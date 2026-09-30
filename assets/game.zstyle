@@ -1,0 +1,54 @@
+:root {
+  --primary:    #0079F1;
+  --primary-hi: #3296FF;
+  --danger:     #BE2137;
+  --danger-hi:  #E62937;
+}
+
+.settings-panel {
+  background: #232328FF;
+  radius: 12px;
+  padding: 4vh 3vw;
+  gap: 3vh;
+}
+
+.title-text  { color: #FDF900; font-size: 5vh; letter-spacing: 3px; margin: 0 0 2vh 0; }
+.normal-text { color: #FFFFFF; font-size: 3vh; }
+
+.setting-row {
+  width: 100%;
+  height: auto;
+  items-v: center;
+  justify: space-between;
+}
+
+.btn-primary {
+  background: var(--primary);
+  radius: 8px;
+  padding: 1.5vh 4vw;
+  transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
+}
+.btn-primary:hover   { background: var(--primary-hi); scale: 1.15; }
+.btn-primary:pressed { background: #505050; scale: 0.90; }
+
+.btn-danger {
+  background: var(--danger);
+  radius: 8px;
+  padding: 1.5vh 4vw;
+  transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
+}
+.btn-danger:hover   { background: var(--danger-hi); scale: 1.15; }
+.btn-danger:pressed { background: #505050; scale: 0.90; }
+
+.toggle { background: #505050; radius: 8px; transition: background 0.15s linear; }
+.toggle:hover { background: #606060; }
+
+@keyframes pulse {
+  0%   { scale: 1.00; }
+  50%  { scale: 1.18; }
+  100% { scale: 1.00; }
+}
+
+.btn-pulse {
+  animation: pulse 1.2s ease-in-out infinite;
+}
