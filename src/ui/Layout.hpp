@@ -6,6 +6,7 @@
 #include "Theme.hpp"
 #include "UIContext.hpp"
 #include "UIAnimations.hpp"
+#include "Logger.hpp"
 
 
 namespace ZenitUI {
@@ -24,19 +25,35 @@ namespace ZenitUI {
 			return std::static_pointer_cast<T>(shared_from_this());
 		}
 
-		std::shared_ptr<Layout> cls(const std::string& className) {
+		void addClass(const std::string& className) {
 			styleClasses.push_back(className);
 			pendingTransition = true;
-			return shared_from_this();
 		}
-		std::shared_ptr<Layout> id(const std::string& node_id) {
+		void setId(const std::string& node_id) {
 			nodeId = node_id;
-			return shared_from_this();
 		}
-		std::shared_ptr<Layout> size(Value w, Value h) {
+
+		void setStyleTag(const std::string& t) { styleTag = t; }
+		const std::string& getStyleTag() const { return styleTag; }
+		const std::vector<std::string>& getStyleClasses() const { return styleClasses; }
+
+		void setSize(Value w, Value h) {
 			inlineBase.width = w;
 			inlineBase.height = h;
 			pendingTransition = true;
+		}
+
+		// --- API fluent (ritornano shared_from_this, NON usare nel costruttore) ---
+		std::shared_ptr<Layout> cls(const std::string& className) {
+			addClass(className);
+			return shared_from_this();
+		}
+		std::shared_ptr<Layout> id(const std::string& node_id) {
+			setId(node_id);
+			return shared_from_this();
+		}
+		std::shared_ptr<Layout> size(Value w, Value h) {
+			setSize(w, h);
 			return shared_from_this();
 		}
 		std::shared_ptr<Layout> with(std::shared_ptr<Layout> child) {
@@ -44,9 +61,19 @@ namespace ZenitUI {
 			return shared_from_this();
 		}
 
-		// --- Albero ---
-		void addChild(std::shared_ptr<Layout> child) {
+				void addChild(std::shared_ptr<Layout> child) {
 			if (!child) return;
+
+			// Rete di sicurezza: se il chiamante è un costruttore o uno stato
+			// dove shared_from_this() non è ancora valido, avvisa e ignora.
+			// Usa X::create() per costruire widget correttamente.
+			if (weak_from_this().expired()) {
+				logWarn("Layout", "", 0, 0,
+					"addChild chiamato su un nodo non gestito da shared_ptr. "
+					"Usa X::create() e metti questa logica in onBuild().");
+				return;
+			}
+
 			child->parent = weak_from_this();
 			children.push_back(std::move(child));
 			pendingTransition = true;
@@ -58,6 +85,36 @@ namespace ZenitUI {
 		// --- Stato / stile ---
 		void setInteractive(bool interactive) { isInteractive = interactive; }
 		void setBlocksRaycast(bool blocks) { blocksRaycast = blocks; }
+
+		void setEnabled(bool e) {
+			if (isEnabled != e) { isEnabled = e; pendingTransition = true; }
+		}
+		bool getEnabled() const { return isEnabled; }
+
+		void setFocusable(bool f) { isFocusable_ = f; }
+		bool isFocusable() const { return isFocusable_ && isEnabled; }
+		bool getFocused() const { return isFocused; }
+
+		void setFocusScope(bool s) { isFocusScope_ = s; }
+		bool isFocusScope() const { return isFocusScope_; }
+
+		void notifyDescendantFocused(Layout* descendant) { onDescendantFocused(descendant); }
+
+		bool isStackingContext() const {
+			return currentStyle.position != Position::Static && !currentStyle.zIndex.isAuto;
+		}
+		int getZIndex() const {
+			return currentStyle.zIndex.isAuto ? 0 : currentStyle.zIndex.value;
+		}
+
+		void setPortal(bool p) { isPortal_ = p; pendingTransition = true; }
+		bool isPortal() const { return isPortal_; }
+
+		void setPassThrough(bool p) { passThrough_ = p; }
+		bool getPassThrough() const { return passThrough_; }
+
+		void setKeyboardActivates(bool v) { keyboardActivates_ = v; }
+    	bool getKeyboardActivates() const { return keyboardActivates_; }
 
 		void setInlineBase(const Style& s) { inlineBase.overlay(s); pendingTransition = true; }
 		Style& getInlineBase() { pendingTransition = true; return inlineBase; }
@@ -79,12 +136,18 @@ namespace ZenitUI {
 		}
 
 		// --- Ciclo di vita ---
-		Vec2 measure(float parent_w, float parent_h);
-		void arrange(Rect space);
+		virtual Vec2 measure(float parent_w, float parent_h);
+		virtual void arrange(Rect space);
+		virtual void arrangeInto(Rect space);
 		virtual void update(float dt, bool ancestorBlocked = false);
 		virtual void draw(float parentOpacity = 1.0f);
 
+		Layout* hitTest(Vec2 p, bool ancestorBlocked = false);
+
+		void updateTree(float dt);
+
 		Rect getRect() const { return rect; }
+		Vec2 getMeasuredSize() const { return measuredSize; }  
 		const ComputedStyle& getStyle() const { return currentStyle; }
 
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
@@ -98,11 +161,22 @@ namespace ZenitUI {
 		LayoutType type;
 		Rect rect{ 0,0,0,0 };
 		Vec2 measuredSize{ 0,0 };
+		Vec2 scrollContentSize{ 0,0 };
+		bool styleInitialized{ false };
+		bool isInteractive{ true }, blocksRaycast{ false }, isHovered{ false },
+		     wantsRemoval{ false }, pendingTransition{ true }, isEnabled{ true };
+		bool isFocused{ false };
+		bool isFocusable_{ false };
+		bool isFocusScope_{ false };
+		bool isPressed{ false }; 
+		bool isPortal_{ false };
+		bool passThrough_{ false };
+		bool keyboardActivates_{ false };
 
-		bool isInteractive{ true }, blocksRaycast{ false }, isHovered{ false }, wantsRemoval{ false }, pendingTransition{ true };
 
+		std::string styleTag;
 		std::vector<std::string> styleClasses;
-		Style inlineBase, inlineHover, inlinePressed;
+		Style inlineBase, inlineHover, inlinePressed, inlineDisabled, inlineFocus;
 		ComputedStyle currentStyle, targetStyle, transitionStartStyle;
 		UIState currentState{ UIState::Idle };
 		float transitionTimer{ 1.0f };
@@ -115,47 +189,96 @@ namespace ZenitUI {
 
 		std::weak_ptr<Layout> parent;
 
-		virtual Vec2 computeIntrinsicSize(float availW, float availH) { return {0,0}; }
+		virtual Vec2 computeIntrinsicSize(float /*availW*/, float /*availH*/) { return {0,0}; }
 
-		// renderSelf riceve il render-style (currentStyle + overlay animazioni CSS).
-		virtual void renderSelf(float globalOpacity, const ComputedStyle& style) {
+		virtual Vec2 measureChild(Layout* child, float availW, float availH) {
+			return child->measure(availW, availH);
+		}
+
+		Transform2D currentTransform(const ComputedStyle& style) const {
+			Transform2D tr;
+			tr.pivot = rect.center();
+			tr.translate = {
+				style.translateX.resolve(Metrics::viewport.x),
+				style.translateY.resolve(Metrics::viewport.y)
+			};
+			tr.rotationDeg = style.rotation;
+			tr.scale = style.scale;
+			return tr;
+		}
+
+		// Chiamato quando un discendente ottiene il focus.
+		// Ritorna true se ha gestito lo scroll internamente.
+		virtual void onDescendantFocused(Layout* /*descendant*/) {}
+
+		// Chrome: sfondo + bordo. Chiamato automaticamente prima di renderContent.
+		// Override solo se il widget ha un "vestito" particolare (es. texture).
+		virtual void renderChrome(float op, const ComputedStyle& style) {
 			auto r = UIContext::get().renderer;
 			if (!r) return;
-			Color bg = style.background.withAlpha(globalOpacity);
+			if (rect.width <= 0 || rect.height <= 0) return;
+
+			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
+			float rPx = std::clamp(style.radius.resolve(maxRadius * 2.0f), 0.0f, maxRadius);
+
+			Color bg = style.background.withAlpha(op);
 			if (bg.a > 0) {
-				float maxRadius = std::min(rect.width, rect.height) * 0.5f;
-				float rPx = std::clamp(style.radius.resolve(maxRadius * 2.0f), 0.0f, maxRadius);
 				if (rPx > 0.0f && maxRadius > 0.0f) r->fillRoundedRect(rect, rPx, bg);
-				else if (rect.width > 0 && rect.height > 0) r->fillRect(rect, bg);
+				else                                r->fillRect(rect, bg);
+			}
+
+			Color bc = style.borderColor.withAlpha(op);
+			float bw = style.borderWidth.resolve(maxRadius * 2.0f);
+			if (bc.a > 0 && bw > 0.0f) {
+				if (rPx > 0.0f && maxRadius > 0.0f) r->strokeRoundedRect(rect, rPx, bw, bc);
+				else                                r->strokeRect(rect, bw, bc);
 			}
 		}
 
-		virtual void onPreUpdate(float dt) {}
-		virtual void onPostUpdate(float dt) {}
+		// Contenuto specifico del widget. Di default non disegna nulla.
+		virtual void renderContent(float /*op*/, const ComputedStyle& /*style*/) {}
+		virtual void onPreUpdate(float /*dt*/) {}
+		virtual void onPostUpdate(float  /*dt*/) {}
 
 	private:
-		ComputedStyle resolveTargetStyle(UIState state);
+		ComputedStyle resolveTargetStyle();
 		void syncCssAnimations();
+		void handleFocusInput();
 	};
 
-	template <typename Derived>
-	class TLayout : public Layout {
+	// CRTP helper: aggiunge la fluent API tipizzata su una Base qualsiasi.
+	// Uso:
+	//   class Text   : public TLayout<Text>              // Base = Layout
+	//   class Panel  : public TLayout<Panel>             // Base = Layout
+	//   class Button : public TLayout<Button, Panel>     // Base = Panel
+	template <typename Derived, typename Base = Layout>
+	class TLayout : public Base {
 	public:
-		TLayout(LayoutType t = LayoutType::Stack) : Layout(t) {}
+		template <typename... Args>
+		TLayout(Args&&... args) : Base(std::forward<Args>(args)...) {}
+
+		template <typename... Args>
+		static std::shared_ptr<Derived> create(Args&&... args) {
+			auto p = std::make_shared<Derived>(std::forward<Args>(args)...);
+			static_cast<TLayout<Derived>*>(p.get())->onBuild();
+			return p;
+		}
+
 
 		std::shared_ptr<Derived> cls(const std::string& name) {
-			this->styleClasses.push_back(name);
-			this->pendingTransition = true;
+			this->addClass(name);
 			return self();
 		}
 		std::shared_ptr<Derived> id(const std::string& node_id) {
-			this->nodeId = node_id;
+			this->setId(node_id);
 			return self();
 		}
 		std::shared_ptr<Derived> size(Value w, Value h) {
-			this->inlineBase.width = w;
-			this->inlineBase.height = h;
-			this->pendingTransition = true;
+			this->setSize(w, h);
+			return self();
+		}
+		std::shared_ptr<Derived> passThrough(bool p = true) {
+			this->setPassThrough(p);
 			return self();
 		}
 		std::shared_ptr<Derived> with(std::shared_ptr<Layout> c) {
@@ -165,5 +288,7 @@ namespace ZenitUI {
 		std::shared_ptr<Derived> self() {
 			return std::static_pointer_cast<Derived>(this->shared_from_this());
 		}
+	protected:
+		virtual void onBuild() {}
 	};
 }

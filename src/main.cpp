@@ -8,11 +8,17 @@
 #include "UI.hpp"
 
 #include "SettingsDialog.hpp"
+#include "DemoWindow.hpp"
 #include "GameTheme.hpp"
 
 using namespace ZenitUI;
 
+#include <exception>
+#include <cstdio>
+#include <cstdlib>
+
 int main(void){
+
     InitWindow(800, 600, "TestUI");
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
@@ -31,21 +37,21 @@ int main(void){
     rootLayer->getInlineBase().width  = Percent(100.0f);
     rootLayer->getInlineBase().height = Percent(100.0f);
 
-    auto openSettingsBtn = UI::Btn("APRI IMPOSTAZIONI", [rootLayer]() {
-        rootLayer->addChild(std::make_shared<SettingsDialog>());
+    auto openDemoBtn = UI::Btn("LANCIA DEMO WINDOW", [rootLayer]() {
+        rootLayer->addChild(DemoWindow::create()); 
     });
 
-    openSettingsBtn->cls("btn-primary");
-    openSettingsBtn->getInlineBase().itemsH = Align::Center;
-    openSettingsBtn->getInlineBase().itemsV = Align::Center;
+    openDemoBtn->cls("btn-primary")->cls("btn-pulse");
+    openDemoBtn->getInlineBase().itemsH = Align::Center;
+    openDemoBtn->getInlineBase().itemsV = Align::Center;
 
-    rootLayer->addChild(openSettingsBtn);
+    rootLayer->addChild(openDemoBtn);
 
     while(!WindowShouldClose()){
         float dt = GetFrameTime();
         UIContext::get().beginFrame(dt);
-
-        rootLayer->update(dt);
+        
+        rootLayer->updateTree(dt);
         rootLayer->measure((float)GetScreenWidth(), (float)GetScreenHeight());
         rootLayer->arrange({ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() });
 

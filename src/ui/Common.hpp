@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdint>
 #include <functional>
+#include <limits> 
 #include <memory>
 #include <optional>
 #include <string>
@@ -14,3 +15,4 @@
 #include <variant>
 #include <vector>
 #include <random>
+#include <sstream>

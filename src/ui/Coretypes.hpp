@@ -72,12 +72,58 @@ namespace ZenitUI {
 		bool down{ false };
 		bool pressed{ false };
 		bool released{ false };
+		float wheelY{ 0.0f };
 	};
 
 	struct Metrics {
 		static inline Vec2 viewport{ 1280.0f, 720.0f };
 	};
 
+		// Codici tasto "speciali" (non caratteri). Indipendenti dal backend.
+	namespace Key {
+		constexpr int Backspace = 1;
+		constexpr int Delete    = 2;
+		constexpr int Enter     = 3;
+		constexpr int Escape    = 4;
+		constexpr int Left      = 5;
+		constexpr int Right     = 6;
+		constexpr int Home      = 7;
+		constexpr int End       = 8;
+		constexpr int Tab       = 9;
+		constexpr int Space     = 10;
+	}
+
+	struct InputEvents {
+		std::vector<int> chars;  // codici Unicode digitati questo frame
+		std::vector<int> keys;   // codici Key::* speciali premuti questo frame
+		std::vector<int> held; 
+	};
+
 	enum class Align { Auto, Start, Center, End, Stretch };
 	enum class Justify { Start, Center, End, SpaceBetween };
+
+	inline Vec2 applyTransform(const Transform2D& t, Vec2 p) {
+		float dx = p.x - t.pivot.x;
+		float dy = p.y - t.pivot.y;
+		dx *= t.scale; dy *= t.scale;
+
+		float rad = t.rotationDeg * 3.14159265358979323846f / 180.0f;
+		float c = std::cos(rad), s = std::sin(rad);
+		float rx = dx * c - dy * s;
+		float ry = dx * s + dy * c;
+
+		return { rx + t.pivot.x + t.translate.x, ry + t.pivot.y + t.translate.y };
+	}
+
+	inline Vec2 applyInverseTransform(const Transform2D& t, Vec2 p) {
+		p.x -= t.translate.x;
+		p.y -= t.translate.y;
+		float dx = p.x - t.pivot.x, dy = p.y - t.pivot.y;
+		float rad = -t.rotationDeg * 3.14159265358979323846f / 180.0f;
+		float c = std::cos(rad), s = std::sin(rad);
+		float rx = dx * c - dy * s;
+		float ry = dx * s + dy * c;
+		rx /= t.scale; ry /= t.scale;
+		return { rx + t.pivot.x, ry + t.pivot.y };
+	}
 }

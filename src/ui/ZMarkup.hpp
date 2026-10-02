@@ -225,6 +225,7 @@ inline std::optional<Color> parseColorToken(std::string_view s) {
         if (h.size() == 8)
             return Color{ (uint8_t)(hex(h[0]) * 16 + hex(h[1])), (uint8_t)(hex(h[2]) * 16 + hex(h[3])), (uint8_t)(hex(h[4]) * 16 + hex(h[5])), (uint8_t)(hex(h[6]) * 16 + hex(h[7])) };
     }
+
     return std::nullopt;
 }
 
@@ -267,38 +268,62 @@ inline std::optional<Justify> parseJustifyToken(std::string_view s) {
 // =========================================================================
 //  Applicazione attributi → inlineBase dello Style
 // =========================================================================
-inline void applyStyleAttr(Style& st, const std::string& key, const std::string& val) {
-    if      (key == "width")          { if (auto v = parseValueToken(val))   st.width = *v; }
-    else if (key == "height")         { if (auto v = parseValueToken(val))   st.height = *v; }
-    else if (key == "min-width")      { if (auto v = parseValueToken(val))   st.minWidth = *v; }
-    else if (key == "max-width")      { if (auto v = parseValueToken(val))   st.maxWidth = *v; }
-    else if (key == "min-height")     { if (auto v = parseValueToken(val))   st.minHeight = *v; }
-    else if (key == "max-height")     { if (auto v = parseValueToken(val))   st.maxHeight = *v; }
-    else if (key == "gap")            { if (auto v = parseValueToken(val))   st.gap = *v; }
-    else if (key == "grow")           { try { st.grow = std::stof(val); } catch (...) {} }
-    else if (key == "padding")        { if (auto v = parseSpacingToken(val)) st.padding = *v; }
-    else if (key == "margin")         { if (auto v = parseSpacingToken(val)) st.margin = *v; }
-    else if (key == "background")     { if (auto v = parseColorToken(val))   st.background = *v; }
-    else if (key == "color")          { if (auto v = parseColorToken(val))   st.color = *v; }
-    else if (key == "tint")           { if (auto v = parseColorToken(val))   st.tint = *v; }
-    else if (key == "border-color")   { if (auto v = parseColorToken(val))   st.borderColor = *v; }
-    else if (key == "border-width")   { if (auto v = parseValueToken(val))   st.borderWidth = *v; }
-    else if (key == "radius")         { if (auto v = parseValueToken(val))   st.radius = *v; }
-    else if (key == "opacity")        { try { st.opacity = std::stof(val); } catch (...) {} }
-    else if (key == "scale")          { try { st.scale = std::stof(val); } catch (...) {} }
-    else if (key == "rotation")       { try { st.rotation = std::stof(val); } catch (...) {} }
-    else if (key == "translate-x")    { if (auto v = parseValueToken(val))   st.translateX = *v; }
-    else if (key == "translate-y")    { if (auto v = parseValueToken(val))   st.translateY = *v; }
-    else if (key == "font-size")      { if (auto v = parseValueToken(val))   st.fontSize = *v; }
-    else if (key == "letter-spacing") { if (auto v = parseValueToken(val))   st.letterSpacing = *v; }
-    else if (key == "items-h")        { if (auto v = parseAlignToken(val))   st.itemsH = *v; }
-    else if (key == "items-v")        { if (auto v = parseAlignToken(val))   st.itemsV = *v; }
-    else if (key == "align-h")        { if (auto v = parseAlignToken(val))   st.alignH = *v; }
-    else if (key == "align-v")        { if (auto v = parseAlignToken(val))   st.alignV = *v; }
-    else if (key == "justify")        { if (auto v = parseJustifyToken(val)) st.justify = *v; }
-    else if (key == "transition-time"){ try { st.transitionTime = std::stof(val); } catch (...) {} }
-    else if (key == "ease")           { TransitionFunction tf; if (parseEasing(val, tf)) st.ease = tf; }
-    // altri attributi (class, id, value, checked, ...) sono gestiti altrove
+inline bool applyStyleAttr(Style& st, const std::string& key, const std::string& val) {
+    if      (key == "width")          { if (auto v = parseValueToken(val))   st.width = *v; return true; }
+    else if (key == "height")         { if (auto v = parseValueToken(val))   st.height = *v; return true; }
+    else if (key == "min-width")      { if (auto v = parseValueToken(val))   st.minWidth = *v; return true; }
+    else if (key == "max-width")      { if (auto v = parseValueToken(val))   st.maxWidth = *v; return true; }
+    else if (key == "min-height")     { if (auto v = parseValueToken(val))   st.minHeight = *v; return true; }
+    else if (key == "max-height")     { if (auto v = parseValueToken(val))   st.maxHeight = *v; return true; }
+    else if (key == "gap")            { if (auto v = parseValueToken(val))   st.gap = *v; return true; }
+    else if (key == "grow")           { try { st.grow = std::stof(val); } catch (...) {} return true; }
+    else if (key == "shrink")         { try { st.shrink = std::stof(val); } catch (...) {} return true; }
+    else if (key == "padding")        { if (auto v = parseSpacingToken(val)) st.padding = *v; return true; }
+    else if (key == "margin")         { if (auto v = parseSpacingToken(val)) st.margin = *v; return true; }
+    else if (key == "background") {
+        auto v = parseColorToken(val);
+        if (!v) {
+            return true;
+        }
+        st.background = *v;
+        return true;
+    }
+    else if (key == "color")          { if (auto v = parseColorToken(val))   st.color = *v; return true; }
+    else if (key == "tint")           { if (auto v = parseColorToken(val))   st.tint = *v; return true; }
+    else if (key == "border-color")   { if (auto v = parseColorToken(val))   st.borderColor = *v; return true; }
+    else if (key == "border-width")   { if (auto v = parseValueToken(val))   st.borderWidth = *v; return true; }
+    else if (key == "radius")         { if (auto v = parseValueToken(val))   st.radius = *v; return true; }
+    else if (key == "opacity")        { try { st.opacity = std::stof(val); } catch (...) {} return true; }
+    else if (key == "scale")          { try { st.scale = std::stof(val); } catch (...) {} return true; }
+    else if (key == "rotation")       { try { st.rotation = std::stof(val); } catch (...) {} return true; }
+    else if (key == "translate-x")    { if (auto v = parseValueToken(val))   st.translateX = *v; return true; }
+    else if (key == "translate-y")    { if (auto v = parseValueToken(val))   st.translateY = *v; return true; }
+    else if (key == "font-size")      { if (auto v = parseValueToken(val))   st.fontSize = *v; return true; }
+    else if (key == "letter-spacing") { if (auto v = parseValueToken(val))   st.letterSpacing = *v; return true; }
+    else if (key == "items-h")        { if (auto v = parseAlignToken(val))   st.itemsH = *v; return true; }
+    else if (key == "items-v")        { if (auto v = parseAlignToken(val))   st.itemsV = *v; return true; }
+    else if (key == "align-h")        { if (auto v = parseAlignToken(val))   st.alignH = *v; return true; }
+    else if (key == "align-v")        { if (auto v = parseAlignToken(val))   st.alignV = *v; return true; }
+    else if (key == "justify")        { if (auto v = parseJustifyToken(val)) st.justify = *v; return true; }
+    else if (key == "text-align")     { if (auto v = parseAlignToken(val))   st.textAlign = *v; return true; }
+    else if (key == "transition-time"){ try { st.transitionTime = std::stof(val); } catch (...) {} return true; }
+    else if (key == "ease")           { TransitionFunction tf; if (parseEasing(val, tf)) st.ease = tf; return true; }
+    else if (key == "position") {
+        if (val == "absolute") st.position = Position::Absolute;
+        else if (val == "relative") st.position = Position::Relative;
+        else st.position = Position::Static;
+        return true;
+    }
+    else if (key == "z-index") {
+        if (val == "auto") st.zIndex = ZIndex::Auto();
+        else { try { st.zIndex = ZIndex(std::stoi(val)); } catch(...) {} }
+        return true;
+    }
+    else if (key == "wrap" || key == "checked" || key == "value" ||
+         key == "options" || key == "passthrough"){
+        return true;
+    }
+    return false;
 }
 
 // =========================================================================
@@ -324,6 +349,8 @@ public:
         auto node = it->second(el);
         if (!node) return nullptr;
 
+        if (el.has("passthrough")) node->setPassThrough(el.attrBool("passthrough"));
+
         for (auto& c : el.classes) node->cls(c);
         if (!el.id.empty()) { node->id(el.id); ctx.byId[el.id] = node; }
 
@@ -346,16 +373,58 @@ private:
 inline void registerBuiltins(Registry& r) {
     using namespace ZenitUI::UI;
 
-    r.reg("Stack",   [](const Element&)   { return std::make_shared<Layout>(LayoutType::Stack); });
+    r.reg("Stack", [](const Element&) {
+			auto l = std::make_shared<Layout>(LayoutType::Stack);
+			l->setStyleTag("Stack");
+			return l;
+		});
+    r.reg("Spacer", [](const Element&) {
+			auto l = std::make_shared<Layout>(LayoutType::Stack);
+			l->setStyleTag("Spacer");
+			return l;
+		});
     r.reg("VStack",  [](const Element&)   { return VStack(); });
     r.reg("HStack",  [](const Element&)   { return HStack(); });
-    r.reg("Spacer",  [](const Element&)   { return std::make_shared<Layout>(LayoutType::Stack); });
-    r.reg("Text",    [](const Element& e) { return Label(e.text); });
-    r.reg("Label",   [](const Element& e) { return Label(e.text); });
+    r.reg("Text", [](const Element& e) {
+        auto t = Label(e.text);
+        if (e.has("wrap")) t->setWrap(e.attrBool("wrap", true));
+        return t;
+    });
+    r.reg("Label", [](const Element& e) {
+        auto t = Label(e.text);
+        if (e.has("wrap")) t->setWrap(e.attrBool("wrap", true));
+        return t;
+    });
+    r.reg("TextInput", [](const Element& e) {
+        return std::make_shared<UI::TextInput>(e.attr("value", e.text));
+    });
+    r.reg("Checkbox", [](const Element& e) {
+        return std::make_shared<UI::Checkbox>(e.attrBool("checked", false));
+    });
+    r.reg("ProgressBar", [](const Element& e) {
+        return std::make_shared<UI::ProgressBar>(e.attrFloat("value", 0.0f));
+    });
+    r.reg("Dropdown", [](const Element& e) {
+        std::vector<std::string> opts;
+        std::string cur;
+        auto flush = [&]() {
+            size_t a = cur.find_first_not_of(" \t");
+            size_t b = cur.find_last_not_of(" \t");
+            if (a != std::string::npos) opts.push_back(cur.substr(a, b - a + 1));
+            cur.clear();
+        };
+        for (char c : e.attr("options", "")) {
+            if (c == ',') flush(); else cur.push_back(c);
+        }
+        flush();
+        if (opts.empty()) opts.push_back("Default");
+        return UI::Dropdown::create(std::move(opts), 0);
+    });
     r.reg("Button",  [](const Element& e) { return Btn(e.text); });
     r.reg("Panel",   [](const Element&)   { return Pan(); });
     r.reg("Slider",  [](const Element& e) { return std::make_shared<Slider>(e.attrFloat("value", 0.5f)); });
     r.reg("Toggle",  [](const Element& e) { return std::make_shared<Toggle>(e.attrBool("checked", false)); });
+    r.reg("ScrollView", [](const Element&) { return ScrollView::create(); });
 }
 
 // =========================================================================

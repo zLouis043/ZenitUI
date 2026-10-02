@@ -53,6 +53,23 @@ namespace ZenitUI {
 		bool blocksInput{ false };
 	};
 
+	enum class Position { Static, Relative, Absolute };
+
+	struct ZIndex {
+		bool isAuto{ true };
+		int value{ 0 };
+
+		ZIndex() = default;
+		ZIndex(int v) : isAuto(false), value(v) {}
+
+		static ZIndex Auto() { return ZIndex(); }
+
+		bool operator==(const ZIndex& o) const { return isAuto == o.isAuto && value == o.value; }
+		bool operator!=(const ZIndex& o) const { return !(*this == o); }
+	};
+
+	enum class Overflow { Visible, Hidden, Scroll };
+
 #define BUBBLE_STYLE_PROPS(X) \
 	X(Value,   width,          Value::autoSize()) \
 	X(Value,   height,         Value::autoSize()) \
@@ -61,6 +78,7 @@ namespace ZenitUI {
 	X(Value,   maxWidth,       Value::autoSize()) \
 	X(Value,   maxHeight,      Value::autoSize()) \
 	X(float,   grow,           0.0f) \
+	X(float,   shrink,         1.0f) \
 	X(Value,   gap,            Value(0.0f)) \
 	X(Spacing, margin,         Spacing()) \
 	X(Spacing, padding,        Spacing()) \
@@ -69,6 +87,7 @@ namespace ZenitUI {
 	X(Align,   itemsH,         Align::Start) \
 	X(Align,   itemsV,         Align::Start) \
 	X(Justify, justify,        Justify::Start) \
+	X(Align,   textAlign,      Align::Auto) \
 	X(Color,   background,     Colors::Blank) \
 	X(Color,   color,          Colors::White) \
 	X(Color,   tint,           Colors::White) \
@@ -83,7 +102,10 @@ namespace ZenitUI {
 	X(Value,   fontSize,       Value(20.0f)) \
 	X(Value,   letterSpacing,  Value(2.0f)) \
 	X(float,   transitionTime, 0.15f) \
-	X(TransitionFunction, ease, TransitionFunction::Linear)
+	X(TransitionFunction, ease, TransitionFunction::Linear) \
+	X(Overflow, overflow,      Overflow::Visible) \
+	X(Position, position,      Position::Static) \
+	X(ZIndex,   zIndex,        ZIndex::Auto())
 
 	struct Style {
 #define X(T, name, def) Opt<T> name;
@@ -132,7 +154,7 @@ namespace ZenitUI {
 	inline bool operator!=(const ComputedStyle& a, const ComputedStyle& b) { return !(a == b); }
 
 	struct StyleSet {
-		Style base, hover, pressed, disabled;
+		Style base, hover, pressed, disabled, focus;
 	};
 
 	inline float lerpProp(float a, float b, float t) { return a + (b - a) * t; }
@@ -157,6 +179,8 @@ namespace ZenitUI {
 
 	template <typename E, typename = std::enable_if_t<std::is_enum_v<E>>>
 	inline E lerpProp(E a, E b, float t) { return t > 0.0f ? b : a; }
+
+	inline ZIndex lerpProp(const ZIndex& a, const ZIndex& b, float t) { return t > 0.0f ? b : a; }
 
 	// Lerp globale (retro-compat): t è già normalizzato in [0,1].
 	inline ComputedStyle lerpStyle(const ComputedStyle& a, const ComputedStyle& b, float t) {
@@ -203,7 +227,31 @@ namespace ZenitUI {
 #undef X
 	}
 
-	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify, TransitionFunction>;
+		// Itera le prop "set" di uno Style (esclusi transitions/animations)
+	template <typename F>
+	inline void forEachSetStyleProp(const Style& s, F&& fn) {
+#define X(T, name, def) if (s.name.is_set) fn(#name);
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+	}
+
+	// Copia una prop per nome. Ritorna true se esiste (era set) nella src.
+	inline bool copyStyleProp(Style& dst, const Style& src, std::string_view name) {
+#define X(T, n, def) if (name == #n) { if (src.n.is_set) { dst.n = src.n; return true; } return false; }
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+		return false;
+	}
+
+	// Ritorna true se la prop è set nella Style.
+	inline bool hasStyleProp(const Style& s, std::string_view name) {
+#define X(T, n, def) if (name == #n) return s.n.is_set;
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+		return false;
+	}
+
+	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify, TransitionFunction, Overflow, Position, ZIndex>;
 
 	struct PropDesc {
 		const char* name;
