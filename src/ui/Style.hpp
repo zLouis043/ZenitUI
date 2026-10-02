@@ -105,7 +105,11 @@ namespace ZenitUI {
 	X(TransitionFunction, ease, TransitionFunction::Linear) \
 	X(Overflow, overflow,      Overflow::Visible) \
 	X(Position, position,      Position::Static) \
-	X(ZIndex,   zIndex,        ZIndex::Auto())
+	X(ZIndex,   zIndex,        ZIndex::Auto()) \
+	X(Value,   top,            Value::autoSize()) \
+	X(Value,   left,           Value::autoSize()) \
+	X(Value,   right,          Value::autoSize()) \
+	X(Value,   bottom,         Value::autoSize())
 
 	struct Style {
 #define X(T, name, def) Opt<T> name;

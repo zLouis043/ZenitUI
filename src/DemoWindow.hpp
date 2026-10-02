@@ -109,6 +109,11 @@ private:
 
         card->addChild(btnRow);
 
+        Tooltip::attach(btnRow->children[0], "Esegue l'azione principale", 0.3f);
+        Tooltip::attach(btnRow->children[1], "Azione distruttiva, richiede conferma", 0.3f);
+        Tooltip::attach(toggle, "Abilita o disabilita questa opzione", 0.3f);
+        Tooltip::attach(check,  "Salva i progressi sul cloud", 0.3f);
+
         parent->addChild(card);
     }
 
@@ -164,19 +169,46 @@ private:
 
         auto card = VStack()->cls("card");
         auto dropdown = Dropdown::create(
-            std::vector<std::string>{"Opzione 1", "Opzione 2", "Opzione 3", "Opzione molto lunga 4"}, 0);
+            std::vector<std::string>{"Opzione 1", "Opzione 2", "Opzione 3"}, 0);
         dropdown->getInlineBase().width = VW(20.0f);
+        card->addChild(HStack({ Label("Valore: ")->cls("normal-text")->cls("setting-label"), dropdown })->cls("setting-row"));
 
-        card->addChild(HStack({ Label("Seleziona Valore:")->cls("normal-text")->cls("setting-label"), dropdown })->cls("setting-row"));
+        // Box contenitore con position: relative (implicito per absolute)
+        auto stage = VStack()->cls("card");
+        stage->getInlineBase().height = VH(30.0f);
+        stage->getInlineBase().position = Position::Relative;
 
-        auto dummy = VStack()->size(Percent(100), VH(20.0f));
-        dummy->getInlineBase().background = ZenitUI::Color{40, 40, 50, 255};
-        dummy->getInlineBase().radius = Px(8.0f);
-        dummy->getInlineBase().itemsH = Align::Center;
-        dummy->getInlineBase().itemsV = Align::Center;
-        dummy->addChild(Label("Questa box viene scavalcata dal Dropdown"));
-        card->addChild(dummy);
+        // Badge in alto a destra: right=8, top=8
+        auto badge = Label("BADGE")->cls("normal-text");
+        badge->getInlineBase().position = Position::Absolute;
+        badge->getInlineBase().top    = Px(8.0f);
+        badge->getInlineBase().right  = Px(8.0f);
+        badge->getInlineBase().background = Colors::Red;
+        badge->getInlineBase().padding = Spacing(Px(4.0f), Px(8.0f));
+        badge->getInlineBase().radius = Px(4.0f);
+        stage->addChild(badge);
 
+        // Label centrato: left=50% + right=50% → stretch a 0, quindi left+width esplicito
+        auto center = Label("centrato")->cls("normal-text");
+        center->getInlineBase().position = Position::Absolute;
+        center->getInlineBase().top = Percent(50);
+        center->getInlineBase().left = Percent(50);
+        center->getInlineBase().width = Px(100.0f);
+        // left 50% del parent, e poi translato a metà larghezza per centrare:
+        center->getInlineBase().translateX = Percent(-50.0f);
+        stage->addChild(center);
+
+        // Stretch horizontal: left=0, right=0, width auto
+        auto stretch = Label("stretch left→right")->cls("normal-text");
+        stretch->getInlineBase().position = Position::Absolute;
+        stretch->getInlineBase().left  = Px(0.0f);
+        stretch->getInlineBase().right = Px(0.0f);
+        stretch->getInlineBase().bottom = Px(8.0f);
+        stage->getInlineBase().itemsH = Align::Center;
+        stretch->getInlineBase().textAlign = Align::Center;
+        stage->addChild(stretch);
+
+        card->addChild(stage);
         parent->addChild(card);
     }
 

@@ -69,6 +69,17 @@ Text {
   font-size: 3vh;
 }
 
+Tooltip {
+  background: #000000E6;
+  color: #FFFFFF;
+  padding: 0.6vh 0.8vw;
+  radius: 4px;
+  border-color: #606070FF;
+  border-width: 1px;
+  transition: opacity 0.2s ease-out;
+}
+
+
 /* ============================================================
    Classi (varianti semantiche)
    ============================================================ */

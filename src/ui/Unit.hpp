@@ -32,6 +32,17 @@ namespace ZenitUI {
 			return 0.0f;
 		}
 
+		float resolveSelf(float selfSize) const {
+			switch (unit) {
+			case Unit::Auto:    return 0.0f;
+			case Unit::Pixel:   return amount + px;
+			case Unit::Percent: return amount * 0.01f * selfSize + px;
+			case Unit::VW:      return amount * 0.01f * Metrics::viewport.x + px;
+			case Unit::VH:      return amount * 0.01f * Metrics::viewport.y + px;
+			}
+			return 0.0f;
+		}
+
 		Value operator+(const Value& o) const {
 			assert(!isAuto() && !o.isAuto() && "Auto non supporta operator+/-");
 			if (unit == o.unit) return Value(amount + o.amount, unit, px + o.px);

@@ -91,6 +91,12 @@ namespace ZenitUI {
 		}
 		bool getEnabled() const { return isEnabled; }
 
+		void beginTransition() {
+			pendingTransition = true;
+			transitionTimer = 0.0f;
+			transitionStartStyle = currentStyle;
+		}
+
 		void setFocusable(bool f) { isFocusable_ = f; }
 		bool isFocusable() const { return isFocusable_ && isEnabled; }
 		bool getFocused() const { return isFocused; }
@@ -199,8 +205,8 @@ namespace ZenitUI {
 			Transform2D tr;
 			tr.pivot = rect.center();
 			tr.translate = {
-				style.translateX.resolve(Metrics::viewport.x),
-				style.translateY.resolve(Metrics::viewport.y)
+				 style.translateX.resolveSelf(rect.width),
+        		style.translateY.resolveSelf(rect.height)
 			};
 			tr.rotationDeg = style.rotation;
 			tr.scale = style.scale;
@@ -260,7 +266,7 @@ namespace ZenitUI {
 		template <typename... Args>
 		static std::shared_ptr<Derived> create(Args&&... args) {
 			auto p = std::make_shared<Derived>(std::forward<Args>(args)...);
-			static_cast<TLayout<Derived>*>(p.get())->onBuild();
+			static_cast<TLayout<Derived, Base>*>(p.get())->onBuild();
 			return p;
 		}
 

@@ -298,6 +298,10 @@ inline bool applyStyleAttr(Style& st, const std::string& key, const std::string&
     else if (key == "rotation")       { try { st.rotation = std::stof(val); } catch (...) {} return true; }
     else if (key == "translate-x")    { if (auto v = parseValueToken(val))   st.translateX = *v; return true; }
     else if (key == "translate-y")    { if (auto v = parseValueToken(val))   st.translateY = *v; return true; }
+    else if (key == "top")            { if (auto v = parseValueToken(val))   st.top = *v; return true; }
+	else if (key == "left")           { if (auto v = parseValueToken(val))   st.left = *v; return true; }
+	else if (key == "right")          { if (auto v = parseValueToken(val))   st.right = *v; return true; }
+	else if (key == "bottom")         { if (auto v = parseValueToken(val))   st.bottom = *v; return true; }
     else if (key == "font-size")      { if (auto v = parseValueToken(val))   st.fontSize = *v; return true; }
     else if (key == "letter-spacing") { if (auto v = parseValueToken(val))   st.letterSpacing = *v; return true; }
     else if (key == "items-h")        { if (auto v = parseAlignToken(val))   st.itemsH = *v; return true; }
