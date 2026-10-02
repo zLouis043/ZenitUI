@@ -13,6 +13,8 @@ namespace ZenitUI {
 		Vec2 viewportSize() override;
 		PointerState pointer() override;
 		double time() override;
+		bool shiftHeld() override;
+		InputEvents pollInputEvents() override;
 	};
 
 	class RaylibRenderer : public IRenderer {
@@ -23,6 +25,9 @@ namespace ZenitUI {
 		void fillRect(Rect r, Color c) override;
 		void fillRoundedRect(Rect r, float radiusPx, Color c) override;
 		void fillCircle(Vec2 center, float radius, Color c) override;
+
+		void strokeRect(Rect r, float thickness, Color c) override;
+		void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) override;
 		
 		void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) override;
 		void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) override;
@@ -34,6 +39,10 @@ namespace ZenitUI {
 		void popTransform() override;
 		void pushEffect(EffectHandle e) override;
 		void popEffect() override;
+		void pushClip(Rect r) override;
+		void popClip() override;
+
+		Rect getClipRect() const override;
 
 		TargetHandle createTarget(int w, int h) override;
 		void destroyTarget(TargetHandle t) override;
@@ -46,5 +55,12 @@ namespace ZenitUI {
 		TextureHandle registerTexture(unsigned int raylibTexId, int w, int h);
 		FontHandle registerFont(unsigned int raylibFontId);
 		EffectHandle registerEffect(unsigned int raylibShaderId);
+
+		Rect transformClipToScreen(const Rect& local) const;
+	private:
+		std::vector<Rect> clipStack;
+		std::vector<Transform2D> transformStack;
+		bool clipActive{ false };
+		Rect currentClip{ 0,0,0,0 };
 	};
 }

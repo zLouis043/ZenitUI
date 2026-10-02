@@ -66,6 +66,10 @@ namespace ZenitUI {
 			{"easeinback", TransitionFunction::EaseInBack},   {"easeoutback", TransitionFunction::EaseOutBack},
 			{"easeoutelastic", TransitionFunction::EaseOutElastic},
 			{"easeoutbounce", TransitionFunction::EaseOutBounce},
+			{"ease",        TransitionFunction::EaseInOutQuad},
+			{"easein",      TransitionFunction::EaseInQuad},
+			{"easeout",     TransitionFunction::EaseOutQuad},
+			{"easeinout",   TransitionFunction::EaseInOutQuad},
 		};
 		for (const auto& e : table) {
 			if (n == e.key) { out = e.fn; return true; }

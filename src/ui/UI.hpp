@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Common.hpp"
-#include "Coretypes.hpp"
+#include "Logger.hpp"
+#include "CoreTypes.hpp"
 #include "Easing.hpp"
 #include "Layout.hpp"
 #include "Style.hpp"

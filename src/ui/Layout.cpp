@@ -2,19 +2,47 @@
 
 namespace ZenitUI {
 
-	ComputedStyle Layout::resolveTargetStyle(UIState state) {
-		Style finalStyle;
+	ComputedStyle Layout::resolveTargetStyle() {
+		auto& theme = Theme::get();
+
+		// Raccogli gli StyleSet applicabili in ordine di specificità
+		std::vector<const StyleSet*> sets;
+		if (!styleTag.empty()) {
+			auto it = theme.tags.find(styleTag);
+			if (it != theme.tags.end()) sets.push_back(&it->second);
+		}
 		for (const auto& cls : styleClasses) {
-			auto it = Theme::get().classes.find(cls);
-			if (it != Theme::get().classes.end()) {
-				finalStyle.overlay(it->second.base);
-				if (state == UIState::Hover || state == UIState::Pressed) finalStyle.overlay(it->second.hover);
-				if (state == UIState::Pressed) finalStyle.overlay(it->second.pressed);
+			auto it = theme.classes.find(cls);
+			if (it != theme.classes.end()) sets.push_back(&it->second);
+		}
+		if (!nodeId.empty()) {
+			auto it = theme.ids.find(nodeId);
+			if (it != theme.ids.end()) sets.push_back(&it->second);
+		}
+
+		Style finalStyle;
+
+		// Fase 1: base di tutti i livelli (specificità crescente)
+		for (auto* s : sets) finalStyle.overlay(s->base);
+		finalStyle.overlay(inlineBase);
+
+		if (!isEnabled) {
+			for (auto* s : sets) finalStyle.overlay(s->disabled);
+			finalStyle.overlay(inlineDisabled);
+		} else {
+			if (isHovered || isPressed) {
+				for (auto* s : sets) finalStyle.overlay(s->hover);
+				finalStyle.overlay(inlineHover);
+			}
+			if (isPressed) {
+				for (auto* s : sets) finalStyle.overlay(s->pressed);
+				finalStyle.overlay(inlinePressed);
+			}
+			if (isFocused) {
+				for (auto* s : sets) finalStyle.overlay(s->focus);
+				finalStyle.overlay(inlineFocus);
 			}
 		}
-		finalStyle.overlay(inlineBase);
-		if (state == UIState::Hover || state == UIState::Pressed) finalStyle.overlay(inlineHover);
-		if (state == UIState::Pressed) finalStyle.overlay(inlinePressed);
 
 		return ComputedStyle::from(finalStyle);
 	}
@@ -38,87 +66,335 @@ namespace ZenitUI {
 	}
 
 	Vec2 Layout::measure(float parent_w, float parent_h) {
-		ComputedStyle calcStyle = pendingTransition ? resolveTargetStyle(currentState) : currentStyle;
+		if (!styleInitialized) {
+			styleInitialized = true;
+			currentStyle = targetStyle = transitionStartStyle = resolveTargetStyle();
+			pendingTransition = false;
+		}
+		ComputedStyle calcStyle = pendingTransition ? resolveTargetStyle() : currentStyle;
 
-		float pl = calcStyle.padding.left.resolve(parent_w); float pr = calcStyle.padding.right.resolve(parent_w);
-		float pt = calcStyle.padding.top.resolve(parent_h); float pb = calcStyle.padding.bottom.resolve(parent_h);
+		// --- Spazio disponibile interno ---
+		float pl = calcStyle.padding.left.resolve(parent_w);
+		float pr = calcStyle.padding.right.resolve(parent_w);
+		float pt = calcStyle.padding.top.resolve(parent_h);
+		float pb = calcStyle.padding.bottom.resolve(parent_h);
 
 		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolve(parent_w);
 		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolve(parent_h);
 
-		float innerW = std::max(0.0f, availW - pl - pr); float innerH = std::max(0.0f, availH - pt - pb);
+		float innerW = std::max(0.0f, availW - pl - pr);
+		float innerH = std::max(0.0f, availH - pt - pb);
 
-		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
-
-		if (type == LayoutType::Stack) {
-			for (auto& child : children) {
-				Vec2 cs = child->measure(innerW, innerH);
-				contentSize.x = std::max(contentSize.x, cs.x); contentSize.y = std::max(contentSize.y, cs.y);
-			}
-		} else if (type == LayoutType::Vertical) {
-			float gap = calcStyle.gap.resolve(parent_h);
-			for (size_t i = 0; i < children.size(); ++i) {
-				Vec2 cs = children[i]->measure(innerW, innerH);
-				contentSize.x = std::max(contentSize.x, cs.x); contentSize.y += cs.y + (i > 0 ? gap : 0.0f);
-			}
-		} else if (type == LayoutType::Horizontal) {
-			float gap = calcStyle.gap.resolve(parent_w);
-			for (size_t i = 0; i < children.size(); ++i) {
-				Vec2 cs = children[i]->measure(innerW, innerH);
-				contentSize.x += cs.x + (i > 0 ? gap : 0.0f); contentSize.y = std::max(contentSize.y, cs.y);
-			}
+		// Se abbiamo lo scroll, togliamo i limiti di misurazione sull'asse principale
+		if (calcStyle.overflow == Overflow::Scroll) {
+			if (type == LayoutType::Vertical)   innerH = 1e9f;
+			if (type == LayoutType::Horizontal) innerW = 1e9f;
 		}
 
-		float finalW = calcStyle.width.isAuto() ? contentSize.x + pl + pr : availW;
-		float finalH = calcStyle.height.isAuto() ? contentSize.y + pt + pb : availH;
-		measuredSize = { finalW, finalH };
+		// --- Misurazione Intrinseca del Nodo (es. Testo) ---
+		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
+		
+		float gapX = calcStyle.gap.resolve(innerW);
+		float gapY = calcStyle.gap.resolve(innerH);
+
+		float totalMainSize = 0.0f;
+		float maxCrossSize = 0.0f;
+		int visibleChildren = 0;
+
+		// --- Misura tutti i figli ---
+		for (auto& c : children) {
+			Vec2 cs = c->measure(innerW, innerH);
+			if (c->getStyle().position == Position::Absolute || c->isPortal()) continue;
+
+			const auto& cst = c->getStyle();
+			float ml = cst.margin.left.resolve(innerW);
+			float mr = cst.margin.right.resolve(innerW);
+			float mt = cst.margin.top.resolve(innerH);
+			float mb = cst.margin.bottom.resolve(innerH);
+
+			float childTotalW = cs.x + ml + mr;
+			float childTotalH = cs.y + mt + mb;
+
+			if (type == LayoutType::Horizontal) {
+				totalMainSize += childTotalW;
+				maxCrossSize = std::max(maxCrossSize, childTotalH);
+			} else if (type == LayoutType::Vertical) {
+				totalMainSize += childTotalH;
+				maxCrossSize = std::max(maxCrossSize, childTotalW);
+			} else if (type == LayoutType::Stack) {
+				contentSize.x = std::max(contentSize.x, childTotalW);
+				contentSize.y = std::max(contentSize.y, childTotalH);
+			}
+			visibleChildren++;
+		}
+
+		// --- Aggiungi i gap ---
+		if (type == LayoutType::Horizontal) {
+			if (visibleChildren > 1) totalMainSize += gapX * (visibleChildren - 1);
+			contentSize.x = std::max(contentSize.x, totalMainSize);
+			contentSize.y = std::max(contentSize.y, maxCrossSize);
+		} else if (type == LayoutType::Vertical) {
+			if (visibleChildren > 1) totalMainSize += gapY * (visibleChildren - 1);
+			contentSize.x = std::max(contentSize.x, maxCrossSize);
+			contentSize.y = std::max(contentSize.y, totalMainSize);
+		}
+
+		// Salviamo l'ingombro reale non tagliato per gestire i limiti dello ScrollView
+		scrollContentSize = contentSize;
+
+		// --- Risoluzione Dimensioni Finali del Genitore ---
+		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
+		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
+
+		float minW = calcStyle.minWidth.isAuto()  ? 0.0f : calcStyle.minWidth.resolve(parent_w);
+		float maxW = calcStyle.maxWidth.isAuto()  ? 1e9f : calcStyle.maxWidth.resolve(parent_w);
+		float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolve(parent_h);
+		float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolve(parent_h);
+
+		measuredSize = { std::clamp(finalW, minW, maxW), std::clamp(finalH, minH, maxH) };
 		return measuredSize;
 	}
 
 	void Layout::arrange(Rect space) {
 		rect = space;
+		arrangeInto(space);
+	}
 
-		float pl = currentStyle.padding.left.resolve(rect.width); float pr = currentStyle.padding.right.resolve(rect.width);
-		float pt = currentStyle.padding.top.resolve(rect.height); float pb = currentStyle.padding.bottom.resolve(rect.height);
+	void Layout::arrangeInto(Rect space) {
+		float pl = currentStyle.padding.left.resolve(space.width);
+		float pr = currentStyle.padding.right.resolve(space.width);
+		float pt = currentStyle.padding.top.resolve(space.height);
+		float pb = currentStyle.padding.bottom.resolve(space.height);
 
-		Rect inner = { rect.x + pl, rect.y + pt, std::max(0.0f, rect.width - pl - pr), std::max(0.0f, rect.height - pt - pb) };
+		Rect inner = {
+			space.x + pl,
+			space.y + pt,
+			std::max(0.0f, space.width  - pl - pr),
+			std::max(0.0f, space.height - pt - pb)
+		};
 
+		float gapX = currentStyle.gap.resolve(inner.width);
+		float gapY = currentStyle.gap.resolve(inner.height);
+
+		// Clamp "safe": evita __glibcxx_assert quando lo > hi
+		// (su MinGW-GCC 15 questo chiama abort()). Quando lo > hi prevale hi,
+		// cioè lo spazio disponibile vince sul min-width/min-height dichiarato.
+		auto clampSafe = [](float v, float lo, float hi) -> float {
+			if (hi < lo) return hi;
+			return std::clamp(v, lo, hi);
+		};
+
+		// =====================================================================
+		//  VERTICAL: main axis = height, cross axis = width
+		// =====================================================================
 		if (type == LayoutType::Vertical) {
-			float current_y = inner.y; float gap = currentStyle.gap.resolve(inner.height);
-			for (auto& child : children) {
-				float cw = child->measuredSize.x; float ch = child->measuredSize.y; float cx = inner.x;
-				if (currentStyle.itemsH == Align::Center) cx += (inner.width - cw) * 0.5f;
-				else if (currentStyle.itemsH == Align::End) cx += inner.width - cw;
-				else if (currentStyle.itemsH == Align::Stretch) cw = inner.width;
-				child->arrange({ cx, current_y, cw, ch });
-				current_y += ch + gap;
+			float totalFixedH = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
+			int visibleChildren = 0;
+
+			for (auto& c : children) {
+				const auto& cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal()) continue;
+				totalFixedH += cst.margin.top.resolve(inner.height)
+							+ c->measuredSize.y
+							+ cst.margin.bottom.resolve(inner.height);
+				totalGrow   += cst.grow;
+				totalShrink += cst.shrink;
+				visibleChildren++;
 			}
+			if (visibleChildren > 1) totalFixedH += gapY * (visibleChildren - 1);
+
+			float freeSpace = inner.height - totalFixedH;
+			float startY = inner.y;
+			float extraGap = 0.0f;
+
+			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0) {
+				switch (currentStyle.justify) {
+					case Justify::Center: startY += freeSpace * 0.5f; break;
+					case Justify::End:    startY += freeSpace;        break;
+					case Justify::SpaceBetween:
+						if (visibleChildren > 1) extraGap = freeSpace / (visibleChildren - 1);
+						break;
+					default: break;
+				}
+			}
+
+			float curY = startY;
+
+			for (auto& c : children) {
+				const auto& cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal()) {
+					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
+					continue;
+				}
+
+				float ml = cst.margin.left.resolve(inner.width);
+				float mr = cst.margin.right.resolve(inner.width);
+				float mt = cst.margin.top.resolve(inner.height);
+				float mb = cst.margin.bottom.resolve(inner.height);
+
+				// ---- main axis: height ----
+				float ch = c->measuredSize.y;
+				if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
+					ch += freeSpace * (cst.grow / totalGrow);
+				else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
+					ch += freeSpace * (cst.shrink / totalShrink);
+
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				ch = clampSafe(ch, minH, maxH);
+
+				// ---- cross axis: width ----
+				float cw = c->measuredSize.x;
+				float availW = std::max(0.0f, inner.width - ml - mr);
+				float minW   = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
+				float maxW   = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
+				cw = clampSafe(cw, minW, std::min(availW, maxW));
+
+				float cx = inner.x + ml;
+				Align aH = (cst.alignH == Align::Auto) ? currentStyle.itemsH : cst.alignH;
+				if (aH == Align::Stretch)
+					cw = clampSafe(availW, minW, std::min(availW, maxW));
+				else if (aH == Align::Center) cx += (availW - cw) * 0.5f;
+				else if (aH == Align::End)    cx += availW - cw;
+
+				c->arrange({ cx, curY + mt, cw, ch });
+				curY += mt + ch + mb + gapY + extraGap;
+			}
+
+		// =====================================================================
+		//  HORIZONTAL: main axis = width, cross axis = height
+		// =====================================================================
 		} else if (type == LayoutType::Horizontal) {
-			float current_x = inner.x; float gap = currentStyle.gap.resolve(inner.width);
-			for (auto& child : children) {
-				float cw = child->measuredSize.x; float ch = child->measuredSize.y; float cy = inner.y;
-				if (currentStyle.itemsV == Align::Center) cy += (inner.height - ch) * 0.5f;
-				else if (currentStyle.itemsV == Align::End) cy += inner.height - ch;
-				else if (currentStyle.itemsV == Align::Stretch) ch = inner.height;
-				child->arrange({ current_x, cy, cw, ch });
-				current_x += cw + gap;
+			float totalFixedW = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
+			int visibleChildren = 0;
+
+			for (auto& c : children) {
+				const auto& cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal()) continue;
+				totalFixedW += cst.margin.left.resolve(inner.width)
+							+ c->measuredSize.x
+							+ cst.margin.right.resolve(inner.width);
+				totalGrow   += cst.grow;
+				totalShrink += cst.shrink;
+				visibleChildren++;
 			}
+			if (visibleChildren > 1) totalFixedW += gapX * (visibleChildren - 1);
+
+			float freeSpace = inner.width - totalFixedW;
+			float startX = inner.x;
+			float extraGap = 0.0f;
+
+			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0) {
+				switch (currentStyle.justify) {
+					case Justify::Center: startX += freeSpace * 0.5f; break;
+					case Justify::End:    startX += freeSpace;        break;
+					case Justify::SpaceBetween:
+						if (visibleChildren > 1) extraGap = freeSpace / (visibleChildren - 1);
+						break;
+					default: break;
+				}
+			}
+
+			float curX = startX;
+
+			for (auto& c : children) {
+				const auto& cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal()) {
+					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
+					continue;
+				}
+
+				float ml = cst.margin.left.resolve(inner.width);
+				float mr = cst.margin.right.resolve(inner.width);
+				float mt = cst.margin.top.resolve(inner.height);
+				float mb = cst.margin.bottom.resolve(inner.height);
+
+				// ---- main axis: width ----
+				float cw = c->measuredSize.x;
+				if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
+					cw += freeSpace * (cst.grow / totalGrow);
+				else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
+					cw += freeSpace * (cst.shrink / totalShrink);
+
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
+				cw = clampSafe(cw, minW, maxW);
+
+				// ---- cross axis: height ----
+				float ch = c->measuredSize.y;
+				float availH = std::max(0.0f, inner.height - mt - mb);
+				float minH   = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
+				float maxH   = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				ch = clampSafe(ch, minH, std::min(availH, maxH));
+
+				float cy = inner.y + mt;
+				Align aV = (cst.alignV == Align::Auto) ? currentStyle.itemsV : cst.alignV;
+				if (aV == Align::Stretch)
+					ch = clampSafe(availH, minH, std::min(availH, maxH));
+				else if (aV == Align::Center) cy += (availH - ch) * 0.5f;
+				else if (aV == Align::End)    cy += availH - ch;
+
+				c->arrange({ curX + ml, cy, cw, ch });
+				curX += ml + cw + mr + gapX + extraGap;
+			}
+
+		// =====================================================================
+		//  STACK: figli sovrapposti
+		// =====================================================================
 		} else if (type == LayoutType::Stack) {
-			for (auto& child : children) {
-				float cw = child->measuredSize.x; float ch = child->measuredSize.y;
-				float cx = inner.x; float cy = inner.y;
-				if (currentStyle.itemsH == Align::Stretch) cw = inner.width;
-				if (currentStyle.itemsV == Align::Stretch) ch = inner.height;
-				if (currentStyle.itemsH == Align::Center) cx += (inner.width - cw) * 0.5f;
-				else if (currentStyle.itemsH == Align::End) cx += inner.width - cw;
-				if (currentStyle.itemsV == Align::Center) cy += (inner.height - ch) * 0.5f;
-				else if (currentStyle.itemsV == Align::End) cy += inner.height - ch;
-				child->arrange({ cx, cy, cw, ch });
+			for (auto& c : children) {
+				const auto& cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal()) {
+					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
+					continue;
+				}
+
+				float ml = cst.margin.left.resolve(inner.width);
+				float mr = cst.margin.right.resolve(inner.width);
+				float mt = cst.margin.top.resolve(inner.height);
+				float mb = cst.margin.bottom.resolve(inner.height);
+
+				float availW = std::max(0.0f, inner.width  - ml - mr);
+				float availH = std::max(0.0f, inner.height - mt - mb);
+
+				float minW = cst.minWidth.isAuto()  ? 0.0f : cst.minWidth.resolve(inner.width);
+				float maxW = cst.maxWidth.isAuto()  ? 1e9f : cst.maxWidth.resolve(inner.width);
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+
+				float cw = clampSafe(c->measuredSize.x, minW, std::min(availW, maxW));
+				float ch = clampSafe(c->measuredSize.y, minH, std::min(availH, maxH));
+
+				float cx = inner.x + ml;
+				float cy = inner.y + mt;
+
+				Align aH = (cst.alignH == Align::Auto) ? currentStyle.itemsH : cst.alignH;
+				Align aV = (cst.alignV == Align::Auto) ? currentStyle.itemsV : cst.alignV;
+
+				if (aH == Align::Stretch)
+					cw = clampSafe(availW, minW, std::min(availW, maxW));
+				else if (aH == Align::Center) cx += (availW - cw) * 0.5f;
+				else if (aH == Align::End)    cx += availW - cw;
+
+				if (aV == Align::Stretch)
+					ch = clampSafe(availH, minH, std::min(availH, maxH));
+				else if (aV == Align::Center) cy += (availH - ch) * 0.5f;
+				else if (aV == Align::End)    cy += availH - ch;
+
+				c->arrange({ cx, cy, cw, ch });
 			}
 		}
 	}
 
 	void Layout::update(float dt, bool ancestorBlocked) {
+
+		if (!styleInitialized) {
+			styleInitialized = true;
+			currentStyle = targetStyle = transitionStartStyle = resolveTargetStyle();
+			pendingTransition = false;
+			syncCssAnimations();
+		}
+
 		onPreUpdate(dt);
 
 		// --- 1) Animazioni imperative ---
@@ -137,18 +413,52 @@ namespace ZenitUI {
 			pendingTransition = true;
 		}
 
-		// --- 2) Blocchi e hover ---
+		// --- 2) Blocchi e UPDATE DEI FIGLI (Bottom-Up) ---
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
-		bool selfBlocked  = blockSubtree || (!isInteractive && blocksRaycast);
+		bool selfBlocked  = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
 
-		auto& pointer = UIContext::get().pointer;
+		// Eseguiamo i figli PRIMA di risolvere gli eventi locali. Questo garantisce il Bubbling!
+		size_t n = children.size();
+		for (size_t i = 0; i < n; ++i) children[i]->update(dt, blockSubtree);
+
+		auto& ctx = UIContext::get();
+		auto& pointer = ctx.pointer;
+
+		// --- 3) Calcolo Hover & Pressed (Bubbling Chain) ---
+		// Un nodo è Hovered se lui STESSO o uno dei suoi SOTTO-NODI è il topmostConsumer
 		isHovered = false;
-		if (!selfBlocked && rect.width > 0 && rect.height > 0) isHovered = rect.contains(pointer.pos);
+		if (!selfBlocked && rect.width > 0 && rect.height > 0) {
+			Layout* trace = ctx.topmostConsumer;
+			while (trace) {
+				if (trace == this) { isHovered = true; break; }
+				
+				// IL FIX CHIAVE:
+				// Se il nodo lungo la catena blocca gli eventi (passThrough == false),
+				// la propagazione VISIVA si ferma. Il padre non si illuminerà!
+				if (!trace->getPassThrough()) {
+					break;
+				}
+				
+				trace = trace->getParent().get();
+			}
+		}
 
+		isPressed = isHovered && pointer.down;
+
+		bool focusNow = ctx.hasFocus(this);
+		if (focusNow != isFocused) {
+			isFocused = focusNow;
+			pendingTransition = true;
+		}
+
+		handleFocusInput();
+
+		// --- 4) Cambio stato ed esecuzione Callback ---
 		UIState nextState = UIState::Idle;
-		if (isHovered) nextState = pointer.down ? UIState::Pressed : UIState::Hover;
+		if (!isEnabled)         nextState = UIState::Disabled;
+		else if (isPressed)     nextState = UIState::Pressed;
+		else if (isHovered)     nextState = UIState::Hover;
 
-		// --- 3) Cambio stato ---
 		bool stateChanged = (currentState != nextState);
 		if (stateChanged) {
 			if (nextState == UIState::Hover && onHoverEnter) onHoverEnter();
@@ -157,25 +467,36 @@ namespace ZenitUI {
 			if (nextState == UIState::Pressed && onPress) onPress();
 			else if (currentState == UIState::Pressed) {
 				if (onRelease) onRelease();
-				if (nextState == UIState::Hover && pointer.released && onClick) onClick();
+				
+				if (nextState == UIState::Hover && pointer.released && onClick) {
+					if (!ctx.clickConsumed) {
+						onClick();
+						
+						// Se non è impostato il passthrough, blocchiamo la propagazione
+						if (!passThrough_) {
+							ctx.consumeClick();
+						}
+					}
+				}
 			}
 			currentState = nextState;
 			transitionTimer = 0.0f;
 			transitionStartStyle = currentStyle;
-			targetStyle = resolveTargetStyle(currentState);
-			syncCssAnimations();          // <-- AGGIUNTO
+			targetStyle = resolveTargetStyle();
+			pendingTransition = false;
+			syncCssAnimations();
 		} else if (pendingTransition) {
-			targetStyle = resolveTargetStyle(currentState);
+			targetStyle = resolveTargetStyle();
 			pendingTransition = false;
 
 			if (transitionTimer >= 1.0f) {
 				currentStyle = targetStyle;
 				transitionStartStyle = currentStyle;
 			}
-			syncCssAnimations();          // <-- AGGIUNTO
+			syncCssAnimations();
 		}
 		
-		// --- 4) Transizione per-property ---
+		// --- 5) Transizione per-property ---
 		if (transitionTimer < 1.0f) {
 			float maxDur = targetStyle.transitionTime;
 			for (const auto& spec : targetStyle.transitions) maxDur = std::max(maxDur, spec.duration);
@@ -194,7 +515,7 @@ namespace ZenitUI {
 			}
 		}
 
-				// --- 5) Tick animazioni CSS ---
+		// --- 6) Tick animazioni CSS ---
 		for (auto& anim : activeCssAnimations) {
 			if (anim.finished) continue;
 			anim.elapsed += dt;
@@ -210,10 +531,6 @@ namespace ZenitUI {
 			activeCssAnimations.end()
 		);
 
-		// --- 6) Update figli ---
-		size_t n = children.size();
-		for (size_t i = 0; i < n; ++i) children[i]->update(dt, blockSubtree);
-
 		// --- 7) Rimozioni ---
 		for (auto it = children.begin(); it != children.end(); ) {
 			if ((*it)->wantsRemoval) { (*it)->parent.reset(); it = children.erase(it); }
@@ -224,8 +541,26 @@ namespace ZenitUI {
 	}
 
 	void Layout::draw(float parentOpacity) {
+
+		if (isPortal_) {
+			UIContext::get().framePortals.push_back(weak_from_this());
+			return;
+		}
+
 		auto renderer = UIContext::get().renderer;
 		if (!renderer) return;
+
+		if (rect.width > 0.0f && rect.height > 0.0f) {
+			Rect clip = renderer->getClipRect();
+			float m = 300.0f;
+
+			if (rect.x > clip.x + clip.width + m ||
+			    rect.x + rect.width < clip.x - m ||
+			    rect.y > clip.y + clip.height + m ||
+			    rect.y + rect.height < clip.y - m) {
+				return; 
+			}
+		}
 
 		ComputedStyle renderStyle = currentStyle;
 		for (const auto& anim : activeCssAnimations) {
@@ -233,29 +568,66 @@ namespace ZenitUI {
 			if (it == Theme::get().keyframes.end()) continue;
 			bool fin = false;
 			float localT = sampleActive(anim, fin);
-			if (fin && !anim.fillForwards) continue;  // già finita e non persiste
-			Style frame = evaluateKeyframes(it->second, localT, anim.alternate ? it->second.keyframes.size() > 0 ? TransitionFunction::Linear : TransitionFunction::Linear : TransitionFunction::Linear);
-			// ↑ semplifichiamo: usiamo sempre Linear. L'ease è nel sampleActive se vuoi.
+			if (fin && !anim.fillForwards) continue;
+			Style frame = evaluateKeyframes(it->second, localT, anim.ease);
 			overlayComputed(renderStyle, frame);
 		}
 
 		float globalOp = renderStyle.opacity * parentOpacity;
 		if (globalOp <= 0.001f) return;
 
-		Transform2D tr;
-		tr.pivot = rect.center();
-		tr.translate = { renderStyle.translateX.resolve(Metrics::viewport.x), renderStyle.translateY.resolve(Metrics::viewport.y) };
-		tr.rotationDeg = renderStyle.rotation;
-		tr.scale = renderStyle.scale;
+		Transform2D tr = currentTransform(renderStyle);
 
-		renderer->pushTransform(tr);
+		const bool identity =
+			tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
+			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
+
+		if (!identity) renderer->pushTransform(tr);
 		if (hasShader && renderer->supports(Feature::Effects)) renderer->pushEffect(customEffect);
 
-		renderSelf(globalOp, renderStyle);
-		for (auto& child : children) child->draw(globalOp);
+		bool needsClip = (renderStyle.overflow == Overflow::Hidden ||
+		                  renderStyle.overflow == Overflow::Scroll);
+		if (needsClip) renderer->pushClip(rect);
+
+		renderChrome(globalOp, renderStyle);
+		renderContent(globalOp, renderStyle);
+
+		// --- RENDERING CSS COMPLIANT (Stacking Context) ---
+		std::vector<Layout*> negZ, normalFlow, posZ;
+		for (auto& child : children) {
+			if (child->isStackingContext()) {
+				if (child->getZIndex() < 0) negZ.push_back(child.get());
+				else posZ.push_back(child.get());
+			} else {
+				normalFlow.push_back(child.get());
+			}
+		}
+
+		auto sortByZ = [](Layout* a, Layout* b) { return a->getZIndex() < b->getZIndex(); };
+		std::stable_sort(negZ.begin(), negZ.end(), sortByZ);
+		std::stable_sort(posZ.begin(), posZ.end(), sortByZ);
+
+		for (auto* child : negZ)       child->draw(globalOp);
+		for (auto* child : normalFlow) child->draw(globalOp);
+		for (auto* child : posZ)       child->draw(globalOp);
+		// ----------------------------------------------------
+
+		if (needsClip) renderer->popClip();
 
 		if (hasShader && renderer->supports(Feature::Effects)) renderer->popEffect();
-		renderer->popTransform();
+		if (!identity) renderer->popTransform();
+
+		if (!hasParent()) {
+			auto portals = UIContext::get().framePortals; 
+			for (auto& wp  : portals) {
+				auto sp = wp.lock();
+    			if (!sp) continue;
+				bool wasPortal = sp->isPortal();
+				sp->setPortal(false);
+				sp->draw(1.0f);
+				sp->setPortal(wasPortal);
+			}
+		}
 	}
 
 	void Layout::syncCssAnimations() {
@@ -296,6 +668,142 @@ namespace ZenitUI {
 				a.fillForwards = r.fillForwards;
 				a.ease         = r.ease;      // <-- AGGIUNTO
 				activeCssAnimations.push_back(std::move(a));
+			}
+		}
+	}
+
+	Layout* Layout::hitTest(Vec2 p, bool ancestorBlocked) {
+		if (ancestorBlocked || !isEnabled) return nullptr;
+
+		// Portali (invariato)
+		if (!hasParent()) {
+			for (auto it = UIContext::get().activePortals.rbegin(); it != UIContext::get().activePortals.rend(); ++it) {
+				auto sp = it->lock();
+				if (!sp) continue;
+				bool wasPortal = sp->isPortal();
+				sp->setPortal(false);
+				Layout* hit = sp->hitTest(p, false);
+				sp->setPortal(wasPortal);
+				if (hit) return hit;
+			}
+		}
+		if (isPortal_) return nullptr;
+
+		// I figli sono disegnati DOPO che il mio transform è applicato.
+		// Quindi per testarli devo trasformare p nello spazio dei figli.
+		Transform2D tr = currentTransform(currentStyle); 
+		Vec2 pChildren = applyInverseTransform(tr, p);
+
+		// Ordine z (invariato)
+		std::vector<Layout*> negZ, normalFlow, posZ;
+		for (auto& child : children) {
+			if (child->isStackingContext()) {
+				if (child->getZIndex() < 0) negZ.push_back(child.get());
+				else posZ.push_back(child.get());
+			} else {
+				normalFlow.push_back(child.get());
+			}
+		}
+		auto sortByZ = [](Layout* a, Layout* b) { return a->getZIndex() < b->getZIndex(); };
+		std::stable_sort(negZ.begin(), negZ.end(), sortByZ);
+		std::stable_sort(posZ.begin(), posZ.end(), sortByZ);
+
+		for (auto it = posZ.rbegin(); it != posZ.rend(); ++it)
+			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+		for (auto it = normalFlow.rbegin(); it != normalFlow.rend(); ++it)
+			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+		for (auto it = negZ.rbegin(); it != negZ.rend(); ++it)
+			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+
+		// Self test: p (in coordinate del parent) contro il mio rect
+		if (rect.width > 0 && rect.height > 0 &&
+			rect.contains(p) &&
+			(isInteractive || blocksRaycast)) {
+			return this;
+		}
+		return nullptr;
+	}
+
+	static void collectFocusables(Layout* node, std::vector<Layout*>& out) {
+		if (node->isFocusable()) out.push_back(node);
+		for (auto& c : node->children) collectFocusables(c.get(), out);
+	}
+
+	static void notifyFocusAncestors(Layout* node) {
+		if (!node) return;
+		auto parent = node->getParent();
+		while (parent) {
+			parent->notifyDescendantFocused(node);
+			parent = parent->getParent();
+		}
+	}
+
+	void Layout::updateTree(float dt) {
+		auto& ctx = UIContext::get();
+
+		// 1) Hit-test topmost
+		ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+
+		// 2) Focus management
+		// 2a) Click con mouse → cambia focus
+		if (ctx.pointer.pressed) {
+			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable()) {
+				ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+			} else {
+				ctx.releaseFocus();
+			}
+		}
+
+		// 2b) Tab navigation
+		for (int k : ctx.inputEvents.keys) {
+			if (k != Key::Tab) continue;
+
+			// Trova lo scope: risali dal nodo focusato fino al primo focus-scope.
+			// Se nessuno è focusato, o nessuno scope trovato, usa this (root).
+			Layout* scope = this;
+			{
+				auto focused = ctx.focusedNode.lock();
+				if (focused) {
+					Layout* n = focused.get();
+					while (n) {
+						if (n->isFocusScope()) { scope = n; break; }
+						n = n->getParent().get();
+					}
+				}
+			}
+
+			std::vector<Layout*> focusables;
+			collectFocusables(scope, focusables);
+			if (focusables.empty()) break;
+
+			auto cur = ctx.focusedNode.lock();
+			Layout* curPtr = cur.get();
+
+			int idx = -1;
+			for (size_t i = 0; i < focusables.size(); ++i)
+				if (focusables[i] == curPtr) { idx = (int)i; break; }
+
+			int next = 0;
+			if (idx >= 0) {
+				int n = (int)focusables.size();
+				next = ctx.shiftHeld ? (idx - 1 + n) % n
+				                     : (idx + 1) % n;
+			}
+			ctx.requestFocus(focusables[next]->shared_from_this());
+			notifyFocusAncestors(ctx.focusedNode.lock().get());
+		}
+
+		// 3) Update normale (con defer automatico)
+		update(dt, false);
+	}
+
+	void Layout::handleFocusInput() {
+		if (!isFocused || !isEnabled || !keyboardActivates_) return;
+
+		auto& ev = UIContext::get().inputEvents;
+		for (int k : ev.keys) {
+			if (k == Key::Enter || k == Key::Space) {
+				if (onClick) onClick();
 			}
 		}
 	}

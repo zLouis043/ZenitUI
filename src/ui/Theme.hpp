@@ -9,7 +9,9 @@ namespace ZenitUI {
 
 	class Theme {
 	public:
+	std::unordered_map<std::string, StyleSet> tags; 
 		std::unordered_map<std::string, StyleSet> classes;
+		std::unordered_map<std::string, StyleSet> ids;
 		std::unordered_map<std::string, KeyframeAnimation> keyframes;
 
 		static Theme& get() {
@@ -21,6 +23,14 @@ namespace ZenitUI {
 			classes[name] = set;
 			return *this;
 		}
+		Theme& addTag(const std::string& name, const StyleSet& set) {
+			tags[name] = set;
+			return *this;
+		}
+		Theme& addId(const std::string& name, const StyleSet& set) {
+			ids[name] = set;
+			return *this;
+		}
 		Theme& addKeyframes(const KeyframeAnimation& anim) {
 			keyframes[anim.name] = anim;
 			return *this;
@@ -28,6 +38,8 @@ namespace ZenitUI {
 		void clear() {
 			classes.clear();
 			keyframes.clear();
+			tags.clear();
+			ids.clear();
 		}
 	};
 }

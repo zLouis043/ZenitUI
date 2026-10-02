@@ -5,11 +5,91 @@
   --danger-hi:  #E62937;
 }
 
+/* ============================================================
+   Tipi (selettori universali per widget)
+   ============================================================ */
+
+Toggle {
+  background: #505050;
+  radius: 8px;
+  transition: background 0.15s linear;
+}
+Toggle:hover  { background: #606060; }
+Toggle:focus  { border-color: #FDF900; border-width: 2px; }
+Toggle:disabled { background: #3A3A40; opacity: 0.6; }
+
+Checkbox {
+  background: #505050;
+  radius: 6px;
+  transition: background 0.15s linear;
+}
+Checkbox:hover  { background: #606060; }
+Checkbox:focus  { border-color: #FDF900; border-width: 2px; }
+Checkbox:disabled { background: #3A3A40; opacity: 0.6; }
+
+Slider {
+  color: #3296FFFF;
+}
+Slider:focus { border-color: #FDF900; border-width: 2px; }
+
+TextInput {
+  background: #1A1A20FF;
+  color: #FFFFFF;
+  radius: 6px;
+  padding: 1.2vh 1.5vw;
+  border-color: #505060FF;
+  border-width: 2px;
+  font-size: 3vh;
+  transition: border-color 0.2s ease-out-quad;
+}
+TextInput:focus { border-color: #FDF900; }
+
+ProgressBar {
+  background: #2A2A32FF;
+  color: #3296FFFF;
+  radius: 6px;
+}
+
+ScrollView {
+  overflow: scroll;
+  background: #1A1A20FF;
+  radius: 8px;
+  border-color: #505060FF;
+  border-width: 2px;
+  padding: 8px;
+}
+
+Panel {
+  background: #232328FF;
+  radius: 8px;
+}
+
+Text {
+  color: #FFFFFF;
+  font-size: 3vh;
+}
+
+/* ============================================================
+   Classi (varianti semantiche)
+   ============================================================ */
+
 .settings-panel {
+  width: 100%;
+  max-width: 80vw;
   background: #232328FF;
   radius: 12px;
   padding: 4vh 3vw;
   gap: 3vh;
+  border-color: #FDF900;
+  border-width: 2px;
+}
+
+.dialog-overlay {
+  width: 100%;
+  height: 100%;
+  items-h: center;
+  items-v: center;
+  background: transparent;
 }
 
 .title-text  { color: #FDF900; font-size: 5vh; letter-spacing: 3px; margin: 0 0 2vh 0; }
@@ -22,33 +102,174 @@
   justify: space-between;
 }
 
+.button-row {
+  width: 100%;
+  height: auto;
+  items-v: center;
+  gap: 0;
+  justify: start;
+}
+
+.spacer-grow { grow: 1; }
+
 .btn-primary {
   background: var(--primary);
   radius: 8px;
-  padding: 1.5vh 4vw;
+  padding: 1.5vh 2vw;
+  min-width: 80px;
+  margin: 0 4px;
   transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
 }
 .btn-primary:hover   { background: var(--primary-hi); scale: 1.15; }
 .btn-primary:pressed { background: #505050; scale: 0.90; }
+.btn-primary:focus   { border-color: #FDF900; border-width: 2px; }
+.btn-primary:disabled { background: #000000; color: #808080FF; opacity: 0.4; }
 
 .btn-danger {
   background: var(--danger);
   radius: 8px;
-  padding: 1.5vh 4vw;
+  padding: 1.5vh 2vw; 
+  min-width: 80px;
+  margin: 0 4px;
   transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
 }
 .btn-danger:hover   { background: var(--danger-hi); scale: 1.15; }
 .btn-danger:pressed { background: #505050; scale: 0.90; }
+.btn-danger:focus   { border-color: #FDF900; border-width: 2px; }
+.btn-danger:disabled { background: #3A2A2CFF; color: #808080FF; opacity: 0.7; }
 
-.toggle { background: #505050; radius: 8px; transition: background 0.15s linear; }
-.toggle:hover { background: #606060; }
+.scroll-item {
+  width: 100%;
+  height: auto;
+  background: #2E2E3AFF;
+  radius: 6px;
+  padding: 2vh 2vw;
+  margin: 0 0 8px 0;
+  color: #FFFFFF;
+  font-size: 3vh;
+}
 
+/* ============================================================
+   Keyframes
+   ============================================================ */
 @keyframes pulse {
   0%   { scale: 1.00; }
   50%  { scale: 1.18; }
   100% { scale: 1.00; }
 }
+.btn-pulse { animation: pulse 1.2s ease-in-out infinite; }
 
-.btn-pulse {
-  animation: pulse 1.2s ease-in-out infinite;
+/* ============================================================
+   Classi per la Demo Window
+   ============================================================ */
+
+.demo-overlay {
+  width: 100%; height: 100%;
+  items-h: center; items-v: center;
+  background: #000000B2;
+}
+
+.demo-panel {
+  width: 90vw; height: 90vh;
+  background: #1A1A20; radius: 12px;
+  border-width: 2px; border-color: var(--primary);
+  padding: 2vh 2vw; gap: 2vw;
+}
+
+.demo-sidebar {
+  width: auto; height: 100%;
+  shrink: 0;
+  gap: 1vh;
+}
+
+.demo-content {
+  grow : 1; height: 100%;
+  background: #232328; radius: 8px;
+  padding: 3vh; overflow: scroll;
+  gap: 4vh;
+  border-width: 1px; border-color: #3A3A40;
+}
+
+.card {
+  width: 100%; height: auto;
+  background: #2A2A32; radius: 8px;
+  padding: 3vh; gap: 2vh;
+  border-width: 1px; border-color: #3A3A40;
+}
+
+.card-title { color: var(--primary); font-size: 3.5vh; margin: 0 0 1vh 0; }
+.card-desc  { color: #A0A0A0; font-size: 2.5vh; margin: 0 0 2vh 0; }
+
+.tab-btn {
+  background: transparent; justify: start;
+  padding: 2vh; radius: 6px;
+  transition: background 0.15s linear;
+}
+.tab-btn:hover { background: #3296FF40; }
+.tab-btn:pressed { background: #3296FF80; }
+
+/* Test per il Bubbling */
+.bubbling-box {
+  width: 100%; height: auto;
+  background: #3A3A45; padding: 5vh; radius: 8px;
+  items-h: center; items-v: center; gap: 3vh;
+  transition: background 0.1s linear, border-color 0.1s linear;
+}
+.bubbling-box:hover { background: #4A4A55; }
+.bubbling-box:pressed { background: #5A5A65; border-color: #FDF900; border-width: 2px; }
+
+/* ============================================================
+   Animazioni extra
+   ============================================================ */
+
+@keyframes breathe {
+  0%   { opacity: 0.6; scale: 0.98; }
+  50%  { opacity: 1.0; scale: 1.04; }
+  100% { opacity: 0.6; scale: 0.98; }
+}
+.breathing-box {
+  width: 100%; height: auto;
+  background: #3296FF80;
+  padding: 4vh; radius: 8px;
+  items-h: center;
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+@keyframes slideIn {
+  0%   { translate-x: -20vw; opacity: 0.0; }
+  100% { translate-x: 0vw;   opacity: 1.0; }
+}
+.slide-in-box {
+  width: 100%; height: auto;
+  background: #4A4A55;
+  padding: 4vh; radius: 8px;
+  items-h: center;
+  animation: slideIn 0.6s ease-out-back;
+}
+
+.hover-box {
+  width: 100%; height: auto;
+  background: #3A3A45;
+  padding: 4vh; radius: 8px;
+  items-h: center;
+  transition: background 0.25s ease-out-quad, scale 0.15s ease-out-back;
+}
+.hover-box:hover {
+  background: #3296FF;
+  scale: 1.05;
+}
+
+.side-panel {
+  width: 50%;        /* era: width auto + grow 1 */
+  background: #2A2A32;
+  radius: 8px;
+  padding: 3vh;
+  gap: 2vh;
+  border-color: #3A3A40;
+  border-width: 1px;
+  /* rimuovi grow: 1 */
+}
+
+.setting-label {
+  shrink: 0;
 }
