@@ -176,6 +176,67 @@ namespace ZenitUI {
 		float gapX = currentStyle.gap.resolve(inner.width);
 		float gapY = currentStyle.gap.resolve(inner.height);
 
+		// ---- Pre-pass: figli absolute (fuori dal flow) ----
+		// Vengono posizionati rispetto a `inner` con le regole CSS top/left/right/bottom.
+		auto arrangeAbsolute = [](Layout* c, const ComputedStyle& cst, const Rect& in) {
+			float ml = cst.margin.left.resolve(in.width);
+			float mr = cst.margin.right.resolve(in.width);
+			float mt = cst.margin.top.resolve(in.height);
+			float mb = cst.margin.bottom.resolve(in.height);
+
+			bool hasL = !cst.left.isAuto();
+			bool hasR = !cst.right.isAuto();
+			bool hasT = !cst.top.isAuto();
+			bool hasB = !cst.bottom.isAuto();
+
+			float w = c->measuredSize.x;
+			float h = c->measuredSize.y;
+			float x, y;
+
+			// ---- orizzontale ----
+			if (hasL && hasR && cst.width.isAuto()) {
+				float L = cst.left.resolve(in.width);
+				float R = cst.right.resolve(in.width);
+				w = std::max(0.0f, in.width - L - R - ml - mr);
+				x = in.x + L + ml;
+			} else if (hasL) {
+				x = in.x + cst.left.resolve(in.width) + ml;
+			} else if (hasR) {
+				x = in.x + in.width - w - cst.right.resolve(in.width) - mr;
+			} else {
+				x = in.x + ml;
+			}
+
+			// ---- verticale ----
+			if (hasT && hasB && cst.height.isAuto()) {
+				float T = cst.top.resolve(in.height);
+				float B = cst.bottom.resolve(in.height);
+				h = std::max(0.0f, in.height - T - B - mt - mb);
+				y = in.y + T + mt;
+			} else if (hasT) {
+				y = in.y + cst.top.resolve(in.height) + mt;
+			} else if (hasB) {
+				y = in.y + in.height - h - cst.bottom.resolve(in.height) - mb;
+			} else {
+				y = in.y + mt;
+			}
+
+			c->arrange({ x, y, w, h });
+		};
+
+		for (auto& c : children) {
+			const auto& cst = c->getStyle();
+			if (c->isPortal()) {
+				// I portal li arrangia chi li gestisce (es. Dropdown::arrange);
+				// qui diamo una posizione di default per compatibilità.
+				c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
+				continue;
+			}
+			if (cst.position == Position::Absolute) {
+				arrangeAbsolute(c.get(), cst, inner);
+			}
+		}
+
 		// Clamp "safe": evita __glibcxx_assert quando lo > hi
 		// (su MinGW-GCC 15 questo chiama abort()). Quando lo > hi prevale hi,
 		// cioè lo spazio disponibile vince sul min-width/min-height dichiarato.
@@ -222,10 +283,7 @@ namespace ZenitUI {
 
 			for (auto& c : children) {
 				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) {
-					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
-					continue;
-				}
+				if (cst.position == Position::Absolute || c->isPortal()) continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);
@@ -299,10 +357,7 @@ namespace ZenitUI {
 
 			for (auto& c : children) {
 				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) {
-					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
-					continue;
-				}
+				if (cst.position == Position::Absolute || c->isPortal()) continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);
@@ -344,10 +399,7 @@ namespace ZenitUI {
 		} else if (type == LayoutType::Stack) {
 			for (auto& c : children) {
 				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) {
-					c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
-					continue;
-				}
+				if (cst.position == Position::Absolute || c->isPortal()) continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);

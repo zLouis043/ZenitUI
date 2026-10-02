@@ -375,7 +375,7 @@ namespace ZenitUI::UI {
 			r->popTarget();
 
 			Transform2D tr; tr.pivot = rect.center();
-			tr.translate = { currentStyle.translateX.resolve(Metrics::viewport.x), currentStyle.translateY.resolve(Metrics::viewport.y) };
+			tr.translate = { currentStyle.translateX.resolveSelf(rect.width), currentStyle.translateY.resolveSelf(rect.height) };
 			tr.rotationDeg = currentStyle.rotation; tr.scale = currentStyle.scale;
 
 			r->pushTransform(tr);
@@ -1074,6 +1074,107 @@ namespace ZenitUI::UI {
 			if (button->children.empty()) return;
 			auto t = std::dynamic_pointer_cast<Text>(button->children.front());
 			if (t) t->setText(options[selected]);
+		}
+	};
+
+	// ---------- Tooltip ----------
+	class Tooltip : public TLayout<Tooltip, Panel> {
+	public:
+		Tooltip(std::string text)
+			: TLayout<Tooltip, Panel>(), text_(std::move(text)) {}
+
+		// Aggancia un tooltip a un widget. showDelay in secondi (default 0.4).
+		static std::shared_ptr<Tooltip> attach(std::shared_ptr<Layout> owner,
+												std::string text,
+												float showDelay = 0.4f) {
+			auto tip = Tooltip::create(std::move(text));
+			tip->anchor_    = owner.get();
+			tip->showDelay_ = showDelay;
+
+			auto prevEnter = owner->onHoverEnter;
+			auto prevExit  = owner->onHoverExit;
+
+			owner->onHoverEnter = [tip, prevEnter]() {
+				if (prevEnter) prevEnter();
+				tip->show();
+			};
+			owner->onHoverExit = [tip, prevExit]() {
+				if (prevExit) prevExit();
+				tip->hide();
+			};
+
+			owner->addChild(tip);
+			return tip;
+		}
+
+		void setAnchor(Layout* a)    { anchor_ = a; }
+		void setShowDelay(float s)   { showDelay_ = s; }
+
+		void show() { hovering_ = true; timer_ = 0.0f; }
+		void hide() {
+			hovering_ = false;
+			visible_  = false;
+			timer_    = 0.0f;
+			setTargetOpacity(0.0f);
+		}
+
+		// Non usiamo lo space del parent: ci arrangiamo da soli in onPreUpdate
+		// basandoci sull'anchor, che è aggiornato solo DOPO il nostro arrange.
+		void arrange(Rect) override {}
+
+	protected:
+		void onBuild() override {
+			setStyleTag("Tooltip");
+			setPortal(true);         // scappa al clipping dei parent
+			setInteractive(false);
+			setBlocksRaycast(false);
+			inlineBase.position = Position::Absolute;
+			inlineBase.opacity  = 0.0f;
+
+			auto label = Label(text_);
+			label->getInlineBase().fontSize = VH(2.4f);
+			addChild(label);
+		}
+
+		void onPreUpdate(float dt) override {
+			// Delay + fade-in
+			if (hovering_ && !visible_) {
+				timer_ += dt;
+				if (timer_ >= showDelay_) {
+					visible_ = true;
+					setTargetOpacity(1.0f);
+				}
+			}
+
+			// Posizionamento rispetto all'anchor
+			if (anchor_) {
+				Rect a  = anchor_->getRect();
+				Vec2 ms = getMeasuredSize();
+				if (ms.x > 0.0f && ms.y > 0.0f) {
+					rect = {
+						a.x + a.width  * 0.5f - ms.x * 0.5f,
+						a.y - ms.y - 6.0f,
+						ms.x,
+						ms.y
+					};
+					arrangeInto(rect);
+				}
+			}
+		}
+
+	private:
+		std::string text_;
+		Layout* anchor_{nullptr};
+		float   showDelay_{0.4f};
+		float   timer_{0.0f};
+		bool    hovering_{false};
+		bool    visible_{false};
+
+		void setTargetOpacity(float op) {
+			float old = inlineBase.opacity.get_or(0.0f);
+			if (inlineBase.opacity.is_set && old == op) return;
+			inlineBase.opacity = op;
+			beginTransition();
 		}
 	};
 }
