@@ -265,6 +265,18 @@ namespace ZenitUI {
 
 		std::unordered_map<std::string, AnimState> activeAnimations;
 		std::vector<ActiveCssAnimation> activeCssAnimations;
+		std::unordered_map<std::string, std::vector<ActiveCssAnimation>> activePartAnimations;
+
+		struct PartTransition {
+			bool  initialized{ false };
+			Style target;
+			Style current;
+			double startTime{ 0.0 };
+			float duration{ 0.0f };
+			TransitionFunction ease{ TransitionFunction::Linear };
+			bool  active{ false };
+		};
+		std::unordered_map<std::string, PartTransition> partTransitions;
 
 		std::weak_ptr<Layout> parent;
 
@@ -272,6 +284,8 @@ namespace ZenitUI {
 			pendingTransition = true;
 			for (auto& c : children) c->markInheritanceDirty();
 		}
+
+		Style partStyle(const std::string& partName);
 
 		// Ritorna la size intrinseca del widget (es. dimensione del testo).
 		// Chiamato in fase di measure, prima di arrangiare i figli.

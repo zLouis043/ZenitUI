@@ -266,6 +266,7 @@ struct StyleSheet {
 
     struct Rule {
         std::string name;
+        std::string part;
         SelectorKind kind{ SelectorKind::Class };
         UIState state{ UIState::Idle };
         bool isFocus{ false };
@@ -486,38 +487,68 @@ private:
         }
 
         for (auto& sel : selectors) {
-			std::string s;
-			for (char c : sel) if (!std::isspace((unsigned char)c)) s.push_back(c);
-			if (s.empty()) continue;
+            std::string s;
+            for (char c : sel) if (!std::isspace((unsigned char)c)) s.push_back(c);
+            if (s.empty()) continue;
 
-			StyleSheet::Rule rule;
-			rule.line = ruleLine;
-			rule.col = ruleCol;
+            StyleSheet::Rule rule;
+            rule.line = ruleLine;
+            rule.col = ruleCol;
 
-			size_t colon = s.find(':');
-			std::string base  = (colon == std::string::npos) ? s : s.substr(0, colon);
-			std::string state = (colon == std::string::npos) ? "" : s.substr(colon + 1);
+            std::string base;
+            std::string state;
 
-			if (!base.empty() && base[0] == '.') {
-				rule.kind = StyleSheet::SelectorKind::Class;
-				rule.name = base.substr(1);
-			} else if (!base.empty() && base[0] == '#') {
-				rule.kind = StyleSheet::SelectorKind::Id;
-				rule.name = base.substr(1);
-			} else {
-				rule.kind = StyleSheet::SelectorKind::Tag;
-				rule.name = base;
-			}
+            // Prima cerco "::" (parts). Solo se non c'è, cerco ":" (state).
+            size_t dcolon = s.find("::");
+            if (dcolon != std::string::npos) {
+                // Sintassi "Tag:state::part"  (state sul widget, come nel CSS reale)
+                // o       "Tag::part:state"   (state sul part)
+                std::string left  = s.substr(0, dcolon);
+                std::string right = s.substr(dcolon + 2);
 
-			if      (state == "hover")    rule.state = UIState::Hover;
-			else if (state == "pressed")  rule.state = UIState::Pressed;
-			else if (state == "disabled") rule.state = UIState::Disabled;
-			else if (state == "focus")    { rule.state = UIState::Idle; rule.isFocus = true; }
-			else                          rule.state = UIState::Idle;
+                // Cerca lo state nella parte sinistra (prima di ::)
+                size_t colonL = left.find(':');
+                if (colonL != std::string::npos) {
+                    base  = left.substr(0, colonL);
+                    state = left.substr(colonL + 1);
+                } else {
+                    base = left;
+                }
 
-			rule.decls = decls;
-			sheet.rules.push_back(std::move(rule));
-		}
+                // Cerca part e (fallback) state nella parte destra
+                size_t colonR = right.find(':');
+                if (colonR != std::string::npos) {
+                    rule.part = right.substr(0, colonR);
+                    if (state.empty()) state = right.substr(colonR + 1);
+                } else {
+                    rule.part = right;
+                }
+            } else {
+                size_t colon = s.find(':');
+                base  = (colon == std::string::npos) ? s : s.substr(0, colon);
+                state = (colon == std::string::npos) ? "" : s.substr(colon + 1);
+            }
+
+            if (!base.empty() && base[0] == '.') {
+                rule.kind = StyleSheet::SelectorKind::Class;
+                rule.name = base.substr(1);
+            } else if (!base.empty() && base[0] == '#') {
+                rule.kind = StyleSheet::SelectorKind::Id;
+                rule.name = base.substr(1);
+            } else {
+                rule.kind = StyleSheet::SelectorKind::Tag;
+                rule.name = base;
+            }
+
+            if      (state == "hover")    rule.state = UIState::Hover;
+            else if (state == "pressed")  rule.state = UIState::Pressed;
+            else if (state == "disabled") rule.state = UIState::Disabled;
+            else if (state == "focus")    { rule.state = UIState::Idle; rule.isFocus = true; }
+            else                          rule.state = UIState::Idle;
+
+            rule.decls = decls;
+            sheet.rules.push_back(std::move(rule));
+        }
     }
 };
 
@@ -593,14 +624,18 @@ inline void applyStyleSheet(const StyleSheet& sheet, const std::string& fileName
             setPtr = &theme.ids[rule.name];
             break;
         }
+        
         StyleSet& set = *setPtr;
 
+        // Se la regola è un ::part, il target è dentro set.parts[part]
+        StyleSet& effectiveSet = rule.part.empty() ? set : set.parts[rule.part];
+
         Style& target =
-            rule.isFocus                          ? set.focus    :
-            (rule.state == UIState::Hover)        ? set.hover    :
-            (rule.state == UIState::Pressed)      ? set.pressed  :
-            (rule.state == UIState::Disabled)     ? set.disabled :
-                                                    set.base;
+            rule.isFocus                          ? effectiveSet.focus    :
+            (rule.state == UIState::Hover)        ? effectiveSet.hover    :
+            (rule.state == UIState::Pressed)      ? effectiveSet.pressed  :
+            (rule.state == UIState::Disabled)     ? effectiveSet.disabled :
+                                                    effectiveSet.base;
 
         for (auto& d : rule.decls) {
             ParseLoc loc{ fileName, d.line, d.col };

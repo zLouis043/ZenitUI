@@ -1,72 +1,296 @@
 #include "Layout.hpp"
 
-namespace ZenitUI {
+namespace ZenitUI
+{
 
-	ComputedStyle Layout::resolveTargetStyle() {
-		auto& theme = Theme::get();
+	ComputedStyle Layout::resolveTargetStyle()
+	{
+		auto &theme = Theme::get();
 
-		std::vector<const StyleSet*> sets;
-		if (!styleTag.empty()) {
+		std::vector<const StyleSet *> sets;
+		if (!styleTag.empty())
+		{
 			auto it = theme.tags.find(styleTag);
-			if (it != theme.tags.end()) sets.push_back(&it->second);
+			if (it != theme.tags.end())
+				sets.push_back(&it->second);
 		}
-		for (const auto& cls : styleClasses) {
+		for (const auto &cls : styleClasses)
+		{
 			auto it = theme.classes.find(cls);
-			if (it != theme.classes.end()) sets.push_back(&it->second);
+			if (it != theme.classes.end())
+				sets.push_back(&it->second);
 		}
-		if (!nodeId.empty()) {
+		if (!nodeId.empty())
+		{
 			auto it = theme.ids.find(nodeId);
-			if (it != theme.ids.end()) sets.push_back(&it->second);
+			if (it != theme.ids.end())
+				sets.push_back(&it->second);
 		}
 
 		Style finalStyle;
-		for (auto* s : sets) finalStyle.overlay(s->base);
+		for (auto *s : sets)
+			finalStyle.overlay(s->base);
 		finalStyle.overlay(inlineBase);
 
-		if (!isEnabled) {
-			for (auto* s : sets) finalStyle.overlay(s->disabled);
+		if (!isEnabled)
+		{
+			for (auto *s : sets)
+				finalStyle.overlay(s->disabled);
 			finalStyle.overlay(inlineDisabled);
-		} else {
-			if (isHovered || isPressed) {
-				for (auto* s : sets) finalStyle.overlay(s->hover);
+		}
+		else
+		{
+			if (isHovered || isPressed)
+			{
+				for (auto *s : sets)
+					finalStyle.overlay(s->hover);
 				finalStyle.overlay(inlineHover);
 			}
-			if (isPressed) {
-				for (auto* s : sets) finalStyle.overlay(s->pressed);
+			if (isPressed)
+			{
+				for (auto *s : sets)
+					finalStyle.overlay(s->pressed);
 				finalStyle.overlay(inlinePressed);
 			}
-			if (isFocused) {
-				for (auto* s : sets) finalStyle.overlay(s->focus);
+			if (isFocused)
+			{
+				for (auto *s : sets)
+					finalStyle.overlay(s->focus);
 				finalStyle.overlay(inlineFocus);
 			}
 		}
 
-		const ComputedStyle* parentStyle = nullptr;
-		if (auto p = getParent()) parentStyle = &p->currentStyle;
+		const ComputedStyle *parentStyle = nullptr;
+		if (auto p = getParent())
+			parentStyle = &p->currentStyle;
 
 		return ComputedStyle::from(finalStyle, parentStyle, &theme.root.base);
 	}
 
-	void Layout::playAnimation(const std::string& name, bool playReverse) {
+	Style Layout::partStyle(const std::string &partName)
+	{
+		auto &theme = Theme::get();
+		Style target; // era "Style result;" — ora è il target non interpolato
+
+		auto overlayPart = [&](const StyleSet &container)
+		{
+			auto it = container.parts.find(partName);
+			if (it == container.parts.end())
+				return;
+			const StyleSet &ps = it->second;
+
+			target.overlay(ps.base);
+			if (!isEnabled)
+			{
+				target.overlay(ps.disabled);
+			}
+			else
+			{
+				if (isHovered || isPressed)
+					target.overlay(ps.hover);
+				if (isPressed)
+					target.overlay(ps.pressed);
+				if (isFocused)
+					target.overlay(ps.focus);
+			}
+		};
+
+		if (!styleTag.empty())
+		{
+			auto it = theme.tags.find(styleTag);
+			if (it != theme.tags.end())
+				overlayPart(it->second);
+		}
+		for (const auto &cls : styleClasses)
+		{
+			auto it = theme.classes.find(cls);
+			if (it != theme.classes.end())
+				overlayPart(it->second);
+		}
+		if (!nodeId.empty())
+		{
+			auto it = theme.ids.find(nodeId);
+			if (it != theme.ids.end())
+				overlayPart(it->second);
+		}
+
+		// ---- Transizione di proprietà sul part ----
+		double now = UIContext::get().time;
+		auto &st = partTransitions[partName];
+
+		if (!st.initialized)
+		{
+			st.target = target;
+			st.current = target;
+			st.active = false;
+			st.initialized = true;
+		}
+		else if (stylesDiffer(target, st.target))
+		{
+			// Congela il valore interpolato attuale come nuovo "start"
+			float tp = 1.0f;
+			if (st.active && st.duration > 0.001f)
+			{
+				tp = (float)std::clamp((now - st.startTime) / st.duration, 0.0, 1.0);
+			}
+			st.current = lerpStyleParts(st.current, st.target, getRatio(tp, st.ease));
+
+			st.target = target;
+			st.startTime = now;
+
+			float maxDur = 0.0f;
+			TransitionFunction ease = TransitionFunction::Linear;
+			if (target.transitions.is_set)
+			{
+				for (const auto &spec : target.transitions.value)
+				{
+					if (spec.duration > maxDur)
+					{
+						maxDur = spec.duration;
+						ease = spec.ease;
+					}
+				}
+			}
+			st.duration = maxDur;
+			st.ease = ease;
+			st.active = (maxDur > 0.001f);
+		}
+
+		float partT = 1.0f;
+		if (st.active)
+		{
+			partT = (float)std::clamp((now - st.startTime) / st.duration, 0.0, 1.0);
+			if (partT >= 1.0f)
+			{
+				st.active = false;
+				partT = 1.0f;
+			}
+		}
+
+		Style result = lerpStyleParts(st.current, st.target, getRatio(partT, st.ease));
+
+		// ---- Sync + tick + overlay delle animazioni CSS (invariato) ----
+		auto &anims = activePartAnimations[partName];
+		const auto &refs = result.animations.is_set
+							   ? result.animations.value
+							   : std::vector<AnimationRef>{};
+
+		anims.erase(
+			std::remove_if(anims.begin(), anims.end(),
+						   [&](const ActiveCssAnimation &a)
+						   {
+							   for (const auto &r : refs)
+								   if (r.name == a.name)
+									   return false;
+							   return true;
+						   }),
+			anims.end());
+
+		// Sync: aggiungi/aggiorna
+		for (const auto &r : refs)
+		{
+			bool found = false;
+			for (auto &a : anims)
+			{
+				if (a.name == r.name)
+				{
+					a.duration = r.duration;
+					a.delay = r.delay;
+					a.iterations = r.iterations;
+					a.alternate = r.alternate;
+					a.fillForwards = r.fillForwards;
+					a.ease = r.ease;
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+			{
+				ActiveCssAnimation a;
+				a.name = r.name;
+				a.startTime = now; // <-- start "assoluto"
+				a.duration = r.duration;
+				a.delay = r.delay;
+				a.iterations = r.iterations;
+				a.alternate = r.alternate;
+				a.fillForwards = r.fillForwards;
+				a.ease = r.ease;
+				anims.push_back(std::move(a));
+			}
+		}
+
+		// Tick: ricalcola elapsed da startTime, poi delega a sampleActive
+		for (auto &anim : anims)
+		{
+			if (anim.finished)
+				continue;
+			anim.elapsed = (float)(now - anim.startTime);
+			auto it = theme.keyframes.find(anim.name);
+			if (it == theme.keyframes.end())
+			{
+				anim.finished = true;
+				continue;
+			}
+			bool fin = false;
+			(void)sampleActive(anim, fin);
+			if (fin)
+				anim.finished = true;
+		}
+
+		anims.erase(
+			std::remove_if(anims.begin(), anims.end(),
+						   [](const ActiveCssAnimation &a)
+						   { return a.finished && !a.fillForwards; }),
+			anims.end());
+
+		for (const auto &anim : anims)
+		{
+			auto it = theme.keyframes.find(anim.name);
+			if (it == theme.keyframes.end())
+				continue;
+			bool fin = false;
+			float localT = sampleActive(anim, fin);
+			if (fin && !anim.fillForwards)
+				continue;
+			Style frame = evaluateKeyframes(it->second, localT, anim.ease);
+			result.overlay(frame);
+		}
+
+		return result;
+	}
+
+	void Layout::playAnimation(const std::string &name, bool playReverse)
+	{
 		auto it = activeAnimations.find(name);
-		if (it == activeAnimations.end()) return;
-		auto& state = it->second;
+		if (it == activeAnimations.end())
+			return;
+		auto &state = it->second;
 		state.reverse = playReverse;
 		state.playing = true;
-		if (!state.reverse && state.elapsed >= state.anim->duration) state.elapsed = 0.0f;
-		else if (state.reverse && state.elapsed <= 0.0f) state.elapsed = state.anim->duration;
+		if (!state.reverse && state.elapsed >= state.anim->duration)
+			state.elapsed = 0.0f;
+		else if (state.reverse && state.elapsed <= 0.0f)
+			state.elapsed = state.anim->duration;
 		state.delayElapsed = state.anim->delay;
 	}
 
-	bool Layout::hasActiveAnimations() const {
-		for (const auto& [n, s] : activeAnimations) if (s.playing) return true;
-		if (!activeCssAnimations.empty()) return true;
-		for (const auto& c : children) if (c->hasActiveAnimations()) return true;
+	bool Layout::hasActiveAnimations() const
+	{
+		for (const auto &[n, s] : activeAnimations)
+			if (s.playing)
+				return true;
+		if (!activeCssAnimations.empty())
+			return true;
+		for (const auto &c : children)
+			if (c->hasActiveAnimations())
+				return true;
 		return false;
 	}
 
-	Vec2 Layout::measure(float parent_w, float parent_h) {
-		if (!styleInitialized) {
+	Vec2 Layout::measure(float parent_w, float parent_h)
+	{
+		if (!styleInitialized)
+		{
 			styleInitialized = true;
 			currentStyle = targetStyle = transitionStartStyle = resolveTargetStyle();
 			pendingTransition = false;
@@ -86,14 +310,17 @@ namespace ZenitUI {
 		float innerH = std::max(0.0f, availH - pt - pb);
 
 		// Se abbiamo lo scroll, togliamo i limiti di misurazione sull'asse principale
-		if (calcStyle.overflow == Overflow::Scroll) {
-			if (type == LayoutType::Vertical)   innerH = 1e9f;
-			if (type == LayoutType::Horizontal) innerW = 1e9f;
+		if (calcStyle.overflow == Overflow::Scroll)
+		{
+			if (type == LayoutType::Vertical)
+				innerH = 1e9f;
+			if (type == LayoutType::Horizontal)
+				innerW = 1e9f;
 		}
 
 		// --- Misurazione Intrinseca del Nodo (es. Testo) ---
 		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
-		
+
 		float gapX = calcStyle.gap.resolve(innerW);
 		float gapY = calcStyle.gap.resolve(innerH);
 
@@ -102,11 +329,13 @@ namespace ZenitUI {
 		int visibleChildren = 0;
 
 		// --- Misura tutti i figli ---
-		for (auto& c : children) {
+		for (auto &c : children)
+		{
 			Vec2 cs = c->measure(innerW, innerH);
-			if (c->getStyle().position == Position::Absolute || c->isPortal()) continue;
+			if (c->getStyle().position == Position::Absolute || c->isPortal())
+				continue;
 
-			const auto& cst = c->getStyle();
+			const auto &cst = c->getStyle();
 			float ml = cst.margin.left.resolve(innerW);
 			float mr = cst.margin.right.resolve(innerW);
 			float mt = cst.margin.top.resolve(innerH);
@@ -115,13 +344,18 @@ namespace ZenitUI {
 			float childTotalW = cs.x + ml + mr;
 			float childTotalH = cs.y + mt + mb;
 
-			if (type == LayoutType::Horizontal) {
+			if (type == LayoutType::Horizontal)
+			{
 				totalMainSize += childTotalW;
 				maxCrossSize = std::max(maxCrossSize, childTotalH);
-			} else if (type == LayoutType::Vertical) {
+			}
+			else if (type == LayoutType::Vertical)
+			{
 				totalMainSize += childTotalH;
 				maxCrossSize = std::max(maxCrossSize, childTotalW);
-			} else if (type == LayoutType::Stack) {
+			}
+			else if (type == LayoutType::Stack)
+			{
 				contentSize.x = std::max(contentSize.x, childTotalW);
 				contentSize.y = std::max(contentSize.y, childTotalH);
 			}
@@ -129,12 +363,17 @@ namespace ZenitUI {
 		}
 
 		// --- Aggiungi i gap ---
-		if (type == LayoutType::Horizontal) {
-			if (visibleChildren > 1) totalMainSize += gapX * (visibleChildren - 1);
+		if (type == LayoutType::Horizontal)
+		{
+			if (visibleChildren > 1)
+				totalMainSize += gapX * (visibleChildren - 1);
 			contentSize.x = std::max(contentSize.x, totalMainSize);
 			contentSize.y = std::max(contentSize.y, maxCrossSize);
-		} else if (type == LayoutType::Vertical) {
-			if (visibleChildren > 1) totalMainSize += gapY * (visibleChildren - 1);
+		}
+		else if (type == LayoutType::Vertical)
+		{
+			if (visibleChildren > 1)
+				totalMainSize += gapY * (visibleChildren - 1);
 			contentSize.x = std::max(contentSize.x, maxCrossSize);
 			contentSize.y = std::max(contentSize.y, totalMainSize);
 		}
@@ -146,22 +385,24 @@ namespace ZenitUI {
 		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
 		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
 
-		float minW = calcStyle.minWidth.isAuto()  ? 0.0f : calcStyle.minWidth.resolve(parent_w);
-		float maxW = calcStyle.maxWidth.isAuto()  ? 1e9f : calcStyle.maxWidth.resolve(parent_w);
+		float minW = calcStyle.minWidth.isAuto() ? 0.0f : calcStyle.minWidth.resolve(parent_w);
+		float maxW = calcStyle.maxWidth.isAuto() ? 1e9f : calcStyle.maxWidth.resolve(parent_w);
 		float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolve(parent_h);
 		float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolve(parent_h);
 
-		measuredSize = { std::clamp(finalW, minW, maxW), std::clamp(finalH, minH, maxH) };
+		measuredSize = {std::clamp(finalW, minW, maxW), std::clamp(finalH, minH, maxH)};
 		return measuredSize;
 	}
 
-	void Layout::arrange(Rect space) {
+	void Layout::arrange(Rect space)
+	{
 		rect = space;
 		arrangeInto(space);
 		onLayout();
 	}
 
-	void Layout::arrangeInto(Rect space) {
+	void Layout::arrangeInto(Rect space)
+	{
 		float pl = currentStyle.padding.left.resolve(space.width);
 		float pr = currentStyle.padding.right.resolve(space.width);
 		float pt = currentStyle.padding.top.resolve(space.height);
@@ -170,16 +411,16 @@ namespace ZenitUI {
 		Rect inner = {
 			space.x + pl,
 			space.y + pt,
-			std::max(0.0f, space.width  - pl - pr),
-			std::max(0.0f, space.height - pt - pb)
-		};
+			std::max(0.0f, space.width - pl - pr),
+			std::max(0.0f, space.height - pt - pb)};
 
 		float gapX = currentStyle.gap.resolve(inner.width);
 		float gapY = currentStyle.gap.resolve(inner.height);
 
 		// ---- Pre-pass: figli absolute (fuori dal flow) ----
 		// Vengono posizionati rispetto a `inner` con le regole CSS top/left/right/bottom.
-		auto arrangeAbsolute = [](Layout* c, const ComputedStyle& cst, const Rect& in) {
+		auto arrangeAbsolute = [](Layout *c, const ComputedStyle &cst, const Rect &in)
+		{
 			float ml = cst.margin.left.resolve(in.width);
 			float mr = cst.margin.right.resolve(in.width);
 			float mt = cst.margin.top.resolve(in.height);
@@ -195,45 +436,62 @@ namespace ZenitUI {
 			float x, y;
 
 			// ---- orizzontale ----
-			if (hasL && hasR && cst.width.isAuto()) {
+			if (hasL && hasR && cst.width.isAuto())
+			{
 				float L = cst.left.resolve(in.width);
 				float R = cst.right.resolve(in.width);
 				w = std::max(0.0f, in.width - L - R - ml - mr);
 				x = in.x + L + ml;
-			} else if (hasL) {
+			}
+			else if (hasL)
+			{
 				x = in.x + cst.left.resolve(in.width) + ml;
-			} else if (hasR) {
+			}
+			else if (hasR)
+			{
 				x = in.x + in.width - w - cst.right.resolve(in.width) - mr;
-			} else {
+			}
+			else
+			{
 				x = in.x + ml;
 			}
 
 			// ---- verticale ----
-			if (hasT && hasB && cst.height.isAuto()) {
+			if (hasT && hasB && cst.height.isAuto())
+			{
 				float T = cst.top.resolve(in.height);
 				float B = cst.bottom.resolve(in.height);
 				h = std::max(0.0f, in.height - T - B - mt - mb);
 				y = in.y + T + mt;
-			} else if (hasT) {
+			}
+			else if (hasT)
+			{
 				y = in.y + cst.top.resolve(in.height) + mt;
-			} else if (hasB) {
+			}
+			else if (hasB)
+			{
 				y = in.y + in.height - h - cst.bottom.resolve(in.height) - mb;
-			} else {
+			}
+			else
+			{
 				y = in.y + mt;
 			}
 
-			c->arrange({ x, y, w, h });
+			c->arrange({x, y, w, h});
 		};
 
-		for (auto& c : children) {
-			const auto& cst = c->getStyle();
-			if (c->isPortal()) {
+		for (auto &c : children)
+		{
+			const auto &cst = c->getStyle();
+			if (c->isPortal())
+			{
 				// I portal li arrangia chi li gestisce (es. Dropdown::arrange);
 				// qui diamo una posizione di default per compatibilità.
-				c->arrange({ inner.x, inner.y, c->measuredSize.x, c->measuredSize.y });
+				c->arrange({inner.x, inner.y, c->measuredSize.x, c->measuredSize.y});
 				continue;
 			}
-			if (cst.position == Position::Absolute) {
+			if (cst.position == Position::Absolute)
+			{
 				arrangeAbsolute(c.get(), cst, inner);
 			}
 		}
@@ -241,50 +499,64 @@ namespace ZenitUI {
 		// Clamp "safe": evita __glibcxx_assert quando lo > hi
 		// (su MinGW-GCC 15 questo chiama abort()). Quando lo > hi prevale hi,
 		// cioè lo spazio disponibile vince sul min-width/min-height dichiarato.
-		auto clampSafe = [](float v, float lo, float hi) -> float {
-			if (hi < lo) return hi;
+		auto clampSafe = [](float v, float lo, float hi) -> float
+		{
+			if (hi < lo)
+				return hi;
 			return std::clamp(v, lo, hi);
 		};
 
 		// =====================================================================
 		//  VERTICAL: main axis = height, cross axis = width
 		// =====================================================================
-		if (type == LayoutType::Vertical) {
+		if (type == LayoutType::Vertical)
+		{
 			float totalFixedH = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
 			int visibleChildren = 0;
 
-			for (auto& c : children) {
-				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) continue;
-				totalFixedH += cst.margin.top.resolve(inner.height)
-							+ c->measuredSize.y
-							+ cst.margin.bottom.resolve(inner.height);
-				totalGrow   += cst.grow;
+			for (auto &c : children)
+			{
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+					continue;
+				totalFixedH += cst.margin.top.resolve(inner.height) + c->measuredSize.y + cst.margin.bottom.resolve(inner.height);
+				totalGrow += cst.grow;
 				totalShrink += cst.shrink;
 				visibleChildren++;
 			}
-			if (visibleChildren > 1) totalFixedH += gapY * (visibleChildren - 1);
+			if (visibleChildren > 1)
+				totalFixedH += gapY * (visibleChildren - 1);
 
 			float freeSpace = inner.height - totalFixedH;
 			float startY = inner.y;
 			float extraGap = 0.0f;
 
-			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0) {
-				switch (currentStyle.justify) {
-					case Justify::Center: startY += freeSpace * 0.5f; break;
-					case Justify::End:    startY += freeSpace;        break;
-					case Justify::SpaceBetween:
-						if (visibleChildren > 1) extraGap = freeSpace / (visibleChildren - 1);
-						break;
-					default: break;
+			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0)
+			{
+				switch (currentStyle.justify)
+				{
+				case Justify::Center:
+					startY += freeSpace * 0.5f;
+					break;
+				case Justify::End:
+					startY += freeSpace;
+					break;
+				case Justify::SpaceBetween:
+					if (visibleChildren > 1)
+						extraGap = freeSpace / (visibleChildren - 1);
+					break;
+				default:
+					break;
 				}
 			}
 
 			float curY = startY;
 
-			for (auto& c : children) {
-				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) continue;
+			for (auto &c : children)
+			{
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+					continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);
@@ -305,60 +577,75 @@ namespace ZenitUI {
 				// ---- cross axis: width ----
 				float cw = c->measuredSize.x;
 				float availW = std::max(0.0f, inner.width - ml - mr);
-				float minW   = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
-				float maxW   = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
 				cw = clampSafe(cw, minW, std::min(availW, maxW));
 
 				float cx = inner.x + ml;
 				Align aH = (cst.alignH == Align::Auto) ? currentStyle.itemsH : cst.alignH;
 				if (aH == Align::Stretch)
 					cw = clampSafe(availW, minW, std::min(availW, maxW));
-				else if (aH == Align::Center) cx += (availW - cw) * 0.5f;
-				else if (aH == Align::End)    cx += availW - cw;
+				else if (aH == Align::Center)
+					cx += (availW - cw) * 0.5f;
+				else if (aH == Align::End)
+					cx += availW - cw;
 
-				c->arrange({ cx, curY + mt, cw, ch });
+				c->arrange({cx, curY + mt, cw, ch});
 				curY += mt + ch + mb + gapY + extraGap;
 			}
 
-		// =====================================================================
-		//  HORIZONTAL: main axis = width, cross axis = height
-		// =====================================================================
-		} else if (type == LayoutType::Horizontal) {
+			// =====================================================================
+			//  HORIZONTAL: main axis = width, cross axis = height
+			// =====================================================================
+		}
+		else if (type == LayoutType::Horizontal)
+		{
 			float totalFixedW = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
 			int visibleChildren = 0;
 
-			for (auto& c : children) {
-				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) continue;
-				totalFixedW += cst.margin.left.resolve(inner.width)
-							+ c->measuredSize.x
-							+ cst.margin.right.resolve(inner.width);
-				totalGrow   += cst.grow;
+			for (auto &c : children)
+			{
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+					continue;
+				totalFixedW += cst.margin.left.resolve(inner.width) + c->measuredSize.x + cst.margin.right.resolve(inner.width);
+				totalGrow += cst.grow;
 				totalShrink += cst.shrink;
 				visibleChildren++;
 			}
-			if (visibleChildren > 1) totalFixedW += gapX * (visibleChildren - 1);
+			if (visibleChildren > 1)
+				totalFixedW += gapX * (visibleChildren - 1);
 
 			float freeSpace = inner.width - totalFixedW;
 			float startX = inner.x;
 			float extraGap = 0.0f;
 
-			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0) {
-				switch (currentStyle.justify) {
-					case Justify::Center: startX += freeSpace * 0.5f; break;
-					case Justify::End:    startX += freeSpace;        break;
-					case Justify::SpaceBetween:
-						if (visibleChildren > 1) extraGap = freeSpace / (visibleChildren - 1);
-						break;
-					default: break;
+			if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0)
+			{
+				switch (currentStyle.justify)
+				{
+				case Justify::Center:
+					startX += freeSpace * 0.5f;
+					break;
+				case Justify::End:
+					startX += freeSpace;
+					break;
+				case Justify::SpaceBetween:
+					if (visibleChildren > 1)
+						extraGap = freeSpace / (visibleChildren - 1);
+					break;
+				default:
+					break;
 				}
 			}
 
 			float curX = startX;
 
-			for (auto& c : children) {
-				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) continue;
+			for (auto &c : children)
+			{
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+					continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);
@@ -379,39 +666,45 @@ namespace ZenitUI {
 				// ---- cross axis: height ----
 				float ch = c->measuredSize.y;
 				float availH = std::max(0.0f, inner.height - mt - mb);
-				float minH   = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
-				float maxH   = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
 				ch = clampSafe(ch, minH, std::min(availH, maxH));
 
 				float cy = inner.y + mt;
 				Align aV = (cst.alignV == Align::Auto) ? currentStyle.itemsV : cst.alignV;
 				if (aV == Align::Stretch)
 					ch = clampSafe(availH, minH, std::min(availH, maxH));
-				else if (aV == Align::Center) cy += (availH - ch) * 0.5f;
-				else if (aV == Align::End)    cy += availH - ch;
+				else if (aV == Align::Center)
+					cy += (availH - ch) * 0.5f;
+				else if (aV == Align::End)
+					cy += availH - ch;
 
-				c->arrange({ curX + ml, cy, cw, ch });
+				c->arrange({curX + ml, cy, cw, ch});
 				curX += ml + cw + mr + gapX + extraGap;
 			}
 
-		// =====================================================================
-		//  STACK: figli sovrapposti
-		// =====================================================================
-		} else if (type == LayoutType::Stack) {
-			for (auto& c : children) {
-				const auto& cst = c->getStyle();
-				if (cst.position == Position::Absolute || c->isPortal()) continue;
+			// =====================================================================
+			//  STACK: figli sovrapposti
+			// =====================================================================
+		}
+		else if (type == LayoutType::Stack)
+		{
+			for (auto &c : children)
+			{
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+					continue;
 
 				float ml = cst.margin.left.resolve(inner.width);
 				float mr = cst.margin.right.resolve(inner.width);
 				float mt = cst.margin.top.resolve(inner.height);
 				float mb = cst.margin.bottom.resolve(inner.height);
 
-				float availW = std::max(0.0f, inner.width  - ml - mr);
+				float availW = std::max(0.0f, inner.width - ml - mr);
 				float availH = std::max(0.0f, inner.height - mt - mb);
 
-				float minW = cst.minWidth.isAuto()  ? 0.0f : cst.minWidth.resolve(inner.width);
-				float maxW = cst.maxWidth.isAuto()  ? 1e9f : cst.maxWidth.resolve(inner.width);
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
 				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
 				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
 
@@ -426,42 +719,48 @@ namespace ZenitUI {
 
 				if (aH == Align::Stretch)
 					cw = clampSafe(availW, minW, std::min(availW, maxW));
-				else if (aH == Align::Center) cx += (availW - cw) * 0.5f;
-				else if (aH == Align::End)    cx += availW - cw;
+				else if (aH == Align::Center)
+					cx += (availW - cw) * 0.5f;
+				else if (aH == Align::End)
+					cx += availW - cw;
 
 				if (aV == Align::Stretch)
 					ch = clampSafe(availH, minH, std::min(availH, maxH));
-				else if (aV == Align::Center) cy += (availH - ch) * 0.5f;
-				else if (aV == Align::End)    cy += availH - ch;
+				else if (aV == Align::Center)
+					cy += (availH - ch) * 0.5f;
+				else if (aV == Align::End)
+					cy += availH - ch;
 
-				c->arrange({ cx, cy, cw, ch });
+				c->arrange({cx, cy, cw, ch});
 			}
 		}
 	}
 
-	void Layout::update(float dt, bool ancestorBlocked) {
+	void Layout::update(float dt, bool ancestorBlocked)
+	{
 
 		// ============================================================
 		//  FASE 1: aggiorna currentStyle per questo frame
 		// ============================================================
 
 		// Snapshot delle prop ereditate PRIMA di ogni modifica
-		struct InheritedSnap {
+		struct InheritedSnap
+		{
 			std::string font;
-			Value       fontSize;
-			Color       color;
-			Value       letterSpacing;
-			Align       textAlign;
+			Value fontSize;
+			Color color;
+			Value letterSpacing;
+			Align textAlign;
 		} snapBefore{
 			currentStyle.font,
 			currentStyle.fontSize,
 			currentStyle.color,
 			currentStyle.letterSpacing,
-			currentStyle.textAlign
-		};
+			currentStyle.textAlign};
 
 		// Init stile al primo frame
-		if (!styleInitialized) {
+		if (!styleInitialized)
+		{
 			styleInitialized = true;
 			currentStyle = targetStyle = transitionStartStyle = resolveTargetStyle();
 			pendingTransition = false;
@@ -470,124 +769,172 @@ namespace ZenitUI {
 
 		// --- Animazioni imperative ---
 		bool localAnimBlocks = false;
-		for (auto& [n, s] : activeAnimations) {
-			if (!s.playing) continue;
-			if (s.anim->blocksInput) localAnimBlocks = true;
-			if (s.delayElapsed > 0.0f) { s.delayElapsed -= dt; continue; }
+		for (auto &[n, s] : activeAnimations)
+		{
+			if (!s.playing)
+				continue;
+			if (s.anim->blocksInput)
+				localAnimBlocks = true;
+			if (s.delayElapsed > 0.0f)
+			{
+				s.delayElapsed -= dt;
+				continue;
+			}
 
 			s.elapsed += (s.reverse ? -dt : dt);
-			if (s.elapsed <= 0.0f)             { s.elapsed = 0.0f; s.playing = false; }
-			if (s.elapsed >= s.anim->duration) { s.elapsed = s.anim->duration; s.playing = false; }
+			if (s.elapsed <= 0.0f)
+			{
+				s.elapsed = 0.0f;
+				s.playing = false;
+			}
+			if (s.elapsed >= s.anim->duration)
+			{
+				s.elapsed = s.anim->duration;
+				s.playing = false;
+			}
 
 			float t = (s.anim->duration > 0.0f) ? (s.elapsed / s.anim->duration) : 1.0f;
-			for (auto& track : s.anim->tracks) track->apply(t, this);
+			for (auto &track : s.anim->tracks)
+				track->apply(t, this);
 			pendingTransition = true;
 		}
 
 		// --- Blocchi ---
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
-		bool selfBlocked  = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
+		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
 
-		auto& ctx     = UIContext::get();
-		auto& pointer = ctx.pointer;
+		auto &ctx = UIContext::get();
+		auto &pointer = ctx.pointer;
 
 		// --- Hover / Pressed / Focus (usano topmostConsumer, già settato) ---
 		isHovered = false;
-		if (!selfBlocked && rect.width > 0 && rect.height > 0) {
+		if (!selfBlocked && rect.width > 0 && rect.height > 0)
+		{
 			isHovered = rect.contains(pointer.pos);
 		}
 
 		isPressed = false;
-		if (pointer.down && ctx.pressTarget) {
-			Layout* n = ctx.pressTarget;
-			while (n) {
-				if (n == this) { isPressed = true; break; }
-				if (!n->getPassThrough()) break; 
+		if (pointer.down && ctx.pressTarget)
+		{
+			Layout *n = ctx.pressTarget;
+			while (n)
+			{
+				if (n == this)
+				{
+					isPressed = true;
+					break;
+				}
+				if (!n->getPassThrough())
+					break;
 				n = n->getParent().get();
 			}
 		}
 
 		bool focusNow = ctx.hasFocus(this);
-		if (focusNow != isFocused) {
+		if (focusNow != isFocused)
+		{
 			isFocused = focusNow;
 			pendingTransition = true;
 		}
 
 		// --- Cambio stato: SOLO setup, niente callback ---
 		UIState nextState = UIState::Idle;
-		if (!isEnabled)         nextState = UIState::Disabled;
-		else if (isPressed)     nextState = UIState::Pressed;
-		else if (isHovered)     nextState = UIState::Hover;
+		if (!isEnabled)
+			nextState = UIState::Disabled;
+		else if (isPressed)
+			nextState = UIState::Pressed;
+		else if (isHovered)
+			nextState = UIState::Hover;
 
-		UIState prevState     = currentState;   // per le callback in fase 3
-		bool    stateChanged  = (currentState != nextState);
+		UIState prevState = currentState; // per le callback in fase 3
+		bool stateChanged = (currentState != nextState);
 
-		if (stateChanged) {
-			currentState         = nextState;
-			transitionTimer      = 0.0f;
+		if (stateChanged)
+		{
+			currentState = nextState;
+			transitionTimer = 0.0f;
 			transitionStartStyle = currentStyle;
-			targetStyle          = resolveTargetStyle();
-			pendingTransition    = false;
+			targetStyle = resolveTargetStyle();
+			pendingTransition = false;
 			syncCssAnimations();
-		} else if (pendingTransition) {
-			targetStyle       = resolveTargetStyle();
+		}
+		else if (pendingTransition)
+		{
+			targetStyle = resolveTargetStyle();
 			pendingTransition = false;
 
-			if (transitionTimer >= 1.0f) {
-				currentStyle         = targetStyle;
+			if (transitionTimer >= 1.0f)
+			{
+				currentStyle = targetStyle;
 				transitionStartStyle = currentStyle;
 			}
 			syncCssAnimations();
 		}
 
 		// --- Avanzamento transizione per-property ---
-		if (transitionTimer < 1.0f) {
+		if (transitionTimer < 1.0f)
+		{
 			float maxDur = targetStyle.transitionTime;
-			for (const auto& spec : targetStyle.transitions)
+			for (const auto &spec : targetStyle.transitions)
 				maxDur = std::max(maxDur, spec.duration);
 
-			if (maxDur <= 0.001f) {
+			if (maxDur <= 0.001f)
+			{
 				transitionTimer = 1.0f;
-				currentStyle    = targetStyle;
-			} else {
+				currentStyle = targetStyle;
+			}
+			else
+			{
 				float elapsed = transitionTimer * maxDur;
 				transitionTimer += dt / maxDur;
-				if (transitionTimer >= 1.0f) {
+				if (transitionTimer >= 1.0f)
+				{
 					transitionTimer = 1.0f;
-					currentStyle    = targetStyle;
-				} else {
+					currentStyle = targetStyle;
+				}
+				else
+				{
 					currentStyle = lerpStyleTimed(transitionStartStyle, targetStyle, elapsed);
 				}
 			}
 		}
 
 		// --- Tick animazioni CSS (nessuna callback utente) ---
-		for (auto& anim : activeCssAnimations) {
-			if (anim.finished) continue;
+		for (auto &anim : activeCssAnimations)
+		{
+			if (anim.finished)
+				continue;
 			anim.elapsed += dt;
 			auto it = Theme::get().keyframes.find(anim.name);
-			if (it == Theme::get().keyframes.end()) { anim.finished = true; continue; }
+			if (it == Theme::get().keyframes.end())
+			{
+				anim.finished = true;
+				continue;
+			}
 			bool fin = false;
 			(void)sampleActive(anim, fin);
-			if (fin) anim.finished = true;
+			if (fin)
+				anim.finished = true;
 		}
 		activeCssAnimations.erase(
 			std::remove_if(activeCssAnimations.begin(), activeCssAnimations.end(),
-				[](const ActiveCssAnimation& a) { return a.finished && !a.fillForwards; }),
-			activeCssAnimations.end()
-		);
+						   [](const ActiveCssAnimation &a)
+						   { return a.finished && !a.fillForwards; }),
+			activeCssAnimations.end());
 
 		// --- Propagazione inheritance: se una prop ereditable è cambiata,
 		//     marca i figli PRIMA che girino (fase 2) ---
 		bool inheritedChanged =
-			snapBefore.font          != currentStyle.font          ||
-			!(snapBefore.fontSize    == currentStyle.fontSize)     ||
-			!(snapBefore.color       == currentStyle.color)        ||
+			snapBefore.font != currentStyle.font ||
+			!(snapBefore.fontSize == currentStyle.fontSize) ||
+			!(snapBefore.color == currentStyle.color) ||
 			!(snapBefore.letterSpacing == currentStyle.letterSpacing) ||
-			!(snapBefore.textAlign   == currentStyle.textAlign);
+			!(snapBefore.textAlign == currentStyle.textAlign);
 
-		if (inheritedChanged) {
-			for (auto& c : children) {
+		if (inheritedChanged)
+		{
+			for (auto &c : children)
+			{
 				c->pendingTransition = true;
 				c->markInheritanceDirty();
 			}
@@ -610,7 +957,8 @@ namespace ZenitUI {
 		handleFocusInput();
 
 		// --- Hover enter/exit (geometrico, come prima) ---
-		if (stateChanged) {
+		if (stateChanged)
+		{
 			if (nextState == UIState::Hover && prevState != UIState::Hover && onHoverEnter)
 				onHoverEnter();
 			else if (prevState == UIState::Hover && nextState != UIState::Hover && onHoverExit)
@@ -618,82 +966,110 @@ namespace ZenitUI {
 		}
 
 		// --- Press: il nodo è nel percorso del pressTarget ---
-		if (pointer.pressed && !ctx.clickConsumed) {
+		if (pointer.pressed && !ctx.clickConsumed)
+		{
 			bool inPressPath = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
-			if (inPressPath) {
-				if (onPress) onPress();
-				if (!passThrough_) ctx.consumeClick();   // "consuma" il press
+			if (inPressPath)
+			{
+				if (onPress)
+					onPress();
+				if (!passThrough_)
+					ctx.consumeClick(); // "consuma" il press
 			}
 		}
 
 		// --- Release + click: pressTarget == releaseTarget sul percorso ---
-		if (pointer.released) {
-			bool pressedHere  = (ctx.pressTarget   == this) || isAncestorOf(ctx.pressTarget);
+		if (pointer.released)
+		{
+			bool pressedHere = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
 			bool releasedHere = (ctx.releaseTarget == this) || isAncestorOf(ctx.releaseTarget);
-			bool validClick   = pressedHere && releasedHere;
+			bool validClick = pressedHere && releasedHere;
 
-			if (validClick) {
-				if (onRelease) onRelease();
+			if (validClick)
+			{
+				if (onRelease)
+					onRelease();
 
-				if (onClick && !ctx.clickConsumed) {
+				if (onClick && !ctx.clickConsumed)
+				{
 					onClick();
-					if (!passThrough_) ctx.consumeClick();
+					if (!passThrough_)
+						ctx.consumeClick();
 				}
 			}
 		}
 
 		// --- Right-click: invariato (già geometrico) ---
-		if (pointer.rightPressed && isHovered && onRightClick) {
-			if (!ctx.rightClickConsumed) {
+		if (pointer.rightPressed && isHovered && onRightClick)
+		{
+			if (!ctx.rightClickConsumed)
+			{
 				onRightClick();
-				if (!passThrough_) ctx.consumeRightClick();
+				if (!passThrough_)
+					ctx.consumeRightClick();
 			}
 		}
 
 		// --- Rimozioni ---
-		for (auto it = children.begin(); it != children.end(); ) {
-			if ((*it)->wantsRemoval) { (*it)->parent.reset(); it = children.erase(it); }
-			else ++it;
+		for (auto it = children.begin(); it != children.end();)
+		{
+			if ((*it)->wantsRemoval)
+			{
+				(*it)->parent.reset();
+				it = children.erase(it);
+			}
+			else
+				++it;
 		}
 
-		if (isEnabled || updateWhenDisabled_) onUpdate(dt);
+		if (isEnabled || updateWhenDisabled_)
+			onUpdate(dt);
 	}
 
-	void Layout::draw(float parentOpacity) {
+	void Layout::draw(float parentOpacity)
+	{
 
-		if (isPortal_) {
+		if (isPortal_)
+		{
 			UIContext::get().framePortals.push_back(weak_from_this());
 			return;
 		}
 
 		auto renderer = UIContext::get().renderer;
-		if (!renderer) return;
+		if (!renderer)
+			return;
 
-		if (rect.width > 0.0f && rect.height > 0.0f) {
+		if (rect.width > 0.0f && rect.height > 0.0f)
+		{
 			Rect clip = renderer->getClipRect();
 			float m = 300.0f;
 
 			if (rect.x > clip.x + clip.width + m ||
-			    rect.x + rect.width < clip.x - m ||
-			    rect.y > clip.y + clip.height + m ||
-			    rect.y + rect.height < clip.y - m) {
-				return; 
+				rect.x + rect.width < clip.x - m ||
+				rect.y > clip.y + clip.height + m ||
+				rect.y + rect.height < clip.y - m)
+			{
+				return;
 			}
 		}
 
 		ComputedStyle renderStyle = currentStyle;
-		for (const auto& anim : activeCssAnimations) {
+		for (const auto &anim : activeCssAnimations)
+		{
 			auto it = Theme::get().keyframes.find(anim.name);
-			if (it == Theme::get().keyframes.end()) continue;
+			if (it == Theme::get().keyframes.end())
+				continue;
 			bool fin = false;
 			float localT = sampleActive(anim, fin);
-			if (fin && !anim.fillForwards) continue;
+			if (fin && !anim.fillForwards)
+				continue;
 			Style frame = evaluateKeyframes(it->second, localT, anim.ease);
 			overlayComputed(renderStyle, frame);
 		}
 
 		float globalOp = renderStyle.opacity * parentOpacity;
-		if (globalOp <= 0.001f) return;
+		if (globalOp <= 0.001f)
+			return;
 
 		Transform2D tr = currentTransform(renderStyle);
 
@@ -701,46 +1077,65 @@ namespace ZenitUI {
 			tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
 
-		if (!identity) renderer->pushTransform(tr);
-		if (hasShader && renderer->supports(Feature::Effects)) renderer->pushEffect(customEffect);
+		if (!identity)
+			renderer->pushTransform(tr);
+		if (hasShader && renderer->supports(Feature::Effects))
+			renderer->pushEffect(customEffect);
 
 		bool needsClip = (renderStyle.overflow == Overflow::Hidden ||
-		                  renderStyle.overflow == Overflow::Scroll);
-		if (needsClip) renderer->pushClip(rect);
+						  renderStyle.overflow == Overflow::Scroll);
+		if (needsClip)
+			renderer->pushClip(rect);
 
 		renderChrome(globalOp, renderStyle);
 		renderContent(globalOp, renderStyle);
 
 		// --- RENDERING CSS COMPLIANT (Stacking Context) ---
-		std::vector<Layout*> negZ, normalFlow, posZ;
-		for (auto& child : children) {
-			if (child->isStackingContext()) {
-				if (child->getZIndex() < 0) negZ.push_back(child.get());
-				else posZ.push_back(child.get());
-			} else {
+		std::vector<Layout *> negZ, normalFlow, posZ;
+		for (auto &child : children)
+		{
+			if (child->isStackingContext())
+			{
+				if (child->getZIndex() < 0)
+					negZ.push_back(child.get());
+				else
+					posZ.push_back(child.get());
+			}
+			else
+			{
 				normalFlow.push_back(child.get());
 			}
 		}
 
-		auto sortByZ = [](Layout* a, Layout* b) { return a->getZIndex() < b->getZIndex(); };
+		auto sortByZ = [](Layout *a, Layout *b)
+		{ return a->getZIndex() < b->getZIndex(); };
 		std::stable_sort(negZ.begin(), negZ.end(), sortByZ);
 		std::stable_sort(posZ.begin(), posZ.end(), sortByZ);
 
-		for (auto* child : negZ)       child->draw(globalOp);
-		for (auto* child : normalFlow) child->draw(globalOp);
-		for (auto* child : posZ)       child->draw(globalOp);
+		for (auto *child : negZ)
+			child->draw(globalOp);
+		for (auto *child : normalFlow)
+			child->draw(globalOp);
+		for (auto *child : posZ)
+			child->draw(globalOp);
 		// ----------------------------------------------------
 
-		if (needsClip) renderer->popClip();
+		if (needsClip)
+			renderer->popClip();
 
-		if (hasShader && renderer->supports(Feature::Effects)) renderer->popEffect();
-		if (!identity) renderer->popTransform();
+		if (hasShader && renderer->supports(Feature::Effects))
+			renderer->popEffect();
+		if (!identity)
+			renderer->popTransform();
 
-		if (!hasParent()) {
-			auto portals = UIContext::get().framePortals; 
-			for (auto& wp  : portals) {
+		if (!hasParent())
+		{
+			auto portals = UIContext::get().framePortals;
+			for (auto &wp : portals)
+			{
 				auto sp = wp.lock();
-    			if (!sp) continue;
+				if (!sp)
+					continue;
 				bool wasPortal = sp->isPortal();
 				sp->setPortal(false);
 				sp->draw(1.0f);
@@ -749,175 +1144,230 @@ namespace ZenitUI {
 		}
 	}
 
-	void Layout::syncCssAnimations() {
-		const auto& refs = targetStyle.animations;
+	void Layout::syncCssAnimations()
+	{
+		const auto &refs = targetStyle.animations;
 
 		// 1) Rimuovi quelle non più dichiarate
 		activeCssAnimations.erase(
 			std::remove_if(activeCssAnimations.begin(), activeCssAnimations.end(),
-				[&](const ActiveCssAnimation& a) {
-					for (const auto& r : refs) if (r.name == a.name) return false;
-					return true;
-				}),
-			activeCssAnimations.end()
-		);
+						   [&](const ActiveCssAnimation &a)
+						   {
+							   for (const auto &r : refs)
+								   if (r.name == a.name)
+									   return false;
+							   return true;
+						   }),
+			activeCssAnimations.end());
 
 		// 2) Aggiungi/aggiorna quelle dichiarate
-		for (const auto& r : refs) {
+		for (const auto &r : refs)
+		{
 			bool found = false;
-			for (auto& a : activeCssAnimations) {
-				if (a.name == r.name) {
-					a.duration     = r.duration;
-					a.delay        = r.delay;
-					a.iterations   = r.iterations;
-					a.alternate    = r.alternate;
+			for (auto &a : activeCssAnimations)
+			{
+				if (a.name == r.name)
+				{
+					a.duration = r.duration;
+					a.delay = r.delay;
+					a.iterations = r.iterations;
+					a.alternate = r.alternate;
 					a.fillForwards = r.fillForwards;
-					a.ease         = r.ease;      // <-- AGGIUNTO
+					a.ease = r.ease; // <-- AGGIUNTO
 					found = true;
 					break;
 				}
 			}
-			if (!found) {
+			if (!found)
+			{
 				ActiveCssAnimation a;
-				a.name         = r.name;
-				a.duration     = r.duration;
-				a.delay        = r.delay;
-				a.iterations   = r.iterations;
-				a.alternate    = r.alternate;
+				a.name = r.name;
+				a.duration = r.duration;
+				a.delay = r.delay;
+				a.iterations = r.iterations;
+				a.alternate = r.alternate;
 				a.fillForwards = r.fillForwards;
-				a.ease         = r.ease;      // <-- AGGIUNTO
+				a.ease = r.ease; // <-- AGGIUNTO
 				activeCssAnimations.push_back(std::move(a));
 			}
 		}
 	}
 
-	Layout* Layout::hitTest(Vec2 p, bool ancestorBlocked) {
-		if (ancestorBlocked || !isEnabled) return nullptr;
+	Layout *Layout::hitTest(Vec2 p, bool ancestorBlocked)
+	{
+		if (ancestorBlocked || !isEnabled)
+			return nullptr;
 
 		// Portali (invariato)
-		if (!hasParent()) {
-			for (auto it = UIContext::get().activePortals.rbegin(); it != UIContext::get().activePortals.rend(); ++it) {
+		if (!hasParent())
+		{
+			for (auto it = UIContext::get().activePortals.rbegin(); it != UIContext::get().activePortals.rend(); ++it)
+			{
 				auto sp = it->lock();
-				if (!sp) continue;
+				if (!sp)
+					continue;
 				bool wasPortal = sp->isPortal();
 				sp->setPortal(false);
-				Layout* hit = sp->hitTest(p, false);
+				Layout *hit = sp->hitTest(p, false);
 				sp->setPortal(wasPortal);
-				if (hit) return hit;
+				if (hit)
+					return hit;
 			}
 		}
-		if (isPortal_) return nullptr;
+		if (isPortal_)
+			return nullptr;
 
 		// I figli sono disegnati DOPO che il mio transform è applicato.
 		// Quindi per testarli devo trasformare p nello spazio dei figli.
-		Transform2D tr = currentTransform(currentStyle); 
+		Transform2D tr = currentTransform(currentStyle);
 		Vec2 pChildren = applyInverseTransform(tr, p);
 
 		// Ordine z (invariato)
-		std::vector<Layout*> negZ, normalFlow, posZ;
-		for (auto& child : children) {
-			if (child->isStackingContext()) {
-				if (child->getZIndex() < 0) negZ.push_back(child.get());
-				else posZ.push_back(child.get());
-			} else {
+		std::vector<Layout *> negZ, normalFlow, posZ;
+		for (auto &child : children)
+		{
+			if (child->isStackingContext())
+			{
+				if (child->getZIndex() < 0)
+					negZ.push_back(child.get());
+				else
+					posZ.push_back(child.get());
+			}
+			else
+			{
 				normalFlow.push_back(child.get());
 			}
 		}
-		auto sortByZ = [](Layout* a, Layout* b) { return a->getZIndex() < b->getZIndex(); };
+		auto sortByZ = [](Layout *a, Layout *b)
+		{ return a->getZIndex() < b->getZIndex(); };
 		std::stable_sort(negZ.begin(), negZ.end(), sortByZ);
 		std::stable_sort(posZ.begin(), posZ.end(), sortByZ);
 
 		for (auto it = posZ.rbegin(); it != posZ.rend(); ++it)
-			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+			if (Layout *hit = (*it)->hitTest(pChildren, false))
+				return hit;
 		for (auto it = normalFlow.rbegin(); it != normalFlow.rend(); ++it)
-			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+			if (Layout *hit = (*it)->hitTest(pChildren, false))
+				return hit;
 		for (auto it = negZ.rbegin(); it != negZ.rend(); ++it)
-			if (Layout* hit = (*it)->hitTest(pChildren, false)) return hit;
+			if (Layout *hit = (*it)->hitTest(pChildren, false))
+				return hit;
 
 		// Self test: p (in coordinate del parent) contro il mio rect
 		if (rect.width > 0 && rect.height > 0 &&
 			rect.contains(p) &&
-			(isInteractive || blocksRaycast)) {
+			(isInteractive || blocksRaycast))
+		{
 			return this;
 		}
 		return nullptr;
 	}
 
-	static void collectFocusables(Layout* node, std::vector<Layout*>& out) {
-		if (node->isFocusable()) out.push_back(node);
-		for (auto& c : node->children) collectFocusables(c.get(), out);
+	static void collectFocusables(Layout *node, std::vector<Layout *> &out)
+	{
+		if (node->isFocusable())
+			out.push_back(node);
+		for (auto &c : node->children)
+			collectFocusables(c.get(), out);
 	}
 
-	static void notifyFocusAncestors(Layout* node) {
-		if (!node) return;
+	static void notifyFocusAncestors(Layout *node)
+	{
+		if (!node)
+			return;
 		auto parent = node->getParent();
-		while (parent) {
+		while (parent)
+		{
 			parent->notifyDescendantFocused(node);
 			parent = parent->getParent();
 		}
 	}
 
-	void Layout::updateTree(float dt) {
-		auto& ctx = UIContext::get();
+	void Layout::updateTree(float dt)
+	{
+		auto &ctx = UIContext::get();
 
 		// 1) Hit-test topmost, con supporto al pointer capture
 		auto captured = ctx.pointerCapture.lock();
-		if (!captured || !captured->getEnabled()) {
+		if (!captured || !captured->getEnabled())
+		{
 			ctx.pointerCapture.reset();
 			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
-		} else {
+		}
+		else
+		{
 			ctx.topmostConsumer = captured.get();
 		}
 
 		// NUOVO: popola i target di input
 		ctx.hoverTarget = ctx.topmostConsumer;
-		if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
-		if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
+		if (ctx.pointer.pressed)
+			ctx.pressTarget = ctx.hoverTarget;
+		if (ctx.pointer.released)
+			ctx.releaseTarget = ctx.hoverTarget;
 
 		// 2) Focus management
 		// 2a) Click con mouse → cambia focus
-		if (ctx.pointer.pressed) {
-			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable()) {
+		if (ctx.pointer.pressed)
+		{
+			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
+			{
 				ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
-			} else {
+			}
+			else
+			{
 				ctx.releaseFocus();
 			}
 		}
 
 		// 2b) Tab navigation
-		for (int k : ctx.inputEvents.keys) {
-			if (k != Key::Tab) continue;
+		for (int k : ctx.inputEvents.keys)
+		{
+			if (k != Key::Tab)
+				continue;
 
 			// Trova lo scope: risali dal nodo focusato fino al primo focus-scope.
 			// Se nessuno è focusato, o nessuno scope trovato, usa this (root).
-			Layout* scope = this;
+			Layout *scope = this;
 			{
 				auto focused = ctx.focusedNode.lock();
-				if (focused) {
-					Layout* n = focused.get();
-					while (n) {
-						if (n->isFocusScope()) { scope = n; break; }
+				if (focused)
+				{
+					Layout *n = focused.get();
+					while (n)
+					{
+						if (n->isFocusScope())
+						{
+							scope = n;
+							break;
+						}
 						n = n->getParent().get();
 					}
 				}
 			}
 
-			std::vector<Layout*> focusables;
+			std::vector<Layout *> focusables;
 			collectFocusables(scope, focusables);
-			if (focusables.empty()) break;
+			if (focusables.empty())
+				break;
 
 			auto cur = ctx.focusedNode.lock();
-			Layout* curPtr = cur.get();
+			Layout *curPtr = cur.get();
 
 			int idx = -1;
 			for (size_t i = 0; i < focusables.size(); ++i)
-				if (focusables[i] == curPtr) { idx = (int)i; break; }
+				if (focusables[i] == curPtr)
+				{
+					idx = (int)i;
+					break;
+				}
 
 			int next = 0;
-			if (idx >= 0) {
+			if (idx >= 0)
+			{
 				int n = (int)focusables.size();
 				next = ctx.shiftHeld ? (idx - 1 + n) % n
-				                     : (idx + 1) % n;
+									 : (idx + 1) % n;
 			}
 			ctx.requestFocus(focusables[next]->shared_from_this());
 			notifyFocusAncestors(ctx.focusedNode.lock().get());
@@ -927,27 +1377,38 @@ namespace ZenitUI {
 		update(dt, false);
 
 		// 4) Auto-rilascio del capture quando il tasto viene sollevato
-		if (ctx.pointer.released) ctx.pressTarget = nullptr;
-		if (!ctx.pointer.down && !ctx.pointerCapture.expired()) ctx.pointerCapture.reset();
+		if (ctx.pointer.released)
+			ctx.pressTarget = nullptr;
+		if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+			ctx.pointerCapture.reset();
 	}
 
-	void Layout::handleFocusInput() {
-		if (!isFocused || !isEnabled || !keyboardActivates_) return;
+	void Layout::handleFocusInput()
+	{
+		if (!isFocused || !isEnabled || !keyboardActivates_)
+			return;
 
-		auto& ev = UIContext::get().inputEvents;
-		for (int k : ev.keys) {
-			if (k == Key::Enter || k == Key::Space) {
-				if (onClick) onClick();
+		auto &ev = UIContext::get().inputEvents;
+		for (int k : ev.keys)
+		{
+			if (k == Key::Enter || k == Key::Space)
+			{
+				if (onClick)
+					onClick();
 			}
 		}
 	}
 }
 
-namespace ZenitUI {
-// Definizione fuori linea perché il corpo richiede Layout completo
-// (isFocusable è dichiarato in Layout.hpp, non visibile da UIContext.hpp).
-void UIContext::requestFocus(std::shared_ptr<Layout> n) {
-    if (n && n->isFocusable()) focusedNode = n;
-    else                       focusedNode.reset();
-}
+namespace ZenitUI
+{
+	// Definizione fuori linea perché il corpo richiede Layout completo
+	// (isFocusable è dichiarato in Layout.hpp, non visibile da UIContext.hpp).
+	void UIContext::requestFocus(std::shared_ptr<Layout> n)
+	{
+		if (n && n->isFocusable())
+			focusedNode = n;
+		else
+			focusedNode.reset();
+	}
 }

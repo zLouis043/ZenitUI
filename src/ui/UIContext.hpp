@@ -70,6 +70,7 @@ namespace ZenitUI {
 
 		PointerState pointer;
 		float dt{ 0.0f };
+		double time{ 0.0 }; 
 		bool wheelConsumedThisFrame{ false };
 		bool shiftHeld{ false }; 
 		bool clickConsumed{ false };
@@ -99,6 +100,7 @@ namespace ZenitUI {
 
 		void beginFrame(float delta_time) {
 			dt = delta_time;
+			time += delta_time;
 			wheelConsumedThisFrame = false; 
 			clickConsumed = false;
 			rightClickConsumed = false; 
