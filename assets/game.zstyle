@@ -11,13 +11,29 @@
    ============================================================ */
 
 Toggle {
+  width: 70px;
+  height: 35px;
+  radius: 18px;
   background: #505050;
-  radius: 8px;
   transition: background 0.15s linear;
 }
-Toggle:hover  { background: #606060; }
-Toggle:focus  { border-color: #FDF900; border-width: 2px; }
+Toggle:hover    { background: #606060; }
+Toggle:focus    { border-color: #FDF900; border-width: 2px; }
 Toggle:disabled { background: #3A3A40; opacity: 0.6; }
+Toggle:checked  { background: #00E430; }
+
+.toggle-knob {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 5px;
+  left: 5px;
+  radius: 50%;
+  background: #FFFFFF;
+  transition: left 0.25s ease-out-back;
+}
+Toggle:checked .toggle-knob { left: 40px; }
+Toggle:disabled .toggle-knob { background: #808080; }
 
 Checkbox {
   background: #505050;
@@ -79,11 +95,6 @@ Tooltip {
   border-width: 1px;
   transition: opacity 0.2s ease-out;
 }
-
-Toggle::track { background: #505050; color: #00E430; }
-Toggle::knob  { color: #FFFFFF; }
-Toggle:disabled::track { background: #3A3A40; color: #3A3A40; }
-Toggle:disabled::knob  { color: #808080; }
 
 Checkbox::box  { background: #1574b0; radius: 6px; }
 Checkbox::mark { color: #ea0404; }
@@ -250,6 +261,13 @@ TextInput:hover::cursor {
   gap: 4vh;
   border-width: 1px; border-color: #3A3A40;
 }
+
+.demo-sidebar .title-text { color: #00FFFF; }
+.demo-content .title-text { color: #FF66FF; }
+
+.demo-panel .demo-content .card .card-title { color: #FF0000; }
+
+.demo-content .card:hover .card-title { color: #00FF00; }
 
 .card {
   width: 100%; height: auto;

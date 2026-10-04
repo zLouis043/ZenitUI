@@ -3,116 +3,146 @@
 namespace ZenitUI
 {
 
+	static bool nodeMatchesSimple(const Layout *node, const SimpleSelector &ss)
+	{
+		if (!node)
+			return false;
+
+		// Stato richiesto dal selettore.
+		if (ss.requireHover && !node->isHoveredState())
+			return false;
+		if (ss.requirePressed && !node->isPressedState())
+			return false;
+		if (ss.requireFocus && !node->isFocusedState())
+			return false;
+		if (ss.requireDisabled && !node->isDisabledState())
+			return false;
+		if (ss.requireChecked && !node->isCheckedState())
+			return false;
+
+		// Tipo: tag / classe / id.
+		if (ss.kind == SimpleSelector::Kind::Tag)
+			return node->getStyleTag() == ss.name;
+
+		if (ss.kind == SimpleSelector::Kind::Id)
+			return node->nodeId == ss.name;
+
+		// Class
+		for (const auto &c : node->getStyleClasses())
+			if (c == ss.name)
+				return true;
+		return false;
+	}
+
+	static bool ruleMatches(const ThemeRule &r, const Layout *node)
+	{
+		if (r.chain.empty() || !node)
+			return false;
+
+		// 1) L'ultimo pezzo della chain deve matchare il nodo stesso.
+		if (!nodeMatchesSimple(node, r.chain.back()))
+			return false;
+
+		// 2) I pezzi precedenti devono matchare antenati, in ordine, dal più
+		//    vicino al più lontano (non serve che siano adiacenti).
+		int i = (int)r.chain.size() - 2;
+		const Layout *cur = node->getParent().get();
+		while (i >= 0 && cur)
+		{
+			if (nodeMatchesSimple(cur, r.chain[i]))
+				--i;
+			cur = cur->getParent().get();
+		}
+		return i < 0;
+	}
+
 	ComputedStyle Layout::resolveTargetStyle()
 	{
 		auto &theme = Theme::get();
 
-		std::vector<const StyleSet *> sets;
-		if (!styleTag.empty())
+		// 1) Raccogli le regole che matchano (esclusi i ::part).
+		struct Match
 		{
-			auto it = theme.tags.find(styleTag);
-			if (it != theme.tags.end())
-				sets.push_back(&it->second);
-		}
-		for (const auto &cls : styleClasses)
+			const ThemeRule *rule;
+		};
+		std::vector<Match> matches;
+
+		for (const auto &r : theme.rules)
 		{
-			auto it = theme.classes.find(cls);
-			if (it != theme.classes.end())
-				sets.push_back(&it->second);
-		}
-		if (!nodeId.empty())
-		{
-			auto it = theme.ids.find(nodeId);
-			if (it != theme.ids.end())
-				sets.push_back(&it->second);
+			if (!r.part.empty())
+				continue; // i part li gestisce partStyle
+			if (!ruleMatches(r, this))
+				continue;
+			matches.push_back({&r});
 		}
 
+		// 2) Ordina per specificità crescente, poi per ordine di dichiarazione.
+		std::stable_sort(matches.begin(), matches.end(),
+						 [](const Match &a, const Match &b)
+						 {
+							 if (a.rule->specificity != b.rule->specificity)
+								 return a.rule->specificity < b.rule->specificity;
+							 return a.rule->order < b.rule->order;
+						 });
+
+		// 3) Overlay in ordine.
 		Style finalStyle;
-		for (auto *s : sets)
-			finalStyle.overlay(s->base);
-		finalStyle.overlay(inlineBase);
+		for (const auto &m : matches)
+			finalStyle.overlay(m.rule->style);
 
+		// 4) Inline (vince su qualsiasi regola, indipendentemente dalla specificità).
+		finalStyle.overlay(inlineBase);
 		if (!isEnabled)
-		{
-			for (auto *s : sets)
-				finalStyle.overlay(s->disabled);
 			finalStyle.overlay(inlineDisabled);
-		}
 		else
 		{
 			if (isHovered || isPressed)
-			{
-				for (auto *s : sets)
-					finalStyle.overlay(s->hover);
 				finalStyle.overlay(inlineHover);
-			}
 			if (isPressed)
-			{
-				for (auto *s : sets)
-					finalStyle.overlay(s->pressed);
 				finalStyle.overlay(inlinePressed);
-			}
 			if (isFocused)
-			{
-				for (auto *s : sets)
-					finalStyle.overlay(s->focus);
 				finalStyle.overlay(inlineFocus);
-			}
+			if (isChecked_)
+				finalStyle.overlay(inlineChecked);
 		}
 
+		// 5) Root come fallback (via ComputedStyle::from).
 		const ComputedStyle *parentStyle = nullptr;
 		if (auto p = getParent())
 			parentStyle = &p->currentStyle;
 
-		return ComputedStyle::from(finalStyle, parentStyle, &theme.root.base);
+		return ComputedStyle::from(finalStyle, parentStyle, &theme.root);
 	}
 
 	Style Layout::partStyle(const std::string &partName)
 	{
 		auto &theme = Theme::get();
-		Style target; // era "Style result;" — ora è il target non interpolato
 
-		auto overlayPart = [&](const StyleSet &container)
-		{
-			auto it = container.parts.find(partName);
-			if (it == container.parts.end())
-				return;
-			const StyleSet &ps = it->second;
+		// 1) Raccogli le regole che matchano, filtrando per part.
+		std::vector<const ThemeRule *> matches;
 
-			target.overlay(ps.base);
-			if (!isEnabled)
-			{
-				target.overlay(ps.disabled);
-			}
-			else
-			{
-				if (isHovered || isPressed)
-					target.overlay(ps.hover);
-				if (isPressed)
-					target.overlay(ps.pressed);
-				if (isFocused)
-					target.overlay(ps.focus);
-			}
-		};
+		for (const auto &r : theme.rules)
+		{
+			if (r.part != partName)
+				continue;
+			if (!ruleMatches(r, this))
+				continue;
+			matches.push_back(&r);
+		}
 
-		if (!styleTag.empty())
-		{
-			auto it = theme.tags.find(styleTag);
-			if (it != theme.tags.end())
-				overlayPart(it->second);
-		}
-		for (const auto &cls : styleClasses)
-		{
-			auto it = theme.classes.find(cls);
-			if (it != theme.classes.end())
-				overlayPart(it->second);
-		}
-		if (!nodeId.empty())
-		{
-			auto it = theme.ids.find(nodeId);
-			if (it != theme.ids.end())
-				overlayPart(it->second);
-		}
+		// 2) Ordina per specificità crescente, poi per ordine di dichiarazione.
+		std::stable_sort(matches.begin(), matches.end(),
+						 [](const ThemeRule *a, const ThemeRule *b)
+						 {
+							 if (a->specificity != b->specificity)
+								 return a->specificity < b->specificity;
+							 return a->order < b->order;
+						 });
+
+		// 3) Target = overlay in ordine.
+		Style target;
+		for (const auto *r : matches)
+			target.overlay(r->style);
 
 		// ---- Transizione di proprietà sul part ----
 		double now = UIContext::get().time;
@@ -835,6 +865,8 @@ namespace ZenitUI
 		{
 			isFocused = focusNow;
 			pendingTransition = true;
+			for (auto &c : children)
+				c->markInheritanceDirty();
 		}
 
 		// --- Cambio stato: SOLO setup, niente callback ---
@@ -857,20 +889,33 @@ namespace ZenitUI
 			targetStyle = resolveTargetStyle();
 			pendingTransition = false;
 			syncCssAnimations();
+			for (auto &c : children)
+				c->markInheritanceDirty();
 		}
 		else if (pendingTransition)
 		{
-			targetStyle = resolveTargetStyle();
+			ComputedStyle newTarget = resolveTargetStyle();
 			pendingTransition = false;
 
-			if (transitionTimer >= 1.0f)
+			if (newTarget != targetStyle)
 			{
-				currentStyle = targetStyle;
+				// Il target è cambiato davvero → parti una nuova transizione.
 				transitionStartStyle = currentStyle;
+				transitionTimer = 0.0f;
+				targetStyle = std::move(newTarget);
+			}
+			else
+			{
+				// Nessun cambio reale, solo un refresh (setSize, addClass, ecc.).
+				targetStyle = std::move(newTarget);
+				if (transitionTimer >= 1.0f)
+				{
+					currentStyle = targetStyle;
+					transitionStartStyle = currentStyle;
+				}
 			}
 			syncCssAnimations();
 		}
-
 		// --- Avanzamento transizione per-property ---
 		if (transitionTimer < 1.0f)
 		{

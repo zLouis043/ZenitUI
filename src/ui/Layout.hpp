@@ -111,6 +111,20 @@ namespace ZenitUI {
 		}
 		bool getEnabled() const { return isEnabled; }
 
+		void setChecked(bool c) {
+			if (isChecked_ == c) return;
+			isChecked_ = c;
+			pendingTransition = true;
+			for (auto& child : children) child->markInheritanceDirty();
+		}
+		bool getChecked() const { return isChecked_; }
+
+		bool isHoveredState()  const { return isHovered; }
+		bool isPressedState()  const { return isPressed; }
+		bool isFocusedState()  const { return isFocused; }
+		bool isDisabledState() const { return !isEnabled; }
+		bool isCheckedState()  const { return isChecked_; }
+
 		void setUpdateWhenDisabled(bool v) { updateWhenDisabled_ = v; }
 		bool getUpdateWhenDisabled() const { return updateWhenDisabled_; }
 
@@ -251,11 +265,12 @@ namespace ZenitUI {
 		bool keyboardActivates_{ false };
 		bool updateWhenDisabled_{false};
 		bool pressedInChain_{ false };
+		bool isChecked_{ false };
 
 
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
-		Style inlineBase, inlineHover, inlinePressed, inlineDisabled, inlineFocus;
+		Style inlineBase, inlineHover, inlinePressed, inlineDisabled, inlineFocus, inlineChecked;
 		ComputedStyle currentStyle, targetStyle, transitionStartStyle;
 		UIState currentState{ UIState::Idle };
 		float transitionTimer{ 1.0f };

@@ -7,41 +7,52 @@
 
 namespace ZenitUI {
 
-	class Theme {
+	struct ThemeRule {
+		std::vector<SimpleSelector> chain;
+		std::string part;              // vuoto se non è ::part
+		Style       style;
+		int         specificity{ 0 };  // precalcolata
+		int         order{ 0 };        // ordine di dichiarazione (per tie-break)
+	};
+
+	inline int computeSpecificity(const std::vector<SimpleSelector>& chain) {
+		int ids = 0, classes = 0, tags = 0;
+		for (const auto& s : chain) {
+			if      (s.kind == SimpleSelector::Kind::Id)    ids++;
+			else if (s.kind == SimpleSelector::Kind::Class) classes++;
+			else                                             tags++;
+
+			// Le pseudo-classi (:hover, :checked, ...) contano come classi.
+			if (s.requireHover || s.requirePressed || s.requireFocus
+				|| s.requireDisabled || s.requireChecked) classes++;
+		}
+		return ids * 10000 + classes * 100 + tags;
+	}
+class Theme {
 	public:
-	std::unordered_map<std::string, StyleSet> tags; 
-		std::unordered_map<std::string, StyleSet> classes;
-		std::unordered_map<std::string, StyleSet> ids;
+		std::vector<ThemeRule> rules;
+		Style root;
 		std::unordered_map<std::string, KeyframeAnimation> keyframes;
-		StyleSet root; 
 
 		static Theme& get() {
 			static Theme instance;
 			return instance;
 		}
 
-		Theme& add(const std::string& name, const StyleSet& set) {
-			classes[name] = set;
-			return *this;
+		void addRule(ThemeRule r) {
+			r.specificity = computeSpecificity(r.chain);
+			r.order       = (int)rules.size();
+			rules.push_back(std::move(r));
 		}
-		Theme& addTag(const std::string& name, const StyleSet& set) {
-			tags[name] = set;
-			return *this;
-		}
-		Theme& addId(const std::string& name, const StyleSet& set) {
-			ids[name] = set;
-			return *this;
-		}
-		Theme& addKeyframes(const KeyframeAnimation& anim) {
+
+		void addKeyframes(const KeyframeAnimation& anim) {
 			keyframes[anim.name] = anim;
-			return *this;
 		}
+
 		void clear() {
-			classes.clear();
+			rules.clear();
 			keyframes.clear();
-			tags.clear();
-			ids.clear();
-			root = StyleSet{};
+			root = Style{};
 		}
 	};
 }

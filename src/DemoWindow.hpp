@@ -92,10 +92,8 @@ private:
         card->addChild(HStack({ Label("Slider → ProgressBar: ")->cls("normal-text")->cls("setting-label"), sfxSlider })->cls("setting-row"));
         card->addChild(HStack({ Label("ProgressBar: ")->cls("normal-text")->cls("setting-label"), pb })->cls("setting-row"));
 
-        auto toggle = std::make_shared<Toggle>(true);
-        toggle->size(VW(4.0f), VH(4.0f));
+        auto toggle = Toggle::create(true);
         auto check  = std::make_shared<Checkbox>(false);
-        check->size(VH(4.0f), VH(4.0f));
 
         card->addChild(HStack({ Label("Toggle: ")->cls("normal-text")->cls("setting-label"),   toggle })->cls("setting-row"));
         card->addChild(HStack({ Label("Checkbox: ")->cls("normal-text")->cls("setting-label"), check  })->cls("setting-row"));
