@@ -55,9 +55,18 @@ namespace ZenitUI {
 		virtual InputEvents pollInputEvents() = 0;  
 	};
 
+	class IAssetProvider {
+	public:
+		virtual ~IAssetProvider() = default;
+		virtual FontHandle    getFont(std::string_view name) = 0;
+		virtual TextureHandle getTexture(std::string_view name) = 0;
+		virtual EffectHandle  getEffect(std::string_view name) = 0;
+	};
+
 	struct UIContext {
 		IRenderer* renderer{ nullptr };
 		IPlatform* platform{ nullptr };
+		IAssetProvider* assets  { nullptr }; 
 
 		PointerState pointer;
 		float dt{ 0.0f };
@@ -65,11 +74,24 @@ namespace ZenitUI {
 		bool shiftHeld{ false }; 
 		bool clickConsumed{ false };
 		void consumeClick() { clickConsumed = true; }
+		bool rightClickConsumed{ false };
+		void consumeRightClick() { rightClickConsumed = true; }
 
 		InputEvents inputEvents;
 		std::weak_ptr<Layout> focusedNode;
+		std::weak_ptr<Layout> pointerCapture;
 
 		Layout* topmostConsumer{ nullptr };  
+
+		Layout* hoverTarget   { nullptr };  // topmost sotto il mouse (geometrico)
+		Layout* pressTarget   { nullptr };  // fissato al mouse-down
+		Layout* releaseTarget { nullptr };  // fissato al mouse-up
+
+		bool isPressTarget(const Layout* n) const { return pressTarget == n; }
+		bool isValidClick() const {
+			return pressTarget && releaseTarget && pressTarget == releaseTarget;
+		}
+
 		std::vector<std::weak_ptr<Layout>> activePortals;
 		std::vector<std::weak_ptr<Layout>> framePortals;
 
@@ -79,7 +101,10 @@ namespace ZenitUI {
 			dt = delta_time;
 			wheelConsumedThisFrame = false; 
 			clickConsumed = false;
+			rightClickConsumed = false; 
 			topmostConsumer = nullptr; 
+			hoverTarget = nullptr;      // <-- nuovo
+    		releaseTarget = nullptr;    // <-- nuovo
 			activePortals = std::move(framePortals);
 			framePortals.clear();
 			if (platform) {
@@ -90,7 +115,7 @@ namespace ZenitUI {
 			}
 		}
 
-		void requestFocus(std::shared_ptr<Layout> n) { focusedNode = n; }
+		void requestFocus(std::shared_ptr<Layout> n);
 		void releaseFocus()                          { focusedNode.reset(); }
 		bool hasFocus(const Layout* n) const {
 			auto sp = focusedNode.lock();

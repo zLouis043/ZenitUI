@@ -72,6 +72,9 @@ namespace ZenitUI {
 		bool down{ false };
 		bool pressed{ false };
 		bool released{ false };
+		bool rightDown{ false };
+		bool rightPressed{ false };
+		bool rightReleased{ false };
 		float wheelY{ 0.0f };
 	};
 
@@ -79,7 +82,7 @@ namespace ZenitUI {
 		static inline Vec2 viewport{ 1280.0f, 720.0f };
 	};
 
-		// Codici tasto "speciali" (non caratteri). Indipendenti dal backend.
+	// Codici tasto "speciali" (non caratteri). Indipendenti dal backend.
 	namespace Key {
 		constexpr int Backspace = 1;
 		constexpr int Delete    = 2;

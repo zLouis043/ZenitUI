@@ -25,9 +25,19 @@ int main(void){
 
     RaylibRenderer backendRenderer;
     RaylibPlatform backendPlatform;
+    RaylibAssetProvider backendAssets(backendRenderer);
 
     UIContext::get().renderer = &backendRenderer;
     UIContext::get().platform = &backendPlatform;
+    UIContext::get().assets   = &backendAssets;
+
+    backendAssets.loadFont("calibri", "assets/calibrib.ttf", 64);
+    backendAssets.loadFont("mont", "assets/mont.otf", 64);
+    backendAssets.loadFont("congose", "assets/congose.ttf", 64);
+    backendAssets.loadFont("designer", "assets/Designer.otf", 64);
+    backendAssets.loadFont("highrise", "assets/highrise.otf", 64);
+    backendAssets.loadTexture("bubble", "assets/bubble.png");
+    backendAssets.loadTexture("npatches", "assets/npatches_y.png");
 
     InitializeGameTheme();
 

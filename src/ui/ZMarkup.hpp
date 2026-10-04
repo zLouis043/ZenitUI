@@ -327,6 +327,25 @@ inline bool applyStyleAttr(Style& st, const std::string& key, const std::string&
          key == "options" || key == "passthrough"){
         return true;
     }
+    else if (key == "font") { st.font = val; return true; }
+    else if (key == "background-texture") {
+        std::istringstream iss(val);
+        std::string name;
+        if (!(iss >> name)) return true;   // vuoto, ignora
+
+        TextureRef ref;
+        ref.name = name;
+
+        // Prova a leggere 4 interi opzionali
+        int l, t, r, b;
+        if (iss >> l >> t >> r >> b) {
+            ref.left = l; ref.top = t; ref.right = r; ref.bottom = b;
+        }
+        // se ne trova meno di 4, ignora la parte slice (stretch semplice)
+
+        st.backgroundTexture = ref;
+        return true;
+    }
     return false;
 }
 

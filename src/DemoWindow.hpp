@@ -357,6 +357,41 @@ private:
 
         card->addChild(parentBox);
         parent->addChild(card);
+
+        // --- Test Popup ---
+        auto popupTest = VStack()->cls("card");
+        popupTest->addChild(Label("Popup / ContextMenu")->cls("card-title"));
+        popupTest->addChild(Label("Click sinistro o destro sul bottone per aprire un menu contestuale.")->cls("card-desc"));
+
+        auto trigger = Btn("Apri Menu", nullptr)->cls("btn-primary");
+        popupTest->addChild(trigger);
+
+        auto menu = ContextMenu({
+            { "Voce 1", []() { std::printf("Menu: Voce 1\n"); } },
+            { "Voce 2", []() { std::printf("Menu: Voce 2\n"); } },
+            { "Voce lunga di test", []() { std::printf("Menu: Voce lunga\n"); } },
+        });
+
+        // Il popup è figlio del trigger (per il lifetime), ma essendo portal
+        // viene renderizzato sopra tutto.
+        trigger->addChild(menu);
+        
+        trigger->onClick      = [trigger, menu]() { menu->openBelow(trigger); };
+        trigger->onRightClick = [trigger, menu]() { menu->openBelow(trigger); };
+
+        auto box = VStack()->cls("bubbling-box");
+        box->addChild(Label("Click destro su questo box")->cls("normal-text"));
+
+        auto boxMenu = ContextMenu({
+            { "Azione A", []() { std::printf("Box: Azione A\n"); } },
+            { "Azione B", []() { std::printf("Box: Azione B\n"); } },
+        });
+        box->addChild(boxMenu);
+        box->onRightClick = [box, boxMenu]() { boxMenu->openAt(UIContext::get().pointer.pos); };
+
+        popupTest->addChild(box);
+
+        parent->addChild(popupTest);
     }
 
     // ---------- TAB 7: STRESS ----------

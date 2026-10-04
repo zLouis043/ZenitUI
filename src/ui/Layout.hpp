@@ -82,14 +82,37 @@ namespace ZenitUI {
 		std::shared_ptr<Layout> getParent() const { return parent.lock(); }
 		bool hasParent() const { return !parent.expired(); }
 
+		bool isAncestorOf(const Layout* other) const {
+			if (!other) return false;
+			auto p = other->getParent();
+			while (p) {
+				if (p.get() == this) return true;
+				p = p->getParent();
+			}
+			return false;
+		}
+
 		// --- Stato / stile ---
 		void setInteractive(bool interactive) { isInteractive = interactive; }
 		void setBlocksRaycast(bool blocks) { blocksRaycast = blocks; }
 
 		void setEnabled(bool e) {
-			if (isEnabled != e) { isEnabled = e; pendingTransition = true; }
+			if (isEnabled == e) return;
+			isEnabled = e;
+			pendingTransition = true;
+
+			if (!e) {
+				auto& ctx = UIContext::get();
+				if (ctx.focusedNode.lock().get()    == this) ctx.focusedNode.reset();
+				if (ctx.pointerCapture.lock().get() == this) ctx.pointerCapture.reset();
+			}
+
+			onEnabledChanged(e);
 		}
 		bool getEnabled() const { return isEnabled; }
+
+		void setUpdateWhenDisabled(bool v) { updateWhenDisabled_ = v; }
+		bool getUpdateWhenDisabled() const { return updateWhenDisabled_; }
 
 		void beginTransition() {
 			pendingTransition = true;
@@ -119,8 +142,55 @@ namespace ZenitUI {
 		void setPassThrough(bool p) { passThrough_ = p; }
 		bool getPassThrough() const { return passThrough_; }
 
+		// Pointer capture: finché un nodo ha il capture attivo, ogni evento
+		// pointer viene indirizzato a lui, indipendentemente dalla posizione
+		// del cursore. Il capture viene rilasciato automaticamente quando il
+		// tasto del mouse viene sollevato.
+		void capturePointer() {
+			UIContext::get().pointerCapture = shared_from_this();
+		}
+		void releasePointer() {
+			auto& ctx = UIContext::get();
+			auto sp = ctx.pointerCapture.lock();
+			if (sp.get() == this) ctx.pointerCapture.reset();
+		}
+		bool hasPointerCapture() const {
+			return UIContext::get().pointerCapture.lock().get() == this;
+		}
+
 		void setKeyboardActivates(bool v) { keyboardActivates_ = v; }
     	bool getKeyboardActivates() const { return keyboardActivates_; }
+
+		inline FontHandle resolveFont(const ComputedStyle& style, FontHandle fallback = {}) {
+			if (style.font.empty() || !UIContext::get().assets) return fallback;
+			FontHandle h = UIContext::get().assets->getFont(style.font);
+			return h.id != 0 ? h : fallback;
+		}
+
+		struct ResolvedBgTexture {
+			TextureHandle tex;
+			NineSlice     slice;
+			bool          valid() const { return tex.valid(); }
+		};
+
+		inline ResolvedBgTexture resolveBgTexture(
+			const ComputedStyle& style,
+			TextureHandle fallbackTex = {},
+			NineSlice     fallbackSlice = {0,0,0,0})
+		{
+			if (!style.backgroundTexture.name.empty()) {
+				auto* a = UIContext::get().assets;
+				if (a) {
+					TextureHandle h = a->getTexture(style.backgroundTexture.name);
+					if (h.valid()) {
+						const auto& tr = style.backgroundTexture;
+						return { h, NineSlice{ tr.left, tr.top, tr.right, tr.bottom } };
+					}
+				}
+			}
+			return { fallbackTex, fallbackSlice };
+		}
+
 
 		void setInlineBase(const Style& s) { inlineBase.overlay(s); pendingTransition = true; }
 		Style& getInlineBase() { pendingTransition = true; return inlineBase; }
@@ -141,22 +211,23 @@ namespace ZenitUI {
 			for (auto& a : activeCssAnimations) if (a.name == name) a.finished = true;
 		}
 
-		// --- Ciclo di vita ---
+		// ============================================================
+		//  CICLO DI VITA
+		//  Chiamati dal runtime (main loop + updateTree). Non override.
+		// ============================================================
 		virtual Vec2 measure(float parent_w, float parent_h);
 		virtual void arrange(Rect space);
-		virtual void arrangeInto(Rect space);
 		virtual void update(float dt, bool ancestorBlocked = false);
 		virtual void draw(float parentOpacity = 1.0f);
 
 		Layout* hitTest(Vec2 p, bool ancestorBlocked = false);
-
 		void updateTree(float dt);
 
 		Rect getRect() const { return rect; }
-		Vec2 getMeasuredSize() const { return measuredSize; }  
+		Vec2 getMeasuredSize() const { return measuredSize; }
 		const ComputedStyle& getStyle() const { return currentStyle; }
 
-		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
+		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick, onRightClick;
 		std::vector<std::shared_ptr<Layout>> children;
 		std::string nodeId;
 
@@ -178,6 +249,8 @@ namespace ZenitUI {
 		bool isPortal_{ false };
 		bool passThrough_{ false };
 		bool keyboardActivates_{ false };
+		bool updateWhenDisabled_{false};
+		bool pressedInChain_{ false };
 
 
 		std::string styleTag;
@@ -195,30 +268,37 @@ namespace ZenitUI {
 
 		std::weak_ptr<Layout> parent;
 
+		void markInheritanceDirty() {
+			pendingTransition = true;
+			for (auto& c : children) c->markInheritanceDirty();
+		}
+
+		// Ritorna la size intrinseca del widget (es. dimensione del testo).
+		// Chiamato in fase di measure, prima di arrangiare i figli.
+		// Default: {0,0}. Override solo se il widget ha una dimensione "naturale".
 		virtual Vec2 computeIntrinsicSize(float /*availW*/, float /*availH*/) { return {0,0}; }
 
-		virtual Vec2 measureChild(Layout* child, float availW, float availH) {
-			return child->measure(availW, availH);
-		}
+		// Chiamato dopo che `rect` è stato settato (subito dopo arrangeInto).
+		// Usalo per ricalcolare cose che dipendono dalla size FINALE, come il
+		// wrap del testo. Non deve modificare `measuredSize`.
+		virtual void onLayout() {}
 
-		Transform2D currentTransform(const ComputedStyle& style) const {
-			Transform2D tr;
-			tr.pivot = rect.center();
-			tr.translate = {
-				 style.translateX.resolveSelf(rect.width),
-        		style.translateY.resolveSelf(rect.height)
-			};
-			tr.rotationDeg = style.rotation;
-			tr.scale = style.scale;
-			return tr;
-		}
+		// Per-frame update. Chiamato una volta per frame, dopo tutto il
+		// processing di stato (hover/pressed/focus). Usalo per input custom,
+		// animazioni locali, logica di drag, ecc.
+		virtual void onUpdate(float /*dt*/) {}
 
-		// Chiamato quando un discendente ottiene il focus.
-		// Ritorna true se ha gestito lo scroll internamente.
-		virtual void onDescendantFocused(Layout* /*descendant*/) {}
+		// Chiamato quando isEnabled cambia. Usalo per pulire cache di stato o
+		// chiudere popup/menu. Non serve per la logica per-frame: per quella
+		// c'è onUpdate, che di default non gira quando il nodo è disabilitato.
+		virtual void onEnabledChanged(bool /*nowEnabled*/) {}
 
-		// Chrome: sfondo + bordo. Chiamato automaticamente prima di renderContent.
-		// Override solo se il widget ha un "vestito" particolare (es. texture).
+		// Disegno del contenuto del widget.
+		// Chiamato DOPO renderChrome, PRIMA dei figli.
+		virtual void renderContent(float /*op*/, const ComputedStyle& /*style*/) {}
+
+		// Sfondo + bordo. Default: fill del background + stroke del border dallo
+		// Style. Override solo per texture, nine-slice o "vestiti" particolari.
 		virtual void renderChrome(float op, const ComputedStyle& style) {
 			auto r = UIContext::get().renderer;
 			if (!r) return;
@@ -227,12 +307,28 @@ namespace ZenitUI {
 			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
 			float rPx = std::clamp(style.radius.resolve(maxRadius * 2.0f), 0.0f, maxRadius);
 
+			// 1) Colore di sfondo (sotto la texture)
 			Color bg = style.background.withAlpha(op);
 			if (bg.a > 0) {
 				if (rPx > 0.0f && maxRadius > 0.0f) r->fillRoundedRect(rect, rPx, bg);
 				else                                r->fillRect(rect, bg);
 			}
 
+			// 2) Texture: CSS se presente, altrimenti il fallback del widget
+			auto resolved = resolveBgTexture(style, bgTexture, bgPatchInfo);
+			if (resolved.valid()) {
+				Color tint = style.tint.withAlpha(op);
+				if (resolved.slice.left || resolved.slice.top ||
+					resolved.slice.right || resolved.slice.bottom) {
+					r->drawNineSlice(resolved.tex, resolved.slice, rect, tint);
+				} else {
+					// stretch semplice: src = dimensioni intere, dst = rect
+					Rect src { 0, 0, (float)resolved.tex.width, (float)resolved.tex.height };
+					r->drawTexture(resolved.tex, src, rect, tint);
+				}
+			}
+
+			// 3) Bordo
 			Color bc = style.borderColor.withAlpha(op);
 			float bw = style.borderWidth.resolve(maxRadius * 2.0f);
 			if (bc.a > 0 && bw > 0.0f) {
@@ -241,10 +337,29 @@ namespace ZenitUI {
 			}
 		}
 
-		// Contenuto specifico del widget. Di default non disegna nulla.
-		virtual void renderContent(float /*op*/, const ComputedStyle& /*style*/) {}
-		virtual void onPreUpdate(float /*dt*/) {}
-		virtual void onPostUpdate(float  /*dt*/) {}
+		// Chiamato quando un discendente ottiene il focus.
+		virtual void onDescendantFocused(Layout* /*descendant*/) {}
+
+		// ============================================================
+		//  LAYOUT ENGINE (interno)
+		// ============================================================
+
+		// Layout dei figli. Non override: se hai bisogno di un layout custom
+		// (scroll, portal, ...) override `arrange` e chiama `arrangeInto`
+		// con lo spazio che vuoi.
+		void arrangeInto(Rect space);
+
+		Transform2D currentTransform(const ComputedStyle& style) const {
+			Transform2D tr;
+			tr.pivot = rect.center();
+			tr.translate = {
+				style.translateX.resolveSelf(rect.width),
+				style.translateY.resolveSelf(rect.height)
+			};
+			tr.rotationDeg = style.rotation;
+			tr.scale = style.scale;
+			return tr;
+		}
 
 	private:
 		ComputedStyle resolveTargetStyle();

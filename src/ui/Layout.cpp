@@ -5,7 +5,6 @@ namespace ZenitUI {
 	ComputedStyle Layout::resolveTargetStyle() {
 		auto& theme = Theme::get();
 
-		// Raccogli gli StyleSet applicabili in ordine di specificità
 		std::vector<const StyleSet*> sets;
 		if (!styleTag.empty()) {
 			auto it = theme.tags.find(styleTag);
@@ -21,8 +20,6 @@ namespace ZenitUI {
 		}
 
 		Style finalStyle;
-
-		// Fase 1: base di tutti i livelli (specificità crescente)
 		for (auto* s : sets) finalStyle.overlay(s->base);
 		finalStyle.overlay(inlineBase);
 
@@ -44,7 +41,10 @@ namespace ZenitUI {
 			}
 		}
 
-		return ComputedStyle::from(finalStyle);
+		const ComputedStyle* parentStyle = nullptr;
+		if (auto p = getParent()) parentStyle = &p->currentStyle;
+
+		return ComputedStyle::from(finalStyle, parentStyle, &theme.root.base);
 	}
 
 	void Layout::playAnimation(const std::string& name, bool playReverse) {
@@ -158,6 +158,7 @@ namespace ZenitUI {
 	void Layout::arrange(Rect space) {
 		rect = space;
 		arrangeInto(space);
+		onLayout();
 	}
 
 	void Layout::arrangeInto(Rect space) {
@@ -440,6 +441,26 @@ namespace ZenitUI {
 
 	void Layout::update(float dt, bool ancestorBlocked) {
 
+		// ============================================================
+		//  FASE 1: aggiorna currentStyle per questo frame
+		// ============================================================
+
+		// Snapshot delle prop ereditate PRIMA di ogni modifica
+		struct InheritedSnap {
+			std::string font;
+			Value       fontSize;
+			Color       color;
+			Value       letterSpacing;
+			Align       textAlign;
+		} snapBefore{
+			currentStyle.font,
+			currentStyle.fontSize,
+			currentStyle.color,
+			currentStyle.letterSpacing,
+			currentStyle.textAlign
+		};
+
+		// Init stile al primo frame
 		if (!styleInitialized) {
 			styleInitialized = true;
 			currentStyle = targetStyle = transitionStartStyle = resolveTargetStyle();
@@ -447,9 +468,7 @@ namespace ZenitUI {
 			syncCssAnimations();
 		}
 
-		onPreUpdate(dt);
-
-		// --- 1) Animazioni imperative ---
+		// --- Animazioni imperative ---
 		bool localAnimBlocks = false;
 		for (auto& [n, s] : activeAnimations) {
 			if (!s.playing) continue;
@@ -465,37 +484,28 @@ namespace ZenitUI {
 			pendingTransition = true;
 		}
 
-		// --- 2) Blocchi e UPDATE DEI FIGLI (Bottom-Up) ---
+		// --- Blocchi ---
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
 		bool selfBlocked  = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
 
-		// Eseguiamo i figli PRIMA di risolvere gli eventi locali. Questo garantisce il Bubbling!
-		size_t n = children.size();
-		for (size_t i = 0; i < n; ++i) children[i]->update(dt, blockSubtree);
-
-		auto& ctx = UIContext::get();
+		auto& ctx     = UIContext::get();
 		auto& pointer = ctx.pointer;
 
-		// --- 3) Calcolo Hover & Pressed (Bubbling Chain) ---
-		// Un nodo è Hovered se lui STESSO o uno dei suoi SOTTO-NODI è il topmostConsumer
+		// --- Hover / Pressed / Focus (usano topmostConsumer, già settato) ---
 		isHovered = false;
 		if (!selfBlocked && rect.width > 0 && rect.height > 0) {
-			Layout* trace = ctx.topmostConsumer;
-			while (trace) {
-				if (trace == this) { isHovered = true; break; }
-				
-				// IL FIX CHIAVE:
-				// Se il nodo lungo la catena blocca gli eventi (passThrough == false),
-				// la propagazione VISIVA si ferma. Il padre non si illuminerà!
-				if (!trace->getPassThrough()) {
-					break;
-				}
-				
-				trace = trace->getParent().get();
-			}
+			isHovered = rect.contains(pointer.pos);
 		}
 
-		isPressed = isHovered && pointer.down;
+		isPressed = false;
+		if (pointer.down && ctx.pressTarget) {
+			Layout* n = ctx.pressTarget;
+			while (n) {
+				if (n == this) { isPressed = true; break; }
+				if (!n->getPassThrough()) break; 
+				n = n->getParent().get();
+			}
+		}
 
 		bool focusNow = ctx.hasFocus(this);
 		if (focusNow != isFocused) {
@@ -503,71 +513,55 @@ namespace ZenitUI {
 			pendingTransition = true;
 		}
 
-		handleFocusInput();
-
-		// --- 4) Cambio stato ed esecuzione Callback ---
+		// --- Cambio stato: SOLO setup, niente callback ---
 		UIState nextState = UIState::Idle;
 		if (!isEnabled)         nextState = UIState::Disabled;
 		else if (isPressed)     nextState = UIState::Pressed;
 		else if (isHovered)     nextState = UIState::Hover;
 
-		bool stateChanged = (currentState != nextState);
-		if (stateChanged) {
-			if (nextState == UIState::Hover && onHoverEnter) onHoverEnter();
-			else if (currentState == UIState::Hover && onHoverExit) onHoverExit();
+		UIState prevState     = currentState;   // per le callback in fase 3
+		bool    stateChanged  = (currentState != nextState);
 
-			if (nextState == UIState::Pressed && onPress) onPress();
-			else if (currentState == UIState::Pressed) {
-				if (onRelease) onRelease();
-				
-				if (nextState == UIState::Hover && pointer.released && onClick) {
-					if (!ctx.clickConsumed) {
-						onClick();
-						
-						// Se non è impostato il passthrough, blocchiamo la propagazione
-						if (!passThrough_) {
-							ctx.consumeClick();
-						}
-					}
-				}
-			}
-			currentState = nextState;
-			transitionTimer = 0.0f;
+		if (stateChanged) {
+			currentState         = nextState;
+			transitionTimer      = 0.0f;
 			transitionStartStyle = currentStyle;
-			targetStyle = resolveTargetStyle();
-			pendingTransition = false;
+			targetStyle          = resolveTargetStyle();
+			pendingTransition    = false;
 			syncCssAnimations();
 		} else if (pendingTransition) {
-			targetStyle = resolveTargetStyle();
+			targetStyle       = resolveTargetStyle();
 			pendingTransition = false;
 
 			if (transitionTimer >= 1.0f) {
-				currentStyle = targetStyle;
+				currentStyle         = targetStyle;
 				transitionStartStyle = currentStyle;
 			}
 			syncCssAnimations();
 		}
-		
-		// --- 5) Transizione per-property ---
+
+		// --- Avanzamento transizione per-property ---
 		if (transitionTimer < 1.0f) {
 			float maxDur = targetStyle.transitionTime;
-			for (const auto& spec : targetStyle.transitions) maxDur = std::max(maxDur, spec.duration);
+			for (const auto& spec : targetStyle.transitions)
+				maxDur = std::max(maxDur, spec.duration);
+
 			if (maxDur <= 0.001f) {
 				transitionTimer = 1.0f;
-				currentStyle = targetStyle;
+				currentStyle    = targetStyle;
 			} else {
 				float elapsed = transitionTimer * maxDur;
 				transitionTimer += dt / maxDur;
 				if (transitionTimer >= 1.0f) {
 					transitionTimer = 1.0f;
-					currentStyle = targetStyle;
+					currentStyle    = targetStyle;
 				} else {
 					currentStyle = lerpStyleTimed(transitionStartStyle, targetStyle, elapsed);
 				}
 			}
 		}
 
-		// --- 6) Tick animazioni CSS ---
+		// --- Tick animazioni CSS (nessuna callback utente) ---
 		for (auto& anim : activeCssAnimations) {
 			if (anim.finished) continue;
 			anim.elapsed += dt;
@@ -583,13 +577,86 @@ namespace ZenitUI {
 			activeCssAnimations.end()
 		);
 
-		// --- 7) Rimozioni ---
+		// --- Propagazione inheritance: se una prop ereditable è cambiata,
+		//     marca i figli PRIMA che girino (fase 2) ---
+		bool inheritedChanged =
+			snapBefore.font          != currentStyle.font          ||
+			!(snapBefore.fontSize    == currentStyle.fontSize)     ||
+			!(snapBefore.color       == currentStyle.color)        ||
+			!(snapBefore.letterSpacing == currentStyle.letterSpacing) ||
+			!(snapBefore.textAlign   == currentStyle.textAlign);
+
+		if (inheritedChanged) {
+			for (auto& c : children) {
+				c->pendingTransition = true;
+				c->markInheritanceDirty();
+			}
+		}
+
+		// ============================================================
+		//  FASE 2: i figli vedono currentStyle già aggiornato
+		// ============================================================
+		{
+			size_t n = children.size();
+			for (size_t i = 0; i < n; ++i)
+				children[i]->update(dt, blockSubtree);
+		}
+
+		// ============================================================
+		//  FASE 3: callback + post-processing
+		// ============================================================
+
+		// --- Focus input (Enter/Space su nodo focusato) ---
+		handleFocusInput();
+
+		// --- Hover enter/exit (geometrico, come prima) ---
+		if (stateChanged) {
+			if (nextState == UIState::Hover && prevState != UIState::Hover && onHoverEnter)
+				onHoverEnter();
+			else if (prevState == UIState::Hover && nextState != UIState::Hover && onHoverExit)
+				onHoverExit();
+		}
+
+		// --- Press: il nodo è nel percorso del pressTarget ---
+		if (pointer.pressed && !ctx.clickConsumed) {
+			bool inPressPath = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
+			if (inPressPath) {
+				if (onPress) onPress();
+				if (!passThrough_) ctx.consumeClick();   // "consuma" il press
+			}
+		}
+
+		// --- Release + click: pressTarget == releaseTarget sul percorso ---
+		if (pointer.released) {
+			bool pressedHere  = (ctx.pressTarget   == this) || isAncestorOf(ctx.pressTarget);
+			bool releasedHere = (ctx.releaseTarget == this) || isAncestorOf(ctx.releaseTarget);
+			bool validClick   = pressedHere && releasedHere;
+
+			if (validClick) {
+				if (onRelease) onRelease();
+
+				if (onClick && !ctx.clickConsumed) {
+					onClick();
+					if (!passThrough_) ctx.consumeClick();
+				}
+			}
+		}
+
+		// --- Right-click: invariato (già geometrico) ---
+		if (pointer.rightPressed && isHovered && onRightClick) {
+			if (!ctx.rightClickConsumed) {
+				onRightClick();
+				if (!passThrough_) ctx.consumeRightClick();
+			}
+		}
+
+		// --- Rimozioni ---
 		for (auto it = children.begin(); it != children.end(); ) {
 			if ((*it)->wantsRemoval) { (*it)->parent.reset(); it = children.erase(it); }
 			else ++it;
 		}
 
-		onPostUpdate(dt);
+		if (isEnabled || updateWhenDisabled_) onUpdate(dt);
 	}
 
 	void Layout::draw(float parentOpacity) {
@@ -793,8 +860,19 @@ namespace ZenitUI {
 	void Layout::updateTree(float dt) {
 		auto& ctx = UIContext::get();
 
-		// 1) Hit-test topmost
-		ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+		// 1) Hit-test topmost, con supporto al pointer capture
+		auto captured = ctx.pointerCapture.lock();
+		if (!captured || !captured->getEnabled()) {
+			ctx.pointerCapture.reset();
+			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+		} else {
+			ctx.topmostConsumer = captured.get();
+		}
+
+		// NUOVO: popola i target di input
+		ctx.hoverTarget = ctx.topmostConsumer;
+		if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
+		if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
 
 		// 2) Focus management
 		// 2a) Click con mouse → cambia focus
@@ -847,6 +925,10 @@ namespace ZenitUI {
 
 		// 3) Update normale (con defer automatico)
 		update(dt, false);
+
+		// 4) Auto-rilascio del capture quando il tasto viene sollevato
+		if (ctx.pointer.released) ctx.pressTarget = nullptr;
+		if (!ctx.pointer.down && !ctx.pointerCapture.expired()) ctx.pointerCapture.reset();
 	}
 
 	void Layout::handleFocusInput() {
@@ -859,4 +941,13 @@ namespace ZenitUI {
 			}
 		}
 	}
+}
+
+namespace ZenitUI {
+// Definizione fuori linea perché il corpo richiede Layout completo
+// (isFocusable è dichiarato in Layout.hpp, non visibile da UIContext.hpp).
+void UIContext::requestFocus(std::shared_ptr<Layout> n) {
+    if (n && n->isFocusable()) focusedNode = n;
+    else                       focusedNode.reset();
+}
 }

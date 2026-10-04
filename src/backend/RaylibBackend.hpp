@@ -5,6 +5,9 @@
 #define NOUSER
 
 #include "UIContext.hpp"
+#include <raylib.h> 
+#include <unordered_map>
+#include <string>
 
 namespace ZenitUI {
 
@@ -52,9 +55,9 @@ namespace ZenitUI {
 
 		bool supports(Feature f) const override { return f == Feature::Effects; }
 
-		TextureHandle registerTexture(unsigned int raylibTexId, int w, int h);
-		FontHandle registerFont(unsigned int raylibFontId);
-		EffectHandle registerEffect(unsigned int raylibShaderId);
+		TextureHandle registerTexture(const ::Texture2D& t);
+		FontHandle    registerFont(const ::Font& f);
+		EffectHandle  registerEffect(const ::Shader& s);
 
 		Rect transformClipToScreen(const Rect& local) const;
 	private:
@@ -62,5 +65,41 @@ namespace ZenitUI {
 		std::vector<Transform2D> transformStack;
 		bool clipActive{ false };
 		Rect currentClip{ 0,0,0,0 };
+	};
+
+	// RaylibBackend.hpp
+	class RaylibAssetProvider : public IAssetProvider {
+	public:
+		explicit RaylibAssetProvider(RaylibRenderer& r) : renderer(r) {}
+
+		bool loadFont(std::string name, const char* path, int baseSize = 96) {
+			::Font f = LoadFontEx(path, baseSize, nullptr, 0);
+			if (f.texture.id == 0) return false;
+			SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
+			fonts[std::move(name)] = renderer.registerFont(f);
+			return true;
+		}
+
+		bool loadTexture(std::string name, const char* path) {
+			::Texture2D t = LoadTexture(path);
+			if (t.id == 0) return false;
+			textures[std::move(name)] = renderer.registerTexture(t);
+			return true;
+		}
+
+		FontHandle getFont(std::string_view name) override {
+			auto it = fonts.find(std::string(name));
+			return it != fonts.end() ? it->second : FontHandle{};
+		}
+		TextureHandle getTexture(std::string_view name) override {
+			auto it = textures.find(std::string(name));
+			return it != textures.end() ? it->second : TextureHandle{};
+		}
+		EffectHandle  getEffect(std::string_view /*name*/) override       { return {}; }
+
+	private:
+		RaylibRenderer& renderer;
+		std::unordered_map<std::string, FontHandle>    fonts;
+		std::unordered_map<std::string, TextureHandle> textures;
 	};
 }
