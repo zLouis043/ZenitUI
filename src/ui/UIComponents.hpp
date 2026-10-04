@@ -354,23 +354,25 @@ namespace ZenitUI::UI
 	};
 
 	// ---------- Toggle ----------
+	// ---------- Toggle ----------
 	class Toggle : public TLayout<Toggle>
 	{
 	public:
-		Toggle(bool state = false) : TLayout<Toggle>(LayoutType::Stack), isChecked(state)
+		Toggle(bool state = false)
+			: TLayout<Toggle>(LayoutType::Stack), isChecked(state)
 		{
 			setInteractive(true);
 			setFocusable(true);
 			setKeyboardActivates(true);
 			setStyleTag("Toggle");
 
-			// Default inline (il CSS può sempre sovrascrivere).
-			getInlineBase().background = Colors::DarkGray;
-			getInlineBase().radius = Px(8.0f);
+			// Comunica lo stato al Layout (il CSS usa :checked sui discendenti)
+			setChecked(state);
 
 			onClick = [this]()
 			{
 				isChecked = !isChecked;
+				setChecked(isChecked);
 				if (onToggle)
 					onToggle(isChecked);
 			};
@@ -380,57 +382,20 @@ namespace ZenitUI::UI
 		bool isChecked;
 
 	protected:
-		Vec2 computeIntrinsicSize(float, float) override
+		void onBuild() override
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
-			return {fs * 2.5f, fs * 1.4f};
+			// Il knob è un nodo vero, figlio del Toggle. Il CSS lo posiziona
+			// via `position: absolute`, `left`, `top`, `width`, `height`,
+			// e la transizione su `left` lo anima quando cambia :checked.
+			knob = std::make_shared<Layout>(LayoutType::Stack);
+			knob->cls("toggle-knob");
+			knob->setInteractive(false);
+			knob->setBlocksRaycast(false);
+			addChild(knob);
 		}
 
-		void renderContent(float op, const ComputedStyle &style) override
-		{
-			auto r = UIContext::get().renderer;
-
-			Style trackStyle = partStyle("track");
-			Style knobStyle = partStyle("knob");
-
-			// Track: background dal ::track se settato, altrimenti comportamento di default
-			Color track;
-			if (!isEnabled)
-			{
-				track = Color{70, 70, 75, 255};
-			}
-			else if (isChecked)
-			{
-				// checked vince: verde di default, o color del ::track se vuoi override
-				track = trackStyle.color.is_set ? trackStyle.color.value : Colors::Green;
-			}
-			else
-			{
-				track = trackStyle.background.is_set ? trackStyle.background.value : style.background;
-			}
-
-			// Knob: color dal ::knob se settato, altrimenti bianco
-			Color knobColor = Colors::White;
-			if (!isEnabled)
-				knobColor = Color{150, 150, 155, 255};
-			if (knobStyle.color.is_set)
-				knobColor = knobStyle.color.value;
-
-			// Radius del track: dal ::track se settato, altrimenti da style
-			float maxR = std::min(rect.width, rect.height) * 0.5f;
-			float rPx = trackStyle.radius.is_set
-							? std::clamp(trackStyle.radius.value.resolve(maxR * 2.0f), 0.0f, maxR)
-							: std::clamp(style.radius.resolve(maxR * 2.0f), 0.0f, maxR);
-
-			r->fillRoundedRect(rect, rPx, track.withAlpha(op));
-
-			float knobR = rect.height * 0.4f;
-			float knobY = rect.y + rect.height * 0.5f;
-			float inset = (rect.height - knobR * 2.0f) * 0.5f;
-			float knobX = isChecked ? rect.x + rect.width - knobR - inset
-									: rect.x + knobR + inset;
-			r->fillCircle({knobX, knobY}, knobR, knobColor.withAlpha(op));
-		}
+	private:
+		std::shared_ptr<Layout> knob;
 	};
 
 	// ---------- Slider ----------

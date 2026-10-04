@@ -108,6 +108,26 @@ namespace ZenitUI
 		bool operator!=(const TextureRef &o) const { return !(*this == o); }
 	};
 
+	// Un "elemento" di un selettore composto. Es. per "Toggle:checked .knob"
+	// la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
+	struct SimpleSelector
+	{
+		enum class Kind
+		{
+			Tag,
+			Class,
+			Id
+		};
+		std::string name;
+		Kind kind{Kind::Tag};
+
+		bool requireHover{false};
+		bool requirePressed{false};
+		bool requireFocus{false};
+		bool requireDisabled{false};
+		bool requireChecked{false};
+	};
+
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
@@ -224,12 +244,6 @@ namespace ZenitUI
 		return true;
 	}
 	inline bool operator!=(const ComputedStyle &a, const ComputedStyle &b) { return !(a == b); }
-
-	struct StyleSet
-	{
-		Style base, hover, pressed, disabled, focus;
-		std::unordered_map<std::string, StyleSet> parts;
-	};
 
 	inline float lerpProp(float a, float b, float t) { return a + (b - a) * t; }
 
