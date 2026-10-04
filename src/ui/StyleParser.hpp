@@ -280,6 +280,7 @@ struct StyleSheet {
     std::vector<KfRule> keyframes;
 
     std::unordered_map<std::string, std::string> vars;
+    std::vector<Declaration> rootDecls;
 };
 
 // =========================================================================
@@ -348,29 +349,41 @@ private:
     }
 
     void parseRoot() {
-        int startLine = line, startCol = col;
         skipWs();
         if (!match('{')) return;
         while (!atEnd() && peek() != '}') {
             skipWs();
-            if (peek() != '-') {
+            if (peek() == '}') break;
+
+            int declLine = line, declCol = col;
+            std::string prop, val;
+            while (!atEnd() && peek() != ':' && peek() != ';' && peek() != '}') prop.push_back(get());
+            if (!match(':')) {
                 while (!atEnd() && peek() != ';' && peek() != '}') (void)get();
                 match(';');
                 continue;
             }
-            if (!matchStr("--")) { (void)get(); continue; }
-            std::string name;
-            while (!atEnd() && peek() != ':' && peek() != ';' && peek() != '}') name.push_back(get());
-            if (!match(':')) continue;
-            std::string val;
             while (!atEnd() && peek() != ';' && peek() != '}') val.push_back(get());
             match(';');
-            sheet.vars["--" + trim(name)] = trim(val);
+
+            std::string p = trim(prop);
+            std::string v = trim(val);
+
+            if (p.rfind("--", 0) == 0) {
+                // Variabile CSS: --primary, --danger, ...
+                sheet.vars[p] = v;
+            } else {
+                // Dichiarazione normale → diventa base globale
+                Declaration d;
+                d.prop  = p;
+                d.value = v;
+                d.line  = declLine;
+                d.col   = declCol;
+                sheet.rootDecls.push_back(std::move(d));
+            }
         }
         match('}');
-        (void)startLine; (void)startCol;
     }
-
     void parseKeyframes() {
         skipWs();
         std::string kfName = readIdent();
@@ -561,6 +574,11 @@ inline void applyStyleSheet(const StyleSheet& sheet, const std::string& fileName
         }
         return v;
     };
+
+    for (auto& d : sheet.rootDecls) {
+        ParseLoc loc{ fileName, d.line, d.col };
+        applyStyleDeclaration(theme.root.base, d.prop, subst(d.value), loc);
+    }
 
     for (auto& rule : sheet.rules) {
         StyleSet* setPtr = nullptr;

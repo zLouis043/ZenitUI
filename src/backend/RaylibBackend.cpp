@@ -22,6 +22,9 @@ namespace ZenitUI {
 		s.down     = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
 		s.pressed  = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 		s.released = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
+		s.rightDown     = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+		s.rightPressed  = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
+		s.rightReleased = IsMouseButtonReleased(MOUSE_BUTTON_RIGHT);
 		s.wheelY   = GetMouseWheelMove();
 		return s;
 	}
@@ -247,23 +250,21 @@ namespace ZenitUI {
 		}
 	}
 
-	TextureHandle RaylibRenderer::registerTexture(unsigned int raylibTexId, int w, int h) {
+	TextureHandle RaylibRenderer::registerTexture(const ::Texture2D& t) {
 		uint32_t id = res.nextId++;
-		res.textures[id] = { raylibTexId, w, h, 1, 7 }; 
-		return { id, w, h };
+		res.textures[id] = t;
+		return { id, t.width, t.height };
 	}
 
-	FontHandle RaylibRenderer::registerFont(unsigned int raylibFontId) {
-		(void)raylibFontId;
+	FontHandle RaylibRenderer::registerFont(const ::Font& f) {
 		uint32_t id = res.nextId++;
-		res.fonts[id] = {}; 
+		res.fonts[id] = f;
 		return { id };
 	}
 
-	EffectHandle RaylibRenderer::registerEffect(unsigned int raylibShaderId) {
-		(void)raylibShaderId; 
+	EffectHandle RaylibRenderer::registerEffect(const ::Shader& s) {
 		uint32_t id = res.nextId++;
-		res.shaders[id] = {}; 
+		res.shaders[id] = s;
 		return { id };
 	}
 }

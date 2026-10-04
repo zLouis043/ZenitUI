@@ -3,6 +3,7 @@
   --primary-hi: #3296FF;
   --danger:     #BE2137;
   --danger-hi:  #E62937;
+  font: calibri;
 }
 
 /* ============================================================
@@ -46,7 +47,7 @@ TextInput:focus { border-color: #FDF900; }
 
 ProgressBar {
   background: #2A2A32FF;
-  color: #3296FFFF;
+  color: #69ff32;
   radius: 6px;
 }
 
@@ -182,9 +183,11 @@ Tooltip {
 
 .demo-panel {
   width: 90vw; height: 90vh;
-  background: #1A1A20; radius: 12px;
+  background: #1A1A20; 
+  radius: 12px;
   border-width: 2px; border-color: var(--primary);
   padding: 2vh 2vw; gap: 2vw;
+  background-texture: npatches 16 16 16 16;
 }
 
 .demo-sidebar {
@@ -195,7 +198,8 @@ Tooltip {
 
 .demo-content {
   grow : 1; height: 100%;
-  background: #232328; radius: 8px;
+  background: #232328; 
+  radius: 8px;
   padding: 3vh; overflow: scroll;
   gap: 4vh;
   border-width: 1px; border-color: #3A3A40;
@@ -203,9 +207,12 @@ Tooltip {
 
 .card {
   width: 100%; height: auto;
-  background: #2A2A32; radius: 8px;
+  background: #2A2A32; 
+  radius: 8px;
   padding: 3vh; gap: 2vh;
-  border-width: 1px; border-color: #3A3A40;
+  border-width: 1px; 
+  border-color: #3A3A40;
+  background-texture: bubble;
 }
 
 .card-title { color: var(--primary); font-size: 3.5vh; margin: 0 0 1vh 0; }
@@ -278,9 +285,27 @@ Tooltip {
   gap: 2vh;
   border-color: #3A3A40;
   border-width: 1px;
-  /* rimuovi grow: 1 */
 }
 
 .setting-label {
   shrink: 0;
 }
+
+Popup {
+  background: #1E1E24F2;
+  border-color: #505060FF;
+  border-width: 1px;
+  radius: 6px;
+  padding: 6px;
+  transition: opacity 0.12s ease-out;
+}
+
+.popup-item {
+  background: transparent;
+  color: #FFFFFF;
+  radius: 4px;
+  padding: 1vh 1.2vw;
+  transition: background 0.1s linear;
+}
+.popup-item:hover   { background: #3296FF60; }
+.popup-item:pressed { background: #3296FFB0; }

@@ -13,6 +13,7 @@ namespace ZenitUI {
 		std::unordered_map<std::string, StyleSet> classes;
 		std::unordered_map<std::string, StyleSet> ids;
 		std::unordered_map<std::string, KeyframeAnimation> keyframes;
+		StyleSet root; 
 
 		static Theme& get() {
 			static Theme instance;
@@ -40,6 +41,7 @@ namespace ZenitUI {
 			keyframes.clear();
 			tags.clear();
 			ids.clear();
+			root = StyleSet{};
 		}
 	};
 }

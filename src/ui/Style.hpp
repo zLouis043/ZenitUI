@@ -70,6 +70,20 @@ namespace ZenitUI {
 
 	enum class Overflow { Visible, Hidden, Scroll };
 
+	struct TextureRef {
+		std::string name;
+		int left{ 0 }, top{ 0 }, right{ 0 }, bottom{ 0 };
+
+		bool isNineSlice() const { return left || top || right || bottom; }
+
+		bool operator==(const TextureRef& o) const {
+			return name == o.name &&
+				left == o.left && top == o.top &&
+				right == o.right && bottom == o.bottom;
+		}
+		bool operator!=(const TextureRef& o) const { return !(*this == o); }
+	};
+
 #define BUBBLE_STYLE_PROPS(X) \
 	X(Value,   width,          Value::autoSize()) \
 	X(Value,   height,         Value::autoSize()) \
@@ -91,6 +105,7 @@ namespace ZenitUI {
 	X(Color,   background,     Colors::Blank) \
 	X(Color,   color,          Colors::White) \
 	X(Color,   tint,           Colors::White) \
+	X(TextureRef, backgroundTexture, TextureRef{}) \
 	X(Color,   borderColor,    Colors::Blank) \
 	X(Value,   borderWidth,    Value(0.0f)) \
 	X(Value,   radius,         Value(0.0f)) \
@@ -109,7 +124,16 @@ namespace ZenitUI {
 	X(Value,   top,            Value::autoSize()) \
 	X(Value,   left,           Value::autoSize()) \
 	X(Value,   right,          Value::autoSize()) \
-	X(Value,   bottom,         Value::autoSize())
+	X(Value,   bottom,         Value::autoSize()) \
+	X(std::string, font, "") \
+
+	inline bool isInheritedProp(std::string_view name) {
+		return name == "font"
+			|| name == "fontSize"
+			|| name == "color"
+			|| name == "letterSpacing"
+			|| name == "textAlign";
+	}
 
 	struct Style {
 #define X(T, name, def) Opt<T> name;
@@ -138,15 +162,21 @@ namespace ZenitUI {
 		std::vector<TransitionSpec> transitions;
 		std::vector<AnimationRef>   animations;
 
-		static ComputedStyle from(const Style& s) {
-			ComputedStyle c;
-#define X(T, name, def) c.name = s.name.get_or(def);
-			BUBBLE_STYLE_PROPS(X)
+		static ComputedStyle from(const Style& s,
+                          const ComputedStyle* parent = nullptr,
+                          const Style* root = nullptr) {
+		ComputedStyle c;
+#define X(T, name, def) \
+		if      (s.name.is_set)                                     c.name = s.name.value; \
+		else if (parent && isInheritedProp(#name))                  c.name = parent->name; \
+		else if (root && root->name.is_set)                         c.name = root->name.value; \
+		else                                                        c.name = def;
+		BUBBLE_STYLE_PROPS(X)
 #undef X
-			if (s.transitions.is_set) c.transitions = s.transitions.value;
-			if (s.animations.is_set)  c.animations  = s.animations.value;
-			return c;
-		}
+		if (s.transitions.is_set) c.transitions = s.transitions.value;
+		if (s.animations.is_set)  c.animations  = s.animations.value;
+		return c;
+	}
 	};
 
 	inline bool operator==(const ComputedStyle& a, const ComputedStyle& b) {
@@ -185,6 +215,14 @@ namespace ZenitUI {
 	inline E lerpProp(E a, E b, float t) { return t > 0.0f ? b : a; }
 
 	inline ZIndex lerpProp(const ZIndex& a, const ZIndex& b, float t) { return t > 0.0f ? b : a; }
+
+	inline std::string lerpProp(const std::string& a, const std::string& b, float t) {
+		return t > 0.0f ? b : a;
+	}
+
+	inline TextureRef lerpProp(const TextureRef& a, const TextureRef& b, float t) {
+		return t > 0.0f ? b : a;
+	}
 
 	// Lerp globale (retro-compat): t è già normalizzato in [0,1].
 	inline ComputedStyle lerpStyle(const ComputedStyle& a, const ComputedStyle& b, float t) {
@@ -255,7 +293,9 @@ namespace ZenitUI {
 		return false;
 	}
 
-	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify, TransitionFunction, Overflow, Position, ZIndex>;
+	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
+                                TransitionFunction, Overflow, Position, ZIndex,
+                                std::string, TextureRef>;
 
 	struct PropDesc {
 		const char* name;
