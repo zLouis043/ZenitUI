@@ -328,13 +328,13 @@ namespace ZenitUI
 		ComputedStyle calcStyle = pendingTransition ? resolveTargetStyle() : currentStyle;
 
 		// --- Spazio disponibile interno ---
-		float pl = calcStyle.padding.left.resolve(parent_w);
-		float pr = calcStyle.padding.right.resolve(parent_w);
-		float pt = calcStyle.padding.top.resolve(parent_h);
-		float pb = calcStyle.padding.bottom.resolve(parent_h);
+		float pl = calcStyle.padding.left.resolveH(parent_w, parent_h);
+		float pr = calcStyle.padding.right.resolveH(parent_w, parent_h);
+		float pt = calcStyle.padding.top.resolveV(parent_w, parent_h);
+		float pb = calcStyle.padding.bottom.resolveV(parent_w, parent_h);
 
-		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolve(parent_w);
-		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolve(parent_h);
+		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
+		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
 
 		float innerW = std::max(0.0f, availW - pl - pr);
 		float innerH = std::max(0.0f, availH - pt - pb);
@@ -351,8 +351,8 @@ namespace ZenitUI
 		// --- Misurazione Intrinseca del Nodo (es. Testo) ---
 		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
 
-		float gapX = calcStyle.gap.resolve(innerW);
-		float gapY = calcStyle.gap.resolve(innerH);
+		float gapX = calcStyle.gap.resolveH(innerW, innerH);
+		float gapY = calcStyle.gap.resolveV(innerW, innerH);
 
 		float totalMainSize = 0.0f;
 		float maxCrossSize = 0.0f;
@@ -366,10 +366,10 @@ namespace ZenitUI
 				continue;
 
 			const auto &cst = c->getStyle();
-			float ml = cst.margin.left.resolve(innerW);
-			float mr = cst.margin.right.resolve(innerW);
-			float mt = cst.margin.top.resolve(innerH);
-			float mb = cst.margin.bottom.resolve(innerH);
+			float ml = cst.margin.left.resolveH(innerW, innerH);
+			float mr = cst.margin.right.resolveH(innerW, innerH);
+			float mt = cst.margin.top.resolveV(innerW, innerH);
+			float mb = cst.margin.bottom.resolveV(innerW, innerH);
 
 			float childTotalW = cs.x + ml + mr;
 			float childTotalH = cs.y + mt + mb;
@@ -415,10 +415,10 @@ namespace ZenitUI
 		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
 		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
 
-		float minW = calcStyle.minWidth.isAuto() ? 0.0f : calcStyle.minWidth.resolve(parent_w);
-		float maxW = calcStyle.maxWidth.isAuto() ? 1e9f : calcStyle.maxWidth.resolve(parent_w);
-		float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolve(parent_h);
-		float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolve(parent_h);
+		float minW = calcStyle.minWidth.isAuto() ? 0.0f : calcStyle.minWidth.resolveH(parent_w, parent_h);
+		float maxW = calcStyle.maxWidth.isAuto() ? 1e9f : calcStyle.maxWidth.resolveH(parent_w, parent_h);
+		float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolveV(parent_w, parent_h);
+		float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolveV(parent_w, parent_h);
 
 		measuredSize = {std::clamp(finalW, minW, maxW), std::clamp(finalH, minH, maxH)};
 		return measuredSize;
@@ -433,10 +433,10 @@ namespace ZenitUI
 
 	void Layout::arrangeInto(Rect space)
 	{
-		float pl = currentStyle.padding.left.resolve(space.width);
-		float pr = currentStyle.padding.right.resolve(space.width);
-		float pt = currentStyle.padding.top.resolve(space.height);
-		float pb = currentStyle.padding.bottom.resolve(space.height);
+		float pl = currentStyle.padding.left.resolveH(space.width, space.height);
+		float pr = currentStyle.padding.right.resolveH(space.width, space.height);
+		float pt = currentStyle.padding.top.resolveV(space.width, space.height);
+		float pb = currentStyle.padding.bottom.resolveV(space.width, space.height);
 
 		Rect inner = {
 			space.x + pl,
@@ -444,17 +444,16 @@ namespace ZenitUI
 			std::max(0.0f, space.width - pl - pr),
 			std::max(0.0f, space.height - pt - pb)};
 
-		float gapX = currentStyle.gap.resolve(inner.width);
-		float gapY = currentStyle.gap.resolve(inner.height);
+		float gapX = currentStyle.gap.resolveH(inner.width, inner.height);
+		float gapY = currentStyle.gap.resolveV(inner.width, inner.height);
 
 		// ---- Pre-pass: figli absolute (fuori dal flow) ----
-		// Vengono posizionati rispetto a `inner` con le regole CSS top/left/right/bottom.
 		auto arrangeAbsolute = [](Layout *c, const ComputedStyle &cst, const Rect &in)
 		{
-			float ml = cst.margin.left.resolve(in.width);
-			float mr = cst.margin.right.resolve(in.width);
-			float mt = cst.margin.top.resolve(in.height);
-			float mb = cst.margin.bottom.resolve(in.height);
+			float ml = cst.margin.left.resolveH(in.width, in.height);
+			float mr = cst.margin.right.resolveH(in.width, in.height);
+			float mt = cst.margin.top.resolveV(in.width, in.height);
+			float mb = cst.margin.bottom.resolveV(in.width, in.height);
 
 			bool hasL = !cst.left.isAuto();
 			bool hasR = !cst.right.isAuto();
@@ -468,18 +467,18 @@ namespace ZenitUI
 			// ---- orizzontale ----
 			if (hasL && hasR && cst.width.isAuto())
 			{
-				float L = cst.left.resolve(in.width);
-				float R = cst.right.resolve(in.width);
+				float L = cst.left.resolveH(in.width, in.height);
+				float R = cst.right.resolveH(in.width, in.height);
 				w = std::max(0.0f, in.width - L - R - ml - mr);
 				x = in.x + L + ml;
 			}
 			else if (hasL)
 			{
-				x = in.x + cst.left.resolve(in.width) + ml;
+				x = in.x + cst.left.resolveH(in.width, in.height) + ml;
 			}
 			else if (hasR)
 			{
-				x = in.x + in.width - w - cst.right.resolve(in.width) - mr;
+				x = in.x + in.width - w - cst.right.resolveH(in.width, in.height) - mr;
 			}
 			else
 			{
@@ -489,18 +488,18 @@ namespace ZenitUI
 			// ---- verticale ----
 			if (hasT && hasB && cst.height.isAuto())
 			{
-				float T = cst.top.resolve(in.height);
-				float B = cst.bottom.resolve(in.height);
+				float T = cst.top.resolveV(in.width, in.height);
+				float B = cst.bottom.resolveV(in.width, in.height);
 				h = std::max(0.0f, in.height - T - B - mt - mb);
 				y = in.y + T + mt;
 			}
 			else if (hasT)
 			{
-				y = in.y + cst.top.resolve(in.height) + mt;
+				y = in.y + cst.top.resolveV(in.width, in.height) + mt;
 			}
 			else if (hasB)
 			{
-				y = in.y + in.height - h - cst.bottom.resolve(in.height) - mb;
+				y = in.y + in.height - h - cst.bottom.resolveV(in.width, in.height) - mb;
 			}
 			else
 			{
@@ -515,8 +514,6 @@ namespace ZenitUI
 			const auto &cst = c->getStyle();
 			if (c->isPortal())
 			{
-				// I portal li arrangia chi li gestisce (es. Dropdown::arrange);
-				// qui diamo una posizione di default per compatibilità.
 				c->arrange({inner.x, inner.y, c->measuredSize.x, c->measuredSize.y});
 				continue;
 			}
@@ -526,9 +523,6 @@ namespace ZenitUI
 			}
 		}
 
-		// Clamp "safe": evita __glibcxx_assert quando lo > hi
-		// (su MinGW-GCC 15 questo chiama abort()). Quando lo > hi prevale hi,
-		// cioè lo spazio disponibile vince sul min-width/min-height dichiarato.
 		auto clampSafe = [](float v, float lo, float hi) -> float
 		{
 			if (hi < lo)
@@ -537,7 +531,7 @@ namespace ZenitUI
 		};
 
 		// =====================================================================
-		//  VERTICAL: main axis = height, cross axis = width
+		//  VERTICAL
 		// =====================================================================
 		if (type == LayoutType::Vertical)
 		{
@@ -549,7 +543,7 @@ namespace ZenitUI
 				const auto &cst = c->getStyle();
 				if (cst.position == Position::Absolute || c->isPortal())
 					continue;
-				totalFixedH += cst.margin.top.resolve(inner.height) + c->measuredSize.y + cst.margin.bottom.resolve(inner.height);
+				totalFixedH += cst.margin.top.resolveV(inner.width, inner.height) + c->measuredSize.y + cst.margin.bottom.resolveV(inner.width, inner.height);
 				totalGrow += cst.grow;
 				totalShrink += cst.shrink;
 				visibleChildren++;
@@ -588,10 +582,10 @@ namespace ZenitUI
 				if (cst.position == Position::Absolute || c->isPortal())
 					continue;
 
-				float ml = cst.margin.left.resolve(inner.width);
-				float mr = cst.margin.right.resolve(inner.width);
-				float mt = cst.margin.top.resolve(inner.height);
-				float mb = cst.margin.bottom.resolve(inner.height);
+				float ml = cst.margin.left.resolveH(inner.width, inner.height);
+				float mr = cst.margin.right.resolveH(inner.width, inner.height);
+				float mt = cst.margin.top.resolveV(inner.width, inner.height);
+				float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
 				// ---- main axis: height ----
 				float ch = c->measuredSize.y;
@@ -600,15 +594,15 @@ namespace ZenitUI
 				else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
 					ch += freeSpace * (cst.shrink / totalShrink);
 
-				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
-				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 				ch = clampSafe(ch, minH, maxH);
 
 				// ---- cross axis: width ----
 				float cw = c->measuredSize.x;
 				float availW = std::max(0.0f, inner.width - ml - mr);
-				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
-				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
 				cw = clampSafe(cw, minW, std::min(availW, maxW));
 
 				float cx = inner.x + ml;
@@ -623,11 +617,10 @@ namespace ZenitUI
 				c->arrange({cx, curY + mt, cw, ch});
 				curY += mt + ch + mb + gapY + extraGap;
 			}
-
-			// =====================================================================
-			//  HORIZONTAL: main axis = width, cross axis = height
-			// =====================================================================
 		}
+		// =====================================================================
+		//  HORIZONTAL
+		// =====================================================================
 		else if (type == LayoutType::Horizontal)
 		{
 			float totalFixedW = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
@@ -638,7 +631,7 @@ namespace ZenitUI
 				const auto &cst = c->getStyle();
 				if (cst.position == Position::Absolute || c->isPortal())
 					continue;
-				totalFixedW += cst.margin.left.resolve(inner.width) + c->measuredSize.x + cst.margin.right.resolve(inner.width);
+				totalFixedW += cst.margin.left.resolveH(inner.width, inner.height) + c->measuredSize.x + cst.margin.right.resolveH(inner.width, inner.height);
 				totalGrow += cst.grow;
 				totalShrink += cst.shrink;
 				visibleChildren++;
@@ -677,10 +670,10 @@ namespace ZenitUI
 				if (cst.position == Position::Absolute || c->isPortal())
 					continue;
 
-				float ml = cst.margin.left.resolve(inner.width);
-				float mr = cst.margin.right.resolve(inner.width);
-				float mt = cst.margin.top.resolve(inner.height);
-				float mb = cst.margin.bottom.resolve(inner.height);
+				float ml = cst.margin.left.resolveH(inner.width, inner.height);
+				float mr = cst.margin.right.resolveH(inner.width, inner.height);
+				float mt = cst.margin.top.resolveV(inner.width, inner.height);
+				float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
 				// ---- main axis: width ----
 				float cw = c->measuredSize.x;
@@ -689,15 +682,15 @@ namespace ZenitUI
 				else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
 					cw += freeSpace * (cst.shrink / totalShrink);
 
-				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
-				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
 				cw = clampSafe(cw, minW, maxW);
 
 				// ---- cross axis: height ----
 				float ch = c->measuredSize.y;
 				float availH = std::max(0.0f, inner.height - mt - mb);
-				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
-				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 				ch = clampSafe(ch, minH, std::min(availH, maxH));
 
 				float cy = inner.y + mt;
@@ -712,11 +705,10 @@ namespace ZenitUI
 				c->arrange({curX + ml, cy, cw, ch});
 				curX += ml + cw + mr + gapX + extraGap;
 			}
-
-			// =====================================================================
-			//  STACK: figli sovrapposti
-			// =====================================================================
 		}
+		// =====================================================================
+		//  STACK
+		// =====================================================================
 		else if (type == LayoutType::Stack)
 		{
 			for (auto &c : children)
@@ -725,18 +717,18 @@ namespace ZenitUI
 				if (cst.position == Position::Absolute || c->isPortal())
 					continue;
 
-				float ml = cst.margin.left.resolve(inner.width);
-				float mr = cst.margin.right.resolve(inner.width);
-				float mt = cst.margin.top.resolve(inner.height);
-				float mb = cst.margin.bottom.resolve(inner.height);
+				float ml = cst.margin.left.resolveH(inner.width, inner.height);
+				float mr = cst.margin.right.resolveH(inner.width, inner.height);
+				float mt = cst.margin.top.resolveV(inner.width, inner.height);
+				float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
 				float availW = std::max(0.0f, inner.width - ml - mr);
 				float availH = std::max(0.0f, inner.height - mt - mb);
 
-				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolve(inner.width);
-				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolve(inner.width);
-				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolve(inner.height);
-				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolve(inner.height);
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 
 				float cw = clampSafe(c->measuredSize.x, minW, std::min(availW, maxW));
 				float ch = clampSafe(c->measuredSize.y, minH, std::min(availH, maxH));
@@ -768,11 +760,6 @@ namespace ZenitUI
 
 	void Layout::update(float dt, bool ancestorBlocked)
 	{
-
-		// ============================================================
-		//  FASE 1: aggiorna currentStyle per questo frame
-		// ============================================================
-
 		// Snapshot delle prop ereditate PRIMA di ogni modifica
 		struct InheritedSnap
 		{
@@ -878,7 +865,7 @@ namespace ZenitUI
 		else if (isHovered)
 			nextState = UIState::Hover;
 
-		UIState prevState = currentState; // per le callback in fase 3
+		UIState prevState = currentState;
 		bool stateChanged = (currentState != nextState);
 
 		if (stateChanged)
@@ -899,14 +886,12 @@ namespace ZenitUI
 
 			if (newTarget != targetStyle)
 			{
-				// Il target è cambiato davvero → parti una nuova transizione.
 				transitionStartStyle = currentStyle;
 				transitionTimer = 0.0f;
 				targetStyle = std::move(newTarget);
 			}
 			else
 			{
-				// Nessun cambio reale, solo un refresh (setSize, addClass, ecc.).
 				targetStyle = std::move(newTarget);
 				if (transitionTimer >= 1.0f)
 				{
@@ -967,8 +952,7 @@ namespace ZenitUI
 						   { return a.finished && !a.fillForwards; }),
 			activeCssAnimations.end());
 
-		// --- Propagazione inheritance: se una prop ereditable è cambiata,
-		//     marca i figli PRIMA che girino (fase 2) ---
+		// --- Propagazione inheritance ---
 		bool inheritedChanged =
 			snapBefore.font != currentStyle.font ||
 			!(snapBefore.fontSize == currentStyle.fontSize) ||
@@ -998,10 +982,8 @@ namespace ZenitUI
 		//  FASE 3: callback + post-processing
 		// ============================================================
 
-		// --- Focus input (Enter/Space su nodo focusato) ---
 		handleFocusInput();
 
-		// --- Hover enter/exit (geometrico, come prima) ---
 		if (stateChanged)
 		{
 			if (nextState == UIState::Hover && prevState != UIState::Hover && onHoverEnter)
@@ -1010,7 +992,6 @@ namespace ZenitUI
 				onHoverExit();
 		}
 
-		// --- Press: il nodo è nel percorso del pressTarget ---
 		if (pointer.pressed && !ctx.clickConsumed)
 		{
 			bool inPressPath = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
@@ -1019,11 +1000,10 @@ namespace ZenitUI
 				if (onPress)
 					onPress();
 				if (!passThrough_)
-					ctx.consumeClick(); // "consuma" il press
+					ctx.consumeClick();
 			}
 		}
 
-		// --- Release + click: pressTarget == releaseTarget sul percorso ---
 		if (pointer.released)
 		{
 			bool pressedHere = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
@@ -1044,7 +1024,6 @@ namespace ZenitUI
 			}
 		}
 
-		// --- Right-click: invariato (già geometrico) ---
 		if (pointer.rightPressed && isHovered && onRightClick)
 		{
 			if (!ctx.rightClickConsumed)
@@ -1073,7 +1052,6 @@ namespace ZenitUI
 
 	void Layout::draw(float parentOpacity)
 	{
-
 		if (isPortal_)
 		{
 			UIContext::get().framePortals.push_back(weak_from_this());
@@ -1135,7 +1113,6 @@ namespace ZenitUI
 		renderChrome(globalOp, renderStyle);
 		renderContent(globalOp, renderStyle);
 
-		// --- RENDERING CSS COMPLIANT (Stacking Context) ---
 		std::vector<Layout *> negZ, normalFlow, posZ;
 		for (auto &child : children)
 		{
@@ -1163,7 +1140,6 @@ namespace ZenitUI
 			child->draw(globalOp);
 		for (auto *child : posZ)
 			child->draw(globalOp);
-		// ----------------------------------------------------
 
 		if (needsClip)
 			renderer->popClip();
@@ -1193,7 +1169,6 @@ namespace ZenitUI
 	{
 		const auto &refs = targetStyle.animations;
 
-		// 1) Rimuovi quelle non più dichiarate
 		activeCssAnimations.erase(
 			std::remove_if(activeCssAnimations.begin(), activeCssAnimations.end(),
 						   [&](const ActiveCssAnimation &a)
@@ -1205,7 +1180,6 @@ namespace ZenitUI
 						   }),
 			activeCssAnimations.end());
 
-		// 2) Aggiungi/aggiorna quelle dichiarate
 		for (const auto &r : refs)
 		{
 			bool found = false;
@@ -1218,7 +1192,7 @@ namespace ZenitUI
 					a.iterations = r.iterations;
 					a.alternate = r.alternate;
 					a.fillForwards = r.fillForwards;
-					a.ease = r.ease; // <-- AGGIUNTO
+					a.ease = r.ease;
 					found = true;
 					break;
 				}
@@ -1232,7 +1206,7 @@ namespace ZenitUI
 				a.iterations = r.iterations;
 				a.alternate = r.alternate;
 				a.fillForwards = r.fillForwards;
-				a.ease = r.ease; // <-- AGGIUNTO
+				a.ease = r.ease;
 				activeCssAnimations.push_back(std::move(a));
 			}
 		}
@@ -1243,7 +1217,6 @@ namespace ZenitUI
 		if (ancestorBlocked || !isEnabled)
 			return nullptr;
 
-		// Portali (invariato)
 		if (!hasParent())
 		{
 			for (auto it = UIContext::get().activePortals.rbegin(); it != UIContext::get().activePortals.rend(); ++it)
@@ -1262,12 +1235,9 @@ namespace ZenitUI
 		if (isPortal_)
 			return nullptr;
 
-		// I figli sono disegnati DOPO che il mio transform è applicato.
-		// Quindi per testarli devo trasformare p nello spazio dei figli.
 		Transform2D tr = currentTransform(currentStyle);
 		Vec2 pChildren = applyInverseTransform(tr, p);
 
-		// Ordine z (invariato)
 		std::vector<Layout *> negZ, normalFlow, posZ;
 		for (auto &child : children)
 		{
@@ -1298,7 +1268,6 @@ namespace ZenitUI
 			if (Layout *hit = (*it)->hitTest(pChildren, false))
 				return hit;
 
-		// Self test: p (in coordinate del parent) contro il mio rect
 		if (rect.width > 0 && rect.height > 0 &&
 			rect.contains(p) &&
 			(isInteractive || blocksRaycast))
@@ -1332,7 +1301,6 @@ namespace ZenitUI
 	{
 		auto &ctx = UIContext::get();
 
-		// 1) Hit-test topmost, con supporto al pointer capture
 		auto captured = ctx.pointerCapture.lock();
 		if (!captured || !captured->getEnabled())
 		{
@@ -1344,15 +1312,12 @@ namespace ZenitUI
 			ctx.topmostConsumer = captured.get();
 		}
 
-		// NUOVO: popola i target di input
 		ctx.hoverTarget = ctx.topmostConsumer;
 		if (ctx.pointer.pressed)
 			ctx.pressTarget = ctx.hoverTarget;
 		if (ctx.pointer.released)
 			ctx.releaseTarget = ctx.hoverTarget;
 
-		// 2) Focus management
-		// 2a) Click con mouse → cambia focus
 		if (ctx.pointer.pressed)
 		{
 			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
@@ -1365,14 +1330,11 @@ namespace ZenitUI
 			}
 		}
 
-		// 2b) Tab navigation
 		for (int k : ctx.inputEvents.keys)
 		{
 			if (k != Key::Tab)
 				continue;
 
-			// Trova lo scope: risali dal nodo focusato fino al primo focus-scope.
-			// Se nessuno è focusato, o nessuno scope trovato, usa this (root).
 			Layout *scope = this;
 			{
 				auto focused = ctx.focusedNode.lock();
@@ -1418,10 +1380,8 @@ namespace ZenitUI
 			notifyFocusAncestors(ctx.focusedNode.lock().get());
 		}
 
-		// 3) Update normale (con defer automatico)
 		update(dt, false);
 
-		// 4) Auto-rilascio del capture quando il tasto viene sollevato
 		if (ctx.pointer.released)
 			ctx.pressTarget = nullptr;
 		if (!ctx.pointer.down && !ctx.pointerCapture.expired())
@@ -1447,8 +1407,6 @@ namespace ZenitUI
 
 namespace ZenitUI
 {
-	// Definizione fuori linea perché il corpo richiede Layout completo
-	// (isFocusable è dichiarato in Layout.hpp, non visibile da UIContext.hpp).
 	void UIContext::requestFocus(std::shared_ptr<Layout> n)
 	{
 		if (n && n->isFocusable())

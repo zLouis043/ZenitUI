@@ -3,48 +3,6 @@
 #include "Common.hpp"
 #include "Layout.hpp"
 
-// ============================================================
-//  COME SCRIVERE UN NUOVO WIDGET
-// ============================================================
-//
-//  class MioWidget : public TLayout<MioWidget> {
-//  public:
-//      MioWidget(...) : TLayout<MioWidget>(LayoutType::Stack) {
-//          setStyleTag("MioWidget");     // obbligatorio: per il CSS
-//          // config comportamento (interactive, focusable, ecc.)
-//          // default inline via getInlineBase().xxx = ...
-//          // callback (onClick, ecc.)
-//      }
-//
-//  protected:
-//      // 1) Solo se hai una size intrinseca (testo, icona, ecc.)
-//      Vec2 computeIntrinsicSize(float availW, float availH) override { ... }
-//
-//      // 2) Solo se devi ricalcolare qualcosa dopo aver saputo la tua size finale
-//      //    (es. wrap di testo, layout interno custom, ...)
-//      void onLayout() override { ... }
-//
-//      // 3) Solo se hai logica per-frame (input, animazioni locali, drag, ...)
-//      void onUpdate(float dt) override { ... }
-//
-//      // 4) QUASI SEMPRE: il disegno del tuo contenuto
-//      void renderContent(float op, const ComputedStyle& style) override { ... }
-//
-//      // 5) Solo se hai un "vestito" particolare (nine-slice texture, effetto custom)
-//      void renderChrome(float op, const ComputedStyle& style) override { ... }
-//
-//      // 6) Solo se il tuo layout è strutturalmente diverso (scroll, portal, ...)
-//      void arrange(Rect space) override { ... }
-//
-//      // 7) Solo in casi estremi: se devi renderizzare su texture target
-//      void draw(float parentOpacity) override { ... }
-//  };
-//
-//  Regola d'oro: se il tuo widget scrive più di 2-3 hook, chiediti se sta
-//  facendo troppo. Spesso puoi spostare logica in una funzione helper o
-//  in una classe separata.
-// ============================================================
-
 namespace ZenitUI::UI
 {
 
@@ -82,8 +40,6 @@ namespace ZenitUI::UI
 			pendingTransition = true;
 		}
 
-		// Font di fallback del widget: usato SOLO se il CSS non specifica `font:`
-		// (o se l'asset CSS non esiste nel provider).
 		void setFont(FontHandle f)
 		{
 			defaultFont = f;
@@ -113,17 +69,15 @@ namespace ZenitUI::UI
 			if (lines.empty())
 				return;
 
-			// Il font può cambiare per stato (:hover con font diverso, ecc.),
-			// quindi lo risolviamo qui ad ogni frame di draw.
 			FontHandle f = resolveFont(style, defaultFont);
 
-			float fs = style.fontSize.resolve(Metrics::viewport.y);
-			float sp = style.letterSpacing.resolve(Metrics::viewport.x);
+			float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+			float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
-			float pl = style.padding.left.resolve(rect.width);
-			float pr = style.padding.right.resolve(rect.width);
-			float pt = style.padding.top.resolve(rect.height);
-			float pb = style.padding.bottom.resolve(rect.height);
+			float pl = style.padding.left.resolveH(rect.width, rect.height);
+			float pr = style.padding.right.resolveH(rect.width, rect.height);
+			float pt = style.padding.top.resolveV(rect.width, rect.height);
+			float pb = style.padding.bottom.resolveV(rect.width, rect.height);
 
 			float availW = std::max(0.0f, rect.width - pl - pr);
 			float availH = std::max(0.0f, rect.height - pt - pb);
@@ -161,15 +115,15 @@ namespace ZenitUI::UI
 			if (!wrap_)
 				return;
 
-			float pl = currentStyle.padding.left.resolve(rect.width);
-			float pr = currentStyle.padding.right.resolve(rect.width);
+			float pl = currentStyle.padding.left.resolveH(rect.width, rect.height);
+			float pr = currentStyle.padding.right.resolveH(rect.width, rect.height);
 			float newAvailW = std::max(0.0f, rect.width - pl - pr);
 
 			if (newAvailW > 0.0f && newAvailW != cachedWrapW)
 			{
 				FontHandle f = resolveFont(currentStyle, defaultFont);
-				float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
-				float sp = currentStyle.letterSpacing.resolve(Metrics::viewport.x);
+				float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+				float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
 				wrapText(newAvailW, fs, sp, f);
 				cachedFs = fs;
@@ -238,10 +192,9 @@ namespace ZenitUI::UI
 
 		Vec2 measureSingleLine(FontHandle f)
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
-			float sp = currentStyle.letterSpacing.resolve(Metrics::viewport.x);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+			float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
-			// Invalida la cache se cambia testo, font (id), fontSize o letterSpacing.
 			if (text_dirty || f.id != cachedFontId ||
 				fs != cachedFs || sp != cachedSp || cachedSize.y == 0.0f)
 			{
@@ -258,8 +211,8 @@ namespace ZenitUI::UI
 
 		Vec2 measureWrapped(float availW, FontHandle f)
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
-			float sp = currentStyle.letterSpacing.resolve(Metrics::viewport.x);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+			float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
 			if (text_dirty || f.id != cachedFontId ||
 				fs != cachedFs || sp != cachedSp || availW != cachedWrapW)
@@ -283,14 +236,14 @@ namespace ZenitUI::UI
 		}
 
 		std::string text;
-		FontHandle defaultFont{0}; // fallback del widget (CSS vince)
+		FontHandle defaultFont{0};
 		bool text_dirty{true};
 		bool wrap_{false};
 		Vec2 cachedSize;
 		float cachedFs{-1.0f};
 		float cachedSp{-1.0f};
 		float cachedWrapW{-1.0f};
-		uint32_t cachedFontId{0}; // ultimo id di font risolto
+		uint32_t cachedFontId{0};
 		std::vector<Line> lines;
 	};
 	inline std::shared_ptr<Text> Label(std::string t) { return std::make_shared<Text>(t); }
@@ -354,7 +307,6 @@ namespace ZenitUI::UI
 	};
 
 	// ---------- Toggle ----------
-	// ---------- Toggle ----------
 	class Toggle : public TLayout<Toggle>
 	{
 	public:
@@ -366,7 +318,6 @@ namespace ZenitUI::UI
 			setKeyboardActivates(true);
 			setStyleTag("Toggle");
 
-			// Comunica lo stato al Layout (il CSS usa :checked sui discendenti)
 			setChecked(state);
 
 			onClick = [this]()
@@ -384,9 +335,6 @@ namespace ZenitUI::UI
 	protected:
 		void onBuild() override
 		{
-			// Il knob è un nodo vero, figlio del Toggle. Il CSS lo posiziona
-			// via `position: absolute`, `left`, `top`, `width`, `height`,
-			// e la transizione su `left` lo anima quando cambia :checked.
 			knob = std::make_shared<Layout>(LayoutType::Stack);
 			knob->cls("toggle-knob");
 			knob->setInteractive(false);
@@ -414,13 +362,12 @@ namespace ZenitUI::UI
 	protected:
 		Vec2 computeIntrinsicSize(float, float) override
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
 			return {120.0f, std::max(24.0f, fs * 1.2f)};
 		}
 
 		void onUpdate(float) override
 		{
-			// Frecce da tastiera (solo se focusato)
 			if (isFocused)
 			{
 				auto &ev = UIContext::get().inputEvents;
@@ -449,8 +396,6 @@ namespace ZenitUI::UI
 				}
 			}
 
-			// Drag: inizia quando isPressed diventa true per la prima volta,
-			// continua finché il tasto è down (anche fuori dal widget, grazie al capture).
 			if (isPressed && !hasPointerCapture())
 			{
 				capturePointer();
@@ -480,18 +425,16 @@ namespace ZenitUI::UI
 			float th = rect.height * 0.3f;
 			Rect trackRect = {rect.x, rect.y + (rect.height - th) * 0.5f, rect.width, th};
 
-			// Track
 			Color trackColor = isEnabled ? Colors::DarkGray : Color{55, 55, 60, 255};
 			if (trackStyle.background.is_set)
 				trackColor = trackStyle.background.value;
 
 			float trackRadius = trackStyle.radius.is_set
-									? trackStyle.radius.value.resolve(th * 0.5f)
+									? trackStyle.radius.value.resolveH(th * 0.5f, th * 0.5f)
 									: 4.0f;
 
 			r->fillRoundedRect(trackRect, trackRadius, trackColor.withAlpha(op));
 
-			// Fill
 			Color fillColor = isEnabled ? style.color : Color{100, 100, 105, 255};
 			if (fillStyle.color.is_set)
 				fillColor = fillStyle.color.value;
@@ -499,13 +442,12 @@ namespace ZenitUI::UI
 			Rect fillRect = {trackRect.x, trackRect.y, trackRect.width * value, trackRect.height};
 			r->fillRoundedRect(fillRect, trackRadius, fillColor.withAlpha(op));
 
-			// Knob
 			Color knobColor = isEnabled ? style.color : Color{130, 130, 135, 255};
 			if (knobStyle.color.is_set)
 				knobColor = knobStyle.color.value;
 
 			float knobR = knobStyle.radius.is_set
-							  ? knobStyle.radius.value.resolve(rect.height * 0.5f)
+							  ? knobStyle.radius.value.resolveH(rect.height * 0.5f, rect.height * 0.5f)
 							  : rect.height * 0.5f;
 
 			r->fillCircle({rect.x + rect.width * value, rect.center().y},
@@ -551,7 +493,9 @@ namespace ZenitUI::UI
 
 			Transform2D tr;
 			tr.pivot = rect.center();
-			tr.translate = {currentStyle.translateX.resolveSelf(rect.width), currentStyle.translateY.resolveSelf(rect.height)};
+			tr.translate = {
+				currentStyle.translateX.resolveSelfH(rect.width, rect.height),
+				currentStyle.translateY.resolveSelfV(rect.width, rect.height)};
 			tr.rotationDeg = currentStyle.rotation;
 			tr.scale = currentStyle.scale;
 
@@ -627,7 +571,6 @@ namespace ZenitUI::UI
 			pendingTransition = true;
 		}
 
-		// --- API di scroll programmatico ---
 		void scrollTo(float x, float y)
 		{
 			scrollX = std::max(0.0f, x);
@@ -651,15 +594,11 @@ namespace ZenitUI::UI
 		{
 			rect = space;
 
-			float pl = currentStyle.padding.left.resolve(rect.width);
-			float pr = currentStyle.padding.right.resolve(rect.width);
-			float pt = currentStyle.padding.top.resolve(rect.height);
-			float pb = currentStyle.padding.bottom.resolve(rect.height);
+			float pl = currentStyle.padding.left.resolveH(rect.width, rect.height);
+			float pr = currentStyle.padding.right.resolveH(rect.width, rect.height);
+			float pt = currentStyle.padding.top.resolveV(rect.width, rect.height);
+			float pb = currentStyle.padding.bottom.resolveV(rect.width, rect.height);
 
-			// Spazio per i figli: parte dal viewport, ma sull'asse di scroll
-			// viene esteso alla dimensione reale del contenuto. Senza questo,
-			// arrangeInto attiva lo shrink del flex (pensato per contenitori
-			// a dimensione fissa) e comprime i figli fino a farli sparire.
 			Rect offsetSpace = space;
 			offsetSpace.x -= scrollX;
 			offsetSpace.y -= scrollY;
@@ -677,7 +616,6 @@ namespace ZenitUI::UI
 
 			arrangeInto(offsetSpace);
 
-			// Calcolo maxScroll (invariato)
 			float contentW = scrollContentSize.x + pl + pr;
 			float contentH = scrollContentSize.y + pt + pb;
 			maxScrollX = std::max(0.0f, contentW - rect.width);
@@ -691,7 +629,6 @@ namespace ZenitUI::UI
 		{
 			auto &ctx = UIContext::get();
 
-			// 1) Drag del thumb (con pointer capture) e click sul track
 			if (!hasPointerCapture())
 			{
 				if (ctx.pointer.pressed && ctx.topmostConsumer == this && maxScrollY > 0.0f)
@@ -699,7 +636,6 @@ namespace ZenitUI::UI
 					Rect thumb = getThumbRect();
 					if (thumb.contains(ctx.pointer.pos))
 					{
-						// Inizia drag del thumb con capture
 						capturePointer();
 						dragStartMouseY = ctx.pointer.pos.y;
 						dragStartScrollY = scrollY;
@@ -707,7 +643,6 @@ namespace ZenitUI::UI
 					}
 					else
 					{
-						// Click sul track (sfondo): salto di pagina
 						float ratio = (ctx.pointer.pos.y - rect.y) / rect.height;
 						scrollY = std::clamp(ratio * scrollContentSize.y - rect.height * 0.5f,
 											 0.0f, maxScrollY);
@@ -717,15 +652,12 @@ namespace ZenitUI::UI
 			}
 			else if (ctx.pointer.down)
 			{
-				// Continuo il drag anche se il cursore è uscito dal widget
 				float dy = ctx.pointer.pos.y - dragStartMouseY;
 				float ratio = (rect.height > 0.0f) ? (scrollContentSize.y / rect.height) : 1.0f;
 				scrollY = std::clamp(dragStartScrollY + dy * ratio, 0.0f, maxScrollY);
 				pendingTransition = true;
 			}
 
-			// 2) Wheel: solo se il widget è attivo e il mouse è dentro.
-			// Un widget disabilitato o non interattivo non consuma la wheel.
 			if (!ctx.wheelConsumedThisFrame && isInteractive &&
 				!hasPointerCapture() && rect.contains(ctx.pointer.pos))
 			{
@@ -740,7 +672,6 @@ namespace ZenitUI::UI
 				}
 			}
 
-			// 3) Momentum
 			if (std::abs(velocityX) > VELOCITY_MIN)
 			{
 				scrollX += velocityX * dt;
@@ -764,7 +695,6 @@ namespace ZenitUI::UI
 		{
 			Layout::draw(parentOpacity);
 
-			// Ridisegna la scrollbar DOPO i figli, così sta sopra.
 			auto r = UIContext::get().renderer;
 			if (!r || maxScrollY <= 0.0f || rect.height <= 10.0f)
 				return;
@@ -775,7 +705,6 @@ namespace ZenitUI::UI
 			if (op <= 0.001f)
 				return;
 
-			// Clip sul rect dello ScrollView per non sbordare
 			r->pushClip(rect);
 
 			Rect track = {
@@ -821,12 +750,12 @@ namespace ZenitUI::UI
 			const float TRACK_W = 6.0f;
 			const float MARGIN = 4.0f;
 
-			float trackH = std::max(0.0f, rect.height - MARGIN * 2.0f); // <-- max
+			float trackH = std::max(0.0f, rect.height - MARGIN * 2.0f);
 			float contentH = scrollContentSize.y;
 			float viewportRatio = (contentH > 0.0f) ? (rect.height / contentH) : 1.0f;
-			float thumbH = std::min(trackH, std::max(30.0f, trackH * viewportRatio)); // <-- min
+			float thumbH = std::min(trackH, std::max(30.0f, trackH * viewportRatio));
 			float scrollRatio = (maxScrollY > 0.0f) ? (scrollY / maxScrollY) : 0.0f;
-			float available = std::max(0.0f, trackH - thumbH); // <-- max
+			float available = std::max(0.0f, trackH - thumbH);
 			float thumbY = rect.y + MARGIN + std::clamp(scrollRatio * available, 0.0f, available);
 
 			return {rect.x + rect.width - TRACK_W - MARGIN, thumbY, TRACK_W, thumbH};
@@ -863,7 +792,7 @@ namespace ZenitUI::UI
 	protected:
 		Vec2 computeIntrinsicSize(float, float) override
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
 			return {fs * 1.4f, fs * 1.4f};
 		}
 
@@ -874,7 +803,6 @@ namespace ZenitUI::UI
 			Style boxStyle = partStyle("box");
 			Style markStyle = partStyle("mark");
 
-			// Box
 			Color box = isChecked ? Colors::Green : style.background;
 			if (!isEnabled)
 				box = Color{70, 70, 75, 255};
@@ -883,12 +811,11 @@ namespace ZenitUI::UI
 
 			float maxR = std::min(rect.width, rect.height) * 0.5f;
 			float rPx = boxStyle.radius.is_set
-							? std::clamp(boxStyle.radius.value.resolve(maxR * 2.0f), 0.0f, maxR)
-							: std::clamp(style.radius.resolve(maxR * 2.0f), 0.0f, maxR);
+							? std::clamp(boxStyle.radius.value.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR)
+							: std::clamp(style.radius.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR);
 
 			r->fillRoundedRect(rect, rPx, box.withAlpha(op));
 
-			// Mark
 			if (isChecked)
 			{
 				Color mark = Colors::White;
@@ -929,7 +856,7 @@ namespace ZenitUI::UI
 	protected:
 		Vec2 computeIntrinsicSize(float, float) override
 		{
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
 			return {120.0f, std::max(16.0f, fs * 0.8f)};
 		}
 
@@ -942,18 +869,16 @@ namespace ZenitUI::UI
 
 			float maxR = std::min(rect.width, rect.height) * 0.5f;
 
-			// Track
 			Color trackColor = style.background;
 			if (trackStyle.background.is_set)
 				trackColor = trackStyle.background.value;
 
 			float rPx = trackStyle.radius.is_set
-							? std::clamp(trackStyle.radius.value.resolve(maxR * 2.0f), 0.0f, maxR)
-							: std::clamp(style.radius.resolve(maxR * 2.0f), 0.0f, maxR);
+							? std::clamp(trackStyle.radius.value.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR)
+							: std::clamp(style.radius.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR);
 
 			r->fillRoundedRect(rect, rPx, trackColor.withAlpha(op));
 
-			// Fill
 			float w = rect.width * value;
 			if (w > 0.5f)
 			{
@@ -989,7 +914,6 @@ namespace ZenitUI::UI
 				UIContext::get().requestFocus(shared_from_this());
 			};
 
-			// Default inline: solo comportamento di base. Font/colori stanno nel CSS.
 			inlineBase.background = Color{30, 30, 36, 255};
 			inlineBase.color = Colors::White;
 			inlineBase.radius = Px(6.0f);
@@ -1009,7 +933,6 @@ namespace ZenitUI::UI
 		const std::string &getText() const { return text; }
 		void clear() { setText(""); }
 
-		// Font di fallback se il CSS non specifica `font:`.
 		void setFont(FontHandle f)
 		{
 			defaultFont = f;
@@ -1023,17 +946,15 @@ namespace ZenitUI::UI
 		Vec2 computeIntrinsicSize(float, float) override
 		{
 			FontHandle f = resolveFont(currentStyle, defaultFont);
-			float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
+			float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
 
-			// Larghezza minima basata su una misura reale del font risolto:
-			// larghezza di un carattere tipico * 12.
 			float charW = 0.0f;
 			if (auto r = UIContext::get().renderer)
 			{
 				charW = r->measureText(f, "M", fs, 0.0f).x;
 			}
 			if (charW <= 0.0f)
-				charW = fs * 0.6f; // fallback prudente
+				charW = fs * 0.6f;
 
 			return {std::max(120.0f, charW * 12.0f), fs * 1.6f};
 		}
@@ -1064,7 +985,6 @@ namespace ZenitUI::UI
 			auto &ev = UIContext::get().inputEvents;
 			bool changed = false;
 
-			// --- Caratteri digitati ---
 			for (int c : ev.chars)
 			{
 				if (c < 32 || c > 126)
@@ -1074,7 +994,6 @@ namespace ZenitUI::UI
 				changed = true;
 			}
 
-			// --- Azioni discrete per un tasto di editing ---
 			auto doAction = [&](int key)
 			{
 				switch (key)
@@ -1111,7 +1030,6 @@ namespace ZenitUI::UI
 				}
 			};
 
-			// --- Tasti one-shot ---
 			for (int k : ev.keys)
 			{
 				switch (k)
@@ -1141,7 +1059,6 @@ namespace ZenitUI::UI
 				}
 			}
 
-			// --- Tasti con auto-repeat ---
 			constexpr float REPEAT_DELAY = 0.40f;
 			constexpr float REPEAT_INTERVAL = 0.04f;
 
@@ -1187,16 +1104,15 @@ namespace ZenitUI::UI
 				pendingTransition = true;
 			}
 
-			// --- Auto-scroll orizzontale, con il font risolto dallo stile ---
 			{
 				auto r = UIContext::get().renderer;
 				if (!r)
 					return;
 
 				FontHandle f = resolveFont(currentStyle, defaultFont);
-				float fs = currentStyle.fontSize.resolve(Metrics::viewport.y);
-				float sp = currentStyle.letterSpacing.resolve(Metrics::viewport.x);
-				float pl = currentStyle.padding.left.resolve(rect.width);
+				float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+				float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+				float pl = currentStyle.padding.left.resolveH(rect.width, rect.height);
 				float availW = std::max(0.0f, rect.width - pl * 2.0f);
 
 				std::string prefix = text.substr(0, cursorPos);
@@ -1217,9 +1133,9 @@ namespace ZenitUI::UI
 		{
 			auto r = UIContext::get().renderer;
 			FontHandle f = resolveFont(style, defaultFont);
-			float fs = style.fontSize.resolve(Metrics::viewport.y);
-			float sp = style.letterSpacing.resolve(Metrics::viewport.x);
-			float pl = style.padding.left.resolve(rect.width);
+			float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+			float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+			float pl = style.padding.left.resolveH(rect.width, rect.height);
 
 			r->pushClip(rect);
 
@@ -1235,9 +1151,8 @@ namespace ZenitUI::UI
 										? cursorStyle.color.value
 										: textColor;
 
-				// Larghezza: usa borderWidth del part se settato, altrimenti 2px
 				float cursorW = cursorStyle.borderWidth.is_set
-									? cursorStyle.borderWidth.value.resolve(fs)
+									? cursorStyle.borderWidth.value.resolveH(fs, fs)
 									: 2.0f;
 
 				std::string prefix = text.substr(0, cursorPos);
@@ -1427,7 +1342,6 @@ namespace ZenitUI::UI
 		Tooltip(std::string text)
 			: TLayout<Tooltip, Panel>(), text_(std::move(text)) {}
 
-		// Aggancia un tooltip a un widget. showDelay in secondi (default 0.4).
 		static std::shared_ptr<Tooltip> attach(std::shared_ptr<Layout> owner,
 											   std::string text,
 											   float showDelay = 0.4f)
@@ -1472,15 +1386,13 @@ namespace ZenitUI::UI
 			setTargetOpacity(0.0f);
 		}
 
-		// Non usiamo lo space del parent: ci arrangiamo da soli in onPreUpdate
-		// basandoci sull'anchor, che è aggiornato solo DOPO il nostro arrange.
 		void arrange(Rect) override {}
 
 	protected:
 		void onBuild() override
 		{
 			setStyleTag("Tooltip");
-			setPortal(true); // scappa al clipping dei parent
+			setPortal(true);
 			setInteractive(false);
 			setBlocksRaycast(false);
 			inlineBase.position = Position::Absolute;
@@ -1493,7 +1405,6 @@ namespace ZenitUI::UI
 
 		void onUpdate(float dt) override
 		{
-			// Delay + fade-in
 			if (hovering_ && !visible_)
 			{
 				timer_ += dt;
@@ -1504,7 +1415,6 @@ namespace ZenitUI::UI
 				}
 			}
 
-			// Posizionamento rispetto all'anchor
 			if (anchor_)
 			{
 				Rect a = anchor_->getRect();
@@ -1540,21 +1450,11 @@ namespace ZenitUI::UI
 	};
 
 	// ---------- Popup ----------
-	//
-	// Pannello fluttuante ancorato a un widget o a una posizione. Usa portal
-	// per scappare al clipping, si chiude su click-outside e Escape.
-	//
-	// Uso tipico (context menu):
-	//   popup->openBelow(btn);   // apre sotto btn
-	//   popup->openAt({x, y});   // apre a coordinate schermo
-	//
 	class Popup : public TLayout<Popup, Panel>
 	{
 	public:
 		Popup() : TLayout<Popup, Panel>() {}
 
-		// Imposta il contenuto (di solito un VStack). Va chiamato una sola volta
-		// in fase di costruzione.
 		void setContent(std::shared_ptr<Layout> content)
 		{
 			content_ = std::move(content);
@@ -1562,7 +1462,6 @@ namespace ZenitUI::UI
 				addChild(content_);
 		}
 
-		// Apre sotto l'anchor
 		void openBelow(std::shared_ptr<Layout> anchor)
 		{
 			anchor_ = anchor.get();
@@ -1570,7 +1469,6 @@ namespace ZenitUI::UI
 			openInternal();
 		}
 
-		// Apre sopra l'anchor
 		void openAbove(std::shared_ptr<Layout> anchor)
 		{
 			anchor_ = anchor.get();
@@ -1578,7 +1476,6 @@ namespace ZenitUI::UI
 			openInternal();
 		}
 
-		// Apre a coordinate schermo
 		void openAt(Vec2 screenPos)
 		{
 			anchor_ = nullptr;
@@ -1605,7 +1502,7 @@ namespace ZenitUI::UI
 		// Config
 		bool closeOnClickOutside{true};
 		bool closeOnEscape{true};
-		float offsetBelow{4.0f}; // distanza dall'anchor
+		float offsetBelow{4.0f};
 		std::function<void()> onClose;
 
 		void arrange(Rect) override { /* no-op */ }
@@ -1621,7 +1518,7 @@ namespace ZenitUI::UI
 			inlineBase.position = Position::Absolute;
 			inlineBase.opacity = 0.0f;
 			isOpen_ = false;
-			setEnabled(false); // chiuso all'inizio
+			setEnabled(false);
 		}
 
 		void onUpdate(float) override
@@ -1641,14 +1538,12 @@ namespace ZenitUI::UI
 				if (above_)
 				{
 					y = a.y - size.y - offsetBelow;
-					// Flip sotto se esce dal bordo superiore
 					if (y < 0.0f)
 						y = a.y + a.height + offsetBelow;
 				}
 				else
 				{
 					y = a.y + a.height + offsetBelow;
-					// Flip sopra se esce dal bordo inferiore
 					if (y + size.y > Metrics::viewport.y)
 						y = a.y - size.y - offsetBelow;
 				}
@@ -1666,21 +1561,18 @@ namespace ZenitUI::UI
 			rect = {x, y, size.x, size.y};
 			arrangeInto(rect);
 
-			// Click outside → close
 			if (closeOnClickOutside && ctx.pointer.pressed)
 			{
 				if (!rect.contains(ctx.pointer.pos))
 					close();
 			}
 
-			// Click destro outside → close
 			if (closeOnClickOutside && ctx.pointer.rightPressed)
 			{
 				if (!rect.contains(ctx.pointer.pos))
 					close();
 			}
 
-			// Escape → close
 			if (closeOnEscape)
 			{
 				for (int k : ctx.inputEvents.keys)
@@ -1704,11 +1596,10 @@ namespace ZenitUI::UI
 		void openInternal()
 		{
 			isOpen_ = true;
-			above_ = (above_ && anchor_); // rispetta la modalità, ma solo con anchor
+			above_ = (above_ && anchor_);
 			setEnabled(true);
 			inlineBase.opacity = 1.0f;
 			beginTransition();
-			// Forza un ricalcolo size la prossima volta che gira
 			if (content_)
 				content_->beginTransition();
 			UIContext::get().requestFocus(shared_from_this());
@@ -1719,23 +1610,17 @@ namespace ZenitUI::UI
 			if (!content_)
 				return {100.0f, 40.0f};
 
-			// Il contenuto è già stato misurato dal parent in fase di measure,
-			// ma se è cambiato (es. testo dinamico) potrebbe essere stale.
-			// Per ora prendiamo la measuredSize del contenuto, che il framework
-			// ha già calcolato.
 			Vec2 s = content_->getMeasuredSize();
 			if (s.x <= 0.0f && s.y <= 0.0f)
 			{
-				// fallback: forziamo una measure con spazio ampio
 				content_->measure(1000.0f, 1000.0f);
 				s = content_->getMeasuredSize();
 			}
 
-			// Aggiungi padding/bordo del popup
-			float pl = currentStyle.padding.left.resolve(0.0f);
-			float pr = currentStyle.padding.right.resolve(0.0f);
-			float pt = currentStyle.padding.top.resolve(0.0f);
-			float pb = currentStyle.padding.bottom.resolve(0.0f);
+			float pl = currentStyle.padding.left.resolveH(0.0f, 0.0f);
+			float pr = currentStyle.padding.right.resolveH(0.0f, 0.0f);
+			float pt = currentStyle.padding.top.resolveV(0.0f, 0.0f);
+			float pb = currentStyle.padding.bottom.resolveV(0.0f, 0.0f);
 			return {s.x + pl + pr, s.y + pt + pb};
 		}
 	};

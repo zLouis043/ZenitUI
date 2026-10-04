@@ -9,7 +9,7 @@ SRC_FILES = $(shell find $(SRC_FOLDER) -name "*.cpp")
 INCLUDE_DIRS = -I./src/backend -I./src/ui
 
 CC = g++
-CFLAGS = -ggdb -Wall -Wextra
+CFLAGS = -ggdb -Wall -Wextra -Wno-missing-field-initializers
 
 $(OUT_FOLDER)/$(APP_NAME): $(SRC_FILES)
 	$(CC) $(CFLAGS) $(SRC_FILES) $(INCLUDE_DIRS) -I$(DEPS_HEADER_FOLDER) -L$(DEPS_LIBS_FOLDER) -lraylibdll -lopengl32 -lgdi32 -lwinmm -o $(OUT_FOLDER)/$(APP_NAME)

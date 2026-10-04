@@ -11,29 +11,36 @@
    ============================================================ */
 
 Toggle {
-  width: 70px;
-  height: 35px;
-  radius: 18px;
+  width: 10vh;
+  height: 5vh;
+  radius: 50ph;
   background: #505050;
-  transition: background 0.15s linear;
+  transition: background 0.15s linear, opacity 0.2s ease-out;
 }
 Toggle:hover    { background: #606060; }
 Toggle:focus    { border-color: #FDF900; border-width: 2px; }
-Toggle:disabled { background: #3A3A40; opacity: 0.6; }
+Toggle:disabled { background: #3A3A40; opacity: 0.5; }
 Toggle:checked  { background: #00E430; }
+Toggle:checked:hover { background: #00FF44; }
 
-.toggle-knob {
+Toggle .toggle-knob {
   position: absolute;
-  width: 25px;
-  height: 25px;
-  top: 5px;
-  left: 5px;
+  width:  60ph;
+  height: 60ph;
+  top:    20ph;
+  left:   20ph;
   radius: 50%;
   background: #FFFFFF;
-  transition: left 0.25s ease-out-back;
+  transition: left 0.28s ease-out-back;
 }
-Toggle:checked .toggle-knob { left: 40px; }
-Toggle:disabled .toggle-knob { background: #808080; }
+
+Toggle:checked .toggle-knob {
+  left: calc(100pw - 80ph);
+}
+
+Toggle:disabled .toggle-knob {
+  background: #909090;
+}
 
 Checkbox {
   background: #505050;

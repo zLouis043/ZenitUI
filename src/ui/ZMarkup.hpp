@@ -174,14 +174,167 @@ inline Element parse(std::string_view src) {
 }
 
 // =========================================================================
+//  Calc parser
+// =========================================================================
+namespace detail {
+
+struct CalcToken {
+    enum class Kind { Number, Ident, Percent, Plus, Minus, Star, Slash, LParen, RParen, End };
+    Kind kind{ Kind::End };
+    float num{ 0.0f };
+    std::string ident;
+};
+
+inline std::vector<CalcToken> tokenizeCalc(std::string_view s) {
+    std::vector<CalcToken> out;
+    size_t i = 0;
+    while (i < s.size()) {
+        char c = s[i];
+        if (std::isspace((unsigned char)c)) { ++i; continue; }
+        if (c == '+') { out.push_back({CalcToken::Kind::Plus});   ++i; continue; }
+        if (c == '-') { out.push_back({CalcToken::Kind::Minus});  ++i; continue; }
+        if (c == '*') { out.push_back({CalcToken::Kind::Star});   ++i; continue; }
+        if (c == '/') { out.push_back({CalcToken::Kind::Slash});  ++i; continue; }
+        if (c == '(') { out.push_back({CalcToken::Kind::LParen}); ++i; continue; }
+        if (c == ')') { out.push_back({CalcToken::Kind::RParen}); ++i; continue; }
+        if (c == '%') { out.push_back({CalcToken::Kind::Percent});++i; continue; }
+
+        if (std::isdigit((unsigned char)c) || c == '.') {
+            size_t start = i;
+            while (i < s.size() && (std::isdigit((unsigned char)s[i]) || s[i] == '.')) ++i;
+            float v = 0.0f;
+            try { v = std::stof(std::string(s.substr(start, i - start))); } catch (...) {}
+            CalcToken t; t.kind = CalcToken::Kind::Number; t.num = v;
+            out.push_back(t);
+            continue;
+        }
+        if (std::isalpha((unsigned char)c) || c == '_') {
+            size_t start = i;
+            while (i < s.size() && (std::isalnum((unsigned char)s[i]) || s[i] == '_')) ++i;
+            CalcToken t; t.kind = CalcToken::Kind::Ident;
+            t.ident = std::string(s.substr(start, i - start));
+            out.push_back(t);
+            continue;
+        }
+        ++i;   // carattere sconosciuto, skip
+    }
+    out.push_back({CalcToken::Kind::End});
+    return out;
+}
+
+class CalcParser {
+public:
+    explicit CalcParser(const std::vector<CalcToken>& toks) : toks(toks) {}
+
+    bool parse(Value& out) {
+        out = parseExpr();
+        return !errored && pos < toks.size() && toks[pos].kind == CalcToken::Kind::End;
+    }
+
+private:
+    const std::vector<CalcToken>& toks;
+    size_t pos{ 0 };
+    bool errored{ false };
+
+    const CalcToken& peek() const { return toks[pos]; }
+    void advance() { if (pos + 1 < toks.size()) ++pos; }
+    void error()   { errored = true; }
+
+    Value parseExpr() {
+        Value left = parseTerm();
+        while (!errored && (peek().kind == CalcToken::Kind::Plus ||
+                            peek().kind == CalcToken::Kind::Minus)) {
+            auto op = peek().kind;
+            advance();
+            Value right = parseTerm();
+            left = (op == CalcToken::Kind::Plus) ? (left + right) : (left - right);
+        }
+        return left;
+    }
+
+    Value parseTerm() {
+        Value left = parseFactor();
+        while (!errored && (peek().kind == CalcToken::Kind::Star ||
+                            peek().kind == CalcToken::Kind::Slash)) {
+            auto op = peek().kind;
+            advance();
+            Value right = parseFactor();
+            left = (op == CalcToken::Kind::Star) ? left.mulWith(right)
+                                                 : left.divWith(right);
+        }
+        return left;
+    }
+
+    Value parseFactor() {
+        if (errored) return Value::px(0.0f);
+
+        // unario
+        if (peek().kind == CalcToken::Kind::Minus) { advance(); return -parseFactor(); }
+        if (peek().kind == CalcToken::Kind::Plus)  { advance(); return  parseFactor(); }
+
+        // parentesi
+        if (peek().kind == CalcToken::Kind::LParen) {
+            advance();
+            Value v = parseExpr();
+            if (peek().kind != CalcToken::Kind::RParen) { error(); return v; }
+            advance();
+            return v;
+        }
+
+        // numero [unità]
+        if (peek().kind == CalcToken::Kind::Number) {
+            float num = peek().num;
+            advance();
+
+            if (peek().kind == CalcToken::Kind::Percent) {
+                advance();
+                return Value::percent(num);
+            }
+            if (peek().kind == CalcToken::Kind::Ident) {
+                const std::string& u = peek().ident;
+                advance();
+                if (u == "px") return Value::px(num);
+                if (u == "vw") return Value::vw(num);
+                if (u == "vh") return Value::vh(num);
+                if (u == "pw") return Value::pw(num);
+                if (u == "ph") return Value::ph(num);
+                return Value::px(num);   // unità sconosciuta: tratta come px
+            }
+            return Value::number(num);
+        }
+
+        error();
+        return Value::px(0.0f);
+    }
+};
+
+} // namespace detail
+
+// =========================================================================
 //  Value parsers (li riuserai anche per il CSS degli stili)
 // =========================================================================
 inline std::optional<Value> parseValueToken(std::string_view s) {
     if (s.empty()) return std::nullopt;
     if (s == "auto") return Value::autoSize();
 
+    // calc(...)
+    if (s.size() >= 6 && s.substr(0, 5) == "calc(" && s.back() == ')') {
+        std::string inner(s.substr(5, s.size() - 6));
+        auto toks = detail::tokenizeCalc(inner);
+        detail::CalcParser p(toks);
+        Value out;
+        if (!p.parse(out)) {
+            logWarn("StyleParser", "", 0, 0,
+                    "calc: espressione non valida '" + std::string(s) + "'");
+            return std::nullopt;
+        }
+        return out;
+    }
+
+    // Numero + unità singola
     size_t n = 0;
-    while (n < s.size() && (std::isdigit((unsigned char)s[n]) || s[n] == '.' || s[n] == '-' || s[n] == '+')) ++n;
+    while (n < s.size() && (std::isdigit((unsigned char)s[n]) ||
+                            s[n] == '.' || s[n] == '-' || s[n] == '+')) ++n;
 
     float amount = 0.0f;
     try { amount = std::stof(std::string(s.substr(0, n))); } catch (...) { return std::nullopt; }
@@ -191,6 +344,8 @@ inline std::optional<Value> parseValueToken(std::string_view s) {
     if (unit == "%")  return Percent(amount);
     if (unit == "vw") return VW(amount);
     if (unit == "vh") return VH(amount);
+    if (unit == "pw") return PW(amount);
+    if (unit == "ph") return PH(amount);
     return std::nullopt;
 }
 
