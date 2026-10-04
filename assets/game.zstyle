@@ -80,6 +80,52 @@ Tooltip {
   transition: opacity 0.2s ease-out;
 }
 
+Toggle::track { background: #505050; color: #00E430; }
+Toggle::knob  { color: #FFFFFF; }
+Toggle:disabled::track { background: #3A3A40; color: #3A3A40; }
+Toggle:disabled::knob  { color: #808080; }
+
+Checkbox::box  { background: #1574b0; radius: 6px; }
+Checkbox::mark { color: #ea0404; }
+Checkbox:disabled::box  { background: #3A3A40; }
+Checkbox:disabled::mark { color: #808080; }
+
+@keyframes knobGlow {
+  0%   { color: #d6ff32; }
+  50%  { color: #ffffff; }
+  100% { color: #d6ff32; }
+}
+
+@keyframes knobPop {
+  0%   { radius: 8px; }
+  50%  { radius: 12px; }
+  100% { radius: 8px; }
+}
+
+Slider::track { background: #1717cf; radius: 4px; }
+Slider::fill  { color: #d6ff32; }
+Slider::knob  { color: #d6ff32; }
+Slider:hover::knob {
+  animation: knobGlow 0.6s ease-in-out infinite;
+}
+Slider:pressed::knob {
+  animation: knobPop 0.2s ease-out;
+}
+
+ProgressBar::track { background: #cc1c9d; }
+ProgressBar::fill  { color: #69FF32; }
+
+TextInput::cursor {
+    color: #FF6600;
+    border-width: 3px;
+    transition: border-width 0.25s ease-out-quad;
+    
+}
+
+TextInput:hover::cursor {
+    color: #FDF900;
+    border-width: 10px;
+}
 
 /* ============================================================
    Classi (varianti semantiche)

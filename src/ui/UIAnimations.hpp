@@ -69,6 +69,7 @@ namespace ZenitUI {
 	struct ActiveCssAnimation {
 		std::string name;
 		float elapsed{ 0.0f };
+		double startTime{ 0.0 }; 
 		float duration{ 1.0f };
 		float delay{ 0.0f };
 		int iterations{ 1 };          // -1 = infinite

@@ -5,22 +5,30 @@
 #include "Easing.hpp"
 #include "Unit.hpp"
 
-namespace ZenitUI {
+namespace ZenitUI
+{
 
 	template <typename T>
-	struct Opt {
+	struct Opt
+	{
 		T value{};
-		bool is_set{ false };
+		bool is_set{false};
 
 		Opt() = default;
-		Opt(const T& v) : value(v), is_set(true) {}
-		Opt& operator=(const T& v) { value = v; is_set = true; return *this; }
+		Opt(const T &v) : value(v), is_set(true) {}
+		Opt &operator=(const T &v)
+		{
+			value = v;
+			is_set = true;
+			return *this;
+		}
 		void reset() { is_set = false; }
-		T get_or(const T& fallback) const { return is_set ? value : fallback; }
+		T get_or(const T &fallback) const { return is_set ? value : fallback; }
 	};
 
-	struct Spacing {
-		Value top{ 0.0f }, right{ 0.0f }, bottom{ 0.0f }, left{ 0.0f };
+	struct Spacing
+	{
+		Value top{0.0f}, right{0.0f}, bottom{0.0f}, left{0.0f};
 
 		Spacing() = default;
 		Spacing(float all) : top(all), right(all), bottom(all), left(all) {}
@@ -29,203 +37,243 @@ namespace ZenitUI {
 		Spacing(Value v, Value h, Value b) : top(v), right(h), bottom(b), left(h) {}
 		Spacing(Value t, Value r, Value b, Value l) : top(t), right(r), bottom(b), left(l) {}
 
-		bool operator==(const Spacing& o) const {
+		bool operator==(const Spacing &o) const
+		{
 			return top == o.top && right == o.right && bottom == o.bottom && left == o.left;
 		}
-		bool operator!=(const Spacing& o) const { return !(*this == o); }
+		bool operator!=(const Spacing &o) const { return !(*this == o); }
 	};
 
-	struct TransitionSpec {
+	struct TransitionSpec
+	{
 		std::string prop;
-		float duration{ 0.15f };
-		TransitionFunction ease{ TransitionFunction::Linear };
-		float delay{ 0.0f };
+		float duration{0.15f};
+		TransitionFunction ease{TransitionFunction::Linear};
+		float delay{0.0f};
 	};
 
-	struct AnimationRef {
+	struct AnimationRef
+	{
 		std::string name;
-		float duration{ 1.0f };
-		TransitionFunction ease{ TransitionFunction::Linear };
-		float delay{ 0.0f };
-		int iterations{ 1 };
-		bool alternate{ false };
-		bool fillForwards{ false };
-		bool blocksInput{ false };
+		float duration{1.0f};
+		TransitionFunction ease{TransitionFunction::Linear};
+		float delay{0.0f};
+		int iterations{1};
+		bool alternate{false};
+		bool fillForwards{false};
+		bool blocksInput{false};
 	};
 
-	enum class Position { Static, Relative, Absolute };
+	enum class Position
+	{
+		Static,
+		Relative,
+		Absolute
+	};
 
-	struct ZIndex {
-		bool isAuto{ true };
-		int value{ 0 };
+	struct ZIndex
+	{
+		bool isAuto{true};
+		int value{0};
 
 		ZIndex() = default;
 		ZIndex(int v) : isAuto(false), value(v) {}
 
 		static ZIndex Auto() { return ZIndex(); }
 
-		bool operator==(const ZIndex& o) const { return isAuto == o.isAuto && value == o.value; }
-		bool operator!=(const ZIndex& o) const { return !(*this == o); }
+		bool operator==(const ZIndex &o) const { return isAuto == o.isAuto && value == o.value; }
+		bool operator!=(const ZIndex &o) const { return !(*this == o); }
 	};
 
-	enum class Overflow { Visible, Hidden, Scroll };
+	enum class Overflow
+	{
+		Visible,
+		Hidden,
+		Scroll
+	};
 
-	struct TextureRef {
+	struct TextureRef
+	{
 		std::string name;
-		int left{ 0 }, top{ 0 }, right{ 0 }, bottom{ 0 };
+		int left{0}, top{0}, right{0}, bottom{0};
 
 		bool isNineSlice() const { return left || top || right || bottom; }
 
-		bool operator==(const TextureRef& o) const {
+		bool operator==(const TextureRef &o) const
+		{
 			return name == o.name &&
-				left == o.left && top == o.top &&
-				right == o.right && bottom == o.bottom;
+				   left == o.left && top == o.top &&
+				   right == o.right && bottom == o.bottom;
 		}
-		bool operator!=(const TextureRef& o) const { return !(*this == o); }
+		bool operator!=(const TextureRef &o) const { return !(*this == o); }
 	};
 
-#define BUBBLE_STYLE_PROPS(X) \
-	X(Value,   width,          Value::autoSize()) \
-	X(Value,   height,         Value::autoSize()) \
-	X(Value,   minWidth,       Value::autoSize()) \
-	X(Value,   minHeight,      Value::autoSize()) \
-	X(Value,   maxWidth,       Value::autoSize()) \
-	X(Value,   maxHeight,      Value::autoSize()) \
-	X(float,   grow,           0.0f) \
-	X(float,   shrink,         1.0f) \
-	X(Value,   gap,            Value(0.0f)) \
-	X(Spacing, margin,         Spacing()) \
-	X(Spacing, padding,        Spacing()) \
-	X(Align,   alignH,         Align::Auto) \
-	X(Align,   alignV,         Align::Auto) \
-	X(Align,   itemsH,         Align::Start) \
-	X(Align,   itemsV,         Align::Start) \
-	X(Justify, justify,        Justify::Start) \
-	X(Align,   textAlign,      Align::Auto) \
-	X(Color,   background,     Colors::Blank) \
-	X(Color,   color,          Colors::White) \
-	X(Color,   tint,           Colors::White) \
-	X(TextureRef, backgroundTexture, TextureRef{}) \
-	X(Color,   borderColor,    Colors::Blank) \
-	X(Value,   borderWidth,    Value(0.0f)) \
-	X(Value,   radius,         Value(0.0f)) \
-	X(float,   opacity,        1.0f) \
-	X(float,   scale,          1.0f) \
-	X(float,   rotation,       0.0f) \
-	X(Value,   translateX,     Value(0.0f)) \
-	X(Value,   translateY,     Value(0.0f)) \
-	X(Value,   fontSize,       Value(20.0f)) \
-	X(Value,   letterSpacing,  Value(2.0f)) \
-	X(float,   transitionTime, 0.15f) \
+#define BUBBLE_STYLE_PROPS(X)                               \
+	X(Value, width, Value::autoSize())                      \
+	X(Value, height, Value::autoSize())                     \
+	X(Value, minWidth, Value::autoSize())                   \
+	X(Value, minHeight, Value::autoSize())                  \
+	X(Value, maxWidth, Value::autoSize())                   \
+	X(Value, maxHeight, Value::autoSize())                  \
+	X(float, grow, 0.0f)                                    \
+	X(float, shrink, 1.0f)                                  \
+	X(Value, gap, Value(0.0f))                              \
+	X(Spacing, margin, Spacing())                           \
+	X(Spacing, padding, Spacing())                          \
+	X(Align, alignH, Align::Auto)                           \
+	X(Align, alignV, Align::Auto)                           \
+	X(Align, itemsH, Align::Start)                          \
+	X(Align, itemsV, Align::Start)                          \
+	X(Justify, justify, Justify::Start)                     \
+	X(Align, textAlign, Align::Auto)                        \
+	X(Color, background, Colors::Blank)                     \
+	X(Color, color, Colors::White)                          \
+	X(Color, tint, Colors::White)                           \
+	X(TextureRef, backgroundTexture, TextureRef{})          \
+	X(Color, borderColor, Colors::Blank)                    \
+	X(Value, borderWidth, Value(0.0f))                      \
+	X(Value, radius, Value(0.0f))                           \
+	X(float, opacity, 1.0f)                                 \
+	X(float, scale, 1.0f)                                   \
+	X(float, rotation, 0.0f)                                \
+	X(Value, translateX, Value(0.0f))                       \
+	X(Value, translateY, Value(0.0f))                       \
+	X(Value, fontSize, Value(20.0f))                        \
+	X(Value, letterSpacing, Value(2.0f))                    \
+	X(float, transitionTime, 0.15f)                         \
 	X(TransitionFunction, ease, TransitionFunction::Linear) \
-	X(Overflow, overflow,      Overflow::Visible) \
-	X(Position, position,      Position::Static) \
-	X(ZIndex,   zIndex,        ZIndex::Auto()) \
-	X(Value,   top,            Value::autoSize()) \
-	X(Value,   left,           Value::autoSize()) \
-	X(Value,   right,          Value::autoSize()) \
-	X(Value,   bottom,         Value::autoSize()) \
-	X(std::string, font, "") \
+	X(Overflow, overflow, Overflow::Visible)                \
+	X(Position, position, Position::Static)                 \
+	X(ZIndex, zIndex, ZIndex::Auto())                       \
+	X(Value, top, Value::autoSize())                        \
+	X(Value, left, Value::autoSize())                       \
+	X(Value, right, Value::autoSize())                      \
+	X(Value, bottom, Value::autoSize())                     \
+	X(std::string, font, "")
 
-	inline bool isInheritedProp(std::string_view name) {
-		return name == "font"
-			|| name == "fontSize"
-			|| name == "color"
-			|| name == "letterSpacing"
-			|| name == "textAlign";
+	inline bool isInheritedProp(std::string_view name)
+	{
+		return name == "font" || name == "fontSize" || name == "color" || name == "letterSpacing" || name == "textAlign";
 	}
 
-	struct Style {
+	struct Style
+	{
 #define X(T, name, def) Opt<T> name;
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 
 		// Transizioni per-property. Assente = eredita dal livello precedente.
 		Opt<std::vector<TransitionSpec>> transitions;
-		Opt<std::vector<AnimationRef>>   animations;
+		Opt<std::vector<AnimationRef>> animations;
 
-		Style& overlay(const Style& o) {
-#define X(T, name, def) if (o.name.is_set) name = o.name;
+		Style &overlay(const Style &o)
+		{
+#define X(T, name, def) \
+	if (o.name.is_set)  \
+		name = o.name;
 			BUBBLE_STYLE_PROPS(X)
 #undef X
-			if (o.transitions.is_set) transitions = o.transitions;
-			if (o.animations.is_set)  animations  = o.animations;
+			if (o.transitions.is_set)
+				transitions = o.transitions;
+			if (o.animations.is_set)
+				animations = o.animations;
 			return *this;
 		}
 	};
 
-	struct ComputedStyle {
+	struct ComputedStyle
+	{
 #define X(T, name, def) T name = def;
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 
 		std::vector<TransitionSpec> transitions;
-		std::vector<AnimationRef>   animations;
+		std::vector<AnimationRef> animations;
 
-		static ComputedStyle from(const Style& s,
-                          const ComputedStyle* parent = nullptr,
-                          const Style* root = nullptr) {
-		ComputedStyle c;
-#define X(T, name, def) \
-		if      (s.name.is_set)                                     c.name = s.name.value; \
-		else if (parent && isInheritedProp(#name))                  c.name = parent->name; \
-		else if (root && root->name.is_set)                         c.name = root->name.value; \
-		else                                                        c.name = def;
-		BUBBLE_STYLE_PROPS(X)
+		static ComputedStyle from(const Style &s,
+								  const ComputedStyle *parent = nullptr,
+								  const Style *root = nullptr)
+		{
+			ComputedStyle c;
+#define X(T, name, def)                        \
+	if (s.name.is_set)                         \
+		c.name = s.name.value;                 \
+	else if (parent && isInheritedProp(#name)) \
+		c.name = parent->name;                 \
+	else if (root && root->name.is_set)        \
+		c.name = root->name.value;             \
+	else                                       \
+		c.name = def;
+			BUBBLE_STYLE_PROPS(X)
 #undef X
-		if (s.transitions.is_set) c.transitions = s.transitions.value;
-		if (s.animations.is_set)  c.animations  = s.animations.value;
-		return c;
-	}
+			if (s.transitions.is_set)
+				c.transitions = s.transitions.value;
+			if (s.animations.is_set)
+				c.animations = s.animations.value;
+			return c;
+		}
 	};
 
-	inline bool operator==(const ComputedStyle& a, const ComputedStyle& b) {
-#define X(T, name, def) if (!(a.name == b.name)) return false;
+	inline bool operator==(const ComputedStyle &a, const ComputedStyle &b)
+	{
+#define X(T, name, def)      \
+	if (!(a.name == b.name)) \
+		return false;
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 		return true;
 	}
-	inline bool operator!=(const ComputedStyle& a, const ComputedStyle& b) { return !(a == b); }
+	inline bool operator!=(const ComputedStyle &a, const ComputedStyle &b) { return !(a == b); }
 
-	struct StyleSet {
+	struct StyleSet
+	{
 		Style base, hover, pressed, disabled, focus;
+		std::unordered_map<std::string, StyleSet> parts;
 	};
 
 	inline float lerpProp(float a, float b, float t) { return a + (b - a) * t; }
 
-	inline Color lerpProp(const Color& a, const Color& b, float t) {
-		auto mix = [t](uint8_t x, uint8_t y) {
+	inline Color lerpProp(const Color &a, const Color &b, float t)
+	{
+		auto mix = [t](uint8_t x, uint8_t y)
+		{
 			float v = static_cast<float>(x) + (static_cast<float>(y) - static_cast<float>(x)) * t;
 			return static_cast<uint8_t>(std::clamp(std::lround(v), 0L, 255L));
 		};
-		return { mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b), mix(a.a, b.a) };
+		return {mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b), mix(a.a, b.a)};
 	}
 
-	inline Value lerpProp(const Value& a, const Value& b, float t) {
-		if (a.unit == b.unit) return Value(lerpProp(a.amount, b.amount, t), a.unit, lerpProp(a.px, b.px, t));
+	inline Value lerpProp(const Value &a, const Value &b, float t)
+	{
+		if (a.unit == b.unit)
+			return Value(lerpProp(a.amount, b.amount, t), a.unit, lerpProp(a.px, b.px, t));
 		return t > 0.0f ? b : a;
 	}
 
-	inline Spacing lerpProp(const Spacing& a, const Spacing& b, float t) {
+	inline Spacing lerpProp(const Spacing &a, const Spacing &b, float t)
+	{
 		return Spacing(lerpProp(a.top, b.top, t), lerpProp(a.right, b.right, t),
-			lerpProp(a.bottom, b.bottom, t), lerpProp(a.left, b.left, t));
+					   lerpProp(a.bottom, b.bottom, t), lerpProp(a.left, b.left, t));
 	}
 
 	template <typename E, typename = std::enable_if_t<std::is_enum_v<E>>>
 	inline E lerpProp(E a, E b, float t) { return t > 0.0f ? b : a; }
 
-	inline ZIndex lerpProp(const ZIndex& a, const ZIndex& b, float t) { return t > 0.0f ? b : a; }
+	inline ZIndex lerpProp(const ZIndex &a, const ZIndex &b, float t) { return t > 0.0f ? b : a; }
 
-	inline std::string lerpProp(const std::string& a, const std::string& b, float t) {
+	inline std::string lerpProp(const std::string &a, const std::string &b, float t)
+	{
 		return t > 0.0f ? b : a;
 	}
 
-	inline TextureRef lerpProp(const TextureRef& a, const TextureRef& b, float t) {
+	inline TextureRef lerpProp(const TextureRef &a, const TextureRef &b, float t)
+	{
 		return t > 0.0f ? b : a;
 	}
 
 	// Lerp globale (retro-compat): t è già normalizzato in [0,1].
-	inline ComputedStyle lerpStyle(const ComputedStyle& a, const ComputedStyle& b, float t) {
+	inline ComputedStyle lerpStyle(const ComputedStyle &a, const ComputedStyle &b, float t)
+	{
 		ComputedStyle r;
 #define X(T, name, def) r.name = lerpProp(a.name, b.name, t);
 		BUBBLE_STYLE_PROPS(X)
@@ -237,23 +285,26 @@ namespace ZenitUI {
 	// Lerp per-property: realElapsed è il tempo in secondi dall'inizio della transizione.
 	// Ogni prop usa la sua duration/ease se presente in transitions; altrimenti
 	// fallback su transitionTime/ease globali di "b".
-	inline ComputedStyle lerpStyleTimed(const ComputedStyle& a, const ComputedStyle& b, float realElapsed) {
+	inline ComputedStyle lerpStyleTimed(const ComputedStyle &a, const ComputedStyle &b, float realElapsed)
+	{
 		ComputedStyle r;
 
-		auto timingFor = [&](const char* propName) -> std::pair<float, TransitionFunction> {
-			for (const auto& spec : b.transitions) {
+		auto timingFor = [&](const char *propName) -> std::pair<float, TransitionFunction>
+		{
+			for (const auto &spec : b.transitions)
+			{
 				if (spec.prop == propName || spec.prop == "all")
-					return { spec.duration, spec.ease };
+					return {spec.duration, spec.ease};
 			}
-			return { b.transitionTime, b.ease };
+			return {b.transitionTime, b.ease};
 		};
 
-#define X(T, name, def) \
-		{ \
-			auto [dur, ease] = timingFor(#name); \
-			float tp = (dur > 0.0f) ? std::clamp(realElapsed / dur, 0.0f, 1.0f) : 1.0f; \
-			r.name = lerpProp(a.name, b.name, getRatio(tp, ease)); \
-		}
+#define X(T, name, def)                                                             \
+	{                                                                               \
+		auto [dur, ease] = timingFor(#name);                                        \
+		float tp = (dur > 0.0f) ? std::clamp(realElapsed / dur, 0.0f, 1.0f) : 1.0f; \
+		r.name = lerpProp(a.name, b.name, getRatio(tp, ease));                      \
+	}
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 
@@ -261,71 +312,152 @@ namespace ZenitUI {
 		return r;
 	}
 
+	// Confronto "cambia qualcosa?" fra due Style. Salta transitions/animations.
+	inline bool stylesDiffer(const Style &a, const Style &b)
+	{
+#define X(T, name, def)                                   \
+	if (a.name.is_set != b.name.is_set)                   \
+		return true;                                      \
+	if (a.name.is_set && !(a.name.value == b.name.value)) \
+		return true;
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+
+		// Animations: se cambia l'insieme (o i parametri) delle keyframe dichiarate,
+		// il part deve aggiornare il target → parte/ferma l'animazione.
+		if (a.animations.is_set != b.animations.is_set)
+			return true;
+		if (a.animations.is_set)
+		{
+			const auto &av = a.animations.value;
+			const auto &bv = b.animations.value;
+			if (av.size() != bv.size())
+				return true;
+			for (size_t i = 0; i < av.size(); ++i)
+			{
+				if (av[i].name != bv[i].name ||
+					av[i].duration != bv[i].duration ||
+					av[i].delay != bv[i].delay ||
+					av[i].iterations != bv[i].iterations ||
+					av[i].alternate != bv[i].alternate ||
+					av[i].fillForwards != bv[i].fillForwards ||
+					av[i].ease != bv[i].ease)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	// Lerp element-wise di due Style, con "snap" se una prop è set solo da un lato.
+	template <typename T>
+	inline Opt<T> lerpOpt(const Opt<T> &a, const Opt<T> &b, float t)
+	{
+		if (a.is_set && b.is_set)
+			return Opt<T>(lerpProp(a.value, b.value, t));
+		return b;
+	}
+
+	inline Style lerpStyleParts(const Style &a, const Style &b, float t)
+	{
+		Style r;
+#define X(T, name, def) r.name = lerpOpt(a.name, b.name, t);
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+		r.transitions = b.transitions;
+		r.animations = b.animations;
+		return r;
+	}
+
 	// Applica un Style (con Opt) su un ComputedStyle esistente.
 	// Usato per l'overlay delle animazioni CSS sul render-style.
-	inline void overlayComputed(ComputedStyle& dst, const Style& src) {
-#define X(T, name, def) if (src.name.is_set) dst.name = src.name.value;
+	inline void overlayComputed(ComputedStyle &dst, const Style &src)
+	{
+#define X(T, name, def)  \
+	if (src.name.is_set) \
+		dst.name = src.name.value;
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 	}
 
-		// Itera le prop "set" di uno Style (esclusi transitions/animations)
+	// Itera le prop "set" di uno Style (esclusi transitions/animations)
 	template <typename F>
-	inline void forEachSetStyleProp(const Style& s, F&& fn) {
-#define X(T, name, def) if (s.name.is_set) fn(#name);
+	inline void forEachSetStyleProp(const Style &s, F &&fn)
+	{
+#define X(T, name, def) \
+	if (s.name.is_set)  \
+		fn(#name);
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 	}
 
 	// Copia una prop per nome. Ritorna true se esiste (era set) nella src.
-	inline bool copyStyleProp(Style& dst, const Style& src, std::string_view name) {
-#define X(T, n, def) if (name == #n) { if (src.n.is_set) { dst.n = src.n; return true; } return false; }
+	inline bool copyStyleProp(Style &dst, const Style &src, std::string_view name)
+	{
+#define X(T, n, def)       \
+	if (name == #n)        \
+	{                      \
+		if (src.n.is_set)  \
+		{                  \
+			dst.n = src.n; \
+			return true;   \
+		}                  \
+		return false;      \
+	}
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 		return false;
 	}
 
 	// Ritorna true se la prop è set nella Style.
-	inline bool hasStyleProp(const Style& s, std::string_view name) {
-#define X(T, n, def) if (name == #n) return s.n.is_set;
+	inline bool hasStyleProp(const Style &s, std::string_view name)
+	{
+#define X(T, n, def) \
+	if (name == #n)  \
+		return s.n.is_set;
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 		return false;
 	}
 
 	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
-                                TransitionFunction, Overflow, Position, ZIndex,
-                                std::string, TextureRef>;
+								   TransitionFunction, Overflow, Position, ZIndex,
+								   std::string, TextureRef>;
 
-	struct PropDesc {
-		const char* name;
-		PropValue(*get)(const ComputedStyle&);
-		void (*set)(ComputedStyle&, const PropValue&);
+	struct PropDesc
+	{
+		const char *name;
+		PropValue (*get)(const ComputedStyle &);
+		void (*set)(ComputedStyle &, const PropValue &);
 	};
 
-	inline const std::vector<PropDesc>& propTable() {
+	inline const std::vector<PropDesc> &propTable()
+	{
 		static const std::vector<PropDesc> table = {
-#define X(T, name, def) PropDesc{ #name, \
-			[](const ComputedStyle& c) -> PropValue { return c.name; }, \
-			[](ComputedStyle& c, const PropValue& v) { if (const T* p = std::get_if<T>(&v)) c.name = *p; } },
+#define X(T, name, def) PropDesc{#name,                                                      \
+								 [](const ComputedStyle &c) -> PropValue { return c.name; }, \
+								 [](ComputedStyle &c, const PropValue &v) { if (const T* p = std::get_if<T>(&v)) c.name = *p; }},
 			BUBBLE_STYLE_PROPS(X)
 #undef X
 		};
 		return table;
 	}
 
-	inline const PropDesc* findProp(std::string_view name) {
-		for (const auto& d : propTable()) {
-			if (name == d.name) return &d;
+	inline const PropDesc *findProp(std::string_view name)
+	{
+		for (const auto &d : propTable())
+		{
+			if (name == d.name)
+				return &d;
 		}
 		return nullptr;
 	}
 
-	inline PropValue lerpValue(const PropValue& a, const PropValue& b, float t) {
-		return std::visit([&](const auto& x) -> PropValue {
+	inline PropValue lerpValue(const PropValue &a, const PropValue &b, float t)
+	{
+		return std::visit([&](const auto &x) -> PropValue
+						  {
 			using T = std::decay_t<decltype(x)>;
 			if (const T* y = std::get_if<T>(&b)) return lerpProp(x, *y, t);
-			return x;
-		}, a);
+			return x; }, a);
 	}
 }
