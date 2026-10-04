@@ -14,7 +14,7 @@ namespace ZenitUI {
 	enum class LayoutType { Stack, Vertical, Horizontal };
 	enum class UIState { Idle, Hover, Pressed, Disabled };
 
-	
+
 
 	class Layout : public std::enable_shared_from_this<Layout> {
 	public:
@@ -66,7 +66,7 @@ namespace ZenitUI {
 
 			// Rete di sicurezza: se il chiamante è un costruttore o uno stato
 			// dove shared_from_this() non è ancora valido, avvisa e ignora.
-			// Usa X::create() per costruire widget correttamente.
+			// Usa X::create() e metti questa logica in onBuild().
 			if (weak_from_this().expired()) {
 				logWarn("Layout", "", 0, 0,
 					"addChild chiamato su un nodo non gestito da shared_ptr. "
@@ -334,7 +334,7 @@ namespace ZenitUI {
 			if (rect.width <= 0 || rect.height <= 0) return;
 
 			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
-			float rPx = std::clamp(style.radius.resolve(maxRadius * 2.0f), 0.0f, maxRadius);
+			float rPx = std::clamp(style.radius.resolveH(maxRadius * 2.0f, maxRadius * 2.0f), 0.0f, maxRadius);
 
 			// 1) Colore di sfondo (sotto la texture)
 			Color bg = style.background.withAlpha(op);
@@ -359,7 +359,7 @@ namespace ZenitUI {
 
 			// 3) Bordo
 			Color bc = style.borderColor.withAlpha(op);
-			float bw = style.borderWidth.resolve(maxRadius * 2.0f);
+			float bw = style.borderWidth.resolveH(maxRadius * 2.0f, maxRadius * 2.0f);
 			if (bc.a > 0 && bw > 0.0f) {
 				if (rPx > 0.0f && maxRadius > 0.0f) r->strokeRoundedRect(rect, rPx, bw, bc);
 				else                                r->strokeRect(rect, bw, bc);
@@ -382,8 +382,8 @@ namespace ZenitUI {
 			Transform2D tr;
 			tr.pivot = rect.center();
 			tr.translate = {
-				style.translateX.resolveSelf(rect.width),
-				style.translateY.resolveSelf(rect.height)
+				style.translateX.resolveSelfH(rect.width, rect.height),
+				style.translateY.resolveSelfV(rect.width, rect.height)
 			};
 			tr.rotationDeg = style.rotation;
 			tr.scale = style.scale;

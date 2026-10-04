@@ -259,9 +259,38 @@ namespace ZenitUI
 
 	inline Value lerpProp(const Value &a, const Value &b, float t)
 	{
-		if (a.unit == b.unit)
-			return Value(lerpProp(a.amount, b.amount, t), a.unit, lerpProp(a.px, b.px, t));
-		return t > 0.0f ? b : a;
+		// Auto su entrambi → resta Auto
+		if (a.isAuto() && b.isAuto())
+			return Value::autoSize();
+		// Auto su uno solo → snap (non sappiamo da quale valore partire)
+		if (a.isAuto() || b.isAuto())
+			return t > 0.0f ? b : a;
+
+		// Raccogli i coefficienti per unità in due array (una entry per unità).
+		float ca[7] = {0}, cb[7] = {0};
+		for (const auto &term : a.terms)
+		{
+			int i = static_cast<int>(term.unit);
+			if (i >= 0 && i < 7)
+				ca[i] += term.coeff;
+		}
+		for (const auto &term : b.terms)
+		{
+			int i = static_cast<int>(term.unit);
+			if (i >= 0 && i < 7)
+				cb[i] += term.coeff;
+		}
+
+		// Interpola termine-a-termine, includendo le unità presenti in una sola
+		// delle due (l'altra contribuisce con coefficiente 0).
+		Value r;
+		for (int i = 0; i < 7; ++i)
+		{
+			float v = ca[i] + (cb[i] - ca[i]) * t;
+			if (v != 0.0f)
+				r.terms.push_back({v, static_cast<Unit>(i)});
+		}
+		return r;
 	}
 
 	inline Spacing lerpProp(const Spacing &a, const Spacing &b, float t)
