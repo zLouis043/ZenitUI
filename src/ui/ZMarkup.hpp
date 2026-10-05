@@ -1,6 +1,13 @@
 #pragma once
 
-#include "UI.hpp"
+#include "Common.hpp"
+#include "Logger.hpp"
+#include "CoreTypes.hpp"
+#include "Easing.hpp"
+#include "Unit.hpp"
+#include "Style.hpp"
+#include "Layout.hpp"
+#include "UIComponents.hpp"
 
 #include <charconv>
 #include <optional>
@@ -552,35 +559,37 @@ inline void registerBuiltins(Registry& r) {
     using namespace ZenitUI::UI;
 
     r.reg("Stack", [](const Element&) {
-			auto l = std::make_shared<Layout>(LayoutType::Stack);
-			l->setStyleTag("Stack");
-			return l;
-		});
+        auto l = std::make_shared<Layout>(LayoutType::Stack);
+        l->setStyleTag("Stack");
+        return l;
+    });
     r.reg("Spacer", [](const Element&) {
-			auto l = std::make_shared<Layout>(LayoutType::Stack);
-			l->setStyleTag("Spacer");
-			return l;
-		});
+        auto l = std::make_shared<Layout>(LayoutType::Stack);
+        l->setStyleTag("Spacer");
+        return l;
+    });
     r.reg("VStack",  [](const Element&)   { return VStack(); });
     r.reg("HStack",  [](const Element&)   { return HStack(); });
+
     r.reg("Text", [](const Element& e) {
-        auto t = Label(e.text);
+        auto t = Text::create(e.text);
         if (e.has("wrap")) t->setWrap(e.attrBool("wrap", true));
         return t;
     });
     r.reg("Label", [](const Element& e) {
-        auto t = Label(e.text);
+        auto t = Text::create(e.text);
         if (e.has("wrap")) t->setWrap(e.attrBool("wrap", true));
         return t;
     });
+
     r.reg("TextInput", [](const Element& e) {
-        return std::make_shared<UI::TextInput>(e.attr("value", e.text));
+        return TextInput::create(e.attr("value", e.text));
     });
     r.reg("Checkbox", [](const Element& e) {
-        return std::make_shared<UI::Checkbox>(e.attrBool("checked", false));
+        return Checkbox::create(e.attrBool("checked", false));
     });
     r.reg("ProgressBar", [](const Element& e) {
-        return std::make_shared<UI::ProgressBar>(e.attrFloat("value", 0.0f));
+        return ProgressBar::create(e.attrFloat("value", 0.0f));
     });
     r.reg("Dropdown", [](const Element& e) {
         std::vector<std::string> opts;
@@ -596,12 +605,12 @@ inline void registerBuiltins(Registry& r) {
         }
         flush();
         if (opts.empty()) opts.push_back("Default");
-        return UI::Dropdown::create(std::move(opts), 0);
+        return Dropdown::create(std::move(opts), 0);
     });
     r.reg("Button",  [](const Element& e) { return Btn(e.text); });
     r.reg("Panel",   [](const Element&)   { return Pan(); });
-    r.reg("Slider",  [](const Element& e) { return std::make_shared<Slider>(e.attrFloat("value", 0.5f)); });
-    r.reg("Toggle",  [](const Element& e) { return std::make_shared<Toggle>(e.attrBool("checked", false)); });
+    r.reg("Slider",  [](const Element& e) { return Slider::create(e.attrFloat("value", 0.5f)); });
+    r.reg("Toggle",  [](const Element& e) { return Toggle::create(e.attrBool("checked", false)); });
     r.reg("ScrollView", [](const Element&) { return ScrollView::create(); });
 }
 

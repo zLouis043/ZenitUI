@@ -31,7 +31,7 @@ Toggle .toggle-knob {
   left:   20ph;
   radius: 50%;
   background: #FFFFFF;
-  transition: left 0.28s ease-out-back;
+  transition: left 0.28s ease-out-cubic;
 }
 
 Toggle:checked .toggle-knob {

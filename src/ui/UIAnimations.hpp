@@ -123,6 +123,13 @@ namespace ZenitUI {
 			finished = true;
 		}
 		float iter = std::floor(t / a.duration);
+
+		// Quando finished e t è esattamente su total, iter punta alla prossima
+		// iterazione inesistente. Lo clampiamo all'ultima valida.
+		if (a.iterations > 0 && finished && iter > 0.0f) {
+			iter = std::min(iter, (float)(a.iterations - 1));
+		}
+
 		float local = (t - iter * a.duration) / a.duration;
 		if (a.alternate && ((int)iter % 2 == 1)) local = 1.0f - local;
 		return std::clamp(local, 0.0f, 1.0f);
