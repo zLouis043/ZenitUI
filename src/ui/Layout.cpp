@@ -266,6 +266,16 @@ namespace ZenitUI
 
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
+
+		if (!subtreeDirty_ &&
+			parent_w == lastMeasureW_ &&
+			parent_h == lastMeasureH_)
+		{
+			return measuredSize;
+		}
+		lastMeasureW_ = parent_w;
+		lastMeasureH_ = parent_h;
+
 		if (!styleInitialized)
 		{
 			styleInitialized = true;
@@ -707,6 +717,9 @@ namespace ZenitUI
 
 	void Layout::update(float dt, bool ancestorBlocked)
 	{
+		bool wasPending = pendingTransition;
+		ComputedStyle styleBefore = currentStyle;
+
 		// Snapshot delle prop ereditate PRIMA di ogni modifica
 		struct InheritedSnap
 		{
@@ -799,7 +812,7 @@ namespace ZenitUI
 		{
 			isFocused = focusNow;
 			pendingTransition = true;
-			//for (auto &c : children)
+			// for (auto &c : children)
 			//	c->markInheritanceDirty();
 		}
 
@@ -823,7 +836,7 @@ namespace ZenitUI
 			targetStyle = resolveTargetStyle();
 			pendingTransition = false;
 			syncCssAnimations();
-			//for (auto &c : children)
+			// for (auto &c : children)
 			//	c->markInheritanceDirty();
 		}
 		else if (pendingTransition)
@@ -907,16 +920,16 @@ namespace ZenitUI
 		//  Copre: hover, pressed, focus, enabled, checked e prop ereditate.
 		// ============================================================
 		bool subtreeChanged =
-			lastSnapshot.hovered         != isHovered ||
-			lastSnapshot.pressed         != isPressed ||
-			lastSnapshot.focused         != isFocused ||
-			lastSnapshot.enabled         != isEnabled ||
-			lastSnapshot.checked         != isChecked_ ||
-			lastSnapshot.font            != currentStyle.font ||
-			!(lastSnapshot.fontSize      == currentStyle.fontSize) ||
-			!(lastSnapshot.color         == currentStyle.color) ||
+			lastSnapshot.hovered != isHovered ||
+			lastSnapshot.pressed != isPressed ||
+			lastSnapshot.focused != isFocused ||
+			lastSnapshot.enabled != isEnabled ||
+			lastSnapshot.checked != isChecked_ ||
+			lastSnapshot.font != currentStyle.font ||
+			!(lastSnapshot.fontSize == currentStyle.fontSize) ||
+			!(lastSnapshot.color == currentStyle.color) ||
 			!(lastSnapshot.letterSpacing == currentStyle.letterSpacing) ||
-			!(lastSnapshot.textAlign     == currentStyle.textAlign);
+			!(lastSnapshot.textAlign == currentStyle.textAlign);
 
 		if (subtreeChanged)
 		{
@@ -926,16 +939,16 @@ namespace ZenitUI
 				c->markInheritanceDirty();
 			}
 
-			lastSnapshot.hovered         = isHovered;
-			lastSnapshot.pressed         = isPressed;
-			lastSnapshot.focused         = isFocused;
-			lastSnapshot.enabled         = isEnabled;
-			lastSnapshot.checked         = isChecked_;
-			lastSnapshot.font            = currentStyle.font;
-			lastSnapshot.fontSize        = currentStyle.fontSize;
-			lastSnapshot.color           = currentStyle.color;
-			lastSnapshot.letterSpacing   = currentStyle.letterSpacing;
-			lastSnapshot.textAlign       = currentStyle.textAlign;
+			lastSnapshot.hovered = isHovered;
+			lastSnapshot.pressed = isPressed;
+			lastSnapshot.focused = isFocused;
+			lastSnapshot.enabled = isEnabled;
+			lastSnapshot.checked = isChecked_;
+			lastSnapshot.font = currentStyle.font;
+			lastSnapshot.fontSize = currentStyle.fontSize;
+			lastSnapshot.color = currentStyle.color;
+			lastSnapshot.letterSpacing = currentStyle.letterSpacing;
+			lastSnapshot.textAlign = currentStyle.textAlign;
 		}
 
 		// ============================================================
@@ -1014,6 +1027,26 @@ namespace ZenitUI
 			else
 				++it;
 		}
+
+		// ============================================================
+		//  Ricalcola subtreeDirty_ per questo frame.
+		//  Un nodo è "dirty" se lui stesso o un suo discendente ha
+		//  cambiato qualcosa che richiede un nuovo measure.
+		// ============================================================
+		bool anyChildDirty = false;
+		for (auto &c : children)
+		{
+			if (c->subtreeDirty_)
+			{
+				anyChildDirty = true;
+				break;
+			}
+		}
+
+		bool styleChanged = (currentStyle != styleBefore);
+		bool inTransition = (transitionTimer < 1.0f);
+
+		subtreeDirty_ = wasPending || pendingTransition || anyChildDirty || styleChanged || inTransition;
 
 		if (isEnabled || updateWhenDisabled_)
 			onUpdate(dt);
@@ -1373,12 +1406,16 @@ namespace ZenitUI
 		}
 	}
 
-	std::vector<const ThemeRule*> Layout::getMatchingRules() const {
-		std::vector<const ThemeRule*> out;
-		auto& theme = Theme::get();
-		for (const auto& r : theme.rules) {
-			if (!r.part.empty()) continue;
-			if (ruleMatches(r, this)) out.push_back(&r);
+	std::vector<const ThemeRule *> Layout::getMatchingRules() const
+	{
+		std::vector<const ThemeRule *> out;
+		auto &theme = Theme::get();
+		for (const auto &r : theme.rules)
+		{
+			if (!r.part.empty())
+				continue;
+			if (ruleMatches(r, this))
+				out.push_back(&r);
 		}
 		return out;
 	}

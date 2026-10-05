@@ -5,13 +5,6 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
-// Helper: build + setup di un piccolo albero (root con un figlio dal markup).
-// Ritorna il nodo cercato per id.
-static std::shared_ptr<Layout> buildAndFind(const char* markup, const char* id) {
-    auto ui = ZMarkup::build(markup);
-    return ui.find(id);
-}
-
 // ============================================================
 //  Widget composti devono avere figli dopo build
 //  (verifica che X::create() sia stato usato, non make_shared)

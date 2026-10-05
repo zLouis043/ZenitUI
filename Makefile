@@ -5,11 +5,13 @@ DEPS_HEADER_FOLDER = $(DEPS_FOLDER)/include
 DEPS_LIBS_FOLDER = $(DEPS_FOLDER)/lib
 APP_NAME = testui
 
+CXX = g++
+CXXFLAGS = -ggdb -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
+
 SRC_FILES = $(shell find $(SRC_FOLDER) -name "*.cpp")
 INCLUDE_DIRS = -I./src/backend -I./src/ui
 
-CC = g++
-CFLAGS = -ggdb -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
+RAYLIB_LINK = -I$(DEPS_HEADER_FOLDER) -L$(DEPS_LIBS_FOLDER) -lraylibdll -lopengl32 -lgdi32 -lwinmm
 
 TESTS_SRCS = \
     ./src/ui/Layout.cpp \
@@ -31,15 +33,19 @@ TESTS_SRCS = \
 TESTS_INCLUDES = -I./src/ui -I./tests
 
 $(OUT_FOLDER)/$(APP_NAME): $(SRC_FILES)
-	$(CC) $(CFLAGS) $(SRC_FILES) $(INCLUDE_DIRS) -I$(DEPS_HEADER_FOLDER) -L$(DEPS_LIBS_FOLDER) -lraylibdll -lopengl32 -lgdi32 -lwinmm -o $(OUT_FOLDER)/$(APP_NAME)
-
-test:
-	@mkdir -p ./bin
-	$(CXX) $(CXXFLAGS) $(TESTS_INCLUDES) $(TESTS_SRCS) -o ./bin/tests
-	./bin/tests
+	@mkdir -p $(OUT_FOLDER)
+	$(CXX) $(CXXFLAGS) $(SRC_FILES) $(INCLUDE_DIRS) $(RAYLIB_LINK) -o $@
 
 main: $(OUT_FOLDER)/$(APP_NAME)
 
+test:
+	@mkdir -p $(OUT_FOLDER)
+	$(CXX) $(CXXFLAGS) $(TESTS_INCLUDES) $(TESTS_SRCS) -o $(OUT_FOLDER)/tests
+	./$(OUT_FOLDER)/tests
+
+clean:
+	rm -f $(OUT_FOLDER)/$(APP_NAME) $(OUT_FOLDER)/tests build_main.log build_test.log
+
 all: main test
 
-.PHONY: test main all
+.PHONY: main test all clean
