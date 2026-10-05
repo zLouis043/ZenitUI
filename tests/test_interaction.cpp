@@ -301,3 +301,42 @@ TEST(Interaction_zindex, higher_z_wins) {
     CHECK(highCount == 1);
     CHECK(lowCount == 0);
 }
+
+TEST(Interaction_subtree, checked_propagates_to_children) {
+    Env env;
+    Theme::get().clear();
+
+    ZMarkup::loadStyleString(R"(
+        Toggle { width: 100px; height: 50px; }
+        .toggle-knob {
+            position: absolute;
+            width: 30px; height: 30px;
+            top: 10px; left: 10px;
+        }
+        Toggle:checked .toggle-knob { left: 60px; }
+    )");
+
+    auto ui = ZMarkup::build(R"(Toggle#t)");
+    auto toggle = ui.find("t");
+    auto knob   = toggle->children[0];
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(toggle);
+
+    env.frame(root);
+    CHECK_NEAR(knob->getRect().x, 10.0f, 1.0f);
+
+    toggle->setChecked(true);
+
+    // Dopo 2 frame, il knob si deve essere mosso dalla posizione iniziale.
+    env.frame(root);
+    env.frame(root);
+    CHECK(knob->getRect().x > 10.5f);   // si è mosso
+    CHECK(knob->getRect().x < 60.0f);   // ma non è ancora arrivato
+
+    // Dopo abbastanza frame, deve essere a 60.
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+    CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
+}

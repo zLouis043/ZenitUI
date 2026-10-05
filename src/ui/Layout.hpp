@@ -113,7 +113,8 @@ namespace ZenitUI {
 			if (isChecked_ == c) return;
 			isChecked_ = c;
 			pendingTransition = true;
-			for (auto& child : children) child->markInheritanceDirty();
+			// La propagazione al sottoalbero è gestita centralmente in update(),
+    		// tramite il confronto con lastSnapshot.
 		}
 		bool getChecked() const { return isChecked_; }
 
@@ -291,6 +292,20 @@ namespace ZenitUI {
 			bool  active{ false };
 		};
 		std::unordered_map<std::string, PartTransition> partTransitions;
+
+		struct Snapshot {
+			bool hovered{false};
+			bool pressed{false};
+			bool focused{false};
+			bool enabled{true};
+			bool checked{false};
+			std::string font;
+			Value fontSize;
+			Color color;
+			Value letterSpacing;
+			Align textAlign{ Align::Auto };
+		};
+		Snapshot lastSnapshot{};
 
 		std::weak_ptr<Layout> parent;
 
