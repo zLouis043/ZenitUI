@@ -799,8 +799,8 @@ namespace ZenitUI
 		{
 			isFocused = focusNow;
 			pendingTransition = true;
-			for (auto &c : children)
-				c->markInheritanceDirty();
+			//for (auto &c : children)
+			//	c->markInheritanceDirty();
 		}
 
 		// --- Cambio stato: SOLO setup, niente callback ---
@@ -823,8 +823,8 @@ namespace ZenitUI
 			targetStyle = resolveTargetStyle();
 			pendingTransition = false;
 			syncCssAnimations();
-			for (auto &c : children)
-				c->markInheritanceDirty();
+			//for (auto &c : children)
+			//	c->markInheritanceDirty();
 		}
 		else if (pendingTransition)
 		{
@@ -899,21 +899,43 @@ namespace ZenitUI
 						   { return a.finished && !a.fillForwards; }),
 			activeCssAnimations.end());
 
-		// --- Propagazione inheritance ---
-		bool inheritedChanged =
-			snapBefore.font != currentStyle.font ||
-			!(snapBefore.fontSize == currentStyle.fontSize) ||
-			!(snapBefore.color == currentStyle.color) ||
-			!(snapBefore.letterSpacing == currentStyle.letterSpacing) ||
-			!(snapBefore.textAlign == currentStyle.textAlign);
+		// ============================================================
+		//  Propagazione al sottoalbero.
+		//  Unico punto di verità: confronta lo snapshot del frame
+		//  precedente con lo stato attuale. Se qualcosa che influenza
+		//  i discendenti è cambiato, marca i figli per il ricalcolo.
+		//  Copre: hover, pressed, focus, enabled, checked e prop ereditate.
+		// ============================================================
+		bool subtreeChanged =
+			lastSnapshot.hovered         != isHovered ||
+			lastSnapshot.pressed         != isPressed ||
+			lastSnapshot.focused         != isFocused ||
+			lastSnapshot.enabled         != isEnabled ||
+			lastSnapshot.checked         != isChecked_ ||
+			lastSnapshot.font            != currentStyle.font ||
+			!(lastSnapshot.fontSize      == currentStyle.fontSize) ||
+			!(lastSnapshot.color         == currentStyle.color) ||
+			!(lastSnapshot.letterSpacing == currentStyle.letterSpacing) ||
+			!(lastSnapshot.textAlign     == currentStyle.textAlign);
 
-		if (inheritedChanged)
+		if (subtreeChanged)
 		{
 			for (auto &c : children)
 			{
 				c->pendingTransition = true;
 				c->markInheritanceDirty();
 			}
+
+			lastSnapshot.hovered         = isHovered;
+			lastSnapshot.pressed         = isPressed;
+			lastSnapshot.focused         = isFocused;
+			lastSnapshot.enabled         = isEnabled;
+			lastSnapshot.checked         = isChecked_;
+			lastSnapshot.font            = currentStyle.font;
+			lastSnapshot.fontSize        = currentStyle.fontSize;
+			lastSnapshot.color           = currentStyle.color;
+			lastSnapshot.letterSpacing   = currentStyle.letterSpacing;
+			lastSnapshot.textAlign       = currentStyle.textAlign;
 		}
 
 		// ============================================================
