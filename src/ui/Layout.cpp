@@ -3,59 +3,6 @@
 namespace ZenitUI
 {
 
-	static bool nodeMatchesSimple(const Layout *node, const SimpleSelector &ss)
-	{
-		if (!node)
-			return false;
-
-		// Stato richiesto dal selettore.
-		if (ss.requireHover && !node->isHoveredState())
-			return false;
-		if (ss.requirePressed && !node->isPressedState())
-			return false;
-		if (ss.requireFocus && !node->isFocusedState())
-			return false;
-		if (ss.requireDisabled && !node->isDisabledState())
-			return false;
-		if (ss.requireChecked && !node->isCheckedState())
-			return false;
-
-		// Tipo: tag / classe / id.
-		if (ss.kind == SimpleSelector::Kind::Tag)
-			return node->getStyleTag() == ss.name;
-
-		if (ss.kind == SimpleSelector::Kind::Id)
-			return node->nodeId == ss.name;
-
-		// Class
-		for (const auto &c : node->getStyleClasses())
-			if (c == ss.name)
-				return true;
-		return false;
-	}
-
-	static bool ruleMatches(const ThemeRule &r, const Layout *node)
-	{
-		if (r.chain.empty() || !node)
-			return false;
-
-		// 1) L'ultimo pezzo della chain deve matchare il nodo stesso.
-		if (!nodeMatchesSimple(node, r.chain.back()))
-			return false;
-
-		// 2) I pezzi precedenti devono matchare antenati, in ordine, dal più
-		//    vicino al più lontano (non serve che siano adiacenti).
-		int i = (int)r.chain.size() - 2;
-		const Layout *cur = node->getParent().get();
-		while (i >= 0 && cur)
-		{
-			if (nodeMatchesSimple(cur, r.chain[i]))
-				--i;
-			cur = cur->getParent().get();
-		}
-		return i < 0;
-	}
-
 	ComputedStyle Layout::resolveTargetStyle()
 	{
 		auto &theme = Theme::get();
@@ -1402,6 +1349,16 @@ namespace ZenitUI
 					onClick();
 			}
 		}
+	}
+
+	std::vector<const ThemeRule*> Layout::getMatchingRules() const {
+		std::vector<const ThemeRule*> out;
+		auto& theme = Theme::get();
+		for (const auto& r : theme.rules) {
+			if (!r.part.empty()) continue;
+			if (ruleMatches(r, this)) out.push_back(&r);
+		}
+		return out;
 	}
 }
 

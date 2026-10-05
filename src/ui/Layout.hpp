@@ -14,8 +14,6 @@ namespace ZenitUI {
 	enum class LayoutType { Stack, Vertical, Horizontal };
 	enum class UIState { Idle, Hover, Pressed, Disabled };
 
-
-
 	class Layout : public std::enable_shared_from_this<Layout> {
 	public:
 		Layout(LayoutType type = LayoutType::Stack) : type(type) {}
@@ -240,6 +238,7 @@ namespace ZenitUI {
 		Rect getRect() const { return rect; }
 		Vec2 getMeasuredSize() const { return measuredSize; }
 		const ComputedStyle& getStyle() const { return currentStyle; }
+		std::vector<const ThemeRule*> getMatchingRules() const;
 
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick, onRightClick;
 		std::vector<std::shared_ptr<Layout>> children;
@@ -441,4 +440,35 @@ namespace ZenitUI {
 	protected:
 		virtual void onBuild() {}
 	};
+
+	inline bool nodeMatchesSimple(const Layout* node, const SimpleSelector& ss) {
+		if (!node) return false;
+		if (ss.requireHover    && !node->isHoveredState())  return false;
+		if (ss.requirePressed  && !node->isPressedState())  return false;
+		if (ss.requireFocus    && !node->isFocusedState())  return false;
+		if (ss.requireDisabled && !node->isDisabledState()) return false;
+		if (ss.requireChecked  && !node->isCheckedState())  return false;
+
+		if (ss.kind == SimpleSelector::Kind::Tag)
+			return node->getStyleTag() == ss.name;
+		if (ss.kind == SimpleSelector::Kind::Id)
+			return node->nodeId == ss.name;
+
+		for (const auto& c : node->getStyleClasses())
+			if (c == ss.name) return true;
+		return false;
+	}
+
+	inline bool ruleMatches(const ThemeRule& r, const Layout* node) {
+		if (r.chain.empty() || !node) return false;
+		if (!nodeMatchesSimple(node, r.chain.back())) return false;
+
+		int i = (int)r.chain.size() - 2;
+		const Layout* cur = node->getParent().get();
+		while (i >= 0 && cur) {
+			if (nodeMatchesSimple(cur, r.chain[i])) --i;
+			cur = cur->getParent().get();
+		}
+		return i < 0;
+	}
 }

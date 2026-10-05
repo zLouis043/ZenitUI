@@ -56,9 +56,26 @@ protected:
         buildBasicWidgets(contentArea);
     }
 
+    void onUpdate(float /*dt*/) override {
+        // ──────────── DEBUG ────────────
+        if (!dumped_) {
+            dumped_ = true;
+
+            // Scegli cosa ispezionare:
+
+            // a) Un nodo specifico della demo. Qui per esempio il toggle
+            //    e il suo knob. Cerca il toggle dentro contentArea:
+            //    (potrebbe essere più comodo cercarlo per id se ne aggiungi uno)
+            ZenitUI::Debug::dumpStyle(*this);
+            ZenitUI::Debug::dumpTree(*this, std::cerr, 3);
+        }
+        // ───────────────────────────────
+    }
+
 private:
     std::function<void()> onCloseCb;
     std::shared_ptr<ScrollView> contentArea;
+    bool dumped_{ false };
 
     static void addHeader(std::shared_ptr<Layout> parent,
                           const std::string& title, const std::string& desc) {
