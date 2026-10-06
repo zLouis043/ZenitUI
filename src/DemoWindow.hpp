@@ -417,7 +417,7 @@ private:
         auto card = VStack()->cls("card");
         card->getInlineBase().gap = Px(4.0f);
 
-        for (int i = 0; i < 200; ++i) {
+        for (int i = 0; i < 1000; ++i) {
             auto row = HStack({
                 Label("Elemento #" + std::to_string(i))->cls("normal-text")->cls("setting-label"),
                 Btn("Azione " + std::to_string(i))

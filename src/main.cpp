@@ -7,7 +7,7 @@
 #include "RaylibBackend.hpp"
 #include "UI.hpp"
 
-#include "SettingsDialog.hpp"
+#include "SettingsScreen.hpp"
 #include "DemoWindow.hpp"
 #include "GameTheme.hpp"
 
@@ -17,7 +17,8 @@ using namespace ZenitUI;
 #include <cstdio>
 #include <cstdlib>
 
-int main(void){
+int main(void)
+{
 
     InitWindow(800, 600, "TestUI");
 
@@ -29,7 +30,7 @@ int main(void){
 
     UIContext::get().renderer = &backendRenderer;
     UIContext::get().platform = &backendPlatform;
-    UIContext::get().assets   = &backendAssets;
+    UIContext::get().assets = &backendAssets;
 
     backendAssets.loadFont("calibri", "assets/calibrib.ttf", 64);
     backendAssets.loadFont("mont", "assets/mont.otf", 64);
@@ -46,30 +47,36 @@ int main(void){
     auto rootLayer = std::make_shared<Layout>(LayoutType::Stack);
     rootLayer->getInlineBase().itemsH = Align::Center;
     rootLayer->getInlineBase().itemsV = Align::Center;
-    rootLayer->getInlineBase().width  = Percent(100.0f);
+    rootLayer->getInlineBase().width = Percent(100.0f);
     rootLayer->getInlineBase().height = Percent(100.0f);
 
-    auto openDemoBtn = UI::Btn("LANCIA DEMO WINDOW", [rootLayer]() {
-        rootLayer->addChild(DemoWindow::create()); 
-    });
+    auto launchRow = HStack({})->cls("launch-row");
 
-    openDemoBtn->cls("btn-primary")->cls("btn-pulse");
-    openDemoBtn->getInlineBase().itemsH = Align::Center;
-    openDemoBtn->getInlineBase().itemsV = Align::Center;
+    auto openDemoBtn = UI::Btn("APRI DEMO", [rootLayer]()
+                               { rootLayer->addChild(DemoWindow::create()); });
+    openDemoBtn->cls("btn-primary");
 
-    rootLayer->addChild(openDemoBtn);
+    auto openSettingsBtn = UI::Btn("APRI IMPOSTAZIONI", [rootLayer]()
+                                   { rootLayer->addChild(SettingsScreen::create()); });
+    openSettingsBtn->cls("btn-secondary");
+
+    launchRow->addChild(openDemoBtn);
+    launchRow->addChild(openSettingsBtn);
+    rootLayer->addChild(launchRow);
 
     bool dumpedOnce = false;
 
-    while(!WindowShouldClose()){
+    while (!WindowShouldClose())
+    {
         float dt = GetFrameTime();
         UIContext::get().beginFrame(dt);
-        
+
         rootLayer->updateTree(dt);
         rootLayer->measure((float)GetScreenWidth(), (float)GetScreenHeight());
-        rootLayer->arrange({ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() });
+        rootLayer->arrange({0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
 
-        if (!dumpedOnce) {
+        if (!dumpedOnce)
+        {
             ZenitUI::Debug::dumpTree(*rootLayer, std::cerr, 4);
             dumpedOnce = true;
         }

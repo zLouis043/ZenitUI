@@ -73,6 +73,7 @@ protected:
         getInlineBase().zIndex = ZIndex(10);
 
         button = Btn("", [this]() { toggleOpen(); });
+        button->cls("dropdown-trigger");
         button->getInlineBase().width = Percent(100);
         button->getInlineBase().height = VH(3.0f);
         button->getInlineBase().background = Color{40, 40, 45, 255};
@@ -87,7 +88,8 @@ protected:
         listContainer->getInlineBase().position = Position::Absolute;
         listContainer->setPortal(true);
         listContainer->getInlineBase().width = VW(15.0f);
-        listContainer->getInlineBase().height = VH(25.0f);
+        int visibleRows = std::min((int)options.size(), 6);
+        listContainer->getInlineBase().height = VH(2.0f + visibleRows * 4.0f);
         listContainer->getInlineBase().background = Color{30, 30, 36, 255};
         listContainer->getInlineBase().borderColor = Color{60, 60, 70, 255};
         listContainer->getInlineBase().borderWidth = Px(1.0f);
