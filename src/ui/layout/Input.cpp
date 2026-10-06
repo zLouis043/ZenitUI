@@ -4,140 +4,125 @@
 namespace ZenitUI
 {
 
-	// =========================================================================
-	//  INPUT
-	//  Macchina a stati (Idle/Hover/Pressed/Disabled), callback di click,
-	//  gestione tastiera (Enter/Space per attivare), focus sui discendenti.
-	// =========================================================================
+// =========================================================================
+//  INPUT (InputController)
+//  Macchina a stati (Idle/Hover/Pressed/Disabled), callback di click,
+//  gestione tastiera, focus. Nessuno stato proprio: opera su Layout.
+// =========================================================================
 
-	void Layout::updateInteractionFlags(bool selfBlocked, bool ancestorScrolling)
+void InputController::updateFlags(Layout &node, bool selfBlocked, bool scrolling)
+{
+	auto &ctx = UIContext::get();
+	auto &pointer = ctx.pointer;
+
+	if (scrolling)
 	{
-		auto &ctx = UIContext::get();
-		auto &pointer = ctx.pointer;
-
-		if (ancestorScrolling || isScrolling_)
+		// Durante lo scroll congeliamo l'hover: evita di marcare dirty
+		// ogni bottone attraversato dal mouse mentre la lista scorre.
+		bool focusNow = ctx.hasFocus(&node);
+		if (focusNow != node.isFocused)
 		{
-			// isPressed e isFocused continuano a funzionare (drag/click),
-			// solo l'hover è congelato.
-			bool focusNow = ctx.hasFocus(this);
-			if (focusNow != isFocused)
-			{
-				isFocused = focusNow;
-				pendingTransition = true;
-			}
-			return;
+			node.isFocused = focusNow;
+			node.pendingTransition = true;
 		}
+		return;
+	}
 
-		isHovered = false;
-		if (!selfBlocked && rect.width > 0 && rect.height > 0)
-			isHovered = rect.contains(pointer.pos);
+	node.isHovered = false;
+	if (!selfBlocked && node.rect.width > 0 && node.rect.height > 0)
+		node.isHovered = node.rect.contains(pointer.pos);
 
-		isPressed = false;
-		if (pointer.down && ctx.pressTarget)
+	node.isPressed = false;
+	if (pointer.down && ctx.pressTarget)
+	{
+		Layout *n = ctx.pressTarget;
+		while (n)
 		{
-			Layout *n = ctx.pressTarget;
-			while (n)
-			{
-				if (n == this)
-				{
-					isPressed = true;
-					break;
-				}
-				if (!n->getPassThrough())
-					break;
-				n = n->getParent().get();
-			}
-		}
-
-		bool focusNow = ctx.hasFocus(this);
-		if (focusNow != isFocused)
-		{
-			isFocused = focusNow;
-			pendingTransition = true;
+			if (n == &node) { node.isPressed = true; break; }
+			if (!n->getPassThrough()) break;
+			n = n->getParent().get();
 		}
 	}
 
-	UIState Layout::computeNextState() const
+	bool focusNow = ctx.hasFocus(&node);
+	if (focusNow != node.isFocused)
 	{
-		if (!isEnabled)
-			return UIState::Disabled;
-		if (isPressed)
-			return UIState::Pressed;
-		if (isHovered)
-			return UIState::Hover;
-		return UIState::Idle;
+		node.isFocused = focusNow;
+		node.pendingTransition = true;
+	}
+}
+
+UIState InputController::computeNextState(const Layout &node) const
+{
+	if (!node.isEnabled)  return UIState::Disabled;
+	if (node.isPressed)   return UIState::Pressed;
+	if (node.isHovered)   return UIState::Hover;
+	return UIState::Idle;
+}
+
+void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
+{
+	auto &ctx = UIContext::get();
+	auto &pointer = ctx.pointer;
+
+	if (stateChanged)
+	{
+		if (nextState == UIState::Hover && prevState != UIState::Hover && node.onHoverEnter)
+			node.onHoverEnter();
+		else if (prevState == UIState::Hover && nextState != UIState::Hover && node.onHoverExit)
+			node.onHoverExit();
 	}
 
-	void Layout::fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged)
+	if (pointer.pressed && !ctx.clickConsumed)
 	{
-		auto &ctx = UIContext::get();
-		auto &pointer = ctx.pointer;
-
-		if (stateChanged)
+		bool inPressPath = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
+		if (inPressPath)
 		{
-			if (nextState == UIState::Hover && prevState != UIState::Hover && onHoverEnter)
-				onHoverEnter();
-			else if (prevState == UIState::Hover && nextState != UIState::Hover && onHoverExit)
-				onHoverExit();
+			if (node.onPress) node.onPress();
+			if (!node.passThrough_) ctx.consumeClick();
 		}
+	}
 
-		if (pointer.pressed && !ctx.clickConsumed)
+	if (pointer.released)
+	{
+		bool pressedHere  = (ctx.pressTarget   == &node) || node.isAncestorOf(ctx.pressTarget);
+		bool releasedHere = (ctx.releaseTarget == &node) || node.isAncestorOf(ctx.releaseTarget);
+		bool validClick   = pressedHere && releasedHere;
+
+		if (validClick)
 		{
-			bool inPressPath = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
-			if (inPressPath)
+			if (node.onRelease) node.onRelease();
+			if (node.onClick && !ctx.clickConsumed)
 			{
-				if (onPress)
-					onPress();
-				if (!passThrough_)
-					ctx.consumeClick();
-			}
-		}
-
-		if (pointer.released)
-		{
-			bool pressedHere = (ctx.pressTarget == this) || isAncestorOf(ctx.pressTarget);
-			bool releasedHere = (ctx.releaseTarget == this) || isAncestorOf(ctx.releaseTarget);
-			bool validClick = pressedHere && releasedHere;
-
-			if (validClick)
-			{
-				if (onRelease)
-					onRelease();
-
-				if (onClick && !ctx.clickConsumed)
-				{
-					onClick();
-					if (!passThrough_)
-						ctx.consumeClick();
-				}
-			}
-		}
-
-		if (pointer.rightPressed && isHovered && onRightClick)
-		{
-			if (!ctx.rightClickConsumed)
-			{
-				onRightClick();
-				if (!passThrough_)
-					ctx.consumeRightClick();
+				node.onClick();
+				if (!node.passThrough_) ctx.consumeClick();
 			}
 		}
 	}
 
-	void Layout::handleFocusInput()
+	if (pointer.rightPressed && node.isHovered && node.onRightClick)
 	{
-		if (!isFocused || !isEnabled || !keyboardActivates_)
-			return;
-
-		auto &ev = UIContext::get().inputEvents;
-		for (int k : ev.keys)
+		if (!ctx.rightClickConsumed)
 		{
-			if (k == Key::Enter || k == Key::Space)
-			{
-				if (onClick)
-					onClick();
-			}
+			node.onRightClick();
+			if (!node.passThrough_) ctx.consumeRightClick();
 		}
 	}
+}
+
+void InputController::handleKeyInput(Layout &node)
+{
+	if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+		return;
+
+	auto &ev = UIContext::get().inputEvents;
+	for (int k : ev.keys)
+	{
+		if (k == Key::Enter || k == Key::Space)
+		{
+			if (node.onClick) node.onClick();
+		}
+	}
+}
 
 } // namespace ZenitUI
