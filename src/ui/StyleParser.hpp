@@ -849,17 +849,31 @@ namespace ZenitUI::ZMarkup
                         ss.name = base;
                     }
 
-                    if (state == "hover")
-                        ss.requireHover = true;
-                    else if (state == "pressed")
-                        ss.requirePressed = true;
-                    else if (state == "focus")
-                        ss.requireFocus = true;
-                    else if (state == "disabled")
-                        ss.requireDisabled = true;
-                    else if (state == "checked")
-                        ss.requireChecked = true;
-                    // altrove: ignora silenziosamente gli stati sconosciuti
+                    // Split per ':' per gestire stati composti tipo "checked:hover".
+                    size_t pos = 0;
+                    while (pos < state.size())
+                    {
+                        size_t next = state.find(':', pos);
+                        std::string one = (next == std::string::npos)
+                                              ? state.substr(pos)
+                                              : state.substr(pos, next - pos);
+
+                        if (one == "hover")
+                            ss.requireHover = true;
+                        else if (one == "pressed")
+                            ss.requirePressed = true;
+                        else if (one == "focus")
+                            ss.requireFocus = true;
+                        else if (one == "disabled")
+                            ss.requireDisabled = true;
+                        else if (one == "checked")
+                            ss.requireChecked = true;
+                        // stati sconosciuti: ignorati silenziosamente
+
+                        if (next == std::string::npos)
+                            break;
+                        pos = next + 1;
+                    }
 
                     rule.chain.push_back(std::move(ss));
                 }

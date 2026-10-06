@@ -7,6 +7,7 @@
 #include "UIContext.hpp"
 #include "UIAnimations.hpp"
 #include "Logger.hpp"
+#include "ScrollState.hpp"
 
 namespace ZenitUI
 {
@@ -187,6 +188,48 @@ namespace ZenitUI
 			return currentStyle.zIndex.isAuto ? 0 : currentStyle.zIndex.value;
 		}
 
+		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
+		bool isScrollContainer() const
+		{
+			return currentStyle.overflow == Overflow::Scroll || currentStyle.overflow == Overflow::Hidden;
+		}
+
+		void scrollTo(float x, float y)
+		{
+			if (!isScrollContainer())
+				return;
+			scroll_.offset.x = std::max(0.0f, x);
+			scroll_.offset.y = std::max(0.0f, y);
+			scroll_.clamp();
+		}
+		void scrollToX(float x) { scrollTo(x, scroll_.offset.y); }
+		void scrollToY(float y) { scrollTo(scroll_.offset.x, y); }
+		void scrollToTop()
+		{
+			if (isScrollContainer())
+				scrollToY(0.0f);
+		}
+		void scrollToBottom()
+		{
+			if (isScrollContainer())
+				scrollToY(scroll_.maxScroll.y);
+		}
+		void scrollToLeft()
+		{
+			if (isScrollContainer())
+				scrollToX(0.0f);
+		}
+		void scrollToRight()
+		{
+			if (isScrollContainer())
+				scrollToX(scroll_.maxScroll.x);
+		}
+
+		float getScrollX() const { return scroll_.offset.x; }
+		float getScrollY() const { return scroll_.offset.y; }
+		float getMaxScrollX() const { return scroll_.maxScroll.x; }
+		float getMaxScrollY() const { return scroll_.maxScroll.y; }
+
 		void setPortal(bool p)
 		{
 			isPortal_ = p;
@@ -330,6 +373,7 @@ namespace ZenitUI
 		float lastMeasureW_{-1.0f};
 		float lastMeasureH_{-1.0f};
 		Vec2 scrollContentSize{0, 0};
+		ScrollState scroll_;
 		bool styleInitialized{false};
 		bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
 			wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
@@ -384,6 +428,7 @@ namespace ZenitUI
 			Color color;
 			Value letterSpacing;
 			Align textAlign{Align::Auto};
+			Overflow overflow{Overflow::Visible};
 		};
 		Snapshot lastSnapshot{};
 
@@ -504,6 +549,39 @@ namespace ZenitUI
 		ComputedStyle resolveTargetStyle();
 		void syncCssAnimations();
 		void handleFocusInput();
+
+		void initStyleIfNeeded();
+		bool tickImperativeAnimations(float dt);
+		void updateInteractionFlags(bool selfBlocked);
+		UIState computeNextState() const;
+		void beginStateTransition(UIState newState);
+		void resolvePendingTransition();
+		void tickTransition(float dt);
+		void tickCssAnimations(float dt);
+		void propagateInheritance();
+		void fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged);
+		void cullRemovedChildren();
+		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);
+
+		// ------------------------------------------------------------
+		//  Arrange: fasi (estratte da arrangeInto() per leggibilità)
+		// ------------------------------------------------------------
+		void arrangeAbsoluteAndPortals(const Rect &inner);
+		void arrangeAbsolute(Layout *c, const ComputedStyle &cst, const Rect &in);
+		void arrangeVerticalFlow(const Rect &inner, float gapY);
+		void arrangeHorizontalFlow(const Rect &inner, float gapX);
+		void arrangeStackFlow(const Rect &inner);
+
+		static float clampSafe(float v, float lo, float hi);
+
+		// ------------------------------------------------------------
+		//  Scroll: fasi
+		// ------------------------------------------------------------
+		bool acceptsScrollInput() const { return currentStyle.overflow == Overflow::Scroll; }
+		void tickScrollInput();
+		void drawScrollbar(float parentOpacity);
+		void resetScrollIfOverflowChanged();
+		Rect getThumbRectImpl() const;
 	};
 
 	// CRTP helper: aggiunge la fluent API tipizzata su una Base qualsiasi.

@@ -145,6 +145,16 @@ TextInput:hover::cursor {
     border-width: 10px;
 }
 
+.dropdown-trigger {
+  min-height: 5vh;          /* ~30px @600 — il bottone non può essere più basso del suo testo */
+  padding: 0.8vh 1vw;       /* respiro verticale e orizzontale */
+  items-h: start;           /* il testo parte da sinistra, non centrato */
+}
+
+.dropdown-trigger .btn-text {
+  font-size: 2.4vh;         /* ~14.4px — comodo dentro 30px con padding */
+}
+
 /* ============================================================
    Classi (varianti semantiche)
    ============================================================ */

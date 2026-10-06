@@ -120,3 +120,12 @@ TEST(Parser_comments, ignored) {
     )", t);
     CHECK(t.rules.size() == 1);
 }
+
+TEST(Parser_basic, compound_state_checked_hover) {
+    Theme t;
+    loadStyleString("Toggle:checked:hover { background: red; }", t);
+    CHECK(t.rules.size() == 1);
+    CHECK(t.rules[0].chain.size() == 1);
+    CHECK(t.rules[0].chain[0].requireChecked);
+    CHECK(t.rules[0].chain[0].requireHover);
+}

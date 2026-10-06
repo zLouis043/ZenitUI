@@ -17,6 +17,8 @@ public:
 
     std::function<void(float)> onValueChanged = nullptr;
 
+    float getValue() const { return value; }
+
 protected:
     Vec2 computeIntrinsicSize(float, float) override
     {

@@ -1,0 +1,156 @@
+/* ============================================================
+   Settings Screen
+   ============================================================ */
+
+.settings-overlay {
+  width: 100%;
+  height: 100%;
+  items-h: center;
+  items-v: center;
+  background: #000000CC;
+  font: calibri;
+}
+
+.settings-panel {
+  width: 60vw;
+  height: 85vh;
+  background: #1E1E24;
+  radius: 12px;
+  padding: 3vh 3vw;
+  gap: 2vh;
+  border-width: 2px;
+  border-color: #3296FF;
+}
+
+.settings-header {
+  width: 100%;
+  height: auto;
+  items-v: center;
+  gap: 1vw;
+}
+
+.settings-title {
+  font-size: 4vh;
+  color: #3296FF;
+  letter-spacing: 2px;
+}
+
+.settings-close {
+  background: transparent;
+  color: #A0A0A0;
+  padding: 1vh 1.5vh;
+  radius: 6px;
+  min-width: 0;
+  margin: 0;
+  transition: background 0.15s linear, color 0.15s linear;
+}
+.settings-close:hover {
+  background: #BE2137;
+  color: #FFFFFF;
+}
+
+.settings-body {
+  width: 100%;
+  grow: 1;
+  background: #232328;
+  radius: 8px;
+  padding: 2vh 2vw;
+  gap: 2vh;
+  overflow: scroll;
+  border-width: 1px;
+  border-color: #3A3A40;
+}
+
+.settings-placeholder {
+  color: #707070;
+  font-size: 3vh;
+  text-align: center;
+}
+
+.settings-footer {
+  width: 100%;
+  height: auto;
+  items-v: center;
+  gap: 0.5vw;
+}
+
+.btn-secondary {
+  background: #3A3A40;
+  radius: 8px;
+  padding: 1.5vh 2vw;
+  min-width: 80px;
+  margin: 0 4px;
+  color: #FFFFFF;
+  transition: background 0.15s linear, scale 0.12s ease-out-back;
+}
+.btn-secondary:hover   { background: #505060; scale: 1.05; }
+.btn-secondary:pressed { background: #2A2A30; scale: 0.95; }
+.btn-secondary:focus   { border-color: #FDF900; border-width: 2px; }
+.btn-secondary:disabled { background: #2A2A30; color: #707070; opacity: 0.5; }
+
+.settings-footer Button {
+  shrink: 0;
+}
+
+/* ============================================================
+   Sezioni del body
+   ============================================================ */
+
+.settings-section {
+  width: 100%;
+  height: auto;
+  background: #2A2A30;
+  radius: 8px;
+  padding: 2vh 2vw;
+  gap: 1.5vh;
+  border-width: 1px;
+  border-color: #3A3A40;
+}
+
+.settings-section-title {
+  color: #3296FF;
+  font-size: 3vh;
+  letter-spacing: 1px;
+}
+
+.settings-row {
+  width: 100%;
+  height: auto;
+  items-v: center;
+  gap: 1vw;
+}
+
+.setting-label {
+  width: 25%;
+  color: #E0E0E0;
+  font-size: 2.5vh;
+}
+
+.setting-value {
+  width: 10%;
+  color: #A0A0A0;
+  font-size: 2.5vh;
+  text-align: end;
+}
+
+.settings-row Dropdown {
+  width: 30%;
+  shrink: 0;
+}
+
+.settings-row .setting-value {
+  width: auto;
+  min-width: 6vw;
+}
+
+.settings-header {
+  shrink: 0;
+}
+
+.settings-footer {
+  shrink: 0;
+}
+
+.settings-body {
+  shrink: 1;
+}
