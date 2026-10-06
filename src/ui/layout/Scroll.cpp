@@ -141,6 +141,10 @@ void Layout::tickScrollInput()
 	}
 
 	scroll_.tickInertia(UIContext::get().dt);
+
+	isScrolling_ = hasPointerCapture()
+            || std::abs(scroll_.velocity.x) > ScrollState::VELOCITY_MIN
+            || std::abs(scroll_.velocity.y) > ScrollState::VELOCITY_MIN;
 }
 
 void Layout::drawScrollbar(float parentOpacity)

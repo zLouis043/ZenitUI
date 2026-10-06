@@ -334,7 +334,7 @@ namespace ZenitUI
 		// ============================================================
 		virtual Vec2 measure(float parent_w, float parent_h);
 		virtual void arrange(Rect space);
-		virtual void update(float dt, bool ancestorBlocked = false);
+		virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false);
 		virtual void draw(float parentOpacity = 1.0f);
 
 		Layout *hitTest(Vec2 p, bool ancestorBlocked = false);
@@ -369,6 +369,9 @@ namespace ZenitUI
 		float lastMeasureH_{-1.0f};
 		Vec2 scrollContentSize{0, 0};
 		ScrollState scroll_;
+		bool arrangeInitialized_{false};
+		Vec2 appliedScroll_{0.0f, 0.0f};
+		bool isScrolling_{false}; 
 		bool styleInitialized{false};
 		bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
 			wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
@@ -394,6 +397,9 @@ namespace ZenitUI
 
 		std::unordered_map<std::string, AnimState> activeAnimations;
 		std::vector<ActiveCssAnimation> activeCssAnimations;
+
+		// Buffer riusati in draw() per evitare allocazioni per-frame.
+		std::vector<Layout*> drawNegZ_, drawNormal_, drawPosZ_;
 
 		std::weak_ptr<Layout> parent;
 
@@ -517,7 +523,7 @@ namespace ZenitUI
 
 		void initStyleIfNeeded();
 		bool tickImperativeAnimations(float dt);
-		void updateInteractionFlags(bool selfBlocked);
+		void updateInteractionFlags(bool selfBlocked, bool ancestorScrolling);
 		UIState computeNextState() const;
 		void tickCssAnimations(float dt);
 		void fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged);
@@ -532,6 +538,8 @@ namespace ZenitUI
 		void arrangeVerticalFlow(const Rect &inner, float gapY);
 		void arrangeHorizontalFlow(const Rect &inner, float gapX);
 		void arrangeStackFlow(const Rect &inner);
+
+		void translateSubtree(float dx, float dy);
 
 		static float clampSafe(float v, float lo, float hi);
 
