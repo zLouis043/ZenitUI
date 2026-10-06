@@ -38,18 +38,7 @@ namespace ZenitUI
 		}
 
 		ComputedStyle renderStyle = style_.currentStyle;
-		for (const auto &anim : activeCssAnimations)
-		{
-			auto it = Theme::get().keyframes.find(anim.name);
-			if (it == Theme::get().keyframes.end())
-				continue;
-			bool fin = false;
-			float localT = sampleActive(anim, fin);
-			if (fin && !anim.fillForwards)
-				continue;
-			Style frame = evaluateKeyframes(it->second, localT, anim.ease);
-			overlayComputed(renderStyle, frame);
-		}
+		Anim::overlayCssComputed(renderStyle, anim_.css);
 
 		float globalOp = renderStyle.opacity * parentOpacity;
 		if (globalOp <= 0.001f)

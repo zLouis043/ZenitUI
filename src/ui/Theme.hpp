@@ -3,7 +3,7 @@
 #include "Common.hpp"
 
 #include "Style.hpp"
-#include "UIAnimations.hpp"
+#include "AnimPrimitives.hpp"
 
 namespace ZenitUI
 {

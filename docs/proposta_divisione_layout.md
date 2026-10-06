@@ -1,4 +1,4 @@
-Hai ragione, e la tua osservazione è più importante di quanto sembri. Il progetto **è nato** con l'idea di avere `Style` e `UIAnimations` come moduli a sé, poi `Layout` li ha inglobati perché "tanto è più comodo". Ora `Layout` è un contenitore onnivoro. La domanda vera non è "come lo scomponiamo", ma "**quale astrazione vogliamo che `Layout` sia**".
+Hai ragione, e la tua osservazione è più importante di quanto sembri. Il progetto **è nato** con l'idea di avere `Style` e `AnimPrimitives` come moduli a sé, poi `Layout` li ha inglobati perché "tanto è più comodo". Ora `Layout` è un contenitore onnivoro. La domanda vera non è "come lo scomponiamo", ma "**quale astrazione vogliamo che `Layout` sia**".
 
 Prima di scrivere una riga, ragioniamo su questo.
 
@@ -16,7 +16,7 @@ Il modello C è il più pulito in teoria e il più disastroso in pratica per un 
 
 Il modello A è il più vicino a quello che hai già. È uno **split fisico dello stato in struct separate**, ma i metodi restano dove sono. Buono per leggibilità, ma non risolve davvero il "Dio oggetto" — la classe Layout ha ancora 3000 righe di logica.
 
-Il modello B è quello che descrivi tu ("Style.hpp, UIAnimations.hpp dovevano essere sottosezioni usate da Layout"). Layout diventa orchestratore magro, i sistemi hanno responsabilità chiara.
+Il modello B è quello che descrivi tu ("Style.hpp, AnimPrimitives.hpp dovevano essere sottosezioni usate da Layout"). Layout diventa orchestratore magro, i sistemi hanno responsabilità chiara.
 
 ## La mia lettura onesta
 

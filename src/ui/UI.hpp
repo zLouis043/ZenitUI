@@ -7,7 +7,7 @@
 #include "Layout.hpp"
 #include "Style.hpp"
 #include "Theme.hpp"
-#include "UIAnimations.hpp"
+#include "AnimPrimitives.hpp"
 #include "UIComponents.hpp"
 #include "UIContext.hpp"
 #include "Unit.hpp"

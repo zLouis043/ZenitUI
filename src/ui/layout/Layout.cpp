@@ -18,11 +18,11 @@ namespace ZenitUI
 		initStyleIfNeeded();
 		resetScrollIfOverflowChanged();
 
-		bool localAnimBlocks = tickImperativeAnimations(dt);
+		bool localAnimBlocks = anim_.tickImperative(*this, dt);
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
 		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
-		bool scrolling = ancestorScrolling;
 
+		const bool scrolling = ancestorScrolling || isScrolling_;
 		updateInteractionFlags(selfBlocked, scrolling);
 
 		UIState prevState = style_.currentState;
@@ -32,22 +32,22 @@ namespace ZenitUI
 		if (stateChanged)
 		{
 			style_.beginStateTransition(*this, nextState);
-			syncCssAnimations();
+			anim_.syncCss(*this);
 		}
 		else if (pendingTransition)
 		{
 			style_.resolvePendingTransition(*this);
-			syncCssAnimations();
+			anim_.syncCss(*this);
 		}
 
 		style_.tick(*this, dt);
-		tickCssAnimations(dt);
+		anim_.tickCss(*this, dt);
 		style_.propagateInheritance(*this);
 
 		{
 			size_t n = children.size();
 			for (size_t i = 0; i < n; ++i)
-				children[i]->update(dt, blockSubtree, isScrolling_);
+				children[i]->update(dt, blockSubtree, scrolling);
 		}
 
 		tickScrollInput();
@@ -67,10 +67,9 @@ namespace ZenitUI
 			styleInitialized = true;
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
 			pendingTransition = false;
-			syncCssAnimations();
+			anim_.syncCss(*this);
 		}
 	}
-
 	void Layout::cullRemovedChildren()
 	{
 		for (auto it = children.begin(); it != children.end();)
