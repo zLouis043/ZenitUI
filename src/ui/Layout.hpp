@@ -8,23 +8,11 @@
 #include "UIAnimations.hpp"
 #include "Logger.hpp"
 #include "ScrollState.hpp"
+#include "StyleResolver.hpp"
+#include "UIEnums.hpp"
 
 namespace ZenitUI
 {
-
-	enum class LayoutType
-	{
-		Stack,
-		Vertical,
-		Horizontal
-	};
-	enum class UIState
-	{
-		Idle,
-		Hover,
-		Pressed,
-		Disabled
-	};
 
 	class Layout : public std::enable_shared_from_this<Layout>
 	{
@@ -37,6 +25,8 @@ namespace ZenitUI
 		{
 			return std::static_pointer_cast<T>(shared_from_this());
 		}
+
+		friend struct StyleResolver;
 
 		void addClass(const std::string &className)
 		{
@@ -54,8 +44,8 @@ namespace ZenitUI
 
 		void setSize(Value w, Value h)
 		{
-			inlineBase.width = w;
-			inlineBase.height = h;
+			style_.inlineBase.width = w;
+			style_.inlineBase.height = h;
 			pendingTransition = true;
 		}
 
@@ -166,8 +156,8 @@ namespace ZenitUI
 		void beginTransition()
 		{
 			pendingTransition = true;
-			transitionTimer = 0.0f;
-			transitionStartStyle = currentStyle;
+			style_.transitionTimer = 0.0f;
+			style_.transitionStartStyle = style_.currentStyle;
 		}
 
 		void setFocusable(bool f) { isFocusable_ = f; }
@@ -181,17 +171,17 @@ namespace ZenitUI
 
 		bool isStackingContext() const
 		{
-			return currentStyle.position != Position::Static && !currentStyle.zIndex.isAuto;
+			return style_.currentStyle.position != Position::Static && !style_.currentStyle.zIndex.isAuto;
 		}
 		int getZIndex() const
 		{
-			return currentStyle.zIndex.isAuto ? 0 : currentStyle.zIndex.value;
+			return style_.currentStyle.zIndex.isAuto ? 0 : style_.currentStyle.zIndex.value;
 		}
 
 		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
 		bool isScrollContainer() const
 		{
-			return currentStyle.overflow == Overflow::Scroll || currentStyle.overflow == Overflow::Hidden;
+			return style_.currentStyle.overflowX != Overflow::Visible || style_.currentStyle.overflowY != Overflow::Visible;
 		}
 
 		void scrollTo(float x, float y)
@@ -301,13 +291,18 @@ namespace ZenitUI
 
 		void setInlineBase(const Style &s)
 		{
-			inlineBase.overlay(s);
+			style_.inlineBase.overlay(s);
 			pendingTransition = true;
 		}
 		Style &getInlineBase()
 		{
 			pendingTransition = true;
-			return inlineBase;
+			return style_.inlineBase;
+		}
+		Style &getInlineDefaults()
+		{
+			pendingTransition = true;
+			return style_.inlineDefaults;
 		}
 
 		// --- Animazioni imperative ---
@@ -347,7 +342,7 @@ namespace ZenitUI
 
 		Rect getRect() const { return rect; }
 		Vec2 getMeasuredSize() const { return measuredSize; }
-		const ComputedStyle &getStyle() const { return currentStyle; }
+		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick, onRightClick;
@@ -390,10 +385,7 @@ namespace ZenitUI
 
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
-		Style inlineBase, inlineHover, inlinePressed, inlineDisabled, inlineFocus, inlineChecked;
-		ComputedStyle currentStyle, targetStyle, transitionStartStyle;
-		UIState currentState{UIState::Idle};
-		float transitionTimer{1.0f};
+		StyleResolver style_;
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
@@ -402,35 +394,6 @@ namespace ZenitUI
 
 		std::unordered_map<std::string, AnimState> activeAnimations;
 		std::vector<ActiveCssAnimation> activeCssAnimations;
-		std::unordered_map<std::string, std::vector<ActiveCssAnimation>> activePartAnimations;
-
-		struct PartTransition
-		{
-			bool initialized{false};
-			Style target;
-			Style current;
-			double startTime{0.0};
-			float duration{0.0f};
-			TransitionFunction ease{TransitionFunction::Linear};
-			bool active{false};
-		};
-		std::unordered_map<std::string, PartTransition> partTransitions;
-
-		struct Snapshot
-		{
-			bool hovered{false};
-			bool pressed{false};
-			bool focused{false};
-			bool enabled{true};
-			bool checked{false};
-			std::string font;
-			Value fontSize;
-			Color color;
-			Value letterSpacing;
-			Align textAlign{Align::Auto};
-			Overflow overflow{Overflow::Visible};
-		};
-		Snapshot lastSnapshot{};
 
 		std::weak_ptr<Layout> parent;
 
@@ -442,7 +405,10 @@ namespace ZenitUI
 				c->markInheritanceDirty();
 		}
 
-		Style partStyle(const std::string &partName);
+		Style partStyle(const std::string &partName)
+		{
+			return style_.partFor(*this, partName);
+		}
 
 		// Ritorna la size intrinseca del widget (es. dimensione del testo).
 		// Chiamato in fase di measure, prima di arrangiare i figli.
@@ -546,7 +512,6 @@ namespace ZenitUI
 		}
 
 	private:
-		ComputedStyle resolveTargetStyle();
 		void syncCssAnimations();
 		void handleFocusInput();
 
@@ -554,11 +519,7 @@ namespace ZenitUI
 		bool tickImperativeAnimations(float dt);
 		void updateInteractionFlags(bool selfBlocked);
 		UIState computeNextState() const;
-		void beginStateTransition(UIState newState);
-		void resolvePendingTransition();
-		void tickTransition(float dt);
 		void tickCssAnimations(float dt);
-		void propagateInheritance();
 		void fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged);
 		void cullRemovedChildren();
 		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);
@@ -577,11 +538,19 @@ namespace ZenitUI
 		// ------------------------------------------------------------
 		//  Scroll: fasi
 		// ------------------------------------------------------------
-		bool acceptsScrollInput() const { return currentStyle.overflow == Overflow::Scroll; }
+		static bool overflowAcceptsInput(Overflow o)
+		{
+			return o == Overflow::Scroll || o == Overflow::Auto;
+		}
+		bool acceptsScrollInput() const
+		{
+			return overflowAcceptsInput(style_.currentStyle.overflowX) || overflowAcceptsInput(style_.currentStyle.overflowY);
+		}
 		void tickScrollInput();
 		void drawScrollbar(float parentOpacity);
 		void resetScrollIfOverflowChanged();
 		Rect getThumbRectImpl() const;
+		Rect getHThumbRectImpl() const;
 	};
 
 	// CRTP helper: aggiunge la fluent API tipizzata su una Base qualsiasi.

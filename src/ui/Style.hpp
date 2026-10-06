@@ -89,7 +89,8 @@ namespace ZenitUI
 	{
 		Visible,
 		Hidden,
-		Scroll
+		Scroll,
+		Auto
 	};
 
 	struct TextureRef
@@ -162,7 +163,8 @@ namespace ZenitUI
 	X(Value, letterSpacing, Value(2.0f))                    \
 	X(float, transitionTime, 0.15f)                         \
 	X(TransitionFunction, ease, TransitionFunction::Linear) \
-	X(Overflow, overflow, Overflow::Visible)                \
+	X(Overflow, overflowX, Overflow::Visible)               \
+	X(Overflow, overflowY, Overflow::Visible)               \
 	X(Position, position, Position::Static)                 \
 	X(ZIndex, zIndex, ZIndex::Auto())                       \
 	X(Value, top, Value::autoSize())                        \
@@ -226,6 +228,11 @@ namespace ZenitUI
 		c.name = def;
 			BUBBLE_STYLE_PROPS(X)
 #undef X
+			if (c.overflowX == Overflow::Visible && c.overflowY != Overflow::Visible)
+				c.overflowX = Overflow::Auto;
+			else if (c.overflowY == Overflow::Visible && c.overflowX != Overflow::Visible)
+				c.overflowY = Overflow::Auto;
+
 			if (s.transitions.is_set)
 				c.transitions = s.transitions.value;
 			if (s.animations.is_set)

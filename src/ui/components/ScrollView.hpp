@@ -16,7 +16,8 @@ public:
         setInteractive(true);
         setBlocksRaycast(true);
         setStyleTag("ScrollView");
-        getInlineBase().overflow = Overflow::Scroll;
+        getInlineDefaults().overflowX = Overflow::Scroll;
+        getInlineDefaults().overflowY = Overflow::Scroll;
     }
 };
 

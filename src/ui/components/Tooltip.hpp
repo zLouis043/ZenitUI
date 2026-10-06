@@ -66,8 +66,8 @@ protected:
         setPortal(true);
         setInteractive(false);
         setBlocksRaycast(false);
-        inlineBase.position = Position::Absolute;
-        inlineBase.opacity = 0.0f;
+        style_.inlineBase.position = Position::Absolute;
+        style_.inlineBase.opacity = 0.0f;
 
         auto label = Label(text_);
         label->getInlineBase().fontSize = VH(2.4f);
@@ -112,10 +112,10 @@ private:
 
     void setTargetOpacity(float op)
     {
-        float old = inlineBase.opacity.get_or(0.0f);
-        if (inlineBase.opacity.is_set && old == op)
+        float old = style_.inlineBase.opacity.get_or(0.0f);
+        if (style_.inlineBase.opacity.is_set && old == op)
             return;
-        inlineBase.opacity = op;
+        style_.inlineBase.opacity = op;
         beginTransition();
     }
 };

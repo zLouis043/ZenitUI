@@ -14,7 +14,13 @@ INCLUDE_DIRS = -I./src/backend -I./src/ui
 RAYLIB_LINK = -I$(DEPS_HEADER_FOLDER) -L$(DEPS_LIBS_FOLDER) -lraylibdll -lopengl32 -lgdi32 -lwinmm
 
 TESTS_SRCS = \
-    ./src/ui/Layout.cpp \
+    ./src/ui/layout/Layout.cpp \
+    ./src/ui/layout/Measure.cpp \
+    ./src/ui/layout/Render.cpp \
+    ./src/ui/layout/Style.cpp \
+    ./src/ui/layout/Anim.cpp \
+    ./src/ui/layout/Input.cpp \
+    ./src/ui/layout/Scroll.cpp \
     tests/test_main.cpp \
     tests/test_unit.cpp \
     tests/test_easing.cpp \

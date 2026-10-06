@@ -47,7 +47,7 @@ public:
             return;
         isOpen_ = false;
         anchor_ = nullptr;
-        inlineBase.opacity = 0.0f;
+        style_.inlineBase.opacity = 0.0f;
         beginTransition();
         setEnabled(false);
         if (onClose)
@@ -71,8 +71,8 @@ protected:
         setInteractive(true);
         setFocusable(true);
         setBlocksRaycast(true);
-        inlineBase.position = Position::Absolute;
-        inlineBase.opacity = 0.0f;
+        style_.inlineBase.position = Position::Absolute;
+        style_.inlineBase.opacity = 0.0f;
         isOpen_ = false;
         setEnabled(false);
     }
@@ -153,7 +153,7 @@ private:
         isOpen_ = true;
         above_ = (above_ && anchor_);
         setEnabled(true);
-        inlineBase.opacity = 1.0f;
+        style_.inlineBase.opacity = 1.0f;
         beginTransition();
         if (content_)
             content_->beginTransition();
@@ -172,10 +172,10 @@ private:
             s = content_->getMeasuredSize();
         }
 
-        float pl = currentStyle.padding.left.resolveH(0.0f, 0.0f);
-        float pr = currentStyle.padding.right.resolveH(0.0f, 0.0f);
-        float pt = currentStyle.padding.top.resolveV(0.0f, 0.0f);
-        float pb = currentStyle.padding.bottom.resolveV(0.0f, 0.0f);
+        float pl = style_.currentStyle.padding.left.resolveH(0.0f, 0.0f);
+        float pr = style_.currentStyle.padding.right.resolveH(0.0f, 0.0f);
+        float pt = style_.currentStyle.padding.top.resolveV(0.0f, 0.0f);
+        float pb = style_.currentStyle.padding.bottom.resolveV(0.0f, 0.0f);
         return {s.x + pl + pr, s.y + pt + pb};
     }
 };
