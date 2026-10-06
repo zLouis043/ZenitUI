@@ -10,6 +10,7 @@
 #include "ScrollState.hpp"
 #include "StyleResolver.hpp"
 #include "AnimationPlayer.hpp"
+#include "InputController.hpp"
 #include "UIEnums.hpp"
 
 namespace ZenitUI
@@ -29,6 +30,7 @@ namespace ZenitUI
 
 		friend struct StyleResolver;
 		friend struct AnimationPlayer;
+		friend struct InputController;
 
 		void addClass(const std::string &className)
 		{
@@ -397,6 +399,7 @@ namespace ZenitUI
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
 		StyleResolver style_;
+		InputController input_;
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
@@ -525,11 +528,7 @@ namespace ZenitUI
 		}
 
 	private:
-		void handleFocusInput();
 		void initStyleIfNeeded();
-		void updateInteractionFlags(bool selfBlocked, bool ancestorScrolling);
-		UIState computeNextState() const;
-		void fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged);
 		void cullRemovedChildren();
 		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);
 

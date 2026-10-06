@@ -5,6 +5,9 @@ DEPS_HEADER_FOLDER = $(DEPS_FOLDER)/include
 DEPS_LIBS_FOLDER = $(DEPS_FOLDER)/lib
 APP_NAME = testui
 
+PCH_SRC = src/pch.hpp
+PCH_OUT = src/pch.hpp.gch
+
 CXX = g++
 CXXFLAGS = -ggdb -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
 
@@ -17,8 +20,8 @@ TESTS_SRCS = \
     ./src/ui/layout/Layout.cpp \
     ./src/ui/layout/Measure.cpp \
     ./src/ui/layout/Render.cpp \
-    ./src/ui/layout/Style.cpp \
-    ./src/ui/layout/Anim.cpp \
+    ./src/ui/layout/StyleResolver.cpp \
+    ./src/ui/layout/AnimationPlayer.cpp \
     ./src/ui/layout/Input.cpp \
     ./src/ui/layout/Scroll.cpp \
     tests/test_main.cpp \
@@ -38,9 +41,13 @@ TESTS_SRCS = \
 
 TESTS_INCLUDES = -I./src/ui -I./tests
 
-$(OUT_FOLDER)/$(APP_NAME): $(SRC_FILES)
+$(OUT_FOLDER)/$(APP_NAME): $(SRC_FILES) $(PCH_OUT)
 	@mkdir -p $(OUT_FOLDER)
-	$(CXX) $(CXXFLAGS) $(SRC_FILES) $(INCLUDE_DIRS) $(RAYLIB_LINK) -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -include $(PCH_SRC) \
+	    $(SRC_FILES) $(RAYLIB_LINK) -o $@
+
+$(PCH_OUT): $(PCH_SRC)
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -x c++-header $(PCH_SRC) -o $(PCH_OUT)
 
 main: $(OUT_FOLDER)/$(APP_NAME)
 
@@ -50,7 +57,7 @@ test:
 	./$(OUT_FOLDER)/tests
 
 clean:
-	rm -f $(OUT_FOLDER)/$(APP_NAME) $(OUT_FOLDER)/tests build_main.log build_test.log
+	rm -f $(OUT_FOLDER)/$(APP_NAME) $(OUT_FOLDER)/tests $(PCH_OUT) build_main.log build_test.log
 
 all: main test
 

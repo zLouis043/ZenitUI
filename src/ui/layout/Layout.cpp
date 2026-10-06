@@ -23,10 +23,10 @@ namespace ZenitUI
 		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
 
 		const bool scrolling = ancestorScrolling || isScrolling_;
-		updateInteractionFlags(selfBlocked, scrolling);
+		input_.updateFlags(*this, selfBlocked, scrolling);
 
 		UIState prevState = style_.currentState;
-		UIState nextState = computeNextState();
+		UIState nextState = input_.computeNextState(*this);
 		bool stateChanged = (style_.currentState != nextState);
 
 		if (stateChanged)
@@ -51,8 +51,8 @@ namespace ZenitUI
 		}
 
 		tickScrollInput();
-		handleFocusInput();
-		fireInteractionCallbacks(prevState, nextState, stateChanged);
+		input_.handleKeyInput(*this);
+		input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 		cullRemovedChildren();
 		recomputeDirty(wasPending, styleBefore);
 
