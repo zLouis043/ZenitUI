@@ -5,10 +5,11 @@
 #include "Style.hpp"
 #include "Theme.hpp"
 #include "UIContext.hpp"
-#include "UIAnimations.hpp"
+#include "AnimPrimitives.hpp"
 #include "Logger.hpp"
 #include "ScrollState.hpp"
 #include "StyleResolver.hpp"
+#include "AnimationPlayer.hpp"
 #include "UIEnums.hpp"
 
 namespace ZenitUI
@@ -27,6 +28,7 @@ namespace ZenitUI
 		}
 
 		friend struct StyleResolver;
+		friend struct AnimationPlayer;
 
 		void addClass(const std::string &className)
 		{
@@ -308,22 +310,28 @@ namespace ZenitUI
 		// --- Animazioni imperative ---
 		void addAnimation(const std::string &name, std::shared_ptr<UIAnimation> anim)
 		{
-			activeAnimations[name] = {anim, 0.0f, 0.0f, false, false};
+			anim_.imperative[name] = {anim, 0.0f, 0.0f, false, false};
 		}
-		void playAnimation(const std::string &name, bool playReverse = false);
-		bool hasActiveAnimations() const;
+		void playAnimation(const std::string &name, bool playReverse = false)
+		{
+			anim_.play(*this, name, playReverse);
+		}
+		bool hasActiveAnimations() const
+		{
+			return anim_.hasActive(*this);
+		}
 
 		// --- Animazioni CSS ---
 		void addCssAnimation(const std::string &name)
 		{
-			for (auto &a : activeCssAnimations)
+			for (auto &a : anim_.css)
 				if (a.name == name)
 					return;
-			activeCssAnimations.push_back({name, 0.0f, false});
+			anim_.css.push_back({name, 0.0f, false});
 		}
 		void stopCssAnimation(const std::string &name)
 		{
-			for (auto &a : activeCssAnimations)
+			for (auto &a : anim_.css)
 				if (a.name == name)
 					a.finished = true;
 		}
@@ -371,7 +379,7 @@ namespace ZenitUI
 		ScrollState scroll_;
 		bool arrangeInitialized_{false};
 		Vec2 appliedScroll_{0.0f, 0.0f};
-		bool isScrolling_{false}; 
+		bool isScrolling_{false};
 		bool styleInitialized{false};
 		bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
 			wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
@@ -395,11 +403,10 @@ namespace ZenitUI
 		EffectHandle customEffect;
 		bool hasShader{false};
 
-		std::unordered_map<std::string, AnimState> activeAnimations;
-		std::vector<ActiveCssAnimation> activeCssAnimations;
+		AnimationPlayer anim_;
 
 		// Buffer riusati in draw() per evitare allocazioni per-frame.
-		std::vector<Layout*> drawNegZ_, drawNormal_, drawPosZ_;
+		std::vector<Layout *> drawNegZ_, drawNormal_, drawPosZ_;
 
 		std::weak_ptr<Layout> parent;
 
@@ -518,14 +525,10 @@ namespace ZenitUI
 		}
 
 	private:
-		void syncCssAnimations();
 		void handleFocusInput();
-
 		void initStyleIfNeeded();
-		bool tickImperativeAnimations(float dt);
 		void updateInteractionFlags(bool selfBlocked, bool ancestorScrolling);
 		UIState computeNextState() const;
-		void tickCssAnimations(float dt);
 		void fireInteractionCallbacks(UIState prevState, UIState nextState, bool stateChanged);
 		void cullRemovedChildren();
 		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);

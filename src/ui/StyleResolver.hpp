@@ -5,7 +5,7 @@
 #include "UIEnums.hpp" 
 #include "Style.hpp"
 #include "Theme.hpp"
-#include "UIAnimations.hpp"
+#include "AnimPrimitives.hpp"
 
 namespace ZenitUI
 {
@@ -48,8 +48,6 @@ struct StyleResolver
         bool active{false};
     };
     std::unordered_map<std::string, PartTransition> partTransitions;
-
-    std::unordered_map<std::string, std::vector<ActiveCssAnimation>> activePartAnimations;
 
     // --- Snapshot per la propagazione dell'ereditarietà ---
     //  Contiene sia i flag di stato (influenzano i discendenti via selettori

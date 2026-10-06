@@ -1,5 +1,5 @@
 #include "TestFramework.hpp"
-#include "UIAnimations.hpp"
+#include "AnimPrimitives.hpp"
 
 using namespace ZenitUI;
 
