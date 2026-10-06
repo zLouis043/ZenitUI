@@ -274,6 +274,19 @@ namespace ZenitUI::Debug
             os << " scale=" << cs.scale;
         if (cs.rotation != 0.0f)
             os << " rotation=" << cs.rotation;
+        if (!cs.customProps.empty())
+        {
+            os << " vars{";
+            bool first = true;
+            for (const auto &[k, v] : cs.customProps)
+            {
+                if (!first)
+                    os << ", ";
+                os << k << "=" << v;
+                first = false;
+            }
+            os << "}";
+        }
         return os.str();
     }
 

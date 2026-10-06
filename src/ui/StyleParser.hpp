@@ -3,6 +3,7 @@
 #include "UI.hpp"
 #include "ZMarkup.hpp"
 #include "Logger.hpp"
+#include "StyleAttr.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -155,6 +156,24 @@ namespace ZenitUI::ZMarkup
     {
         std::string k = trim(keyRaw);
         std::string v = trim(valRaw);
+
+        // ---------- CUSTOM PROPERTY ----------
+        // Una prop che inizia con -- è una custom property: la salviamo raw.
+        if (k.rfind("--", 0) == 0)
+        {
+            st.customProps[k] = v;
+            return;
+        }
+
+        // ---------- VALORI CON var() ----------
+        // Non risolviamo ora: il valore dipende dal cascade finale.
+        // Le salviamo raw e le risolviamo in StyleResolver::resolveFor.
+        if (v.find("var(") != std::string::npos)
+        {
+            st.unresolvedProps[k] = v;
+            clearStyleProp(st, k);
+            return;
+        }
 
         // ---------- TRANSITION ----------
         if (k == "transition")
@@ -676,19 +695,21 @@ namespace ZenitUI::ZMarkup
 
                 if (p.rfind("--", 0) == 0)
                 {
-                    // Variabile CSS: --primary, --danger, ...
+                    // Variabile CSS: la teniamo anche in sheet.vars (retrocompat),
+                    // ma va comunque registrata come declaration per finire
+                    // in theme.root.customProps tramite applyStyleDeclaration.
                     sheet.vars[p] = v;
                 }
-                else
-                {
-                    // Dichiarazione normale → diventa base globale
-                    Declaration d;
-                    d.prop = p;
-                    d.value = v;
-                    d.line = declLine;
-                    d.col = declCol;
-                    sheet.rootDecls.push_back(std::move(d));
-                }
+
+                // Sempre: push come declaration. Se è una var, applyStyleDeclaration
+                // la instrada in theme.root.customProps; se è una prop normale,
+                // la instrada nella root Style.
+                Declaration d;
+                d.prop = p;
+                d.value = v;
+                d.line = declLine;
+                d.col = declCol;
+                sheet.rootDecls.push_back(std::move(d));
             }
             match('}');
         }
@@ -973,38 +994,11 @@ namespace ZenitUI::ZMarkup
     // =========================================================================
     inline void applyStyleSheet(const StyleSheet &sheet, const std::string &fileName, Theme &theme)
     {
-        auto subst = [&](std::string v)
-        {
-            bool changed = true;
-            int safety = 0;
-            while (changed && safety++ < 10)
-            {
-                changed = false;
-                size_t pos = 0;
-                while ((pos = v.find("var(", pos)) != std::string::npos)
-                {
-                    size_t close = v.find(')', pos);
-                    if (close == std::string::npos)
-                        break;
-                    std::string name = trim(v.substr(pos + 4, close - pos - 4));
-                    auto it = sheet.vars.find(name);
-                    if (it == sheet.vars.end())
-                    {
-                        pos = close + 1;
-                        continue;
-                    }
-                    v.replace(pos, close - pos + 1, it->second);
-                    changed = true;
-                }
-            }
-            return v;
-        };
-
         // :root → Style base
         for (auto &d : sheet.rootDecls)
         {
             ParseLoc loc{fileName, d.line, d.col};
-            applyStyleDeclaration(theme.root, d.prop, subst(d.value), loc);
+            applyStyleDeclaration(theme.root, d.prop, d.value, loc);
         }
 
         // Regole normali → ThemeRule
@@ -1017,7 +1011,7 @@ namespace ZenitUI::ZMarkup
             for (auto &d : r.decls)
             {
                 ParseLoc loc{fileName, d.line, d.col};
-                applyStyleDeclaration(tr.style, d.prop, subst(d.value), loc);
+                applyStyleDeclaration(tr.style, d.prop, d.value, loc);
             }
 
             theme.addRule(std::move(tr));
@@ -1043,7 +1037,7 @@ namespace ZenitUI::ZMarkup
                 for (auto &d : frame.decls)
                 {
                     ParseLoc loc{fileName, d.line, d.col};
-                    applyStyleDeclaration(k.delta, d.prop, subst(d.value), loc);
+                    applyStyleDeclaration(k.delta, d.prop, d.value, loc);
                 }
                 anim.keyframes.push_back(std::move(k));
             }
