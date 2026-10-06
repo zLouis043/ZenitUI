@@ -22,7 +22,7 @@ public:
 protected:
     Vec2 computeIntrinsicSize(float, float) override
     {
-        float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
         return {120.0f, std::max(24.0f, fs * 1.2f)};
     }
 

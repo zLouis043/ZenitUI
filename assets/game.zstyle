@@ -274,9 +274,11 @@ TextInput:hover::cursor {
   grow : 1; height: 100%;
   background: #232328; 
   radius: 8px;
-  padding: 3vh; overflow: scroll;
+  padding: 3vh;
   gap: 4vh;
   border-width: 1px; border-color: #3A3A40;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .demo-sidebar .title-text { color: #00FFFF; }

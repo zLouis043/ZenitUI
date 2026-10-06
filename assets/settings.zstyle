@@ -56,7 +56,8 @@
   radius: 8px;
   padding: 2vh 2vw;
   gap: 2vh;
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-width: 1px;
   border-color: #3A3A40;
 }

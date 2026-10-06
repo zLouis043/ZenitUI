@@ -23,12 +23,12 @@ public:
             UIContext::get().requestFocus(shared_from_this());
         };
 
-        inlineBase.background = Color{30, 30, 36, 255};
-        inlineBase.color = Colors::White;
-        inlineBase.radius = Px(6.0f);
-        inlineBase.padding = Spacing(VH(1.2f), VW(1.5f));
-        inlineBase.borderColor = Color{60, 60, 70, 255};
-        inlineBase.borderWidth = Px(1.0f);
+        style_.inlineBase.background = Color{30, 30, 36, 255};
+        style_.inlineBase.color = Colors::White;
+        style_.inlineBase.radius = Px(6.0f);
+        style_.inlineBase.padding = Spacing(VH(1.2f), VW(1.5f));
+        style_.inlineBase.borderColor = Color{60, 60, 70, 255};
+        style_.inlineBase.borderWidth = Px(1.0f);
         pendingTransition = true;
     }
 
@@ -54,8 +54,8 @@ public:
 protected:
     Vec2 computeIntrinsicSize(float, float) override
     {
-        FontHandle f = resolveFont(currentStyle, defaultFont);
-        float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        FontHandle f = resolveFont(style_.currentStyle, defaultFont);
+        float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
 
         float charW = 0.0f;
         if (auto r = UIContext::get().renderer)
@@ -218,10 +218,10 @@ protected:
             if (!r)
                 return;
 
-            FontHandle f = resolveFont(currentStyle, defaultFont);
-            float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-            float pl = currentStyle.padding.left.resolveH(rect.width, rect.height);
+            FontHandle f = resolveFont(style_.currentStyle, defaultFont);
+            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+            float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
             float availW = std::max(0.0f, rect.width - pl * 2.0f);
 
             std::string prefix = text.substr(0, cursorPos);

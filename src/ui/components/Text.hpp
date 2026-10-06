@@ -39,7 +39,7 @@ public:
 protected:
     Vec2 computeIntrinsicSize(float availW, float /*availH*/) override
     {
-        FontHandle f = resolveFont(currentStyle, defaultFont);
+        FontHandle f = resolveFont(style_.currentStyle, defaultFont);
         if (wrap_ && availW > 0.0f)
             return measureWrapped(availW, f);
         return measureSingleLine(f);
@@ -96,15 +96,15 @@ protected:
         if (!wrap_)
             return;
 
-        float pl = currentStyle.padding.left.resolveH(rect.width, rect.height);
-        float pr = currentStyle.padding.right.resolveH(rect.width, rect.height);
+        float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
+        float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
         float newAvailW = std::max(0.0f, rect.width - pl - pr);
 
         if (newAvailW > 0.0f && newAvailW != cachedWrapW)
         {
-            FontHandle f = resolveFont(currentStyle, defaultFont);
-            float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+            FontHandle f = resolveFont(style_.currentStyle, defaultFont);
+            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+            float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
             wrapText(newAvailW, fs, sp, f);
             cachedFs = fs;
@@ -173,8 +173,8 @@ private:
 
     Vec2 measureSingleLine(FontHandle f)
     {
-        float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-        float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+        float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
         if (text_dirty || f.id != cachedFontId ||
             fs != cachedFs || sp != cachedSp || cachedSize.y == 0.0f)
@@ -192,8 +192,8 @@ private:
 
     Vec2 measureWrapped(float availW, FontHandle f)
     {
-        float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-        float sp = currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+        float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
         if (text_dirty || f.id != cachedFontId ||
             fs != cachedFs || sp != cachedSp || availW != cachedWrapW)

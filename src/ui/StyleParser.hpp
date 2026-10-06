@@ -432,20 +432,64 @@ namespace ZenitUI::ZMarkup
         }
 
         // ---------- Overflow ----------
+        auto parseOverflowValue = [&](const std::string &val, Overflow &out) -> bool
+        {
+            if (val == "visible")
+            {
+                out = Overflow::Visible;
+                return true;
+            }
+            if (val == "hidden")
+            {
+                out = Overflow::Hidden;
+                return true;
+            }
+            if (val == "scroll")
+            {
+                out = Overflow::Scroll;
+                return true;
+            }
+            if (val == "auto")
+            {
+                out = Overflow::Auto;
+                return true;
+            }
+            return false;
+        };
+
         if (k == "overflow")
         {
-            if (v == "visible")
-                st.overflow = Overflow::Visible;
-            else if (v == "hidden")
-                st.overflow = Overflow::Hidden;
-            else if (v == "scroll")
-                st.overflow = Overflow::Scroll;
+            Overflow o;
+            if (parseOverflowValue(v, o))
+            {
+                st.overflowX = o;
+                st.overflowY = o;
+            }
             else
             {
                 logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "valore overflow non riconosciuto: '" + v + "'. Uso 'visible'.");
-                st.overflow = Overflow::Visible;
+                        "valore overflow non riconosciuto: '" + v + "'. Ignorato.");
             }
+            return;
+        }
+        if (k == "overflow-x")
+        {
+            Overflow o;
+            if (parseOverflowValue(v, o))
+                st.overflowX = o;
+            else
+                logWarn("StyleParser", loc.file, loc.line, loc.col,
+                        "valore overflow-x non riconosciuto: '" + v + "'. Ignorato.");
+            return;
+        }
+        if (k == "overflow-y")
+        {
+            Overflow o;
+            if (parseOverflowValue(v, o))
+                st.overflowY = o;
+            else
+                logWarn("StyleParser", loc.file, loc.line, loc.col,
+                        "valore overflow-y non riconosciuto: '" + v + "'. Ignorato.");
             return;
         }
 

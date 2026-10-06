@@ -32,7 +32,7 @@ public:
 protected:
     Vec2 computeIntrinsicSize(float, float) override
     {
-        float fs = currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
         return {fs * 1.4f, fs * 1.4f};
     }
 
