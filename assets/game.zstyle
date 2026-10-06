@@ -259,7 +259,6 @@ TextInput:hover::cursor {
   width: 90vw; height: 90vh;
   background: #1A1A20; 
   radius: 12px;
-  border-width: 2px; border-color: var(--primary);
   padding: 2vh 2vw; gap: 2vw;
   background-texture: npatches 16 16 16 16;
 }

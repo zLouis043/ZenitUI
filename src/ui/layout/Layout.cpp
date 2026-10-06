@@ -4,225 +4,229 @@
 namespace ZenitUI
 {
 
-// =========================================================================
-//  ORCHESTRAZIONE
-//  update() coordina i sottosistemi. Non contiene logica di dettaglio:
-//  quella vive in Style/Anim/Input/Scroll/Measure/Render.
-// =========================================================================
+	// =========================================================================
+	//  ORCHESTRAZIONE
+	//  update() coordina i sottosistemi. Non contiene logica di dettaglio:
+	//  quella vive in Style/Anim/Input/Scroll/Measure/Render.
+	// =========================================================================
 
-void Layout::update(float dt, bool ancestorBlocked)
-{
-	bool wasPending = pendingTransition;
-	ComputedStyle styleBefore = style_.currentStyle;
-
-	initStyleIfNeeded();
-	resetScrollIfOverflowChanged();
-
-	bool localAnimBlocks = tickImperativeAnimations(dt);
-	bool blockSubtree = ancestorBlocked || localAnimBlocks;
-	bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
-
-	updateInteractionFlags(selfBlocked);
-
-	UIState prevState = style_.currentState;
-	UIState nextState = computeNextState();
-	bool stateChanged = (style_.currentState != nextState);
-
-	if (stateChanged)
+	void Layout::update(float dt, bool ancestorBlocked, bool ancestorScrolling)
 	{
-		style_.beginStateTransition(*this, nextState);
-		syncCssAnimations();
-	}
-	else if (pendingTransition)
-	{
-		style_.resolvePendingTransition(*this);
-		syncCssAnimations();
-	}
+		bool wasPending = pendingTransition;
+		ComputedStyle styleBefore = style_.currentStyle;
 
-	style_.tick(*this, dt);
-	tickCssAnimations(dt);
-	style_.propagateInheritance(*this);
+		initStyleIfNeeded();
+		resetScrollIfOverflowChanged();
 
-	{
-		size_t n = children.size();
-		for (size_t i = 0; i < n; ++i)
-			children[i]->update(dt, blockSubtree);
-	}
+		bool localAnimBlocks = tickImperativeAnimations(dt);
+		bool blockSubtree = ancestorBlocked || localAnimBlocks;
+		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
+		bool scrolling = ancestorScrolling;
 
-	tickScrollInput();
-	handleFocusInput();
-	fireInteractionCallbacks(prevState, nextState, stateChanged);
-	cullRemovedChildren();
-	recomputeDirty(wasPending, styleBefore);
+		updateInteractionFlags(selfBlocked, scrolling);
 
-	if (isEnabled || updateWhenDisabled_)
-		onUpdate(dt);
-}
+		UIState prevState = style_.currentState;
+		UIState nextState = computeNextState();
+		bool stateChanged = (style_.currentState != nextState);
 
-void Layout::initStyleIfNeeded()
-{
-	if (!styleInitialized)
-	{
-		styleInitialized = true;
-		style_.currentStyle = style_.targetStyle = style_.transitionStartStyle
-			= style_.resolveFor(*this);
-		pendingTransition = false;
-		syncCssAnimations();
-	}
-}
-
-void Layout::cullRemovedChildren()
-{
-	for (auto it = children.begin(); it != children.end();)
-	{
-		if ((*it)->wantsRemoval)
+		if (stateChanged)
 		{
-			(*it)->parent.reset();
-			it = children.erase(it);
+			style_.beginStateTransition(*this, nextState);
+			syncCssAnimations();
 		}
-		else
-			++it;
-	}
-}
-
-void Layout::recomputeDirty(bool wasPending, const ComputedStyle &styleBefore)
-{
-	bool anyChildDirty = false;
-	for (auto &c : children)
-	{
-		if (c->subtreeDirty_) { anyChildDirty = true; break; }
-	}
-
-	bool styleChanged = (style_.currentStyle != styleBefore);
-	bool inTransition = (style_.transitionTimer < 1.0f);
-
-	subtreeDirty_ = wasPending || pendingTransition || anyChildDirty || styleChanged || inTransition;
-}
-
-std::vector<const ThemeRule *> Layout::getMatchingRules() const
-{
-	std::vector<const ThemeRule *> out;
-	auto &theme = Theme::get();
-	for (const auto &r : theme.rules)
-	{
-		if (!r.part.empty())
-			continue;
-		if (ruleMatches(r, this))
-			out.push_back(&r);
-	}
-	return out;
-}
-
-static void collectFocusables(Layout *node, std::vector<Layout *> &out)
-{
-	if (node->isFocusable())
-		out.push_back(node);
-	for (auto &c : node->children)
-		collectFocusables(c.get(), out);
-}
-
-static void notifyFocusAncestors(Layout *node)
-{
-	if (!node)
-		return;
-	auto parent = node->getParent();
-	while (parent)
-	{
-		parent->notifyDescendantFocused(node);
-		parent = parent->getParent();
-	}
-}
-
-void Layout::updateTree(float dt)
-{
-	auto &ctx = UIContext::get();
-
-	auto captured = ctx.pointerCapture.lock();
-	if (!captured || !captured->getEnabled())
-	{
-		ctx.pointerCapture.reset();
-		ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
-	}
-	else
-	{
-		ctx.topmostConsumer = captured.get();
-	}
-
-	ctx.hoverTarget = ctx.topmostConsumer;
-	if (ctx.pointer.pressed)
-		ctx.pressTarget = ctx.hoverTarget;
-	if (ctx.pointer.released)
-		ctx.releaseTarget = ctx.hoverTarget;
-
-	if (ctx.pointer.pressed)
-	{
-		if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
+		else if (pendingTransition)
 		{
-			ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+			style_.resolvePendingTransition(*this);
+			syncCssAnimations();
 		}
-		else
+
+		style_.tick(*this, dt);
+		tickCssAnimations(dt);
+		style_.propagateInheritance(*this);
+
 		{
-			ctx.releaseFocus();
+			size_t n = children.size();
+			for (size_t i = 0; i < n; ++i)
+				children[i]->update(dt, blockSubtree, isScrolling_);
+		}
+
+		tickScrollInput();
+		handleFocusInput();
+		fireInteractionCallbacks(prevState, nextState, stateChanged);
+		cullRemovedChildren();
+		recomputeDirty(wasPending, styleBefore);
+
+		if (isEnabled || updateWhenDisabled_)
+			onUpdate(dt);
+	}
+
+	void Layout::initStyleIfNeeded()
+	{
+		if (!styleInitialized)
+		{
+			styleInitialized = true;
+			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
+			pendingTransition = false;
+			syncCssAnimations();
 		}
 	}
 
-	for (int k : ctx.inputEvents.keys)
+	void Layout::cullRemovedChildren()
 	{
-		if (k != Key::Tab)
-			continue;
-
-		Layout *scope = this;
+		for (auto it = children.begin(); it != children.end();)
 		{
-			auto focused = ctx.focusedNode.lock();
-			if (focused)
+			if ((*it)->wantsRemoval)
 			{
-				Layout *n = focused.get();
-				while (n)
-				{
-					if (n->isFocusScope())
-					{
-						scope = n;
-						break;
-					}
-					n = n->getParent().get();
-				}
+				(*it)->parent.reset();
+				it = children.erase(it);
 			}
+			else
+				++it;
 		}
+	}
 
-		std::vector<Layout *> focusables;
-		collectFocusables(scope, focusables);
-		if (focusables.empty())
-			break;
-
-		auto cur = ctx.focusedNode.lock();
-		Layout *curPtr = cur.get();
-
-		int idx = -1;
-		for (size_t i = 0; i < focusables.size(); ++i)
-			if (focusables[i] == curPtr)
+	void Layout::recomputeDirty(bool wasPending, const ComputedStyle &styleBefore)
+	{
+		bool anyChildDirty = false;
+		for (auto &c : children)
+		{
+			if (c->subtreeDirty_)
 			{
-				idx = (int)i;
+				anyChildDirty = true;
 				break;
 			}
-
-		int next = 0;
-		if (idx >= 0)
-		{
-			int n = (int)focusables.size();
-			next = ctx.shiftHeld ? (idx - 1 + n) % n
-								 : (idx + 1) % n;
 		}
-		ctx.requestFocus(focusables[next]->shared_from_this());
-		notifyFocusAncestors(ctx.focusedNode.lock().get());
+
+		bool styleChanged = (style_.currentStyle != styleBefore);
+		bool inTransition = (style_.transitionTimer < 1.0f);
+
+		subtreeDirty_ = wasPending || pendingTransition || anyChildDirty || styleChanged || inTransition;
 	}
 
-	update(dt, false);
+	std::vector<const ThemeRule *> Layout::getMatchingRules() const
+	{
+		std::vector<const ThemeRule *> out;
+		auto &theme = Theme::get();
+		for (const auto &r : theme.rules)
+		{
+			if (!r.part.empty())
+				continue;
+			if (ruleMatches(r, this))
+				out.push_back(&r);
+		}
+		return out;
+	}
 
-	if (ctx.pointer.released)
-		ctx.pressTarget = nullptr;
-	if (!ctx.pointer.down && !ctx.pointerCapture.expired())
-		ctx.pointerCapture.reset();
-}
+	static void collectFocusables(Layout *node, std::vector<Layout *> &out)
+	{
+		if (node->isFocusable())
+			out.push_back(node);
+		for (auto &c : node->children)
+			collectFocusables(c.get(), out);
+	}
+
+	static void notifyFocusAncestors(Layout *node)
+	{
+		if (!node)
+			return;
+		auto parent = node->getParent();
+		while (parent)
+		{
+			parent->notifyDescendantFocused(node);
+			parent = parent->getParent();
+		}
+	}
+
+	void Layout::updateTree(float dt)
+	{
+		auto &ctx = UIContext::get();
+
+		auto captured = ctx.pointerCapture.lock();
+		if (!captured || !captured->getEnabled())
+		{
+			ctx.pointerCapture.reset();
+			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+		}
+		else
+		{
+			ctx.topmostConsumer = captured.get();
+		}
+
+		ctx.hoverTarget = ctx.topmostConsumer;
+		if (ctx.pointer.pressed)
+			ctx.pressTarget = ctx.hoverTarget;
+		if (ctx.pointer.released)
+			ctx.releaseTarget = ctx.hoverTarget;
+
+		if (ctx.pointer.pressed)
+		{
+			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
+			{
+				ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+			}
+			else
+			{
+				ctx.releaseFocus();
+			}
+		}
+
+		for (int k : ctx.inputEvents.keys)
+		{
+			if (k != Key::Tab)
+				continue;
+
+			Layout *scope = this;
+			{
+				auto focused = ctx.focusedNode.lock();
+				if (focused)
+				{
+					Layout *n = focused.get();
+					while (n)
+					{
+						if (n->isFocusScope())
+						{
+							scope = n;
+							break;
+						}
+						n = n->getParent().get();
+					}
+				}
+			}
+
+			std::vector<Layout *> focusables;
+			collectFocusables(scope, focusables);
+			if (focusables.empty())
+				break;
+
+			auto cur = ctx.focusedNode.lock();
+			Layout *curPtr = cur.get();
+
+			int idx = -1;
+			for (size_t i = 0; i < focusables.size(); ++i)
+				if (focusables[i] == curPtr)
+				{
+					idx = (int)i;
+					break;
+				}
+
+			int next = 0;
+			if (idx >= 0)
+			{
+				int n = (int)focusables.size();
+				next = ctx.shiftHeld ? (idx - 1 + n) % n
+									 : (idx + 1) % n;
+			}
+			ctx.requestFocus(focusables[next]->shared_from_this());
+			notifyFocusAncestors(ctx.focusedNode.lock().get());
+		}
+
+		update(dt, false);
+
+		if (ctx.pointer.released)
+			ctx.pressTarget = nullptr;
+		if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+			ctx.pointerCapture.reset();
+	}
 
 } // namespace ZenitUI
 

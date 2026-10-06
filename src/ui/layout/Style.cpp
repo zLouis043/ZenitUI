@@ -232,11 +232,13 @@ void StyleResolver::beginStateTransition(Layout &node, UIState newState)
 	transitionTimer = 0.0f;
 	transitionStartStyle = currentStyle;
 	targetStyle = resolveFor(node);
+	node.pendingTransition = false;      // <-- AGGIUNTO
 }
 
 void StyleResolver::resolvePendingTransition(Layout &node)
 {
 	ComputedStyle newTarget = resolveFor(node);
+	node.pendingTransition = false;      // <-- AGGIUNTO
 
 	if (newTarget != targetStyle)
 	{

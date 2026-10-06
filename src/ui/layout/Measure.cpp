@@ -127,43 +127,48 @@ namespace ZenitUI
 
 	void Layout::arrange(Rect space)
 	{
+		const bool positionChanged = (space.x != rect.x || space.y != rect.y);
 		rect = space;
 
-		// Scroll container: espandi lo spazio per il contenuto sull'asse principale.
-		// (Replica HTML: overflow != visible => "scroll container")
-		Rect arrangeSpace = space;
 		if (isScrollContainer() && type != LayoutType::Stack)
 		{
-			float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
-			float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
-			float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
-			float pb = style_.currentStyle.padding.bottom.resolveV(space.width, space.height);
+			// positionChanged: il container è stato riposizionato (es. listContainer
+			// del Dropdown spostato dall'arrange del padre). I figli vanno riallineati.
+			bool needFullArrange = !arrangeInitialized_ || subtreeDirty_ || positionChanged;
 
-			arrangeSpace.x -= scroll_.offset.x;
-			arrangeSpace.y -= scroll_.offset.y;
-
-			// Espandi solo l'asse principale (flow direction) se quell'asse
-			// ha overflow != visible. L'asse cross resta della dimensione del
-			// container: i figli che eccedono traboccano e vengono scrollati
-			// tramite offset, senza espandere il box logico.
-			if (type == LayoutType::Vertical && style_.currentStyle.overflowY != Overflow::Visible)
+			if (needFullArrange)
 			{
-				float contentH = scrollContentSize.y + pt + pb;
-				arrangeSpace.height = std::max(space.height, contentH);
+				float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
+				float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
+				float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
+				float pb = style_.currentStyle.padding.bottom.resolveV(space.width, space.height);
+
+				Rect arrangeSpace = space;
+
+				if (type == LayoutType::Vertical && style_.currentStyle.overflowY != Overflow::Visible)
+				{
+					float contentH = scrollContentSize.y + pt + pb;
+					arrangeSpace.height = std::max(space.height, contentH);
+				}
+				else if (type == LayoutType::Horizontal && style_.currentStyle.overflowX != Overflow::Visible)
+				{
+					float contentW = scrollContentSize.x + pl + pr;
+					arrangeSpace.width = std::max(space.width, contentW);
+				}
+
+				arrangeInto(arrangeSpace);
+				arrangeInitialized_ = true;
+				appliedScroll_ = {0.0f, 0.0f};
 			}
-			else if (type == LayoutType::Horizontal && style_.currentStyle.overflowX != Overflow::Visible)
+
+			float dx = appliedScroll_.x - scroll_.offset.x;
+			float dy = appliedScroll_.y - scroll_.offset.y;
+			if (dx != 0.0f || dy != 0.0f)
 			{
-				float contentW = scrollContentSize.x + pl + pr;
-				arrangeSpace.width = std::max(space.width, contentW);
+				translateSubtree(dx, dy);
+				appliedScroll_ = scroll_.offset;
 			}
-		}
 
-		arrangeInto(arrangeSpace);
-
-		// Aggiorna i limiti di scroll dopo l'arrange.
-		// Aggiorna i limiti di scroll dopo l'arrange.
-		if (isScrollContainer() && type != LayoutType::Stack)
-		{
 			float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
 			float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
 			float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
@@ -175,10 +180,27 @@ namespace ZenitUI
 			scroll_.maxScroll.y = std::max(0.0f, contentH - rect.height);
 			scroll_.clamp();
 		}
+		else
+		{
+			arrangeInto(space);
+			arrangeInitialized_ = true;
+		}
 
 		onLayout();
 	}
 
+	void Layout::translateSubtree(float dx, float dy)
+	{
+		// Sposta i figli (e i loro discendenti) senza toccare il rect di `this`.
+		for (auto &c : children)
+		{
+			//if (c->isPortal())
+			//	continue;
+			c->rect.x += dx;
+			c->rect.y += dy;
+			c->translateSubtree(dx, dy);
+		}
+	}
 	void Layout::arrangeInto(Rect space)
 	{
 		float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
