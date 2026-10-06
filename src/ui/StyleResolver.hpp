@@ -6,6 +6,7 @@
 #include "Style.hpp"
 #include "Theme.hpp"
 #include "AnimPrimitives.hpp"
+#include "StyleAttr.hpp"
 
 namespace ZenitUI
 {

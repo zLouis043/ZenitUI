@@ -178,6 +178,9 @@ namespace ZenitUI
 		return name == "font" || name == "fontSize" || name == "color" || name == "letterSpacing" || name == "textAlign";
 	}
 
+	struct Style; // forward
+	inline bool clearStyleProp(Style &s, std::string_view name);
+
 	struct Style
 	{
 #define X(T, name, def) Opt<T> name;
@@ -187,6 +190,10 @@ namespace ZenitUI
 		// Transizioni per-property. Assente = eredita dal livello precedente.
 		Opt<std::vector<TransitionSpec>> transitions;
 		Opt<std::vector<AnimationRef>> animations;
+		// Custom properties (--name). Il valore è raw (non parsato).
+		std::unordered_map<std::string, std::string> customProps;
+		// Prop che contengono var() e non sono risolvibili a parse time.
+		std::unordered_map<std::string, std::string> unresolvedProps;
 
 		Style &overlay(const Style &o)
 		{
@@ -199,9 +206,35 @@ namespace ZenitUI
 				transitions = o.transitions;
 			if (o.animations.is_set)
 				animations = o.animations;
+
+			if (!o.customProps.empty())
+				for (const auto &[k, v] : o.customProps)
+					customProps[k] = v;
+			if (!o.unresolvedProps.empty())
+				for (const auto &[k, v] : o.unresolvedProps)
+				{
+					unresolvedProps[k] = v;
+					clearStyleProp(*this, k); // cancella la versione tipizzata precedente
+				}
+
 			return *this;
 		}
 	};
+
+	inline bool clearStyleProp(Style &s, std::string_view name)
+	{
+		// Usiamo una lambda per non dover scrivere 40 if.
+		bool cleared = false;
+#define X(T, n, def)            \
+	if (!cleared && name == #n) \
+	{                           \
+		s.n.reset();            \
+		cleared = true;         \
+	}
+		BUBBLE_STYLE_PROPS(X)
+#undef X
+		return cleared;
+	}
 
 	struct ComputedStyle
 	{
@@ -211,6 +244,7 @@ namespace ZenitUI
 
 		std::vector<TransitionSpec> transitions;
 		std::vector<AnimationRef> animations;
+		std::unordered_map<std::string, std::string> customProps;
 
 		static ComputedStyle from(const Style &s,
 								  const ComputedStyle *parent = nullptr,
@@ -237,6 +271,11 @@ namespace ZenitUI
 				c.transitions = s.transitions.value;
 			if (s.animations.is_set)
 				c.animations = s.animations.value;
+
+			if (parent)
+				c.customProps = parent->customProps;
+			for (const auto &[k, v] : s.customProps)
+				c.customProps[k] = v;
 			return c;
 		}
 	};
@@ -329,6 +368,7 @@ namespace ZenitUI
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 		r.transitions = b.transitions;
+		r.customProps = b.customProps;
 		return r;
 	}
 
@@ -359,6 +399,7 @@ namespace ZenitUI
 #undef X
 
 		r.transitions = b.transitions;
+		r.customProps = b.customProps;
 		return r;
 	}
 
@@ -415,6 +456,8 @@ namespace ZenitUI
 #undef X
 		r.transitions = b.transitions;
 		r.animations = b.animations;
+		r.customProps = b.customProps;
+		r.unresolvedProps = b.unresolvedProps;
 		return r;
 	}
 
