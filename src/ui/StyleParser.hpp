@@ -450,7 +450,7 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-                // ---------- FILTER ----------
+        // ---------- FILTER ----------
         if (k == "filter")
         {
             std::vector<FilterRef> refs;
@@ -464,14 +464,18 @@ namespace ZenitUI::ZMarkup
                 while (comma < cur.size())
                 {
                     char c = cur[comma];
-                    if (c == '(') depth++;
-                    else if (c == ')') depth--;
-                    else if (c == ',' && depth == 0) break;
+                    if (c == '(')
+                        depth++;
+                    else if (c == ')')
+                        depth--;
+                    else if (c == ',' && depth == 0)
+                        break;
                     comma++;
                 }
                 std::string part = trim(cur.substr(pos, comma - pos));
                 pos = (comma < cur.size()) ? comma + 1 : cur.size();
-                if (part.empty()) continue;
+                if (part.empty())
+                    continue;
 
                 FilterRef ref;
                 size_t lparen = part.find('(');
@@ -484,15 +488,17 @@ namespace ZenitUI::ZMarkup
                     size_t rparen = part.find(')', lparen);
                     ref.name = trim(part.substr(0, lparen));
                     std::string args = (rparen == std::string::npos)
-                        ? part.substr(lparen + 1)
-                        : part.substr(lparen + 1, rparen - lparen - 1);
+                                           ? part.substr(lparen + 1)
+                                           : part.substr(lparen + 1, rparen - lparen - 1);
 
                     std::string curArg;
                     int argDepth = 0;
                     for (char c : args)
                     {
-                        if (c == '(') argDepth++;
-                        else if (c == ')') argDepth--;
+                        if (c == '(')
+                            argDepth++;
+                        else if (c == ')')
+                            argDepth--;
                         if (c == ',' && argDepth == 0)
                         {
                             ref.args.push_back(trim(curArg));
@@ -603,6 +609,7 @@ namespace ZenitUI::ZMarkup
             std::vector<Declaration> decls;
             int line{0};
             int col{0};
+            std::optional<MediaQuery> media;
         };
         std::vector<Rule> rules;
 
@@ -647,6 +654,8 @@ namespace ZenitUI::ZMarkup
                     parseRoot();
                 else if (matchStr("@keyframes"))
                     parseKeyframes();
+                else if (matchStr("@media"))
+                    parseMedia();
                 else
                     parseRule();
             }
@@ -844,7 +853,144 @@ namespace ZenitUI::ZMarkup
             sheet.keyframes.push_back(std::move(kf));
         }
 
-        void parseRule()
+        void parseMedia()
+        {
+            skipWs();
+
+            // Parse della condizione fino a '{'.
+            std::string cond;
+            while (!atEnd() && peek() != '{')
+                cond.push_back(get());
+            cond = trim(cond);
+            if (!match('{'))
+                return;
+
+            MediaQuery query = parseMediaQuery(cond);
+
+            // Le regole dentro ereditano questa query.
+            while (!atEnd() && peek() != '}')
+            {
+                skipWs();
+                if (peek() == '}')
+                    break;
+                parseRuleWithMedia(query);
+            }
+            match('}');
+        }
+
+        MediaQuery parseMediaQuery(const std::string &s)
+        {
+            MediaQuery q;
+            // Formato: "(min-width: 600px) and (orientation: landscape)"
+            // Facciamo uno split per " and " e parse di ogni condizione.
+            std::vector<std::string> parts;
+            std::string cur;
+            size_t depth = 0;
+            for (size_t i = 0; i < s.size(); ++i)
+            {
+                char c = s[i];
+                if (c == '(')
+                {
+                    depth++;
+                    cur.push_back(c);
+                }
+                else if (c == ')')
+                {
+                    depth--;
+                    cur.push_back(c);
+                }
+                else if (depth == 0 && i + 5 <= s.size() &&
+                         s.compare(i, 5, " and ") == 0)
+                {
+                    parts.push_back(trim(cur));
+                    cur.clear();
+                    i += 4;
+                }
+                else
+                    cur.push_back(c);
+            }
+            if (!cur.empty())
+                parts.push_back(trim(cur));
+
+            for (auto &p : parts)
+            {
+                // p = "(min-width: 600px)" → estrai "min-width" e "600px"
+                std::string inner = p;
+                if (inner.size() >= 2 && inner.front() == '(' && inner.back() == ')')
+                    inner = inner.substr(1, inner.size() - 2);
+
+                size_t colon = inner.find(':');
+                std::string key = trim(colon == std::string::npos ? inner : inner.substr(0, colon));
+                std::string val = colon == std::string::npos ? "" : trim(inner.substr(colon + 1));
+
+                MediaCondition c;
+                if (key == "min-width")
+                {
+                    c.kind = MediaCondition::Kind::MinWidth;
+                    c.value = std::stof(val);
+                }
+                else if (key == "max-width")
+                {
+                    c.kind = MediaCondition::Kind::MaxWidth;
+                    c.value = std::stof(val);
+                }
+                else if (key == "min-height")
+                {
+                    c.kind = MediaCondition::Kind::MinHeight;
+                    c.value = std::stof(val);
+                }
+                else if (key == "max-height")
+                {
+                    c.kind = MediaCondition::Kind::MaxHeight;
+                    c.value = std::stof(val);
+                }
+                else if (key == "orientation")
+                {
+                    if (val == "landscape")
+                        c.kind = MediaCondition::Kind::OrientationLandscape;
+                    else if (val == "portrait")
+                        c.kind = MediaCondition::Kind::OrientationPortrait;
+                    else
+                        continue;
+                }
+                else if (key == "min-aspect-ratio")
+                {
+                    // "16/9" o "1.77"
+                    c.kind = MediaCondition::Kind::MinAspectRatio;
+                    c.value = parseAspectRatio(val);
+                }
+                else if (key == "max-aspect-ratio")
+                {
+                    c.kind = MediaCondition::Kind::MaxAspectRatio;
+                    c.value = parseAspectRatio(val);
+                }
+                else
+                    continue;
+
+                q.conditions.push_back(c);
+            }
+            return q;
+        }
+
+        static float parseAspectRatio(const std::string &s)
+        {
+            size_t slash = s.find('/');
+            if (slash == std::string::npos)
+                return std::stof(s);
+            float num = std::stof(s.substr(0, slash));
+            float den = std::stof(s.substr(slash + 1));
+            return den > 0.0f ? num / den : 1.0f;
+        }
+
+        void parseRuleWithMedia(const MediaQuery &media)
+        {
+            // Identico a parseRule(), ma prima di push nella sheet imposta tr.media.
+            // Per non duplicare 100 righe, si rifattorizza parseRule per accettare
+            // un Opt<MediaQuery>. Vedi sotto.
+            parseRule(&media);
+        }
+
+        void parseRule(const MediaQuery *media = nullptr)
         {
             int ruleLine = line, ruleCol = col;
             std::string selector;
@@ -913,6 +1059,8 @@ namespace ZenitUI::ZMarkup
                 StyleSheet::Rule rule;
                 rule.line = ruleLine;
                 rule.col = ruleCol;
+                if (media)
+                    rule.media = *media;
 
                 // 1) Separa "::part" (doppia colon), che sta sempre in fondo.
                 std::string chainPart = sel;
@@ -1069,6 +1217,7 @@ namespace ZenitUI::ZMarkup
             ThemeRule tr;
             tr.chain = r.chain;
             tr.part = r.part;
+            tr.media = r.media;
 
             for (auto &d : r.decls)
             {

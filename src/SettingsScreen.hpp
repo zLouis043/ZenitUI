@@ -190,14 +190,6 @@ private:
                     label->setText(name + " FPS");
             };
         }
-
-        if (auto fs = ui.find<Layout>("fs-toggle")) {
-            Debug::dumpStyle(*fs);
-            if (!fs->children.empty()) {
-                std::fprintf(stderr, "--- knob of fs-toggle ---\n");
-                Debug::dumpStyle(*fs->children[0]);
-            }
-        }
     }
 
     // ============================================================

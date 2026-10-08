@@ -4,6 +4,7 @@
 
 #include "Style.hpp"
 #include "AnimPrimitives.hpp"
+#include "Media.hpp"
 
 namespace ZenitUI
 {
@@ -58,6 +59,7 @@ namespace ZenitUI
 		Style style;
 		Specificity specificity;
 		int order{0}; // ordine di dichiarazione (per tie-break)
+		std::optional<MediaQuery> media; 
 	};
 
 	class Theme

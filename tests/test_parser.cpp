@@ -69,12 +69,9 @@ TEST(Parser_var, substitution) {
         Button { background: var(--primary); }
     )", t);
     CHECK(t.rules.size() == 1);
-    auto& bg = t.rules[0].style.background;
-    CHECK(bg.is_set);
-    CHECK(bg.value.r == 255);
-    CHECK(bg.value.g == 0);
-    CHECK(bg.value.b == 0);
-    CHECK(bg.value.a == 255);
+    CHECK(!t.rules[0].style.background.is_set);
+    CHECK(t.rules[0].style.unresolvedProps.count("background") > 0);
+    CHECK(t.rules[0].style.unresolvedProps.at("background") == "var(--primary)");
 }
 
 TEST(Parser_calc, percent_minus_px) {
@@ -128,4 +125,35 @@ TEST(Parser_basic, compound_state_checked_hover) {
     CHECK(t.rules[0].chain.size() == 1);
     CHECK(t.rules[0].chain[0].requireChecked);
     CHECK(t.rules[0].chain[0].requireHover);
+}
+
+#include "TestFramework.hpp"
+#include "StyleParser.hpp"
+#include "Theme.hpp"
+
+using namespace ZenitUI;
+using namespace ZenitUI::ZMarkup;
+
+TEST(Parser_effect, simple_name) {
+    Theme t;
+    loadStyleString(".btn { effect: hueShift; }", t);
+    CHECK(t.rules.size() == 1);
+    const auto& e = t.rules[0].style.effect;
+    CHECK(e.is_set);
+    CHECK(e.value == "hueShift");
+}
+
+TEST(Parser_effect, empty_not_set) {
+    Theme t;
+    loadStyleString(".btn { color: red; }", t);
+    CHECK(!t.rules[0].style.effect.is_set);
+}
+
+TEST(Parser_effect, coexists_with_filter) {
+    Theme t;
+    loadStyleString(".btn { effect: hueShift; filter: blur(2px); }", t);
+    CHECK(t.rules[0].style.effect.is_set);
+    CHECK(t.rules[0].style.effect.value == "hueShift");
+    CHECK(t.rules[0].style.filters.is_set);
+    CHECK(t.rules[0].style.filters.value.size() == 1);
 }

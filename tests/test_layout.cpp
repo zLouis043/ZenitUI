@@ -227,21 +227,19 @@ TEST(Layout_dirtyTracking, size_change_triggers_remeasure) {
     CHECK_NEAR(s.x, 300.0f, 1e-4);
 }
 
-TEST(Layout_dirtyTracking, transition_forces_remeasure) {
+TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
     freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(100));
 
-    // Transizione su width: due stili, partiamo da uno e passiamo all'altro
-    // via setSize (che non è una transizione, ma possiamo forzarla manualmente).
-    // In alternativa, un widget con :hover che cambia padding, ma richiederebbe
-    // interazione. Quindi testiamo l'invariante più semplice:
-    // dopo un cambio di size e un update, subtreeDirty_ deve essere true.
-    root->size(Px(300), Px(150));
+    // Primo giro: popola la cache
+    Vec2 s1 = root->measure(1000, 1000);
+    CHECK_NEAR(s1.x, 200.0f, 1e-4);
 
-    // Non chiamiamo update qui — il test di dirty tracking in isolation
-    // richiede il ciclo completo. Il test end-to-end è in test_interaction.
-    // Questo test verifica solo che il campo esista e sia accessibile.
-    // (dummy check, in realtà lo verifichiamo indirettamente)
-    CHECK(true);
+    // Cambio size: al prossimo measure deve ricalcolare.
+    // Il vecchio risultato era 200, ora deve essere 300.
+    root->size(Px(300), Px(150));
+    Vec2 s2 = root->measure(1000, 1000);
+    CHECK_NEAR(s2.x, 300.0f, 1e-4);
+    CHECK_NEAR(s2.y, 150.0f, 1e-4);
 }

@@ -393,3 +393,10 @@ Popup {
 }
 .popup-item:hover   { background: #3296FF60; }
 .popup-item:pressed { background: #3296FFB0; }
+
+@media (max-width: 700px) {
+    .card-desc { color: #FF0000; }
+}
+@media (min-width: 900px) {
+    .card-desc { color: #00FF00; }
+}

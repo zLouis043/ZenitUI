@@ -18,6 +18,15 @@ namespace ZenitUI
 		initStyleIfNeeded();
 		resetScrollIfOverflowChanged();
 
+		// Se il viewport è cambiato dall'ultimo frame, le media query CSS
+		// possono aver cambiato l'esito: forziamo una ri-risoluzione.
+		uint32_t gen = UIContext::get().viewportGeneration;
+		if (gen != lastViewportGen_)
+		{
+			lastViewportGen_ = gen;
+			pendingTransition = true;
+		}
+
 		bool localAnimBlocks = anim_.tickImperative(*this, dt);
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
 		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);

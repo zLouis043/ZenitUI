@@ -423,3 +423,82 @@ TEST(Style_lerpStyleParts, only_source_set_snaps_to_target_unset) {
     Style r = lerpStyleParts(a, b, 0.5f);
     CHECK(!r.opacity.is_set);   // b era unset → il risultato è unset
 }
+
+// ============================================================
+//  overlay di customProps / unresolvedProps
+// ============================================================
+
+TEST(Style_customProps, overlay_merges) {
+    Style a;
+    a.customProps["--a"] = "1";
+    Style b;
+    b.customProps["--b"] = "2";
+    a.overlay(b);
+    CHECK(a.customProps.size() == 2);
+    CHECK(a.customProps.at("--a") == "1");
+    CHECK(a.customProps.at("--b") == "2");
+}
+
+TEST(Style_customProps, overlay_same_key_wins) {
+    Style a;
+    a.customProps["--x"] = "red";
+    Style b;
+    b.customProps["--x"] = "blue";
+    a.overlay(b);
+    CHECK(a.customProps.at("--x") == "blue");
+}
+
+TEST(Style_unresolvedProps, overlay_clears_typed) {
+    // Se l'overlay porta una var per "background", la versione typed
+    // di "background" già presente deve essere resettata.
+    Style a;
+    a.background = Colors::Red;
+    CHECK(a.background.is_set);
+
+    Style b;
+    b.unresolvedProps["background"] = "var(--x)";
+    a.overlay(b);
+
+    CHECK(!a.background.is_set);
+    CHECK(a.unresolvedProps.count("background") == 1);
+}
+
+// ============================================================
+//  Regola del computed value (overflow)
+// ============================================================
+
+TEST(Style_computedValue, visible_x_with_scroll_y_becomes_auto) {
+    Style s;
+    s.overflowX = Overflow::Visible;
+    s.overflowY = Overflow::Scroll;
+    auto c = ComputedStyle::from(s, nullptr, nullptr);
+    CHECK(c.overflowX == Overflow::Auto);
+    CHECK(c.overflowY == Overflow::Scroll);
+}
+
+TEST(Style_computedValue, visible_y_with_scroll_x_becomes_auto) {
+    Style s;
+    s.overflowX = Overflow::Scroll;
+    s.overflowY = Overflow::Visible;
+    auto c = ComputedStyle::from(s, nullptr, nullptr);
+    CHECK(c.overflowX == Overflow::Scroll);
+    CHECK(c.overflowY == Overflow::Auto);
+}
+
+TEST(Style_computedValue, both_visible_stay_visible) {
+    Style s;
+    s.overflowX = Overflow::Visible;
+    s.overflowY = Overflow::Visible;
+    auto c = ComputedStyle::from(s, nullptr, nullptr);
+    CHECK(c.overflowX == Overflow::Visible);
+    CHECK(c.overflowY == Overflow::Visible);
+}
+
+TEST(Style_computedValue, both_scroll_stay_scroll) {
+    Style s;
+    s.overflowX = Overflow::Scroll;
+    s.overflowY = Overflow::Scroll;
+    auto c = ComputedStyle::from(s, nullptr, nullptr);
+    CHECK(c.overflowX == Overflow::Scroll);
+    CHECK(c.overflowY == Overflow::Scroll);
+}

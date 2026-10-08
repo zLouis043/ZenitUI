@@ -12,6 +12,7 @@
 #include "AnimationPlayer.hpp"
 #include "InputController.hpp"
 #include "UIEnums.hpp"
+#include "Media.hpp"
 
 namespace ZenitUI
 {
@@ -24,8 +25,10 @@ namespace ZenitUI
 		{
 			if (auto *r = UIContext::get().renderer)
 			{
-				if (layerTarget_.valid())  r->destroyTarget(layerTarget_);
-				if (layerScratch_.valid()) r->destroyTarget(layerScratch_);
+				if (layerTarget_.valid())
+					r->destroyTarget(layerTarget_);
+				if (layerScratch_.valid())
+					r->destroyTarget(layerScratch_);
 			}
 		}
 
@@ -379,6 +382,7 @@ namespace ZenitUI
 
 	protected:
 		LayoutType type;
+		uint32_t lastViewportGen_{0};
 		Rect rect{0, 0, 0, 0};
 		Vec2 measuredSize{0, 0};
 		bool subtreeDirty_{true};
@@ -661,6 +665,8 @@ namespace ZenitUI
 	inline bool ruleMatches(const ThemeRule &r, const Layout *node)
 	{
 		if (r.chain.empty() || !node)
+			return false;
+		if (r.media.has_value() && !evaluateMedia(*r.media, Metrics::viewport))
 			return false;
 		if (!nodeMatchesSimple(node, r.chain.back()))
 			return false;
