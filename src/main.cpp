@@ -67,19 +67,11 @@ int main(void)
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
-        UIContext::get().beginFrame(dt);
-
-        rootLayer->updateTree(dt);
-        rootLayer->measure(Metrics::viewport.x, Metrics::viewport.y);
-        rootLayer->arrange({0, 0, Metrics::viewport.x, Metrics::viewport.y});
+        rootLayer->runFrame(dt);
 
         BeginDrawing();
-
-        UIContext::get().renderer->beginFrame();
         ClearBackground(GetColor(0x181818FF));
-        rootLayer->draw();
-        UIContext::get().renderer->endFrame();
-
+        rootLayer->renderFrame();
         EndDrawing();
     }
 

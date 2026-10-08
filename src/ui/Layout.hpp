@@ -360,6 +360,14 @@ namespace ZenitUI
 		Layout *hitTest(Vec2 p, bool ancestorBlocked = false);
 		void updateTree(float dt);
 
+				// Ciclo di logica: beginFrame + updateTree + measure + arrange.
+		// Chiamato dal root una volta per frame, prima di BeginDrawing.
+		void runFrame(float dt);
+
+		// Ciclo di disegno: renderer->beginFrame + draw + renderer->endFrame.
+		// Chiamato dal root una volta per frame, tra BeginDrawing e EndDrawing.
+		void renderFrame();
+
 		Rect getRect() const { return rect; }
 		Vec2 getMeasuredSize() const { return measuredSize; }
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }

@@ -236,6 +236,23 @@ namespace ZenitUI
 			ctx.pointerCapture.reset();
 	}
 
+	void Layout::runFrame(float dt)
+	{
+		UIContext::get().beginFrame(dt);
+		updateTree(dt);
+		measure(Metrics::viewport.x, Metrics::viewport.y);
+		arrange({0, 0, Metrics::viewport.x, Metrics::viewport.y});
+	}
+
+	void Layout::renderFrame()
+	{
+		auto *r = UIContext::get().renderer;
+		if (!r)
+			return;
+		r->beginFrame();
+		draw();
+		r->endFrame();
+	}
 } // namespace ZenitUI
 
 namespace ZenitUI
