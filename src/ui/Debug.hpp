@@ -230,6 +230,15 @@ namespace ZenitUI::Debug
         return s;
     }
 
+    inline std::string toString(const BoxShadow &b)
+    {
+        if (!b.enabled) return "none";
+        std::ostringstream os;
+        os << valueToString(b.x) << " " << valueToString(b.y)
+           << " " << valueToString(b.blur) << " " << toString(b.color);
+        return os.str();
+    }
+
     // ============================================================
     //  Style / ComputedStyle
     // ============================================================

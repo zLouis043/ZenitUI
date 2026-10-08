@@ -518,6 +518,36 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
+        // ---------- BOX-SHADOW ----------
+        if (k == "box-shadow")
+        {
+            auto tokens = splitWs(v);
+            if (tokens.size() >= 3)
+            {
+                BoxShadow s;
+                s.enabled = true;
+                if (auto x = parseValueToken(tokens[0]))
+                    s.x = *x;
+                if (auto y = parseValueToken(tokens[1]))
+                    s.y = *y;
+                if (auto b = parseValueToken(tokens[2]))
+                    s.blur = *b;
+                if (tokens.size() >= 4)
+                {
+                    if (auto c = parseColorToken(tokens[3]))
+                        s.color = *c;
+                    else
+                        s.color = Color{0, 0, 0, 128};
+                }
+                else
+                {
+                    s.color = Color{0, 0, 0, 128};
+                }
+                st.boxShadow = s;
+            }
+            return;
+        }
+
         // ---------- Overflow ----------
         auto parseOverflowValue = [&](const std::string &val, Overflow &out) -> bool
         {
