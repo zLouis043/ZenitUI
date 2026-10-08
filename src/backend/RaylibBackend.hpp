@@ -21,6 +21,7 @@ namespace ZenitUI
 		bool shiftHeld() override;
 		InputEvents pollInputEvents() override;
 		float dpiScale() override;
+		EdgeInsets safeArea() override;
 	};
 
 	class RaylibRenderer : public IRenderer
