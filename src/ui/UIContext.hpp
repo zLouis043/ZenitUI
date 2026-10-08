@@ -70,6 +70,7 @@ namespace ZenitUI
 		virtual bool shiftHeld() = 0;
 		virtual InputEvents pollInputEvents() = 0;
 		virtual float dpiScale() = 0;
+		virtual EdgeInsets safeArea() = 0;
 	};
 
 	class IAssetProvider
@@ -91,6 +92,7 @@ namespace ZenitUI
 		float dt{0.0f};
 		double time{0.0};
 		float dpiScale{1.0f};
+		EdgeInsets safeArea;
 		bool wheelConsumedThisFrame{false};
 		bool shiftHeld{false};
 		bool clickConsumed{false};
@@ -136,11 +138,14 @@ namespace ZenitUI
 			if (platform)
 			{
 				Vec2 newVp = platform->viewportSize();
-				if (newVp.x != Metrics::viewport.x || newVp.y != Metrics::viewport.y)
+				EdgeInsets newSafe = platform->safeArea();
+				if (newVp.x != Metrics::viewport.x || newVp.y != Metrics::viewport.y ||
+				    newSafe != safeArea)
 				{
 					viewportGeneration++;
 				}
 				Metrics::viewport = newVp;
+				safeArea = newSafe;
 				pointer = platform->pointer();
 				shiftHeld = platform->shiftHeld();
 				inputEvents = platform->pollInputEvents();

@@ -101,6 +101,14 @@ namespace ZenitUI
 #endif
 	}
 
+	EdgeInsets RaylibPlatform::safeArea()
+	{
+		// Desktop: nessun notch/bordo arrotondato. Mobile: qui si leggerebbe
+		// dalla API nativa (Android: DisplayCutout + WindowInsets;
+		// iOS: safeAreaInsets della UIWindow). Per ora zero.
+		return {};
+	}
+
 	struct RaylibResources
 	{
 		std::unordered_map<uint32_t, ::RenderTexture2D> targets;
@@ -358,7 +366,7 @@ namespace ZenitUI
 		BeginTextureMode(res.targets[t.id]);
 		ClearBackground(::BLANK);
 	}
-	
+
 	void RaylibRenderer::popTarget()
 	{
 		EndTextureMode();

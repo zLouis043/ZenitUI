@@ -194,6 +194,9 @@ namespace ZenitUI::Test
         {
             nextEvents.chars.push_back(c);
         }
+
+        EdgeInsets safe{};
+		EdgeInsets safeArea() override { return safe; }
     };
 
     // ============================================================
@@ -261,6 +264,7 @@ namespace ZenitUI::Test
             platform.shiftDown = false;
             platform.nextPointer = {};
             platform.nextEvents = {};
+            platform.safe = {};
 
             Metrics::viewport = {1920.0f, 1080.0f};
 
