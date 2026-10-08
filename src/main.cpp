@@ -70,15 +70,17 @@ int main(void)
         UIContext::get().beginFrame(dt);
 
         rootLayer->updateTree(dt);
-        rootLayer->measure((float)GetScreenWidth(), (float)GetScreenHeight());
-        rootLayer->arrange({0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
+        rootLayer->measure(Metrics::viewport.x, Metrics::viewport.y);
+        rootLayer->arrange({0, 0, Metrics::viewport.x, Metrics::viewport.y});
 
         BeginDrawing();
+
+        UIContext::get().renderer->beginFrame();
         ClearBackground(GetColor(0x181818FF));
         rootLayer->draw();
-        EndDrawing();
-
         UIContext::get().renderer->endFrame();
+
+        EndDrawing();
     }
 
     CloseWindow();

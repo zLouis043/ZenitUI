@@ -148,7 +148,6 @@ namespace ZenitUI
 				if (renderer)
 				{
 					renderer->setDpiScale(dpiScale);
-					renderer->beginFrame();
 				}
 			}
 		}
