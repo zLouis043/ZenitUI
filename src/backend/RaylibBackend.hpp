@@ -5,13 +5,15 @@
 #define NOUSER
 
 #include "UIContext.hpp"
-#include <raylib.h> 
+#include <raylib.h>
 #include <unordered_map>
 #include <string>
 
-namespace ZenitUI {
+namespace ZenitUI
+{
 
-	class RaylibPlatform : public IPlatform {
+	class RaylibPlatform : public IPlatform
+	{
 	public:
 		Vec2 viewportSize() override;
 		PointerState pointer() override;
@@ -20,7 +22,8 @@ namespace ZenitUI {
 		InputEvents pollInputEvents() override;
 	};
 
-	class RaylibRenderer : public IRenderer {
+	class RaylibRenderer : public IRenderer
+	{
 	public:
 		RaylibRenderer();
 		~RaylibRenderer();
@@ -31,14 +34,14 @@ namespace ZenitUI {
 
 		void strokeRect(Rect r, float thickness, Color c) override;
 		void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) override;
-		
+
 		void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) override;
 		void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) override;
-		
+
 		void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) override;
 		Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) override;
 
-		void pushTransform(const Transform2D& t) override;
+		void pushTransform(const Transform2D &t) override;
 		void popTransform() override;
 		void pushEffect(EffectHandle e) override;
 		void popEffect() override;
@@ -55,51 +58,81 @@ namespace ZenitUI {
 
 		bool supports(Feature f) const override { return f == Feature::Effects; }
 
-		TextureHandle registerTexture(const ::Texture2D& t);
-		FontHandle    registerFont(const ::Font& f);
-		EffectHandle  registerEffect(const ::Shader& s);
+		TextureHandle registerTexture(const ::Texture2D &t);
+		FontHandle registerFont(const ::Font &f);
+		EffectHandle registerEffect(const ::Shader &s);
 
-		Rect transformClipToScreen(const Rect& local) const;
+		void setEffectFloat(EffectHandle e, const char *name, float value) override;
+		void setEffectVec2(EffectHandle e, const char *name, Vec2 value) override;
+		void setEffectVec4(EffectHandle e, const char *name, Color value) override;
+		bool inTarget() const override;
+		void clearTarget(TargetHandle t, Color c) override;
+
+		Rect transformClipToScreen(const Rect &local) const;
+
 	private:
 		std::vector<Rect> clipStack;
 		std::vector<Transform2D> transformStack;
-		bool clipActive{ false };
-		Rect currentClip{ 0,0,0,0 };
+		std::vector<EffectHandle> effectStack_;
+		bool clipActive{false};
+		Rect currentClip{0, 0, 0, 0};
+		bool insideTarget_{false};
 	};
 
 	// RaylibBackend.hpp
-	class RaylibAssetProvider : public IAssetProvider {
+	class RaylibAssetProvider : public IAssetProvider
+	{
 	public:
-		explicit RaylibAssetProvider(RaylibRenderer& r) : renderer(r) {}
+		explicit RaylibAssetProvider(RaylibRenderer &r) : renderer(r) {}
 
-		bool loadFont(std::string name, const char* path, int baseSize = 96) {
+		bool loadFont(std::string name, const char *path, int baseSize = 96)
+		{
 			::Font f = LoadFontEx(path, baseSize, nullptr, 0);
-			if (f.texture.id == 0) return false;
+			if (f.texture.id == 0)
+				return false;
 			SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
 			fonts[std::move(name)] = renderer.registerFont(f);
 			return true;
 		}
 
-		bool loadTexture(std::string name, const char* path) {
+		bool loadTexture(std::string name, const char *path)
+		{
 			::Texture2D t = LoadTexture(path);
-			if (t.id == 0) return false;
+			if (t.id == 0)
+				return false;
 			textures[std::move(name)] = renderer.registerTexture(t);
 			return true;
 		}
 
-		FontHandle getFont(std::string_view name) override {
+		bool loadEffect(std::string name, const char *fsPath, const char *vsPath = nullptr)
+		{
+			::Shader s = LoadShader(vsPath, fsPath);
+			if (s.id == 0)
+				return false;
+			effects[std::move(name)] = renderer.registerEffect(s);
+			return true;
+		}
+
+		FontHandle getFont(std::string_view name) override
+		{
 			auto it = fonts.find(std::string(name));
 			return it != fonts.end() ? it->second : FontHandle{};
 		}
-		TextureHandle getTexture(std::string_view name) override {
+		TextureHandle getTexture(std::string_view name) override
+		{
 			auto it = textures.find(std::string(name));
 			return it != textures.end() ? it->second : TextureHandle{};
 		}
-		EffectHandle  getEffect(std::string_view /*name*/) override       { return {}; }
+		EffectHandle getEffect(std::string_view name) override
+		{
+			auto it = effects.find(std::string(name));
+			return it != effects.end() ? it->second : EffectHandle{};
+		}
 
 	private:
-		RaylibRenderer& renderer;
-		std::unordered_map<std::string, FontHandle>    fonts;
+		RaylibRenderer &renderer;
+		std::unordered_map<std::string, FontHandle> fonts;
 		std::unordered_map<std::string, TextureHandle> textures;
+		std::unordered_map<std::string, EffectHandle> effects;
 	};
 }

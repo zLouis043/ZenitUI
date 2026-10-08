@@ -450,6 +450,68 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
+                // ---------- FILTER ----------
+        if (k == "filter")
+        {
+            std::vector<FilterRef> refs;
+            std::string cur = v;
+            size_t pos = 0;
+            while (pos < cur.size())
+            {
+                // Trova la prossima virgola top-level
+                size_t comma = pos;
+                int depth = 0;
+                while (comma < cur.size())
+                {
+                    char c = cur[comma];
+                    if (c == '(') depth++;
+                    else if (c == ')') depth--;
+                    else if (c == ',' && depth == 0) break;
+                    comma++;
+                }
+                std::string part = trim(cur.substr(pos, comma - pos));
+                pos = (comma < cur.size()) ? comma + 1 : cur.size();
+                if (part.empty()) continue;
+
+                FilterRef ref;
+                size_t lparen = part.find('(');
+                if (lparen == std::string::npos)
+                {
+                    ref.name = trim(part);
+                }
+                else
+                {
+                    size_t rparen = part.find(')', lparen);
+                    ref.name = trim(part.substr(0, lparen));
+                    std::string args = (rparen == std::string::npos)
+                        ? part.substr(lparen + 1)
+                        : part.substr(lparen + 1, rparen - lparen - 1);
+
+                    std::string curArg;
+                    int argDepth = 0;
+                    for (char c : args)
+                    {
+                        if (c == '(') argDepth++;
+                        else if (c == ')') argDepth--;
+                        if (c == ',' && argDepth == 0)
+                        {
+                            ref.args.push_back(trim(curArg));
+                            curArg.clear();
+                        }
+                        else
+                        {
+                            curArg.push_back(c);
+                        }
+                    }
+                    if (!curArg.empty())
+                        ref.args.push_back(trim(curArg));
+                }
+                refs.push_back(std::move(ref));
+            }
+            st.filters = refs;
+            return;
+        }
+
         // ---------- Overflow ----------
         auto parseOverflowValue = [&](const std::string &val, Overflow &out) -> bool
         {

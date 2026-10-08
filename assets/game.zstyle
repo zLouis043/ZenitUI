@@ -204,6 +204,7 @@ TextInput:hover::cursor {
   padding: 1.5vh 2vw;
   min-width: 80px;
   margin: 0 4px;
+  effect: hueShift;
   transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
 }
 .btn-primary:hover   { background: var(--primary-hi); scale: 1.15; }
@@ -295,6 +296,7 @@ TextInput:hover::cursor {
   border-width: 1px; 
   border-color: #3A3A40;
   background-texture: bubble;
+  //filter: blur(4px);
 }
 
 .card-title { color: var(--primary); font-size: 3.5vh; margin: 0 0 1vh 0; }

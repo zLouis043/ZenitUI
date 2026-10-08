@@ -312,6 +312,7 @@ inline bool applyStyleAttr(Style& st, const std::string& key, const std::string&
         st.backgroundTexture = ref;
         return true;
     }
+    else if (key == "effect") { st.effect = val; return true; }
     return false;
 }
 

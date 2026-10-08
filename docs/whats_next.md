@@ -99,3 +99,191 @@ Effort: **2-3 ore**, ma **non lo farei** a meno che tu non stia costruendo un ed
 5. **On-demand rendering** — quasi mai. Salta a meno che tu non stia facendo un editor.
 
 Il punto vero è: **nessuna di queste è urgente per usare ZenitUI adesso**. Sono tutte "aggiunte quando servono". Il custom properties è l'unica che ha un pizzico di "debito" perché il comportamento attuale non è corretto secondo lo standard HTML/CSS che hai scelto come modello. Le altre sono feature: le aggiungi se ti servono, quando ti servono.
+
+
+------------------------------------------
+
+Bene, andiamo a fondo sui due punti. Sono due problemi diversi ma legati da un tema comune: **la separazione tra astrazione e backend**.
+
+# 1. Shader al root vs shader per-widget
+
+La domanda è giusta perché rivela un'ambiguità che il codice attuale non risolve. Oggi `pushEffect` è naive: chiama `BeginShaderMode` e spera che vada bene. Se ci pensi, "shader al root" può significare tre cose diverse:
+
+## Tre semantiche possibili
+
+**A) Shader per-primitiva (inline).** Ogni `fillRect`, `drawText`, ecc. passa dal shader. Utile per: tint, hue shift, saturazione, brightness. Non serve un render target.
+
+**B) Shader post-process (filter).** Il subtree del nodo viene disegnato su un render target, poi il shader lo legge pixel-per-pixel e lo scrive sul framebuffer. Utile per: blur, drop-shadow, distorsione, outline, glow. **Serve un render target.**
+
+**C) Shader di compositing.** Il nodo viene disegnato normalmente, ma al momento di comporlo sul genitore passa da un blend shader. Utile per: mix-blend-mode, mask, chroma key.
+
+Sono tre cose diverse. Il tuo `pushEffect` attuale copre solo (A), e anche male — perché Raylib non stacca, quindi due `pushEffect` annidati si sovrascrivono.
+
+## Cosa succede se applichi uno shader al root
+
+Con (A): il root shader tocca ogni primitiva dell'intero albero. Un widget con shader proprio fa `pushEffect(widget)` che **rimpiazza** il root shader per quel subtree. Quando il widget fa `popEffect`, Raylib non ripristina il precedente — esce dallo shader del tutto. Il root shader è perso per il resto del frame. **Composizione rotta.**
+
+Con (B): ogni nodo con shader diventa un **confine di render target**. Il suo subtree renderizza su una texture, il shader la processa, il risultato viene composto sul genitore. Il root diventa solo un altro nodo con `filter`. **La composizione funziona naturalmente**, perché ogni livello è un layer a sé. È esattamente come funziona CSS `filter:` nei browser.
+
+La risposta alla tua domanda è quindi: **se implementi (A) come unico modello, uno shader al root e uno per widget si rompono a vicenda. Se implementi (B) come modello principale, root e widget convivono senza problemi e il root è solo "il primo filtro della catena".**
+
+## Il modello che consiglio
+
+Due proprietà CSS distinte:
+
+```css
+.widget {
+  effect: hueShift(0.3);        /* (A) inline: per-primitiva */
+}
+
+.card {
+  filter: blur(4px) drop-shadow(2px, 2px, #00000080);  /* (B) post-process */
+}
+```
+
+**`effect:`** — shader inline, applicato a ogni draw call del nodo **e dei figli** (dopo il push). Usa `pushEffect/popEffect` come oggi. Non compone: il widget più vicino vince. Utile per trasformazioni di colore.
+
+**`filter:`** — lista di effetti post-process. Se il nodo ha `filter`, il suo subtree viene disegnato su un render target, ogni filtro viene applicato in sequenza, il risultato viene composto sul genitore. **Composizione naturalmente corretta**. Il nodo con `filter` è un "layer" a tutti gli effetti.
+
+Il root è solo un nodo che può avere `filter`. Nessun caso speciale.
+
+## Perché questa separazione
+
+- `effect` è economico (nessun render target) → lo usi per micro-tweaks frequenti.
+- `filter` è costoso (2N draw call invece di N) → lo usi dove serve davvero.
+- Concettualmente allineati a CSS, che è il tuo modello mentale.
+- Non devi "rimediare" al fatto che Raylib non stacca i shader — il modello `filter` **aggira il problema per design**.
+
+## Cosa manca nel codice per arrivare lì
+
+1. `RaylibAssetProvider::loadEffect(name, path)` — caricare shader da file.
+2. `EffectHandle` già esiste, ma serve associarci il nome del file per il reload/debug.
+3. `Style::effect` (string) e `Style::filter` (lista di `FilterRef{name, params}`).
+4. Parser CSS: `effect: hueShift;` e `filter: blur(4px);`.
+5. `Layout::draw`: se `filter` è non-vuoto, il nodo diventa un layer (crea target, disegna subtree, applica filtri, compone). Altrimenti comportamento attuale.
+6. Per `effect`: fixare il comportamento di push/pop — il fix più semplice è **tracciare uno stack nel renderer** e fare pop che ripristina il precedente invece di spegnere tutto.
+
+Quest'ultimo punto è importante: oggi `popEffect` fa `EndShaderMode`, che spegne tutto. Va cambiato in: se lo stack è vuoto, `EndShaderMode`, altrimenti riapplica il precedente. Un `std::vector<EffectHandle>` nel `RaylibRenderer`.
+
+# 2. Cosa aggiungere agli hook per DPI e input alternativi
+
+Hai ragione: raylib è solo un backend. La domanda corretta non è "cosa fa raylib" ma **"quale astrazione serve perché un backend mobile/touch/DX12/SDL possa implementarla senza rompere il framework"**.
+
+## DPI
+
+Il modello giusto è: **il framework lavora interamente in CSS pixel** (logical pixels). Il backend traduce in pixel fisici al momento del rendering.
+
+Nel `IPlatform`:
+```cpp
+virtual float dpiScale() = 0;   // 1.0 desktop, 2.0/3.0 su retina
+```
+
+Nel `IRenderer`:
+```cpp
+virtual void beginFrame() = 0;   // hook per settare scale/DPI
+virtual void endFrame() = 0;
+```
+
+Il renderer applica la scala nel suo `pushTransform` di base, oppure la incorpora in `fillRect`/`drawText` (meglio: applica in fase di scrittura dei vertici).
+
+**Nel framework non cambia niente.** Tutti i `Value::resolve*` continuano a lavorare in logical pixel. `Metrics::viewport` rimane in logical pixel. Il `dpiScale` è puramente del backend.
+
+Questo è il punto chiave: **il DPI non deve entrare nel layout**. Se entra, ogni calcolo diventa ambiguo ("questo `Px(20)` è logico o fisico?") e diventa un incubo. Tienilo fuori.
+
+## Safe area (notch)
+
+```cpp
+struct EdgeInsets { float top, right, bottom, left; };
+virtual EdgeInsets safeArea() = 0;   // inset in logical pixel
+```
+
+Esposto su `UIContext::safeArea`. Il framework può consumarlo tramite una classe CSS tipo `.safe-area-top` o una pseudo-proprietà `padding-env: safe-area-top`. Il codice utente può anche usarlo direttamente. **Non** lo applichi automaticamente al root — lascia decidere.
+
+## Input: dal singolo pointer al multi-pointer
+
+Questo è il pezzo più delicato. Il modello attuale è: `PointerState` singolo. Un modello mobile richiede:
+
+**a) Multi-pointer.** `std::vector<Pointer>`. Ogni pointer ha `id` (mouse = -1, touch = 0..N), `position`, `phase` (Began/Moved/Ended/Cancelled), `pressure`, `isPrimary` (il primo pointer attivo).
+
+**b) Hover separato dal pointer.** Mouse ha hover. Touch non ha hover — appare e agisce. Il modello attuale (`isHovered` come stato del widget) funziona per mouse ma su touch è un concetto vuoto. Va bene se "hover = false quando l'input è touch", ma serve un modo per il framework di saperlo.
+
+**c) Gesture come layer separato.** Tap, long-press, swipe, pinch. Questi **non** vanno nel `Pointer`. Vanno in un `IGestureRecognizer` opzionale o in uno strato `GestureProcessor` sopra `UIContext`. Il framework di UI non li usa (i widget ricevono click/scroll come oggi). Il codice utente può consumarli per camera, zoom, ecc.
+
+**d) Gamepad.** Non è un pointer. Non ha posizione. La navigazione è focus-driven. Modello: `IPlatform::gamepadState()` con direzioni + pulsanti. `InputController` esteso con una branch gamepad: `InputEvent::Navigate(Direction)` che muove il focus nell'albero (il tuo `updateTree` già fa Tab, che è quasi la stessa logica).
+
+## Cosa cambia concretamente negli hook
+
+**`IPlatform`:**
+```cpp
+virtual float dpiScale() = 0;
+virtual EdgeInsets safeArea() = 0;
+virtual std::vector<Pointer> pollPointers() = 0;   // era pointer()
+virtual GamepadState gamepad() = 0;
+```
+
+**`PointerState`** (rinominato `Pointer`):
+```cpp
+struct Pointer {
+    int id{-1};
+    Vec2 pos;
+    Phase phase;              // Began/Moved/Ended/Cancelled/Stationary
+    bool isPrimary{true};
+    bool hasHover{true};      // mouse/stylus: true, touch: false
+    float pressure{0.0f};
+    // legacy compat per widget esistenti:
+    bool down, pressed, released, rightDown, rightPressed, rightReleased;
+    float wheelY;
+};
+```
+
+**`UIContext`:**
+```cpp
+std::vector<Pointer> pointers;         // tutti i pointer attivi
+Pointer& primaryPointer();             // scorciatoia
+float dpiScale{1.0f};
+EdgeInsets safeArea;
+// Il resto (topmostConsumer, pressTarget, ecc.) resta com'è oggi,
+// ma lavora sul primaryPointer.
+```
+
+**`IRenderer`:**
+```cpp
+virtual void beginFrame();   // hook per DPI/clear
+virtual void endFrame();
+// o, meglio, UIContext chiama renderer->beginFrame() prima di draw()
+```
+
+**InputController**: accetta anche `GamepadState`, gestisce `Navigate(Dir)` — praticamente è un'estensione della logica Tab che hai già.
+
+## Cosa **non** toccare
+
+- `Value`, `resolveH/V`, `Unit` — restano in logical pixel.
+- `Layout::measure/arrange` — restano in logical pixel.
+- Widget — non sanno nulla di pointer multipli. Continuano a usare `isHovered`, `isPressed`, `onClick` come oggi.
+- `Metrics::viewport` — resta in logical pixel.
+
+Tutto il multi-touch, DPI, safe-area, gamepad **non entra nel modello di layout**. È tutto sopra (input) o sotto (rendering). Questa è l'unica separazione che rende il framework portabile.
+
+# Sintesi
+
+**Shaders:**
+- Aggiungi il concetto di **layer** (nodo con `filter` → render target).
+- Mantieni `effect` come shader inline con stack corretto nel renderer.
+- Il root è solo un nodo con eventuale `filter`. Nessun caso speciale.
+- Aggiungi `loadEffect` all'asset provider.
+
+**Portabilità:**
+- DPI è un problema del **backend**, non del layout. Esponi `dpiScale()` e lascia al renderer la conversione.
+- Multi-pointer è un problema dell'**input**, non dei widget. Esponi `std::vector<Pointer>`, `primaryPointer()` per retrocompat.
+- Gesture e gamepad sono **layer sopra il context**, non dentro. Non inquinano il framework di UI.
+
+**Prossimi passi concreti, in ordine:**
+1. `loadEffect` + fix dello stack `pushEffect/popEffect` (sblocca shader per-widget immediatamente, mezz'ora).
+2. Modello `filter` con layer boundary (sblocca blur/drop-shadow, mezza giornata).
+3. Media queries (indipendente, mezza giornata).
+4. `dpiScale` + `safeArea` nel IPlatform, propagato a UIContext (mezza giornata).
+5. `std::vector<Pointer>` (una giornata, tocca l'input path).
+
+Se vuoi partire, direi **1 + 2** insieme: sono coerenti e si sbloccano a vicenda. Media queries e DPI dopo.
+
+Quale di questi vuoi attaccare per primo?

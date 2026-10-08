@@ -201,6 +201,35 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
+    inline std::string toString(const FilterRef &f)
+    {
+        if (f.args.empty())
+            return f.name;
+        std::string s = f.name + "(";
+        for (size_t i = 0; i < f.args.size(); ++i)
+        {
+            if (i > 0)
+                s += ", ";
+            s += f.args[i];
+        }
+        s += ")";
+        return s;
+    }
+
+    inline std::string toString(const std::vector<FilterRef> &fs)
+    {
+        if (fs.empty())
+            return "[]";
+        std::string s;
+        for (size_t i = 0; i < fs.size(); ++i)
+        {
+            if (i > 0)
+                s += " ";
+            s += toString(fs[i]);
+        }
+        return s;
+    }
+
     // ============================================================
     //  Style / ComputedStyle
     // ============================================================
