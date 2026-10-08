@@ -15,12 +15,17 @@ namespace ZenitUI
 	static ::Vector2 rl(const Vec2 &v) { return {v.x, v.y}; }
 	static ::Rectangle rl(const Rect &r) { return {r.x, r.y, r.width, r.height}; }
 
-	Vec2 RaylibPlatform::viewportSize() { return {(float)GetScreenWidth(), (float)GetScreenHeight()}; }
+	Vec2 RaylibPlatform::viewportSize()
+	{
+		float s = dpiScale();
+		return {(float)GetScreenWidth() / s, (float)GetScreenHeight() / s};
+	}
 	PointerState RaylibPlatform::pointer()
 	{
 		auto mp = GetMousePosition();
+		float dS = dpiScale();
 		PointerState s;
-		s.pos = {mp.x, mp.y};
+		s.pos = {mp.x / dS, mp.y / dS};
 		s.down = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
 		s.pressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 		s.released = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
@@ -81,6 +86,19 @@ namespace ZenitUI
 				ev.held.push_back(m.mapped);
 
 		return ev;
+	}
+
+	float RaylibPlatform::dpiScale()
+	{
+		// Desktop: 1.0. Su Android/iOS con FLAG_WINDOW_HIGHDPI, Raylib espone
+		// già il framebuffer scalato; qui si ritorna 1.0 e il backend grafico
+		// (OpenGL ES) applica lo scale nativamente. Su Windows/retina, se in
+		// futuro serve, si può leggere da GetWindowScaleDPI() (Raylib 5.1+).
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
+		return 1.0f; // già gestito dal backend grafico
+#else
+		return 1.0f; // desktop standard
+#endif
 	}
 
 	struct RaylibResources
@@ -149,8 +167,8 @@ namespace ZenitUI
 	{
 		::Font font = res.fonts.count(f.id) ? res.fonts[f.id] : GetFontDefault();
 		std::string str(s);
-		auto v = MeasureTextEx(font, str.c_str(), size, spacing);
-		return {v.x, v.y};
+		auto v = MeasureTextEx(font, str.c_str(), size * dpiScale_, spacing * dpiScale_);
+		return {v.x / dpiScale_, v.y / dpiScale_};
 	}
 
 	void RaylibRenderer::pushEffect(EffectHandle e)
@@ -231,6 +249,24 @@ namespace ZenitUI
 		return {minX, minY, maxX - minX, maxY - minY};
 	}
 
+	void RaylibRenderer::setDpiScale(float scale)
+	{
+		dpiScale_ = (scale > 0.01f) ? scale : 1.0f;
+	}
+
+	void RaylibRenderer::beginFrame()
+	{
+		// Scala globale: tutto il rendering è in logical pixel,
+		// qui lo convertiamo in physical una volta sola.
+		rlPushMatrix();
+		rlScalef(dpiScale_, dpiScale_, 1.0f);
+	}
+
+	void RaylibRenderer::endFrame()
+	{
+		rlPopMatrix();
+	}
+
 	void RaylibRenderer::pushTransform(const Transform2D &t)
 	{
 		transformStack.push_back(t); // NUOVO
@@ -270,10 +306,10 @@ namespace ZenitUI
 			clipActive = true;
 		}
 
-		int x = (int)std::floor(currentClip.x);
-		int y = (int)std::floor(currentClip.y);
-		int w = (int)std::ceil(currentClip.width);
-		int h = (int)std::ceil(currentClip.height);
+		int x = (int)std::floor(currentClip.x * dpiScale_);
+		int y = (int)std::floor(currentClip.y * dpiScale_);
+		int w = (int)std::ceil(currentClip.width * dpiScale_);
+		int h = (int)std::ceil(currentClip.height * dpiScale_);
 		if (w <= 0 || h <= 0)
 		{
 			BeginScissorMode(0, 0, 0, 0);
@@ -299,10 +335,10 @@ namespace ZenitUI
 			return;
 		}
 
-		int x = (int)std::floor(currentClip.x);
-		int y = (int)std::floor(currentClip.y);
-		int w = (int)std::ceil(currentClip.width);
-		int h = (int)std::ceil(currentClip.height);
+		int x = (int)std::floor(currentClip.x * dpiScale_);
+		int y = (int)std::floor(currentClip.y * dpiScale_);
+		int w = (int)std::ceil(currentClip.width * dpiScale_);
+		int h = (int)std::ceil(currentClip.height * dpiScale_);
 		BeginScissorMode(x, y, w, h);
 	}
 

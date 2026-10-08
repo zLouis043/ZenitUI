@@ -32,6 +32,10 @@ TESTS_SRCS = \
     tests/test_animations.cpp \
     tests/test_theme.cpp \
     tests/test_parser.cpp \
+    tests/test_media.cpp \
+    tests/test_customprops.cpp \
+    tests/test_filter.cpp \
+    tests/test_effect.cpp \
     tests/test_parser_utils.cpp \
     tests/test_value_parsers.cpp \
     tests/test_zmarkup.cpp \

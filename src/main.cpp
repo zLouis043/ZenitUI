@@ -44,8 +44,6 @@ int main(void)
 
     InitializeGameTheme();
 
-    ZenitUI::Debug::dumpTheme();
-
     auto rootLayer = std::make_shared<Layout>(LayoutType::Stack);
     rootLayer->getInlineBase().itemsH = Align::Center;
     rootLayer->getInlineBase().itemsV = Align::Center;
@@ -66,8 +64,6 @@ int main(void)
     launchRow->addChild(openSettingsBtn);
     rootLayer->addChild(launchRow);
 
-    bool dumpedOnce = false;
-
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
@@ -77,16 +73,12 @@ int main(void)
         rootLayer->measure((float)GetScreenWidth(), (float)GetScreenHeight());
         rootLayer->arrange({0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()});
 
-        if (!dumpedOnce)
-        {
-            ZenitUI::Debug::dumpTree(*rootLayer, std::cerr, 4);
-            dumpedOnce = true;
-        }
-
         BeginDrawing();
         ClearBackground(GetColor(0x181818FF));
         rootLayer->draw();
         EndDrawing();
+
+        UIContext::get().renderer->endFrame();
     }
 
     CloseWindow();

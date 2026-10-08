@@ -20,6 +20,7 @@ namespace ZenitUI
 		double time() override;
 		bool shiftHeld() override;
 		InputEvents pollInputEvents() override;
+		float dpiScale() override;
 	};
 
 	class RaylibRenderer : public IRenderer
@@ -70,12 +71,17 @@ namespace ZenitUI
 
 		Rect transformClipToScreen(const Rect &local) const;
 
+		void beginFrame() override;
+		void endFrame() override;
+		void setDpiScale(float scale) override;
+
 	private:
 		std::vector<Rect> clipStack;
 		std::vector<Transform2D> transformStack;
 		std::vector<EffectHandle> effectStack_;
 		bool clipActive{false};
 		Rect currentClip{0, 0, 0, 0};
+		float dpiScale_{1.0f};
 		bool insideTarget_{false};
 	};
 

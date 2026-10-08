@@ -54,6 +54,10 @@ namespace ZenitUI
 		virtual bool inTarget() const = 0;
 
 		virtual bool supports(Feature f) const = 0;
+
+		virtual void beginFrame() = 0;
+		virtual void endFrame() = 0;
+		virtual void setDpiScale(float scale) = 0;
 	};
 
 	class IPlatform
@@ -65,6 +69,7 @@ namespace ZenitUI
 		virtual double time() = 0;
 		virtual bool shiftHeld() = 0;
 		virtual InputEvents pollInputEvents() = 0;
+		virtual float dpiScale() = 0;
 	};
 
 	class IAssetProvider
@@ -85,6 +90,7 @@ namespace ZenitUI
 		PointerState pointer;
 		float dt{0.0f};
 		double time{0.0};
+		float dpiScale{1.0f};
 		bool wheelConsumedThisFrame{false};
 		bool shiftHeld{false};
 		bool clickConsumed{false};
@@ -95,6 +101,8 @@ namespace ZenitUI
 		InputEvents inputEvents;
 		std::weak_ptr<Layout> focusedNode;
 		std::weak_ptr<Layout> pointerCapture;
+
+		uint32_t viewportGeneration{0};
 
 		Layout *topmostConsumer{nullptr};
 
@@ -127,10 +135,21 @@ namespace ZenitUI
 			framePortals.clear();
 			if (platform)
 			{
-				Metrics::viewport = platform->viewportSize();
+				Vec2 newVp = platform->viewportSize();
+				if (newVp.x != Metrics::viewport.x || newVp.y != Metrics::viewport.y)
+				{
+					viewportGeneration++;
+				}
+				Metrics::viewport = newVp;
 				pointer = platform->pointer();
 				shiftHeld = platform->shiftHeld();
 				inputEvents = platform->pollInputEvents();
+				dpiScale = platform->dpiScale();
+				if (renderer)
+				{
+					renderer->setDpiScale(dpiScale);
+					renderer->beginFrame();
+				}
 			}
 		}
 
