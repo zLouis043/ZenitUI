@@ -39,6 +39,8 @@ int main(void)
     backendAssets.loadFont("highrise", "assets/highrise.otf", 64);
     backendAssets.loadTexture("bubble", "assets/bubble.png");
     backendAssets.loadTexture("npatches", "assets/npatches_y.png");
+    backendAssets.loadEffect("hueShift", "assets/hue_shift.fs");
+    backendAssets.loadEffect("blur", "assets/blur.fs");
 
     InitializeGameTheme();
 

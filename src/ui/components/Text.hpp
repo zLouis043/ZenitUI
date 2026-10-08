@@ -76,7 +76,8 @@ protected:
             pos.y += availH - totalTextH;
 
         auto r = UIContext::get().renderer;
-        r->pushClip(rect);
+        const bool doClip = !r->inTarget();
+        if (doClip) r->pushClip(rect);
         float curY = pos.y;
         for (auto &ln : lines)
         {
@@ -88,7 +89,7 @@ protected:
             r->drawText(f, ln.text, {x, curY}, fs, sp, style.color.withAlpha(op));
             curY += ln.size.y;
         }
-        r->popClip();
+        if (doClip) r->popClip();
     }
 
     void onLayout() override

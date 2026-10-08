@@ -246,7 +246,8 @@ protected:
         float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
         float pl = style.padding.left.resolveH(rect.width, rect.height);
 
-        r->pushClip(rect);
+        const bool doClip = !r->inTarget();
+        if (doClip) r->pushClip(rect);
 
         Vec2 pos = {rect.x + pl - scrollX, rect.y + (rect.height - fs) * 0.5f - fs * 0.1f};
 
@@ -272,7 +273,7 @@ protected:
             r->fillRect({cx, cy, cursorW, ch}, cursorColor.withAlpha(op));
         }
 
-        r->popClip();
+        if (doClip) r->popClip();
     }
 
 private:

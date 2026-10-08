@@ -20,7 +20,14 @@ namespace ZenitUI
 	{
 	public:
 		Layout(LayoutType type = LayoutType::Stack) : type(type) {}
-		virtual ~Layout() = default;
+		virtual ~Layout()
+		{
+			if (auto *r = UIContext::get().renderer)
+			{
+				if (layerTarget_.valid())  r->destroyTarget(layerTarget_);
+				if (layerScratch_.valid()) r->destroyTarget(layerScratch_);
+			}
+		}
 
 		template <typename T = Layout>
 		std::shared_ptr<T> as()
@@ -403,7 +410,11 @@ namespace ZenitUI
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
-		EffectHandle customEffect;
+		TargetHandle layerTarget_;	 // render target per il path "filter"
+		TargetHandle layerScratch_;	 // secondo target per blur separabile
+		EffectHandle customEffect;	 // cache dell'handle risolto
+		std::string effectName_;	 // nome stile, per detect cambio
+		EffectHandle currentEffect_; // cache dell'handle risolto
 		bool hasShader{false};
 
 		AnimationPlayer anim_;
@@ -531,6 +542,10 @@ namespace ZenitUI
 		void initStyleIfNeeded();
 		void cullRemovedChildren();
 		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);
+		void resolveEffectIfNeeded(const ComputedStyle &style);
+		void drawInline(const ComputedStyle &renderStyle, float globalOp);
+		void drawLayer(const ComputedStyle &renderStyle, float globalOp);
+		void drawChildren(float globalOp);
 
 		// ------------------------------------------------------------
 		//  Arrange: fasi (estratte da arrangeInto() per leggibilità)

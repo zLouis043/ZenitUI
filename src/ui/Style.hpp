@@ -129,6 +129,34 @@ namespace ZenitUI
 		bool requireChecked{false};
 	};
 
+	// Un filtro CSS (post-process): "blur(4px)", "drop-shadow(2px, 2px, #000)".
+	// Il Layout lo traduce in un EffectHandle per nome; gli args restano raw.
+	struct FilterRef
+	{
+		std::string name;
+		std::vector<std::string> args;
+
+		bool operator==(const FilterRef &o) const
+		{
+			return name == o.name && args == o.args;
+		}
+		bool operator!=(const FilterRef &o) const { return !(*this == o); }
+	};
+
+	inline bool operator==(const std::vector<FilterRef> &a, const std::vector<FilterRef> &b)
+	{
+		if (a.size() != b.size())
+			return false;
+		for (size_t i = 0; i < a.size(); ++i)
+			if (!(a[i] == b[i]))
+				return false;
+		return true;
+	}
+	inline bool operator!=(const std::vector<FilterRef> &a, const std::vector<FilterRef> &b)
+	{
+		return !(a == b);
+	}
+
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
@@ -151,6 +179,8 @@ namespace ZenitUI
 	X(Color, color, Colors::White)                          \
 	X(Color, tint, Colors::White)                           \
 	X(TextureRef, backgroundTexture, TextureRef{})          \
+	X(std::string, effect, "")                              \
+	X(std::vector<FilterRef>, filters, {})                  \
 	X(Color, borderColor, Colors::Blank)                    \
 	X(Value, borderWidth, Value(0.0f))                      \
 	X(Value, radius, Value(0.0f))                           \
@@ -355,6 +385,13 @@ namespace ZenitUI
 		return t > 0.0f ? b : a;
 	}
 
+	inline std::vector<FilterRef> lerpProp(const std::vector<FilterRef> &a,
+										   const std::vector<FilterRef> &b,
+										   float t)
+	{
+		return t > 0.0f ? b : a;
+	}
+
 	inline TextureRef lerpProp(const TextureRef &a, const TextureRef &b, float t)
 	{
 		return t > 0.0f ? b : a;
@@ -514,7 +551,7 @@ namespace ZenitUI
 
 	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
 								   TransitionFunction, Overflow, Position, ZIndex,
-								   std::string, TextureRef>;
+								   std::string, TextureRef, std::vector<FilterRef>>;
 
 	struct PropDesc
 	{
