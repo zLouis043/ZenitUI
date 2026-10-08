@@ -157,3 +157,30 @@ TEST(Parser_effect, coexists_with_filter) {
     CHECK(t.rules[0].style.filters.is_set);
     CHECK(t.rules[0].style.filters.value.size() == 1);
 }
+
+TEST(Parser_boxshadow, x_y_blur_color) {
+    Theme t;
+    loadStyleString(".card { box-shadow: 4px 4px 8px #00000080; }", t);
+    CHECK(t.rules.size() == 1);
+    const auto& s = t.rules[0].style.boxShadow;
+    CHECK(s.is_set);
+    CHECK(s.value.enabled);
+    CHECK_NEAR(s.value.x.resolveSelfH(0, 0), 4.0f, 1e-4);
+    CHECK_NEAR(s.value.y.resolveSelfV(0, 0), 4.0f, 1e-4);
+    CHECK_NEAR(s.value.blur.resolveSelfH(0, 0), 8.0f, 1e-4);
+    CHECK((s.value.color == Color{0, 0, 0, 0x80}));
+}
+
+TEST(Parser_boxshadow, default_color_when_missing) {
+    Theme t;
+    loadStyleString(".card { box-shadow: 2px 2px 4px; }", t);
+    const auto& s = t.rules[0].style.boxShadow;
+    CHECK(s.is_set);
+    CHECK((s.value.color == Color{0, 0, 0, 128}));
+}
+
+TEST(Parser_boxshadow, not_set_if_only_two_tokens) {
+    Theme t;
+    loadStyleString(".card { box-shadow: 2px 2px; }", t);
+    CHECK(!t.rules[0].style.boxShadow.is_set);
+}

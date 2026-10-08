@@ -157,6 +157,20 @@ namespace ZenitUI
 		return !(a == b);
 	}
 
+	// CSS box-shadow: ombra del rettangolo del box, non della silhouette.
+	struct BoxShadow
+	{
+		Value x{0.0f}, y{0.0f}, blur{0.0f};
+		Color color{Colors::Blank};
+		bool enabled{false};
+
+		bool operator==(const BoxShadow &o) const
+		{
+			return x == o.x && y == o.y && blur == o.blur && color == o.color && enabled == o.enabled;
+		}
+		bool operator!=(const BoxShadow &o) const { return !(*this == o); }
+	};
+
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
@@ -179,6 +193,7 @@ namespace ZenitUI
 	X(Color, color, Colors::White)                          \
 	X(Color, tint, Colors::White)                           \
 	X(TextureRef, backgroundTexture, TextureRef{})          \
+	X(BoxShadow, boxShadow, BoxShadow{})                    \
 	X(std::string, effect, "")                              \
 	X(std::vector<FilterRef>, filters, {})                  \
 	X(Color, borderColor, Colors::Blank)                    \
@@ -397,6 +412,11 @@ namespace ZenitUI
 		return t > 0.0f ? b : a;
 	}
 
+	inline BoxShadow lerpProp(const BoxShadow &a, const BoxShadow &b, float t)
+	{
+		return t > 0.0f ? b : a;
+	}
+
 	// Lerp globale (retro-compat): t è già normalizzato in [0,1].
 	inline ComputedStyle lerpStyle(const ComputedStyle &a, const ComputedStyle &b, float t)
 	{
@@ -551,7 +571,8 @@ namespace ZenitUI
 
 	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
 								   TransitionFunction, Overflow, Position, ZIndex,
-								   std::string, TextureRef, std::vector<FilterRef>>;
+								   std::string, TextureRef, std::vector<FilterRef>,
+								   BoxShadow>;
 
 	struct PropDesc
 	{

@@ -360,7 +360,7 @@ namespace ZenitUI
 		Layout *hitTest(Vec2 p, bool ancestorBlocked = false);
 		void updateTree(float dt);
 
-				// Ciclo di logica: beginFrame + updateTree + measure + arrange.
+		// Ciclo di logica: beginFrame + updateTree + measure + arrange.
 		// Chiamato dal root una volta per frame, prima di BeginDrawing.
 		void runFrame(float dt);
 
@@ -485,6 +485,45 @@ namespace ZenitUI
 
 			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
 			float rPx = std::clamp(style.radius.resolveH(maxRadius * 2.0f, maxRadius * 2.0f), 0.0f, maxRadius);
+
+			// 0) Box-shadow (dietro a tutto)
+			if (style.boxShadow.enabled)
+			{
+				const auto &sh = style.boxShadow;
+				float sx = sh.x.resolveSelfH(rect.width, rect.height);
+				float sy = sh.y.resolveSelfV(rect.width, rect.height);
+				float blur = sh.blur.resolveSelfH(rect.width, rect.height);
+
+				Rect shadowRect = {
+					rect.x + sx,
+					rect.y + sy,
+					rect.width,
+					rect.height};
+
+				Color baseColor = sh.color.withAlpha(op);
+
+				if (blur <= 0.5f)
+				{
+					r->fillRoundedRect(shadowRect, rPx, baseColor);
+				}
+				else
+				{
+					// Approssimazione: 5 strati concentrici con alpha decrescente.
+					constexpr int LAYERS = 5;
+					for (int i = 0; i < LAYERS; ++i)
+					{
+						float expand = blur * (float)(i + 1) / (float)LAYERS;
+						float alpha = (1.0f - (float)i / (float)LAYERS) * 0.35f;
+						Rect r2 = {
+							shadowRect.x - expand,
+							shadowRect.y - expand,
+							shadowRect.width + expand * 2.0f,
+							shadowRect.height + expand * 2.0f};
+						float rPx2 = std::clamp(rPx + expand, 0.0f, expand + maxRadius);
+						r->fillRoundedRect(r2, rPx2, sh.color.withAlpha(op * alpha));
+					}
+				}
+			}
 
 			// 1) Colore di sfondo (sotto la texture)
 			Color bg = style.background.withAlpha(op);

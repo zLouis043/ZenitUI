@@ -400,3 +400,7 @@ Popup {
 @media (min-width: 900px) {
     .card-desc { color: #00FF00; }
 }
+
+.card {
+    box-shadow: 4px 4px 8px #000000CC;
+}
