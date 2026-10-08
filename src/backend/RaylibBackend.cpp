@@ -256,15 +256,17 @@ namespace ZenitUI
 
 	void RaylibRenderer::beginFrame()
 	{
-		// Scala globale: tutto il rendering è in logical pixel,
-		// qui lo convertiamo in physical una volta sola.
-		rlPushMatrix();
-		rlScalef(dpiScale_, dpiScale_, 1.0f);
+		if (dpiScale_ != 1.0f)
+		{
+			rlPushMatrix();
+			rlScalef(dpiScale_, dpiScale_, 1.0f);
+		}
 	}
 
 	void RaylibRenderer::endFrame()
 	{
-		rlPopMatrix();
+		if (dpiScale_ != 1.0f)
+			rlPopMatrix();
 	}
 
 	void RaylibRenderer::pushTransform(const Transform2D &t)
@@ -286,9 +288,6 @@ namespace ZenitUI
 
 	void RaylibRenderer::pushClip(Rect r)
 	{
-		// Dentro un render target il scissor in coord schermo non ha senso:
-		// il target stesso delimita l'area. Ignoriamo push/pop finché siamo
-		// dentro al target. Clip locali al target sono demandati al futuro.
 		if (insideTarget_)
 			return;
 
@@ -301,11 +300,12 @@ namespace ZenitUI
 		}
 		else
 		{
-			clipStack.push_back({0.0f, 0.0f, (float)GetScreenWidth(), (float)GetScreenHeight()});
+			clipStack.push_back({0.0f, 0.0f, (float)GetScreenWidth() / dpiScale_, (float)GetScreenHeight() / dpiScale_});
 			currentClip = screenRect;
 			clipActive = true;
 		}
 
+		// Scissor opera in pixel fisici, currentClip è in logical.
 		int x = (int)std::floor(currentClip.x * dpiScale_);
 		int y = (int)std::floor(currentClip.y * dpiScale_);
 		int w = (int)std::ceil(currentClip.width * dpiScale_);
@@ -358,21 +358,23 @@ namespace ZenitUI
 		BeginTextureMode(res.targets[t.id]);
 		ClearBackground(::BLANK);
 	}
-
+	
 	void RaylibRenderer::popTarget()
 	{
 		EndTextureMode();
 		insideTarget_ = false;
 
-		rlPopMatrix();
+		// Raylib ha resettato la MODELVIEW con LoadIdentity: riapplichiamo
+		// la scala DPI globale.
+		if (dpiScale_ != 1.0f)
+			rlScalef(dpiScale_, dpiScale_, 1.0f);
 
-		// Ripristina scissor se era attivo prima del target.
 		if (clipActive)
 		{
-			int x = (int)std::floor(currentClip.x);
-			int y = (int)std::floor(currentClip.y);
-			int w = (int)std::ceil(currentClip.width);
-			int h = (int)std::ceil(currentClip.height);
+			int x = (int)std::floor(currentClip.x * dpiScale_);
+			int y = (int)std::floor(currentClip.y * dpiScale_);
+			int w = (int)std::ceil(currentClip.width * dpiScale_);
+			int h = (int)std::ceil(currentClip.height * dpiScale_);
 			if (w > 0 && h > 0)
 				BeginScissorMode(x, y, w, h);
 		}
