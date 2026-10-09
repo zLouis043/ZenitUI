@@ -3,6 +3,8 @@
 #include "Theme.hpp"
 #include "StyleParser.hpp"
 #include "UIComponents.hpp"
+#include "Mocks.hpp"
+using namespace ZenitUI::Test;
 
 using namespace ZenitUI;
 
@@ -184,4 +186,42 @@ TEST(Anim_callback, css_finished_fires) {
         node->update(1.0f / 60.0f, false);
 
     CHECK(fired);
+}
+
+TEST(Anim_imperative, drives_current_style_without_transition)
+{
+    Env env;
+
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->size(Px(100), Px(100));
+    node->getInlineBase().opacity = 0.0f;
+
+    auto anim = std::make_shared<UIAnimation>(0.2f);
+    anim->addTrack<float>(0.0f, 1.0f,
+        [](Layout* l, float v) { l->getInlineBase().opacity = v; });
+    node->addAnimation("fade", anim);
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(node);
+
+    env.frame(root);
+    CHECK_NEAR(node->getStyle().opacity, 0.0f, 1e-3);
+
+    // Play e gira metà dell'animazione.
+    node->playAnimation("fade");
+    for (int i = 0; i < 6; ++i)   // ~0.1s a 60fps, metà di 0.2s
+        env.frame(root);
+
+    // Senza il fix, opacity resterebbe 0.0f perché la transizione
+    // non progredisce. Con il fix, è intermedia.
+    float mid = node->getStyle().opacity;
+    CHECK(mid > 0.2f);
+    CHECK(mid < 0.9f);
+
+    // Completa l'animazione.
+    for (int i = 0; i < 20; ++i)
+        env.frame(root);
+
+    CHECK_NEAR(node->getStyle().opacity, 1.0f, 1e-3);
 }
