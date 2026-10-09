@@ -361,8 +361,8 @@ namespace ZenitUI
 		virtual void draw(float parentOpacity = 1.0f);
 
 		Layout *hitTest(Vec2 p,
-                bool ancestorBlocked = false,
-                const Rect *clipLocal = nullptr);
+						bool ancestorBlocked = false,
+						const Rect *clipLocal = nullptr);
 		void updateTree(float dt);
 
 		// Ciclo di logica: beginFrame + updateTree + measure + arrange.
@@ -673,6 +673,9 @@ namespace ZenitUI
 	{
 		if (!node)
 			return false;
+
+		// Le pseudo-classi sono richieste a livello di compound intero:
+		// se sono presenti, il nodo deve soddisfarle tutte.
 		if (ss.requireHover && !node->isHoveredState())
 			return false;
 		if (ss.requirePressed && !node->isPressedState())
@@ -684,15 +687,35 @@ namespace ZenitUI
 		if (ss.requireChecked && !node->isCheckedState())
 			return false;
 
-		if (ss.kind == SimpleSelector::Kind::Tag)
-			return node->getStyleTag() == ss.name;
-		if (ss.kind == SimpleSelector::Kind::Id)
-			return node->nodeId == ss.name;
+		// Helper: verifica che un singolo componente (tipo, nome) matchi
+		// il nodo.
+		auto matchesComponent = [node](SimpleSelector::Kind kind,
+									   const std::string &name) -> bool
+		{
+			if (kind == SimpleSelector::Kind::Tag)
+				return node->getStyleTag() == name;
+			if (kind == SimpleSelector::Kind::Id)
+				return node->nodeId == name;
+			// Class
+			for (const auto &c : node->getStyleClasses())
+				if (c == name)
+					return true;
+			return false;
+		};
 
-		for (const auto &c : node->getStyleClasses())
-			if (c == ss.name)
-				return true;
-		return false;
+		// Componente principale.
+		if (!matchesComponent(ss.kind, ss.name))
+			return false;
+
+		// Componenti aggiuntivi del compound selector: tutti devono matchare
+		// lo stesso nodo.
+		for (const auto &[kind, name] : ss.extras)
+		{
+			if (!matchesComponent(kind, name))
+				return false;
+		}
+
+		return true;
 	}
 
 	inline bool ruleMatches(const ThemeRule &r, const Layout *node)

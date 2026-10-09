@@ -110,24 +110,34 @@ namespace ZenitUI
 	};
 
 	// Un "elemento" di un selettore composto. Es. per "Toggle:checked .knob"
-	// la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
-	struct SimpleSelector
-	{
-		enum class Kind
-		{
-			Tag,
-			Class,
-			Id
-		};
-		std::string name;
-		Kind kind{Kind::Tag};
+    // la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
+    //
+    // Supporta i selettori composti: `Button.btn-primary`, `.card.elevated`,
+    // `Button#save`, `Button.btn-primary:hover`. In quel caso `name`/`kind`
+    // contengono il primo componente, e `extras` contiene i successivi.
+    // Tutti devono matchare lo stesso nodo.
+    struct SimpleSelector
+    {
+        enum class Kind
+        {
+            Tag,
+            Class,
+            Id
+        };
 
-		bool requireHover{false};
-		bool requirePressed{false};
-		bool requireFocus{false};
-		bool requireDisabled{false};
-		bool requireChecked{false};
-	};
+        std::string name;
+        Kind kind{Kind::Tag};
+
+        // Componenti aggiuntivi del compound selector. Ogni coppia è
+        // (tipo, nome). Vuoto = selectore semplice (retro-compat).
+        std::vector<std::pair<Kind, std::string>> extras;
+
+        bool requireHover{false};
+        bool requirePressed{false};
+        bool requireFocus{false};
+        bool requireDisabled{false};
+        bool requireChecked{false};
+    };
 
 	// Un filtro CSS (post-process): "blur(4px)", "drop-shadow(2px, 2px, #000)".
 	// Il Layout lo traduce in un EffectHandle per nome; gli args restano raw.

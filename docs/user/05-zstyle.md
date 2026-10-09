@@ -154,15 +154,35 @@ Matches a node whose `nodeId` equals the name. Ids are set via
 
 ### 3.4 Compound
 
-A single token can combine tag, class, and id:
+A single token can combine a tag, any number of classes, and an id. All
+components must match the **same node**.
 
 ```css
 Button.btn-primary { ... }       /* Button with class btn-primary */
 Button#save { ... }              /* Button with id save */
 Panel.card.elevated { ... }      /* Panel with two classes */
+Button.btn-primary#save { ... }  /* all three */
 ```
 
-The order between `.class` and `#id` doesn't matter.
+States can be attached to the whole compound:
+
+```css
+Button.btn-primary:hover { ... }
+Toggle.primary:checked { ... }
+```
+
+The order between `.class` and `#id` doesn't matter, and the tag is
+optional (as with `.btn-primary` alone). The one rule is: **no spaces**
+inside a compound. A space starts a new descendant selector token.
+
+```css
+.card Button.btn-primary   /* two tokens: .card, then Button.btn-primary */
+.cardButton.btn-primary    /* one token: tag ".cardButton" + class */
+```
+
+Note that the parser splits on the first `.` or `#` in each token; every
+subsequent `.name` or `#name` is a component of the same compound. This
+means a class name cannot contain a literal `.` or `#` — matching CSS.
 
 ### 3.5 Descendant
 

@@ -184,3 +184,77 @@ TEST(Parser_boxshadow, not_set_if_only_two_tokens) {
     loadStyleString(".card { box-shadow: 2px 2px; }", t);
     CHECK(!t.rules[0].style.boxShadow.is_set);
 }
+
+// ---------- Compound selectors ----------
+
+TEST(Parser_compound, tag_with_class) {
+    Theme t;
+    loadStyleString("Button.btn-primary { color: red; }", t);
+    CHECK(t.rules.size() == 1);
+    CHECK(t.rules[0].chain.size() == 1);
+
+    const auto& ss = t.rules[0].chain[0];
+    CHECK(ss.kind == SimpleSelector::Kind::Tag);
+    CHECK(ss.name == "Button");
+    CHECK(ss.extras.size() == 1);
+    CHECK(ss.extras[0].first  == SimpleSelector::Kind::Class);
+    CHECK(ss.extras[0].second == "btn-primary");
+}
+
+TEST(Parser_compound, class_and_class) {
+    Theme t;
+    loadStyleString(".card.elevated { color: red; }", t);
+    const auto& ss = t.rules[0].chain[0];
+    CHECK(ss.kind == SimpleSelector::Kind::Class);
+    CHECK(ss.name == "card");
+    CHECK(ss.extras.size() == 1);
+    CHECK(ss.extras[0].first  == SimpleSelector::Kind::Class);
+    CHECK(ss.extras[0].second == "elevated");
+}
+
+TEST(Parser_compound, tag_with_id) {
+    Theme t;
+    loadStyleString("Button#save { color: red; }", t);
+    const auto& ss = t.rules[0].chain[0];
+    CHECK(ss.kind == SimpleSelector::Kind::Tag);
+    CHECK(ss.name == "Button");
+    CHECK(ss.extras.size() == 1);
+    CHECK(ss.extras[0].first  == SimpleSelector::Kind::Id);
+    CHECK(ss.extras[0].second == "save");
+}
+
+TEST(Parser_compound, three_components) {
+    Theme t;
+    loadStyleString("Button.btn-primary#save { color: red; }", t);
+    const auto& ss = t.rules[0].chain[0];
+    CHECK(ss.kind == SimpleSelector::Kind::Tag);
+    CHECK(ss.name == "Button");
+    CHECK(ss.extras.size() == 2);
+    CHECK(ss.extras[0].first  == SimpleSelector::Kind::Class);
+    CHECK(ss.extras[0].second == "btn-primary");
+    CHECK(ss.extras[1].first  == SimpleSelector::Kind::Id);
+    CHECK(ss.extras[1].second == "save");
+}
+
+TEST(Parser_compound, tag_class_with_state) {
+    Theme t;
+    loadStyleString("Button.btn-primary:hover { color: red; }", t);
+    const auto& ss = t.rules[0].chain[0];
+    CHECK(ss.kind == SimpleSelector::Kind::Tag);
+    CHECK(ss.name == "Button");
+    CHECK(ss.extras.size() == 1);
+    CHECK(ss.extras[0].second == "btn-primary");
+    CHECK(ss.requireHover);
+}
+
+TEST(Parser_compound, descendant_of_compound) {
+    Theme t;
+    loadStyleString(".card Button.btn-primary { color: red; }", t);
+    CHECK(t.rules[0].chain.size() == 2);
+    CHECK(t.rules[0].chain[0].kind == SimpleSelector::Kind::Class);
+    CHECK(t.rules[0].chain[0].name == "card");
+    CHECK(t.rules[0].chain[1].kind == SimpleSelector::Kind::Tag);
+    CHECK(t.rules[0].chain[1].name == "Button");
+    CHECK(t.rules[0].chain[1].extras.size() == 1);
+    CHECK(t.rules[0].chain[1].extras[0].second == "btn-primary");
+}

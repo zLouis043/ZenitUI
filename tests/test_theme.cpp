@@ -101,3 +101,40 @@ TEST(Theme_clear, resets_all) {
     CHECK(t.keyframes.empty());
     CHECK(!t.root.opacity.is_set);
 }
+
+// ---------- Specificity with compound selectors ----------
+
+TEST(Theme_specificity, tag_plus_class) {
+    SimpleSelector ss;
+    ss.kind = SimpleSelector::Kind::Tag;
+    ss.name = "Button";
+    ss.extras = {{SimpleSelector::Kind::Class, "btn-primary"}};
+
+    auto spec = computeSpecificity({ ss });
+    CHECK(spec.ids == 0);
+    CHECK(spec.classes == 1);
+    CHECK(spec.tags == 1);
+}
+
+TEST(Theme_specificity, class_plus_class) {
+    SimpleSelector ss;
+    ss.kind = SimpleSelector::Kind::Class;
+    ss.name = "card";
+    ss.extras = {{SimpleSelector::Kind::Class, "elevated"}};
+
+    auto spec = computeSpecificity({ ss });
+    CHECK(spec.classes == 2);
+}
+
+TEST(Theme_specificity, tag_plus_class_beats_class) {
+    SimpleSelector compound;
+    compound.kind = SimpleSelector::Kind::Tag;
+    compound.name = "Button";
+    compound.extras = {{SimpleSelector::Kind::Class, "primary"}};
+
+    SimpleSelector simple;
+    simple.kind = SimpleSelector::Kind::Class;
+    simple.name = "primary";
+
+    CHECK(computeSpecificity({simple}) < computeSpecificity({compound}));
+}

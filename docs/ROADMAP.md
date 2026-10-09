@@ -385,12 +385,12 @@ existing chain semantics for descendant matching.
 applied to a `Button` with class `btn-primary` must produce a red
 button.
 
-- [ ] Extend the parser to split compound selectors
-- [ ] Update `nodeMatchesSimple` / `ruleMatches`
-- [ ] Update `computeSpecificity`
-- [ ] Add tests for `Tag.class`, `.class1.class2`, `Tag#id`, `Tag.class:hover`
-- [ ] Update `user/05-zstyle.md` (add a section on compound selectors)
-- [ ] Update `api/ZStyle.md`
+- [x] Extend the parser to split compound selectors
+- [x] Update `nodeMatchesSimple` / `ruleMatches`
+- [x] Update `computeSpecificity`
+- [x] Add tests for `Tag.class`, `.class1.class2`, `Tag#id`, `Tag.class:hover`
+- [x] Update `user/05-zstyle.md` (add a section on compound selectors)
+- [x] Update `api/ZStyle.md`
 
 ---
 

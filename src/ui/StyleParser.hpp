@@ -1125,6 +1125,9 @@ namespace ZenitUI::ZMarkup
                     continue;
 
                 // 3) Per ogni token, estrai base (tag/.class/#id) e stato (dopo ':').
+                // 3) Per ogni token, estrai base (tag/.class/#id) e stato (dopo ':').
+                //    Il base può essere un selettore composto: `Button.btn-primary`,
+                //    `.card.elevated`, `Button#save`.
                 for (auto &tok : tokens)
                 {
                     SimpleSelector ss;
@@ -1138,21 +1141,49 @@ namespace ZenitUI::ZMarkup
                         state = tok.substr(colon + 1);
                     }
 
-                    if (!base.empty() && base[0] == '.')
+                    // Split di `base` in componenti: ogni '.' o '#' inizia un
+                    // nuovo componente. Il testo prima di qualsiasi marker è
+                    // il tag (se presente).
+                    std::vector<std::pair<SimpleSelector::Kind, std::string>> components;
                     {
-                        ss.kind = SimpleSelector::Kind::Class;
-                        ss.name = base.substr(1);
+                        size_t i = 0;
+                        // Tag iniziale (fino al primo '.' o '#')
+                        if (i < base.size() && base[i] != '.' && base[i] != '#')
+                        {
+                            size_t start = i;
+                            while (i < base.size() && base[i] != '.' && base[i] != '#')
+                                ++i;
+                            components.push_back({SimpleSelector::Kind::Tag,
+                                                  base.substr(start, i - start)});
+                        }
+                        // Componenti successivi
+                        while (i < base.size())
+                        {
+                            char marker = base[i];
+                            ++i;
+                            size_t start = i;
+                            while (i < base.size() && base[i] != '.' && base[i] != '#')
+                                ++i;
+                            std::string name = base.substr(start, i - start);
+                            if (marker == '.')
+                                components.push_back({SimpleSelector::Kind::Class, name});
+                            else
+                                components.push_back({SimpleSelector::Kind::Id, name});
+                        }
                     }
-                    else if (!base.empty() && base[0] == '#')
+
+                    // Il primo componente va in ss.kind / ss.name.
+                    // Gli altri vanno in ss.extras.
+                    if (components.empty())
                     {
-                        ss.kind = SimpleSelector::Kind::Id;
-                        ss.name = base.substr(1);
+                        // Token vuoto o malformato: salta.
+                        continue;
                     }
-                    else
-                    {
-                        ss.kind = SimpleSelector::Kind::Tag;
-                        ss.name = base;
-                    }
+
+                    ss.kind = components[0].first;
+                    ss.name = components[0].second;
+                    for (size_t ci = 1; ci < components.size(); ++ci)
+                        ss.extras.push_back(components[ci]);
 
                     // Split per ':' per gestire stati composti tipo "checked:hover".
                     size_t pos = 0;

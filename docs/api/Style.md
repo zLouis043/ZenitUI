@@ -415,6 +415,11 @@ struct SimpleSelector {
     std::string name;
     Kind kind{Kind::Tag};
 
+    // Extra components of a compound selector (`Button.btn-primary`,
+    // `.card.elevated`, `Button#save`). Each pair is (kind, name).
+    // All components must match the same node.
+    std::vector<std::pair<Kind, std::string>> extras;
+
     bool requireHover{false};
     bool requirePressed{false};
     bool requireFocus{false};
@@ -423,8 +428,24 @@ struct SimpleSelector {
 };
 ```
 
-One compound selector (e.g. `Button.btn-primary:hover`). A `ThemeRule`
-holds a `chain` of these (descendant selectors).
+One token of a selector chain. A `ThemeRule` holds a `chain` of these:
+the rightmost entry matches the node itself, the earlier ones match
+ancestors (descendant selectors).
+
+A token can be a **compound selector**: a tag, any number of classes,
+and an id, all on the same node. In that case `kind`/`name` hold the
+first component and `extras` holds the rest. Examples:
+
+| Source              | `kind` / `name`         | `extras`                                    |
+|---------------------|-------------------------|---------------------------------------------|
+| `Button`            | `Tag` / `"Button"`      | (empty)                                     |
+| `.btn-primary`      | `Class` / `"btn-primary"` | (empty)                                   |
+| `Button.btn-primary`| `Tag` / `"Button"`      | `[(Class, "btn-primary")]`                  |
+| `.card.elevated`    | `Class` / `"card"`      | `[(Class, "elevated")]`                     |
+| `Button.btn-primary#save` | `Tag` / `"Button"` | `[(Class, "btn-primary"), (Id, "save")]` |
+
+States (`:hover`, `:checked`, …) always apply to the whole compound,
+regardless of where they appear in the source.
 
 ---
 
