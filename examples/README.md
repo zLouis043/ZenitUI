@@ -89,3 +89,4 @@ small and the assets reusable.
 | `00_demo` | Full demo: every widget, ZMarkup, ZStyle, animations, filters |
 | `01_hello_world` | Minimal setup: window, root, one clickable button |
 | `02_layouts` | Vertical, Horizontal, Stack containers; `grow`, `gap`, `justify` |
+| `03_widgets` | Built-in widgets: Button, Toggle, Checkbox, Slider, TextInput, Dropdown |

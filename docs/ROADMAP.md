@@ -208,6 +208,35 @@ pointer-pressed branch.
 - [ ] Add test
 - [ ] Update `internals/07-input-system.md`
 
+### 1.7 `Dropdown` hardcoda `height: VH(3.0f)` in `inlineBase`
+
+**Severity:** medium — affects every dropdown whose trigger needs a
+different height than the default.
+
+**Location:** `src/ui/components/Dropdown.hpp`, `Dropdown::onBuild`.
+
+**Problem:** the trigger button's `height` (and most of its visual
+properties) are set with `getInlineBase()`, which wins over any
+`.zstyle` rule. A user can't change the trigger's height via CSS, and
+if they add padding larger than the baked-in height, the text gets
+clipped to invisibility.
+
+**Expected:** visual defaults should live in `inlineDefaults` (the
+"user agent" layer), so a `.zstyle` rule can override them. Only
+structural properties — like `width: 100%`, which is what makes the
+trigger fill its dropdown — should stay in `inlineBase`.
+
+**Fix:** in `onBuild`, move `height`, `background`, `radius`,
+`borderColor`, `borderWidth`, `itemsH`, `itemsV` from `inlineBase` to
+`inlineDefaults` for both the trigger button and the list container.
+
+**Test:** add a test that sets `.dropdown-trigger { height: 60px; }`
+in a stylesheet and verifies the trigger's actual rect height.
+
+- [ ] Move visual properties to `inlineDefaults`
+- [ ] Add regression test
+- [ ] Update `user/03-widgets.md` (Dropdown section)
+
 ---
 
 ## Phase 2 — Missing core API

@@ -789,17 +789,40 @@ that isn't the trigger or the list closes the dropdown.
 
 ### Styling
 
+The trigger's visual properties live in `inlineDefaults`, so a
+`.zstyle` rule can override them freely:
+
 ```css
 .dropdown-trigger {
-    min-height: 5vh;
-    padding: 0.8vh 1vw;
-    items-h: start;
+    height: 48px;                       /* default: 3vh */
+    background: #232328;
+    radius: 6px;
+    padding: 8px 14px;
+    border-width: 1px;
+    border-color: #505060;
+    font-size: 16px;
 }
 .dropdown-trigger .btn-text {
-    font-size: 2.4vh;
+    font-size: 16px;
 }
+
 Dropdown { background: #232328; }   /* affects the trigger face */
 ```
+
+Only `width: 100%` is baked into the trigger's `inlineBase` — it's
+what makes the trigger fill its logical parent. To constrain the
+dropdown's overall width, wrap it in a fixed-size container:
+
+```cpp
+auto wrapper = std::make_shared<Layout>(LayoutType::Stack);
+wrapper->size(Px(180), Auto());
+wrapper->addChild(dropdown);
+parent->addChild(wrapper);
+```
+
+This is the recommended pattern when placing a dropdown inside an
+`HStack` or any other container that would otherwise let the trigger
+stretch to the full row width.
 
 Individual options inherit whatever styling you apply to `Label` inside
 the list. The list itself (`ScrollView`) can be targeted via
@@ -811,6 +834,12 @@ the list. The list itself (`ScrollView`) can be targeted via
   `overflow: hidden`. This is the entire reason portals exist.
 - `setOpen(false)` when the dropdown is disabled — the implementation
   closes it automatically in `onEnabledChanged`.
+- The trigger's `height`, `background`, `radius`, `border-*`,
+  `items-h`, and `items-v` are all overridable via `.zstyle`. Only
+  `width: 100%` is fixed.
+- If the trigger's text is invisible, check the trigger's padding
+  against its height. If `padding-top + padding-bottom` is larger than
+  the trigger's content box, the text gets clipped to zero height.
 
 ---
 

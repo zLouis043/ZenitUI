@@ -81,28 +81,37 @@ namespace ZenitUI::UI
             button = Btn("", [this]()
                          { toggleOpen(); });
             button->cls("dropdown-trigger");
+
+            // --- inlineBase: proprietà strutturali, non override-abili ---
             button->getInlineBase().width = Percent(100);
-            button->getInlineBase().height = VH(3.0f);
-            button->getInlineBase().background = Color{40, 40, 45, 255};
-            button->getInlineBase().radius = Px(6.0f);
-            button->getInlineBase().borderColor = Color{70, 70, 80, 255};
-            button->getInlineBase().borderWidth = Px(1.0f);
-            button->getInlineBase().itemsH = Align::Center;
-            button->getInlineBase().itemsV = Align::Center;
+
+            // --- inlineDefaults: cosmetici, CSS può sovrascriverli ---
+            button->getInlineDefaults().height = VH(3.0f);
+            button->getInlineDefaults().background = Color{40, 40, 45, 255};
+            button->getInlineDefaults().radius = Px(6.0f);
+            button->getInlineDefaults().borderColor = Color{70, 70, 80, 255};
+            button->getInlineDefaults().borderWidth = Px(1.0f);
+            button->getInlineDefaults().itemsH = Align::Center;
+            button->getInlineDefaults().itemsV = Align::Center;
             addChild(button);
 
             listContainer = std::make_shared<ScrollView>();
+
+            // --- inlineBase: posizionamento, strutturale ---
             listContainer->getInlineBase().position = Position::Absolute;
             listContainer->setPortal(true);
-            listContainer->getInlineBase().width = VW(15.0f);
+
+            // --- inlineDefaults: cosmetici ---
+            listContainer->getInlineDefaults().width = VW(15.0f);
             int visibleRows = std::min((int)options.size(), 6);
-            listContainer->getInlineBase().height = VH(2.0f + visibleRows * 4.0f);
-            listContainer->getInlineBase().background = Color{30, 30, 36, 255};
-            listContainer->getInlineBase().borderColor = Color{60, 60, 70, 255};
-            listContainer->getInlineBase().borderWidth = Px(1.0f);
-            listContainer->getInlineBase().itemsH = Align::Stretch;
-            listContainer->getInlineBase().overflowX = Overflow::Auto;
-            listContainer->getInlineBase().overflowY = Overflow::Auto;
+            listContainer->getInlineDefaults().height = VH(2.0f + visibleRows * 4.0f);
+            listContainer->getInlineDefaults().background = Color{30, 30, 36, 255};
+            listContainer->getInlineDefaults().borderColor = Color{60, 60, 70, 255};
+            listContainer->getInlineDefaults().borderWidth = Px(1.0f);
+            listContainer->getInlineDefaults().itemsH = Align::Stretch;
+            listContainer->getInlineDefaults().overflowX = Overflow::Auto;
+            listContainer->getInlineDefaults().overflowY = Overflow::Auto;
+
             for (size_t i = 0; i < options.size(); ++i)
             {
                 int idx = (int)i;
