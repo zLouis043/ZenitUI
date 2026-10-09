@@ -8,7 +8,7 @@
 changes.
 
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
-[![License](https://img.shields.io/badge/license-TBD-lightgrey.svg)](#license)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](#status)
 
 ---
@@ -127,6 +127,40 @@ A full walkthrough is in **[Getting Started](docs/user/01-getting-started.md)**.
 
 ---
 
+## Building
+
+The project is built with a plain **Makefile**. It expects:
+
+- A C++17 compiler (`g++` by default).
+- **Raylib** unpacked in `deps/raylib/`, with:
+  - headers in `deps/raylib/include/`
+  - libraries in `deps/raylib/lib/`
+
+### Common targets
+
+```bash
+make          # builds ./bin/testui (the demo app)
+make test     # builds and runs the headless test suite
+make clean    # removes build artifacts
+make all      # main + test
+```
+
+### Portability note
+
+The current Makefile targets **MinGW / GCC on Windows** (it links
+`-lopengl32 -lgdi32 -lwinmm`). On Linux and macOS, the same targets work
+if Raylib is present and the link flags are adjusted for the platform
+(`-lGL -lm -lpthread -ldl -lrt -lX11` on Linux, no extra flags on
+macOS).
+
+The **test suite is fully portable** — it doesn't link Raylib at all.
+On Linux and macOS, `make test` works out of the box.
+
+A CMake build for full cross-platform support (including MSVC) is
+planned — see [docs/ROADMAP.md](docs/ROADMAP.md).
+
+---
+
 ## Documentation
 
 The full documentation lives in [`docs/`](docs/):
@@ -179,37 +213,64 @@ The full documentation lives in [`docs/`](docs/):
 ## Repository layout
 
 ```
-include/
-  Common.hpp            CoreTypes.hpp       Unit.hpp
-  Layout.hpp            Style.hpp           Theme.hpp
-  StyleResolver.hpp     StyleParser.hpp     StyleAttr.hpp
-  AnimationPlayer.hpp   AnimPrimitives.hpp  Easing.hpp
-  InputController.hpp   ScrollController.hpp ScrollState.hpp
-  FilterRegistry.hpp    UIContext.hpp       Media.hpp
-  UI.hpp                UIComponents.hpp    UIEnums.hpp
-  Logger.hpp            Debug.hpp
-  ZMarkup.hpp
-  components/           Button, Toggle, Slider, Checkbox, TextInput,
-                        ProgressBar, Dropdown, ScrollView, Modal,
-                        Tooltip, Popup, Canvas, Text, ImageContainer
 src/
-  Layout.cpp            Measure.cpp         Render.cpp
-  StyleResolver.cpp     AnimationPlayer.cpp Input.cpp
-  ScrollController.cpp  FilterRegistry.cpp
-backends/
-  raylib/               RaylibBackend.{hpp,cpp}
+  pch.hpp                     Precompiled header (Raylib app only)
+  main.cpp                    Demo entry point
+  ui/
+    Layout.hpp                Core node type
+    Style.hpp                 Style / ComputedStyle
+    Theme.hpp                 Rules, keyframes, specificity
+    StyleResolver.hpp         Cascade + transitions
+    StyleParser.hpp           .zstyle parser
+    StyleAttr.hpp             Attribute value parsers
+    AnimationPlayer.hpp       Imperative + CSS animation
+    AnimPrimitives.hpp        Keyframe types, evaluators
+    Easing.hpp                TransitionFunction
+    InputController.hpp       Input FSM
+    ScrollController.hpp      Scroll orchestration
+    ScrollState.hpp           Scroll state (POD)
+    FilterRegistry.hpp        Filter registration
+    UIContext.hpp             The three backend interfaces + context
+    Media.hpp                 Media queries
+    CoreTypes.hpp             Vec2, Rect, Color, ...
+    Common.hpp                Standard includes
+    Logger.hpp                Structured logging
+    Debug.hpp                 Debug dumps
+    UI.hpp                    Aggregator header
+    UIComponents.hpp          Widget aggregator
+    UIEnums.hpp               LayoutType, UIState
+    Unit.hpp                  Value / Unit
+    ZMarkup.hpp               DSL parser + builder
+    components/               Widgets (header-only)
+      Text.hpp  Button.hpp  Panel.hpp  ImageContainer.hpp
+      Toggle.hpp  Checkbox.hpp  Slider.hpp  ProgressBar.hpp
+      TextInput.hpp  ScrollView.hpp  Dropdown.hpp
+      Canvas.hpp  Modal.hpp  Tooltip.hpp  Popup.hpp
+      Layouts.hpp
+    layout/                   Core implementation
+      Layout.cpp
+      Measure.cpp
+      Render.cpp
+      StyleResolver.cpp
+      AnimationPlayer.cpp
+      Input.cpp
+      ScrollController.cpp
+      FilterRegistry.cpp
+  backend/
+    RaylibBackend.hpp
+    RaylibBackend.cpp
+deps/
+  raylib/                     Vendored Raylib (include/, lib/)
 tests/
-  Mocks.hpp             test_*.cpp
+  TestFramework.hpp
+  Mocks.hpp
+  test_main.cpp
+  test_*.cpp
 docs/
   README.md  CHEATSHEET.md  GLOSSARY.md  ROADMAP.md
-  user/      internals/    api/
+  user/      internals/     api/
+assets/                       .zstyle files, fonts, textures, shaders
 ```
-
----
-
-## Building
-
-*TODO — describe the build system here (CMake / Bazel / manual).*
 
 ---
 
@@ -224,11 +285,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ZenitUI is in **alpha**. The core architecture is stable, but the API
 is still evolving — breaking changes are expected between releases.
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the detailed plan from alpha
-to beta to 1.0, including known issues and planned features.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the detailed plan from
+alpha to beta to 1.0, including known issues and planned features.
 
 ---
 
 ## License
 
-*TODO — see [LICENSE](LICENSE).*
+[MIT](LICENSE) © 2026 zLouis043
