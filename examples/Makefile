@@ -22,6 +22,8 @@ endif
 # Scoperta: ogni sottocartella con un main.cpp è un esempio.
 EXAMPLE_DIRS := $(patsubst %/,%,$(dir $(wildcard */main.cpp)))
 
+all: $(EXAMPLE_DIRS:%=bin/%/main$(EXE))
+
 # Template: genera una regola esplicita per un esempio.
 # $(1) è il nome della cartella (es. 00_demo).
 define EXAMPLE_RULE
@@ -34,10 +36,7 @@ bin/$(1)/main$(EXE): $(wildcard $(1)/*.cpp) $(LIBZENIT) $(BACKEND_SRC)
 	@cp $(RAYLIB_DLL) $$(dir $$@) 2>/dev/null || true
 endef
 
-# Istanziare il template per ogni esempio.
 $(foreach d,$(EXAMPLE_DIRS),$(eval $(call EXAMPLE_RULE,$(d))))
-
-all: $(EXAMPLE_DIRS:%=bin/%/main$(EXE))
 
 clean:
 	rm -rf bin
