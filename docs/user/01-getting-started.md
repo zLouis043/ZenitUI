@@ -9,7 +9,7 @@ By the end you will have a window with a styled, clickable button.
 
 ## 1. Prerequisites
 
-- **C++17** or newer.
+- **C++20** or newer.
 - A **backend**. ZenitUI ships a reference implementation for
   [Raylib](https://www.raylib.com/), but the core only depends on three
   abstract interfaces declared in `UIContext.hpp`:
