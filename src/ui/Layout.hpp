@@ -11,6 +11,7 @@
 #include "StyleResolver.hpp"
 #include "AnimationPlayer.hpp"
 #include "InputController.hpp"
+#include "ScrollController.hpp"
 #include "UIEnums.hpp"
 #include "Media.hpp"
 
@@ -41,6 +42,7 @@ namespace ZenitUI
 		friend struct StyleResolver;
 		friend struct AnimationPlayer;
 		friend struct InputController;
+		friend struct ScrollController;
 
 		void addClass(const std::string &className)
 		{
@@ -193,6 +195,7 @@ namespace ZenitUI
 		}
 
 		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
+		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
 		bool isScrollContainer() const
 		{
 			return style_.currentStyle.overflowX != Overflow::Visible || style_.currentStyle.overflowY != Overflow::Visible;
@@ -202,12 +205,12 @@ namespace ZenitUI
 		{
 			if (!isScrollContainer())
 				return;
-			scroll_.offset.x = std::max(0.0f, x);
-			scroll_.offset.y = std::max(0.0f, y);
-			scroll_.clamp();
+			scroll_.state.offset.x = std::max(0.0f, x);
+			scroll_.state.offset.y = std::max(0.0f, y);
+			scroll_.state.clamp();
 		}
-		void scrollToX(float x) { scrollTo(x, scroll_.offset.y); }
-		void scrollToY(float y) { scrollTo(scroll_.offset.x, y); }
+		void scrollToX(float x) { scrollTo(x, scroll_.state.offset.y); }
+		void scrollToY(float y) { scrollTo(scroll_.state.offset.x, y); }
 		void scrollToTop()
 		{
 			if (isScrollContainer())
@@ -216,7 +219,7 @@ namespace ZenitUI
 		void scrollToBottom()
 		{
 			if (isScrollContainer())
-				scrollToY(scroll_.maxScroll.y);
+				scrollToY(scroll_.state.maxScroll.y);
 		}
 		void scrollToLeft()
 		{
@@ -226,13 +229,13 @@ namespace ZenitUI
 		void scrollToRight()
 		{
 			if (isScrollContainer())
-				scrollToX(scroll_.maxScroll.x);
+				scrollToX(scroll_.state.maxScroll.x);
 		}
 
-		float getScrollX() const { return scroll_.offset.x; }
-		float getScrollY() const { return scroll_.offset.y; }
-		float getMaxScrollX() const { return scroll_.maxScroll.x; }
-		float getMaxScrollY() const { return scroll_.maxScroll.y; }
+		float getScrollX() const { return scroll_.state.offset.x; }
+		float getScrollY() const { return scroll_.state.offset.y; }
+		float getMaxScrollX() const { return scroll_.state.maxScroll.x; }
+		float getMaxScrollY() const { return scroll_.state.maxScroll.y; }
 
 		void setPortal(bool p)
 		{
@@ -396,11 +399,7 @@ namespace ZenitUI
 		bool subtreeDirty_{true};
 		float lastMeasureW_{-1.0f};
 		float lastMeasureH_{-1.0f};
-		Vec2 scrollContentSize{0, 0};
-		ScrollState scroll_;
-		bool arrangeInitialized_{false};
-		Vec2 appliedScroll_{0.0f, 0.0f};
-		bool isScrolling_{false};
+		ScrollController scroll_;
 		bool styleInitialized{false};
 		bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
 			wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
@@ -610,23 +609,6 @@ namespace ZenitUI
 		void translateSubtree(float dx, float dy);
 
 		static float clampSafe(float v, float lo, float hi);
-
-		// ------------------------------------------------------------
-		//  Scroll: fasi
-		// ------------------------------------------------------------
-		static bool overflowAcceptsInput(Overflow o)
-		{
-			return o == Overflow::Scroll || o == Overflow::Auto;
-		}
-		bool acceptsScrollInput() const
-		{
-			return overflowAcceptsInput(style_.currentStyle.overflowX) || overflowAcceptsInput(style_.currentStyle.overflowY);
-		}
-		void tickScrollInput();
-		void drawScrollbar(float parentOpacity);
-		void resetScrollIfOverflowChanged();
-		Rect getThumbRectImpl() const;
-		Rect getHThumbRectImpl() const;
 	};
 
 	// CRTP helper: aggiunge la fluent API tipizzata su una Base qualsiasi.

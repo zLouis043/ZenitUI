@@ -110,7 +110,7 @@ namespace ZenitUI
 		}
 
 		// Salviamo l'ingombro reale non tagliato per gestire i limiti dello ScrollView
-		scrollContentSize = contentSize;
+		scroll_.contentSize = contentSize;
 
 		// --- Risoluzione Dimensioni Finali del Genitore ---
 		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
@@ -125,70 +125,33 @@ namespace ZenitUI
 		return measuredSize;
 	}
 
-	void Layout::arrange(Rect space)
+		void Layout::arrange(Rect space)
 	{
 		const bool positionChanged = (space.x != rect.x || space.y != rect.y);
 		rect = space;
 
 		if (isScrollContainer() && type != LayoutType::Stack)
 		{
-			// positionChanged: il container è stato riposizionato (es. listContainer
-			// del Dropdown spostato dall'arrange del padre). I figli vanno riallineati.
-			bool needFullArrange = !arrangeInitialized_ || subtreeDirty_ || positionChanged;
-
-			if (needFullArrange)
+			if (scroll_.needsFullArrange(*this, positionChanged))
 			{
-				float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
-				float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
-				float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
-				float pb = style_.currentStyle.padding.bottom.resolveV(space.width, space.height);
-
-				Rect arrangeSpace = space;
-
-				if (type == LayoutType::Vertical && style_.currentStyle.overflowY != Overflow::Visible)
-				{
-					float contentH = scrollContentSize.y + pt + pb;
-					arrangeSpace.height = std::max(space.height, contentH);
-				}
-				else if (type == LayoutType::Horizontal && style_.currentStyle.overflowX != Overflow::Visible)
-				{
-					float contentW = scrollContentSize.x + pl + pr;
-					arrangeSpace.width = std::max(space.width, contentW);
-				}
-
+				Rect arrangeSpace = scroll_.computeArrangeSpace(*this, space);
 				arrangeInto(arrangeSpace);
-				arrangeInitialized_ = true;
-				appliedScroll_ = {0.0f, 0.0f};
+				scroll_.arrangeInitialized = true;
+				scroll_.appliedOffset = {0.0f, 0.0f};
 			}
 
-			float dx = appliedScroll_.x - scroll_.offset.x;
-			float dy = appliedScroll_.y - scroll_.offset.y;
-			if (dx != 0.0f || dy != 0.0f)
-			{
-				translateSubtree(dx, dy);
-				appliedScroll_ = scroll_.offset;
-			}
-
-			float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
-			float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
-			float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
-			float pb = style_.currentStyle.padding.bottom.resolveV(space.width, space.height);
-
-			float contentW = scrollContentSize.x + pl + pr;
-			float contentH = scrollContentSize.y + pt + pb;
-			scroll_.maxScroll.x = std::max(0.0f, contentW - rect.width);
-			scroll_.maxScroll.y = std::max(0.0f, contentH - rect.height);
-			scroll_.clamp();
+			scroll_.applyOffsetDelta(*this);
+			scroll_.updateMaxScroll(*this, space);
 		}
 		else
 		{
 			arrangeInto(space);
-			arrangeInitialized_ = true;
+			scroll_.arrangeInitialized = true;
 		}
 
 		onLayout();
 	}
-
+	
 	void Layout::translateSubtree(float dx, float dy)
 	{
 		// Sposta i figli (e i loro discendenti) senza toccare il rect di `this`.
