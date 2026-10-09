@@ -43,10 +43,10 @@ jobs:
     - name: Compilazione ed Esecuzione Test (Linux / macOS)
       if: runner.os != 'Windows'
       # Il Makefile leggerà la variabile CXX passata in riga di comando
-      run: make test CXX=${{ matrix.cxx }}
+      run: make -j4 test CXX=${{ matrix.cxx }}
 
     - name: Compilazione ed Esecuzione Test (Windows)
       if: runner.os == 'Windows'
       # Forza l'uso della shell bash di MSYS2 invece del CMD di Windows
       shell: msys2 {0}
-      run: make test CXX=${{ matrix.cxx }}
+      run: make -j4 test CXX=${{ matrix.cxx }}

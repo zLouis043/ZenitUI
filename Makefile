@@ -1,69 +1,85 @@
-OUT_FOLDER = ./bin
-SRC_FOLDER = ./src
-DEPS_FOLDER = ./deps/raylib
-DEPS_HEADER_FOLDER = $(DEPS_FOLDER)/include
-DEPS_LIBS_FOLDER = $(DEPS_FOLDER)/lib
-APP_NAME = testui
+CXX      := g++
+CXXFLAGS := -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
 
-PCH_SRC = src/pch.hpp
-PCH_OUT = src/pch.hpp.gch
+ifeq ($(OS),Windows_NT)
+  EXE := .exe
+else
+  EXE :=
+endif
 
-CXX = g++
-CXXFLAGS = -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
+CPPFLAGS := -I./src -I./src/ui -I./src/backend -I./src/backend/raylib -I./tests
+CPPFLAGS += -Ideps/raylib/include
 
-SRC_FILES = $(shell find $(SRC_FOLDER) -name "*.cpp")
-INCLUDE_DIRS = -I./src/backend -I./src/ui
+LDFLAGS  := -Ldeps/raylib/lib
+LIBS     := -lraylibdll -lopengl32 -lgdi32 -lwinmm
+RAYLIB_DLL := deps/raylib/lib/raylib.dll
 
-RAYLIB_LINK = -I$(DEPS_HEADER_FOLDER) -L$(DEPS_LIBS_FOLDER) -lraylibdll -lopengl32 -lgdi32 -lwinmm
+FRAMEWORK_SRCS := $(wildcard src/ui/layout/*.cpp)
+TEST_SRCS      := $(wildcard tests/*.cpp)
+BACKEND_SRCS   := src/backend/raylib/RaylibBackend.cpp
+DEMO_SRCS      := src/main.cpp
 
-TESTS_SRCS = \
-    ./src/ui/layout/Layout.cpp \
-    ./src/ui/layout/Measure.cpp \
-    ./src/ui/layout/Render.cpp \
-    ./src/ui/layout/StyleResolver.cpp \
-    ./src/ui/layout/AnimationPlayer.cpp \
-    ./src/ui/layout/Input.cpp \
-    ./src/ui/layout/ScrollController.cpp \
-    ./src/ui/layout/FilterRegistry.cpp \
-    tests/test_main.cpp \
-    tests/test_unit.cpp \
-    tests/test_easing.cpp \
-    tests/test_style.cpp \
-    tests/test_coretypes.cpp \
-    tests/test_animations.cpp \
-    tests/test_theme.cpp \
-    tests/test_parser.cpp \
-    tests/test_media.cpp \
-    tests/test_customprops.cpp \
-    tests/test_filter.cpp \
-    tests/test_effect.cpp \
-    tests/test_parser_utils.cpp \
-    tests/test_value_parsers.cpp \
-    tests/test_zmarkup.cpp \
-    tests/test_layout.cpp \
-    tests/test_interaction.cpp \
-    tests/test_zmarkup_build.cpp
+OBJ_DIR := obj
+BIN_DIR := bin
 
-TESTS_INCLUDES = -I./src/ui -I./tests
+FRAMEWORK_OBJS := $(FRAMEWORK_SRCS:%.cpp=$(OBJ_DIR)/%.o)
+BACKEND_OBJS   := $(BACKEND_SRCS:%.cpp=$(OBJ_DIR)/%.o)
+TEST_OBJS      := $(TEST_SRCS:%.cpp=$(OBJ_DIR)/%.o)
+DEMO_OBJS      := $(DEMO_SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
-$(OUT_FOLDER)/$(APP_NAME): $(SRC_FILES) $(PCH_OUT)
-	@mkdir -p $(OUT_FOLDER)
-	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -include $(PCH_SRC) \
-	    $(SRC_FILES) $(RAYLIB_LINK) -o $@
+DEPS := $(FRAMEWORK_OBJS:.o=.d) $(BACKEND_OBJS:.o=.d) \
+        $(TEST_OBJS:.o=.d) $(DEMO_OBJS:.o=.d)
 
-$(PCH_OUT): $(PCH_SRC)
-	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -x c++-header $(PCH_SRC) -o $(PCH_OUT)
+TESTS_BIN := $(BIN_DIR)/tests$(EXE)
+DEMO_BIN  := $(BIN_DIR)/demo$(EXE)
 
-main: $(OUT_FOLDER)/$(APP_NAME)
+all: $(TESTS_BIN) $(DEMO_BIN)
 
-test:
-	@mkdir -p $(OUT_FOLDER)
-	$(CXX) $(CXXFLAGS) $(TESTS_INCLUDES) $(TESTS_SRCS) -o $(OUT_FOLDER)/tests
-	./$(OUT_FOLDER)/tests
+$(TESTS_BIN): $(FRAMEWORK_OBJS) $(TEST_OBJS) | $(BIN_DIR)
+	$(CXX) $^ -o $@
+
+$(DEMO_BIN): $(FRAMEWORK_OBJS) $(BACKEND_OBJS) $(DEMO_OBJS) $(RAYLIB_DLL) | $(BIN_DIR)
+	$(CXX) $(FRAMEWORK_OBJS) $(BACKEND_OBJS) $(DEMO_OBJS) \
+	    $(LDFLAGS) $(LIBS) -o $@
+	@cp $(RAYLIB_DLL) $(BIN_DIR)/
+
+$(RAYLIB_DLL):
+	@echo "ERROR: raylib.dll not found in $(RAYLIB_DLL)"
+	@echo "Try copying manually raylib.dll in bin/ or check the path."
+	@exit 1
+
+$(OBJ_DIR)/src/ui/layout/%.o: src/ui/layout/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/src/backend/%.o: src/backend/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/src/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/tests/%.o: tests/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DZENITUI_DEBUG -MMD -MP -c $< -o $@
+
+-include $(DEPS)
+
+$(BIN_DIR):
+	mkdir -p $@
+
+test: $(TESTS_BIN)
+	./$(TESTS_BIN)
+
+demo: $(DEMO_BIN)
+	./$(DEMO_BIN)
+
+run: demo
 
 clean:
-	rm -f $(OUT_FOLDER)/$(APP_NAME) $(OUT_FOLDER)/tests $(PCH_OUT) build_main.log build_test.log
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-all: main test
+rebuild: clean all
 
-.PHONY: main test all clean
+.PHONY: all test demo run clean rebuild
