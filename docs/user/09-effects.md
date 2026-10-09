@@ -362,11 +362,10 @@ Type mapping:
 | `Vec4` | `setEffectVec4` | Four `parseLengthArg`, same as Vec3 |
 | `Color` | `setEffectVec4` | `parseColorToken` |
 
-**Note about `Vec3` / `Vec4`:** the current implementation converts the
-float arguments to `uint8_t` with `std::clamp(v, 0, 1) * 255`. This
-means a `Vec3` filter expecting `(0.5, 0.5, 0.5)` will get `(127, 127, 127)`.
-The shader should normalize back to `[0,1]`. This is a known quirk —
-the comment in the source says as much.
+`Vec3` and `Vec4` pass their float arguments through to the shader
+unchanged, as a `vec3` / `vec4` in the natural float range. A filter
+written as `myfilter(0.5, 0.25, 0.75)` receives `vec3(0.5, 0.25, 0.75)`
+in the shader. No clamping or scaling is applied.
 
 ### 4.3 Patterns
 
@@ -681,13 +680,7 @@ rotating a filtered node is rare.
 snaps to the target at `t > 0`. To animate filter parameters, drive a
 uniform via an imperative animation, or make the change instantaneous.
 
-### 7.5 `Vec3` / `Vec4` param scaling
-
-As noted in §4.2, `Vec3` / `Vec4` params scale their float arguments
-by 255. If your shader expects `[0,1]` values, normalize inside the
-shader. Or use a `Custom` filter and set uniforms directly.
-
-### 7.6 Render target size
+### 7.5 Render target size
 
 The render target is sized to the intersection of the transformed rect
 and the current clip. For a filtered node that fills the viewport, this
@@ -705,7 +698,7 @@ if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM) {
 }
 ```
 
-### 7.7 Effect on the same node as a filter
+### 7.6 Effect on the same node as a filter
 
 If a node has both `filter:` and `effect:`:
 

@@ -66,6 +66,8 @@ namespace ZenitUI
 
 		void setEffectFloat(EffectHandle e, const char *name, float value) override;
 		void setEffectVec2(EffectHandle e, const char *name, Vec2 value) override;
+		void setEffectVec3(EffectHandle e, const char *name, Vec3 value) override;
+		void setEffectVec4f(EffectHandle e, const char *name, Vec4 value) override;
 		void setEffectVec4(EffectHandle e, const char *name, Color value) override;
 		bool inTarget() const override;
 		void clearTarget(TargetHandle t, Color c) override;

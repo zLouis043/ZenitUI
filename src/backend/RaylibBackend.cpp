@@ -364,7 +364,7 @@ namespace ZenitUI
 		BeginTextureMode(res.targets[t.id]);
 		ClearBackground(::BLANK);
 	}
-	
+
 	void RaylibRenderer::popTarget()
 	{
 		EndTextureMode();
@@ -459,6 +459,24 @@ namespace ZenitUI
 			return;
 		float arr[2] = {value.x, value.y};
 		SetShaderValue(res.shaders[e.id], loc, arr, SHADER_UNIFORM_VEC2);
+	}
+
+	void RaylibRenderer::setEffectVec3(EffectHandle e, const char *name, Vec3 value)
+	{
+		int loc = shaderLoc(e, name);
+		if (loc < 0)
+			return;
+		float arr[3] = {value.x, value.y, value.z};
+		SetShaderValue(res.shaders[e.id], loc, arr, SHADER_UNIFORM_VEC3);
+	}
+
+	void RaylibRenderer::setEffectVec4f(EffectHandle e, const char *name, Vec4 value)
+	{
+		int loc = shaderLoc(e, name);
+		if (loc < 0)
+			return;
+		float arr[4] = {value.x, value.y, value.z, value.w};
+		SetShaderValue(res.shaders[e.id], loc, arr, SHADER_UNIFORM_VEC4);
 	}
 
 	void RaylibRenderer::setEffectVec4(EffectHandle e, const char *name, Color value)

@@ -76,14 +76,12 @@ The type of a shader uniform, and how many CSS arguments it consumes.
 |------|----------|----------|
 | `Float` | 1 arg | `setEffectFloat` |
 | `Vec2` | 2 args | `setEffectVec2` |
-| `Vec3` | 3 args | `setEffectVec4` (values scaled to `[0,1]` then to `uint8_t`) |
-| `Vec4` | 4 args | `setEffectVec4` (same) |
+| `Vec3` | 3 args | `setEffectVec3` |
+| `Vec4` | 4 args | `setEffectVec4f` |
 | `Color` | 1 arg (`#RRGGBB[AA]`) | `setEffectVec4` |
 
-**Note:** `Vec3` and `Vec4` interpret their float arguments as
-normalized `[0, 1]` values and convert them to `uint8_t` by
-multiplying by 255. The shader receives `vec4` in `[0, 255]` — it
-should normalize back if needed. This is a known quirk.
+`Vec3` and `Vec4` are set via `setEffectVec3` / `setEffectVec4f`. Their
+float arguments are passed through unchanged.
 
 ---
 
@@ -658,16 +656,6 @@ Filters registered in one test can affect subsequent tests. Reset
 between tests isn't provided — you'd need to `clear()` the registry
 manually (there's no public API for it, so this requires modifying the
 class or using a fresh process).
-
-**`Vec3` / `Vec4` param scaling.**
-
-Arguments are parsed as floats, clamped to `[0, 1]`, multiplied by 255,
-and stored as `uint8_t` in a `Color`. The shader receives `vec4` in
-`[0, 255]`. This is documented in §3 but easy to forget.
-
-For shaders that expect normalized values, either normalize in the
-shader (`vec4 / 255.0`) or use a `Custom` filter and set uniforms
-directly.
 
 **Multiple filters don't chain.**
 

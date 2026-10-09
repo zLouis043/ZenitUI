@@ -92,8 +92,7 @@ namespace ZenitUI
                     b = parseLengthArg(ref.args[p.argIndex + 1]);
                     c = parseLengthArg(ref.args[p.argIndex + 2]);
                 }
-                // uso setEffectVec4 con alpha 1; se serve un vero Vec3, aggiungiamo il metodo
-                r->setEffectVec4(fx, p.uniform.c_str(), Color{(uint8_t)(std::clamp(a, 0.0f, 1.0f) * 255.0f), (uint8_t)(std::clamp(b, 0.0f, 1.0f) * 255.0f), (uint8_t)(std::clamp(c, 0.0f, 1.0f) * 255.0f), (uint8_t)255});
+                r->setEffectVec3(fx, p.uniform.c_str(), {a, b, c});
                 break;
             }
             case FilterParamType::Vec4:
@@ -106,17 +105,15 @@ namespace ZenitUI
                     c = parseLengthArg(ref.args[p.argIndex + 2]);
                     d = parseLengthArg(ref.args[p.argIndex + 3]);
                 }
-                r->setEffectVec4(fx, p.uniform.c_str(), Color{(uint8_t)(std::clamp(a, 0.0f, 1.0f) * 255.0f), (uint8_t)(std::clamp(b, 0.0f, 1.0f) * 255.0f), (uint8_t)(std::clamp(c, 0.0f, 1.0f) * 255.0f), (uint8_t)(std::clamp(d, 0.0f, 1.0f) * 255.0f)});
+                r->setEffectVec4f(fx, p.uniform.c_str(), {a, b, c, d});
                 break;
             }
             case FilterParamType::Color:
             {
                 Color c = p.cdef;
                 if (p.argIndex < n)
-                {
                     if (auto col = parseColorToken(ref.args[p.argIndex]))
                         c = *col;
-                }
                 r->setEffectVec4(fx, p.uniform.c_str(), c);
                 break;
             }
@@ -137,7 +134,7 @@ namespace ZenitUI
     }
 
     static void applySeparable(const FilterContext &c, EffectHandle fx,
-                               const FilterDef& /*def*/)
+                               const FilterDef & /*def*/)
     {
         // Pass H: src → scratch
         c.renderer->pushTarget(c.scratch);

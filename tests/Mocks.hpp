@@ -32,6 +32,38 @@ namespace ZenitUI::Test
         std::vector<Rect> clipStack;
         Rect currentClip{0, 0, 1e9f, 1e9f};
 
+        struct CapturedFloat
+        {
+            std::string name;
+            float value;
+        };
+        struct CapturedVec2
+        {
+            std::string name;
+            Vec2 value;
+        };
+        struct CapturedVec3
+        {
+            std::string name;
+            Vec3 value;
+        };
+        struct CapturedVec4
+        {
+            std::string name;
+            Vec4 value;
+        };
+        struct CapturedColor
+        {
+            std::string name;
+            Color value;
+        };
+
+        std::vector<CapturedFloat> capturedFloat;
+        std::vector<CapturedVec2> capturedVec2;
+        std::vector<CapturedVec3> capturedVec3;
+        std::vector<CapturedVec4> capturedVec4f;
+        std::vector<CapturedColor> capturedColor;
+
         void fillRect(Rect, Color) override { fillRectCount++; }
         void fillRoundedRect(Rect, float, Color) override {}
         void fillCircle(Vec2, float, Color) override {}
@@ -89,9 +121,26 @@ namespace ZenitUI::Test
         void drawTarget(TargetHandle, Rect, Color) override {}
 
         // Effetti shader
-        void setEffectFloat(EffectHandle, const char *, float) override {}
-        void setEffectVec2(EffectHandle, const char *, Vec2) override {}
-        void setEffectVec4(EffectHandle, const char *, Color) override {}
+        void setEffectFloat(EffectHandle, const char *name, float value) override
+        {
+            capturedFloat.push_back({name, value});
+        }
+        void setEffectVec2(EffectHandle, const char *name, Vec2 value) override
+        {
+            capturedVec2.push_back({name, value});
+        }
+        void setEffectVec3(EffectHandle, const char *name, Vec3 value) override
+        {
+            capturedVec3.push_back({name, value});
+        }
+        void setEffectVec4f(EffectHandle, const char *name, Vec4 value) override
+        {
+            capturedVec4f.push_back({name, value});
+        }
+        void setEffectVec4(EffectHandle, const char *name, Color value) override
+        {
+            capturedColor.push_back({name, value});
+        }
         bool inTarget() const override { return false; }
         void clearTarget(TargetHandle, Color) override {}
 
@@ -138,7 +187,8 @@ namespace ZenitUI::Test
             return e;
         }
 
-        float dpiScale() override {
+        float dpiScale() override
+        {
             return 1.0f;
         }
 
@@ -196,7 +246,7 @@ namespace ZenitUI::Test
         }
 
         EdgeInsets safe{};
-		EdgeInsets safeArea() override { return safe; }
+        EdgeInsets safeArea() override { return safe; }
     };
 
     // ============================================================
@@ -208,7 +258,21 @@ namespace ZenitUI::Test
     public:
         FontHandle getFont(std::string_view) override { return {}; }
         TextureHandle getTexture(std::string_view) override { return {}; }
-        EffectHandle getEffect(std::string_view) override { return {}; }
+        EffectHandle getEffect(std::string_view name) override
+        {
+            auto it = registeredEffects.find(std::string(name));
+            return it != registeredEffects.end() ? it->second : EffectHandle{};
+        }
+
+        // Test helper
+        void registerEffect(std::string name)
+        {
+            static uint32_t nextId = 100;
+            registeredEffects[name] = EffectHandle{nextId++};
+        }
+
+    private:
+        std::unordered_map<std::string, EffectHandle> registeredEffects;
     };
 
     // ============================================================
@@ -273,6 +337,11 @@ namespace ZenitUI::Test
             renderer.pushClipCount = 0;
             renderer.popClipCount = 0;
             renderer.clipStack.clear();
+            renderer.capturedFloat.clear();
+            renderer.capturedVec2.clear();
+            renderer.capturedVec3.clear();
+            renderer.capturedVec4f.clear();
+            renderer.capturedColor.clear();
             renderer.currentClip = {0, 0, 1e9f, 1e9f};
         }
 
