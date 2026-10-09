@@ -66,6 +66,18 @@ struct AnimationPlayer
                 return true;
         return false;
     }
+
+    // True se QUESTO nodo (non i discendenti) ha animazioni attive:
+    // imperative in play, CSS di nodo, o CSS di part.
+    bool hasActiveLocal() const
+    {
+        for (const auto& [n, s] : imperative)
+            if (s.playing) return true;
+        if (!css.empty()) return true;
+        for (const auto& [pn, v] : parts)
+            if (!v.empty()) return true;
+        return false;
+    }
 };
 
 } // namespace ZenitUI

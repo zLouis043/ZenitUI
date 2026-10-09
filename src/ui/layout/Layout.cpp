@@ -54,6 +54,13 @@ namespace ZenitUI
 		style_.propagateInheritance(*this);
 
 		{
+			bool anyLocal = anim_.hasActiveLocal();
+			if (hadLocalAnimationsLast_ && !anyLocal && onAnimationsFinished)
+				onAnimationsFinished();
+			hadLocalAnimationsLast_ = anyLocal;
+		}
+
+		{
 			size_t n = children.size();
 			for (size_t i = 0; i < n; ++i)
 				children[i]->update(dt, blockSubtree, scrolling);

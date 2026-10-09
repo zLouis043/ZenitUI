@@ -377,6 +377,7 @@ namespace ZenitUI
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick, onRightClick;
+		std::function<void()> onAnimationsFinished;
 		std::vector<std::shared_ptr<Layout>> children;
 		std::string nodeId;
 
@@ -413,6 +414,7 @@ namespace ZenitUI
 		bool updateWhenDisabled_{false};
 		bool pressedInChain_{false};
 		bool isChecked_{false};
+		bool hadLocalAnimationsLast_{false};
 
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
