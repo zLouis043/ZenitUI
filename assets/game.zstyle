@@ -205,6 +205,7 @@ TextInput:hover::cursor {
   min-width: 80px;
   margin: 0 4px;
   effect: hueShift;
+  
   transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
 }
 .btn-primary:hover   { background: var(--primary-hi); scale: 1.15; }
@@ -401,6 +402,4 @@ Popup {
     .card-desc { color: #00FF00; }
 }
 
-.card {
-    box-shadow: 4px 4px 8px #000000CC;
-}
+.demo-content .card { filter: sepia(0.8); }

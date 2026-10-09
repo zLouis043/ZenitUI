@@ -357,8 +357,6 @@ namespace ZenitUI
 		if (clipActive)
 			EndScissorMode();
 
-		// Isola il matrix del parent: dentro al target le coordinate devono
-		// partire da (0,0) senza ereditare translate/scale/rotation.
 		rlPushMatrix();
 		rlLoadIdentity();
 
@@ -366,16 +364,15 @@ namespace ZenitUI
 		BeginTextureMode(res.targets[t.id]);
 		ClearBackground(::BLANK);
 	}
-
+	
 	void RaylibRenderer::popTarget()
 	{
 		EndTextureMode();
 		insideTarget_ = false;
 
-		// Raylib ha resettato la MODELVIEW con LoadIdentity: riapplichiamo
-		// la scala DPI globale.
-		if (dpiScale_ != 1.0f)
-			rlScalef(dpiScale_, dpiScale_, 1.0f);
+		// Ripristina la matrix precedente (include già la scala DPI globale).
+		// NIENTE rlScalef manuale dopo: sarebbe ridondante.
+		rlPopMatrix();
 
 		if (clipActive)
 		{
