@@ -93,3 +93,4 @@ small and the assets reusable.
 | `04_animations` | Transitions, `@keyframes`, and `::part` animations |
 | `04b_imperative_animations` | `UIAnimation` in C++: play/reverse, custom math, chaining |
 | `05_zstyle` | External `.zstyle` file: `var()`, `calc()`, `@media`, states, `::part` |
+| `06_zmarkup` | Declarative UI: `ZMarkup::build`, `UINode`, callback binding |
