@@ -23,7 +23,7 @@ TESTS_SRCS = \
     ./src/ui/layout/StyleResolver.cpp \
     ./src/ui/layout/AnimationPlayer.cpp \
     ./src/ui/layout/Input.cpp \
-    ./src/ui/layout/Scroll.cpp \
+    ./src/ui/layout/ScrollController.cpp \
     ./src/ui/layout/FilterRegistry.cpp \
     tests/test_main.cpp \
     tests/test_unit.cpp \

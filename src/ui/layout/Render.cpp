@@ -55,7 +55,7 @@ namespace ZenitUI
 		else
 			drawInline(renderStyle, globalOp);
 
-		drawScrollbar(parentOpacity);
+		scroll_.drawScrollbar(*this, parentOpacity);
 
 		if (!hasParent())
 		{

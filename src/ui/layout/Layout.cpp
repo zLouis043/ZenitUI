@@ -16,7 +16,7 @@ namespace ZenitUI
 		ComputedStyle styleBefore = style_.currentStyle;
 
 		initStyleIfNeeded();
-		resetScrollIfOverflowChanged();
+		scroll_.resetIfOverflowChanged(*this);
 
 		// Se il viewport è cambiato dall'ultimo frame, le media query CSS
 		// possono aver cambiato l'esito: forziamo una ri-risoluzione.
@@ -31,7 +31,7 @@ namespace ZenitUI
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
 		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
 
-		const bool scrolling = ancestorScrolling || isScrolling_;
+		const bool scrolling = ancestorScrolling || scroll_.scrolling;
 		input_.updateFlags(*this, selfBlocked, scrolling);
 
 		UIState prevState = style_.currentState;
@@ -59,7 +59,7 @@ namespace ZenitUI
 				children[i]->update(dt, blockSubtree, scrolling);
 		}
 
-		tickScrollInput();
+		scroll_.tickInput(*this);
 		input_.handleKeyInput(*this);
 		input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 		cullRemovedChildren();
