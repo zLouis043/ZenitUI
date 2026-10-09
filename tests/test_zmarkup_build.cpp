@@ -128,3 +128,24 @@ TEST(ZMarkupBuild, toggle_arranges_with_size) {
     // Con :checked, left=60px → knob spostato a destra
     CHECK(knobRect.x > 10.0f);
 }
+
+TEST(Widget_dropdown, css_can_override_trigger_height)
+{
+    Env env;
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        .dropdown-trigger { height: 60px; }
+    )");
+
+    auto dd = UI::Dropdown::create(
+        std::vector<std::string>{"A", "B"}, 0);
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(dd);
+
+    env.frame(root);
+
+    auto trigger = dd->children[0];
+    CHECK_NEAR(trigger->getRect().height, 60.0f, 1.0f);
+}

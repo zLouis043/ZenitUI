@@ -565,6 +565,45 @@ public:
 The list flips above or below the trigger based on available space,
 and is shrunk if it fits in neither.
 
+### Styling
+
+The trigger's visual properties live in `inlineDefaults`, so any
+`.zstyle` rule targeting `.dropdown-trigger` overrides them:
+
+```css
+.dropdown-trigger {
+    height: 48px;                       /* default: 3vh */
+    background: #232328;
+    radius: 6px;
+    padding: 8px 14px;
+    border-width: 1px;
+    border-color: #505060;
+    font-size: 16px;
+}
+.dropdown-trigger .btn-text {
+    font-size: 16px;
+}
+```
+
+Only `width: 100%` (on the trigger) is baked into `inlineBase`,
+because it's what makes the trigger fill its logical parent. To
+constrain the dropdown's overall width, wrap it in a fixed-size
+container:
+
+```cpp
+auto wrapper = std::make_shared<Layout>(LayoutType::Stack);
+wrapper->size(Px(180), Auto());
+wrapper->addChild(dropdown);
+```
+
+This is the recommended pattern when the dropdown lives inside an
+`HStack` or any container that would otherwise stretch the trigger
+to the full row width.
+
+Individual options inherit whatever styling is applied to `Label`
+inside the list. The list itself (`ScrollView`) can be targeted via
+`Dropdown ScrollView { ... }`.
+
 ### Style tag
 
 `"Dropdown"`
@@ -572,8 +611,8 @@ and is shrunk if it fits in neither.
 ### Closing
 
 - Outside click (left or right).
-- `Escape` (not currently wired; the list closes on outside click).
 - An option click.
+- On disable (via `onEnabledChanged`).
 
 ### ZMarkup
 
