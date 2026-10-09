@@ -340,3 +340,43 @@ TEST(Interaction_subtree, checked_propagates_to_children) {
         env.frame(root);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
 }
+
+TEST(Interaction_hover, exit_does_not_fire_on_press) {
+    Env env;
+    int enters = 0, exits = 0;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onHoverEnter = [&enters]() { enters++; };
+    btn->onHoverExit  = [&exits]()  { exits++; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    // Hover
+    env.platform.moveMouse({50, 25});
+    env.frame(root);
+    CHECK(enters == 1);
+    CHECK(exits  == 0);
+
+    // Press (ancora sopra il bottone): non deve sparare onHoverExit
+    env.platform.pressLeft({50, 25});
+    env.frame(root);
+    CHECK(enters == 1);
+    CHECK(exits  == 0);   // <-- la regressione era qui
+
+    // Release (ancora sopra)
+    env.platform.releaseLeft({50, 25});
+    env.frame(root);
+    CHECK(exits == 0);
+
+    // Uscita reale
+    env.platform.moveMouse({500, 500});
+    env.frame(root);
+    CHECK(exits == 1);
+}
