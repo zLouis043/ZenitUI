@@ -87,7 +87,5 @@ small and the assets reusable.
 | Folder | What it shows |
 |--------|---------------|
 | `00_demo` | Full demo: every widget, ZMarkup, ZStyle, animations, filters |
-
-The list above grows as new examples are added. It is intentionally
-short: each example should demonstrate **one** idea well, not be a
-kitchen sink.
+| `01_hello_world` | Minimal setup: window, root, one clickable button |
+| `02_layouts` | Vertical, Horizontal, Stack containers; `grow`, `gap`, `justify` |
