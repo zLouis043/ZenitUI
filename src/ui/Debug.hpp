@@ -232,7 +232,8 @@ namespace ZenitUI::Debug
 
     inline std::string toString(const BoxShadow &b)
     {
-        if (!b.enabled) return "none";
+        if (!b.enabled)
+            return "none";
         std::ostringstream os;
         os << valueToString(b.x) << " " << valueToString(b.y)
            << " " << valueToString(b.blur) << " " << toString(b.color);
@@ -339,11 +340,21 @@ namespace ZenitUI::Debug
             if (i > 0)
                 os << " ";
             const auto &ss = r.chain[i];
-            if (ss.kind == SimpleSelector::Kind::Class)
-                os << ".";
-            else if (ss.kind == SimpleSelector::Kind::Id)
-                os << "#";
-            os << ss.name;
+
+            auto printComponent = [&](SimpleSelector::Kind kind,
+                                      const std::string &name)
+            {
+                if (kind == SimpleSelector::Kind::Class)
+                    os << ".";
+                else if (kind == SimpleSelector::Kind::Id)
+                    os << "#";
+                os << name;
+            };
+
+            printComponent(ss.kind, ss.name);
+            for (const auto &[kind, name] : ss.extras)
+                printComponent(kind, name);
+
             if (ss.requireHover)
                 os << ":hover";
             if (ss.requirePressed)

@@ -45,8 +45,21 @@ namespace ZenitUI
 			else
 				s.tags++;
 
+			// Componenti aggiuntivi del compound selector.
+			for (const auto &[kind, name] : sel.extras)
+			{
+				(void)name;
+				if (kind == SimpleSelector::Kind::Id)
+					s.ids++;
+				else if (kind == SimpleSelector::Kind::Class)
+					s.classes++;
+				else
+					s.tags++;
+			}
+
 			// Le pseudo-classi (:hover, :checked, ...) contano come classi.
-			if (sel.requireHover || sel.requirePressed || sel.requireFocus || sel.requireDisabled || sel.requireChecked)
+			if (sel.requireHover || sel.requirePressed || sel.requireFocus ||
+			    sel.requireDisabled || sel.requireChecked)
 				s.classes++;
 		}
 		return s;

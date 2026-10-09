@@ -43,44 +43,23 @@ Walks a selector chain and accumulates:
 - `Id` → `ids++`.
 - `Class` → `classes++`.
 - `Tag` → `tags++`.
+- Each entry in a selector's `extras` (the additional components of a
+  compound selector) contributes the same way: a class adds to
+  `classes`, an id adds to `ids`, a tag adds to `tags`.
 - Any state flag on the selector (`:hover`, `:pressed`, `:focus`,
   `:disabled`, `:checked`) → `classes++`.
 
-**Example:**
+So `Button.btn-primary` has specificity `(0, 1, 1)` — one class from
+`.btn-primary`, one tag from `Button`. `Button.btn-primary#save` has
+`(1, 1, 1)`. A state on the compound counts once, not once per
+component:
 
 ```cpp
-auto s1 = computeSpecificity({ tagSel("Toggle") });
-// (0, 0, 1)
-
-auto s2 = computeSpecificity({ classSel("btn-primary") });
-// (0, 1, 0)
-
-auto s3 = computeSpecificity({ idSel("save") });
-// (1, 0, 0)
-
-auto s4 = computeSpecificity({ tagSel("Toggle", {.requireChecked = true}) });
-// (0, 1, 1)
+computeSpecificity({ tag("Button", {class("btn-primary")},
+                         /*requireHover=*/true) });
+// → (0, 2, 1): one class from .btn-primary, one class from :hover,
+//              one tag from Button
 ```
-
-### Comparison
-
-```cpp
-Specificity a{0, 1, 0};  // one class
-Specificity b{0, 0, 5};  // five tags
-
-a < b  // false (0,1,0) > (0,0,5) because classes beat tags
-```
-
-The comparison is:
-
-```cpp
-if (ids != o.ids) return ids < o.ids;
-if (classes != o.classes) return classes < o.classes;
-return tags < o.tags;
-```
-
-So higher specificity is "greater" — the sort in `resolveFor` uses
-ascending order, so the last (highest) wins.
 
 ---
 
