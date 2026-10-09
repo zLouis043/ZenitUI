@@ -3,18 +3,29 @@ repo_url: https://github.com/zLouis043/ZenitUI
 theme:
   name: material
   palette:
-    scheme: slate # Tema scuro di default
+    scheme: slate
   features:
-    - navigation.tabs # Navigazione a tab in alto
+    - navigation.tabs
     - search.suggest
     - search.highlight
 
-# Opzionale: puoi definire un menù di navigazione esplicito.
-# Se non lo fai, MkDocs creerà il menù leggendo le tue cartelle automaticamente.
 nav:
   - Home: README.md
+  - Glossary: GLOSSARY.md
+
+  - User Guide:
+    - Getting started: user/01-getting-started.md
+    - Layout: user/02-layout.md
+    - Widgets: user/03-widgets.md
+    - ZMarkup: user/04-zmarkup.md
+    - ZStyle: user/05-zstyle.md
+    - Events: user/06-events.md
+    - Animations: user/07-animations.md
+    - Portals: user/08-portals.md
+    - Effects: user/09-effects.md
+    - Custom widgets: user/10-custom-widgets.md
+
   - API:
-    - api/GLOSSARY.md
     - api/Layout.md
     - api/Style.md
     - api/Theme.md
@@ -23,6 +34,8 @@ nav:
     - api/Widgets.md
     - api/ZMarkup.md
     - api/ZStyle.md
+    - api/FilterRegistry.md
+
   - Internals:
     - internals/01-architecture.md
     - internals/02-lifecycle.md
@@ -34,14 +47,3 @@ nav:
     - internals/08-scroll-system.md
     - internals/09-backend.md
     - internals/10-debug.md
-  - User Guide:
-    - user/01-getting-started.md
-    - user/02-layout.md
-    - user/03-widgets.md
-    - user/04-zmarkup.md
-    - user/05-zstyle.md
-    - user/06-events.md
-    - user/07-animations.md
-    - user/08-portals.md
-    - user/09-effects.md
-    - user/10-custom-widgets.md
