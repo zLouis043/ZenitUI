@@ -179,6 +179,7 @@ namespace ZenitUI
 			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
 			{
 				ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+				notifyFocusAncestors(ctx.focusedNode.lock().get());
 			}
 			else
 			{

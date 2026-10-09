@@ -4,6 +4,20 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
+namespace {
+
+// Sottoclasse di Layout che conta le notifiche di focus sui discendenti.
+struct NotifyingContainer : public TLayout<NotifyingContainer>
+{
+    NotifyingContainer() : TLayout<NotifyingContainer>(LayoutType::Stack) {}
+    int notifyCount = 0;
+
+protected:
+    void onDescendantFocused(Layout*) override { notifyCount++; }
+};
+
+} // namespace
+
 // ============================================================
 //  Helper: piccolo nodo cliccabile
 // ============================================================
@@ -502,4 +516,33 @@ TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     bool okBelow = std::abs(gapBelow - 4.0f) < 2.0f;
     bool okAbove = std::abs(gapAbove - 4.0f) < 2.0f;
     CHECK(okBelow || okAbove);
+}
+
+TEST(Interaction_focus, click_fires_on_descendant_focused)
+{
+    Env env;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto container = NotifyingContainer::create();
+    container->size(Px(200), Px(200));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->setFocusable(true);
+    container->addChild(btn);
+    root->addChild(container);
+
+    env.frame(root);
+
+    CHECK(container->notifyCount == 0);
+
+    // Click sul bottone → focus + notifica agli antenati.
+    env.click(root, { 50, 25 });
+
+    CHECK(UIContext::get().hasFocus(btn.get()));
+    CHECK(container->notifyCount == 1);
 }
