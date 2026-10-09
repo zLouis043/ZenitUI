@@ -2,6 +2,8 @@
 
 #include "Common.hpp"
 
+#include <algorithm>
+
 namespace ZenitUI
 {
 

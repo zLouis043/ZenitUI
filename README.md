@@ -7,7 +7,7 @@
 **Status:** 🧪 *alpha* — the API is still evolving. Expect breaking
 changes.
 
-[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-orange.svg)](#status)
 
@@ -131,7 +131,7 @@ A full walkthrough is in **[Getting Started](docs/user/01-getting-started.md)**.
 
 The project is built with a plain **Makefile**. It expects:
 
-- A C++17 compiler (`g++` by default).
+- A C++20 compiler (`g++` by default).
 - **Raylib** unpacked in `deps/raylib/`, with:
   - headers in `deps/raylib/include/`
   - libraries in `deps/raylib/lib/`
