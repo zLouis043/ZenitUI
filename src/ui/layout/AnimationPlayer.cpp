@@ -200,6 +200,7 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
         }
 
         s.elapsed += (s.reverse ? -dt : dt);
+        bool justFinished = false;
 
         if (s.elapsed <= 0.0f)
         {
@@ -209,6 +210,8 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
         if (s.elapsed >= s.anim->duration)
         {
             s.elapsed = s.anim->duration;
+             if (s.playing && !s.reverse)
+                justFinished = true;
             s.playing = false;
         }
 
@@ -217,6 +220,14 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
             track->apply(t, &node);
 
         node.pendingTransition = true;
+
+        if (justFinished)
+        {
+            // Copia il callback: potrebbe invalidare la mappa imperative
+            // (es. removeFromParent lanciato dal callback stesso).
+            auto cb = s.anim->onFinished;
+            if (cb) cb();
+        }
     }
 
     return localBlocks;

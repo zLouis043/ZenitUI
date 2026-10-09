@@ -3,6 +3,7 @@
 #include "Common.hpp"
 #include "Logger.hpp"
 #include "CoreTypes.hpp"
+#include "UIEnums.hpp"
 #include "Easing.hpp"
 #include "Layout.hpp"
 #include "Style.hpp"

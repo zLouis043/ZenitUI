@@ -44,6 +44,7 @@ namespace ZenitUI {
 		float delay{ 0.0f };
 		bool blocksInput{ true };
 		std::vector<std::unique_ptr<TrackBase>> tracks;
+		std::function<void()> onFinished;
 	};
 
 	struct AnimState {

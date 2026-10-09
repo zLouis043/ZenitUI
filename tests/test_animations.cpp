@@ -1,5 +1,8 @@
 #include "TestFramework.hpp"
-#include "AnimPrimitives.hpp"
+#include "Layout.hpp"
+#include "Theme.hpp"
+#include "StyleParser.hpp"
+#include "UIComponents.hpp"
 
 using namespace ZenitUI;
 
@@ -141,4 +144,44 @@ TEST(Anim_sampleActive, infinite_never_finishes) {
     bool fin = false;
     CHECK_NEAR(sampleActive(a, fin), 0.0f, 1e-4);
     CHECK(!fin);
+}
+
+TEST(Anim_callback, imperative_finished_fires) {
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    auto anim = std::make_shared<UIAnimation>(0.1f);
+    anim->addTrack<float>(0.0f, 1.0f,
+        [](Layout* l, float v) { l->getInlineBase().opacity = v; });
+    bool fired = false;
+    anim->onFinished = [&fired]() { fired = true; };
+
+    node->addAnimation("fade", anim);
+    node->playAnimation("fade");
+
+    // Due frame per superare 0.1s con dt=1/60 (0.0167) → serve ~6 frame.
+    for (int i = 0; i < 10; ++i)
+        node->update(1.0f / 60.0f, false);
+
+    CHECK(fired);
+}
+
+TEST(Anim_callback, css_finished_fires) {
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        @keyframes blink {
+            0%   { opacity: 0.0; }
+            100% { opacity: 1.0; }
+        }
+        .blink { animation: blink 0.05s linear; }
+    )");
+
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->cls("blink");
+
+    bool fired = false;
+    node->onAnimationsFinished = [&fired]() { fired = true; };
+
+    for (int i = 0; i < 10; ++i)
+        node->update(1.0f / 60.0f, false);
+
+    CHECK(fired);
 }
