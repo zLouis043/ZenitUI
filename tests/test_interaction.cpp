@@ -415,3 +415,91 @@ TEST(Interaction_scroll, reset_on_overflow_change_only) {
     env.frame(root);
     CHECK_NEAR(sv->getScrollY(), 0.0f, 1e-4);
 }
+
+TEST(Interaction_scroll, portal_does_not_move_with_scroll) {
+    Env env;
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        .scroller { overflow: scroll; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto sv = std::make_shared<Layout>(LayoutType::Vertical);
+    sv->size(Px(200), Px(100));
+    sv->cls("scroller");
+    sv->addChild(std::make_shared<Layout>(LayoutType::Stack)->size(Px(100), Px(500)));
+
+    auto portal = std::make_shared<Layout>(LayoutType::Stack);
+    portal->size(Px(50), Px(50));
+    portal->setPortal(true);
+    portal->arrange({0, 0, 50, 50});
+    sv->addChild(portal);
+
+    root->addChild(sv);
+    env.frame(root);
+
+    float py0 = portal->getRect().y;
+
+    sv->scrollToY(200.0f);
+    env.frame(root);
+
+    // Il portal non deve essere traslato dallo scroll
+    CHECK_NEAR(portal->getRect().y, py0, 0.5f);
+}
+
+TEST(Interaction_scroll, dropdown_list_follows_trigger) {
+    Env env;
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        .scroller { overflow: scroll; }
+        Dropdown { width: 150px; height: 40px; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto sv = std::make_shared<Layout>(LayoutType::Vertical);
+    sv->size(Px(300), Px(200));
+    sv->cls("scroller");
+
+    // Spacer per far stare il Dropdown un po' in basso
+    auto spacer = std::make_shared<Layout>(LayoutType::Stack);
+    spacer->size(Px(10), Px(80));
+    sv->addChild(spacer);
+
+    auto dd = UI::Dropdown::create(std::vector<std::string>{"A", "B", "C"}, 0);
+    sv->addChild(dd);
+
+    // Contenuto dopo per rendere il container scrollabile
+    auto filler = std::make_shared<Layout>(LayoutType::Stack);
+    filler->size(Px(10), Px(500));
+    sv->addChild(filler);
+
+    root->addChild(sv);
+    env.frame(root);
+
+    // Apri il dropdown e lascia che il portal si registri
+    dd->setOpen(true);
+    env.frame(root);
+    env.frame(root);
+
+    auto list = dd->children[1];  // listContainer
+
+    // Scrolla
+    sv->scrollToY(60.0f);
+    env.frame(root);
+    env.frame(root);
+
+    Rect btnRect  = dd->children[0]->getRect();
+    Rect listRect = list->getRect();
+
+    // La lista deve essere ancorata al bottone (sotto o sopra, gap ~4)
+    float gapBelow = listRect.y - (btnRect.y + btnRect.height);
+    float gapAbove = btnRect.y - (listRect.y + listRect.height);
+
+    bool okBelow = std::abs(gapBelow - 4.0f) < 2.0f;
+    bool okAbove = std::abs(gapAbove - 4.0f) < 2.0f;
+    CHECK(okBelow || okAbove);
+}
