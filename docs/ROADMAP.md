@@ -615,16 +615,48 @@ Not blocking for beta, but needed for 1.0.
 - [ ] `round()`, `floor()`, `ceil()`
 - [ ] `mod()`
 
-### 5.4 Filter chaining
+### 5.4 Filter and effect chaining
 
-Currently each filter reads the original target. To chain:
+Two separate limitations:
 
-- [ ] Ping-pong between `layerTarget_` and `layerScratch_`
-- [ ] Update `applyFilter` to accept a "current input target"
-- [ ] Update `Silhouette` and `Separable` patterns to write to the
-      next target instead of the framebuffer
+**5.4a — Filter-to-filter chaining.** Currently each filter in a
+`filter:` list reads the **original** `layerTarget_`, not the output
+of the previous filter. `filter: blur(2px), sepia(0.6)` produces "sepia
+on the original" instead of "sepia of blur". Only the last filter's
+output is visible on the framebuffer.
+
+Fix:
+- Ping-pong between `layerTarget_` and `layerScratch_` (already both
+  exist, both sized to `region`).
+- Update `applyFilter` to accept a "current input target" parameter.
+- `SinglePass` and `Silhouette` write to the next target instead of
+  the framebuffer; the final pass writes to the framebuffer.
+- `Separable` already ping-pongs internally; needs to read from the
+  current input and leave the result in the next target.
+- Add tests.
+- Update `user/09-effects.md` §1.5 and `internals/06-render-pipeline.md`.
+
+**5.4b — `effect:` and `filter:` on the same node.** When both are set,
+the effect shader is pushed inside the layer target (applies to each
+draw call), then the filter chain processes the composited result.
+The visual outcome is "effect applied N times (once per draw call),
+then filter", not "effect on the composited subtree, then filter".
+
+Options:
+- Leave as is, document the behavior explicitly in `09-effects.md`.
+- Route `effect:` through the layer pipeline too (one extra pass in the
+  target) so it operates on the composited image like a `filter:`.
+- Unify both: make `effect:` a special case of `filter:` with a
+  single-pass pipeline.
+
+The unification (option 3) is the cleanest but the largest change.
+It would collapse the two properties into one and simplify the mental
+model — at the cost of a breaking change to the `.zstyle` surface.
+
+- [ ] Decide between documenting or unifying
+- [ ] Implement
 - [ ] Add tests
-- [ ] Update documentation
+- [ ] Update docs (`09-effects.md`, `06-render-pipeline.md`, `05-zstyle.md`)
 
 ### 5.5 Nested render targets
 
