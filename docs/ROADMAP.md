@@ -345,6 +345,53 @@ lists.
 - [ ] Consider whether it should also clear `parent` pointers of the
       removed children
 
+### 2.8 Compound selectors in ZStyle
+
+**Severity:** high — ZStyle doesn't support `Tag.class`,
+`.class1.class2`, `Tag#id`, or `Tag.class:pseudo`. The parser reads
+the whole token as a single name, so `Button.btn-primary` never
+matches any node.
+
+**Location:** `src/ui/StyleParser.hpp`, the selector-splitting step
+inside `parseRule`; `Style.hpp`, `SimpleSelector`; `Layout.hpp`,
+`nodeMatchesSimple` and `ruleMatches`.
+
+**Problem:** a token like `Button.btn-primary` is parsed as
+`SimpleSelector{kind=Tag, name="Button.btn-primary"}`, which matches
+nothing. The parser only handles a single component per token:
+`Tag`, `.class`, `#id`, and their `:pseudo` variants. It does not
+distinguish a *compound* selector (`Tag.class`, one node) from a
+*descendant* selector (`Tag .class`, two nodes).
+
+**Expected:** the parser must recognise compound selectors and the
+matcher must require all their components to match the same node.
+
+**Design options:**
+
+- **A.** Extend `SimpleSelector` with optional extra components
+  (`Opt<TagName>`, `std::vector<ClassName>`, `Opt<IdName>`) and
+  update `computeSpecificity`, `nodeMatchesSimple`,
+  `Debug::selectorToString`.
+- **B.** Introduce a `CompoundSelector` struct and change
+  `ThemeRule::chain` to `std::vector<CompoundSelector>`.
+- **C.** Pre-process the selector string at parse time: emit one
+  `SimpleSelector` per component and add a `bool compound` flag
+  on the `SimpleSelector` to indicate "same node as next".
+
+**Recommendation:** option C is the smallest change and keeps the
+existing chain semantics for descendant matching.
+
+**Test:** a stylesheet with `Button.btn-primary { background: red; }`
+applied to a `Button` with class `btn-primary` must produce a red
+button.
+
+- [ ] Extend the parser to split compound selectors
+- [ ] Update `nodeMatchesSimple` / `ruleMatches`
+- [ ] Update `computeSpecificity`
+- [ ] Add tests for `Tag.class`, `.class1.class2`, `Tag#id`, `Tag.class:hover`
+- [ ] Update `user/05-zstyle.md` (add a section on compound selectors)
+- [ ] Update `api/ZStyle.md`
+
 ---
 
 ## Phase 3 — Test coverage
