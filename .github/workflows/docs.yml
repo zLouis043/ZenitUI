@@ -1,0 +1,28 @@
+name: Publish Documentation
+
+on:
+  push:
+    branches:
+      - main # Esegue il deploy solo quando i cambiamenti arrivano sul main
+      - master
+
+permissions:
+  contents: write # Necessario per fare il push sul branch gh-pages
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codice
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Installa MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Deploy su GitHub Pages
+        run: mkdocs gh-deploy --force

@@ -81,7 +81,7 @@ PR directly.
 
 Minimum required:
 
-- A C++17 compiler (GCC, Clang, or MSVC).
+- A C++20 compiler (GCC, Clang, or MSVC).
 - Raylib (for the reference backend and the manual test apps).
 
 To build the tests without a window, only the core library and the
