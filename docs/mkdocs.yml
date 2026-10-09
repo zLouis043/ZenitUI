@@ -1,0 +1,47 @@
+site_name: ZenitUI Documentation
+repo_url: https://github.com/zLouis043/ZenitUI
+theme:
+  name: material
+  palette:
+    scheme: slate # Tema scuro di default
+  features:
+    - navigation.tabs # Navigazione a tab in alto
+    - search.suggest
+    - search.highlight
+
+# Opzionale: puoi definire un menù di navigazione esplicito.
+# Se non lo fai, MkDocs creerà il menù leggendo le tue cartelle automaticamente.
+nav:
+  - Home: README.md
+  - API:
+    - api/GLOSSARY.md
+    - api/Layout.md
+    - api/Style.md
+    - api/Theme.md
+    - api/UIContext.md
+    - api/Unit.md
+    - api/Widgets.md
+    - api/ZMarkup.md
+    - api/ZStyle.md
+  - Internals:
+    - internals/01-architecture.md
+    - internals/02-lifecycle.md
+    - internals/03-style-system.md
+    - internals/04-animation-system.md
+    - internals/05-layout-engine.md
+    - internals/06-render-pipeline.md
+    - internals/07-input-system.md
+    - internals/08-scroll-system.md
+    - internals/09-backend.md
+    - internals/10-debug.md
+  - User Guide:
+    - user/01-getting-started.md
+    - user/02-layout.md
+    - user/03-widgets.md
+    - user/04-zmarkup.md
+    - user/05-zstyle.md
+    - user/06-events.md
+    - user/07-animations.md
+    - user/08-portals.md
+    - user/09-effects.md
+    - user/10-custom-widgets.md
