@@ -161,7 +161,7 @@ namespace ZenitUI
 		if (!captured || !captured->getEnabled())
 		{
 			ctx.pointerCapture.reset();
-			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false, nullptr);
 		}
 		else
 		{

@@ -360,7 +360,9 @@ namespace ZenitUI
 		virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false);
 		virtual void draw(float parentOpacity = 1.0f);
 
-		Layout *hitTest(Vec2 p, bool ancestorBlocked = false);
+		Layout *hitTest(Vec2 p,
+                bool ancestorBlocked = false,
+                const Rect *clipLocal = nullptr);
 		void updateTree(float dt);
 
 		// Ciclo di logica: beginFrame + updateTree + measure + arrange.
