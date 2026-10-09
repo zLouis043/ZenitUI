@@ -16,7 +16,6 @@ namespace ZenitUI
 		ComputedStyle styleBefore = style_.currentStyle;
 
 		initStyleIfNeeded();
-		scroll_.resetIfOverflowChanged(*this);
 
 		// Se il viewport è cambiato dall'ultimo frame, le media query CSS
 		// possono aver cambiato l'esito: forziamo una ri-risoluzione.
@@ -52,6 +51,8 @@ namespace ZenitUI
 		style_.tick(*this, dt);
 		anim_.tickCss(*this, dt);
 		style_.propagateInheritance(*this);
+
+		scroll_.resetIfOverflowChanged(*this);
 
 		{
 			bool anyLocal = anim_.hasActiveLocal();

@@ -380,3 +380,38 @@ TEST(Interaction_hover, exit_does_not_fire_on_press) {
     env.frame(root);
     CHECK(exits == 1);
 }
+
+TEST(Interaction_scroll, reset_on_overflow_change_only) {
+    Env env;
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        .scroller { overflow: scroll; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto sv = std::make_shared<Layout>(LayoutType::Vertical);
+    sv->size(Px(200), Px(100));
+    sv->cls("scroller");
+    sv->addChild(std::make_shared<Layout>(LayoutType::Stack)->size(Px(100), Px(500)));
+    root->addChild(sv);
+
+    env.frame(root);
+
+    // Scroll a metà
+    sv->scrollToY(100.0f);
+    env.frame(root);
+    CHECK(sv->getScrollY() > 0.0f);
+
+    // Cambia un'altra proprietà: NON deve resettare lo scroll
+    sv->setEnabled(true);   // già true, ma tocca il flag
+    env.frame(root);
+    CHECK(sv->getScrollY() > 0.0f);
+
+    // Cambia overflow: DEVE resettare
+    sv->getInlineBase().overflowY = Overflow::Hidden;
+    env.frame(root);
+    env.frame(root);
+    CHECK_NEAR(sv->getScrollY(), 0.0f, 1e-4);
+}
