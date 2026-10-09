@@ -92,3 +92,4 @@ small and the assets reusable.
 | `03_widgets` | Built-in widgets: Button, Toggle, Checkbox, Slider, TextInput, Dropdown |
 | `04_animations` | Transitions, `@keyframes`, and `::part` animations |
 | `04b_imperative_animations` | `UIAnimation` in C++: play/reverse, custom math, chaining |
+| `05_zstyle` | External `.zstyle` file: `var()`, `calc()`, `@media`, states, `::part` |
