@@ -132,17 +132,17 @@ namespace ZenitUI::UI
             if (!button || !listContainer)
                 return;
 
+            // btnRect è in coord "base" (appena posizionato da arrangeInto).
             Rect btnRect = button->getRect();
 
-            // Trova il primo antenato con overflow != visible. Il suo rect è in
-            // coord schermo; il suo scroll serve per portare il clip in coord
-            // "base" (dove vive btnRect durante arrangeInto).
+            // Trova il primo antenato scrollabile/clippante.
             Layout *clipAncestor = nullptr;
             Layout *p = getParent().get();
             while (p)
             {
                 const auto &st = p->getStyle();
-                if (st.overflowX != Overflow::Visible || st.overflowY != Overflow::Visible)
+                if (st.overflowX != Overflow::Visible ||
+                    st.overflowY != Overflow::Visible)
                 {
                     clipAncestor = p;
                     break;
@@ -150,26 +150,33 @@ namespace ZenitUI::UI
                 p = p->getParent().get();
             }
 
+            // clip è in SCREEN coords (il container dello scroll non si muove).
             Rect clip;
-            float scroll = 0.0f;
+            float scrollX = 0.0f;
+            float scrollY = 0.0f;
             if (clipAncestor)
             {
                 clip = clipAncestor->getRect();
-                scroll = clipAncestor->getScrollY();
+                scrollX = clipAncestor->getScrollX();
+                scrollY = clipAncestor->getScrollY();
             }
             else
             {
                 clip = {0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
             }
 
-            // Convertiamo il clip in coord "base" per confrontarlo con btnRect.
-            clip.y += scroll;
+            // Il button (figlio non-portal del Dropdown) verrà traslato da
+            // applyOffsetDelta. Per portarlo in screen coords sottraiamo lo
+            // scroll dell'antenato. Il listContainer invece è un portal e NON
+            // verrà traslato: lo posizioniamo direttamente in screen coords.
+            const float btnScreenX = btnRect.x - scrollX;
+            const float btnScreenY = btnRect.y - scrollY;
 
             float listH = listContainer->getMeasuredSize().y;
-            float desiredY = btnRect.y + btnRect.height + 4.0f;
+            float desiredY = btnScreenY + btnRect.height + 4.0f;
 
-            float spaceBelow = (clip.y + clip.height) - desiredY;
-            float spaceAbove = btnRect.y - clip.y;
+            const float spaceBelow = (clip.y + clip.height) - desiredY;
+            const float spaceAbove = btnScreenY - clip.y;
 
             if (listH <= spaceBelow)
             {
@@ -177,8 +184,8 @@ namespace ZenitUI::UI
             }
             else if (listH <= spaceAbove)
             {
-                // Flip: c'è più spazio sopra.
-                desiredY = btnRect.y - listH - 4.0f;
+                // Flip: più spazio sopra.
+                desiredY = btnScreenY - listH - 4.0f;
             }
             else
             {
@@ -190,11 +197,11 @@ namespace ZenitUI::UI
                 else
                 {
                     listH = std::max(20.0f, spaceAbove);
-                    desiredY = btnRect.y - listH - 4.0f;
+                    desiredY = btnScreenY - listH - 4.0f;
                 }
             }
 
-            listContainer->arrange({btnRect.x, desiredY, btnRect.width, listH});
+            listContainer->arrange({btnScreenX, desiredY, btnRect.width, listH});
         }
 
     private:

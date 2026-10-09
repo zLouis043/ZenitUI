@@ -157,8 +157,8 @@ namespace ZenitUI
 		// Sposta i figli (e i loro discendenti) senza toccare il rect di `this`.
 		for (auto &c : children)
 		{
-			//if (c->isPortal())
-			//	continue;
+			if (c->isPortal())
+				continue;
 			c->rect.x += dx;
 			c->rect.y += dy;
 			c->translateSubtree(dx, dy);
