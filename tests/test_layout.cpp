@@ -1,6 +1,7 @@
 #include "TestFramework.hpp"
 #include "Layout.hpp"
 #include "Theme.hpp"
+#include "ZMarkup.hpp"
 
 using namespace ZenitUI;
 
@@ -242,4 +243,40 @@ TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
     Vec2 s2 = root->measure(1000, 1000);
     CHECK_NEAR(s2.x, 300.0f, 1e-4);
     CHECK_NEAR(s2.y, 150.0f, 1e-4);
+}
+
+TEST(Layout_hitTest, clipped_area_not_hit) {
+    freshTheme();
+
+    // Root più grande del clipper, così il punto (300, 50) può essere
+    // dentro il root ma fuori dal clipper.
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Px(500), Px(200));
+
+    auto clipper = std::make_shared<Layout>(LayoutType::Stack);
+    clipper->size(Px(200), Px(100));
+    clipper->getInlineBase().overflowX = Overflow::Hidden;
+    clipper->getInlineBase().overflowY = Overflow::Hidden;
+
+    auto inner = std::make_shared<Layout>(LayoutType::Stack);
+    inner->size(Px(400), Px(100));
+    inner->setInteractive(true);
+    inner->setBlocksRaycast(true);
+    clipper->addChild(inner);
+    root->addChild(clipper);
+
+    // Arrange manuale.
+    root->measure(1000, 1000);
+    root->arrange({0, 0, 500, 200});
+    clipper->measure(500, 200);
+    clipper->arrange({0, 0, 200, 100});
+    inner->measure(200, 100);
+    inner->arrange({0, 0, 400, 100});
+
+    // (50, 50): dentro sia clipper che inner → hit su inner.
+    CHECK(root->hitTest({50, 50}, false) == inner.get());
+
+    // (300, 50): dentro inner (400 wide) ma fuori dal clipper (200 wide).
+    // Non deve colpire inner.
+    CHECK(root->hitTest({300, 50}, false) != inner.get());
 }

@@ -4,6 +4,15 @@
 namespace ZenitUI
 {
 
+	static Rect intersectRect(const Rect &a, const Rect &b)
+	{
+		float x1 = std::max(a.x, b.x);
+		float y1 = std::max(a.y, b.y);
+		float x2 = std::min(a.x + a.width, b.x + b.width);
+		float y2 = std::min(a.y + a.height, b.y + b.height);
+		return {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
+	}
+
 	// =========================================================================
 	//  MISURA E ARRANGE
 	//  Fase 1: ogni nodo calcola la propria dimensione intrinseca (measure).
@@ -125,7 +134,7 @@ namespace ZenitUI
 		return measuredSize;
 	}
 
-		void Layout::arrange(Rect space)
+	void Layout::arrange(Rect space)
 	{
 		const bool positionChanged = (space.x != rect.x || space.y != rect.y);
 		rect = space;
@@ -151,7 +160,7 @@ namespace ZenitUI
 
 		onLayout();
 	}
-	
+
 	void Layout::translateSubtree(float dx, float dy)
 	{
 		// Sposta i figli (e i loro discendenti) senza toccare il rect di `this`.
@@ -493,21 +502,29 @@ namespace ZenitUI
 		}
 	}
 
-	Layout *Layout::hitTest(Vec2 p, bool ancestorBlocked)
+	Layout *Layout::hitTest(Vec2 p, bool ancestorBlocked, const Rect *clipLocal)
 	{
 		if (ancestorBlocked || !isEnabled)
 			return nullptr;
 
+		// Clip check: se il punto è fuori dal clip del parent, questo ramo
+		// non è visibile e non può essere colpito.
+		if (clipLocal && !clipLocal->contains(p))
+			return nullptr;
+
 		if (!hasParent())
 		{
-			for (auto it = UIContext::get().activePortals.rbegin(); it != UIContext::get().activePortals.rend(); ++it)
+			for (auto it = UIContext::get().activePortals.rbegin();
+				 it != UIContext::get().activePortals.rend(); ++it)
 			{
 				auto sp = it->lock();
 				if (!sp)
 					continue;
 				bool wasPortal = sp->isPortal();
 				sp->setPortal(false);
-				Layout *hit = sp->hitTest(p, false);
+				// I portal non sono clippati da nessun antenato: passiamo
+				// nullptr come clipLocal.
+				Layout *hit = sp->hitTest(p, false, nullptr);
 				sp->setPortal(wasPortal);
 				if (hit)
 					return hit;
@@ -518,6 +535,24 @@ namespace ZenitUI
 
 		Transform2D tr = currentTransform(style_.currentStyle);
 		Vec2 pChildren = applyInverseTransform(tr, p);
+
+		// Clip per i figli: se questo nodo ha overflow != visible, il suo
+		// rect diventa il nuovo confine visibile. Intersechiamo col clip
+		// corrente (se presente) oppure col viewport (primo livello).
+		const bool needsClip =
+			style_.currentStyle.overflowX != Overflow::Visible ||
+			style_.currentStyle.overflowY != Overflow::Visible;
+
+		Rect newClipStorage;
+		const Rect *newClip = clipLocal;
+		if (needsClip)
+		{
+			Rect base = clipLocal
+							? *clipLocal
+							: Rect{0, 0, Metrics::viewport.x, Metrics::viewport.y};
+			newClipStorage = intersectRect(base, rect);
+			newClip = &newClipStorage;
+		}
 
 		std::vector<Layout *> negZ, normalFlow, posZ;
 		for (auto &child : children)
@@ -540,13 +575,13 @@ namespace ZenitUI
 		std::stable_sort(posZ.begin(), posZ.end(), sortByZ);
 
 		for (auto it = posZ.rbegin(); it != posZ.rend(); ++it)
-			if (Layout *hit = (*it)->hitTest(pChildren, false))
+			if (Layout *hit = (*it)->hitTest(pChildren, false, newClip))
 				return hit;
 		for (auto it = normalFlow.rbegin(); it != normalFlow.rend(); ++it)
-			if (Layout *hit = (*it)->hitTest(pChildren, false))
+			if (Layout *hit = (*it)->hitTest(pChildren, false, newClip))
 				return hit;
 		for (auto it = negZ.rbegin(); it != negZ.rend(); ++it)
-			if (Layout *hit = (*it)->hitTest(pChildren, false))
+			if (Layout *hit = (*it)->hitTest(pChildren, false, newClip))
 				return hit;
 
 		if (rect.width > 0 && rect.height > 0 &&
