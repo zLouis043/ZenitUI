@@ -1,0 +1,156 @@
+/* =========================================================================
+   ZenitUI — Example 05: ZStyle
+   A stylesheet demonstrating custom properties, var(), calc(), @media,
+   states (:hover, :checked, :focus), ::part, and transitions.
+   ========================================================================= */
+
+/* ---- :root: global custom properties ------------------------------- */
+:root {
+    --bg:         #141418;
+    --surface:    #1e1e24;
+    --surface-hi: #26262e;
+    --primary:    #4a9eff;
+    --primary-hi: #7bc0ff;
+    --text:       #e8e8ee;
+    --text-dim:   #9090a0;
+    --radius:     8px;
+    --pad:        1.6vh 1.2vw;
+}
+
+/* ---- Page background + typography --------------------------------- */
+Page {
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    padding: 3vh 3vw;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---- The panel that holds the demo rows --------------------------- */
+Panel {
+    background: var(--surface);
+    radius: var(--radius);
+    padding: var(--pad);
+    gap: 14px;
+    width: 100%;
+}
+
+/* ---- A section title ---------------------------------------------- */
+.title {
+    color: var(--primary);
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* ---- Demo row ----------------------------------------------------- */
+.row {
+    background: var(--surface-hi);
+    radius: 6px;
+    padding: 10px 14px;
+    gap: 16px;
+    items-v: center;
+    width: 100%;
+}
+
+.row-label {
+    color: var(--text-dim);
+    font-size: 13px;
+    min-width: 200px;
+}
+
+/* ---- var() inside calc(): width = 100% - 260px -------------------- */
+.value-box {
+    background: var(--primary);
+    color: #ffffff;
+    radius: 6px;
+    padding: 8px 16px;
+    width: calc(100% - 260px);
+    items-h: center;
+    transition: background 0.2s ease-out-quad;
+}
+.value-box:hover { background: var(--primary-hi); }
+
+/* ---- Toggle with state rules + transition on the knob ------------- */
+Toggle {
+    width: 52px;
+    height: 28px;
+    background: #3a3a44;
+    radius: 14px;
+    transition: background 0.2s linear;
+}
+Toggle:checked { background: var(--primary); }
+
+Toggle .toggle-knob {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 2px;
+    left: 2px;
+    radius: 12px;
+    background: #ffffff;
+    transition: left 0.20s ease-out-cubic;
+}
+Toggle:checked .toggle-knob { left: 26px; }
+
+/* ---- Checkbox with ::part styling --------------------------------- */
+Checkbox {
+    width: 26px;
+    height: 26px;
+    background: #3a3a44;
+    radius: 4px;
+    transition: background 0.15s linear;
+}
+Checkbox:checked { background: var(--primary); }
+
+Checkbox::box  { radius: 4px; }
+Checkbox::mark { color: #ffffff; }
+
+/* ---- Slider with ::part + transition on hover --------------------- */
+Slider {
+    width: 240px;
+    height: 24px;
+}
+Slider::track {
+    background: #3a3a44;
+    radius: 4px;
+}
+Slider::fill {
+    color: var(--primary);
+    transition: color 0.2s ease-out-quad;
+}
+Slider::knob {
+    color: #ffffff;
+    transition: color 0.2s ease-out-quad;
+}
+Slider:hover::fill { color: var(--primary-hi); }
+Slider:hover::knob { color: var(--primary-hi); }
+
+/* ---- TextInput with :focus ---------------------------------------- */
+TextInput {
+    background: #14141a;
+    color: var(--text);
+    radius: 4px;
+    padding: 8px 12px;
+    border-width: 1px;
+    border-color: #3a3a44;
+    min-width: 220px;
+    transition: border-color 0.18s ease-out-quad;
+}
+TextInput:focus { border-color: var(--primary); }
+
+/* ---- @media: change layout when the window is narrow -------------- */
+@media (max-width: 700px) {
+    .row {
+        gap: 8px;
+        padding: 8px 10px;
+    }
+    .row-label {
+        min-width: 120px;
+        font-size: 12px;
+    }
+    .value-box {
+        width: calc(100% - 160px);
+    }
+}
