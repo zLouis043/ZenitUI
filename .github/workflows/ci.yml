@@ -1,0 +1,52 @@
+name: ZenitUI Tests
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    name: ${{ matrix.os }} - ${{ matrix.cxx }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux con GCC
+          - os: ubuntu-latest
+            cxx: g++
+          # Linux con Clang
+          - os: ubuntu-latest
+            cxx: clang++
+          # macOS con Apple Clang
+          - os: macos-latest
+            cxx: clang++
+          # Windows con MinGW GCC
+          - os: windows-latest
+            cxx: g++
+
+    steps:
+    - name: Checkout del codice
+      uses: actions/checkout@v4
+
+    - name: Setup MSYS2 (Solo per Windows)
+      if: runner.os == 'Windows'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        # Installa make e il compilatore GCC per Windows
+        install: make mingw-w64-x86_64-gcc
+
+    - name: Compilazione ed Esecuzione Test (Linux / macOS)
+      if: runner.os != 'Windows'
+      # Il Makefile leggerà la variabile CXX passata in riga di comando
+      run: make test CXX=${{ matrix.cxx }}
+
+    - name: Compilazione ed Esecuzione Test (Windows)
+      if: runner.os == 'Windows'
+      # Forza l'uso della shell bash di MSYS2 invece del CMD di Windows
+      shell: msys2 {0}
+      run: make test CXX=${{ matrix.cxx }}
