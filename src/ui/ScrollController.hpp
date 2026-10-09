@@ -24,6 +24,9 @@ struct ScrollController
     Vec2        appliedOffset{0, 0};// offset già applicato via translateSubtree
     bool        arrangeInitialized{false};
     bool        scrolling{false};   // drag attivo o inerzia in corso
+    Overflow lastOverflowX{Overflow::Visible};
+    Overflow lastOverflowY{Overflow::Visible};
+    bool     overflowInitialized{false};
 
     // --- Arrange ---
     // Ritorna true se serve un re-arrange completo (dirty, cambio posizione, primo giro).

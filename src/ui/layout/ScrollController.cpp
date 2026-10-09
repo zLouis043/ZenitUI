@@ -319,9 +319,21 @@ Rect ScrollController::horizontalThumb(const Layout& node) const
 void ScrollController::resetIfOverflowChanged(const Layout& node)
 {
     const auto& cur = node.style_.currentStyle;
-    const auto& prev = node.style_.lastInherited;
-    if (cur.overflowX != prev.overflowX || cur.overflowY != prev.overflowY)
+
+    if (!overflowInitialized)
+    {
+        lastOverflowX = cur.overflowX;
+        lastOverflowY = cur.overflowY;
+        overflowInitialized = true;
+        return;
+    }
+
+    if (cur.overflowX != lastOverflowX || cur.overflowY != lastOverflowY)
+    {
+        lastOverflowX = cur.overflowX;
+        lastOverflowY = cur.overflowY;
         reset();
+    }
 }
 
 } // namespace ZenitUI

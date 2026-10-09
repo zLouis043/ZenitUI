@@ -26,19 +26,3 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
-
-// --- Framework core (macro-heavy: Style.hpp espande BUBBLE_STYLE_PROPS) ---
-#include "Common.hpp"
-#include "CoreTypes.hpp"
-#include "Easing.hpp"
-#include "Unit.hpp"
-#include "Style.hpp"
-#include "Theme.hpp"
-#include "AnimPrimitives.hpp"
-#include "StyleResolver.hpp"
-#include "AnimationPlayer.hpp"
-#include "UIContext.hpp"
-#include "Logger.hpp"
-#include "ScrollState.hpp"
-#include "UIEnums.hpp"
-#include "Layout.hpp"
