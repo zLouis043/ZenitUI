@@ -13,4 +13,5 @@
 #include "Unit.hpp"
 #include "ZMarkup.hpp"
 #include "StyleParser.hpp"
+#include "FilterRegistry.hpp"
 #include "Debug.hpp"

@@ -41,6 +41,15 @@ int main(void)
     backendAssets.loadTexture("npatches", "assets/npatches_y.png");
     backendAssets.loadEffect("hueShift", "assets/hue_shift.fs");
     backendAssets.loadEffect("blur", "assets/blur.fs");
+    backendAssets.loadEffect("dropShadow", "assets/drop_shadow.fs");
+
+    backendAssets.loadEffect("sepia", "assets/sepia.fs");
+
+    ZenitUI::FilterRegistry::get().add(ZenitUI::FilterDef{.name = "sepia",
+                                        .shader = "sepia",
+                                        .pattern = ZenitUI::FilterPattern::SinglePass,
+                                        .params = {
+                                            {"amount", ZenitUI::FilterParamType::Float, 0, 0.7f}}});
 
     InitializeGameTheme();
 

@@ -1,5 +1,7 @@
 #include "Layout.hpp"
 #include "Debug.hpp"
+#include "StyleAttr.hpp"
+#include "FilterRegistry.hpp"
 
 namespace ZenitUI
 {
@@ -43,7 +45,10 @@ namespace ZenitUI
 			return;
 
 		const bool isLayer =
-			!renderStyle.filters.empty() && renderer->supports(Feature::Effects) && rect.width > 0.0f && rect.height > 0.0f;
+			!renderStyle.filters.empty() &&
+			renderer->supports(Feature::Effects) &&
+			rect.width > 0.0f && rect.height > 0.0f &&
+			!renderer->inTarget(); // Raylib non ha texture mode annidate
 
 		if (isLayer)
 			drawLayer(renderStyle, globalOp);
@@ -115,13 +120,29 @@ namespace ZenitUI
 
 		// rect e getClipRect() sono entrambe in coordinate schermo.
 		// La regione visibile è la loro intersezione.
+		// Calcola il bounding box del nodo DOPO il transform (scale + translate).
+		// Rotation ignorata: rara su nodi con filter. Se servirà, si aggiunge.
+		const float scale = renderStyle.scale;
+		const float tx = renderStyle.translateX.resolveSelfH(rect.width, rect.height);
+		const float ty = renderStyle.translateY.resolveSelfV(rect.width, rect.height);
+		const Vec2 pivot = rect.center();
+
+		const float tW = rect.width * scale;
+		const float tH = rect.height * scale;
+
+		Rect transformedRect = {
+			pivot.x - tW * 0.5f + tx,
+			pivot.y - tH * 0.5f + ty,
+			tW, tH};
+
+		// Regione visibile = intersezione fra il bbox trasformato e il clip.
 		Rect clip = renderer->getClipRect();
 
 		Rect region;
-		region.x = std::max(rect.x, clip.x);
-		region.y = std::max(rect.y, clip.y);
-		float right = std::min(rect.x + rect.width, clip.x + clip.width);
-		float bottom = std::min(rect.y + rect.height, clip.y + clip.height);
+		region.x = std::max(transformedRect.x, clip.x);
+		region.y = std::max(transformedRect.y, clip.y);
+		float right = std::min(transformedRect.x + transformedRect.width, clip.x + clip.width);
+		float bottom = std::min(transformedRect.y + transformedRect.height, clip.y + clip.height);
 		region.width = std::max(0.0f, right - region.x);
 		region.height = std::max(0.0f, bottom - region.y);
 
@@ -165,7 +186,6 @@ namespace ZenitUI
 		Transform2D offsetTr;
 		offsetTr.pivot = {0.0f, 0.0f};
 		offsetTr.translate = {-region.x, -region.y};
-		renderer->pushTransform(offsetTr);
 
 		Transform2D tr = currentTransform(renderStyle);
 		const bool identity =
@@ -173,6 +193,7 @@ namespace ZenitUI
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
 		if (!identity)
 			renderer->pushTransform(tr);
+		renderer->pushTransform(offsetTr);
 
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->pushEffect(customEffect);
@@ -187,61 +208,44 @@ namespace ZenitUI
 			renderer->popEffect();
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->popEffect();
+		renderer->popTransform();
 		if (!identity)
 			renderer->popTransform();
-		renderer->popTransform();
+
 		renderer->popTarget();
 
-		// Filtri.
-		const auto &f = renderStyle.filters.front();
+		registerBuiltinFilters();
 
-		if (f.name == "blur")
+		FilterContext ctx;
+		ctx.renderer = renderer;
+		ctx.node = this;
+		ctx.src = layerTarget_;
+		ctx.scratch = layerScratch_;
+		ctx.region = region;
+		ctx.dst = {0, 0, (float)tw, (float)th};
+		ctx.opacity = globalOp;
+
+		auto &registry = FilterRegistry::get();
+
+		if (renderStyle.filters.empty())
 		{
-			EffectHandle fx = UIContext::get().assets
-								  ? UIContext::get().assets->getEffect("blur")
-								  : EffectHandle{};
-
-			if (fx.valid())
-			{
-				float radius = 4.0f;
-				if (!f.args.empty())
-				{
-					std::string s = f.args[0];
-					if (s.size() > 2 && s.substr(s.size() - 2) == "px")
-						s = s.substr(0, s.size() - 2);
-					try
-					{
-						radius = std::stof(s);
-					}
-					catch (...)
-					{
-					}
-				}
-
-				Rect dst = {0, 0, (float)tw, (float)th};
-
-				// Pass H: layerTarget_ → layerScratch_.
-				renderer->pushTarget(layerScratch_);
-				renderer->pushEffect(fx);
-				renderer->setEffectVec2(fx, "texSize", {(float)tw, (float)th});
-				renderer->setEffectVec2(fx, "direction", {1.0f, 0.0f});
-				renderer->setEffectFloat(fx, "radius", radius);
-				renderer->drawTarget(layerTarget_, dst, Colors::White);
-				renderer->popEffect();
-				renderer->popTarget();
-
-				// Pass V: layerScratch_ → framebuffer, alla region.
-				renderer->pushEffect(fx);
-				renderer->setEffectVec2(fx, "texSize", {(float)tw, (float)th});
-				renderer->setEffectVec2(fx, "direction", {0.0f, 1.0f});
-				renderer->setEffectFloat(fx, "radius", radius);
-				renderer->drawTarget(layerScratch_, region, Colors::White.withAlpha(globalOp));
-				renderer->popEffect();
-				return;
-			}
+			renderer->drawTarget(layerTarget_, region, Colors::White.withAlpha(globalOp));
+			return;
 		}
 
-		renderer->drawTarget(layerTarget_, region, Colors::White.withAlpha(globalOp));
+		for (const auto &f : renderStyle.filters)
+		{
+			ctx.ref = &f;
+
+			if (const auto *def = registry.find(f.name))
+			{
+				applyFilter(*def, ctx);
+			}
+			else
+			{
+				renderer->drawTarget(layerTarget_, region, Colors::White.withAlpha(globalOp));
+			}
+		}
 	}
 
 	// -------------------------------------------------------------------------
