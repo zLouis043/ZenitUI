@@ -1,0 +1,3282 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Layout/">
+      
+      
+        <link rel="next" href="../Theme/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Style — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#style-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Style — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-optt-optional-property-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Opt&lt;T&gt; — optional property wrapper
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Opt&lt;T&gt; — optional property wrapper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bubble_style_props-the-property-macro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. BUBBLE_STYLE_PROPS — the property macro
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. BUBBLE_STYLE_PROPS — the property macro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#property-list-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property list (quick reference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-the-declared-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Style — the declared style
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style — the declared style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overlayconst-style-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overlay(const Style&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-computedstyle-the-resolved-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. ComputedStyle — the resolved style
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. ComputedStyle — the resolved style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#froms-parent-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from(s, parent, root)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator== / operator!=
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Spacing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-transitionspec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. TransitionSpec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-animationref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. AnimationRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-position-zindex-overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Position, ZIndex, Overflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Position, ZIndex, Overflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZIndex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-textureref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. TextureRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-simpleselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. SimpleSelector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-filterref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. FilterRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-boxshadow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. BoxShadow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-property-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Property table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-lerp-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Lerp functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Lerp functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-and-unit-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar and unit types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum-like-types-snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enum-like types (snap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lerpvalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lerpValue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lerpstyle-lerpstyletimed-lerpstyleparts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lerpStyle, lerpStyleTimed, lerpStyleParts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-style-manipulation-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Style manipulation helpers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Style manipulation helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overlaycomputeddst-src" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overlayComputed(dst, src)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foreachsetstyleprops-fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forEachSetStyleProp(s, fn)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hasstyleprops-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hasStyleProp(s, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copystylepropdst-src-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        copyStyleProp(dst, src, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearstyleprops-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clearStyleProp(s, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stylesdiffera-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stylesDiffer(a, b)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-a-resolved-property" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading a resolved property
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overlaying-a-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overlaying a style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-a-keyframe-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying a keyframe overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-a-custom-style-in-a-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a custom Style in a widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterating-set-properties-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterating set properties (debugging)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-optt-optional-property-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Opt&lt;T&gt; — optional property wrapper
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Opt&lt;T&gt; — optional property wrapper">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bubble_style_props-the-property-macro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. BUBBLE_STYLE_PROPS — the property macro
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. BUBBLE_STYLE_PROPS — the property macro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#property-list-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property list (quick reference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-the-declared-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Style — the declared style
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style — the declared style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overlayconst-style-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overlay(const Style&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-computedstyle-the-resolved-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. ComputedStyle — the resolved style
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. ComputedStyle — the resolved style">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#froms-parent-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from(s, parent, root)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator== / operator!=
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Spacing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-transitionspec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. TransitionSpec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-animationref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. AnimationRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-position-zindex-overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Position, ZIndex, Overflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Position, ZIndex, Overflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZIndex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-textureref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. TextureRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-simpleselector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. SimpleSelector
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-filterref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. FilterRef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-boxshadow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. BoxShadow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-property-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Property table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-lerp-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Lerp functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Lerp functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-and-unit-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar and unit types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum-like-types-snap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enum-like types (snap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lerpvalue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lerpValue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lerpstyle-lerpstyletimed-lerpstyleparts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lerpStyle, lerpStyleTimed, lerpStyleParts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-style-manipulation-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Style manipulation helpers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Style manipulation helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overlaycomputeddst-src" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        overlayComputed(dst, src)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foreachsetstyleprops-fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forEachSetStyleProp(s, fn)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hasstyleprops-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hasStyleProp(s, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copystylepropdst-src-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        copyStyleProp(dst, src, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearstyleprops-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clearStyleProp(s, name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stylesdiffera-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stylesDiffer(a, b)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-a-resolved-property" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading a resolved property
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overlaying-a-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overlaying a style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-a-keyframe-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying a keyframe overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-a-custom-style-in-a-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a custom Style in a widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterating-set-properties-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iterating set properties (debugging)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="style-api-reference"><code>Style</code> — API Reference</h1>
+<p>The style data model. Three structs (<code>Style</code>, <code>ComputedStyle</code>, and the
+helpers), plus the supporting types used inside them.</p>
+<ul>
+<li><strong>Header</strong>: <code>Style.hpp</code></li>
+<li><strong>Namespace</strong>: <code>ZenitUI</code></li>
+</ul>
+<p>For the cascade and transitions, see
+<a href="../../internals/03-style-system/">Style System</a>. For the <code>.zstyle</code>
+grammar, see <a href="../../user/05-zstyle/">ZStyle</a>.</p>
+<hr />
+<h2 id="1-optt-optional-property-wrapper">1. <code>Opt&lt;T&gt;</code> — optional property wrapper</h2>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+struct Opt {
+    T    value{};
+    bool is_set{false};
+
+    Opt() = default;
+    Opt(const T&amp; v);
+    Opt&amp; operator=(const T&amp; v);
+    void reset();
+    T get_or(const T&amp; fallback) const;
+};
+</code></pre>
+<p>Every style property is an <code>Opt&lt;T&gt;</code>. <code>is_set</code> distinguishes "not
+declared" from "declared to the default value". This is what makes the
+cascade work: an unset property doesn't override a lower-priority one.</p>
+<h3 id="methods">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Opt(const T&amp;)</code></td>
+<td>Constructs a set <code>Opt</code>.</td>
+</tr>
+<tr>
+<td><code>operator=(const T&amp;)</code></td>
+<td>Assigns and sets <code>is_set = true</code>.</td>
+</tr>
+<tr>
+<td><code>reset()</code></td>
+<td>Sets <code>is_set = false</code>. The value is unchanged but ignored.</td>
+</tr>
+<tr>
+<td><code>get_or(fallback)</code></td>
+<td>Returns <code>value</code> if <code>is_set</code>, else <code>fallback</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> <code>Opt&lt;T&gt;</code> has no <code>operator bool</code>. Use <code>is_set</code> directly.</p>
+<hr />
+<h2 id="2-bubble_style_props-the-property-macro">2. <code>BUBBLE_STYLE_PROPS</code> — the property macro</h2>
+<p>All properties of <code>Style</code> and <code>ComputedStyle</code> are defined by one macro:</p>
+<pre><code class="language-cpp">#define BUBBLE_STYLE_PROPS(X)                               \
+    X(Value, width, Value::autoSize())                      \
+    X(Value, height, Value::autoSize())                     \
+    X(Value, minWidth, Value::autoSize())                   \
+    X(Value, minHeight, Value::autoSize())                  \
+    X(Value, maxWidth, Value::autoSize())                   \
+    X(Value, maxHeight, Value::autoSize())                  \
+    X(float, grow, 0.0f)                                    \
+    X(float, shrink, 1.0f)                                  \
+    X(Value, gap, Value(0.0f))                              \
+    X(Spacing, margin, Spacing())                           \
+    X(Spacing, padding, Spacing())                          \
+    X(Align, alignH, Align::Auto)                           \
+    X(Align, alignV, Align::Auto)                           \
+    X(Align, itemsH, Align::Start)                          \
+    X(Align, itemsV, Align::Start)                          \
+    X(Justify, justify, Justify::Start)                     \
+    X(Align, textAlign, Align::Auto)                        \
+    X(Color, background, Colors::Blank)                     \
+    X(Color, color, Colors::White)                          \
+    X(Color, tint, Colors::White)                           \
+    X(TextureRef, backgroundTexture, TextureRef{})          \
+    X(BoxShadow, boxShadow, BoxShadow{})                    \
+    X(std::string, effect, &quot;&quot;)                              \
+    X(std::vector&lt;FilterRef&gt;, filters, {})                  \
+    X(Color, borderColor, Colors::Blank)                    \
+    X(Value, borderWidth, Value(0.0f))                      \
+    X(Value, radius, Value(0.0f))                           \
+    X(float, opacity, 1.0f)                                 \
+    X(float, scale, 1.0f)                                   \
+    X(float, rotation, 0.0f)                                \
+    X(Value, translateX, Value(0.0f))                       \
+    X(Value, translateY, Value(0.0f))                       \
+    X(Value, fontSize, Value(20.0f))                        \
+    X(Value, letterSpacing, Value(2.0f))                    \
+    X(float, transitionTime, 0.15f)                         \
+    X(TransitionFunction, ease, TransitionFunction::Linear) \
+    X(Overflow, overflowX, Overflow::Visible)               \
+    X(Overflow, overflowY, Overflow::Visible)               \
+    X(Position, position, Position::Static)                 \
+    X(ZIndex, zIndex, ZIndex::Auto())                       \
+    X(Value, top, Value::autoSize())                        \
+    X(Value, left, Value::autoSize())                       \
+    X(Value, right, Value::autoSize())                      \
+    X(Value, bottom, Value::autoSize())                     \
+    X(std::string, font, &quot;&quot;)
+</code></pre>
+<p>Every operation on <code>Style</code> and <code>ComputedStyle</code> (<code>overlay</code>, <code>operator==</code>,
+<code>lerp</code>, <code>stylesDiffer</code>, <code>forEachSetStyleProp</code>, <code>propTable</code>, etc.) uses
+this macro. Adding a property means editing this macro and the parser
+(<code>applyStyleAttr</code> in <code>StyleAttr.hpp</code>).</p>
+<h3 id="property-list-quick-reference">Property list (quick reference)</h3>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sizing</td>
+<td><code>width</code>, <code>height</code>, <code>minWidth</code>, <code>minHeight</code>, <code>maxWidth</code>, <code>maxHeight</code></td>
+</tr>
+<tr>
+<td>Flex</td>
+<td><code>grow</code>, <code>shrink</code>, <code>gap</code></td>
+</tr>
+<tr>
+<td>Spacing</td>
+<td><code>margin</code>, <code>padding</code></td>
+</tr>
+<tr>
+<td>Alignment</td>
+<td><code>alignH</code>, <code>alignV</code>, <code>itemsH</code>, <code>itemsV</code>, <code>justify</code>, <code>textAlign</code></td>
+</tr>
+<tr>
+<td>Visual</td>
+<td><code>background</code>, <code>color</code>, <code>tint</code>, <code>backgroundTexture</code>, <code>boxShadow</code>, <code>borderColor</code>, <code>borderWidth</code>, <code>radius</code>, <code>opacity</code></td>
+</tr>
+<tr>
+<td>Effects</td>
+<td><code>effect</code>, <code>filters</code></td>
+</tr>
+<tr>
+<td>Transform</td>
+<td><code>scale</code>, <code>rotation</code>, <code>translateX</code>, <code>translateY</code></td>
+</tr>
+<tr>
+<td>Typography</td>
+<td><code>fontSize</code>, <code>letterSpacing</code>, <code>font</code></td>
+</tr>
+<tr>
+<td>Transition</td>
+<td><code>transitionTime</code>, <code>ease</code></td>
+</tr>
+<tr>
+<td>Overflow / position</td>
+<td><code>overflowX</code>, <code>overflowY</code>, <code>position</code>, <code>zIndex</code>, <code>top</code>, <code>left</code>, <code>right</code>, <code>bottom</code></td>
+</tr>
+</tbody>
+</table>
+<p>All property names use <strong>camelCase</strong> in C++ and <strong>kebab-case</strong> in
+<code>.zstyle</code> (<code>borderWidth</code> ↔ <code>border-width</code>).</p>
+<hr />
+<h2 id="3-style-the-declared-style">3. <code>Style</code> — the declared style</h2>
+<pre><code class="language-cpp">struct Style {
+    #define X(T, name, def) Opt&lt;T&gt; name;
+    BUBBLE_STYLE_PROPS(X)
+    #undef X
+
+    Opt&lt;std::vector&lt;TransitionSpec&gt;&gt; transitions;
+    Opt&lt;std::vector&lt;AnimationRef&gt;&gt;   animations;
+
+    std::unordered_map&lt;std::string, std::string&gt; customProps;
+    std::unordered_map&lt;std::string, std::string&gt; unresolvedProps;
+
+    Style&amp; overlay(const Style&amp; o);
+};
+</code></pre>
+<p>Every property is an <code>Opt&lt;T&gt;</code>. Plus:</p>
+<ul>
+<li><strong><code>transitions</code></strong> — the parsed <code>transition:</code> shorthand.</li>
+<li><strong><code>animations</code></strong> — the parsed <code>animation:</code> shorthand.</li>
+<li><strong><code>customProps</code></strong> — custom properties (<code>--name</code>) stored as raw
+  strings.</li>
+<li><strong><code>unresolvedProps</code></strong> — properties whose values contained <code>var()</code>
+  and couldn't be typed at parse time.</li>
+</ul>
+<h3 id="overlayconst-style-o"><code>overlay(const Style&amp; o)</code></h3>
+<p>Copies every <strong>set</strong> property from <code>o</code> into <code>*this</code>. Unset properties
+in <code>o</code> don't change <code>*this</code>. This is the core cascade operation.</p>
+<pre><code class="language-cpp">Style a;
+a.background = Colors::Red;
+a.color = Colors::White;
+
+Style b;
+b.background = Colors::Blue;   // only background
+
+a.overlay(b);
+// a.background == Blue, a.color == White
+</code></pre>
+<p>For <code>customProps</code> and <code>unresolvedProps</code>, the maps are merged
+(overlay wins on conflicts). For <code>transitions</code> and <code>animations</code>, the
+whole vector is replaced if <code>o</code>'s is set.</p>
+<p><strong>Special behavior for <code>unresolvedProps</code>:</strong> when an overlay brings an
+unresolved prop, <code>clearStyleProp</code> is called on the same name in <code>*this</code>
+to clear any typed value. This ensures a typed value from a lower-
+priority source doesn't win over a <code>var()</code>-containing value from a
+higher-priority one.</p>
+<hr />
+<h2 id="4-computedstyle-the-resolved-style">4. <code>ComputedStyle</code> — the resolved style</h2>
+<pre><code class="language-cpp">struct ComputedStyle {
+    #define X(T, name, def) T name = def;
+    BUBBLE_STYLE_PROPS(X)
+    #undef X
+
+    std::vector&lt;TransitionSpec&gt; transitions;
+    std::vector&lt;AnimationRef&gt;   animations;
+    std::unordered_map&lt;std::string, std::string&gt; customProps;
+
+    static ComputedStyle from(const Style&amp; s,
+                              const ComputedStyle* parent = nullptr,
+                              const Style* root = nullptr);
+};
+</code></pre>
+<p>Same property list, but each field is a concrete value (no <code>Opt</code>). Every
+field has a default, so a <code>ComputedStyle</code> is always fully populated.</p>
+<h3 id="froms-parent-root"><code>from(s, parent, root)</code></h3>
+<p>Resolves a <code>Style</code> into a <code>ComputedStyle</code>. Priority:</p>
+<ol>
+<li>If <code>s.name.is_set</code>, use it.</li>
+<li>Else if the property is inherited and <code>parent</code> exists, use
+   <code>parent-&gt;name</code>.</li>
+<li>Else if <code>root</code> has the property set, use <code>root-&gt;name.value</code>.</li>
+<li>Else use the default.</li>
+</ol>
+<p>Plus the <strong>overflow computed-value rule</strong>:</p>
+<pre><code class="language-cpp">if (c.overflowX == Overflow::Visible &amp;&amp; c.overflowY != Overflow::Visible)
+    c.overflowX = Overflow::Auto;
+else if (c.overflowY == Overflow::Visible &amp;&amp; c.overflowX != Overflow::Visible)
+    c.overflowY = Overflow::Auto;
+</code></pre>
+<p>If one axis is <code>Visible</code> and the other isn't, the <code>Visible</code> axis is
+promoted to <code>Auto</code>. This makes clipping behavior predictable.</p>
+<p><code>customProps</code> inherit from the parent, then merge with the node's own
+(winning on conflict).</p>
+<h3 id="inheritance">Inheritance</h3>
+<p>Only these properties are inherited:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>font</code></td>
+<td>Text typography cascades.</td>
+</tr>
+<tr>
+<td><code>fontSize</code></td>
+<td>Same.</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>Same.</td>
+</tr>
+<tr>
+<td><code>letterSpacing</code></td>
+<td>Same.</td>
+</tr>
+<tr>
+<td><code>textAlign</code></td>
+<td>Same.</td>
+</tr>
+</tbody>
+</table>
+<p>The check is <code>isInheritedProp(name)</code> in <code>Style.hpp</code>:</p>
+<pre><code class="language-cpp">inline bool isInheritedProp(std::string_view name) {
+    return name == &quot;font&quot; || name == &quot;fontSize&quot; || name == &quot;color&quot;
+        || name == &quot;letterSpacing&quot; || name == &quot;textAlign&quot;;
+}
+</code></pre>
+<p>Everything else uses the local value or the default — no inheritance.</p>
+<h3 id="operator-operator"><code>operator==</code> / <code>operator!=</code></h3>
+<p>Compares every field. Used by <code>Layout::recomputeDirty</code> to detect style
+changes.</p>
+<pre><code class="language-cpp">inline bool operator==(const ComputedStyle&amp; a, const ComputedStyle&amp; b);
+inline bool operator!=(const ComputedStyle&amp; a, const ComputedStyle&amp; b);
+</code></pre>
+<hr />
+<h2 id="5-spacing">5. <code>Spacing</code></h2>
+<pre><code class="language-cpp">struct Spacing {
+    Value top, right, bottom, left;
+
+    Spacing();
+    Spacing(float all);
+    Spacing(Value all);
+    Spacing(Value v, Value h);
+    Spacing(Value v, Value h, Value b);
+    Spacing(Value t, Value r, Value b, Value l);
+
+    bool operator==(const Spacing&amp; o) const;
+    bool operator!=(const Spacing&amp; o) const;
+};
+</code></pre>
+<p>The four-side value used by <code>padding</code> and <code>margin</code>. Follows CSS syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Constructor</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Spacing(v)</code></td>
+<td>All sides = <code>v</code>.</td>
+</tr>
+<tr>
+<td><code>Spacing(v, h)</code></td>
+<td>Vertical = <code>v</code>, horizontal = <code>h</code>.</td>
+</tr>
+<tr>
+<td><code>Spacing(v, h, b)</code></td>
+<td>Top = <code>v</code>, horizontal = <code>h</code>, bottom = <code>b</code>.</td>
+</tr>
+<tr>
+<td><code>Spacing(t, r, b, l)</code></td>
+<td>Top, right, bottom, left.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> these are constructed programmatically. In <code>.zstyle</code>, spacing
+is parsed by <code>parseSpacingToken</code>, which produces the same result from
+1 / 2 / 3 / 4 whitespace-separated values.</p>
+<hr />
+<h2 id="6-transitionspec">6. <code>TransitionSpec</code></h2>
+<pre><code class="language-cpp">struct TransitionSpec {
+    std::string        prop;           // property name, or &quot;all&quot;
+    float              duration{0.15f}; // seconds
+    TransitionFunction ease{TransitionFunction::Linear};
+    float              delay{0.0f};    // seconds
+};
+</code></pre>
+<p>One entry in <code>Style::transitions</code>. A <code>transition:</code> shorthand produces
+one <code>TransitionSpec</code> per comma-separated item.</p>
+<p>See <a href="../../user/07-animations/">Animations</a> for the CSS semantics.</p>
+<hr />
+<h2 id="7-animationref">7. <code>AnimationRef</code></h2>
+<pre><code class="language-cpp">struct AnimationRef {
+    std::string        name;           // keyframe name
+    float              duration{1.0f}; // seconds
+    TransitionFunction ease{TransitionFunction::Linear};
+    float              delay{0.0f};    // seconds
+    int                iterations{1};  // -1 for infinite
+    bool               alternate{false};
+    bool               fillForwards{false};
+    bool               blocksInput{false};
+};
+</code></pre>
+<p>One entry in <code>Style::animations</code>. An <code>animation:</code> shorthand produces
+one <code>AnimationRef</code> per comma-separated item.</p>
+<hr />
+<h2 id="8-position-zindex-overflow">8. <code>Position</code>, <code>ZIndex</code>, <code>Overflow</code></h2>
+<h3 id="position"><code>Position</code></h3>
+<pre><code class="language-cpp">enum class Position {
+    Static,     // in flow, no z-index stacking
+    Relative,   // in flow, can have z-index
+    Absolute    // out of flow, positioned by top/left/right/bottom
+};
+</code></pre>
+<p><code>Relative</code> currently behaves like <code>Static</code> for layout purposes (only
+affects stacking). See <a href="../../user/02-layout/#7-absolute-positioning">Layout §7</a>.</p>
+<h3 id="zindex"><code>ZIndex</code></h3>
+<pre><code class="language-cpp">struct ZIndex {
+    bool isAuto{true};
+    int  value{0};
+
+    ZIndex() = default;
+    ZIndex(int v);
+    static ZIndex Auto();
+
+    bool operator==(const ZIndex&amp; o) const;
+    bool operator!=(const ZIndex&amp; o) const;
+};
+</code></pre>
+<p><code>isAuto = true</code> means "no explicit z-index" — the node participates in
+its parent's normal flow ordering. <code>isAuto = false</code> with <code>value</code> set
+means the node is a stacking context (if <code>position != Static</code>).</p>
+<h3 id="overflow"><code>Overflow</code></h3>
+<pre><code class="language-cpp">enum class Overflow {
+    Visible,   // no clipping, no scrolling
+    Hidden,    // clipping, no scrolling
+    Scroll,    // clipping, scrollbar always visible
+    Auto       // clipping, scrollbar only when needed
+};
+</code></pre>
+<p>See <a href="../../user/02-layout/#8-overflow">Layout §8</a>.</p>
+<hr />
+<h2 id="9-textureref">9. <code>TextureRef</code></h2>
+<pre><code class="language-cpp">struct TextureRef {
+    std::string name;
+    int left{0}, top{0}, right{0}, bottom{0};
+
+    bool isNineSlice() const;
+    bool operator==(const TextureRef&amp; o) const;
+    bool operator!=(const TextureRef&amp; o) const;
+};
+</code></pre>
+<p>A background texture reference. <code>name</code> is the asset name. The four
+integers are nine-slice insets; if all zero, <code>isNineSlice()</code> returns
+false and the texture is stretched.</p>
+<p>Set in <code>.zstyle</code>:</p>
+<pre><code class="language-css">background-texture: bubble;               /* stretch */
+background-texture: npatches 16 16 16 16; /* nine-slice */
+</code></pre>
+<hr />
+<h2 id="10-simpleselector">10. <code>SimpleSelector</code></h2>
+<pre><code class="language-cpp">struct SimpleSelector {
+    enum class Kind { Tag, Class, Id };
+    std::string name;
+    Kind kind{Kind::Tag};
+
+    // Extra components of a compound selector (`Button.btn-primary`,
+    // `.card.elevated`, `Button#save`). Each pair is (kind, name).
+    // All components must match the same node.
+    std::vector&lt;std::pair&lt;Kind, std::string&gt;&gt; extras;
+
+    bool requireHover{false};
+    bool requirePressed{false};
+    bool requireFocus{false};
+    bool requireDisabled{false};
+    bool requireChecked{false};
+};
+</code></pre>
+<p>One token of a selector chain. A <code>ThemeRule</code> holds a <code>chain</code> of these:
+the rightmost entry matches the node itself, the earlier ones match
+ancestors (descendant selectors).</p>
+<p>A token can be a <strong>compound selector</strong>: a tag, any number of classes,
+and an id, all on the same node. In that case <code>kind</code>/<code>name</code> hold the
+first component and <code>extras</code> holds the rest. Examples:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th><code>kind</code> / <code>name</code></th>
+<th><code>extras</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Button</code></td>
+<td><code>Tag</code> / <code>"Button"</code></td>
+<td>(empty)</td>
+</tr>
+<tr>
+<td><code>.btn-primary</code></td>
+<td><code>Class</code> / <code>"btn-primary"</code></td>
+<td>(empty)</td>
+</tr>
+<tr>
+<td><code>Button.btn-primary</code></td>
+<td><code>Tag</code> / <code>"Button"</code></td>
+<td><code>[(Class, "btn-primary")]</code></td>
+</tr>
+<tr>
+<td><code>.card.elevated</code></td>
+<td><code>Class</code> / <code>"card"</code></td>
+<td><code>[(Class, "elevated")]</code></td>
+</tr>
+<tr>
+<td><code>Button.btn-primary#save</code></td>
+<td><code>Tag</code> / <code>"Button"</code></td>
+<td><code>[(Class, "btn-primary"), (Id, "save")]</code></td>
+</tr>
+</tbody>
+</table>
+<p>States (<code>:hover</code>, <code>:checked</code>, …) always apply to the whole compound,
+regardless of where they appear in the source.</p>
+<hr />
+<h2 id="11-filterref">11. <code>FilterRef</code></h2>
+<pre><code class="language-cpp">struct FilterRef {
+    std::string name;
+    std::vector&lt;std::string&gt; args;
+
+    bool operator==(const FilterRef&amp; o) const;
+    bool operator!=(const FilterRef&amp; o) const;
+};
+
+inline bool operator==(const std::vector&lt;FilterRef&gt;&amp; a,
+                       const std::vector&lt;FilterRef&gt;&amp; b);
+inline bool operator!=(const std::vector&lt;FilterRef&gt;&amp; a,
+                       const std::vector&lt;FilterRef&gt;&amp; b);
+</code></pre>
+<p>One filter in a <code>filter:</code> list. <code>args</code> is the raw argument strings.</p>
+<pre><code class="language-css">filter: blur(4px), drop-shadow(2px, 2px, #000);
+</code></pre>
+<p>produces two <code>FilterRef</code>: <code>{name="blur", args={"4px"}}</code> and
+<code>{name="drop-shadow", args={"2px", "2px", "#000"}}</code>.</p>
+<hr />
+<h2 id="12-boxshadow">12. <code>BoxShadow</code></h2>
+<pre><code class="language-cpp">struct BoxShadow {
+    Value x{0.0f}, y{0.0f}, blur{0.0f};
+    Color color{Colors::Blank};
+    bool  enabled{false};
+
+    bool operator==(const BoxShadow&amp; o) const;
+    bool operator!=(const BoxShadow&amp; o) const;
+};
+</code></pre>
+<p>A box-shadow definition. <code>enabled</code> is true if the property was declared.</p>
+<pre><code class="language-css">box-shadow: 4px 4px 8px #00000080;
+</code></pre>
+<p>is <code>{x=4px, y=4px, blur=8px, color={0,0,0,128}, enabled=true}</code>.</p>
+<hr />
+<h2 id="13-property-table">13. Property table</h2>
+<pre><code class="language-cpp">using PropValue = std::variant&lt;float, Value, Color, Spacing, Align, Justify,
+                                TransitionFunction, Overflow, Position, ZIndex,
+                                std::string, TextureRef, std::vector&lt;FilterRef&gt;,
+                                BoxShadow&gt;;
+
+struct PropDesc {
+    const char* name;
+    PropValue (*get)(const ComputedStyle&amp;);
+    void (*set)(ComputedStyle&amp;, const PropValue&amp;);
+};
+
+inline const std::vector&lt;PropDesc&gt;&amp; propTable();
+inline const PropDesc* findProp(std::string_view name);
+</code></pre>
+<p>A runtime-discoverable table of all properties. Used by <code>lerpValue</code>,
+and available for reflection / tooling.</p>
+<p><code>findProp("width")</code> returns a <code>PropDesc*</code> or null. The <code>get</code> / <code>set</code>
+function pointers let you read or write a property by name.</p>
+<hr />
+<h2 id="14-lerp-functions">14. Lerp functions</h2>
+<h3 id="scalar-and-unit-types">Scalar and unit types</h3>
+<pre><code class="language-cpp">float  lerpProp(float a, float b, float t);
+Color  lerpProp(const Color&amp; a, const Color&amp; b, float t);
+Value  lerpProp(const Value&amp; a, const Value&amp; b, float t);
+Spacing lerpProp(const Spacing&amp; a, const Spacing&amp; b, float t);
+</code></pre>
+<p>Numeric interpolation with the easing applied upstream.</p>
+<p>For <code>Value</code>, <code>auto</code> on either side causes a <strong>snap</strong> (returns <code>b</code> if
+<code>t &gt; 0</code>, else <code>a</code>). Mixed units are interpolated term-by-term,
+including units present in only one side.</p>
+<h3 id="enum-like-types-snap">Enum-like types (snap)</h3>
+<pre><code class="language-cpp">template &lt;typename E&gt;
+E lerpProp(E a, E b, float t);              // enums snap
+
+ZIndex      lerpProp(const ZIndex&amp; a,      const ZIndex&amp; b,      float t);
+std::string lerpProp(const std::string&amp; a, const std::string&amp; b, float t);
+TextureRef  lerpProp(const TextureRef&amp; a,  const TextureRef&amp; b,  float t);
+BoxShadow   lerpProp(const BoxShadow&amp; a,   const BoxShadow&amp; b,   float t);
+std::vector&lt;FilterRef&gt; lerpProp(const std::vector&lt;FilterRef&gt;&amp; a,
+                                 const std::vector&lt;FilterRef&gt;&amp; b,
+                                 float t);
+</code></pre>
+<p>All return <code>t &gt; 0 ? b : a</code> (snap at the first non-zero <code>t</code>).</p>
+<h3 id="lerpvalue"><code>lerpValue</code></h3>
+<pre><code class="language-cpp">PropValue lerpValue(const PropValue&amp; a, const PropValue&amp; b, float t);
+</code></pre>
+<p>Variant-dispatched lerp. If the two variants hold the same type, lerps;
+otherwise returns <code>a</code>.</p>
+<h3 id="lerpstyle-lerpstyletimed-lerpstyleparts"><code>lerpStyle</code>, <code>lerpStyleTimed</code>, <code>lerpStyleParts</code></h3>
+<pre><code class="language-cpp">ComputedStyle lerpStyle(const ComputedStyle&amp; a,
+                        const ComputedStyle&amp; b, float t);
+
+ComputedStyle lerpStyleTimed(const ComputedStyle&amp; a,
+                             const ComputedStyle&amp; b,
+                             float realElapsed);
+
+Style lerpStyleParts(const Style&amp; a, const Style&amp; b, float t);
+</code></pre>
+<p>Three variants:</p>
+<ul>
+<li><strong><code>lerpStyle</code></strong> — global lerp with a pre-normalized <code>t</code>. All properties
+  use the same <code>t</code>.</li>
+<li><strong><code>lerpStyleTimed</code></strong> — per-property timing. Each property uses its own
+  duration/ease from <code>b.transitions</code>, with <code>b.transitionTime</code> as
+  fallback. <code>realElapsed</code> is the elapsed time in seconds.</li>
+<li><strong><code>lerpStyleParts</code></strong> — for <code>Style</code> (not <code>ComputedStyle</code>). Uses
+  <code>lerpOpt</code>, which <strong>snaps</strong> if either side is unset. Used by
+  <code>StyleResolver::partFor</code>.</li>
+</ul>
+<hr />
+<h2 id="15-style-manipulation-helpers">15. Style manipulation helpers</h2>
+<h3 id="overlaycomputeddst-src"><code>overlayComputed(dst, src)</code></h3>
+<pre><code class="language-cpp">inline void overlayComputed(ComputedStyle&amp; dst, const Style&amp; src);
+</code></pre>
+<p>Applies a <code>Style</code> on top of a <code>ComputedStyle</code>. Every set property in
+<code>src</code> overwrites the corresponding field in <code>dst</code>.</p>
+<p>Used by <code>Anim::overlayCssComputed</code> to apply CSS keyframe values to the
+node's render style.</p>
+<h3 id="foreachsetstyleprops-fn"><code>forEachSetStyleProp(s, fn)</code></h3>
+<pre><code class="language-cpp">template &lt;typename F&gt;
+inline void forEachSetStyleProp(const Style&amp; s, F&amp;&amp; fn);
+</code></pre>
+<p>Calls <code>fn(name)</code> for each property that's set. <code>name</code> is a <code>const char*</code>.</p>
+<h3 id="hasstyleprops-name"><code>hasStyleProp(s, name)</code></h3>
+<pre><code class="language-cpp">inline bool hasStyleProp(const Style&amp; s, std::string_view name);
+</code></pre>
+<p>True if the named property is set.</p>
+<h3 id="copystylepropdst-src-name"><code>copyStyleProp(dst, src, name)</code></h3>
+<pre><code class="language-cpp">inline bool copyStyleProp(Style&amp; dst, const Style&amp; src, std::string_view name);
+</code></pre>
+<p>If <code>src.name</code> is set, copies it to <code>dst.name</code> and returns true. Else
+returns false without touching <code>dst</code>.</p>
+<h3 id="clearstyleprops-name"><code>clearStyleProp(s, name)</code></h3>
+<pre><code class="language-cpp">inline bool clearStyleProp(Style&amp; s, std::string_view name);
+</code></pre>
+<p>Resets the named property (<code>is_set = false</code>). Returns true if the
+property was recognized.</p>
+<h3 id="stylesdiffera-b"><code>stylesDiffer(a, b)</code></h3>
+<pre><code class="language-cpp">inline bool stylesDiffer(const Style&amp; a, const Style&amp; b);
+</code></pre>
+<p>Compares two <code>Style</code>s, distinguishing "unset" from "set to default".
+Returns true if any property is set in exactly one, or set to different
+values in both. Also compares <code>animations</code>.</p>
+<p>Used by <code>StyleResolver::partFor</code> to decide whether to start a part
+transition.</p>
+<hr />
+<h2 id="16-common-patterns">16. Common patterns</h2>
+<h3 id="reading-a-resolved-property">Reading a resolved property</h3>
+<pre><code class="language-cpp">const ComputedStyle&amp; style = node-&gt;getStyle();
+float w = style.width.resolveH(parentW, parentH);
+float rPx = style.radius.resolveH(rect.width, rect.height);
+</code></pre>
+<h3 id="overlaying-a-style">Overlaying a style</h3>
+<pre><code class="language-cpp">Style base;
+base.background = Colors::Red;
+
+Style override;
+override.background = Colors::Blue;
+override.radius = Px(8);
+
+base.overlay(override);
+// base.background == Blue, base.radius == 8px
+</code></pre>
+<h3 id="applying-a-keyframe-overlay">Applying a keyframe overlay</h3>
+<pre><code class="language-cpp">ComputedStyle renderStyle = node-&gt;getStyle();
+Anim::overlayCssComputed(renderStyle, node-&gt;anim_.css);
+</code></pre>
+<h3 id="building-a-custom-style-in-a-widget">Building a custom <code>Style</code> in a widget</h3>
+<pre><code class="language-cpp">Style s;
+s.background = Colors::DarkGray;
+s.radius = Px(6);
+s.padding = Spacing(Px(8));
+node-&gt;setInlineBase(s);
+</code></pre>
+<h3 id="iterating-set-properties-debugging">Iterating set properties (debugging)</h3>
+<pre><code class="language-cpp">forEachSetStyleProp(style, [](const char* name) {
+    std::printf(&quot;%s\n&quot;, name);
+});
+</code></pre>
+<hr />
+<h2 id="17-pitfalls">17. Pitfalls</h2>
+<p><strong><code>overlay</code> doesn't clear unset properties.</strong></p>
+<pre><code class="language-cpp">Style a; a.background = Colors::Red;
+Style b; // empty
+a.overlay(b);
+// a.background is still Red
+</code></pre>
+<p>To clear, use <code>clearStyleProp(a, "background")</code> or <code>reset()</code> on the
+specific <code>Opt</code>.</p>
+<p><strong><code>ComputedStyle::from</code> uses the parent's value for inherited props
+even if the parent has no explicit value.</strong></p>
+<p>Because <code>ComputedStyle</code> is always fully populated, an inherited
+property always comes from the parent (or root, or default) — never
+from a "no value" state. This is correct for CSS but can surprise
+you if you expected inheritance to be optional.</p>
+<p><strong><code>Value</code> lerp with <code>auto</code> snaps.</strong></p>
+<pre><code class="language-cpp">Value a = Auto();
+Value b = Px(100);
+lerpProp(a, b, 0.5f) == b   // snap
+</code></pre>
+<p>There's no interpolation between "no value" and a concrete value.</p>
+<p><strong><code>stylesDiffer</code> and <code>ComputedStyle::operator==</code> are not the same.</strong></p>
+<ul>
+<li><code>stylesDiffer(a, b)</code> compares two <code>Style</code>s, considering "setness".</li>
+<li><code>operator==(ComputedStyle, ComputedStyle)</code> compares two resolved
+  styles, where every field has a value.</li>
+</ul>
+<p><code>stylesDiffer</code> is for part transitions (where unset means "fall back"),
+<code>operator==</code> is for dirty tracking.</p>
+<p><strong><code>unresolvedProps</code> shadows typed values.</strong></p>
+<p>When a <code>Style</code> has both <code>background</code> (typed) and
+<code>unresolvedProps["background"]</code> (a <code>var()</code> expression), the overlay
+rule clears the typed value. This is intentional: the <code>var()</code> is
+higher priority. Don't set both manually unless you know what you're
+doing.</p>
+<p><strong><code>TransitionSpec::prop</code> is a raw string.</strong></p>
+<p>There's no enum. The comparison in <code>lerpStyleTimed</code> is a string compare
+against the property name (<code>"opacity"</code>, <code>"all"</code>, etc.). Typos silently
+fall through to the default timing.</p>
+<p><strong><code>propTable</code> is built once, on first call.</strong></p>
+<p>The static table is initialized on first use. Thread-safety of the
+initialization is guaranteed by C++11's magic statics, but the returned
+reference is <code>const</code>, and the table is read-only after init.</p>
+<p><strong><code>BoxShadow</code> snaps under interpolation.</strong></p>
+<p><code>lerpProp(BoxShadow, BoxShadow, t)</code> returns <code>b</code> if <code>t &gt; 0</code>, else <code>a</code>.
+So a transition on <code>box-shadow</code> jumps to the target at the first
+non-zero <code>t</code>. It's visually a hard cut, not an interpolation.</p>
+<p>The same applies to <code>TextureRef</code>, <code>FilterRef</code> lists, <code>ZIndex</code>, enums,
+and strings.</p>
+<p><strong><code>lerpProp(Value, Value, t)</code> can produce multi-term results.</strong></p>
+<p>Interpolating <code>Px(0)</code> to <code>Percent(100)</code> at <code>t = 0.5</code> produces
+<code>{0.5 Pixel, 50 Percent}</code> — a two-term value. This resolves fine but
+has more terms than either input. For repeatedly-recomputed values
+(e.g. in a transition tick), the term count stays bounded because the
+lerp is between fixed endpoints, not accumulated.</p>
+<p><strong><code>customProps</code> are not part of <code>operator==</code>.</strong></p>
+<p><code>ComputedStyle::operator==</code> compares the macro-generated properties
+only. Two styles that differ only in <code>customProps</code> compare equal. This
+is a known limitation — custom properties are treated as metadata, not
+as part of the style identity.</p>
+<p><strong><code>Style::overlay</code> merges <code>customProps</code> but not other maps.</strong></p>
+<p><code>customProps</code> and <code>unresolvedProps</code> are merged key-by-key. Everything
+else (including <code>transitions</code> and <code>animations</code>) is replaced wholesale
+when the source is set.</p>
+<p><strong><code>forEachSetStyleProp</code> doesn't iterate <code>transitions</code> / <code>animations</code>.</strong></p>
+<p>The macro only covers the ~45 typed properties. The two vectors and the
+custom props maps are skipped.</p>
+<p><strong><code>propTable</code> doesn't include <code>transitions</code> / <code>animations</code> / <code>customProps</code>.</strong></p>
+<p>Same reason. The variant doesn't have a case for them.</p>
+<hr />
+<h2 id="18-see-also">18. See also</h2>
+<ul>
+<li><a href="../../internals/03-style-system/">Style System</a> — the cascade in
+  detail.</li>
+<li><a href="../../user/05-zstyle/">ZStyle</a> — the <code>.zstyle</code> grammar.</li>
+<li><a href="../Unit/">Unit</a> — the <code>Value</code> type used by many properties.</li>
+<li><a href="../Theme/">Theme</a> — <code>ThemeRule</code> and specificity.</li>
+<li><a href="../../user/07-animations/">Animations</a> — transitions and keyframes.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

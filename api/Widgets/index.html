@@ -1,0 +1,4862 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Unit/">
+      
+      
+        <link rel="next" href="../ZMarkup/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Widgets — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#widgets-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Widgets — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layout-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout helpers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layout helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vstackchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VStack(children = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hstackchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HStack(children = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Button
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Button">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagecontainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ImageContainer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ImageContainer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progressbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProgressBar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ProgressBar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#textinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TextInput
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TextInput">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scrollview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScrollView
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ScrollView">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dropdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dropdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Styling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvaslayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CanvasLayout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CanvasLayout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behavior_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tooltip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooltip
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tooltip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Popup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavior_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-helper-contextmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory helper — ContextMenu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binding-callbacks-after-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binding callbacks after build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-a-widget-by-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing a widget by type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layout-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout helpers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layout helpers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vstackchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VStack(children = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hstackchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HStack(children = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Panel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#button" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Button
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Button">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagecontainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ImageContainer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ImageContainer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progressbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProgressBar
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ProgressBar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#textinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TextInput
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TextInput">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyboard-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyboard behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intrinsic-size_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parts_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scrollview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScrollView
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ScrollView">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dropdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dropdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#styling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Styling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#closing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zmarkup_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canvaslayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CanvasLayout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CanvasLayout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behavior_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tooltip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooltip
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tooltip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Popup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methods-fields_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods / fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavior_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-tag_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-helper-contextmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory helper — ContextMenu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-a-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binding-callbacks-after-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binding callbacks after build
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-a-widget-by-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing a widget by type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="widgets-api-reference">Widgets — API Reference</h1>
+<p>Compact reference for every built-in widget in <code>namespace ZenitUI::UI</code>.
+For usage examples and tutorials, see
+<a href="../../user/03-widgets/">Widgets (guide)</a>.</p>
+<p>All widgets derive from <code>Layout</code> (directly or via
+<code>TLayout&lt;Derived, Base&gt;</code>). They share the entire <code>Layout</code> API —
+only the additions are listed here.</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Header</th>
+<th>Base</th>
+<th>Factory</th>
+<th>ZMarkup tag</th>
+<th>Interactive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Text</code></td>
+<td><code>Text.hpp</code></td>
+<td><code>TLayout&lt;Text&gt;</code></td>
+<td><code>Label(text)</code></td>
+<td><code>Text</code>, <code>Label</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>Button.hpp</code></td>
+<td><code>TLayout&lt;Button, Panel&gt;</code></td>
+<td><code>Btn(text, cb)</code></td>
+<td><code>Button</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>Panel</code></td>
+<td><code>Layouts.hpp</code></td>
+<td><code>TLayout&lt;Panel&gt;</code></td>
+<td><code>Pan()</code></td>
+<td><code>Panel</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>ImageContainer</code></td>
+<td><code>ImageContainer.hpp</code></td>
+<td><code>TLayout&lt;ImageContainer&gt;</code></td>
+<td>—</td>
+<td>—</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>Toggle</code></td>
+<td><code>Toggle.hpp</code></td>
+<td><code>TLayout&lt;Toggle&gt;</code></td>
+<td>—</td>
+<td><code>Toggle</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>Checkbox</code></td>
+<td><code>Checkbox.hpp</code></td>
+<td><code>TLayout&lt;Checkbox&gt;</code></td>
+<td>—</td>
+<td><code>Checkbox</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>Slider</code></td>
+<td><code>Slider.hpp</code></td>
+<td><code>TLayout&lt;Slider&gt;</code></td>
+<td>—</td>
+<td><code>Slider</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>ProgressBar</code></td>
+<td><code>ProgressBar.hpp</code></td>
+<td><code>TLayout&lt;ProgressBar&gt;</code></td>
+<td>—</td>
+<td><code>ProgressBar</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>TextInput</code></td>
+<td><code>TextInput.hpp</code></td>
+<td><code>TLayout&lt;TextInput&gt;</code></td>
+<td>—</td>
+<td><code>TextInput</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>ScrollView</code></td>
+<td><code>ScrollView.hpp</code></td>
+<td><code>TLayout&lt;ScrollView&gt;</code></td>
+<td>—</td>
+<td><code>ScrollView</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>Dropdown</code></td>
+<td><code>Dropdown.hpp</code></td>
+<td><code>TLayout&lt;Dropdown&gt;</code></td>
+<td>—</td>
+<td><code>Dropdown</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>CanvasLayout</code></td>
+<td><code>Canvas.hpp</code></td>
+<td><code>TLayout&lt;CanvasLayout&gt;</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td><code>Modal.hpp</code></td>
+<td><code>TLayout&lt;Modal&gt;</code></td>
+<td>—</td>
+<td>—</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>Tooltip</code></td>
+<td><code>Tooltip.hpp</code></td>
+<td><code>TLayout&lt;Tooltip, Panel&gt;</code></td>
+<td><code>Tooltip::attach(...)</code></td>
+<td>—</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>Popup</code></td>
+<td><code>Popup.hpp</code></td>
+<td><code>TLayout&lt;Popup, Panel&gt;</code></td>
+<td><code>ContextMenu(items)</code></td>
+<td>—</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="layout-helpers">Layout helpers</h2>
+<p>Not widgets, but factory functions returning <code>Layout</code> instances with
+specific types and style tags.</p>
+<h3 id="vstackchildren"><code>VStack(children = {})</code></h3>
+<pre><code class="language-cpp">std::shared_ptr&lt;Layout&gt; VStack(
+    std::initializer_list&lt;std::shared_ptr&lt;Layout&gt;&gt; children = {});
+</code></pre>
+<p>Creates a <code>Layout(LayoutType::Vertical)</code> with style tag <code>"VStack"</code>.</p>
+<h3 id="hstackchildren"><code>HStack(children = {})</code></h3>
+<pre><code class="language-cpp">std::shared_ptr&lt;Layout&gt; HStack(
+    std::initializer_list&lt;std::shared_ptr&lt;Layout&gt;&gt; children = {});
+</code></pre>
+<p>Creates a <code>Layout(LayoutType::Horizontal)</code> with style tag <code>"HStack"</code>.</p>
+<hr />
+<h2 id="panel"><code>Panel</code></h2>
+<p>Plain box. Non-interactive, blocks raycast.</p>
+<pre><code class="language-cpp">class Panel : public TLayout&lt;Panel&gt; {
+public:
+    Panel();
+};
+
+std::shared_ptr&lt;Panel&gt; Pan();
+</code></pre>
+<ul>
+<li><strong>Style tag</strong>: <code>"Panel"</code></li>
+<li><strong>Layout type</strong>: <code>Stack</code></li>
+<li><strong>Flags</strong>: <code>setInteractive(false)</code>, <code>setBlocksRaycast(true)</code></li>
+<li><strong>ZMarkup</strong>: <code>Panel { ... }</code></li>
+</ul>
+<hr />
+<h2 id="text"><code>Text</code></h2>
+<p>Text widget with optional wrapping and font selection.</p>
+<pre><code class="language-cpp">class Text : public TLayout&lt;Text&gt; {
+public:
+    Text(std::string text);
+
+    void setText(std::string new_text);
+    void setFont(FontHandle f);
+    void setWrap(bool w);
+    bool getWrap() const;
+};
+
+std::shared_ptr&lt;Text&gt; Label(std::string t);
+</code></pre>
+<h3 id="methods">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setText(std::string)</code></td>
+<td>Replace content. Sets <code>text_dirty</code> and <code>pendingTransition</code>.</td>
+</tr>
+<tr>
+<td><code>setFont(FontHandle)</code></td>
+<td>Override the resolved font.</td>
+</tr>
+<tr>
+<td><code>setWrap(bool)</code></td>
+<td>Enable / disable word wrapping.</td>
+</tr>
+<tr>
+<td><code>getWrap()</code></td>
+<td>Current wrapping state.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="style-tag">Style tag</h3>
+<p><code>"Text"</code></p>
+<h3 id="flags">Flags</h3>
+<ul>
+<li><code>setInteractive(false)</code></li>
+</ul>
+<h3 id="zmarkup">ZMarkup</h3>
+<pre><code>Text &quot;Hello&quot;
+Label.normal-text &quot;Hello&quot;
+Text wrap &quot;Long text that wraps&quot;
+</code></pre>
+<hr />
+<h2 id="button"><code>Button</code></h2>
+<p>Interactive box with optional text child.</p>
+<pre><code class="language-cpp">class Button : public TLayout&lt;Button, Panel&gt; {
+public:
+    Button(std::function&lt;void()&gt; cb);
+};
+
+std::shared_ptr&lt;Button&gt; Btn(std::string text,
+                            std::function&lt;void()&gt; cb = nullptr);
+</code></pre>
+<h3 id="constructor">Constructor</h3>
+<p>The <code>Button(std::function&lt;void()&gt; cb)</code> constructor sets:</p>
+<ul>
+<li><code>onClick = cb</code></li>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setKeyboardActivates(true)</code></li>
+<li><code>setStyleTag("Button")</code></li>
+<li><code>itemsH = Center</code>, <code>itemsV = Center</code></li>
+</ul>
+<h3 id="factory-helpers">Factory helpers</h3>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Btn(text)</code></td>
+<td>Creates a <code>Button</code> with no callback, adds a <code>Text</code> child with class <code>"btn-text"</code>.</td>
+</tr>
+<tr>
+<td><code>Btn(text, cb)</code></td>
+<td>Same, with a callback.</td>
+</tr>
+<tr>
+<td><code>Button::create(cb)</code></td>
+<td>Full control — no text child added.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="style-tag_1">Style tag</h3>
+<p><code>"Button"</code></p>
+<h3 id="zmarkup_1">ZMarkup</h3>
+<pre><code>Button.btn-primary#go &quot;Click me&quot;
+</code></pre>
+<hr />
+<h2 id="imagecontainer"><code>ImageContainer</code></h2>
+<p>Non-interactive node drawing a texture.</p>
+<pre><code class="language-cpp">class ImageContainer : public TLayout&lt;ImageContainer&gt; {
+public:
+    ImageContainer(TextureHandle tex);
+
+    void setTexture(TextureHandle t);
+};
+</code></pre>
+<h3 id="methods_1">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setTexture(TextureHandle)</code></td>
+<td>Change the texture.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rendering">Rendering</h3>
+<p>Draws the texture stretched to the node's rect, tinted by the style's
+<code>tint</code> property.</p>
+<h3 id="style-tag_2">Style tag</h3>
+<p><code>"ImageContainer"</code></p>
+<h3 id="flags_1">Flags</h3>
+<ul>
+<li><code>setInteractive(false)</code></li>
+</ul>
+<hr />
+<h2 id="toggle"><code>Toggle</code></h2>
+<p>On/off switch with a knob child.</p>
+<pre><code class="language-cpp">class Toggle : public TLayout&lt;Toggle&gt; {
+public:
+    Toggle(bool state = false);
+
+    std::function&lt;void(bool)&gt; onToggle = nullptr;
+    bool isChecked;
+};
+</code></pre>
+<h3 id="fields">Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isChecked</code></td>
+<td><code>bool</code></td>
+<td>Current state. Kept in sync with <code>getChecked()</code>.</td>
+</tr>
+<tr>
+<td><code>onToggle</code></td>
+<td><code>std::function&lt;void(bool)&gt;</code></td>
+<td>Fires when the user clicks.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="behavior">Behavior</h3>
+<ul>
+<li><code>onBuild()</code> creates a child <code>Layout</code> with class <code>"toggle-knob"</code>.</li>
+<li>Clicking the toggle flips <code>isChecked</code> and fires <code>onToggle</code>.</li>
+<li><code>setChecked(bool)</code> (from <code>Layout</code>) updates the state and triggers
+  a style re-resolve.</li>
+</ul>
+<h3 id="style-tag_3">Style tag</h3>
+<p><code>"Toggle"</code></p>
+<h3 id="flags_2">Flags</h3>
+<ul>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setKeyboardActivates(true)</code></li>
+</ul>
+<h3 id="structure">Structure</h3>
+<p>The knob is a <code>Layout(Stack)</code> with <code>interactive: false</code>,
+<code>blocksRaycast: false</code>, and class <code>toggle-knob</code>. Its position must be
+set entirely from <code>.zstyle</code>.</p>
+<h3 id="zmarkup_2">ZMarkup</h3>
+<pre><code>Toggle#t checked=true
+</code></pre>
+<p>Binding:</p>
+<pre><code class="language-cpp">ui.onToggle(&quot;t&quot;, [](bool v) { /* ... */ });
+</code></pre>
+<hr />
+<h2 id="checkbox"><code>Checkbox</code></h2>
+<p>Checkbox with a custom-rendered mark (no children).</p>
+<pre><code class="language-cpp">class Checkbox : public TLayout&lt;Checkbox&gt; {
+public:
+    Checkbox(bool state = false);
+
+    std::function&lt;void(bool)&gt; onToggle = nullptr;
+    bool isChecked;
+};
+</code></pre>
+<h3 id="fields_1">Fields</h3>
+<p>Same as <code>Toggle</code>: <code>isChecked</code>, <code>onToggle</code>.</p>
+<h3 id="intrinsic-size">Intrinsic size</h3>
+<p><code>font-size × 1.4</code> (square).</p>
+<h3 id="style-tag_4">Style tag</h3>
+<p><code>"Checkbox"</code></p>
+<h3 id="parts">Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>::box</code></td>
+<td>The outer rounded rect (background color overrides).</td>
+</tr>
+<tr>
+<td><code>::mark</code></td>
+<td>The checkmark square (color).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flags_3">Flags</h3>
+<ul>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setKeyboardActivates(true)</code></li>
+</ul>
+<h3 id="zmarkup_3">ZMarkup</h3>
+<pre><code>Checkbox#c checked=true
+</code></pre>
+<hr />
+<h2 id="slider"><code>Slider</code></h2>
+<p>Horizontal slider with a value in <code>[0, 1]</code>.</p>
+<pre><code class="language-cpp">class Slider : public TLayout&lt;Slider&gt; {
+public:
+    Slider(float val = 0.5f);
+
+    std::function&lt;void(float)&gt; onValueChanged = nullptr;
+
+    float getValue() const;
+};
+</code></pre>
+<h3 id="methods-fields">Methods / fields</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getValue()</code></td>
+<td><code>float</code></td>
+<td>Current value in <code>[0, 1]</code>.</td>
+</tr>
+<tr>
+<td><code>onValueChanged</code></td>
+<td><code>std::function&lt;void(float)&gt;</code></td>
+<td>Fires during drag or on keyboard step.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> there is no public <code>setValue()</code> — the value is only changed
+by user input.</p>
+<h3 id="intrinsic-size_1">Intrinsic size</h3>
+<p><code>120 × max(24, font-size × 1.2)</code>.</p>
+<h3 id="interaction">Interaction</h3>
+<ul>
+<li><strong>Drag</strong>: click and drag anywhere on the track. Uses pointer capture.</li>
+<li><strong>Keyboard</strong>: <code>Left</code> / <code>Right</code> move by <code>0.05</code>; with <code>Shift</code>, by <code>0.01</code>.</li>
+</ul>
+<h3 id="style-tag_5">Style tag</h3>
+<p><code>"Slider"</code></p>
+<h3 id="parts_1">Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>::track</code></td>
+<td>Background bar (<code>background</code>).</td>
+</tr>
+<tr>
+<td><code>::fill</code></td>
+<td>Filled portion (<code>color</code>).</td>
+</tr>
+<tr>
+<td><code>::knob</code></td>
+<td>Circular handle (<code>color</code>, <code>radius</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flags_4">Flags</h3>
+<ul>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setKeyboardActivates(false)</code> — keyboard handled in <code>onUpdate</code>.</li>
+</ul>
+<h3 id="zmarkup_4">ZMarkup</h3>
+<pre><code>Slider#s value=0.65 width=&quot;55%&quot;
+</code></pre>
+<hr />
+<h2 id="progressbar"><code>ProgressBar</code></h2>
+<p>Non-interactive bar showing a value in <code>[0, 1]</code>.</p>
+<pre><code class="language-cpp">class ProgressBar : public TLayout&lt;ProgressBar&gt; {
+public:
+    ProgressBar(float v = 0.0f);
+
+    void setValue(float v);
+    float getValue() const;
+};
+</code></pre>
+<h3 id="methods_2">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setValue(float)</code></td>
+<td>Change value (clamped to <code>[0, 1]</code>).</td>
+</tr>
+<tr>
+<td><code>getValue()</code></td>
+<td>Current value.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="intrinsic-size_2">Intrinsic size</h3>
+<p><code>120 × max(16, font-size × 0.8)</code>.</p>
+<h3 id="style-tag_6">Style tag</h3>
+<p><code>"ProgressBar"</code></p>
+<h3 id="parts_2">Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>::track</code></td>
+<td>Background bar (<code>background</code>).</td>
+</tr>
+<tr>
+<td><code>::fill</code></td>
+<td>Filled portion (<code>color</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flags_5">Flags</h3>
+<ul>
+<li><code>setInteractive(false)</code></li>
+</ul>
+<h3 id="zmarkup_5">ZMarkup</h3>
+<pre><code>ProgressBar#pb value=0.3 width=&quot;55%&quot;
+</code></pre>
+<hr />
+<h2 id="textinput"><code>TextInput</code></h2>
+<p>Single-line editable text field.</p>
+<pre><code class="language-cpp">class TextInput : public TLayout&lt;TextInput&gt; {
+public:
+    TextInput(std::string initial = &quot;&quot;);
+
+    void setText(std::string t);
+    const std::string&amp; getText() const;
+    void clear();
+    void setFont(FontHandle f);
+
+    std::function&lt;void(const std::string&amp;)&gt; onTextChanged;
+    std::function&lt;void(const std::string&amp;)&gt; onSubmit;
+};
+</code></pre>
+<h3 id="methods-fields_1">Methods / fields</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setText(std::string)</code></td>
+<td>Replace content.</td>
+</tr>
+<tr>
+<td><code>getText()</code></td>
+<td>Current content.</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>Equivalent to <code>setText("")</code>.</td>
+</tr>
+<tr>
+<td><code>setFont(FontHandle)</code></td>
+<td>Override the resolved font.</td>
+</tr>
+<tr>
+<td><code>onTextChanged</code></td>
+<td>Fires on any edit.</td>
+</tr>
+<tr>
+<td><code>onSubmit</code></td>
+<td>Fires on <code>Enter</code> (before losing focus).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-behavior">Keyboard behavior</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Printable ASCII</td>
+<td>Insert at cursor.</td>
+</tr>
+<tr>
+<td><code>Backspace</code> / <code>Delete</code></td>
+<td>Delete, with repeat (0.40s initial, 0.04s interval).</td>
+</tr>
+<tr>
+<td><code>Left</code> / <code>Right</code></td>
+<td>Move cursor, with repeat.</td>
+</tr>
+<tr>
+<td><code>Home</code> / <code>End</code></td>
+<td>Jump to start / end.</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>Fire <code>onSubmit</code>, release focus.</td>
+</tr>
+<tr>
+<td><code>Escape</code></td>
+<td>Release focus without submitting.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="intrinsic-size_3">Intrinsic size</h3>
+<p><code>max(120, char-width × 12) × font-size × 1.6</code>.</p>
+<h3 id="style-tag_7">Style tag</h3>
+<p><code>"TextInput"</code></p>
+<h3 id="parts_3">Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>::cursor</code></td>
+<td>Blinking caret. <code>color</code> = caret color, <code>border-width</code> = caret thickness. Blink period 1s.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flags_6">Flags</h3>
+<ul>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setKeyboardActivates(false)</code> — <code>Enter</code> / <code>Escape</code> handled in
+  <code>onUpdate</code>.</li>
+<li><code>setUpdateWhenDisabled(false)</code> (default).</li>
+</ul>
+<h3 id="zmarkup_6">ZMarkup</h3>
+<pre><code>TextInput#name value=&quot;Player1&quot; width=&quot;55%&quot;
+</code></pre>
+<hr />
+<h2 id="scrollview"><code>ScrollView</code></h2>
+<p>Wrapper that sets <code>overflow: scroll</code> on both axes and appropriate
+flags.</p>
+<pre><code class="language-cpp">class ScrollView : public TLayout&lt;ScrollView&gt; {
+public:
+    explicit ScrollView(LayoutType t = LayoutType::Vertical);
+};
+</code></pre>
+<h3 id="constructor_1">Constructor</h3>
+<ul>
+<li>Sets <code>setInteractive(true)</code>, <code>setBlocksRaycast(true)</code>.</li>
+<li>Sets style tag <code>"ScrollView"</code>.</li>
+<li>Sets <code>overflowX</code> and <code>overflowY</code> to <code>Scroll</code> in inline defaults.</li>
+</ul>
+<h3 id="style-tag_8">Style tag</h3>
+<p><code>"ScrollView"</code></p>
+<h3 id="scroll-api">Scroll API</h3>
+<p>All inherited from <code>Layout</code>:</p>
+<ul>
+<li><code>scrollTo</code>, <code>scrollToTop</code>, <code>scrollToBottom</code>, <code>scrollToLeft</code>,
+  <code>scrollToRight</code>, <code>scrollToX</code>, <code>scrollToY</code>.</li>
+<li><code>getScrollX</code>, <code>getScrollY</code>, <code>getMaxScrollX</code>, <code>getMaxScrollY</code>.</li>
+<li><code>isScrollContainer</code>.</li>
+</ul>
+<h3 id="zmarkup_7">ZMarkup</h3>
+<pre><code>ScrollView#sv {
+    Text &quot;...&quot;
+    Text &quot;...&quot;
+}
+</code></pre>
+<hr />
+<h2 id="dropdown"><code>Dropdown</code></h2>
+<p>Select-from-list widget with a portal-rendered option list.</p>
+<pre><code class="language-cpp">class Dropdown : public TLayout&lt;Dropdown&gt; {
+public:
+    Dropdown(std::vector&lt;std::string&gt; options, int selected = 0);
+
+    int  getSelected() const;
+    void setSelected(int idx);
+    bool getOpen() const;
+    void setOpen(bool o);
+
+    std::function&lt;void(int, const std::string&amp;)&gt; onChange;
+};
+</code></pre>
+<h3 id="methods-fields_2">Methods / fields</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getSelected()</code></td>
+<td>Current index.</td>
+</tr>
+<tr>
+<td><code>setSelected(int)</code></td>
+<td>Programmatic selection. Fires <code>onChange</code>.</td>
+</tr>
+<tr>
+<td><code>getOpen()</code> / <code>setOpen(bool)</code></td>
+<td>Open state control.</td>
+</tr>
+<tr>
+<td><code>onChange</code></td>
+<td>Fires when selection changes (user or programmatic).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-structure">Internal structure</h3>
+<p><code>onBuild()</code> creates:</p>
+<ul>
+<li>A <code>Button</code> with class <code>dropdown-trigger</code> (the closed face).</li>
+<li>A <code>ScrollView</code> with <code>position: absolute</code> and <code>setPortal(true)</code> —
+  the option list.</li>
+</ul>
+<p>The list flips above or below the trigger based on available space,
+and is shrunk if it fits in neither.</p>
+<h3 id="styling">Styling</h3>
+<p>The trigger's visual properties live in <code>inlineDefaults</code>, so any
+<code>.zstyle</code> rule targeting <code>.dropdown-trigger</code> overrides them:</p>
+<pre><code class="language-css">.dropdown-trigger {
+    height: 48px;                       /* default: 3vh */
+    background: #232328;
+    radius: 6px;
+    padding: 8px 14px;
+    border-width: 1px;
+    border-color: #505060;
+    font-size: 16px;
+}
+.dropdown-trigger .btn-text {
+    font-size: 16px;
+}
+</code></pre>
+<p>Only <code>width: 100%</code> (on the trigger) is baked into <code>inlineBase</code>,
+because it's what makes the trigger fill its logical parent. To
+constrain the dropdown's overall width, wrap it in a fixed-size
+container:</p>
+<pre><code class="language-cpp">auto wrapper = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+wrapper-&gt;size(Px(180), Auto());
+wrapper-&gt;addChild(dropdown);
+</code></pre>
+<p>This is the recommended pattern when the dropdown lives inside an
+<code>HStack</code> or any container that would otherwise stretch the trigger
+to the full row width.</p>
+<p>Individual options inherit whatever styling is applied to <code>Label</code>
+inside the list. The list itself (<code>ScrollView</code>) can be targeted via
+<code>Dropdown ScrollView { ... }</code>.</p>
+<h3 id="style-tag_9">Style tag</h3>
+<p><code>"Dropdown"</code></p>
+<h3 id="closing">Closing</h3>
+<ul>
+<li>Outside click (left or right).</li>
+<li>An option click.</li>
+<li>On disable (via <code>onEnabledChanged</code>).</li>
+</ul>
+<h3 id="zmarkup_8">ZMarkup</h3>
+<pre><code>Dropdown#d options=&quot;A,B,C&quot;
+</code></pre>
+<hr />
+<h2 id="canvaslayout"><code>CanvasLayout</code></h2>
+<p>Renders its subtree into an offscreen render target.</p>
+<pre><code class="language-cpp">class CanvasLayout : public TLayout&lt;CanvasLayout&gt; {
+public:
+    CanvasLayout();
+    ~CanvasLayout();
+};
+</code></pre>
+<h3 id="behavior_1">Behavior</h3>
+<ul>
+<li><code>LayoutType::Stack</code>, style tag <code>"Canvas"</code>.</li>
+<li><code>setInteractive(true)</code>.</li>
+<li>On each draw: if the rect size changed, recreates the render target.</li>
+<li>Renders the subtree into the target, then draws the target as a
+  texture.</li>
+<li>Applies a custom shader (via <code>setShader</code>) if <code>supports(Effects)</code>.</li>
+</ul>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>The target is destroyed in the destructor.</li>
+<li>Requires <code>supports(Feature::Effects)</code> for shader application.</li>
+<li>No ZMarkup tag by default. Register one via <code>ZMarkup::Registry</code>.</li>
+</ul>
+<hr />
+<h2 id="modal"><code>Modal</code></h2>
+<p>Full-screen overlay with a centered content panel and intro animation.</p>
+<pre><code class="language-cpp">class Modal : public TLayout&lt;Modal&gt; {
+public:
+    Modal();
+
+    void show();
+    void hide();
+};
+</code></pre>
+<h3 id="methods_3">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>show()</code></td>
+<td>Set opacity to 1, play <code>"Intro"</code> forward.</td>
+</tr>
+<tr>
+<td><code>hide()</code></td>
+<td>Set opacity to 0, play <code>"Intro"</code> in reverse.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="structure_1">Structure</h3>
+<p><code>onBuild()</code> creates:</p>
+<ul>
+<li>A full-screen <code>Stack</code> with tag <code>"Modal"</code>, background black 0.6,
+  opacity 0.</li>
+<li>One child: a <code>VStack</code> with class <code>modal-content</code>.</li>
+</ul>
+<p>The <code>"Intro"</code> animation translates the content from <code>VH(100)</code> to <code>0</code>
+with <code>ease-out-back</code>, over 0.4s.</p>
+<h3 id="flags_7">Flags</h3>
+<ul>
+<li><code>setInteractive(false)</code> (in <code>onBuild</code>; <code>show()</code> sets it to <code>true</code>).</li>
+<li><code>setFocusScope(true)</code>.</li>
+</ul>
+<h3 id="content-access">Content access</h3>
+<p>The content is <code>children[0]</code>:</p>
+<pre><code class="language-cpp">modal-&gt;children[0]-&gt;addChild(Label(&quot;Are you sure?&quot;));
+</code></pre>
+<h3 id="style-tag_10">Style tag</h3>
+<p><code>"Modal"</code></p>
+<hr />
+<h2 id="tooltip"><code>Tooltip</code></h2>
+<p>Hover-triggered floating label.</p>
+<pre><code class="language-cpp">class Tooltip : public TLayout&lt;Tooltip, Panel&gt; {
+public:
+    Tooltip(std::string text);
+
+    static std::shared_ptr&lt;Tooltip&gt; attach(
+        std::shared_ptr&lt;Layout&gt; owner,
+        std::string text,
+        float showDelay = 0.4f);
+
+    void setAnchor(Layout* a);
+    void setShowDelay(float s);
+    void show();
+    void hide();
+};
+</code></pre>
+<h3 id="methods_4">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>attach(owner, text, delay)</code></td>
+<td>Static helper: creates the tooltip, hooks into <code>owner</code>'s hover callbacks, adds it as a child.</td>
+</tr>
+<tr>
+<td><code>setAnchor(Layout*)</code></td>
+<td>Manually set the anchor node.</td>
+</tr>
+<tr>
+<td><code>setShowDelay(float)</code></td>
+<td>Delay in seconds before showing.</td>
+</tr>
+<tr>
+<td><code>show()</code></td>
+<td>Start the timer.</td>
+</tr>
+<tr>
+<td><code>hide()</code></td>
+<td>Hide immediately.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="positioning">Positioning</h3>
+<p>Centered above the anchor, offset by <code>6px</code> vertically. If the anchor
+isn't measured yet, the tooltip isn't positioned.</p>
+<h3 id="style-tag_11">Style tag</h3>
+<p><code>"Tooltip"</code></p>
+<h3 id="flags_8">Flags</h3>
+<ul>
+<li><code>setPortal(true)</code></li>
+<li><code>setInteractive(false)</code></li>
+<li><code>setBlocksRaycast(false)</code></li>
+</ul>
+<hr />
+<h2 id="popup"><code>Popup</code></h2>
+<p>Generic floating panel. Supports <code>openBelow</code> / <code>openAbove</code> / <code>openAt</code>.</p>
+<pre><code class="language-cpp">class Popup : public TLayout&lt;Popup, Panel&gt; {
+public:
+    Popup();
+
+    void setContent(std::shared_ptr&lt;Layout&gt; content);
+    void openBelow(std::shared_ptr&lt;Layout&gt; anchor);
+    void openAbove(std::shared_ptr&lt;Layout&gt; anchor);
+    void openAt(Vec2 screenPos);
+    void close();
+    bool isOpen() const;
+
+    bool closeOnClickOutside{true};
+    bool closeOnEscape{true};
+    float offsetBelow{4.0f};
+    std::function&lt;void()&gt; onClose;
+
+    void arrange(Rect) override;   // no-op
+};
+</code></pre>
+<h3 id="methods-fields_3">Methods / fields</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setContent(content)</code></td>
+<td>Sets (and adds) the content node.</td>
+</tr>
+<tr>
+<td><code>openBelow(anchor)</code></td>
+<td>Open below an anchor node. Flips above if no space.</td>
+</tr>
+<tr>
+<td><code>openAbove(anchor)</code></td>
+<td>Open above.</td>
+</tr>
+<tr>
+<td><code>openAt(pos)</code></td>
+<td>Open at an absolute screen position.</td>
+</tr>
+<tr>
+<td><code>close()</code></td>
+<td>Hide. Fires <code>onClose</code>.</td>
+</tr>
+<tr>
+<td><code>isOpen()</code></td>
+<td>Current state.</td>
+</tr>
+<tr>
+<td><code>closeOnClickOutside</code></td>
+<td>Close on outside click. Default <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>closeOnEscape</code></td>
+<td>Close on <code>Escape</code>. Default <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>offsetBelow</code></td>
+<td>Distance from anchor. Default <code>4.0f</code>.</td>
+</tr>
+<tr>
+<td><code>onClose</code></td>
+<td>Fires on close.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="behavior_2">Behavior</h3>
+<p>On each frame while open:</p>
+<ol>
+<li>Compute size from content + padding.</li>
+<li>Compute position from anchor or <code>pos_</code>.</li>
+<li>Flip above if it would overflow.</li>
+<li>Clamp to viewport.</li>
+<li>Call <code>arrangeInto()</code> with the final rect.</li>
+</ol>
+<h3 id="style-tag_12">Style tag</h3>
+<p><code>"Popup"</code></p>
+<h3 id="flags_9">Flags</h3>
+<ul>
+<li><code>setPortal(true)</code></li>
+<li><code>setInteractive(true)</code></li>
+<li><code>setFocusable(true)</code></li>
+<li><code>setBlocksRaycast(true)</code></li>
+</ul>
+<h3 id="factory-helper-contextmenu">Factory helper — <code>ContextMenu</code></h3>
+<pre><code class="language-cpp">std::shared_ptr&lt;Popup&gt; ContextMenu(
+    std::vector&lt;std::pair&lt;std::string, std::function&lt;void()&gt;&gt;&gt; items);
+</code></pre>
+<p>Creates a <code>Popup</code> with a vertical <code>VStack</code> content and one <code>Button</code>
+per item. Each button has class <code>popup-item</code> and, when clicked, fires
+its callback and closes the popup.</p>
+<hr />
+<h2 id="common-patterns">Common patterns</h2>
+<h3 id="building-a-widget">Building a widget</h3>
+<pre><code class="language-cpp">auto btn = Btn(&quot;OK&quot;, []{ /* ... */ });
+btn-&gt;cls(&quot;btn-primary&quot;);
+root-&gt;addChild(btn);
+</code></pre>
+<h3 id="from-zmarkup">From ZMarkup</h3>
+<pre><code class="language-cpp">auto ui = ZMarkup::build(R&quot;(
+    VStack {
+        Text &quot;Hello&quot;
+        Button.btn-primary#ok &quot;OK&quot;
+    }
+)&quot;);
+ui.onClick(&quot;ok&quot;, []{ /* ... */ });
+root-&gt;addChild(ui.root());
+</code></pre>
+<h3 id="binding-callbacks-after-build">Binding callbacks after build</h3>
+<pre><code class="language-cpp">ui.onClick(&quot;ok&quot;, []{ /* ... */ });
+ui.onToggle(&quot;mute&quot;, [](bool v){ /* ... */ });
+ui.onValueChanged(&quot;volume&quot;, [](float v){ /* ... */ });
+</code></pre>
+<h3 id="accessing-a-widget-by-type">Accessing a widget by type</h3>
+<pre><code class="language-cpp">auto slider = ui.find&lt;Slider&gt;(&quot;volume&quot;);
+slider-&gt;onValueChanged = [](float v){ /* ... */ };
+</code></pre>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../../user/03-widgets/">Widgets (guide)</a> — tutorials and patterns.</li>
+<li><a href="../Layout/">Layout</a> — base node API.</li>
+<li><a href="../../user/10-custom-widgets/">Custom Widgets</a> — writing your own.</li>
+<li><a href="../../user/06-events/">Events</a> — click, hover, focus semantics.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

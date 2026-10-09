@@ -1,0 +1,3564 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../08-scroll-system/">
+      
+      
+        <link rel="next" href="../10-debug/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Backend - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#backend" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Backend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-three-interfaces-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The three interfaces at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-iplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. IPlatform
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. IPlatform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-viewportsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 viewportSize()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pointer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 pointer()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 time()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-shiftheld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 shiftHeld()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-pollinputevents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 pollInputEvents()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-dpiscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 dpiScale()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-safearea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 safeArea()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-what-iplatform-should-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 What IPlatform should not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-irenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. IRenderer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. IRenderer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Textures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-effects-shaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Effects (shaders)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-clipping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Clipping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-render-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Render targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-feature-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Feature detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-iassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. IAssetProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. IAssetProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-raylibs-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Raylib's implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-load-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Load order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Lifetime
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-raylib-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Raylib backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The Raylib backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-resource-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Resource management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-transform-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Transform stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-clip-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Clip stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-effect-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Effect stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-target-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Target management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-dpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 DPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-text-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Text rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-drawtarget-and-the-y-flip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 drawTarget and the Y-flip
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-writing-a-new-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Writing a new backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Writing a new backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-implement-iplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Implement IPlatform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-implement-irenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Implement IRenderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-implement-iassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Implement IAssetProvider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-wire-into-uicontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Wire into UIContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-handling-unsupported-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Handling unsupported features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-dpi-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 DPI strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-the-y-flip-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 The Y-flip question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-testing-a-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Testing a backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Testing a backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-verifying-text-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Verifying text measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-verifying-clip-and-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Verifying clip and transform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-adding-a-new-feature-to-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Adding a new feature to the framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-adding-a-new-primitive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Adding a new primitive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-adding-a-new-platform-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Adding a new platform event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-supporting-a-second-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Supporting a second window
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-three-interfaces-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The three interfaces at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-iplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. IPlatform
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. IPlatform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-viewportsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 viewportSize()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pointer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 pointer()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 time()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-shiftheld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 shiftHeld()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-pollinputevents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 pollInputEvents()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-dpiscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 dpiScale()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-safearea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 safeArea()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-what-iplatform-should-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 What IPlatform should not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-irenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. IRenderer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. IRenderer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Textures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-effects-shaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Effects (shaders)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-clipping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Clipping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-render-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Render targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-feature-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Feature detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-iassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. IAssetProvider
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. IAssetProvider">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-raylibs-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Raylib's implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-load-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Load order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Lifetime
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-raylib-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Raylib backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The Raylib backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-resource-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Resource management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-transform-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Transform stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-clip-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Clip stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-effect-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Effect stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-target-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Target management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-dpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 DPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-text-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Text rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-drawtarget-and-the-y-flip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 drawTarget and the Y-flip
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-writing-a-new-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Writing a new backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Writing a new backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-implement-iplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Implement IPlatform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-implement-irenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Implement IRenderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-implement-iassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Implement IAssetProvider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-wire-into-uicontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Wire into UIContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-handling-unsupported-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Handling unsupported features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-dpi-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 DPI strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-the-y-flip-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 The Y-flip question
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-testing-a-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Testing a backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Testing a backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-verifying-text-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Verifying text measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-verifying-clip-and-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Verifying clip and transform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-adding-a-new-feature-to-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Adding a new feature to the framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-adding-a-new-primitive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Adding a new primitive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-adding-a-new-platform-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Adding a new platform event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-supporting-a-second-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Supporting a second window
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="backend">Backend</h1>
+<p>ZenitUI doesn't draw anything itself. It produces a stream of abstract
+draw calls, input queries, and asset lookups that are interpreted by a
+<strong>backend</strong>. The framework ships a reference backend for
+<a href="https://www.raylib.com/">Raylib</a>, but the core only depends on three
+abstract interfaces:</p>
+<ul>
+<li><strong><code>IRenderer</code></strong> — drawing primitives, text measurement, clip,
+  transform, render targets, shader push/pop.</li>
+<li><strong><code>IPlatform</code></strong> — window size, pointer, keyboard, timers, DPI, safe
+  area.</li>
+<li><strong><code>IAssetProvider</code></strong> — fonts, textures, shaders by string name.</li>
+</ul>
+<p>These are declared in <code>UIContext.hpp</code>. <code>UIContext</code> holds pointers to
+one of each, and the rest of the framework uses them exclusively.</p>
+<p>This document covers what each interface must provide, the contract
+each method obeys, and how to write a new backend.</p>
+<hr />
+<h2 id="1-the-three-interfaces-at-a-glance">1. The three interfaces at a glance</h2>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Direction</th>
+<th>Called from</th>
+<th>Owns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IPlatform</code></td>
+<td>inbound</td>
+<td><code>UIContext::beginFrame</code></td>
+<td>window, input, time</td>
+</tr>
+<tr>
+<td><code>IRenderer</code></td>
+<td>outbound</td>
+<td><code>Layout::draw</code>, filters</td>
+<td>framebuffer, state</td>
+</tr>
+<tr>
+<td><code>IAssetProvider</code></td>
+<td>lookup</td>
+<td>style resolution, effect resolution</td>
+<td>fonts, textures, shaders</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Platform</strong> is called <strong>once per frame</strong>, at the start of <code>beginFrame</code>.
+It returns the current input snapshot and viewport. It's the only source
+of time, pointer, and keyboard state.</p>
+<p><strong>Renderer</strong> is called <strong>during draw</strong>, once per node, and inside
+filters. Every method is either a primitive draw or a stack operation
+(clip, transform, effect, target). The renderer maintains its own state
+stacks and must keep them balanced.</p>
+<p><strong>Asset provider</strong> is called from a few well-defined places:</p>
+<ul>
+<li><code>Layout::resolveFont</code> — when a node's style has a <code>font</code> property.</li>
+<li><code>Layout::resolveBgTexture</code> — when a node has a <code>background-texture</code>.</li>
+<li><code>Layout::resolveEffectIfNeeded</code> — when a node has an <code>effect</code>.</li>
+<li><code>FilterRegistry::applyFilter</code> — when a filter's shader is needed.</li>
+</ul>
+<p>It's a lookup by string name, returning an opaque handle.</p>
+<hr />
+<h2 id="2-iplatform">2. <code>IPlatform</code></h2>
+<pre><code class="language-cpp">class IPlatform {
+public:
+    virtual ~IPlatform() = default;
+    virtual Vec2 viewportSize() = 0;
+    virtual PointerState pointer() = 0;
+    virtual double time() = 0;
+    virtual bool shiftHeld() = 0;
+    virtual InputEvents pollInputEvents() = 0;
+    virtual float dpiScale() = 0;
+    virtual EdgeInsets safeArea() = 0;
+};
+</code></pre>
+<p>Eight methods, all called from <code>UIContext::beginFrame</code>. None of them
+draw anything, and none of them mutate state inside the framework.</p>
+<h3 id="21-viewportsize">2.1 <code>viewportSize()</code></h3>
+<p>Returns the <strong>logical</strong> viewport size, in UI pixels. On a HiDPI display
+or a mobile device with a device pixel ratio, this is the size the UI
+should treat as "the screen".</p>
+<p>The framework uses this value for:</p>
+<ul>
+<li><code>Metrics::viewport</code>, used to resolve <code>vw</code> / <code>vh</code> units.</li>
+<li>The root's arrange rect (<code>{0, 0, viewport.x, viewport.y}</code>).</li>
+<li>Media query evaluation.</li>
+</ul>
+<p>The returned value should be stable across a single frame — calling it
+twice in the same <code>beginFrame</code> should return the same value.</p>
+<h3 id="22-pointer">2.2 <code>pointer()</code></h3>
+<p>Returns the current pointer state:</p>
+<pre><code class="language-cpp">struct PointerState {
+    Vec2 pos;                // logical coordinates
+    bool down;               // button currently held
+    bool pressed;            // rising edge this frame
+    bool released;           // falling edge this frame
+    bool rightDown;
+    bool rightPressed;
+    bool rightReleased;
+    float wheelY;            // wheel delta this frame
+};
+</code></pre>
+<p>The <code>pos</code> should be in the same logical coordinate space as
+<code>viewportSize</code>. If the platform reports physical pixels, divide by
+<code>dpiScale()</code> before returning.</p>
+<p>The <code>pressed</code> / <code>released</code> flags are <strong>edge events</strong> — they should be
+true only on the frame the transition happens. The framework reads them
+once per frame and relies on this one-frame semantics.</p>
+<p><code>wheelY</code> is the wheel delta for this frame. A positive value
+conventionally means "scroll up" (or "away from user"), matching the
+Raylib convention. The scroll system negates it internally.</p>
+<h3 id="23-time">2.3 <code>time()</code></h3>
+<p>Returns a monotonically increasing time in seconds, as a <code>double</code>.</p>
+<p>This is used by:</p>
+<ul>
+<li><code>UIContext::time</code>, which is the timeline for absolute-tick animations
+  (parts) and the <code>startTime</code> of CSS animations.</li>
+<li><code>StyleResolver::partFor</code> for part transition timing.</li>
+</ul>
+<p>The value doesn't need to start at zero — it just needs to be monotonic
+and to advance at wall-clock rate. Raylib returns <code>GetTime()</code> directly.</p>
+<h3 id="24-shiftheld">2.4 <code>shiftHeld()</code></h3>
+<p>Returns whether <code>Shift</code> is currently down. Used by:</p>
+<ul>
+<li>Tab navigation (reverse direction).</li>
+<li>Scroll (horizontal wheel).</li>
+<li><code>Slider</code> (fine step).</li>
+</ul>
+<p>Only <code>Shift</code> is exposed. Other modifiers (Ctrl, Alt, Meta) aren't part
+of the interface. Adding one means extending the interface and updating
+every backend.</p>
+<h3 id="25-pollinputevents">2.5 <code>pollInputEvents()</code></h3>
+<p>Returns the keyboard events for this frame:</p>
+<pre><code class="language-cpp">struct InputEvents {
+    std::vector&lt;int&gt; chars;   // Unicode codepoints typed this frame
+    std::vector&lt;int&gt; keys;    // special keys pressed this frame (rising edge)
+    std::vector&lt;int&gt; held;    // special keys currently down (level)
+};
+</code></pre>
+<p>Three channels:</p>
+<ul>
+<li><strong><code>chars</code></strong> — printable characters typed. From the platform's text
+  input (e.g. <code>GetCharPressed</code> in Raylib). These are the actual
+  codepoints, not the physical keys pressed.</li>
+<li><strong><code>keys</code></strong> — special key codes that were <strong>pressed this frame</strong>
+  (rising edge). The codes are <code>Key::Backspace</code>, <code>Key::Delete</code>,
+  <code>Key::Enter</code>, <code>Key::Escape</code>, <code>Key::Left</code>, <code>Key::Right</code>,
+  <code>Key::Home</code>, <code>Key::End</code>, <code>Key::Tab</code>, <code>Key::Space</code> — see
+  <code>CoreTypes.hpp</code> for the full list.</li>
+<li><strong><code>held</code></strong> — special key codes that are <strong>currently down</strong> (level).
+  Used for key repeat.</li>
+</ul>
+<p>The distinction between <code>keys</code> and <code>held</code> matters: <code>keys</code> fires once
+per press, <code>held</code> stays true while the key is down. A <code>TextInput</code>
+uses <code>keys</code> for <code>Escape</code> (single action) and <code>held</code> for <code>Backspace</code>
+(repeat).</p>
+<h3 id="26-dpiscale">2.6 <code>dpiScale()</code></h3>
+<p>Returns the DPI scale factor, e.g. <code>1.0</code> on standard displays, <code>2.0</code> on
+Retina.</p>
+<p>Used by the framework to:</p>
+<ul>
+<li>Convert logical coordinates to physical pixels for the renderer
+  (Raylib's scissor operates in physical pixels).</li>
+<li>Adjust text measurement (<code>RaylibRenderer::measureText</code> multiplies by
+  the scale, then divides the result back).</li>
+</ul>
+<p>The framework handles most of the DPI logic in the renderer, not in the
+platform. The platform just reports the value.</p>
+<h3 id="27-safearea">2.7 <code>safeArea()</code></h3>
+<p>Returns the safe area insets (notch, rounded corners, etc.). Currently
+only reported; the framework doesn't apply them automatically. Future
+extensions might use them in layout (e.g. <code>safe-area-top: 1</code> as a
+padding value).</p>
+<p>For desktop, return <code>{}</code> (all zeros).</p>
+<h3 id="28-what-iplatform-should-not-do">2.8 What <code>IPlatform</code> should <strong>not</strong> do</h3>
+<ul>
+<li>Don't draw anything. <code>IPlatform</code> is pure input.</li>
+<li>Don't own the main loop. The user's <code>main()</code> drives the loop.</li>
+<li>Don't create the window. The user creates it before initializing
+  ZenitUI (in the Raylib case, <code>InitWindow</code> is called by the user).</li>
+<li>Don't poll more than once per frame. The framework calls
+  <code>pointer()</code> and <code>pollInputEvents()</code> exactly once per <code>beginFrame</code>.</li>
+</ul>
+<hr />
+<h2 id="3-irenderer">3. <code>IRenderer</code></h2>
+<pre><code class="language-cpp">class IRenderer {
+public:
+    virtual ~IRenderer() = default;
+
+    // Primitives
+    virtual void fillRect(Rect r, Color c) = 0;
+    virtual void fillRoundedRect(Rect r, float radiusPx, Color c) = 0;
+    virtual void fillCircle(Vec2 center, float radius, Color c) = 0;
+
+    virtual void strokeRect(Rect r, float thickness, Color c) = 0;
+    virtual void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) = 0;
+
+    virtual void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) = 0;
+    virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) = 0;
+
+    virtual void drawText(FontHandle f, std::string_view s, Vec2 pos,
+                          float size, float spacing, Color c) = 0;
+    virtual Vec2 measureText(FontHandle f, std::string_view s,
+                             float size, float spacing) = 0;
+
+    // State stacks
+    virtual void pushTransform(const Transform2D&amp; t) = 0;
+    virtual void popTransform() = 0;
+    virtual void pushEffect(EffectHandle e) = 0;
+    virtual void popEffect() = 0;
+    virtual void pushClip(Rect r) = 0;
+    virtual void popClip() = 0;
+    virtual Rect getClipRect() const = 0;
+
+    // Render targets
+    virtual TargetHandle createTarget(int w, int h) = 0;
+    virtual void destroyTarget(TargetHandle t) = 0;
+    virtual void pushTarget(TargetHandle t) = 0;
+    virtual void popTarget() = 0;
+    virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+    virtual void clearTarget(TargetHandle t, Color c) = 0;
+    virtual bool inTarget() const = 0;
+
+    // Effect uniforms
+    virtual void setEffectFloat(EffectHandle e, const char* name, float value) = 0;
+    virtual void setEffectVec2(EffectHandle e, const char* name, Vec2 value) = 0;
+    virtual void setEffectVec4(EffectHandle e, const char* name, Color value) = 0;
+
+    // Frame
+    virtual void beginFrame() = 0;
+    virtual void endFrame() = 0;
+    virtual void setDpiScale(float scale) = 0;
+
+    // Features
+    virtual bool supports(Feature f) const = 0;
+};
+</code></pre>
+<p>This is the largest interface, but each method is small.</p>
+<h3 id="31-primitives">3.1 Primitives</h3>
+<p><strong><code>fillRect(r, c)</code></strong> — draw a filled rectangle. <code>c</code> already has the
+node's opacity applied by the caller (via <code>.withAlpha(op)</code>).</p>
+<p><strong><code>fillRoundedRect(r, radiusPx, c)</code></strong> — draw a filled rectangle with
+rounded corners. <code>radiusPx</code> is in logical pixels; if larger than
+<code>min(r.width, r.height) * 0.5</code>, it should be clamped (or the caller
+clamps, which it does — see <code>renderChrome</code>).</p>
+<p><strong><code>fillCircle(center, radius, c)</code></strong> — draw a filled circle.</p>
+<p><strong><code>strokeRect(r, thickness, c)</code></strong> — draw a rectangle outline of the
+given thickness. The stroke should be centered on the rect's edge (or
+drawn inside — the exact convention is up to the backend, but it must
+be consistent).</p>
+<p><strong><code>strokeRoundedRect(r, radiusPx, thickness, c)</code></strong> — same, rounded.</p>
+<p>These five are what <code>renderChrome</code> and <code>renderContent</code> use. Every
+widget draws with them.</p>
+<h3 id="32-textures">3.2 Textures</h3>
+<p><strong><code>drawTexture(t, src, dst, tint)</code></strong> — draw a texture from the <code>src</code>
+sub-rectangle to the <code>dst</code> rectangle, multiplied by <code>tint</code>.</p>
+<p><strong><code>drawNineSlice(t, s, dst, tint)</code></strong> — draw a nine-slice texture
+(corners preserved, edges stretched, center stretched). <code>s</code> contains
+the four inset values.</p>
+<p><code>t</code> is an opaque <code>TextureHandle</code>. The handle is valid only if
+<code>t.valid()</code> returns true (<code>id != 0</code>).</p>
+<h3 id="33-text">3.3 Text</h3>
+<p><strong><code>drawText(f, s, pos, size, spacing, c)</code></strong> — draw a text string at
+<code>pos</code> with the given font, size, and letter spacing.</p>
+<p><strong><code>measureText(f, s, size, spacing)</code></strong> — return the size the text would
+occupy if drawn.</p>
+<p>Both take a <code>FontHandle</code>. If <code>f.id == 0</code>, the backend should use its
+default font (Raylib's <code>GetFontDefault</code>).</p>
+<p>Text measurement is <strong>critical</strong>: it drives the <code>Text</code> widget's
+intrinsic size, which drives layout. The measurement must match what
+<code>drawText</code> actually produces, or layouts will be wrong.</p>
+<h3 id="34-transforms">3.4 Transforms</h3>
+<p><strong><code>pushTransform(t)</code></strong> / <strong><code>popTransform()</code></strong> — push and pop a
+<code>Transform2D</code> on the renderer's transform stack.</p>
+<pre><code class="language-cpp">struct Transform2D {
+    Vec2 pivot;
+    Vec2 translate;
+    float rotationDeg;
+    float scale;
+};
+</code></pre>
+<p>The transform is applied as: translate to <code>pivot + translate</code>, rotate,
+scale, translate back by <code>-pivot</code>. This is the standard
+pivot-centered transform.</p>
+<p>Calls must be balanced. The framework always pairs them, but a backend
+should handle unbalanced calls gracefully (e.g. by returning early on
+<code>popTransform</code> if the stack is empty).</p>
+<h3 id="35-effects-shaders">3.5 Effects (shaders)</h3>
+<p><strong><code>pushEffect(e)</code></strong> / <strong><code>popEffect()</code></strong> — push and pop a shader on the
+effect stack.</p>
+<p>An effect is a shader that affects subsequent draw calls until popped.
+Nested pushes are allowed — the top of the stack is the active shader.</p>
+<p><strong><code>setEffectFloat</code></strong> / <strong><code>setEffectVec2</code></strong> / <strong><code>setEffectVec4</code></strong> — set
+a uniform on the currently active effect. The <code>name</code> is the uniform
+name in the shader source. If the uniform doesn't exist, the call
+should be a no-op (not an error).</p>
+<h3 id="36-clipping">3.6 Clipping</h3>
+<p><strong><code>pushClip(r)</code></strong> / <strong><code>popClip()</code></strong> — push and pop a clip rect on the
+clip stack.</p>
+<p>The clip should intersect with the current clip (nested clips compose
+by intersection). The rect is in the <strong>current transform's</strong> coordinate
+space — the backend applies any active transforms to convert it to
+screen space.</p>
+<p><strong><code>getClipRect()</code></strong> — return the current effective clip rect in
+<strong>logical</strong> coordinates. If no clip is active, return the full viewport
+(<code>{0, 0, Metrics::viewport.x, Metrics::viewport.y}</code>).</p>
+<p>The clip is used for frustum culling in <code>draw</code>. A node outside the
+current clip is skipped entirely.</p>
+<h3 id="37-render-targets">3.7 Render targets</h3>
+<p><strong><code>createTarget(w, h)</code></strong> — allocate a render target of the given size.
+Returns a <code>TargetHandle</code>. If allocation fails, return an invalid handle
+(<code>id == 0</code>).</p>
+<p><strong><code>destroyTarget(t)</code></strong> — free a target. Called in <code>~Layout</code> and when a
+layer's region size changes.</p>
+<p><strong><code>pushTarget(t)</code></strong> — redirect subsequent draws into the target. The
+coordinate system resets to <code>(0, 0)</code> at the top-left of the target.
+The previous transform stack, clip stack, and effect stack should be
+preserved but not applied until the target is popped.</p>
+<p><strong><code>popTarget()</code></strong> — return drawing to the framebuffer.</p>
+<p><strong><code>drawTarget(t, dst, tint)</code></strong> — draw a target's content into the
+current framebuffer at <code>dst</code>, multiplied by <code>tint</code>.</p>
+<p><strong><code>clearTarget(t, c)</code></strong> — fill a target with a solid color.</p>
+<p><strong><code>inTarget()</code></strong> — return true if currently inside a <code>pushTarget</code>.</p>
+<p>The render target API is the most backend-specific. Raylib's
+<code>RenderTexture2D</code> has a flipped Y-axis relative to the framebuffer, so
+<code>drawTarget</code> uses a negative source height to flip it back. Other
+backends might not need this.</p>
+<p><strong>Important</strong>: the framework doesn't support nested targets. The check
+in <code>Layout::draw</code>:</p>
+<pre><code class="language-cpp">const bool isLayer =
+    !renderStyle.filters.empty() &amp;&amp;
+    renderer-&gt;supports(Feature::Effects) &amp;&amp;
+    rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f &amp;&amp;
+    !renderer-&gt;inTarget();
+</code></pre>
+<p>A backend that supports nested targets (via a target stack) could lift
+this restriction, but the framework doesn't currently use it. For now,
+<code>inTarget()</code> must accurately report whether a target is active.</p>
+<h3 id="38-frame">3.8 Frame</h3>
+<p><strong><code>beginFrame()</code></strong> / <strong><code>endFrame()</code></strong> — frame-level setup. Called once
+per frame, around the whole draw pass.</p>
+<p>In the Raylib backend, <code>beginFrame</code> pushes a DPI matrix if
+<code>dpiScale_ != 1.0</code>, and <code>endFrame</code> pops it. A different backend might
+use these for clearing, present-swap, or other per-frame work.</p>
+<p>The two must be paired. The framework always calls them around
+<code>root-&gt;draw()</code>.</p>
+<p><strong><code>setDpiScale(scale)</code></strong> — set the current DPI scale factor. Called
+from <code>beginFrame</code> after reading <code>platform-&gt;dpiScale()</code>.</p>
+<p>The renderer uses the scale to convert logical coordinates to physical
+pixels for operations that require them (e.g. scissor). A backend that
+works entirely in logical coordinates can ignore this.</p>
+<h3 id="39-feature-detection">3.9 Feature detection</h3>
+<p><strong><code>supports(f)</code></strong> — return whether the backend supports a feature.</p>
+<pre><code class="language-cpp">enum class Feature {
+    Effects,        // pushEffect / popEffect / setEffect*
+    NestedTargets,  // pushTarget while already in a target
+};
+</code></pre>
+<p>Currently only <code>Effects</code> is checked by the framework. The Raylib backend
+returns <code>true</code> for it. A software renderer might return <code>false</code>, which
+would make all <code>filter:</code> and <code>effect:</code> properties no-ops.</p>
+<p><code>NestedTargets</code> is declared but not used. It's a placeholder for a
+future extension.</p>
+<hr />
+<h2 id="4-iassetprovider">4. <code>IAssetProvider</code></h2>
+<pre><code class="language-cpp">class IAssetProvider {
+public:
+    virtual ~IAssetProvider() = default;
+    virtual FontHandle    getFont(std::string_view name) = 0;
+    virtual TextureHandle getTexture(std::string_view name) = 0;
+    virtual EffectHandle  getEffect(std::string_view name) = 0;
+};
+</code></pre>
+<p>Three methods, all lookups by string name. Return an invalid handle
+(<code>id == 0</code>) if the name isn't found.</p>
+<p>The provider is populated out-of-band (by the user, before the first
+frame) with load methods. The interface itself only exposes the getters.</p>
+<h3 id="41-raylibs-implementation">4.1 Raylib's implementation</h3>
+<p><code>RaylibAssetProvider</code> adds <code>loadFont</code> / <code>loadTexture</code> / <code>loadEffect</code>:</p>
+<pre><code class="language-cpp">bool loadFont(std::string name, const char* path, int baseSize = 96) {
+    ::Font f = LoadFontEx(path, baseSize, nullptr, 0);
+    if (f.texture.id == 0) return false;
+    SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
+    fonts[std::move(name)] = renderer.registerFont(f);
+    return true;
+}
+</code></pre>
+<p>Each load method calls the corresponding Raylib loader, registers the
+result with the renderer (which assigns an ID and stores the resource
+in a static map), and stores the handle under the name.</p>
+<p>The renderer's <code>registerFont</code> / <code>registerTexture</code> / <code>registerEffect</code>
+methods return the handle that the provider exposes.</p>
+<h3 id="42-naming">4.2 Naming</h3>
+<p>Names are <strong>case-sensitive</strong> strings. <code>"calibri"</code> and <code>"Calibri"</code> are
+different.</p>
+<p>The convention is lowercase, no spaces. See <code>main.cpp</code> in the demo:</p>
+<pre><code class="language-cpp">backendAssets.loadFont(&quot;calibri&quot;, &quot;assets/calibrib.ttf&quot;, 64);
+backendAssets.loadFont(&quot;mont&quot;, &quot;assets/mont.otf&quot;, 64);
+backendAssets.loadTexture(&quot;bubble&quot;, &quot;assets/bubble.png&quot;);
+backendAssets.loadEffect(&quot;blur&quot;, &quot;assets/blur.fs&quot;);
+</code></pre>
+<h3 id="43-load-order">4.3 Load order</h3>
+<p>Assets must be loaded <strong>before the first frame</strong>. The framework doesn't
+lazy-load — if a <code>.zstyle</code> rule references <code>font: mont</code> and <code>mont</code>
+isn't registered, the resolution falls back to the default font
+silently.</p>
+<p>Loading mid-run is possible but not recommended. If you do, be aware
+that style resolution caches handles — a font that's added after a node
+resolved its style won't be picked up until the node re-resolves (e.g.
+via a state change).</p>
+<h3 id="44-lifetime">4.4 Lifetime</h3>
+<p>The provider owns the resources. It's the user's responsibility to
+destroy them (or to let the provider's destructor do it). The Raylib
+backend's provider doesn't currently unload its resources — a small
+leak at shutdown, harmless for a typical game.</p>
+<hr />
+<h2 id="5-the-raylib-backend">5. The Raylib backend</h2>
+<p><code>RaylibBackend.hpp</code> / <code>.cpp</code> implement the three interfaces for Raylib.</p>
+<h3 id="51-structure">5.1 Structure</h3>
+<pre><code class="language-cpp">class RaylibPlatform : public IPlatform { /* ... */ };
+class RaylibRenderer : public IRenderer { /* ... */ };
+class RaylibAssetProvider : public IAssetProvider { /* ... */ };
+</code></pre>
+<p>No inheritance between them. They're independent classes that the user
+constructs and wires into <code>UIContext</code>.</p>
+<h3 id="52-resource-management">5.2 Resource management</h3>
+<p><code>RaylibRenderer</code> uses a static (file-local) <code>RaylibResources</code> struct to
+store the actual resources:</p>
+<pre><code class="language-cpp">struct RaylibResources {
+    std::unordered_map&lt;uint32_t, ::RenderTexture2D&gt; targets;
+    std::unordered_map&lt;uint32_t, ::Texture2D&gt; textures;
+    std::unordered_map&lt;uint32_t, ::Font&gt; fonts;
+    std::unordered_map&lt;uint32_t, ::Shader&gt; shaders;
+    uint32_t nextId{1};
+};
+static RaylibResources res;
+</code></pre>
+<p>Handles are <code>{id, ...}</code> structs. The renderer maps IDs to resources.
+This indirection keeps the framework's handles opaque and small.</p>
+<p>The static <code>res</code> means there's effectively one renderer per process.
+This is fine for the framework's single-window use case, but would be
+a problem if you wanted multiple windows with multiple renderers.</p>
+<h3 id="53-transform-stack">5.3 Transform stack</h3>
+<p>Maintained as a <code>std::vector&lt;Transform2D&gt; transformStack</code>. Used by
+<code>transformClipToScreen</code> to compute the screen-space AABB of a clip
+rect. The actual rendering uses Raylib's <code>rlPushMatrix</code> / <code>rlPopMatrix</code>.</p>
+<h3 id="54-clip-stack">5.4 Clip stack</h3>
+<p>Maintained as a <code>std::vector&lt;Rect&gt; clipStack</code> and a <code>bool clipActive</code>
+with the current <code>currentClip</code>. <code>pushClip</code> calls <code>BeginScissorMode</code>
+with the transformed and DPI-scaled rect. <code>popClip</code> calls it again
+with the restored rect (or <code>EndScissorMode</code> if the stack is empty).</p>
+<p><code>pushClip</code> is a no-op inside a target (<code>insideTarget_ == true</code>). This
+is because Raylib's render targets don't support scissor. The target's
+bounds act as the clip instead.</p>
+<h3 id="55-effect-stack">5.5 Effect stack</h3>
+<p>Maintained as a <code>std::vector&lt;EffectHandle&gt; effectStack_</code>. <code>pushEffect</code>
+calls <code>BeginShaderMode</code> with the shader. <code>popEffect</code> calls
+<code>EndShaderMode</code>, then re-pushes the previous shader if there's one on
+the stack.</p>
+<p>The re-push is because Raylib's shader mode is not stackable by default
+— it's a "current state" not a "stack". The renderer implements the
+stack manually.</p>
+<h3 id="56-target-management">5.6 Target management</h3>
+<p><code>pushTarget</code> calls <code>rlPushMatrix</code>, <code>rlLoadIdentity</code> (so the target's
+coordinate system starts at <code>(0, 0)</code>), sets <code>insideTarget_ = true</code>,
+ends any active scissor, and calls <code>BeginTextureMode</code>.</p>
+<p><code>popTarget</code> calls <code>EndTextureMode</code>, restores the matrix with
+<code>rlPopMatrix</code>, sets <code>insideTarget_ = false</code>, and re-issues the scissor
+if one was active.</p>
+<p>The <code>rlLoadIdentity</code> is important: it isolates the target from the
+parent's transform. A draw call inside the target uses only the
+transforms pushed within the target.</p>
+<h3 id="57-dpi">5.7 DPI</h3>
+<p><code>beginFrame</code> pushes a scale matrix if <code>dpiScale_ != 1.0f</code>:</p>
+<pre><code class="language-cpp">void RaylibRenderer::beginFrame() {
+    if (dpiScale_ != 1.0f) {
+        rlPushMatrix();
+        rlScalef(dpiScale_, dpiScale_, 1.0f);
+    }
+}
+</code></pre>
+<p><code>endFrame</code> pops it. The scale is applied to all coordinates passed to
+the backend, so the backend's logical coordinates are automatically
+converted to physical pixels.</p>
+<p><code>pushClip</code> applies the scale manually to the scissor:</p>
+<pre><code class="language-cpp">int x = (int)std::floor(currentClip.x * dpiScale_);
+int y = (int)std::floor(currentClip.y * dpiScale_);
+int w = (int)std::ceil(currentClip.width * dpiScale_);
+int h = (int)std::ceil(currentClip.height * dpiScale_);
+</code></pre>
+<p>Because scissor operates in physical pixels (Raylib's API), not in the
+transformed coordinate space.</p>
+<p><code>measureText</code> divides the result by <code>dpiScale_</code> to return logical
+pixels:</p>
+<pre><code class="language-cpp">Vec2 RaylibRenderer::measureText(FontHandle f, std::string_view s,
+                                  float size, float spacing)
+{
+    ::Font font = res.fonts.count(f.id) ? res.fonts[f.id] : GetFontDefault();
+    std::string str(s);
+    auto v = MeasureTextEx(font, str.c_str(),
+                           size * dpiScale_, spacing * dpiScale_);
+    return {v.x / dpiScale_, v.y / dpiScale_};
+}
+</code></pre>
+<p>This is because Raylib's <code>MeasureTextEx</code> works in physical pixels, but
+the framework expects logical pixels.</p>
+<h3 id="58-text-rendering">5.8 Text rendering</h3>
+<p><code>drawText</code> doesn't apply DPI manually — the <code>beginFrame</code> scale matrix
+takes care of it. So the text is drawn at <code>size</code> (logical), and the
+matrix scales it to <code>size * dpiScale_</code> (physical).</p>
+<p>But <code>measureText</code> uses the physical size for the measurement, then
+divides back. The result is consistent: <code>drawText</code> at logical size <code>s</code>
+has the same physical size as <code>measureText</code> at logical size <code>s</code>.</p>
+<h3 id="59-drawtarget-and-the-y-flip">5.9 <code>drawTarget</code> and the Y-flip</h3>
+<pre><code class="language-cpp">void RaylibRenderer::drawTarget(TargetHandle t, Rect dst, Color tint) {
+    if (res.targets.count(t.id)) {
+        ::Texture2D tex = res.targets[t.id].texture;
+        ::Rectangle src = {0.0f, 0.0f, (float)tex.width, -(float)tex.height};
+        DrawTexturePro(tex, src, rl(dst), {0, 0}, 0.0f, rl(tint));
+    }
+}
+</code></pre>
+<p>Raylib's render textures are stored <strong>upside down</strong> relative to the
+screen. The <code>-tex.height</code> in the source rect flips the texture during
+the draw, restoring the correct orientation.</p>
+<p>This is a Raylib-specific quirk. Other backends (e.g. OpenGL FBOs
+rendered in the correct orientation) wouldn't need it.</p>
+<hr />
+<h2 id="6-writing-a-new-backend">6. Writing a new backend</h2>
+<p>The process for porting ZenitUI to a new graphics library:</p>
+<h3 id="61-implement-iplatform">6.1 Implement <code>IPlatform</code></h3>
+<p>This is usually the easiest. Map your library's input and time APIs to
+the eight methods. The main gotchas:</p>
+<ul>
+<li>Convert pointer position to logical pixels if your library reports
+  physical.</li>
+<li>Ensure <code>pressed</code> / <code>released</code> are one-frame edges.</li>
+<li>Map your key codes to the <code>Key::*</code> constants.</li>
+<li>Return the correct DPI scale.</li>
+</ul>
+<h3 id="62-implement-irenderer">6.2 Implement <code>IRenderer</code></h3>
+<p>This is the largest. Structure it like the Raylib backend:</p>
+<ol>
+<li>A resources struct (maps, next ID).</li>
+<li>A transform stack (for <code>transformClipToScreen</code>).</li>
+<li>A clip stack (for nested clips).</li>
+<li>An effect stack (for nested shaders).</li>
+<li>A target state (for <code>inTarget()</code>).</li>
+</ol>
+<p>The methods are individually simple, but the interactions between them
+(clipping inside transforms, effects inside targets, etc.) require care.</p>
+<p>Common pitfalls:</p>
+<ul>
+<li><strong>Forgetting to intersect clips.</strong> Nested <code>pushClip</code> calls must
+  produce the intersection, not the last clip.</li>
+<li><strong>Forgetting to apply transforms to clips.</strong> A clip rect is in the
+  current transform's space; converting it to screen space is what
+  makes the clip follow the transform.</li>
+<li><strong>Not resetting state on <code>pushTarget</code>.</strong> Drawing inside a target
+  should start from a clean coordinate system.</li>
+<li><strong>Not restoring state on <code>popTarget</code>.</strong> The clip that was active
+  before the target must be re-applied.</li>
+<li><strong>Not handling <code>dpiScale</code>.</strong> If your backend works in physical
+  pixels, you need to scale the clip and divide the text measurement.</li>
+</ul>
+<h3 id="63-implement-iassetprovider">6.3 Implement <code>IAssetProvider</code></h3>
+<p>Simple. Your library's font / texture / shader loading methods map
+directly to <code>loadFont</code> / <code>loadTexture</code> / <code>loadEffect</code>, plus a registry
+to store the handles by name.</p>
+<h3 id="64-wire-into-uicontext">6.4 Wire into <code>UIContext</code></h3>
+<pre><code class="language-cpp">MyRenderer   renderer;
+MyPlatform   platform;
+MyAssets     assets(renderer);
+
+UIContext::get().renderer = &amp;renderer;
+UIContext::get().platform = &amp;platform;
+UIContext::get().assets   = &amp;assets;
+</code></pre>
+<p>All three must be set before the first frame. The framework doesn't
+validate this — if any is null, the first frame will crash or
+misbehave silently.</p>
+<h3 id="65-handling-unsupported-features">6.5 Handling unsupported features</h3>
+<p>If your backend can't implement <code>pushEffect</code> / <code>popEffect</code> (e.g. a
+software renderer without shaders), return <code>false</code> from
+<code>supports(Feature::Effects)</code>. The framework will skip all shader code
+paths, and <code>filter:</code> / <code>effect:</code> properties become no-ops.</p>
+<p>Similarly, <code>NestedTargets</code> should return <code>false</code> unless you actually
+support nested render targets.</p>
+<p>The <code>supports</code> method is the <strong>only</strong> feature-detection mechanism. The
+framework doesn't try-catch or probe — it just asks and trusts the
+answer.</p>
+<h3 id="66-dpi-strategy">6.6 DPI strategy</h3>
+<p>If your backend works entirely in logical coordinates (e.g. a vector
+renderer that doesn't care about physical pixels), you can ignore
+<code>dpiScale</code> — always return <code>1.0f</code> from <code>setDpiScale</code>, ignore it in
+<code>pushClip</code>, and return the measured text size directly.</p>
+<p>If your backend uses physical pixels (OpenGL, Vulkan, Metal, Raylib),
+you need to handle the scale, following the Raylib pattern.</p>
+<h3 id="67-the-y-flip-question">6.7 The Y-flip question</h3>
+<p>Raylib's render textures are Y-flipped relative to the framebuffer. If
+your backend has the same quirk, you need the <code>-tex.height</code> trick in
+<code>drawTarget</code>. If not, just use <code>{0, 0, tex.width, tex.height}</code>.</p>
+<p>The framework doesn't care — it just calls <code>drawTarget</code> and expects the
+target's content to appear at <code>dst</code> with the same orientation as when
+it was drawn.</p>
+<hr />
+<h2 id="7-testing-a-backend">7. Testing a backend</h2>
+<p>ZenitUI is designed to be testable without a real backend. The
+<code>tests/Mocks.hpp</code> file provides:</p>
+<ul>
+<li><strong><code>MockRenderer</code></strong> — records calls, provides deterministic text
+  measurement, tracks clip intersection.</li>
+<li><strong><code>MockPlatform</code></strong> — scriptable pointer, input events, viewport.</li>
+<li><strong><code>MockAssetProvider</code></strong> — returns empty handles.</li>
+<li><strong><code>Env</code></strong> — fixture that installs the mocks, clears <code>Theme</code>, and
+  provides <code>frame()</code> / <code>click()</code> helpers.</li>
+</ul>
+<p>You can write a test suite for a new backend by:</p>
+<ol>
+<li>Implementing the three interfaces.</li>
+<li>Running the framework's existing tests against them.</li>
+<li>Adding backend-specific tests for the tricky parts (clip
+   intersection, transform composition, text measurement consistency).</li>
+</ol>
+<p>The existing tests use <code>MockRenderer</code> and pass without a window. A new
+backend should be able to pass the same tests.</p>
+<h3 id="71-verifying-text-measurement">7.1 Verifying text measurement</h3>
+<p>The most important consistency check: <code>measureText</code> and <code>drawText</code> must
+agree on the size. If <code>measureText(s)</code> returns <code>100x20</code> but <code>drawText</code>
+actually draws <code>110x22</code>, the layout will be wrong.</p>
+<p>The test for this is to draw the text to a target, read back the pixels,
+and measure the actual bounding box. The Raylib backend doesn't have
+this test — it trusts the library.</p>
+<h3 id="72-verifying-clip-and-transform">7.2 Verifying clip and transform</h3>
+<p>The clip and transform interactions are the trickiest parts of a
+backend. A common failure mode: clipping to a rect that's been
+transformed by a scale, but the clip doesn't follow the scale.</p>
+<p>The test: push a <code>scale: 2</code> transform, push a clip, draw a full-rect
+fill, and read back the pixels. The filled area should be the clip
+scaled by 2.</p>
+<hr />
+<h2 id="8-common-tasks">8. Common tasks</h2>
+<h3 id="81-adding-a-new-feature-to-the-framework">8.1 Adding a new feature to the framework</h3>
+<p>If a new feature needs backend support:</p>
+<ol>
+<li>Add a value to the <code>Feature</code> enum.</li>
+<li>Update the framework to check <code>supports(Feature::YourFeature)</code>.</li>
+<li>Implement the feature in the Raylib backend.</li>
+<li>Update other backends to return <code>false</code> (or implement it).</li>
+</ol>
+<h3 id="82-adding-a-new-primitive">8.2 Adding a new primitive</h3>
+<ol>
+<li>Add a method to <code>IRenderer</code>.</li>
+<li>Implement in <code>RaylibRenderer</code>.</li>
+<li>Use it in the framework (in <code>renderChrome</code>, <code>renderContent</code>, or a
+   filter).</li>
+</ol>
+<h3 id="83-adding-a-new-platform-event">8.3 Adding a new platform event</h3>
+<ol>
+<li>Add the field to <code>PointerState</code> or <code>InputEvents</code> (in
+   <code>CoreTypes.hpp</code>).</li>
+<li>Populate it in the platform's <code>pointer()</code> or <code>pollInputEvents()</code>.</li>
+<li>Handle it in the framework (<code>InputController</code> or <code>Layout</code>).</li>
+<li>Map it in the Raylib backend (e.g. a new <code>IsKeyDown</code> check).</li>
+</ol>
+<h3 id="84-supporting-a-second-window">8.4 Supporting a second window</h3>
+<p>The framework assumes a single window. <code>UIContext::get()</code> is a
+singleton, and the Raylib backend uses a static resources struct. To
+support multiple windows, you'd need:</p>
+<ol>
+<li>A per-window <code>UIContext</code> (or a context passed explicitly).</li>
+<li>A per-window renderer (no static resources).</li>
+<li>A window manager on top.</li>
+</ol>
+<p>This is a significant refactor. The current design is intentionally
+single-window.</p>
+<hr />
+<h2 id="9-pitfalls">9. Pitfalls</h2>
+<p><strong>Forgetting to call <code>setDpiScale</code>.</strong></p>
+<p>The user's <code>main()</code> must call <code>UIContext::get().renderer-&gt;setDpiScale(...)</code>
+if they want DPI scaling. The framework's <code>beginFrame</code> calls it
+automatically from <code>platform-&gt;dpiScale()</code>, but only if the renderer is
+set before the first frame. If you set the renderer late, the scale
+might be wrong.</p>
+<p><strong>Handles are <code>uint32_t</code> IDs, not pointers.</strong></p>
+<p>A <code>FontHandle</code> is <code>{id}</code>. The backend maps IDs to actual resources. This
+keeps the framework's types small and copyable, but it means you can't
+compare handles directly to resources — you need the backend's lookup.</p>
+<p>The <code>valid()</code> method on handles checks <code>id != 0</code>. So <code>id = 0</code> is the
+"invalid" / "default" handle. For fonts, <code>id = 0</code> means "use the
+backend's default font". For textures and effects, <code>id = 0</code> means
+"no resource".</p>
+<p><strong>Assets are never unloaded.</strong></p>
+<p>The <code>RaylibAssetProvider</code> doesn't have an unload method. Resources are
+leaked at shutdown. For a game, this is harmless (the OS reclaims at
+process exit). For a long-running app with dynamic loading, you'd need
+to add explicit unloading.</p>
+<p><strong>The Raylib renderer uses global state.</strong></p>
+<p><code>static RaylibResources res;</code> is a file-local static. This means:</p>
+<ul>
+<li>Only one <code>RaylibRenderer</code> per process can have valid resources.</li>
+<li>Creating a second renderer doesn't create a second set of resources.</li>
+<li>Destroying the first renderer doesn't clean up (the static persists).</li>
+</ul>
+<p>This is a simplification for the single-window use case.</p>
+<p><strong><code>pushClip</code> inside a target is a no-op.</strong></p>
+<p>A filtered node inside a scroll container: the filter pushes a target,
+then the scroll container's clip is skipped inside the target. The
+target's size acts as the clip. If the target is larger than the
+visible region (because the transform expanded it), the content might
+be visible outside the container's bounds.</p>
+<p>This is a known limitation. In practice, the target size is the region,
+which is the intersection of the transformed rect and the outer clip,
+so the target is exactly the visible area. The no-op clip is fine.</p>
+<p><strong>Effects don't apply to text unless the backend supports it.</strong></p>
+<p><code>drawText</code> calls <code>DrawTextEx</code> in Raylib, which respects the current
+shader mode. So a node with <code>effect: hueShift</code> and text content will
+apply the shader to the text too. But the shader must expect text
+coordinates — many shaders are written for full-screen quads and won't
+work on text.</p>
+<p><strong>The DPI scale is global, not per-node.</strong></p>
+<p>A backend can't have different DPI scales for different nodes. If you
+need per-node scaling, use the <code>scale</code> transform property, not the DPI
+scale.</p>
+<p><strong>Text rendering with <code>spacing = 0</code> is backend-dependent.</strong></p>
+<p>The framework passes the <code>letterSpacing</code> value from the style. If it's
+zero, <code>DrawTextEx</code> uses its default spacing (which might not be zero).
+The framework's <code>letterSpacing</code> default is <code>2.0</code>, not <code>0</code>, so this is
+usually not an issue.</p>
+<p><strong>Measure text with a font that failed to load.</strong></p>
+<p>If <code>loadFont</code> returns <code>false</code> (file not found), the name isn't
+registered. A style that references it falls back to the default font
+(<code>f.id == 0</code>). <code>drawText</code> with <code>f.id == 0</code> uses <code>GetFontDefault()</code>. The
+text renders in Raylib's built-in font. No error is logged (by default).</p>
+<p><strong>Clip rects are not transformed for the current target.</strong></p>
+<p>Inside a render target, <code>pushClip</code> is a no-op. So the clip rect isn't
+transformed. This is fine because the target is clipped by its bounds.
+But if you were to lift the "no nested targets" restriction, you'd need
+to handle clips inside targets differently.</p>
+<p><strong><code>drawTarget</code> with a target that was destroyed.</strong></p>
+<p>If <code>destroyTarget</code> is called and then <code>drawTarget</code> with the same
+handle, the map lookup fails and nothing is drawn. No crash — but the
+content is missing. The framework avoids this by only destroying targets
+in <code>~Layout</code> or right before recreating them.</p>
+<p><strong>The <code>beginFrame</code> / <code>endFrame</code> pair is not a transaction.</strong></p>
+<p>The framework calls <code>renderer-&gt;beginFrame()</code> before <code>root-&gt;draw()</code> and
+<code>renderer-&gt;endFrame()</code> after. If <code>draw</code> throws or returns early, the
+<code>endFrame</code> is still called (in <code>renderFrame</code>). This is correct — the
+backend's frame-level state must be reset regardless.</p>
+<p>If a backend's <code>beginFrame</code> allocates something, it must be freed in
+<code>endFrame</code>, even if <code>draw</code> was empty.</p>
+<p><strong>Shaders are loaded from file, not from source.</strong></p>
+<p><code>RaylibAssetProvider::loadEffect(name, fsPath)</code> calls
+<code>LoadShader(nullptr, fsPath)</code>. The vertex shader defaults to Raylib's
+standard one. To use a custom vertex shader, pass a <code>vsPath</code>.</p>
+<p>The framework doesn't support loading shaders from source strings.
+You'd need to write them to disk first, or extend the provider.</p>
+<p><strong>The framework doesn't handle window resize explicitly.</strong></p>
+<p>A window resize changes <code>viewportSize()</code>, which changes
+<code>Metrics::viewport</code>, which triggers <code>viewportGeneration++</code>, which
+triggers a style re-resolution. The render targets allocated by the
+framework (for filters, canvas) keep their old size until the next
+<code>drawLayer</code> sees a size mismatch and reallocates. This usually works,
+but there can be a frame of incorrect rendering during the transition.</p>
+<p>The Raylib backend doesn't handle window resize in <code>beginFrame</code> — it
+just reports the new size. The framework's logic handles the rest.</p>
+<p><strong>The backend doesn't have a "clear screen" method.</strong></p>
+<p>The user's <code>main()</code> calls <code>ClearBackground</code> (Raylib) before
+<code>root-&gt;renderFrame()</code>. The framework doesn't clear the framebuffer
+itself. If you forget to clear, you'll see the previous frame's content
+bleeding through.</p>
+<p>For a new backend, the user is responsible for clearing. The framework
+assumes a cleared framebuffer at the start of <code>draw</code>.</p>
+<p><strong>The framework doesn't handle window close.</strong></p>
+<p><code>WindowShouldClose()</code> is checked in the user's loop. When the window
+closes, the loop exits, and the user's <code>main()</code> cleans up (via
+destructors). The framework doesn't have a "shutdown" method — cleanup
+is RAII-based.</p>
+<p>The <code>UIContext::renderer</code> pointer becomes dangling after the renderer
+is destroyed, but the framework isn't called anymore (the main loop is
+over), so this is harmless.</p>
+<p><strong>Multithreading is not supported.</strong></p>
+<p>The framework assumes all backend calls happen on the main thread.
+<code>UIContext</code> is a singleton without locking. Backends that do async work
+(e.g. loading assets in a background thread) must synchronize their
+own state.</p>
+<p><strong>The <code>supports(Feature::Effects)</code> check is done in multiple places.</strong></p>
+<p>In <code>Layout::draw</code>, <code>drawInline</code>, <code>drawLayer</code>. If a backend returns
+<code>false</code>, all effect-related calls are skipped. This is the correct
+behavior but means the check is repeated. A future optimization could
+cache the result, but the <code>supports</code> call is cheap (a virtual call
+returning a bool).</p>
+<p><strong>The <code>inTarget()</code> check prevents filtering inside a filter.</strong></p>
+<p>A node with <code>filter:</code> inside another node with <code>filter:</code> falls back to
+inline rendering (no filter on the inner node). This is a Raylib
+limitation, exposed as a general framework rule. If a new backend
+supports nested targets, it can override <code>supports(Feature::NestedTargets)</code>
+— but the framework doesn't currently check that feature, so it wouldn't
+help.</p>
+<p>To lift the restriction, the check would need to be:</p>
+<pre><code class="language-cpp">const bool isLayer =
+    !renderStyle.filters.empty() &amp;&amp;
+    renderer-&gt;supports(Feature::Effects) &amp;&amp;
+    rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f &amp;&amp;
+    (!renderer-&gt;inTarget() || renderer-&gt;supports(Feature::NestedTargets));
+</code></pre>
+<p>Not currently implemented, but a clear extension point.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

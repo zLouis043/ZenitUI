@@ -1,0 +1,3560 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../09-backend/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Debugging - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#debugging" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Debugging
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-debug-macro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The debug macro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-debugdump-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Debug::dump* functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Debug::dump* functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-dumpstylenode-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 dumpStyle(node, os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dumptreenode-os-maxdepth-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 dumpTree(node, os, maxDepth, depth)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-dumpthemeos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 dumpTheme(os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dumppartsnode-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 dumpParts(node, os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-output-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Output target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Logger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Logger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-default-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The default logger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-installing-a-custom-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Installing a custom logger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-free-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Free functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-categories-used-in-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Categories used in the framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-what-gets-logged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 What gets logged
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-logging-from-user-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Logging from user code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-test-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Test infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mockrenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MockRenderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-mockplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 MockPlatform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-mockassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 MockAssetProvider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-env-fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Env fixture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-writing-a-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Writing a test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-example-click-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Example: click test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-example-hover-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Example: hover test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-example-keyboard-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Example: keyboard test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-example-style-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Example: style test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-what-can-be-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 What can be tested
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-what-cant-be-tested-with-the-mocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 What can't be tested with the mocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-debugging-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Debugging workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Debugging workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-my-widget-doesnt-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 "My widget doesn't appear"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-my-styles-dont-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 "My styles don't apply"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-my-click-doesnt-fire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 "My click doesn't fire"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-my-layout-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 "My layout is wrong"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-my-animation-doesnt-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 "My animation doesn't run"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-my-filter-doesnt-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 "My filter doesn't work"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-logging-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Logging integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Logging integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-custom-logger-for-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Custom logger for tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-custom-logger-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Custom logger for production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-logging-in-a-game-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Logging in a game loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-dumping-the-tree-on-a-key-press" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Dumping the tree on a key press
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-highlighting-a-specific-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Highlighting a specific node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-tracing-style-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Tracing style resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-tracing-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Tracing input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-inspecting-uicontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Inspecting UIContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-debug-macro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The debug macro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-debugdump-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Debug::dump* functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Debug::dump* functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-dumpstylenode-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 dumpStyle(node, os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dumptreenode-os-maxdepth-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 dumpTree(node, os, maxDepth, depth)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-dumpthemeos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 dumpTheme(os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-dumppartsnode-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 dumpParts(node, os)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-output-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Output target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Logger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Logger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-default-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The default logger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-installing-a-custom-logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Installing a custom logger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-free-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Free functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-categories-used-in-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Categories used in the framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-what-gets-logged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 What gets logged
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-logging-from-user-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Logging from user code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-test-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Test infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mockrenderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MockRenderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-mockplatform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 MockPlatform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-mockassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 MockAssetProvider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-env-fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Env fixture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-writing-a-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Writing a test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-example-click-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Example: click test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-example-hover-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Example: hover test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-example-keyboard-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Example: keyboard test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-example-style-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Example: style test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-what-can-be-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 What can be tested
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-what-cant-be-tested-with-the-mocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 What can't be tested with the mocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-debugging-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Debugging workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Debugging workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-my-widget-doesnt-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 "My widget doesn't appear"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-my-styles-dont-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 "My styles don't apply"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-my-click-doesnt-fire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 "My click doesn't fire"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-my-layout-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 "My layout is wrong"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-my-animation-doesnt-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 "My animation doesn't run"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-my-filter-doesnt-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 "My filter doesn't work"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-logging-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Logging integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Logging integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-custom-logger-for-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Custom logger for tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-custom-logger-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Custom logger for production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-logging-in-a-game-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Logging in a game loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-dumping-the-tree-on-a-key-press" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Dumping the tree on a key press
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-highlighting-a-specific-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Highlighting a specific node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-tracing-style-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Tracing style resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-tracing-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Tracing input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-inspecting-uicontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Inspecting UIContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="debugging">Debugging</h1>
+<p>ZenitUI has three independent tools for understanding what's happening
+at runtime:</p>
+<ul>
+<li><strong><code>Debug::dump*</code></strong> — structured dumps of a node, a tree, the theme,
+  and the parts of a widget. Compiled in only when <code>ZENITUI_DEBUG</code> is
+  defined.</li>
+<li><strong><code>Logger</code></strong> — a structured logging system with categories, source
+  locations, and severity levels. Always compiled in, but only emits
+  when something goes wrong or a custom logger is installed.</li>
+<li><strong><code>Mocks.hpp</code></strong> — a headless test harness that replaces the three
+  backend interfaces with mocks, letting you drive the framework
+  through a scripted sequence of frames and pointer/keyboard events.</li>
+</ul>
+<p>This document covers all three, plus the workflow of writing tests and
+debugging common problems.</p>
+<hr />
+<h2 id="1-the-debug-macro">1. The debug macro</h2>
+<p><code>Debug.hpp</code> wraps its entire implementation in:</p>
+<pre><code class="language-cpp">#ifdef ZENITUI_DEBUG
+    // ... full implementation ...
+#else
+    // ... inline no-op stubs with the same signatures ...
+#endif
+</code></pre>
+<p>So including <code>Debug.hpp</code> and calling <code>Debug::dumpTree(*node)</code> always
+compiles. But if <code>ZENITUI_DEBUG</code> isn't defined, the call compiles to
+nothing (an empty inline function with the same signature). No linker
+errors, no runtime overhead.</p>
+<p>To enable the debug functions, define the macro <strong>before</strong> including
+<code>Debug.hpp</code> (or globally, via the build system):</p>
+<pre><code class="language-cpp">#define ZENITUI_DEBUG
+#include &quot;Debug.hpp&quot;
+</code></pre>
+<p>Because <code>Debug.hpp</code> is included by <code>UI.hpp</code>, the macro must be defined
+in the build flags (<code>-DZENITUI_DEBUG</code>) or at the very top of the file
+that includes <code>UI.hpp</code>. Defining it after including <code>UI.hpp</code> has no
+effect — the header has already been processed with the stub branch.</p>
+<p>In practice:</p>
+<ul>
+<li><strong>Debug builds</strong>: <code>-DZENITUI_DEBUG</code>.</li>
+<li><strong>Release builds</strong>: undefined (or explicitly <code>-UZENITUI_DEBUG</code>).</li>
+</ul>
+<p>The macros are orthogonal to <code>NDEBUG</code> — you can have a build with
+<code>NDEBUG</code> (asserts off) and <code>ZENITUI_DEBUG</code> (dumps on), or vice versa.
+They serve different purposes.</p>
+<hr />
+<h2 id="2-debugdump-functions">2. <code>Debug::dump*</code> functions</h2>
+<p>Four functions, all in <code>namespace ZenitUI::Debug</code>, all writing to a
+<code>std::ostream&amp;</code> (default <code>std::cerr</code>).</p>
+<h3 id="21-dumpstylenode-os">2.1 <code>dumpStyle(node, os)</code></h3>
+<p>Prints a single node's identity, state, rect, computed style, and the
+list of matching rules.</p>
+<pre><code>=== Node ===
+  tag      : Button
+  classes  : .btn-primary
+  state    : H
+  rect     : (340, 280  120x40)
+  style    : size=auto x auto bg=#0079F1FF color=#FFFFFFFF fs=20 padding=[0 0 0 0] margin=[0 0 0 0] radius=8px opacity=1 pos=static ...
+  matches  : 3 rule(s)
+spec=0.1.0] .btn-primary
+      -&gt; { background=#0079F1FF, radius=8px, ... }
+spec=0.1.0] .btn-primary:hover
+      -&gt; { background=#3296FFFF, scale=1.15 }
+spec=0.1.1] Button.btn-primary
+      -&gt; { min-width=80px, padding=[1.5vh 2vw 1.5vh 2vw] }
+</code></pre>
+<p>Sections:</p>
+<ul>
+<li><strong>Identity</strong>: tag, id (if set), classes.</li>
+<li><strong>State</strong>: a compact code — <code>H</code> overed, <code>P</code> ressed, <code>F</code> ocused,
+  <code>C</code> hecked, <code>D</code> isabled. <code>-</code> if none.</li>
+<li><strong>Rect</strong>: <code>(x, y  widthxheight)</code>.</li>
+<li><strong>Style</strong>: <code>computedStyleToString</code> — a compact summary of every
+  non-default property.</li>
+<li><strong>Matches</strong>: every <code>ThemeRule</code> that matched this node, with its
+  specificity (<code>ids.classes.tags</code>), the selector string, and the
+  declarations from that rule.</li>
+</ul>
+<p>The style summary is generated by <code>computedStyleToString</code>, which only
+prints non-default values. So a node with no styling shows a bare
+<code>size=auto x auto bg=#00000000 ...</code> with most fields omitted.</p>
+<p>The <code>matches</code> section is the most useful for cascade debugging: it
+shows you exactly which rules applied, in what order, and what each
+one contributed. If a property isn't what you expect, look here.</p>
+<h3 id="22-dumptreenode-os-maxdepth-depth">2.2 <code>dumpTree(node, os, maxDepth, depth)</code></h3>
+<p>Prints the tree recursively, one line per node.</p>
+<pre><code>- Stack#root  [800x600 @ 0,0]
+  - Button.btn-primary  [120x40 @ 340,280] {H}
+    - Text.btn-text  [80x20 @ 360,290]
+  - ScrollView.demo-content  [600x560 @ 180,20]
+    - VStack.card  [560x200 @ 200,40]
+      - Text.card-title  [100x24 @ 220,60]
+      - Text.card-desc  [560x48 @ 220,92]
+    - VStack.card  [560x180 @ 200,260]
+      ...
+</code></pre>
+<p>Format: <code>indent - [#id] Tag.class1.class2  [WxH @ X,Y] {state}</code>.</p>
+<p>Parameters:</p>
+<ul>
+<li><code>maxDepth</code>: if <code>&gt;= 0</code>, stops recursion at that depth. Default <code>-1</code>
+  (unlimited).</li>
+<li><code>depth</code>: internal, starts at 0. Don't pass.</li>
+</ul>
+<p><code>dumpTree</code> traverses the <strong>logical</strong> tree, not the render tree. So a
+portal appears as a child of its logical parent, not at the root where
+it's drawn. See <a href="../../user/08-portals/">Portals §8</a> for the discussion.</p>
+<p>The <code>state</code> block is only shown if the node has any flag set (<code>{H}</code>,
+<code>{PF}</code>, etc.). Nodes with no flags show nothing.</p>
+<h3 id="23-dumpthemeos">2.3 <code>dumpTheme(os)</code></h3>
+<p>Prints the global <code>Theme</code>:</p>
+<pre><code>=== Theme ===
+Rules    : 47
+Keyframes: 3
+
+--- Keyframes ---
+  pulse (3 frames)
+  knobGlow (3 frames)
+  knobPop (3 frames)
+
+--- Rules ---
+  [  0] spec=     0.0.1  VStack
+         { gap=2vh }
+  [  1] spec=     0.1.0  .btn-primary
+         { background=#0079F1FF, radius=8px, padding=[1.5vh 2vw 1.5vh 2vw] }
+  [  2] spec=     0.1.0  .btn-primary:hover
+         { background=#3296FFFF, scale=1.15 }
+  ...
+</code></pre>
+<p>Three sections:</p>
+<ul>
+<li><strong>Summary</strong>: total rule count and keyframe count.</li>
+<li><strong>Keyframes</strong>: name and frame count for each <code>@keyframes</code>.</li>
+<li><strong>Rules</strong>: each rule with its index, specificity, selector string,
+  and declarations.</li>
+</ul>
+<p>The rule index is the order of declaration in the theme. Lower indices
+were declared earlier. When two rules have the same specificity, the
+later one wins — so a rule with a higher index overrides one with a
+lower index.</p>
+<p>Useful for:</p>
+<ul>
+<li>Checking what styles are loaded after <code>loadStyleFile</code>.</li>
+<li>Verifying that a <code>@keyframes</code> block parsed correctly.</li>
+<li>Debugging specificity issues (which rule wins).</li>
+</ul>
+<h3 id="24-dumppartsnode-os">2.4 <code>dumpParts(node, os)</code></h3>
+<p>Prints the <code>::part</code>s that have matching rules for a node.</p>
+<pre><code>=== Parts of Slider ===
+  ::track  (2 matching rule(s))
+  ::fill   (1 matching rule(s))
+  ::knob   (3 matching rule(s))
+</code></pre>
+<p><code>dumpParts</code> checks a hardcoded list of candidate names:</p>
+<pre><code class="language-cpp">static const char* candidates[] = {
+    &quot;track&quot;, &quot;fill&quot;, &quot;knob&quot;, &quot;box&quot;, &quot;mark&quot;, &quot;cursor&quot;
+};
+</code></pre>
+<p>For each candidate, it counts matching <code>ThemeRule</code>s (rules whose <code>part</code>
+field equals the name and whose <code>chain</code> matches the node). If the count
+is non-zero, it's printed.</p>
+<p>This is a <strong>coverage check</strong>, not a full dump. It tells you which parts
+have styles, but not what those styles are. For the full rules, use
+<code>dumpStyle</code> (which lists all matching rules, including <code>::part</code> rules)
+or <code>dumpTheme</code>.</p>
+<p>Note: the candidate list is hardcoded. If you write a custom widget
+with a part name not in the list, <code>dumpParts</code> won't report it. The
+list is intentionally small to keep the output readable.</p>
+<h3 id="25-output-target">2.5 Output target</h3>
+<p>All four functions take a <code>std::ostream&amp;</code> defaulting to <code>std::cerr</code>.
+To dump to a file:</p>
+<pre><code class="language-cpp">std::ofstream log(&quot;dump.txt&quot;);
+Debug::dumpTree(*root, log);
+Debug::dumpTheme(log);
+</code></pre>
+<p>To dump to stdout:</p>
+<pre><code class="language-cpp">Debug::dumpStyle(*node, std::cout);
+</code></pre>
+<p>The functions don't flush. If you're writing to a file, flush or close
+the stream before reading it.</p>
+<h3 id="26-performance">2.6 Performance</h3>
+<p><code>dumpStyle</code> and <code>dumpTree</code> are cheap — they iterate a node's rules and
+children. <code>dumpTheme</code> is <code>O(rules)</code>. All are synchronous and blocking.</p>
+<p>Calling them every frame produces a lot of output. They're meant for
+one-shot debugging, not continuous logging. For per-frame diagnostics,
+use <code>Logger</code> instead.</p>
+<hr />
+<h2 id="3-logger">3. <code>Logger</code></h2>
+<p><code>Logger</code> is the framework's structured logging system. It's always
+compiled in (unlike <code>Debug</code>), and it's used by the framework itself to
+report warnings (unknown properties, invalid values, misuse of APIs).</p>
+<h3 id="31-the-message">3.1 The message</h3>
+<pre><code class="language-cpp">struct LogMessage {
+    LogLevel    level;
+    std::string category;   // &quot;StyleParser&quot;, &quot;Layout&quot;, &quot;Animations&quot;, ...
+    std::string file;       // source file (e.g. &quot;assets/game.zstyle&quot;)
+    int         line;       // 0 if not available
+    int         column;     // 0 if not available
+    std::string text;
+};
+
+enum class LogLevel { Debug, Info, Warning, Error };
+</code></pre>
+<p>Five fields, all optional except <code>level</code> and <code>text</code>. The <code>file</code> / <code>line</code>
+/ <code>column</code> are populated when the logging call site knows its source
+location (e.g. the style parser, which has parsed a <code>.zstyle</code> file and
+knows the current line).</p>
+<h3 id="32-the-interface">3.2 The interface</h3>
+<pre><code class="language-cpp">class ILogger {
+public:
+    virtual ~ILogger() = default;
+    virtual void log(const LogMessage&amp; msg) = 0;
+};
+</code></pre>
+<p>One method. Implementations are free to do anything with the message.</p>
+<h3 id="33-the-default-logger">3.3 The default logger</h3>
+<p><code>ConsoleLogger</code> writes to <code>stderr</code>:</p>
+<pre><code>[WARN ] [StyleParser] assets/game.zstyle(45:10): unknown property 'foo'. Ignored.
+[ERROR] [StyleParser] assets/game.zstyle: impossibile aprire il file
+</code></pre>
+<p>Format: <code>[LEVEL] [category] file(line:col): text</code>.</p>
+<p>If <code>file</code> is empty, the file part is omitted. If <code>line == 0</code>, only the
+file name is shown (no line/column). If both are empty, only the level
+and category.</p>
+<p>The level is padded to 5 characters for alignment (<code>DEBUG</code>, <code>INFO</code>,
+<code>WARN</code>, <code>ERROR</code>).</p>
+<h3 id="34-installing-a-custom-logger">3.4 Installing a custom logger</h3>
+<pre><code class="language-cpp">Logger::set(&amp;myLogger);
+</code></pre>
+<p><code>Logger::set</code> takes an <code>ILogger*</code>. Passing <code>nullptr</code> restores the
+default <code>ConsoleLogger</code>. The user is responsible for the lifetime of a
+custom logger — <code>Logger</code> doesn't own it.</p>
+<p>A custom logger might:</p>
+<ul>
+<li>Filter by category or level.</li>
+<li>Route to <code>std::cout</code> for info, <code>std::cerr</code> for warnings.</li>
+<li>Collect messages into a buffer for later display.</li>
+<li>Forward to a game engine's logging system.</li>
+<li>Write to a file.</li>
+</ul>
+<p>Example: a logger that writes only errors to a file:</p>
+<pre><code class="language-cpp">class FileErrorLogger : public ILogger {
+public:
+    FileErrorLogger(const char* path) : file(path) {}
+    void log(const LogMessage&amp; msg) override {
+        if (msg.level != LogLevel::Error &amp;&amp;
+            msg.level != LogLevel::Warning) return;
+        file &lt;&lt; &quot;[&quot; &lt;&lt; (int)msg.level &lt;&lt; &quot;] &quot;
+             &lt;&lt; msg.category &lt;&lt; &quot;: &quot; &lt;&lt; msg.text &lt;&lt; &quot;\n&quot;;
+    }
+private:
+    std::ofstream file;
+};
+</code></pre>
+<h3 id="35-free-functions">3.5 Free functions</h3>
+<p>Five free functions in <code>namespace ZenitUI</code>:</p>
+<pre><code class="language-cpp">inline void logDebug(const std::string&amp; c, const std::string&amp; f, int l, int col, const std::string&amp; t);
+inline void logInfo (const std::string&amp; c, const std::string&amp; f, int l, int col, const std::string&amp; t);
+inline void logWarn (const std::string&amp; c, const std::string&amp; f, int l, int col, const std::string&amp; t);
+inline void logError(const std::string&amp; c, const std::string&amp; f, int l, int col, const std::string&amp; t);
+</code></pre>
+<p>Each constructs a <code>LogMessage</code> and forwards to <code>Logger::get().log(msg)</code>.</p>
+<p>Parameters:</p>
+<ul>
+<li><code>c</code>: category (a short string like <code>"StyleParser"</code>).</li>
+<li><code>f</code>: file (source file or asset path). Empty if not applicable.</li>
+<li><code>l</code>: line. 0 if not applicable.</li>
+<li><code>col</code>: column. 0 if not applicable.</li>
+<li><code>t</code>: text.</li>
+</ul>
+<p>Typical call sites:</p>
+<pre><code class="language-cpp">// In the style parser, with full location
+logWarn(&quot;StyleParser&quot;, loc.file, loc.line, loc.col,
+        &quot;unknown property '&quot; + k + &quot;'. Ignored.&quot;);
+
+// In Layout::addChild, without location
+logWarn(&quot;Layout&quot;, &quot;&quot;, 0, 0,
+        &quot;addChild called on a node not managed by shared_ptr. &quot;
+        &quot;Use X::create() and put this logic in onBuild().&quot;);
+</code></pre>
+<h3 id="36-categories-used-in-the-framework">3.6 Categories used in the framework</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Where</th>
+<th>Typical messages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StyleParser</code></td>
+<td><code>StyleParser.hpp</code>, <code>StyleAttr.hpp</code></td>
+<td>Unknown properties, invalid values, missing transition shorthand, keyframe auto-fills, unreadable files.</td>
+</tr>
+<tr>
+<td><code>Layout</code></td>
+<td><code>Layout.hpp</code></td>
+<td><code>addChild</code> misuse (constructor call), missing <code>shared_ptr</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>There's no strict registry of categories. New code can use any string.
+The convention is <code>PascalCase</code>, one or two words, describing the
+subsystem.</p>
+<h3 id="37-what-gets-logged">3.7 What gets logged</h3>
+<p>The framework logs in these situations:</p>
+<ul>
+<li><strong>Unknown property in <code>.zstyle</code></strong>: <code>StyleParser</code> warns, continues.</li>
+<li><strong>Invalid value in <code>.zstyle</code></strong>: <code>StyleParser</code> warns, ignores the
+  property.</li>
+<li><strong><code>transition-delay</code> without <code>transition</code></strong>: warning, ignored.</li>
+<li><strong><code>animation-delay</code> without <code>animation</code></strong>: warning, ignored.</li>
+<li><strong>Keyframe auto-fill</strong>: warning per filled property per keyframe.</li>
+<li><strong>File not found</strong>: error, parse aborted.</li>
+<li><strong><code>addChild</code> on a <code>make_shared</code> node</strong>: warning, call ignored.</li>
+</ul>
+<p>The framework <strong>doesn't</strong> log on:</p>
+<ul>
+<li>Missing assets (font, texture, effect) — silent fallback.</li>
+<li>Unknown selector states (<code>:foo</code>) — silently ignored.</li>
+<li>Missing filter shaders — silent fallback to unfiltered.</li>
+<li>Style resolution errors that are recoverable — silent.</li>
+</ul>
+<p>The philosophy: log <strong>things the user probably didn't intend</strong>, but
+<strong>stay silent about fallbacks that are legitimate</strong>. A missing font is
+often fine (the default is used); a typo'd property is usually a bug.</p>
+<h3 id="38-logging-from-user-code">3.8 Logging from user code</h3>
+<p>There's no requirement to use <code>Logger</code> in user code. It's available if
+you want:</p>
+<pre><code class="language-cpp">logInfo(&quot;MyGame&quot;, &quot;&quot;, 0, 0, &quot;player spawned&quot;);
+</code></pre>
+<p>But <code>std::printf</code> is simpler for most cases. <code>Logger</code> is most useful
+when you want the message to go through the same sink as the framework's
+messages (e.g. a game console overlay).</p>
+<h3 id="39-performance">3.9 Performance</h3>
+<p><code>logImpl</code> constructs a <code>LogMessage</code> (a struct with four strings), then
+calls the logger. The strings are copied. For a call that doesn't
+actually log (e.g. debug level filtered out by a custom logger), the
+copy is wasted.</p>
+<p>There's no "level check before formatting" optimization. If you log in
+a hot path, check the level first or use a custom logger that doesn't
+copy.</p>
+<p>In practice, the framework doesn't log in hot paths. The typical
+warning (unknown property) fires once at parse time. There's no
+per-frame logging.</p>
+<hr />
+<h2 id="4-test-infrastructure">4. Test infrastructure</h2>
+<p><code>tests/Mocks.hpp</code> provides a complete headless test fixture. You can
+drive the framework through a full frame loop without opening a window,
+and assert on observable behavior (callbacks fired, states set, rects
+computed).</p>
+<h3 id="41-mockrenderer">4.1 <code>MockRenderer</code></h3>
+<p>Implements <code>IRenderer</code> with counting and minimal state:</p>
+<pre><code class="language-cpp">class MockRenderer : public IRenderer {
+public:
+    int fillRectCount{0};
+    int drawTextCount{0};
+    int pushClipCount{0};
+    int popClipCount{0};
+
+    float charWidth{8.0f};  // deterministic text measurement
+
+    std::vector&lt;Rect&gt; clipStack;
+    Rect currentClip{0, 0, 1e9f, 1e9f};
+
+    // ... method implementations ...
+
+    bool supports(Feature) const override { return false; }
+};
+</code></pre>
+<p>Key features:</p>
+<ul>
+<li><strong>Counting</strong>: <code>fillRectCount</code>, <code>drawTextCount</code>, <code>pushClipCount</code>,
+  <code>popClipCount</code> increment on the corresponding calls. Useful for
+  asserting "this node was drawn" or "text was measured".</li>
+<li><strong>Deterministic text</strong>: <code>measureText</code> returns <code>charWidth * length</code>
+  for the width and <code>size</code> for the height. So a 10-char string at
+  font size 20 measures <code>80 x 20</code>. No font required.</li>
+<li><strong>Clip stack tracking</strong>: the renderer maintains a <code>clipStack</code> and
+  the intersected <code>currentClip</code>. <code>pushClip</code> intersects, <code>popClip</code>
+  restores. This lets tests verify that clipping works without a
+  real GPU.</li>
+<li><strong>No effects</strong>: <code>supports(Feature::Effects)</code> returns <code>false</code>, so
+  filters are skipped in tests unless explicitly enabled.</li>
+</ul>
+<p>The mock doesn't actually draw pixels. It just records that draw calls
+were made. Tests that need to verify visual output would need a real
+backend with framebuffer readback.</p>
+<h3 id="42-mockplatform">4.2 <code>MockPlatform</code></h3>
+<p>Implements <code>IPlatform</code> with scriptable input:</p>
+<pre><code class="language-cpp">class MockPlatform : public IPlatform {
+public:
+    Vec2 viewport{800.0f, 600.0f};
+    double currentTime{0.0};
+    bool shiftDown{false};
+
+    PointerState nextPointer;
+    InputEvents nextEvents;
+
+    // ... scripted helpers ...
+    void moveMouse(Vec2 pos);
+    void pressLeft(Vec2 pos);
+    void releaseLeft(Vec2 pos);
+    void holdLeft(Vec2 pos);
+    void pressRight(Vec2 pos);
+    void releaseRight(Vec2 pos);
+    void pressKey(int key);
+    void typeChar(int c);
+};
+</code></pre>
+<p>The pointer state is set via helper methods, then read by the framework
+on the next <code>beginFrame</code>. The mock <strong>clears</strong> <code>pressed</code> / <code>released</code>
+after each read, so edge events only fire once.</p>
+<p>Helper semantics:</p>
+<ul>
+<li><code>pressLeft(pos)</code> — sets <code>down = true</code>, <code>pressed = true</code>,
+  <code>released = false</code>. The next frame sees a press.</li>
+<li><code>holdLeft(pos)</code> — <code>down = true</code>, <code>pressed = false</code>, <code>released =
+  false</code>. Subsequent frames of a held button.</li>
+<li><code>releaseLeft(pos)</code> — <code>down = false</code>, <code>pressed = false</code>,
+  <code>released = true</code>.</li>
+<li><code>moveMouse(pos)</code> — no buttons, no edges.</li>
+</ul>
+<p>So a click sequence is:</p>
+<pre><code class="language-cpp">platform.pressLeft({50, 50});
+env.frame(root);       // framework sees press
+platform.releaseLeft({50, 50});
+env.frame(root);       // framework sees release
+</code></pre>
+<p>Or, more concisely, using the <code>click</code> helper (see §4.4).</p>
+<h3 id="43-mockassetprovider">4.3 <code>MockAssetProvider</code></h3>
+<p>Implements <code>IAssetProvider</code> returning empty handles for everything:</p>
+<pre><code class="language-cpp">class MockAssetProvider : public IAssetProvider {
+public:
+    FontHandle    getFont(std::string_view) override { return {}; }
+    TextureHandle getTexture(std::string_view) override { return {}; }
+    EffectHandle  getEffect(std::string_view) override { return {}; }
+};
+</code></pre>
+<p>This means no fonts, textures, or effects are loaded. The framework
+falls back to defaults:</p>
+<ul>
+<li>Text uses the default font (which in the mock renderer has
+  deterministic measurement via <code>charWidth</code>).</li>
+<li>Background textures are missing (nothing drawn).</li>
+<li>Effects are unsupported (the mock renderer returns <code>false</code> for
+  <code>supports(Effects)</code>).</li>
+</ul>
+<p>For tests that need a specific asset, you'd extend the provider.</p>
+<h3 id="44-the-env-fixture">4.4 The <code>Env</code> fixture</h3>
+<pre><code class="language-cpp">struct Env {
+    MockRenderer      renderer;
+    MockPlatform      platform;
+    MockAssetProvider assets;
+
+    Env();       // installs the mocks in UIContext, calls reset()
+    ~Env();      // nulls the UIContext pointers
+
+    void reset();   // clears Theme, UIContext state, mock counters
+    void frame(std::shared_ptr&lt;Layout&gt; root, float dt = 1.0f / 60.0f);
+    void click(std::shared_ptr&lt;Layout&gt; root, Vec2 pos);
+};
+</code></pre>
+<p>Construction installs the three mocks in <code>UIContext</code> and calls
+<code>reset()</code>. Destruction nulls the pointers (so subsequent tests don't
+use dangling references).</p>
+<p><code>reset()</code> clears:</p>
+<ul>
+<li><code>Theme</code> (rules, keyframes, root).</li>
+<li><code>UIContext</code> focus, capture, targets, flags, portals.</li>
+<li><code>MockPlatform</code> state (viewport, time, pointer, events).</li>
+<li><code>MockRenderer</code> counters and clip state.</li>
+<li><code>Metrics::viewport</code> to <code>{1920, 1080}</code> (a sensible default for tests).</li>
+</ul>
+<p><code>frame(root, dt)</code> runs a single frame:</p>
+<pre><code class="language-cpp">void frame(std::shared_ptr&lt;Layout&gt; root, float dt = 1.0f / 60.0f) {
+    auto&amp; ctx = UIContext::get();
+    ctx.beginFrame(dt);
+    root-&gt;updateTree(dt);
+    root-&gt;measure(platform.viewport.x, platform.viewport.y);
+    root-&gt;arrange({0, 0, platform.viewport.x, platform.viewport.y});
+    root-&gt;draw();
+}
+</code></pre>
+<p>This is the same sequence as <code>runFrame</code> + <code>renderFrame</code>, but inlined
+without the renderer's <code>beginFrame</code> / <code>endFrame</code> (which the mock
+doesn't need).</p>
+<p><code>click(root, pos)</code> does a full press-and-release sequence:</p>
+<pre><code class="language-cpp">void click(std::shared_ptr&lt;Layout&gt; root, Vec2 pos) {
+    platform.pressLeft(pos);
+    frame(root);
+    platform.releaseLeft(pos);
+    frame(root);
+}
+</code></pre>
+<p>Two frames — one for the press, one for the release. Callbacks fire on
+the appropriate frame.</p>
+<h3 id="45-writing-a-test">4.5 Writing a test</h3>
+<p>The test framework is defined in <code>tests/TestFramework.hpp</code> (not shown,
+but the API is used throughout the test files). Tests use a simple
+macro-based syntax:</p>
+<pre><code class="language-cpp">TEST(SuiteName, test_name) {
+    Env env;
+    // setup
+    // actions
+    CHECK(condition);
+    CHECK_NEAR(a, b, tolerance);
+}
+</code></pre>
+<p>Test files are <code>tests/test_*.cpp</code>. Each file includes <code>TestFramework.hpp</code>
+and (optionally) <code>Mocks.hpp</code>.</p>
+<p><code>test_main.cpp</code>:</p>
+<pre><code class="language-cpp">int main() {
+    ZenitUI::Metrics::viewport = { 1920.0f, 1080.0f };
+    return Test::run();
+}
+</code></pre>
+<p>Sets the viewport for tests that use <code>vw</code> / <code>vh</code> before running all
+registered tests.</p>
+<h3 id="46-example-click-test">4.6 Example: click test</h3>
+<pre><code class="language-cpp">TEST(Interaction_click, simple_click_increments) {
+    Env env;
+    int count = 0;
+
+    auto root = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    root-&gt;size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    btn-&gt;size(Px(100), Px(50));
+    btn-&gt;setInteractive(true);
+    btn-&gt;setBlocksRaycast(true);
+    btn-&gt;onClick = [&amp;count]() { count++; };
+
+    root-&gt;addChild(btn);
+
+    env.frame(root);       // layout settles
+    env.click(root, {50, 25});
+
+    CHECK(count == 1);
+}
+</code></pre>
+<p>Steps:</p>
+<ol>
+<li>Create the fixture (installs mocks, resets state).</li>
+<li>Build a tree.</li>
+<li>Run one frame so layout is computed.</li>
+<li>Simulate a click.</li>
+<li>Assert the callback fired.</li>
+</ol>
+<p>The <code>env.frame(root)</code> before the click is required — without it, the
+button's <code>rect</code> is <code>{0, 0, 0, 0}</code> (no measure/arrange has run), and the
+hit-test at <code>(50, 25)</code> won't find it.</p>
+<h3 id="47-example-hover-test">4.7 Example: hover test</h3>
+<pre><code class="language-cpp">TEST(Interaction_hover, enter_fires_on_move) {
+    Env env;
+    int enters = 0;
+
+    auto btn = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    btn-&gt;size(Px(100), Px(50));
+    btn-&gt;setInteractive(true);
+    btn-&gt;setBlocksRaycast(true);
+    btn-&gt;onHoverEnter = [&amp;enters]() { enters++; };
+
+    auto root = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    root-&gt;size(Percent(100), Percent(100));
+    root-&gt;addChild(btn);
+
+    env.frame(root);
+    CHECK(enters == 0);
+
+    env.platform.moveMouse({50, 25});
+    env.frame(root);
+    CHECK(enters == 1);
+
+    env.platform.moveMouse({500, 500});
+    env.frame(root);
+    // enters still 1 (no exit handler, so no change in enters)
+}
+</code></pre>
+<p>The pattern: <code>moveMouse</code> sets the pointer position, <code>frame</code> runs the
+frame with that position, and the framework updates the hover flags.</p>
+<h3 id="48-example-keyboard-test">4.8 Example: keyboard test</h3>
+<pre><code class="language-cpp">TEST(Interaction_focus, tab_cycles_through_focusables) {
+    Env env;
+
+    auto root = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    root-&gt;size(Percent(100), Percent(100));
+
+    auto a = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    a-&gt;size(Px(100), Px(50));
+    a-&gt;setInteractive(true);
+    a-&gt;setBlocksRaycast(true);
+    a-&gt;setFocusable(true);
+
+    auto b = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+    b-&gt;size(Px(100), Px(50));
+    b-&gt;setInteractive(true);
+    b-&gt;setBlocksRaycast(true);
+    b-&gt;setFocusable(true);
+
+    root-&gt;addChild(a);
+    root-&gt;addChild(b);
+
+    env.frame(root);
+
+    env.platform.pressKey(Key::Tab);
+    env.frame(root);
+    CHECK(UIContext::get().hasFocus(a.get()));
+
+    env.platform.pressKey(Key::Tab);
+    env.frame(root);
+    CHECK(UIContext::get().hasFocus(b.get()));
+
+    env.platform.pressKey(Key::Tab);
+    env.frame(root);
+    CHECK(UIContext::get().hasFocus(a.get()));   // wrap
+}
+</code></pre>
+<p>Each <code>pressKey</code> sets <code>nextEvents.keys</code>, which is consumed by the next
+<code>pollInputEvents</code> call. So the Tab event is seen on the following
+<code>frame</code>.</p>
+<h3 id="49-example-style-test">4.9 Example: style test</h3>
+<pre><code class="language-cpp">TEST(Parser_basic, hover_state) {
+    Theme t;
+    ZMarkup::loadStyleString(&quot;Toggle:hover { background: blue; }&quot;, t);
+    CHECK(t.rules.size() == 1);
+    CHECK(t.rules[0].chain.size() == 1);
+    CHECK(t.rules[0].chain[0].requireHover);
+}
+</code></pre>
+<p>Parser tests don't need <code>Env</code> — they operate on a local <code>Theme</code>. This
+is faster and simpler for testing the parsing layer.</p>
+<h3 id="410-what-can-be-tested">4.10 What can be tested</h3>
+<ul>
+<li><strong>Style parsing</strong>: parse a string, check <code>Theme::rules</code>,
+  <code>Style::customProps</code>, etc.</li>
+<li><strong>Style resolution</strong>: build a node, run a frame, check
+  <code>node-&gt;getStyle()</code>.</li>
+<li><strong>Layout</strong>: build a tree, run measure/arrange, check <code>getRect()</code>.</li>
+<li><strong>Interaction</strong>: simulate clicks/keys, check callbacks and state.</li>
+<li><strong>Animation</strong>: run N frames, check that a property interpolated.</li>
+<li><strong>Media queries</strong>: set <code>Metrics::viewport</code>, check that rules match.</li>
+<li><strong>ZMarkup</strong>: build a string, check the tree.</li>
+</ul>
+<h3 id="411-what-cant-be-tested-with-the-mocks">4.11 What can't be tested with the mocks</h3>
+<ul>
+<li><strong>Visual output</strong>: the mock renderer doesn't draw pixels. Tests
+  can't verify colors, shapes, or text rendering.</li>
+<li><strong>Text measurement accuracy</strong>: the mock uses <code>charWidth * length</code>,
+  which is a rough approximation. Tests that depend on precise text
+  size should use a real backend.</li>
+<li><strong>Effects</strong>: the mock returns <code>false</code> for <code>supports(Effects)</code>, so
+  filters and shaders are skipped.</li>
+<li><strong>Render targets</strong>: the mock's <code>createTarget</code> returns an invalid
+  handle, so any code that relies on a valid target won't work.</li>
+<li><strong>Performance</strong>: the mocks are fast, but they don't measure real
+  rendering performance.</li>
+</ul>
+<p>For these, you need a real backend. The Raylib backend can be used
+headlessly (no window) with an offscreen framebuffer, but that's not
+currently set up.</p>
+<hr />
+<h2 id="5-debugging-workflow">5. Debugging workflow</h2>
+<h3 id="51-my-widget-doesnt-appear">5.1 "My widget doesn't appear"</h3>
+<ol>
+<li><code>Debug::dumpTree(*root, std::cout);</code> — is the widget in the tree?</li>
+<li>If yes: <code>Debug::dumpStyle(*widget, std::cout);</code> — does it have
+   a non-zero rect? Are the expected rules matched?</li>
+<li>If the rect is <code>{0,0,0,0}</code>: check the parent's size and the
+   widget's <code>width</code> / <code>height</code> / intrinsic size.</li>
+<li>If the rect is fine but nothing is drawn: check <code>supports(Effects)</code>
+   and the filter chain (a missing shader silently draws nothing for
+   filtered nodes).</li>
+</ol>
+<h3 id="52-my-styles-dont-apply">5.2 "My styles don't apply"</h3>
+<ol>
+<li><code>Debug::dumpTheme(std::cout);</code> — is the rule loaded?</li>
+<li><code>Debug::dumpStyle(*node, std::cout);</code> — is the rule matching?</li>
+<li>If the rule isn't in <code>matches</code>: check the selector. Specificity?
+   Media query? State flags?</li>
+<li>If the rule matches but the value is wrong: check the cascade
+   order. Inline styles beat CSS. Later same-specificity rules beat
+   earlier ones. <code>!important</code> doesn't exist.</li>
+<li>Check <code>customProps</code> if using <code>var()</code>.</li>
+</ol>
+<h3 id="53-my-click-doesnt-fire">5.3 "My click doesn't fire"</h3>
+<ol>
+<li>Is the node <code>interactive</code>? <code>setInteractive(true)</code>.</li>
+<li>Does it <code>blocksRaycast</code>? Check the parent chain.</li>
+<li>Is there a node on top that's consuming? Use
+   <code>UIContext::get().topmostConsumer</code> after a frame.</li>
+<li>Is the press and release on the same node? A drag-out-drag-in
+   might not fire.</li>
+<li>Is <code>onClick</code> even set? Check with a breakpoint or a log.</li>
+</ol>
+<h3 id="54-my-layout-is-wrong">5.4 "My layout is wrong"</h3>
+<ol>
+<li><code>Debug::dumpTree(*root, std::cout);</code> — check the rects.</li>
+<li>Is the parent the right size? Check recursively.</li>
+<li>Is the child's intrinsic size what you expect? <code>computeIntrinsicSize</code>
+   might be returning 0.</li>
+<li>Is <code>grow</code> / <code>shrink</code> distributing space correctly? Check the
+   container's main-axis size vs. the sum of children.</li>
+<li>Is <code>justify</code> / <code>items-*</code> doing what you expect? Check the
+   align values.</li>
+</ol>
+<h3 id="55-my-animation-doesnt-run">5.5 "My animation doesn't run"</h3>
+<ol>
+<li>Is the <code>animation</code> / <code>transition</code> property parsed? Check
+   <code>dumpStyle</code> output.</li>
+<li>Is the keyframe name defined? Check <code>dumpTheme</code>.</li>
+<li>Is the state correct? <code>:hover</code> needs <code>isHovered</code>, <code>:checked</code>
+   needs <code>setChecked(true)</code>.</li>
+<li>Is the animation ticked? <code>tickCss</code> runs every frame in <code>update</code>.</li>
+<li>For imperative: is <code>addAnimation</code> + <code>playAnimation</code> called? Is
+   the name correct?</li>
+</ol>
+<h3 id="56-my-filter-doesnt-work">5.6 "My filter doesn't work"</h3>
+<ol>
+<li>Is the shader loaded? <code>assets.loadEffect(name, path)</code>.</li>
+<li>Is the filter registered? <code>FilterRegistry::get().add(def)</code>.</li>
+<li>Is the name in <code>.zstyle</code> matching? Check <code>dumpStyle</code>.</li>
+<li>Is the backend supporting effects? <code>supports(Feature::Effects)</code>.</li>
+<li>Is the node inside another target? <code>renderer-&gt;inTarget()</code>.</li>
+</ol>
+<hr />
+<h2 id="6-logging-integration">6. Logging integration</h2>
+<h3 id="61-custom-logger-for-tests">6.1 Custom logger for tests</h3>
+<p>Tests can install a logger that fails on any error:</p>
+<pre><code class="language-cpp">class FailingLogger : public ILogger {
+public:
+    void log(const LogMessage&amp; msg) override {
+        if (msg.level == LogLevel::Error) {
+            std::cerr &lt;&lt; &quot;UNEXPECTED ERROR: &quot; &lt;&lt; msg.text &lt;&lt; &quot;\n&quot;;
+            std::abort();
+        }
+    }
+};
+</code></pre>
+<p>This makes tests fail on unexpected errors, catching silent bugs.</p>
+<h3 id="62-custom-logger-for-production">6.2 Custom logger for production</h3>
+<p>A production logger might:</p>
+<ul>
+<li>Write to a rolling file.</li>
+<li>Forward errors to a crash reporter.</li>
+<li>Filter out <code>Debug</code> messages.</li>
+<li>Prefix messages with a timestamp.</li>
+</ul>
+<p>The <code>Logger::set(&amp;custom)</code> call is the only integration point.</p>
+<h3 id="63-logging-in-a-game-loop">6.3 Logging in a game loop</h3>
+<p>If you log every frame, the console fills up. Filter aggressively:</p>
+<pre><code class="language-cpp">class FrameLogger : public ILogger {
+public:
+    void log(const LogMessage&amp; msg) override {
+        if (msg.level == LogLevel::Error)
+            console.Print(msg.text);
+        // drop warnings in release
+    }
+};
+</code></pre>
+<p>Or accumulate and show only on a keypress (a "debug overlay").</p>
+<hr />
+<h2 id="7-common-tasks">7. Common tasks</h2>
+<h3 id="71-dumping-the-tree-on-a-key-press">7.1 Dumping the tree on a key press</h3>
+<pre><code class="language-cpp">if (IsKeyPressed(KEY_F1)) {
+    Debug::dumpTree(*root, std::cout);
+}
+if (IsKeyPressed(KEY_F2)) {
+    Debug::dumpTheme(std::cout);
+}
+</code></pre>
+<p>Requires <code>ZENITUI_DEBUG</code> to be defined. In a release build, the calls
+are no-ops (the stubs compile to nothing).</p>
+<h3 id="72-highlighting-a-specific-node">7.2 Highlighting a specific node</h3>
+<p>There's no built-in "highlight" in the renderer. To visually debug a
+node's position, add a debug border:</p>
+<pre><code class="language-cpp">node-&gt;getInlineBase().borderColor = Colors::Red;
+node-&gt;getInlineBase().borderWidth = Px(1);
+</code></pre>
+<p>Or, temporarily, add a child that draws a red rect. A future extension
+might add a debug overlay.</p>
+<h3 id="73-tracing-style-resolution">7.3 Tracing style resolution</h3>
+<p>Add a breakpoint in <code>StyleResolver::resolveFor</code>, or log inside:</p>
+<pre><code class="language-cpp">logDebug(&quot;Style&quot;, &quot;&quot;, 0, 0,
+    &quot;resolving &quot; + node.getStyleTag() + &quot; with &quot; +
+    std::to_string(matches.size()) + &quot; matches&quot;);
+</code></pre>
+<p>This requires temporarily modifying the framework source. A less
+invasive approach: dump the theme once at startup and inspect the
+rules manually.</p>
+<h3 id="74-tracing-input">7.4 Tracing input</h3>
+<p>Log in <code>InputController::fireCallbacks</code>:</p>
+<pre><code class="language-cpp">if (node.onClick) {
+    logDebug(&quot;Input&quot;, &quot;&quot;, 0, 0, &quot;click on &quot; + node.getStyleTag());
+}
+</code></pre>
+<p>Again, requires modifying the source.</p>
+<h3 id="75-inspecting-uicontext">7.5 Inspecting <code>UIContext</code></h3>
+<p><code>UIContext::get()</code> is a singleton. You can inspect it from anywhere:</p>
+<pre><code class="language-cpp">auto&amp; ctx = UIContext::get();
+std::cout &lt;&lt; &quot;pointer: &quot; &lt;&lt; ctx.pointer.pos.x &lt;&lt; &quot;,&quot; &lt;&lt; ctx.pointer.pos.y &lt;&lt; &quot;\n&quot;;
+std::cout &lt;&lt; &quot;topmost: &quot; &lt;&lt; (ctx.topmostConsumer ? ctx.topmostConsumer-&gt;getStyleTag() : &quot;none&quot;) &lt;&lt; &quot;\n&quot;;
+std::cout &lt;&lt; &quot;focused: &quot; &lt;&lt; (ctx.focusedNode.lock() ? &quot;yes&quot; : &quot;no&quot;) &lt;&lt; &quot;\n&quot;;
+</code></pre>
+<p>Useful for understanding why a click isn't reaching a node.</p>
+<hr />
+<h2 id="8-pitfalls">8. Pitfalls</h2>
+<p><strong><code>ZENITUI_DEBUG</code> must be defined before including <code>Debug.hpp</code>.</strong></p>
+<p>Defining it after the include has no effect. The stub branch is
+already active. To enable debug functions in a specific file:</p>
+<pre><code class="language-cpp">#define ZENITUI_DEBUG
+#include &quot;Debug.hpp&quot;
+</code></pre>
+<p>Or use the compiler flag: <code>-DZENITUI_DEBUG</code>.</p>
+<p><strong><code>dumpTree</code> prints the logical tree, not the visual tree.</strong></p>
+<p>Portals appear where they're declared, not where they're drawn.
+Absolute-positioned nodes appear in their parent's children list, not
+at their screen position. The rects are correct, but the tree
+structure doesn't reflect z-order or portal destinations.</p>
+<p><strong><code>dumpStyle</code> only shows <code>::part</code> rules that match the node.</strong></p>
+<p>The <code>matches</code> list includes <code>::part</code> rules (since they match the node
+with a state), but <code>dumpStyle</code> doesn't distinguish them from regular
+rules. Look for the <code>::part</code> suffix in the selector string.</p>
+<p><strong><code>dumpParts</code> uses a hardcoded candidate list.</strong></p>
+<p>If your widget defines a part not in the list (<code>"track", "fill",
+"knob", "box", "mark", "cursor"</code>), <code>dumpParts</code> won't report it. Use
+<code>dumpStyle</code> instead, or extend the list.</p>
+<p><strong>The <code>Logger</code> doesn't filter by level.</strong></p>
+<p>The default <code>ConsoleLogger</code> prints everything. If you want to filter,
+install a custom logger. There's no built-in level setting.</p>
+<p><strong>Missing assets are silent.</strong></p>
+<p><code>resolveFont</code>, <code>resolveBgTexture</code>, <code>resolveEffectIfNeeded</code>, and
+<code>FilterRegistry::applyFilter</code> all fall back silently when the name
+isn't found. This is intentional (the framework works without assets),
+but it means a typo'd font name produces no error — just the default
+font.</p>
+<p><strong>The mock renderer's <code>measureText</code> is a rough approximation.</strong></p>
+<p><code>charWidth * length</code> doesn't account for kerning, variable-width
+fonts, or even spaces (a space has the same width as a letter in the
+mock). Tests that rely on precise text measurement should use a real
+backend.</p>
+<p><strong><code>env.frame</code> doesn't call <code>renderFrame</code>'s <code>beginFrame</code> / <code>endFrame</code>.</strong></p>
+<p>The mock renderer's <code>beginFrame</code> / <code>endFrame</code> are no-ops, so it
+doesn't matter. If you extend the mock to do per-frame setup, you'd
+need to add those calls.</p>
+<p><strong>The <code>Env</code> destructor nulls the <code>UIContext</code> pointers.</strong></p>
+<p>If a test creates an <code>Env</code> inside a scope and then uses a <code>Layout</code> from
+that scope after it, the <code>Layout</code>'s destructor might try to use the
+renderer (via <code>~Layout</code>'s <code>destroyTarget</code>). With the pointer nulled,
+this is safe — the destructor checks for null.</p>
+<p>But if the <code>Env</code> is alive and the <code>Layout</code> is destroyed after the
+<code>Env</code>, the <code>Layout</code> uses the (still valid) mock renderer. If the
+<code>Env</code> was destroyed, the pointer is null and the check saves it.</p>
+<p><strong>Tests don't reset <code>Theme</code> automatically.</strong></p>
+<p><code>Env::reset()</code> clears <code>Theme::get()</code>, but a test that creates an <code>Env</code>
+outside a loop and reuses it across test cases should call <code>env.reset()</code>
+between cases. Most tests create a fresh <code>Env</code> per case (the fixture
+is cheap), so this isn't an issue.</p>
+<p><strong><code>dumpTheme</code> can be very large.</strong></p>
+<p>A stylesheet with hundreds of rules produces hundreds of lines of
+output. Redirect to a file or filter with a custom logger.</p>
+<p><strong>Debug functions don't flush.</strong></p>
+<p><code>std::cerr</code> is unbuffered (or line-buffered) by default. <code>std::cout</code>
+is buffered. If you're writing to a file, flush explicitly.</p>
+<p><strong>The <code>Debug</code> stubs take the same parameters.</strong></p>
+<p>The no-op stubs in the <code>#else</code> branch have the same signatures, so
+calls compile in both modes. This is intentional — you can leave
+debug calls in the code without conditionals.</p>
+<p>But the stubs don't evaluate their arguments. So
+<code>Debug::dumpTree(*node)</code> compiles to nothing — <code>node</code> isn't
+dereferenced. If <code>node</code> were a <code>nullptr</code>, the release build wouldn't
+crash (the stub ignores it), but the debug build would. A subtle
+difference, but usually irrelevant.</p>
+<p><strong><code>Logger</code> is a singleton.</strong></p>
+<p><code>Logger::get()</code> returns a static instance. <code>Logger::set(&amp;custom)</code>
+replaces the current logger. This is process-wide — all tests, all
+subsystems share the same logger.</p>
+<p>If you install a custom logger in one test and forget to restore it,
+subsequent tests use it. Use <code>Logger::set(nullptr)</code> to restore the
+default, or scope the custom logger with an RAII wrapper.</p>
+<p><strong>The mock's text measurement uses the string's length, not its size.</strong></p>
+<p><code>measureText</code> does <code>charWidth * (float)s.size()</code>. For ASCII, this is
+the character count. For multi-byte UTF-8, this is the byte count,
+which overestimates. Since the framework only handles ASCII currently,
+this isn't an issue in practice.</p>
+<p><strong>The <code>Env</code> fixture doesn't set <code>Metrics::viewport</code> to the platform's
+viewport.</strong></p>
+<p><code>Env::reset()</code> sets <code>Metrics::viewport = {1920, 1080}</code> (a default) and
+<code>platform.viewport = {800, 600}</code>. The first <code>beginFrame</code> overwrites
+<code>Metrics::viewport</code> with <code>platform.viewport</code>. So before the first
+frame, <code>Metrics::viewport</code> is <code>{1920, 1080}</code>, and after it's
+<code>{800, 600}</code>. If a test reads <code>Metrics::viewport</code> before calling
+<code>frame</code>, it gets the wrong value.</p>
+<p>The reason for the discrepancy: <code>Metrics::viewport</code> is a global, and
+some tests (e.g. <code>test_value_parsers.cpp</code>) read it before setting up
+a mock. The default <code>{1920, 1080}</code> is a sensible choice for those
+tests. Once <code>Env</code> runs a frame, the platform's viewport takes over.</p>
+<p><strong>Tests share global state.</strong></p>
+<p><code>Theme</code>, <code>UIContext</code>, <code>Metrics</code> are all singletons. Tests that modify
+them affect subsequent tests unless reset. <code>Env::reset()</code> handles the
+common cases (<code>Theme::clear()</code>, <code>UIContext</code> fields), but a test that
+sets <code>Metrics::viewport</code> without an <code>Env</code> leaves it modified.</p>
+<p>In practice, <code>test_main.cpp</code> sets <code>Metrics::viewport = {1920, 1080}</code>
+at the start, and tests that need a specific viewport set it
+explicitly. The framework doesn't restore between tests, so ordering
+matters. Keep this in mind when a test passes alone but fails in a
+suite.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

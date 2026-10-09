@@ -1,0 +1,2754 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../UIContext/">
+      
+      
+        <link rel="next" href="../Widgets/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Unit and Value — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unit-and-value-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unit and Value — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-unit-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Unit enum
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-value-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Value struct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Value struct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-factory-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Factory functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-free-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Free helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Queries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-isauto-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isAuto() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-issimple-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isSimple() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-isnumber-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isNumber() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-asnumber-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float asNumber() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#float-resolvehfloat-parentw-float-parenth-float-autovalue-0-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveH(float parentW, float parentH, float autoValue = 0) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolvevfloat-parentw-float-parenth-float-autovalue-0-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveV(float parentW, float parentH, float autoValue = 0) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolveselfhfloat-selfw-float-selfh-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveSelfH(float selfW, float selfH) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolveselfvfloat-selfw-float-selfh-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveSelfV(float selfW, float selfH) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Arithmetic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Arithmetic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-sum-of-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator+ — sum of terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator- — difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unary-operator-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unary operator-
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-and-operator-scalar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator* and operator/ — scalar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mulwithconst-value-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mulWith(const Value&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#divwithconst-value-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        divWith(const Value&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparison
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-operatorconst-value-o-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool operator==(const Value&amp; o) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-operatorconst-value-o-const_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool operator!=(const Value&amp; o) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-an-explicit-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting an explicit size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-a-resolved-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading a resolved value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-units-in-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining units in calc()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-pw-ph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        % vs pw / ph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-unit-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Unit enum
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-value-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Value struct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Value struct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-factory-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Factory functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-free-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Free helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Queries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-isauto-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isAuto() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-issimple-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isSimple() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-isnumber-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isNumber() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-asnumber-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float asNumber() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#float-resolvehfloat-parentw-float-parenth-float-autovalue-0-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveH(float parentW, float parentH, float autoValue = 0) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolvevfloat-parentw-float-parenth-float-autovalue-0-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveV(float parentW, float parentH, float autoValue = 0) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolveselfhfloat-selfw-float-selfh-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveSelfH(float selfW, float selfH) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-resolveselfvfloat-selfw-float-selfh-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        float resolveSelfV(float selfW, float selfH) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Arithmetic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Arithmetic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-sum-of-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator+ — sum of terms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator- — difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unary-operator-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unary operator-
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operator-and-operator-scalar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        operator* and operator/ — scalar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mulwithconst-value-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mulWith(const Value&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#divwithconst-value-o" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        divWith(const Value&amp; o)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparison
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-operatorconst-value-o-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool operator==(const Value&amp; o) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-operatorconst-value-o-const_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool operator!=(const Value&amp; o) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-an-explicit-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting an explicit size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-a-resolved-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading a resolved value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-units-in-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining units in calc()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-pw-ph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        % vs pw / ph
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="unit-and-value-api-reference"><code>Unit</code> and <code>Value</code> — API Reference</h1>
+<p>The <code>Value</code> struct is ZenitUI's length type. It represents a
+<strong>sum of terms</strong>, where each term is a coefficient and a unit. This
+is what makes <code>calc()</code> work and what allows a single value to mix
+units (e.g. <code>calc(100% - 20px)</code>).</p>
+<ul>
+<li><strong>Header</strong>: <code>Unit.hpp</code></li>
+<li><strong>Namespace</strong>: <code>ZenitUI</code></li>
+</ul>
+<hr />
+<h2 id="1-the-unit-enum">1. The <code>Unit</code> enum</h2>
+<pre><code class="language-cpp">enum class Unit {
+    Auto    = -1,
+    Number  = 0,
+    Pixel   = 1,
+    Percent = 2,
+    VW      = 3,
+    VH      = 4,
+    PW      = 5,   // % of the parent's WIDTH
+    PH      = 6    // % of the parent's HEIGHT
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Auto</code></td>
+<td>The value is unset. Resolution returns the <code>autoValue</code> argument (or 0).</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>A bare number. Useful for arithmetic inside <code>calc()</code> and for properties like <code>grow</code> / <code>shrink</code>.</td>
+</tr>
+<tr>
+<td><code>Pixel</code></td>
+<td>Logical pixels. Same as <code>Number</code> at resolution time but semantically distinct.</td>
+</tr>
+<tr>
+<td><code>Percent</code></td>
+<td>Percentage of the <strong>relevant axis</strong> of the parent. Width for horizontal props, height for vertical props.</td>
+</tr>
+<tr>
+<td><code>VW</code></td>
+<td>1% of the viewport width (<code>Metrics::viewport.x</code>).</td>
+</tr>
+<tr>
+<td><code>VH</code></td>
+<td>1% of the viewport height (<code>Metrics::viewport.y</code>).</td>
+</tr>
+<tr>
+<td><code>PW</code></td>
+<td>Percentage of the parent's <strong>width</strong>, regardless of axis.</td>
+</tr>
+<tr>
+<td><code>PH</code></td>
+<td>Percentage of the parent's <strong>height</strong>, regardless of axis.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>Percent</code> vs <code>PW</code> / <code>PH</code></strong>: <code>Percent</code> is axis-aware — <code>width: 50%</code>
+resolves against the parent's width, <code>height: 50%</code> against the parent's
+height. <code>PW</code> is always the parent's width and <code>PH</code> always its height,
+regardless of which property they're used in.</p>
+<hr />
+<h2 id="2-the-value-struct">2. The <code>Value</code> struct</h2>
+<pre><code class="language-cpp">struct Value {
+    struct Term {
+        float coeff{0.0f};
+        Unit  unit{Unit::Auto};
+
+        bool operator==(const Term&amp; o) const;
+    };
+
+    std::vector&lt;Term&gt; terms;
+
+    Value() = default;
+    Value(float pixels);
+    Value(float amount, Unit u);
+
+    // ... see below ...
+};
+</code></pre>
+<p>A <code>Value</code> is a vector of <code>Term</code>s. Empty means <code>Auto</code>. A single term
+is the common case (<code>Px(10)</code> has one term). Multiple terms come from
+<code>calc()</code> (e.g. <code>calc(100% - 20px)</code> has two terms).</p>
+<h3 id="21-construction">2.1 Construction</h3>
+<pre><code class="language-cpp">Value v1;                      // Auto
+Value v2 = Px(10.0f);          // one Pixel term
+Value v3 = Percent(50.0f);     // one Percent term
+Value v4 = Px(10.0f) + Percent(50.0f);  // two terms
+</code></pre>
+<p>The two direct constructors:</p>
+<table>
+<thead>
+<tr>
+<th>Constructor</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Value(float pixels)</code></td>
+<td>Creates a single <code>Pixel</code> term.</td>
+</tr>
+<tr>
+<td><code>Value(float amount, Unit u)</code></td>
+<td>Creates a single term with the given unit. If <code>u == Unit::Auto</code>, the result is empty.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-factory-functions">2.2 Factory functions</h3>
+<pre><code class="language-cpp">static Value autoSize();
+static Value number(float n);
+static Value px(float p);
+static Value percent(float p);
+static Value vw(float p);
+static Value vh(float p);
+static Value pw(float p);
+static Value ph(float p);
+</code></pre>
+<p>Each returns a <code>Value</code> with a single term of the corresponding unit.</p>
+<h3 id="23-free-helpers">2.3 Free helpers</h3>
+<p>Shorter names, defined in <code>namespace ZenitUI</code>:</p>
+<pre><code class="language-cpp">inline Value Auto();
+inline Value Px(float p);
+inline Value Percent(float p);
+inline Value VW(float p);
+inline Value VH(float p);
+inline Value PW(float p);
+inline Value PH(float p);
+inline Value Num(float p);
+</code></pre>
+<p>These are what you use in most code:</p>
+<pre><code class="language-cpp">node-&gt;size(Px(100), Percent(50));
+node-&gt;getInlineBase().gap = VH(2.0f);
+</code></pre>
+<hr />
+<h2 id="3-queries">3. Queries</h2>
+<h3 id="bool-isauto-const"><code>bool isAuto() const</code></h3>
+<p>True if the value is <code>Auto</code> (empty terms vector).</p>
+<h3 id="bool-issimple-const"><code>bool isSimple() const</code></h3>
+<p>True if the value has exactly one term.</p>
+<h3 id="bool-isnumber-const"><code>bool isNumber() const</code></h3>
+<p>True if the value has exactly one term and it's a <code>Number</code>.</p>
+<h3 id="float-asnumber-const"><code>float asNumber() const</code></h3>
+<p>Returns the coefficient if <code>isNumber()</code>, else 0.</p>
+<hr />
+<h2 id="4-resolution">4. Resolution</h2>
+<p>Four resolution methods, differing in which axis each unit resolves
+against.</p>
+<h3 id="float-resolvehfloat-parentw-float-parenth-float-autovalue-0-const"><code>float resolveH(float parentW, float parentH, float autoValue = 0) const</code></h3>
+<p>Resolves for a <strong>horizontal</strong> property (e.g. <code>width</code>, <code>padding-left</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Multiplied by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Number</code> / <code>Pixel</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>Percent</code></td>
+<td><code>parentW</code></td>
+</tr>
+<tr>
+<td><code>PW</code></td>
+<td><code>parentW</code></td>
+</tr>
+<tr>
+<td><code>PH</code></td>
+<td><code>parentH</code></td>
+</tr>
+<tr>
+<td><code>VW</code></td>
+<td><code>Metrics::viewport.x</code></td>
+</tr>
+<tr>
+<td><code>VH</code></td>
+<td><code>Metrics::viewport.y</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="float-resolvevfloat-parentw-float-parenth-float-autovalue-0-const"><code>float resolveV(float parentW, float parentH, float autoValue = 0) const</code></h3>
+<p>Resolves for a <strong>vertical</strong> property (e.g. <code>height</code>, <code>padding-top</code>).</p>
+<p>Same as <code>resolveH</code> except <code>Percent</code> uses <code>parentH</code> instead of
+<code>parentW</code>. <code>PW</code> and <code>PH</code> are unchanged (always width and height
+respectively).</p>
+<h3 id="float-resolveselfhfloat-selfw-float-selfh-const"><code>float resolveSelfH(float selfW, float selfH) const</code></h3>
+<p>Resolves against the <strong>node's own</strong> width for <code>Percent</code> / <code>PW</code>, and
+its own height for <code>PH</code>. Used for <code>translate-x</code> / <code>translate-y</code>, which
+resolve against the node's own size, not the parent's.</p>
+<p>No <code>autoValue</code> parameter — an unset value returns 0.</p>
+<h3 id="float-resolveselfvfloat-selfw-float-selfh-const"><code>float resolveSelfV(float selfW, float selfH) const</code></h3>
+<p>Same as <code>resolveSelfH</code> but for vertical self-resolution.</p>
+<h3 id="resolution-table">Resolution table</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th><code>%</code> uses</th>
+<th><code>PW</code> uses</th>
+<th><code>PH</code> uses</th>
+<th><code>VW</code> / <code>VH</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resolveH</code></td>
+<td>parentW</td>
+<td>parentW</td>
+<td>parentH</td>
+<td>viewport</td>
+</tr>
+<tr>
+<td><code>resolveV</code></td>
+<td>parentH</td>
+<td>parentW</td>
+<td>parentH</td>
+<td>viewport</td>
+</tr>
+<tr>
+<td><code>resolveSelfH</code></td>
+<td>selfW</td>
+<td>selfW</td>
+<td>selfH</td>
+<td>viewport</td>
+</tr>
+<tr>
+<td><code>resolveSelfV</code></td>
+<td>selfH</td>
+<td>selfW</td>
+<td>selfH</td>
+<td>viewport</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-arithmetic">5. Arithmetic</h2>
+<h3 id="operator-sum-of-terms"><code>operator+</code> — sum of terms</h3>
+<pre><code class="language-cpp">Value c = Px(10) + Percent(50);   // two terms
+</code></pre>
+<p>Terms are concatenated and normalized (same-unit coefficients are
+combined).</p>
+<h3 id="operator-difference"><code>operator-</code> — difference</h3>
+<pre><code class="language-cpp">Value c = PW(100) - PH(80);
+</code></pre>
+<p>Same as <code>+</code> with negated coefficients on the right.</p>
+<h3 id="unary-operator-">Unary <code>operator-</code></h3>
+<pre><code class="language-cpp">Value neg = -Px(10);
+</code></pre>
+<h3 id="operator-and-operator-scalar"><code>operator*</code> and <code>operator/</code> — scalar</h3>
+<pre><code class="language-cpp">Value v = Percent(50) * 2.0f;   // Percent(100)
+Value w = Px(10) / 2.0f;        // Px(5)
+</code></pre>
+<p>Scalar multiplication scales every coefficient. Scalar division by a
+non-zero value is equivalent to multiplying by the reciprocal.</p>
+<h3 id="mulwithconst-value-o"><code>mulWith(const Value&amp; o)</code></h3>
+<p>Multiplication by another value. Returns <code>o * this.coeff</code> if <code>this</code> is
+a single number, or <code>this * o.coeff</code> if <code>o</code> is a single number,
+otherwise returns <code>this</code> (multiplication by a non-number is a no-op).
+Used inside <code>calc()</code> for <code>*</code>.</p>
+<h3 id="divwithconst-value-o"><code>divWith(const Value&amp; o)</code></h3>
+<p>Division by another value. Only defined when <code>o</code> is a single number
+(division by a unit is a no-op, returning <code>this</code>). Used inside
+<code>calc()</code> for <code>/</code>.</p>
+<h3 id="normalize"><code>normalize()</code></h3>
+<p>Combines terms with the same unit into a single term, then removes
+zero-coefficient terms. Called automatically by <code>operator+</code> and
+<code>operator-</code>. Idempotent.</p>
+<p>Example:</p>
+<pre><code class="language-cpp">Value a = Px(5) + Px(10) + Px(3);
+a.normalize();
+// a is now Px(18) (one term)
+</code></pre>
+<hr />
+<h2 id="6-comparison">6. Comparison</h2>
+<h3 id="bool-operatorconst-value-o-const"><code>bool operator==(const Value&amp; o) const</code></h3>
+<p>True if the two values have the same terms in the same order. Assumes
+both are normalized.</p>
+<pre><code class="language-cpp">Px(10) == Px(10)                            // true
+Px(10) == Px(11)                            // false
+(Px(5) + Px(5)) == Px(10)                   // true (after normalize)
+(PW(100) - PH(80)) == (PW(100) - PH(80))    // true
+</code></pre>
+<h3 id="bool-operatorconst-value-o-const_1"><code>bool operator!=(const Value&amp; o) const</code></h3>
+<p>Negation of <code>==</code>.</p>
+<hr />
+<h2 id="7-common-patterns">7. Common patterns</h2>
+<h3 id="setting-an-explicit-size">Setting an explicit size</h3>
+<pre><code class="language-cpp">node-&gt;size(Px(100), Px(50));
+node-&gt;size(Percent(100), Auto());
+node-&gt;size(VW(30), VH(6));
+</code></pre>
+<h3 id="reading-a-resolved-value">Reading a resolved value</h3>
+<pre><code class="language-cpp">const ComputedStyle&amp; style = node-&gt;getStyle();
+float w = style.width.resolveH(parentW, parentH);
+</code></pre>
+<h3 id="combining-units-in-calc">Combining units in <code>calc()</code></h3>
+<pre><code class="language-cpp">auto v = parseValueToken(&quot;calc(100% - 20px)&quot;).value();
+float w = v.resolveH(parentW, parentH);
+</code></pre>
+<h3 id="vs-pw-ph"><code>%</code> vs <code>pw</code> / <code>ph</code></h3>
+<pre><code class="language-css">/* width: 50% of parent's width */
+width: 50%;
+
+/* height: 50% of parent's width (regardless of property axis) */
+height: 50pw;
+
+/* top: 50% of parent's height */
+top: 50%;
+
+/* left: 50% of parent's height (unusual but valid) */
+left: 50ph;
+</code></pre>
+<p>The <code>pw</code> / <code>ph</code> units are useful when you want a value to scale with a
+specific axis of the parent regardless of which property it's set on.
+The canonical example is the toggle knob:</p>
+<pre><code class="language-css">Toggle:checked .toggle-knob {
+    left: calc(100pw - 80ph);
+}
+</code></pre>
+<p><code>100pw</code> is the full parent width (where the knob must move to),
+<code>80ph</code> is a fixed offset based on the parent's height (the knob's
+size + margins). Mixed units, resolved lazily.</p>
+<hr />
+<h2 id="8-pitfalls">8. Pitfalls</h2>
+<p><strong>Empty <code>Value</code> is <code>Auto</code>.</strong></p>
+<pre><code class="language-cpp">Value v;                // Auto
+v.isAuto()              // true
+</code></pre>
+<p>An <code>Auto</code> value resolves to the <code>autoValue</code> argument of <code>resolveH</code> /
+<code>resolveV</code> (default 0), or 0 for <code>resolveSelfH</code> / <code>resolveSelfV</code>. This
+is what "let the layout engine decide" means.</p>
+<p><strong><code>std::clamp</code> with mixed-unit <code>Value</code>.</strong></p>
+<p><code>Value</code> doesn't have <code>operator&lt;</code>. To compare two values numerically,
+resolve them first:</p>
+<pre><code class="language-cpp">if (a.resolveH(w, h) &lt; b.resolveH(w, h)) { ... }
+</code></pre>
+<p><strong><code>Value</code> equality is structural, not numerical.</strong></p>
+<pre><code class="language-cpp">Px(10) == Px(10)           // true
+Px(10) == Percent(50)      // false, even if the parent makes them equal
+</code></pre>
+<p>If you need to compare resolved values, resolve them first.</p>
+<p><strong><code>operator*</code> and <code>operator/</code> only accept scalars.</strong></p>
+<pre><code class="language-cpp">Px(10) * 2.0f              // ✅
+Px(10) * Px(2)             // ❌ doesn't compile
+</code></pre>
+<p>To multiply two <code>Value</code>s, use <code>mulWith</code>. In practice, <code>calc()</code> handles
+this automatically.</p>
+<p><strong><code>normalize</code> doesn't sort terms.</strong></p>
+<p>The order of terms in the vector matters for <code>operator==</code>. Two values
+built in different orders but with the same terms won't compare equal
+unless both are normalized. <code>operator+</code> normalizes automatically;
+manual construction doesn't.</p>
+<p>To be safe, call <code>normalize()</code> before comparing manually-built values.</p>
+<p><strong><code>resolveH</code> / <code>resolveV</code> vs <code>resolveSelfH</code> / <code>resolveSelfV</code>.</strong></p>
+<p>The "self" variants resolve <code>%</code> against the node's <strong>own</strong> size, which
+is what <code>translate-x</code> / <code>translate-y</code> need. Other properties use the
+parent-relative variants. Using the wrong one silently produces wrong
+values — no error.</p>
+<p><strong><code>VW</code> / <code>VH</code> read <code>Metrics::viewport</code> at resolution time.</strong></p>
+<p>The value is not cached. A <code>vw</code> value resolves to a different pixel
+value before and after a viewport change. The style re-resolution on
+viewport change (<code>viewportGeneration</code>) handles this for styled
+properties, but a manually-resolved <code>Value</code> won't update until you
+re-resolve it.</p>
+<p><strong><code>Unit::Auto</code> on a single term.</strong></p>
+<pre><code class="language-cpp">Value v = Value(10, Unit::Auto);   // empty, not a 10-value
+</code></pre>
+<p>The constructor treats <code>Unit::Auto</code> as "unset" and produces an empty
+<code>Value</code>. Use <code>Value::autoSize()</code> for clarity.</p>
+<p><strong><code>calc()</code> with a trailing unit on the result.</strong></p>
+<p><code>calc(100% - 20px)</code> produces two terms (Percent and Pixel). <code>calc(100% / 2)</code>
+produces a single <code>Percent(50)</code>. <code>calc(10px * 2)</code> produces a single
+<code>Px(20)</code>. The result of <code>calc()</code> is always a valid <code>Value</code>, but the
+number of terms depends on the operators used.</p>
+<p><strong><code>Value</code> in <code>BoxShadow</code> vs <code>BoxShadow::x</code> / <code>y</code> / <code>blur</code>.</strong></p>
+<p><code>BoxShadow</code> fields are <code>Value</code>, so a shadow offset can use any unit:</p>
+<pre><code class="language-css">box-shadow: 2vw 2vh 4px #00000080;
+</code></pre>
+<p>The resolution uses <code>resolveSelfH</code> / <code>resolveSelfV</code> in
+<code>renderChrome</code>, meaning the offsets resolve against the node's own
+size, not the parent's. This is usually what you want (a shadow scales
+with its node), but it's different from other properties.</p>
+<p><strong><code>Value</code> with multiple <code>Percent</code> terms.</strong></p>
+<p>After normalization, only one <code>Percent</code> term remains, with the sum of
+all the original coefficients. So <code>Percent(30) + Percent(20)</code> becomes
+<code>Percent(50)</code>, not two separate terms.</p>
+<hr />
+<h2 id="9-see-also">9. See also</h2>
+<ul>
+<li><a href="../../user/02-layout/">Layout</a> — how units are used in practice.</li>
+<li><a href="../../user/05-zstyle/">ZStyle</a> — the <code>.zstyle</code> grammar for values,
+  including <code>calc()</code>.</li>
+<li><a href="../../internals/05-layout-engine/">Layout Engine</a> — where <code>resolveH</code>
+  and <code>resolveV</code> are called.</li>
+<li><a href="../Style/">Style</a> — the <code>Style</code> and <code>ComputedStyle</code> structs that hold
+  <code>Value</code> fields.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

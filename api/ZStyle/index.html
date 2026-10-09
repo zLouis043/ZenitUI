@@ -1,0 +1,3153 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ZMarkup/">
+      
+      
+        <link rel="next" href="../FilterRegistry/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>ZStyle — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zstyle-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZStyle — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-public-entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Public entry points
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Public entry points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loadstylestring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadStyleString
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadstylefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadStyleFile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystylesheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleSheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ast-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AST types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AST types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stylesheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StyleSheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseloc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ParseLoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-styleparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. StyleParser
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. StyleParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#line-column-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Line / column tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-attribute-parsers-styleattrhpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Attribute parsers (StyleAttr.hpp)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Attribute parsers (StyleAttr.hpp)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parsevaluetoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseValueToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsecolortoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseColorToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsespacingtoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseSpacingToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsealigntoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseAlignToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsejustifytoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseJustifyToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystyleattr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleAttr
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-var-substitution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. var() substitution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. var() substitution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#substitutevarrefs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        substituteVarRefs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolveunresolvedprops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolveUnresolvedProps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-parsing-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Parsing utilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Parsing utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stripcomments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stripComments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        splitBy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        splitWs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsedurationsec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseDurationSec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseaspectratio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseAspectRatio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalizekeyframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalizeKeyframes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystyledeclaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleDeclaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-calc-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. calc() parsing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. calc() parsing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calctoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CalcToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenizecalc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenizeCalc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calcparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CalcParser
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Complete example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-public-entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Public entry points
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Public entry points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loadstylestring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadStyleString
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadstylefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadStyleFile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystylesheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleSheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ast-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AST types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AST types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stylesheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StyleSheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseloc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ParseLoc
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-styleparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. StyleParser
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. StyleParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#line-column-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Line / column tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-attribute-parsers-styleattrhpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Attribute parsers (StyleAttr.hpp)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Attribute parsers (StyleAttr.hpp)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parsevaluetoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseValueToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsecolortoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseColorToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsespacingtoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseSpacingToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsealigntoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseAlignToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsejustifytoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseJustifyToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystyleattr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleAttr
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-var-substitution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. var() substitution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. var() substitution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#substitutevarrefs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        substituteVarRefs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolveunresolvedprops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolveUnresolvedProps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-parsing-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Parsing utilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Parsing utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trim
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stripcomments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stripComments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        splitBy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        splitWs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parsedurationsec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseDurationSec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parseaspectratio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parseAspectRatio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normalizekeyframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalizeKeyframes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applystyledeclaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        applyStyleDeclaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-calc-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. calc() parsing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. calc() parsing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calctoken" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CalcToken
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenizecalc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenizeCalc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calcparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CalcParser
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Complete example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zstyle-api-reference"><code>ZStyle</code> — API Reference</h1>
+<p>The <code>.zstyle</code> parser and its supporting utilities. This document is the
+API reference for the parsing layer; for the grammar itself, see
+<a href="../../user/05-zstyle/">ZStyle (guide)</a>.</p>
+<ul>
+<li><strong>Headers</strong>: <code>StyleParser.hpp</code>, <code>StyleAttr.hpp</code></li>
+<li><strong>Namespace</strong>: <code>ZenitUI::ZMarkup</code> (parser) and <code>ZenitUI</code> (attribute parsers)</li>
+</ul>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<p>The <code>.zstyle</code> pipeline has three stages:</p>
+<ol>
+<li><strong>Tokenize and parse</strong> — read the source, extract rules, keyframes,
+   and <code>:root</code> declarations into an intermediate <code>StyleSheet</code> AST.</li>
+<li><strong>Convert</strong> — walk the AST and produce <code>ThemeRule</code>, <code>Style</code>, and
+   <code>KeyframeAnimation</code> objects.</li>
+<li><strong>Apply</strong> — append the results to a <code>Theme</code>.</li>
+</ol>
+<p>The public entry points wrap all three:</p>
+<pre><code class="language-cpp">ZMarkup::loadStyleString(source, theme, fileName);
+ZMarkup::loadStyleFile(path, theme);
+</code></pre>
+<p>Everything else is exposed for advanced use (custom parsing flows,
+unit tests, tooling).</p>
+<hr />
+<h2 id="2-public-entry-points">2. Public entry points</h2>
+<h3 id="loadstylestring"><code>loadStyleString</code></h3>
+<pre><code class="language-cpp">inline bool loadStyleString(std::string_view src,
+                            Theme&amp; theme = Theme::get(),
+                            const std::string&amp; fileName = &quot;&lt;string&gt;&quot;);
+</code></pre>
+<p>Parses <code>src</code> and applies it to <code>theme</code>. Returns <code>true</code> on success.</p>
+<p>Parse errors are logged (via <code>Logger</code>) but don't abort the whole
+parse — the offending rule is skipped, and the rest continues.</p>
+<pre><code class="language-cpp">ZMarkup::loadStyleString(R&quot;(
+    Button { background: red; }
+    .btn-primary { background: blue; }
+)&quot;);
+</code></pre>
+<h3 id="loadstylefile"><code>loadStyleFile</code></h3>
+<pre><code class="language-cpp">inline bool loadStyleFile(const std::filesystem::path&amp; path,
+                          Theme&amp; theme = Theme::get());
+</code></pre>
+<p>Reads the file at <code>path</code> and calls <code>loadStyleString</code> with the file's
+content and name. Returns <code>false</code> if the file can't be opened.</p>
+<pre><code class="language-cpp">if (!ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;)) {
+    std::fprintf(stderr, &quot;Failed to load game.zstyle\n&quot;);
+}
+</code></pre>
+<h3 id="applystylesheet"><code>applyStyleSheet</code></h3>
+<pre><code class="language-cpp">inline void applyStyleSheet(const StyleSheet&amp; sheet,
+                            const std::string&amp; fileName,
+                            Theme&amp; theme);
+</code></pre>
+<p>Applies an already-parsed <code>StyleSheet</code> to a <code>Theme</code>. Used internally by
+<code>loadStyleString</code>. Public for advanced flows where you parse once and
+apply to multiple themes.</p>
+<hr />
+<h2 id="3-ast-types">3. AST types</h2>
+<h3 id="stylesheet"><code>StyleSheet</code></h3>
+<pre><code class="language-cpp">struct StyleSheet {
+    struct Rule {
+        std::vector&lt;SimpleSelector&gt; chain;
+        std::string part;                    // non-empty for ::part
+        std::vector&lt;Declaration&gt; decls;
+        int line{0};
+        int col{0};
+        std::optional&lt;MediaQuery&gt; media;
+    };
+    std::vector&lt;Rule&gt; rules;
+
+    struct KfFrame {
+        std::string ts;                      // &quot;0%&quot;, &quot;from&quot;, &quot;100%&quot;, etc.
+        std::vector&lt;Declaration&gt; decls;
+        int line{0};
+        int col{0};
+    };
+    struct KfRule {
+        std::string name;
+        std::vector&lt;KfFrame&gt; frames;
+        int line{0};
+        int col{0};
+    };
+    std::vector&lt;KfRule&gt; keyframes;
+
+    std::unordered_map&lt;std::string, std::string&gt; vars;  // --name → value
+    std::vector&lt;Declaration&gt; rootDecls;                 // :root { ... }
+};
+</code></pre>
+<p>The AST output of <code>StyleParser::parse()</code>. Three top-level sections:</p>
+<ul>
+<li><strong><code>rules</code></strong> — one entry per selector (a comma-separated selector list
+  produces multiple rules). Each has a chain, an optional <code>::part</code>
+  name, declarations, and an optional media query.</li>
+<li><strong><code>keyframes</code></strong> — one entry per <code>@keyframes</code> block. Frames carry a
+  timestamp string (<code>"0%"</code>, <code>"from"</code>) and declarations.</li>
+<li><strong><code>rootDecls</code></strong> — the <code>:root { ... }</code> block's declarations.</li>
+<li><strong><code>vars</code></strong> — custom properties extracted from <code>:root</code> (a subset of
+  <code>rootDecls</code>, kept for backward compatibility).</li>
+</ul>
+<h3 id="declaration"><code>Declaration</code></h3>
+<pre><code class="language-cpp">struct Declaration {
+    std::string prop;
+    std::string value;
+    int line{0};
+    int col{0};
+};
+</code></pre>
+<p>A single <code>property: value;</code> declaration. The <code>line</code> / <code>col</code> are the
+source position, used for logging.</p>
+<h3 id="parseloc"><code>ParseLoc</code></h3>
+<pre><code class="language-cpp">struct ParseLoc {
+    std::string file;
+    int line{0};
+    int col{0};
+};
+</code></pre>
+<p>A location used in log messages. Constructed from the parser's current
+position and the source file name.</p>
+<hr />
+<h2 id="4-styleparser">4. <code>StyleParser</code></h2>
+<p>The parser class.</p>
+<pre><code class="language-cpp">class StyleParser {
+public:
+    StyleParser(std::string_view src, std::string fileName);
+    StyleSheet parse();
+};
+</code></pre>
+<h3 id="construction">Construction</h3>
+<p><code>StyleParser(src, fileName)</code> strips comments from <code>src</code>, stores it, and
+remembers the file name for diagnostics.</p>
+<p><strong>Note:</strong> the constructor stores a <strong>copy</strong> of the stripped source. The
+original <code>std::string_view</code> doesn't need to outlive the parser, but the
+parser itself holds the whole source in memory.</p>
+<h3 id="parse"><code>parse()</code></h3>
+<pre><code class="language-cpp">StyleSheet parse();
+</code></pre>
+<p>Parses the source and returns the AST. Idempotent — calling it twice
+on the same parser produces the same result (the parser's internal
+position is reset).</p>
+<p>The parser handles:</p>
+<ul>
+<li><code>:root { ... }</code> blocks.</li>
+<li><code>@keyframes name { ... }</code> blocks.</li>
+<li><code>@media (cond) { ... }</code> blocks (containing rules).</li>
+<li>Regular <code>selector { declarations }</code> rules.</li>
+<li>Comments: <code>//</code> (line) and <code>/* ... */</code> (block).</li>
+<li>Multiple selectors via comma.</li>
+</ul>
+<h3 id="example">Example</h3>
+<pre><code class="language-cpp">ZenitUI::ZMarkup::StyleParser parser(R&quot;(
+    Button { background: red; }
+    Button:hover { background: blue; }
+)&quot;, &quot;test.zstyle&quot;);
+
+auto sheet = parser.parse();
+// sheet.rules.size() == 2
+// sheet.rules[0].chain[0].name == &quot;Button&quot;
+// sheet.rules[1].chain[0].requireHover == true
+</code></pre>
+<h3 id="line-column-tracking">Line / column tracking</h3>
+<p>The parser maintains a <code>line</code> and <code>col</code> that advance as it consumes
+characters. Each <code>Declaration</code> in the AST carries these, and error
+messages use them via <code>ParseLoc</code>.</p>
+<p>For a multi-line source, error messages point to the correct line:</p>
+<pre><code>[WARN ] [StyleParser] assets/game.zstyle(45:10): unknown property 'foo'. Ignored.
+</code></pre>
+<hr />
+<h2 id="5-attribute-parsers-styleattrhpp">5. Attribute parsers (<code>StyleAttr.hpp</code>)</h2>
+<p>Low-level parsers for individual values. Used by <code>applyStyleAttr</code>, and
+available for custom parsing flows.</p>
+<h3 id="parsevaluetoken"><code>parseValueToken</code></h3>
+<pre><code class="language-cpp">inline std::optional&lt;Value&gt; parseValueToken(std::string_view s);
+</code></pre>
+<p>Parses a value string into a <code>Value</code>. Handles:</p>
+<ul>
+<li><code>auto</code> → <code>Value::autoSize()</code>.</li>
+<li><code>calc(...)</code> → evaluated via <code>CalcParser</code>.</li>
+<li><code>10px</code> / <code>10</code> / <code>10%</code> / <code>10vw</code> / <code>10vh</code> / <code>10pw</code> / <code>10ph</code>.</li>
+<li>Bare numbers (treated as pixels).</li>
+</ul>
+<p>Returns <code>std::nullopt</code> on parse failure.</p>
+<pre><code class="language-cpp">auto v = parseValueToken(&quot;calc(100% - 20px)&quot;);
+// v.value() resolves to 100% - 20px
+</code></pre>
+<h3 id="parsecolortoken"><code>parseColorToken</code></h3>
+<pre><code class="language-cpp">inline std::optional&lt;Color&gt; parseColorToken(std::string_view s);
+</code></pre>
+<p>Parses a color string. Supports:</p>
+<ul>
+<li>Named colors: <code>white</code>, <code>black</code>, <code>transparent</code>, <code>blank</code>, <code>red</code>,
+  <code>maroon</code>, <code>green</code>, <code>blue</code>, <code>yellow</code>, <code>gray</code>, <code>darkgray</code>, <code>lightgray</code>.</li>
+<li>Hex: <code>#RGB</code>, <code>#RGBA</code>, <code>#RRGGBB</code>, <code>#RRGGBBAA</code>.</li>
+</ul>
+<p>Returns <code>std::nullopt</code> for unknown colors.</p>
+<pre><code class="language-cpp">auto c = parseColorToken(&quot;#FF000080&quot;);
+// c-&gt;r == 0xFF, c-&gt;g == 0x00, c-&gt;b == 0x00, c-&gt;a == 0x80
+</code></pre>
+<h3 id="parsespacingtoken"><code>parseSpacingToken</code></h3>
+<pre><code class="language-cpp">inline std::optional&lt;Spacing&gt; parseSpacingToken(std::string_view s);
+</code></pre>
+<p>Parses 1, 2, 3, or 4 whitespace-separated values into a <code>Spacing</code>.</p>
+<pre><code class="language-cpp">parseSpacingToken(&quot;10px&quot;);              // all sides
+parseSpacingToken(&quot;10px 20px&quot;);         // vertical | horizontal
+parseSpacingToken(&quot;1px 2px 3px&quot;);       // top | horizontal | bottom
+parseSpacingToken(&quot;1px 2px 3px 4px&quot;);   // top | right | bottom | left
+</code></pre>
+<h3 id="parsealigntoken"><code>parseAlignToken</code></h3>
+<pre><code class="language-cpp">inline std::optional&lt;Align&gt; parseAlignToken(std::string_view s);
+</code></pre>
+<p>Parses one of: <code>auto</code>, <code>start</code>, <code>center</code>, <code>end</code>, <code>stretch</code>.</p>
+<h3 id="parsejustifytoken"><code>parseJustifyToken</code></h3>
+<pre><code class="language-cpp">inline std::optional&lt;Justify&gt; parseJustifyToken(std::string_view s);
+</code></pre>
+<p>Parses one of: <code>start</code>, <code>center</code>, <code>end</code>, <code>space-between</code>.</p>
+<h3 id="applystyleattr"><code>applyStyleAttr</code></h3>
+<pre><code class="language-cpp">inline bool applyStyleAttr(Style&amp; st,
+                           const std::string&amp; key,
+                           const std::string&amp; val);
+</code></pre>
+<p>Applies a single <code>key: value</code> declaration to a <code>Style</code>. This is the
+<strong>shared</strong> routine used by:</p>
+<ul>
+<li>The <code>.zstyle</code> parser's <code>applyStyleDeclaration</code>.</li>
+<li>ZMarkup's inline attribute application.</li>
+<li>The <code>var()</code> resolution path.</li>
+</ul>
+<p>Returns <code>true</code> if the key was recognized, <code>false</code> otherwise. Unknown
+keys are not an error — the caller decides whether to log.</p>
+<p>The handled keys are the <strong>kebab-case</strong> versions of the
+<code>BUBBLE_STYLE_PROPS</code> fields, plus a few special cases:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code>, <code>height</code>, <code>min-width</code>, <code>max-width</code>, <code>min-height</code>, <code>max-height</code></td>
+<td>Sets the corresponding <code>Value</code> field.</td>
+</tr>
+<tr>
+<td><code>gap</code>, <code>padding</code>, <code>margin</code></td>
+<td><code>gap</code> is <code>Value</code>, the others are <code>Spacing</code>.</td>
+</tr>
+<tr>
+<td><code>grow</code>, <code>shrink</code></td>
+<td>Parses a float.</td>
+</tr>
+<tr>
+<td><code>background</code>, <code>color</code>, <code>tint</code>, <code>border-color</code></td>
+<td>Parses a color.</td>
+</tr>
+<tr>
+<td><code>border-width</code>, <code>radius</code></td>
+<td>Parses a <code>Value</code>.</td>
+</tr>
+<tr>
+<td><code>opacity</code>, <code>scale</code>, <code>rotation</code></td>
+<td>Parses a float.</td>
+</tr>
+<tr>
+<td><code>translate-x</code>, <code>translate-y</code>, <code>top</code>, <code>left</code>, <code>right</code>, <code>bottom</code></td>
+<td>Parses a <code>Value</code>.</td>
+</tr>
+<tr>
+<td><code>font-size</code>, <code>letter-spacing</code></td>
+<td>Parses a <code>Value</code>.</td>
+</tr>
+<tr>
+<td><code>items-h</code>, <code>items-v</code>, <code>align-h</code>, <code>align-v</code>, <code>text-align</code></td>
+<td>Parses an <code>Align</code>.</td>
+</tr>
+<tr>
+<td><code>justify</code></td>
+<td>Parses a <code>Justify</code>.</td>
+</tr>
+<tr>
+<td><code>transition-time</code></td>
+<td>Parses a float.</td>
+</tr>
+<tr>
+<td><code>ease</code></td>
+<td>Parses an easing name.</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><code>static</code> / <code>relative</code> / <code>absolute</code>.</td>
+</tr>
+<tr>
+<td><code>z-index</code></td>
+<td><code>auto</code> or integer.</td>
+</tr>
+<tr>
+<td><code>font</code></td>
+<td>Sets the string.</td>
+</tr>
+<tr>
+<td><code>background-texture</code></td>
+<td>Parses <code>name [l t r b]</code>.</td>
+</tr>
+<tr>
+<td><code>effect</code></td>
+<td>Sets the string.</td>
+</tr>
+<tr>
+<td><code>wrap</code>, <code>checked</code>, <code>value</code>, <code>options</code>, <code>passthrough</code></td>
+<td>Recognized but ignored (widget-specific, handled by factories).</td>
+</tr>
+</tbody>
+</table>
+<p>Everything else returns <code>false</code>.</p>
+<hr />
+<h2 id="6-var-substitution">6. <code>var()</code> substitution</h2>
+<p>Two functions, both in <code>StyleAttr.hpp</code>.</p>
+<h3 id="substitutevarrefs"><code>substituteVarRefs</code></h3>
+<pre><code class="language-cpp">inline std::string substituteVarRefs(
+    std::string v,
+    const std::unordered_map&lt;std::string, std::string&gt;&amp; customProps);
+</code></pre>
+<p>Replaces <code>var(--name)</code> references in <code>v</code> with the values from
+<code>customProps</code>. Iterates up to 10 times to handle chained references
+(<code>--a: var(--b)</code>).</p>
+<p>If a <code>var()</code> reference doesn't resolve, it's left as-is (the caller
+decides what to do — usually nothing, and the resulting string fails to
+parse).</p>
+<pre><code class="language-cpp">std::unordered_map&lt;std::string, std::string&gt; props{
+    {&quot;--primary&quot;, &quot;#FF0000&quot;},
+    {&quot;--size&quot;, &quot;100px&quot;}
+};
+substituteVarRefs(&quot;var(--size) - 20px&quot;, props);  // &quot;100px - 20px&quot;
+substituteVarRefs(&quot;var(--missing)&quot;, props);      // &quot;var(--missing)&quot;
+</code></pre>
+<p>The 10-iteration limit prevents infinite loops on circular references
+(<code>--a: var(--b); --b: var(--a);</code>). After 10 passes, the remaining
+<code>var()</code> calls are left unresolved.</p>
+<h3 id="resolveunresolvedprops"><code>resolveUnresolvedProps</code></h3>
+<pre><code class="language-cpp">inline Style resolveUnresolvedProps(
+    const std::unordered_map&lt;std::string, std::string&gt;&amp; unresolved,
+    const std::unordered_map&lt;std::string, std::string&gt;&amp; customProps);
+</code></pre>
+<p>Resolves a map of <code>property → raw value</code> (where the value contains
+<code>var()</code>) into a typed <code>Style</code>. Each property is substituted and then
+parsed via <code>applyStyleAttr</code>.</p>
+<p>Returns a <code>Style</code> with only the properties that successfully parsed.</p>
+<pre><code class="language-cpp">std::unordered_map&lt;std::string, std::string&gt; unresolved{
+    {&quot;background&quot;, &quot;var(--primary)&quot;}
+};
+std::unordered_map&lt;std::string, std::string&gt; props{
+    {&quot;--primary&quot;, &quot;#FF0000&quot;}
+};
+
+auto s = resolveUnresolvedProps(unresolved, props);
+// s.background.is_set == true, value == red
+</code></pre>
+<hr />
+<h2 id="7-parsing-utilities">7. Parsing utilities</h2>
+<p>Free functions used by the parser and exposed for reuse.</p>
+<h3 id="trim"><code>trim</code></h3>
+<pre><code class="language-cpp">inline std::string trim(std::string s);
+</code></pre>
+<p>Removes leading and trailing whitespace.</p>
+<pre><code class="language-cpp">trim(&quot;  hello  &quot;);  // &quot;hello&quot;
+</code></pre>
+<h3 id="stripcomments"><code>stripComments</code></h3>
+<pre><code class="language-cpp">inline std::string stripComments(std::string_view src);
+</code></pre>
+<p>Removes <code>//</code> line comments and <code>/* ... */</code> block comments. Preserves
+comments inside string literals (respects <code>"..."</code> boundaries).</p>
+<pre><code class="language-cpp">stripComments(&quot;a // comment\nb&quot;);  // &quot;a \nb&quot;
+stripComments(&quot;a /* block */ b&quot;);  // &quot;a  b&quot;
+stripComments(R&quot;(&quot;a // b&quot;)&quot;);      // &quot;\&quot;a // b\&quot;&quot; — comment preserved
+</code></pre>
+<p>The string awareness is what makes it safe to have <code>//</code> or <code>/*</code> inside
+text content.</p>
+<h3 id="splitby"><code>splitBy</code></h3>
+<pre><code class="language-cpp">inline std::vector&lt;std::string&gt; splitBy(std::string_view s, char sep);
+</code></pre>
+<p>Splits on a character, no whitespace trimming.</p>
+<pre><code class="language-cpp">splitBy(&quot;a,b,c&quot;, ',');   // [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+splitBy(&quot;a,b,&quot;, ',');    // [&quot;a&quot;, &quot;b&quot;, &quot;&quot;]
+splitBy(&quot;&quot;, ',');        // [&quot;&quot;]
+</code></pre>
+<p>Trailing separators produce an empty final element.</p>
+<h3 id="splitws"><code>splitWs</code></h3>
+<pre><code class="language-cpp">inline std::vector&lt;std::string&gt; splitWs(std::string_view s);
+</code></pre>
+<p>Splits on whitespace, collapsing consecutive spaces.</p>
+<pre><code class="language-cpp">splitWs(&quot;a    b   c&quot;);  // [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+splitWs(&quot;   a b   &quot;);   // [&quot;a&quot;, &quot;b&quot;]
+splitWs(&quot;&quot;);            // []
+</code></pre>
+<h3 id="parsedurationsec"><code>parseDurationSec</code></h3>
+<pre><code class="language-cpp">inline float parseDurationSec(std::string_view s);
+</code></pre>
+<p>Parses a duration string into seconds. Handles <code>"1s"</code>, <code>"500ms"</code>, and
+bare numbers (interpreted as seconds).</p>
+<pre><code class="language-cpp">parseDurationSec(&quot;1s&quot;);     // 1.0
+parseDurationSec(&quot;500ms&quot;);  // 0.5
+parseDurationSec(&quot;2&quot;);      // 2.0
+</code></pre>
+<p>Throws <code>std::invalid_argument</code> / <code>std::out_of_range</code> on invalid input
+(uses <code>std::stof</code> internally). The caller is expected to catch.</p>
+<h3 id="parseaspectratio"><code>parseAspectRatio</code></h3>
+<pre><code class="language-cpp">static float parseAspectRatio(const std::string&amp; s);
+</code></pre>
+<p>Parses <code>"16/9"</code> or a decimal number into a float. Used by the media
+query parser.</p>
+<pre><code class="language-cpp">parseAspectRatio(&quot;16/9&quot;);   // 1.777...
+parseAspectRatio(&quot;1.77&quot;);   // 1.77
+</code></pre>
+<h3 id="normalizekeyframes"><code>normalizeKeyframes</code></h3>
+<pre><code class="language-cpp">inline void normalizeKeyframes(KeyframeAnimation&amp; anim,
+                                const ParseLoc&amp; loc);
+</code></pre>
+<p>Fills in missing properties in a keyframe animation. For each property
+that appears in some frames but not others, the missing values are
+copied from the <strong>nearest neighbor</strong> (previous frame first, then next).</p>
+<p>Logs a warning for each auto-filled property, with the source location.</p>
+<pre><code class="language-cpp">@keyframes example {
+    0%   { scale: 1.0; }
+    50%  { scale: 1.2; opacity: 0.5; }
+    100% { scale: 1.0; }
+}
+</code></pre>
+<p>Here <code>opacity</code> is set only at 50%. <code>normalizeKeyframes</code> copies <code>0.5</code>
+into the 0% and 100% frames, logging two warnings.</p>
+<p>The name "normalize" is a bit misleading — the animation would work
+without this step (the evaluator's per-property fallback handles
+missing endpoints). Normalization just makes the behavior explicit
+and consistent.</p>
+<h3 id="applystyledeclaration"><code>applyStyleDeclaration</code></h3>
+<pre><code class="language-cpp">inline void applyStyleDeclaration(Style&amp; st,
+                                   const std::string&amp; keyRaw,
+                                   const std::string&amp; valRaw,
+                                   const ParseLoc&amp; loc);
+</code></pre>
+<p>The high-level declaration applier. Handles:</p>
+<ul>
+<li>Custom properties (<code>--name</code>) — stored in <code>st.customProps</code>.</li>
+<li>Properties with <code>var()</code> — stored in <code>st.unresolvedProps</code>.</li>
+<li><code>transition</code>, <code>transition-*</code> shorthands and longhands.</li>
+<li><code>animation</code>, <code>animation-*</code> shorthands and longhands.</li>
+<li><code>filter</code> — parsed into a <code>FilterRef</code> list.</li>
+<li><code>box-shadow</code> — parsed into a <code>BoxShadow</code>.</li>
+<li><code>overflow</code>, <code>overflow-x</code>, <code>overflow-y</code> — parsed into the enum.</li>
+<li>Fallback to <code>applyStyleAttr</code> for the standard properties.</li>
+</ul>
+<p><strong>Logs a warning</strong> for unknown properties and invalid values.</p>
+<p>This is the function called for each declaration in a rule, a
+keyframe, or <code>:root</code>. It's public because it's used by the parser and
+by some test files, but for most use cases you'd just call
+<code>loadStyleFile</code> / <code>loadStyleString</code>.</p>
+<hr />
+<h2 id="8-calc-parsing">8. <code>calc()</code> parsing</h2>
+<p>The <code>calc()</code> support is implemented via an internal tokenizer and
+recursive descent parser. Both are in <code>namespace ZenitUI::detail</code> and
+not part of the public API, but documented here for completeness.</p>
+<h3 id="calctoken"><code>CalcToken</code></h3>
+<pre><code class="language-cpp">struct CalcToken {
+    enum class Kind {
+        Number, Ident, Percent,
+        Plus, Minus, Star, Slash,
+        LParen, RParen, End
+    };
+    Kind kind{Kind::End};
+    float num{0.0f};
+    std::string ident;
+};
+</code></pre>
+<p>A single token in a <code>calc()</code> expression.</p>
+<h3 id="tokenizecalc"><code>tokenizeCalc</code></h3>
+<pre><code class="language-cpp">inline std::vector&lt;CalcToken&gt; tokenizeCalc(std::string_view s);
+</code></pre>
+<p>Splits a <code>calc()</code> body into tokens. Numbers are read as floats, units
+as identifiers (<code>px</code>, <code>vw</code>, <code>%</code>), operators as single characters.</p>
+<h3 id="calcparser"><code>CalcParser</code></h3>
+<pre><code class="language-cpp">class CalcParser {
+public:
+    explicit CalcParser(const std::vector&lt;CalcToken&gt;&amp; toks);
+    bool parse(Value&amp; out);
+};
+</code></pre>
+<p>Recursive descent parser for <code>calc()</code> expressions. Grammar:</p>
+<pre><code>expr   := term (('+' | '-') term)*
+term   := factor (('*' | '/') factor)*
+factor := '-' factor
+        | '+' factor
+        | '(' expr ')'
+        | number ('%' | ident)?
+</code></pre>
+<p>Units are recognized: <code>px</code>, <code>vw</code>, <code>vh</code>, <code>pw</code>, <code>ph</code>, and <code>%</code>. An
+unknown unit falls back to pixels.</p>
+<p>The result is a <code>Value</code> — possibly with multiple terms for mixed-unit
+expressions like <code>100% - 20px</code>.</p>
+<p><strong>Note:</strong> <code>*</code> and <code>/</code> require one side to be a bare number. <code>calc(50% * 2)</code>
+works (<code>50% * 2.0</code>), but <code>calc(50% * 100%)</code> doesn't (multiplication of
+two units is not meaningful and falls back to the left operand).</p>
+<hr />
+<h2 id="9-complete-example">9. Complete example</h2>
+<p>Parsing a stylesheet manually and inspecting the AST:</p>
+<pre><code class="language-cpp">#include &quot;StyleParser.hpp&quot;
+using namespace ZenitUI;
+
+const char* src = R&quot;(
+    :root {
+        --primary: #0079F1;
+    }
+
+    Button {
+        background: var(--primary);
+        padding: 8px 16px;
+        transition: background 0.25s ease-out;
+    }
+
+    Button:hover {
+        background: #3296FF;
+    }
+
+    @keyframes pulse {
+        0%   { scale: 1.0; }
+        50%  { scale: 1.2; }
+        100% { scale: 1.0; }
+    }
+)&quot;;
+
+ZMarkup::StyleParser parser(src, &quot;example.zstyle&quot;);
+auto sheet = parser.parse();
+
+// sheet.rules.size() == 2
+// sheet.rules[0].chain[0].kind == SimpleSelector::Kind::Tag
+// sheet.rules[0].chain[0].name == &quot;Button&quot;
+// sheet.rules[0].decls.size() == 3
+// sheet.rules[1].chain[0].requireHover == true
+
+// sheet.keyframes.size() == 1
+// sheet.keyframes[0].name == &quot;pulse&quot;
+// sheet.keyframes[0].frames.size() == 3
+
+// sheet.rootDecls.size() == 1
+// sheet.rootDecls[0].prop == &quot;--primary&quot;
+// sheet.rootDecls[0].value == &quot;#0079F1&quot;
+
+// Apply to a theme
+Theme t;
+ZMarkup::applyStyleSheet(sheet, &quot;example.zstyle&quot;, t);
+</code></pre>
+<p>For most use cases, you'd skip the manual parsing and call
+<code>loadStyleString</code> / <code>loadStyleFile</code> directly.</p>
+<hr />
+<h2 id="10-pitfalls">10. Pitfalls</h2>
+<p><strong><code>StyleParser</code> copies the source.</strong></p>
+<p>The constructor takes a <code>std::string_view</code>, but stores a stripped
+<code>std::string</code> copy. This is safe (no lifetime issue with the view), but
+it means the full source is in memory for the parser's lifetime. For
+very large stylesheets, this is fine — parsing is a one-time cost.</p>
+<p><strong><code>parse()</code> can be called multiple times.</strong></p>
+<p>It resets the internal position and re-parses. Useful for tests, but
+in practice you'd call it once.</p>
+<p><strong>Unknown properties are logged but not errors.</strong></p>
+<p><code>applyStyleDeclaration</code> logs a warning and continues. The rest of the
+rule is still applied. This is intentional — a typo doesn't break the
+whole stylesheet.</p>
+<p><strong><code>calc()</code> with malformed input returns <code>nullopt</code> from the outer
+<code>parseValueToken</code>.</strong></p>
+<p>The inner <code>CalcParser</code> sets an error flag and returns a best-effort
+value. The outer check <code>!p.parse(out)</code> decides whether to accept the
+result. A malformed <code>calc()</code> is treated as a parse failure, and the
+property is left unset.</p>
+<p><strong><code>var()</code> substitution happens at cascade time, not parse time.</strong></p>
+<p>The parser stores <code>unresolvedProps</code> with the raw <code>var()</code> expression.
+<code>StyleResolver::resolveFor</code> substitutes at resolution time, when the
+cascade has been resolved and the final <code>customProps</code> are known. This
+is what makes <code>--x</code> inheritable and overridable.</p>
+<p><strong><code>substituteVarRefs</code> has a 10-iteration cap.</strong></p>
+<p>Circular references (<code>--a: var(--b); --b: var(--a);</code>) will leave the
+<code>var()</code> unresolved after 10 passes. The resulting string fails to
+parse, and the property is left unset. No warning is logged for the
+cycle itself — the failure manifests as a parse warning.</p>
+<p><strong><code>applyStyleAttr</code> returns <code>bool</code>, but <code>applyStyleDeclaration</code> doesn't.</strong></p>
+<p><code>applyStyleDeclaration</code> handles more cases (shorthands, custom props,
+etc.) and always logs a warning for unknown keys. If you need the
+boolean "was this recognized?" check, use <code>applyStyleAttr</code> directly
+on standard properties.</p>
+<p><strong><code>trim</code> is by-value.</strong></p>
+<p><code>trim(std::string s)</code> takes by value. It modifies the copy and returns
+it. If you already have a <code>std::string</code>, this moves efficiently. If
+you have a <code>std::string_view</code>, it copies.</p>
+<p><strong><code>stripComments</code> preserves newlines for <code>//</code>.</strong></p>
+<p>A line comment is replaced by a single newline, so line numbers in the
+remaining source stay correct. Block comments are removed entirely,
+which can shift subsequent line numbers if the block spans multiple
+lines. The parser doesn't track this — line numbers in error messages
+might be slightly off after a multi-line block comment.</p>
+<p><strong>The <code>vars</code> map in <code>StyleSheet</code> is a subset of <code>rootDecls</code>.</strong></p>
+<p>Custom properties from <code>:root</code> appear in both. The <code>vars</code> map is kept
+for backward compatibility with code that reads it directly. New code
+should use <code>rootDecls</code> (which <code>applyStyleSheet</code> processes via
+<code>applyStyleDeclaration</code>, routing custom props into <code>theme.root.customProps</code>).</p>
+<p><strong><code>normalizeKeyframes</code> logs per-property per-keyframe.</strong></p>
+<p>A keyframe animation with 5 frames and 3 properties missing in 2
+frames produces up to 6 warnings. For large animations, the log can be
+noisy. Filter by category or level if needed.</p>
+<p><strong><code>parseDurationSec</code> throws on invalid input.</strong></p>
+<p>Unlike most parsers in the framework, this one uses <code>std::stof</code>
+directly and lets exceptions propagate. The callers in
+<code>applyStyleDeclaration</code> wrap it in try/catch, but a direct call site
+must handle the exception.</p>
+<p><strong>Media query conditions with unsupported keys are skipped.</strong></p>
+<p>If a media query contains a key the parser doesn't recognize
+(e.g. <code>resolution</code>), the condition is skipped (not the whole query).
+The remaining conditions are still evaluated.</p>
+<p><strong>The parser doesn't support nested rules.</strong></p>
+<pre><code class="language-css">/* Not supported */
+.card {
+    Button { color: red; }
+}
+</code></pre>
+<p>Rules can't be nested inside other rules. Use descendant selectors
+(<code>.card Button { ... }</code>) instead.</p>
+<p><strong><code>@media</code> blocks are expanded inline.</strong></p>
+<p>Rules inside <code>@media { ... }</code> are added to <code>sheet.rules</code> with the
+<code>media</code> field set. They aren't kept as a separate section. This means
+the ordering in <code>sheet.rules</code> interleaves media rules with regular
+ones, which affects the declaration order (and thus the cascade).</p>
+<p><strong><code>:root</code> variables must be declared before use.</strong></p>
+<p><code>applyStyleSheet</code> processes <code>rootDecls</code> before rules, so <code>:root</code>
+custom properties are available when rules are resolved. But the
+<strong>parser</strong> stores them in source order — if you manually inspect the
+sheet, <code>rootDecls</code> might not be first. It doesn't matter for
+<code>applyStyleSheet</code>, which processes <code>rootDecls</code> explicitly first.</p>
+<p><strong>Selectors with <code>:</code> in a class name break parsing.</strong></p>
+<p>The parser splits on <code>:</code> for state detection, so a class name
+containing a colon isn't supported. This is a rare case — CSS also
+doesn't allow colons in class names.</p>
+<p><strong>The <code>part</code> field is only set for <code>::part</code> rules.</strong></p>
+<p>A <code>::part</code> suffix on the last selector token moves the name into
+<code>rule.part</code>. If you have a rule like <code>Slider::knob:checked</code>, the parser
+might misinterpret <code>:checked</code> as part of the part name (since it
+appears after <code>::</code>). Use the state before <code>::</code>:
+<code>Slider:hover::knob</code> is correct; <code>Slider::knob:hover</code> isn't parsed as
+a state.</p>
+<p><strong>Unknown states are silently ignored.</strong></p>
+<p><code>Button:foo { ... }</code> parses, but <code>requireFoo</code> isn't a field, so the
+<code>:foo</code> is silently dropped. The rule matches all buttons. No warning.
+This is intentional (forward compatibility) but can hide typos.</p>
+<p><strong>Attribute values are not validated at parse time.</strong></p>
+<p><code>applyStyleDeclaration</code> parses each value, but a value that doesn't
+parse is logged and ignored — the property is left unset. This means a
+typo (<code>background: blu;</code>) doesn't break the rule, but silently leaves
+the property unchanged.</p>
+<hr />
+<h2 id="11-see-also">11. See also</h2>
+<ul>
+<li><a href="../../user/05-zstyle/">ZStyle (guide)</a> — the grammar and semantics.</li>
+<li><a href="../Theme/">Theme</a> — where parsed rules end up.</li>
+<li><a href="../Style/">Style</a> — the <code>Style</code> struct modified by the parser.</li>
+<li><a href="../Unit/">Unit</a> — the <code>Value</code> type produced by <code>parseValueToken</code>.</li>
+<li><a href="../ZMarkup/">ZMarkup</a> — the DSL that uses <code>applyStyleAttr</code> for
+  inline attributes.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

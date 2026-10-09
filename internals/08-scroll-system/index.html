@@ -1,0 +1,3968 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../07-input-system/">
+      
+      
+        <link rel="next" href="../09-backend/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Scroll System - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#scroll-system" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Scroll System
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-when-a-node-is-a-scroll-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. When a node is a scroll container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-scrollstate-the-pure-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ScrollState — the pure state
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. ScrollState — the pure state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-offset-and-maxscroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 offset and maxScroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-velocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 velocity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-drag-start-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Drag start snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-clamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 clamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 reset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-tickinertia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 tickInertia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-a-note-on-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 A note on units
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-scrollcontroller-the-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ScrollController — the orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ScrollController — the orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-lifecycle-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Lifecycle methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-resetifoverflowchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 resetIfOverflowChanged
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scroll-and-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scroll and measure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scroll and measure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-unbounded-main-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Unbounded main axis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-contentsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 contentSize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-measured-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Measured size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-unbounded-main-axis-and-content-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The "unbounded main axis" and content size
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-scroll-and-arrange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scroll and arrange
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Scroll and arrange">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-arrange-flow-for-a-scroll-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The arrange flow for a scroll container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-needsfullarrange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 needsFullArrange
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-computearrangespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 computeArrangeSpace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-applyoffsetdelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 applyOffsetDelta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-updatemaxscroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 updateMaxScroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scroll-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scroll input
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Scroll input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-the-entry-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 The entry condition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-the-main-scroll-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 The main scroll body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-drag-start-and-track-click" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Drag start and track click
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-drag-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Drag update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Wheel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-statetickinertiactxdt-and-scrolling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 state.tickInertia(ctx.dt) and scrolling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-scrollbar-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Scrollbar geometry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Scrollbar geometry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-verticalthumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 verticalThumb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-horizontalthumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 horizontalThumb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-isbarvisible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 isBarVisible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-constant-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Constant dimensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-hover-freeze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Hover freeze
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Hover freeze">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-the-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 The propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-which-scroll-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Which scroll counts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-the-freeze-is-global-not-per-subtree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 The freeze is global, not per-subtree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-focus-is-still-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Focus is still updated
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-scrollbar-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Scrollbar rendering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Scrollbar rendering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-opacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Opacity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-clip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Clip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-order-relative-to-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Order relative to children
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-scrollview-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ScrollView widget
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. ScrollView widget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-why-not-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Why not Stack?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-adding-a-new-scroll-input-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Adding a new scroll input source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-smooth-scroll-to-a-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Smooth scroll to a target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-custom-scrollbar-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Custom scrollbar rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-custom-inertia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Custom inertia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-when-a-node-is-a-scroll-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. When a node is a scroll container
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-scrollstate-the-pure-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ScrollState — the pure state
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. ScrollState — the pure state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-offset-and-maxscroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 offset and maxScroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-velocity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 velocity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-drag-start-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Drag start snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-clamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 clamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 reset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-tickinertia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 tickInertia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-a-note-on-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 A note on units
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-scrollcontroller-the-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ScrollController — the orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ScrollController — the orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-lifecycle-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Lifecycle methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-resetifoverflowchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 resetIfOverflowChanged
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scroll-and-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scroll and measure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scroll and measure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-unbounded-main-axis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Unbounded main axis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-contentsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 contentSize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-measured-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Measured size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-unbounded-main-axis-and-content-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The "unbounded main axis" and content size
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-scroll-and-arrange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scroll and arrange
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Scroll and arrange">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-arrange-flow-for-a-scroll-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The arrange flow for a scroll container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-needsfullarrange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 needsFullArrange
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-computearrangespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 computeArrangeSpace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-applyoffsetdelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 applyOffsetDelta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-updatemaxscroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 updateMaxScroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scroll-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scroll input
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Scroll input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-the-entry-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 The entry condition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-the-main-scroll-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 The main scroll body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-drag-start-and-track-click" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Drag start and track click
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-drag-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Drag update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Wheel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-statetickinertiactxdt-and-scrolling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 state.tickInertia(ctx.dt) and scrolling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-scrollbar-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Scrollbar geometry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Scrollbar geometry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-verticalthumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 verticalThumb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-horizontalthumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 horizontalThumb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-isbarvisible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 isBarVisible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-constant-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Constant dimensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-hover-freeze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Hover freeze
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Hover freeze">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-the-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 The propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-which-scroll-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Which scroll counts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-the-freeze-is-global-not-per-subtree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 The freeze is global, not per-subtree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-focus-is-still-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Focus is still updated
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-scrollbar-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Scrollbar rendering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Scrollbar rendering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-opacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Opacity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-clip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Clip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-order-relative-to-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Order relative to children
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-scrollview-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ScrollView widget
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. ScrollView widget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-why-not-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Why not Stack?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-adding-a-new-scroll-input-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Adding a new scroll input source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-smooth-scroll-to-a-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Smooth scroll to a target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-custom-scrollbar-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Custom scrollbar rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-custom-inertia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 Custom inertia
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="scroll-system">Scroll System</h1>
+<p>The scroll system lets a <code>Layout</code> node hold content larger than its own
+rect, and lets the user pan that content via wheel, drag, or programmatic
+API. It lives in <code>ScrollController</code>, <code>ScrollState</code>, and a handful of
+methods on <code>Layout</code> (in <code>Measure.cpp</code> and <code>Layout.cpp</code>).</p>
+<p>This document covers:</p>
+<ul>
+<li><code>ScrollState</code> — the pure state machine.</li>
+<li><code>ScrollController</code> — the orchestration layer.</li>
+<li>How scroll interacts with <code>measure</code> / <code>arrange</code> / <code>draw</code>.</li>
+<li>Wheel, drag, and inertia input.</li>
+<li>Scrollbar geometry and rendering.</li>
+<li>The "hover freeze" behavior.</li>
+</ul>
+<p>For the user-facing API, see <a href="../../user/02-layout/#8-overflow">Layout §8</a>
+and <a href="../../user/03-widgets/#12-scrollview">Widgets §12 (ScrollView)</a>.</p>
+<hr />
+<h2 id="1-when-a-node-is-a-scroll-container">1. When a node is a scroll container</h2>
+<pre><code class="language-cpp">bool Layout::isScrollContainer() const {
+    return style_.currentStyle.overflowX != Overflow::Visible ||
+           style_.currentStyle.overflowY != Overflow::Visible;
+}
+</code></pre>
+<p>A node is a scroll container if <strong>either</strong> axis has an <code>overflow</code> value
+other than <code>visible</code>. <code>hidden</code> / <code>scroll</code> / <code>auto</code> all qualify — even
+<code>hidden</code>, which doesn't show a scrollbar but still clips and can
+technically hold scroll state.</p>
+<p>The computed-value rule (see <a href="../03-style-system/">Style System §1.2</a>)
+means that setting <code>overflow-x: hidden</code> alone promotes <code>overflow-y</code> to
+<code>auto</code>, making the node a scroll container on both axes. This is the
+CSS behavior and is intentional.</p>
+<p>For the purposes of the arrange algorithm, <code>Stack</code> type nodes are
+excluded:</p>
+<pre><code class="language-cpp">if (isScrollContainer() &amp;&amp; type != LayoutType::Stack) { ... }
+else { arrangeInto(space); ... }
+</code></pre>
+<p>A <code>Stack</code> has no main axis, so scrolling along "the flow" doesn't make
+sense. A <code>Stack</code> with <code>overflow: scroll</code> behaves like a non-scroll
+container with clipping — no scroll offset, no thumb. This is a
+deliberate simplification; if you need scrolling in a <code>Stack</code>, use
+<code>Vertical</code> or <code>Horizontal</code>.</p>
+<hr />
+<h2 id="2-scrollstate-the-pure-state">2. <code>ScrollState</code> — the pure state</h2>
+<p><code>ScrollState</code> is a POD struct with no knowledge of <code>Layout</code>:</p>
+<pre><code class="language-cpp">struct ScrollState {
+    Vec2 offset{0.0f, 0.0f};        // current scroll position
+    Vec2 maxScroll{0.0f, 0.0f};     // maximum offset per axis
+    Vec2 velocity{0.0f, 0.0f};      // inertia velocity (px/s)
+
+    float dragStartMouseY{0.0f};
+    float dragStartOffsetY{0.0f};
+    float dragStartMouseX{0.0f};
+    float dragStartOffsetX{0.0f};
+
+    static constexpr float WHEEL_IMPULSE = 400.0f;
+    static constexpr float DECAY = 0.90f;
+    static constexpr float VELOCITY_MIN = 5.0f;
+
+    void clamp();
+    void reset();
+    void tickInertia(float dt);
+};
+</code></pre>
+<h3 id="21-offset-and-maxscroll">2.1 <code>offset</code> and <code>maxScroll</code></h3>
+<ul>
+<li><code>offset</code> is the current scroll position, always in <code>[0, maxScroll]</code>.</li>
+<li><code>maxScroll</code> is <code>contentSize - containerSize</code>, per axis. Zero means
+  no scrolling needed.</li>
+</ul>
+<p>Both are <code>Vec2</code> so <code>x</code> and <code>y</code> scroll independently.</p>
+<h3 id="22-velocity">2.2 <code>velocity</code></h3>
+<p>The inertia velocity. When a wheel event arrives, it adds an impulse to
+<code>velocity</code> rather than directly modifying <code>offset</code>. Each frame,
+<code>tickInertia</code> integrates velocity into offset and decays it.</p>
+<p>This produces the "smooth scroll" behavior: a wheel tick adds a
+velocity, the velocity is applied over several frames, and it decays
+exponentially. The result is a decelerating scroll that settles at the
+target.</p>
+<h3 id="23-drag-start-snapshots">2.3 Drag start snapshots</h3>
+<p>When a scrollbar thumb drag starts, the current mouse position and
+offset are saved. On each frame of the drag, the delta is computed and
+mapped to a new offset. This avoids drift from accumulated small
+increments.</p>
+<h3 id="24-constants">2.4 Constants</h3>
+<ul>
+<li><code>WHEEL_IMPULSE = 400.0f</code> — pixels of velocity added per wheel tick.
+  A typical wheel tick is <code>±1.0</code> in Raylib's <code>GetMouseWheelMove</code>, so a
+  single tick produces <code>±400 px/s</code> of velocity.</li>
+<li><code>DECAY = 0.90f</code> — velocity multiplier per 60Hz frame. After 1 second
+  (60 frames), velocity is <code>0.9^60 ≈ 0.0018</code> of its initial value.</li>
+<li><code>VELOCITY_MIN = 5.0f</code> — below this threshold, velocity is zeroed.
+  Prevents a slow drift that never settles.</li>
+</ul>
+<h3 id="25-clamp">2.5 <code>clamp</code></h3>
+<pre><code class="language-cpp">void clamp() {
+    offset.x = std::clamp(offset.x, 0.0f, maxScroll.x);
+    offset.y = std::clamp(offset.y, 0.0f, maxScroll.y);
+}
+</code></pre>
+<p>Ensures <code>offset</code> is within <code>[0, maxScroll]</code>. Called after any
+modification and at the end of <code>tickInertia</code>.</p>
+<h3 id="26-reset">2.6 <code>reset</code></h3>
+<pre><code class="language-cpp">void reset() {
+    offset = {0.0f, 0.0f};
+    maxScroll = {0.0f, 0.0f};
+    velocity = {0.0f, 0.0f};
+}
+</code></pre>
+<p>Clears everything. Called when overflow changes (see §5.4).</p>
+<h3 id="27-tickinertia">2.7 <code>tickInertia</code></h3>
+<pre><code class="language-cpp">void tickInertia(float dt) {
+    if (std::abs(velocity.x) &gt; VELOCITY_MIN) {
+        offset.x += velocity.x * dt;
+        velocity.x *= std::pow(DECAY, dt * 60.0f);
+    } else {
+        velocity.x = 0.0f;
+    }
+
+    if (std::abs(velocity.y) &gt; VELOCITY_MIN) {
+        offset.y += velocity.y * dt;
+        velocity.y *= std::pow(DECAY, dt * 60.0f);
+    } else {
+        velocity.y = 0.0f;
+    }
+
+    clamp();
+}
+</code></pre>
+<p>Per-axis integration:</p>
+<ol>
+<li>If <code>|velocity| &gt; VELOCITY_MIN</code>, apply <code>velocity * dt</code> to offset and
+   decay velocity.</li>
+<li>Otherwise, zero the velocity (stop).</li>
+<li>Clamp offset.</li>
+</ol>
+<p>The decay is <code>DECAY^(dt * 60)</code> — the <code>dt * 60</code> factor makes the decay
+rate independent of frame rate. At 60 fps, <code>dt = 1/60</code>, so the exponent
+is <code>1.0</code> and velocity is multiplied by <code>0.90</code>. At 30 fps, <code>dt = 1/30</code>,
+exponent is <code>2.0</code>, velocity is multiplied by <code>0.81</code>. Same decay per
+second.</p>
+<p>The offset integration doesn't use the same frame-rate normalization —
+<code>offset += velocity * dt</code> is frame-rate correct because it's a direct
+integration of velocity over time. The velocity itself is in px/s, so
+<code>velocity * dt</code> is the pixels scrolled this frame.</p>
+<h3 id="28-a-note-on-units">2.8 A note on units</h3>
+<p><code>offset</code>, <code>maxScroll</code>, and <code>velocity</code> are all in <strong>logical pixels</strong>.
+<code>contentSize</code> and <code>rect.width/height</code> (which feed <code>maxScroll</code>) are also
+logical pixels. The DPI scale is applied by the renderer, not by the
+scroll system.</p>
+<hr />
+<h2 id="3-scrollcontroller-the-orchestrator">3. <code>ScrollController</code> — the orchestrator</h2>
+<p><code>ScrollController</code> is a struct with:</p>
+<pre><code class="language-cpp">struct ScrollController {
+    ScrollState state;
+    Vec2        contentSize{0, 0};
+    Vec2        appliedOffset{0, 0};
+    bool        arrangeInitialized{false};
+    bool        scrolling{false};
+};
+</code></pre>
+<p>It's a member of every <code>Layout</code> node, but only used when
+<code>isScrollContainer()</code> is true.</p>
+<h3 id="31-fields">3.1 Fields</h3>
+<ul>
+<li><strong><code>state</code></strong> — the <code>ScrollState</code> from §2.</li>
+<li><strong><code>contentSize</code></strong> — the uncut content extent, set by <code>measure</code>. This
+  is what <code>maxScroll</code> is computed from.</li>
+<li><strong><code>appliedOffset</code></strong> — the offset that has already been applied to the
+  children via <code>translateSubtree</code>. This can differ from <code>state.offset</code>
+  momentarily: <code>state.offset</code> is the target, <code>appliedOffset</code> is the
+  current. The difference is applied each frame in <code>applyOffsetDelta</code>.</li>
+<li><strong><code>arrangeInitialized</code></strong> — true after the first <code>arrange</code>. Used to
+  detect the "first frame" case.</li>
+<li><strong><code>scrolling</code></strong> — true during a drag or inertia. Used to freeze hover
+  (see §8).</li>
+</ul>
+<h3 id="32-lifecycle-methods">3.2 Lifecycle methods</h3>
+<p>The controller's methods are called from <code>Layout::arrange</code> and
+<code>Layout::update</code>:</p>
+<pre><code>arrange:
+├── resetIfOverflowChanged   (in update, actually)
+├── needsFullArrange
+├── computeArrangeSpace
+├── arrangeInto
+├── applyOffsetDelta
+└── updateMaxScroll
+
+update:
+├── resetIfOverflowChanged
+├── tickInput
+│   ├── (wheel, drag, click-on-track)
+│   ├── tickInertia
+│   └── sets scrolling
+
+draw:
+└── drawScrollbar
+    ├── verticalThumb
+    └── horizontalThumb
+</code></pre>
+<p>Note that <code>resetIfOverflowChanged</code> is called from <code>update</code>, not
+<code>arrange</code>. This means the overflow check runs before measure, which is
+correct — the overflow determines whether the node measures with an
+unbounded main axis.</p>
+<h3 id="33-resetifoverflowchanged">3.3 <code>resetIfOverflowChanged</code></h3>
+<pre><code class="language-cpp">void ScrollController::resetIfOverflowChanged(const Layout&amp; node) {
+    const auto&amp; cur = node.style_.currentStyle;
+    const auto&amp; prev = node.style_.lastInherited;
+    if (cur.overflowX != prev.overflowX || cur.overflowY != prev.overflowY)
+        reset();
+}
+</code></pre>
+<p>Compares the current <code>overflow</code> to the last snapshot. If either axis
+changed, resets the scroll state. This prevents "phantom scroll" when a
+container stops being scrollable — the offset would otherwise stay at
+a non-zero value and clamp to zero on the next <code>updateMaxScroll</code>, but
+only after one frame of weird rendering.</p>
+<p><strong>Wait, this uses <code>lastInherited</code> for the overflow comparison.</strong> That's
+the snapshot used by <code>propagateInheritance</code>, which has <code>overflowX</code> and
+<code>overflowY</code> as fields. So the "last seen overflow" comes from that
+snapshot. It's updated in <code>propagateInheritance</code> after the change is
+processed. So:</p>
+<ol>
+<li>Frame N: <code>overflow</code> changes from <code>visible</code> to <code>scroll</code>.</li>
+<li><code>update</code> runs. <code>resetIfOverflowChanged</code> sees the change (current
+   differs from <code>lastInherited</code>), resets.</li>
+<li><code>propagateInheritance</code> updates <code>lastInherited.overflowX/Y</code>.</li>
+<li>Frame N+1: <code>resetIfOverflowChanged</code> sees no change, no reset.</li>
+</ol>
+<p>But there's a subtlety: <code>propagateInheritance</code> only updates
+<code>lastInherited</code> if something changed (it has an early-out for "no
+change"). Since overflow is part of the snapshot, a change to overflow
+triggers the update. So the sequence works.</p>
+<p>Actually, looking more carefully at <code>propagateInheritance</code>:</p>
+<pre><code class="language-cpp">bool changed =
+    lastInherited.hovered != node.isHoveredState() ||
+    // ... other flags ...
+    !(lastInherited.overflowX == currentStyle.overflowX) ||
+    !(lastInherited.overflowY == currentStyle.overflowY);
+
+if (!changed) return;
+
+// ... update snapshot ...
+lastInherited.overflowX = currentStyle.overflowX;
+lastInherited.overflowY = currentStyle.overflowY;
+</code></pre>
+<p>Wait, is overflow in the <code>changed</code> check? Let me look at the actual
+source... From <code>StyleResolver.cpp</code>:</p>
+<pre><code class="language-cpp">bool changed =
+    lastInherited.hovered != node.isHoveredState() ||
+    lastInherited.pressed != node.isPressedState() ||
+    lastInherited.focused != node.isFocusedState() ||
+    lastInherited.enabled != node.getEnabled() ||
+    lastInherited.checked != node.isCheckedState() ||
+    lastInherited.font != currentStyle.font ||
+    !(lastInherited.fontSize == currentStyle.fontSize) ||
+    !(lastInherited.color == currentStyle.color) ||
+    !(lastInherited.letterSpacing == currentStyle.letterSpacing) ||
+    !(lastInherited.textAlign == currentStyle.textAlign);
+</code></pre>
+<p>Overflow is <strong>not</strong> in the <code>changed</code> check, but it <strong>is</strong> updated at the
+end:</p>
+<pre><code class="language-cpp">lastInherited.overflowX = currentStyle.overflowX;
+lastInherited.overflowY = currentStyle.overflowY;
+</code></pre>
+<p>This is a bug: <code>lastInherited.overflowX</code> is only updated when some
+<strong>other</strong> property changed, because the early-return skips the update
+if <code>changed</code> is false. So the overflow snapshot can be stale.</p>
+<p>The impact: <code>resetIfOverflowChanged</code> might see a spurious change (if
+<code>lastInherited.overflowX</code> hasn't been updated since some prior
+overflow value), or might miss a change (if it was updated
+"accidentally" by some other change). In practice, the reset is rare
+enough that this doesn't cause visible problems. But it's a known
+issue in the source.</p>
+<p>For the rest of this document, I'll describe the intended behavior
+(reset when overflow changes), noting that the implementation has this
+edge case.</p>
+<hr />
+<h2 id="4-scroll-and-measure">4. Scroll and measure</h2>
+<h3 id="41-unbounded-main-axis">4.1 Unbounded main axis</h3>
+<p>In <code>measure</code>:</p>
+<pre><code class="language-cpp">if (type == LayoutType::Vertical &amp;&amp; calcStyle.overflowY != Overflow::Visible)
+    innerH = 1e9f;
+if (type == LayoutType::Horizontal &amp;&amp; calcStyle.overflowX != Overflow::Visible)
+    innerW = 1e9f;
+</code></pre>
+<p>The main axis of a scroll container has effectively infinite space for
+its children. This lets children compute their natural size without
+being constrained by the container — which is the whole point of
+scrolling.</p>
+<p>The <code>1e9f</code> sentinel is large enough to never be hit in practice, but
+finite to avoid <code>inf</code> propagation in the arithmetic.</p>
+<h3 id="42-contentsize">4.2 <code>contentSize</code></h3>
+<p>At the end of <code>measure</code>:</p>
+<pre><code class="language-cpp">scroll_.contentSize = contentSize;
+</code></pre>
+<p><code>contentSize</code> is the accumulated size of the children (before the
+container's own <code>measuredSize</code> is applied). For a <code>Vertical</code> container,
+<code>contentSize.y</code> is the total height of the children plus gaps.</p>
+<p>For a node that isn't a scroll container, <code>contentSize</code> is still stored
+(the assignment is unconditional). It's just unused.</p>
+<h3 id="43-measured-size">4.3 Measured size</h3>
+<p>The container's own <code>measuredSize</code> is computed normally from
+<code>contentSize</code> (via the <code>auto</code> rules) and clamped by <code>min-*</code> / <code>max-*</code>.
+So a scroll container with <code>height: auto</code> measures to fit its content
+(no scrolling needed). To have an actual scroll, you need to give the
+container an explicit height (or a <code>grow</code> context that fills the
+available space).</p>
+<p>Common patterns:</p>
+<pre><code class="language-css">/* ScrollView fills its parent */
+ScrollView { height: 100%; overflow-y: auto; }
+
+/* ScrollView grows to fill leftover space */
+.settings-body { grow: 1; overflow-y: auto; }
+
+/* ScrollView with a fixed height */
+.terminal { height: 30vh; overflow-y: scroll; }
+</code></pre>
+<h3 id="44-the-unbounded-main-axis-and-content-size">4.4 The "unbounded main axis" and content size</h3>
+<p>A subtle point: the <code>contentSize</code> measured with an unbounded main axis
+might differ from what the same content would measure with a bounded
+main axis. This is because <code>Text</code> with <code>wrap: true</code> measures to fit
+its parent's width — if the parent is a scroll container, the text
+measures against the container's width (bounded, cross axis), and the
+height is the wrapped height (unbounded, main axis).</p>
+<p>For a vertical scroll container, this is correct: text wraps at the
+container's width, and the container's height accommodates the wrapped
+text. But if the container is horizontal (unbounded width), text
+won't wrap (it has all the width it needs) and will overflow
+horizontally.</p>
+<p>This is a known asymmetry — it matches CSS's "scroll container measures
+its content with unbounded main axis" behavior. For most UIs, this is
+fine because scroll containers are vertical.</p>
+<hr />
+<h2 id="5-scroll-and-arrange">5. Scroll and arrange</h2>
+<h3 id="51-the-arrange-flow-for-a-scroll-container">5.1 The arrange flow for a scroll container</h3>
+<pre><code class="language-cpp">if (isScrollContainer() &amp;&amp; type != LayoutType::Stack) {
+    if (scroll_.needsFullArrange(*this, positionChanged)) {
+        Rect arrangeSpace = scroll_.computeArrangeSpace(*this, space);
+        arrangeInto(arrangeSpace);
+        scroll_.arrangeInitialized = true;
+        scroll_.appliedOffset = {0.0f, 0.0f};
+    }
+    scroll_.applyOffsetDelta(*this);
+    scroll_.updateMaxScroll(*this, space);
+} else {
+    arrangeInto(space);
+    scroll_.arrangeInitialized = true;
+}
+</code></pre>
+<p>Three sub-steps:</p>
+<ol>
+<li><strong>Full arrange</strong> (if needed): expand the arrange space and lay out
+   children.</li>
+<li><strong>Apply offset delta</strong>: shift the subtree by the scroll delta.</li>
+<li><strong>Update max scroll</strong>: recompute <code>maxScroll</code> from the new
+   <code>contentSize</code> and the container's <code>rect</code>.</li>
+</ol>
+<p>Non-scroll containers just call <code>arrangeInto(space)</code>.</p>
+<h3 id="52-needsfullarrange">5.2 <code>needsFullArrange</code></h3>
+<pre><code class="language-cpp">bool ScrollController::needsFullArrange(const Layout&amp; node, bool positionChanged) const {
+    return !arrangeInitialized || node.subtreeDirty_ || positionChanged;
+}
+</code></pre>
+<p>A full arrange is needed if:</p>
+<ul>
+<li>This is the first arrange (<code>!arrangeInitialized</code>).</li>
+<li>The subtree is dirty (something changed).</li>
+<li>The container moved (position changed).</li>
+</ul>
+<p>If none of these, the arrange is "incremental" — only the offset is
+applied, no children are repositioned.</p>
+<p>The rationale: since scroll works by <code>translateSubtree</code>, the children's
+positions are relative to the "base" arrange (offset 0). When the
+container moves but the subtree doesn't change, the base arrange is
+already correct; only the offset needs to be reapplied.</p>
+<p>Wait, that's not quite right. If the container moves, the children's
+<code>rect</code> positions were computed for the old container position. The
+<code>translateSubtree</code> accumulated the scroll offset, but the base positions
+are in the old container's frame.</p>
+<p>Actually, re-reading <code>arrange</code>:</p>
+<pre><code class="language-cpp">const bool positionChanged = (space.x != rect.x || space.y != rect.y);
+rect = space;
+</code></pre>
+<p>The <code>rect</code> is updated first. Then <code>needsFullArrange</code> decides whether to
+re-run <code>arrangeInto</code>. If <code>positionChanged</code> is true, it re-arranges, so
+the children's positions are recomputed for the new container rect.</p>
+<p>If <code>positionChanged</code> is false (container didn't move), and the subtree
+isn't dirty, the children keep their positions from the last arrange,
+and only the scroll delta is applied. This is the fast path: a scroll
+container whose content didn't change, scrolling smoothly over many
+frames.</p>
+<h3 id="53-computearrangespace">5.3 <code>computeArrangeSpace</code></h3>
+<pre><code class="language-cpp">Rect ScrollController::computeArrangeSpace(const Layout&amp; node, Rect space) const {
+    const auto&amp; st = node.style_.currentStyle;
+
+    float pl = st.padding.left.resolveH(space.width, space.height);
+    float pr = st.padding.right.resolveH(space.width, space.height);
+    float pt = st.padding.top.resolveV(space.width, space.height);
+    float pb = st.padding.bottom.resolveV(space.width, space.height);
+
+    Rect arranged = space;
+
+    if (node.type == LayoutType::Vertical &amp;&amp; st.overflowY != Overflow::Visible) {
+        float contentH = contentSize.y + pt + pb;
+        arranged.height = std::max(space.height, contentH);
+    } else if (node.type == LayoutType::Horizontal &amp;&amp; st.overflowX != Overflow::Visible) {
+        float contentW = contentSize.x + pl + pr;
+        arranged.width = std::max(space.width, contentW);
+    }
+
+    return arranged;
+}
+</code></pre>
+<p>The arrange space is the container's rect, expanded on the main axis if
+the content is larger. If the content fits (contentSize &lt; container
+size), the space is unchanged.</p>
+<p>Only the main axis is expanded — the cross axis stays at the container
+size. So a vertical scroll container's children are arranged within the
+container's width, regardless of their content height.</p>
+<h3 id="54-applyoffsetdelta">5.4 <code>applyOffsetDelta</code></h3>
+<pre><code class="language-cpp">bool ScrollController::applyOffsetDelta(Layout&amp; node) {
+    float dx = appliedOffset.x - state.offset.x;
+    float dy = appliedOffset.y - state.offset.y;
+    if (dx == 0.0f &amp;&amp; dy == 0.0f) return false;
+
+    node.translateSubtree(dx, dy);
+    appliedOffset = state.offset;
+    return true;
+}
+</code></pre>
+<p>Computes the delta between the applied offset (from last frame) and the
+current offset (this frame), and translates the subtree by that delta.</p>
+<p>The delta is <code>appliedOffset - state.offset</code>:
+- If we're scrolling <strong>down</strong> (state.offset increased), the delta is
+  negative, so children move up (negative y).
+- If we're scrolling <strong>up</strong>, the delta is positive, children move down.</p>
+<p>This is the correct sign: scrolling down means content moves up.</p>
+<p><code>translateSubtree</code>:</p>
+<pre><code class="language-cpp">void Layout::translateSubtree(float dx, float dy) {
+    for (auto&amp; c : children) {
+        c-&gt;rect.x += dx;
+        c-&gt;rect.y += dy;
+        c-&gt;translateSubtree(dx, dy);
+    }
+}
+</code></pre>
+<p>Recursively shifts every descendant's <code>rect</code>. The node's own <code>rect</code> is
+not shifted — the container stays fixed, only its content moves.</p>
+<p><strong>Note:</strong> absolute children and portals are also translated. Absolute
+children of a scroll container will scroll with the content, which is
+usually what you want. Portals, however, are supposed to be
+independent of the scroll (they position themselves in screen space).
+Translating them will break their positioning.</p>
+<p>Looking at the code, there's a commented-out check:</p>
+<pre><code class="language-cpp">//if (c-&gt;isPortal())
+//    continue;
+</code></pre>
+<p>So the portal exclusion was considered but not enabled. In practice,
+portals inside a scroll container are rare, and the issue is masked by
+the portal's <code>onUpdate</code> setting its own <code>rect</code> each frame. The
+translate shift is overwritten by the portal's position computation.
+But the recursion still shifts the portal's children, which can be
+visible.</p>
+<p>This is a known issue.</p>
+<h3 id="55-updatemaxscroll">5.5 <code>updateMaxScroll</code></h3>
+<pre><code class="language-cpp">void ScrollController::updateMaxScroll(const Layout&amp; node, Rect space) {
+    const auto&amp; st = node.style_.currentStyle;
+
+    float pl = st.padding.left.resolveH(space.width, space.height);
+    float pr = st.padding.right.resolveH(space.width, space.height);
+    float pt = st.padding.top.resolveV(space.width, space.height);
+    float pb = st.padding.bottom.resolveV(space.width, space.height);
+
+    float contentW = contentSize.x + pl + pr;
+    float contentH = contentSize.y + pt + pb;
+    state.maxScroll.x = std::max(0.0f, contentW - node.rect.width);
+    state.maxScroll.y = std::max(0.0f, contentH - node.rect.height);
+    state.clamp();
+}
+</code></pre>
+<p><code>maxScroll</code> is <code>contentSize (plus padding) - container size</code>. If
+negative, clamped to zero.</p>
+<p>Called after <code>applyOffsetDelta</code>, so if <code>maxScroll</code> shrinks (content
+shrank), the offset is re-clamped. This can cause a visible "snap back"
+if content is removed while scrolled past the new max. That's the
+expected behavior.</p>
+<p><strong>Padding is added to content size</strong> — this means a container with
+<code>padding: 8px</code> and content of height 100 has <code>contentH = 116</code>, so
+<code>maxScroll.y = 116 - containerHeight</code>. The padding is part of the
+scrollable content, so you can scroll to see the padding too. This
+matches CSS's <code>box-sizing: content-box</code> default (which ZenitUI uses —
+padding is added outside the content size).</p>
+<hr />
+<h2 id="6-scroll-input">6. Scroll input</h2>
+<p><code>ScrollController::tickInput</code> handles all user input for scrolling:
+wheel, scrollbar drag, and track click.</p>
+<h3 id="61-the-entry-condition">6.1 The entry condition</h3>
+<pre><code class="language-cpp">void ScrollController::tickInput(Layout&amp; node) {
+    const auto&amp; st = node.style_.currentStyle;
+    if (!acceptsAnyInput(st) || node.type == LayoutType::Stack)
+        return;
+    // ...
+}
+</code></pre>
+<p>Returns early if:</p>
+<ul>
+<li>The container doesn't accept input (<code>acceptsInput</code> returns true only
+  for <code>Scroll</code> and <code>Auto</code>, not <code>Hidden</code>).</li>
+<li>The type is <code>Stack</code>.</li>
+</ul>
+<p>So a <code>Hidden</code> overflow clips but doesn't accept scroll input. A <code>Stack</code>
+with <code>Scroll</code> doesn't either (the arrange path already excluded it).</p>
+<p><code>acceptsInput</code>:</p>
+<pre><code class="language-cpp">static bool acceptsInput(Overflow o) {
+    return o == Overflow::Scroll || o == Overflow::Auto;
+}
+</code></pre>
+<h3 id="62-the-main-scroll-body">6.2 The main scroll body</h3>
+<pre><code class="language-cpp">const bool canScrollY = state.maxScroll.y &gt; 0.0f &amp;&amp;
+                        st.overflowY != Overflow::Hidden;
+const bool canScrollX = state.maxScroll.x &gt; 0.0f &amp;&amp;
+                        st.overflowX != Overflow::Hidden;
+</code></pre>
+<p>Each axis can scroll if <code>maxScroll &gt; 0</code> on that axis, and the overflow
+isn't <code>Hidden</code>. So <code>Hidden</code> on one axis still allows scrolling on the
+other (if it's <code>Scroll</code> or <code>Auto</code>).</p>
+<p>The scrollbar drag, wheel, and track click all check these flags.</p>
+<h3 id="63-drag-start-and-track-click">6.3 Drag start and track click</h3>
+<pre><code class="language-cpp">if (!node.hasPointerCapture()) {
+    if (pointer.pressed &amp;&amp; ctx.topmostConsumer == &amp;node) {
+        bool handled = false;
+
+        // Try vertical thumb
+        if (canScrollY) {
+            Rect thumb = verticalThumb(node);
+            if (thumb.contains(pointer.pos)) {
+                node.capturePointer();
+                state.dragStartMouseY = pointer.pos.y;
+                state.dragStartOffsetY = state.offset.y;
+                state.velocity = {0.0f, 0.0f};
+                handled = true;
+            }
+        }
+
+        // Try horizontal thumb
+        if (!handled &amp;&amp; canScrollX) {
+            Rect thumb = horizontalThumb(node);
+            if (thumb.contains(pointer.pos)) {
+                node.capturePointer();
+                state.dragStartMouseX = pointer.pos.x;
+                state.dragStartOffsetX = state.offset.x;
+                state.velocity = {0.0f, 0.0f};
+                handled = true;
+            }
+        }
+
+        // Click on track: jump
+        if (!handled &amp;&amp; canScrollY &amp;&amp; !canScrollX) {
+            float ratio = (rect.height &gt; 0.0f)
+                ? ((pointer.pos.y - rect.y) / rect.height)
+                : 0.0f;
+            state.offset.y = std::clamp(
+                ratio * contentSize.y - rect.height * 0.5f,
+                0.0f, state.maxScroll.y);
+        }
+        else if (!handled &amp;&amp; canScrollX &amp;&amp; !canScrollY) {
+            float ratio = (rect.width &gt; 0.0f)
+                ? ((pointer.pos.x - rect.x) / rect.width)
+                : 0.0f;
+            state.offset.x = std::clamp(
+                ratio * contentSize.x - rect.width * 0.5f,
+                0.0f, state.maxScroll.x);
+        }
+    }
+}
+</code></pre>
+<p>The logic, when the pointer is pressed on this container (topmost
+consumer):</p>
+<ol>
+<li>Check the vertical thumb rect. If the pointer is on it, start a
+   vertical drag.</li>
+<li>Otherwise, check the horizontal thumb rect. If the pointer is on it,
+   start a horizontal drag.</li>
+<li>Otherwise, if only one axis is scrollable, treat the click as a
+   "jump to position" on the track. The new offset is
+   <code>ratio * contentSize - rect.size * 0.5</code>, so the clicked point ends up
+   in the middle of the container.</li>
+</ol>
+<p>The thumb drag snapshots the current mouse position and offset. On
+subsequent frames (see §6.4), the delta is applied.</p>
+<p>The track click is only enabled if exactly one axis is scrollable. If
+both are, the click on the track is ignored (to avoid ambiguity about
+which axis to jump on). In practice, both scrollable is rare.</p>
+<h3 id="64-drag-update">6.4 Drag update</h3>
+<pre><code class="language-cpp">else if (pointer.down) {
+    if (canScrollY) {
+        float dy = pointer.pos.y - state.dragStartMouseY;
+        float ratio = (rect.height &gt; 0.0f)
+            ? (contentSize.y / rect.height)
+            : 1.0f;
+        state.offset.y = std::clamp(
+            state.dragStartOffsetY + dy * ratio,
+            0.0f, state.maxScroll.y);
+    }
+    if (canScrollX) {
+        float dx = pointer.pos.x - state.dragStartMouseX;
+        float ratio = (rect.width &gt; 0.0f)
+            ? (contentSize.x / rect.width)
+            : 1.0f;
+        state.offset.x = std::clamp(
+            state.dragStartOffsetX + dx * ratio,
+            0.0f, state.maxScroll.x);
+    }
+}
+</code></pre>
+<p>While the pointer is down (and capture is set), the offset is computed
+from the drag start:</p>
+<pre><code>new_offset = drag_start_offset + (mouse_delta * ratio)
+</code></pre>
+<p>where <code>ratio = contentSize / containerSize</code>. This maps the mouse delta
+in container pixels to the corresponding content pixels. If the content
+is 3× the container, dragging the mouse by 10px scrolls the content by
+30px. This matches the "thumb is a small version of the content"
+intuition.</p>
+<p>The <code>dragStartOffset</code> snapshot prevents drift: each frame's offset is
+computed from the original, not from the previous frame's offset. This
+keeps the drag stable.</p>
+<h3 id="65-wheel">6.5 Wheel</h3>
+<pre><code class="language-cpp">if (!ctx.wheelConsumedThisFrame &amp;&amp; node.isInteractive &amp;&amp;
+    !node.hasPointerCapture() &amp;&amp; rect.contains(pointer.pos))
+{
+    if (pointer.wheelY != 0.0f) {
+        if (ctx.shiftHeld &amp;&amp; canScrollX) {
+            state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
+            ctx.wheelConsumedThisFrame = true;
+        }
+        else if (!ctx.shiftHeld &amp;&amp; canScrollY) {
+            state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
+            ctx.wheelConsumedThisFrame = true;
+        }
+    }
+}
+</code></pre>
+<p>Conditions:</p>
+<ul>
+<li><code>!wheelConsumedThisFrame</code> — no node has consumed the wheel this frame.</li>
+<li><code>node.isInteractive</code> — the node is interactive (default true for most).</li>
+<li><code>!hasPointerCapture</code> — not currently in a capture (avoid double-handling).</li>
+<li><code>rect.contains(pointer.pos)</code> — the pointer is over the container.</li>
+</ul>
+<p>If all four are true and there's a wheel delta:</p>
+<ul>
+<li>With <code>Shift</code>: scroll horizontally.</li>
+<li>Without <code>Shift</code>: scroll vertically.</li>
+</ul>
+<p>The wheel adds an <strong>impulse to velocity</strong>, not to offset. So the actual
+scroll happens through <code>tickInertia</code>, giving smooth deceleration.</p>
+<p>The sign is negated: <code>velocity.y -= wheelY * IMPULSE</code>. A positive
+<code>wheelY</code> (scroll down / away from user) decreases velocity, which
+decreases offset, which scrolls up (content moves down). This matches
+the convention where scrolling down moves content up... actually, it
+depends on the backend's sign convention. Raylib's
+<code>GetMouseWheelMove()</code> returns positive for scrolling up and negative
+for scrolling down (by default). So <code>wheelY = -1</code> for a "scroll down"
+action. Then <code>velocity.y -= (-1) * IMPULSE = velocity.y + IMPULSE</code>,
+increasing the offset, moving content up. Correct.</p>
+<p>The <code>wheelConsumedThisFrame</code> flag prevents nested scroll containers
+from both scrolling. The <code>topmostConsumer</code> (the innermost scroll
+container) gets the event first (it's deeper in the tree, updated
+first), consumes it, and outer containers skip.</p>
+<h3 id="66-statetickinertiactxdt-and-scrolling">6.6 <code>state.tickInertia(ctx.dt)</code> and <code>scrolling</code></h3>
+<pre><code class="language-cpp">state.tickInertia(ctx.dt);
+
+scrolling = node.hasPointerCapture() ||
+            std::abs(state.velocity.x) &gt; ScrollState::VELOCITY_MIN ||
+            std::abs(state.velocity.y) &gt; ScrollState::VELOCITY_MIN;
+</code></pre>
+<p><code>tickInertia</code> applies velocity to offset and decays it. Then <code>scrolling</code>
+is set to true if:</p>
+<ul>
+<li>The pointer is captured (drag in progress), OR</li>
+<li>There's still significant velocity (inertia in progress).</li>
+</ul>
+<p>This flag is propagated up to <code>Layout::update</code> via
+<code>ancestorScrolling</code>, and used by <code>updateFlags</code> to freeze hover (see §8).</p>
+<hr />
+<h2 id="7-scrollbar-geometry">7. Scrollbar geometry</h2>
+<p>The scrollbar thumb geometry is computed on demand by
+<code>verticalThumb(node)</code> and <code>horizontalThumb(node)</code>. Both are const
+methods that return a <code>Rect</code>.</p>
+<h3 id="71-verticalthumb">7.1 <code>verticalThumb</code></h3>
+<pre><code class="language-cpp">Rect ScrollController::verticalThumb(const Layout&amp; node) const {
+    const auto&amp; st = node.style_.currentStyle;
+    const Rect&amp; rect = node.rect;
+
+    const float TRACK_W = 6.0f;
+    const float MARGIN  = 4.0f;
+
+    const bool wantH = isBarVisible(st.overflowX, state.maxScroll.x);
+    const float reservedH = wantH ? (TRACK_W + MARGIN) : 0.0f;
+
+    float trackH = std::max(0.0f, rect.height - MARGIN * 2.0f - reservedH);
+    float contentH = contentSize.y;
+    float viewportRatio = (contentH &gt; 0.0f) ? (rect.height / contentH) : 1.0f;
+    float thumbH = std::min(trackH, std::max(30.0f, trackH * viewportRatio));
+    float scrollRatio = (state.maxScroll.y &gt; 0.0f)
+        ? (state.offset.y / state.maxScroll.y)
+        : 0.0f;
+    float available = std::max(0.0f, trackH - thumbH);
+    float thumbY = rect.y + MARGIN + std::clamp(scrollRatio * available, 0.0f, available);
+
+    return {rect.x + rect.width - TRACK_W - MARGIN, thumbY, TRACK_W, thumbH};
+}
+</code></pre>
+<p>Steps:</p>
+<ol>
+<li>Check if the horizontal bar is visible. If so, the vertical track
+   shrinks by <code>TRACK_W + MARGIN</code> to make room for the horizontal bar's
+   thickness at the bottom.</li>
+<li><code>trackH</code> — the vertical space available for the track, after margins
+   and the horizontal bar.</li>
+<li><code>viewportRatio = rect.height / contentH</code> — the fraction of content
+   visible at once. If content is 3× the container, this is <code>1/3</code>.</li>
+<li><code>thumbH</code> — the thumb height, <code>trackH * viewportRatio</code>, clamped to
+   minimum 30px and maximum <code>trackH</code>.</li>
+<li><code>scrollRatio = offset.y / maxScroll.y</code> — the scroll position, 0 at
+   top, 1 at bottom.</li>
+<li><code>available = trackH - thumbH</code> — the free space the thumb can move
+   through.</li>
+<li><code>thumbY</code> — the thumb's top edge, offset by <code>scrollRatio * available</code>.</li>
+</ol>
+<p>The result is a rect on the right side of the container
+(<code>rect.x + rect.width - TRACK_W - MARGIN</code>), with the computed height
+and position.</p>
+<h3 id="72-horizontalthumb">7.2 <code>horizontalThumb</code></h3>
+<p>Symmetric, with <code>trackW</code>, <code>reservedV</code>, and returning a rect on the
+bottom of the container.</p>
+<h3 id="73-isbarvisible">7.3 <code>isBarVisible</code></h3>
+<pre><code class="language-cpp">static bool isBarVisible(Overflow o, float maxScroll) {
+    if (o == Overflow::Scroll) return true;
+    if (o == Overflow::Auto)   return maxScroll &gt; 0.0f;
+    return false;
+}
+</code></pre>
+<ul>
+<li><code>Scroll</code> → always visible.</li>
+<li><code>Auto</code> → visible only when <code>maxScroll &gt; 0</code>.</li>
+<li><code>Hidden</code> / <code>Visible</code> → never visible.</li>
+</ul>
+<p>This is the CSS behavior.</p>
+<h3 id="74-constant-dimensions">7.4 Constant dimensions</h3>
+<p>The track width (<code>TRACK_W = 6.0f</code>) and margin (<code>MARGIN = 4.0f</code>) are
+hardcoded. There's no <code>.zstyle</code> property for them — a future extension
+would make them configurable.</p>
+<hr />
+<h2 id="8-hover-freeze">8. Hover freeze</h2>
+<p>The most subtle scroll behavior is the "hover freeze": during a scroll,
+hover state is not recomputed for any node.</p>
+<h3 id="81-the-propagation">8.1 The propagation</h3>
+<p>In <code>Layout::update</code>:</p>
+<pre><code class="language-cpp">const bool scrolling = ancestorScrolling || scroll_.scrolling;
+input_.updateFlags(*this, selfBlocked, scrolling);
+</code></pre>
+<p>The <code>scrolling</code> flag is computed as "this node is scrolling OR an
+ancestor is scrolling". It propagates down through the tree.</p>
+<p><code>updateFlags</code>:</p>
+<pre><code class="language-cpp">if (scrolling) {
+    bool focusNow = ctx.hasFocus(&amp;node);
+    if (focusNow != node.isFocused) {
+        node.isFocused = focusNow;
+        node.pendingTransition = true;
+    }
+    return;
+}
+</code></pre>
+<p>During scroll, only <code>isFocused</code> is updated. <code>isHovered</code> and <code>isPressed</code>
+are not touched — they keep their previous values.</p>
+<h3 id="82-why">8.2 Why</h3>
+<p>Without this, scrolling a list of 100 buttons would fire <code>onHoverEnter</code>
+and <code>onHoverExit</code> on each button as it passed under the stationary
+cursor. For a 60fps scroll, that's 100 events per second across the
+list. Catastrophic for any hover-driven behavior (tooltips, animations).</p>
+<p>With the freeze, the hover state is "frozen" until the scroll ends.
+Then the normal update runs, and the correct node (the one under the
+cursor after the scroll stops) gets <code>onHoverEnter</code>.</p>
+<h3 id="83-which-scroll-counts">8.3 Which scroll counts</h3>
+<p><code>scrolling</code> is true if:</p>
+<ul>
+<li>The node has pointer capture (a drag on its scrollbar).</li>
+<li>The node's velocity is above <code>VELOCITY_MIN</code> (inertia in progress).</li>
+</ul>
+<p>A node with a scroll but no active drag or inertia (e.g. just sitting
+at a scroll position) doesn't set <code>scrolling</code>. So the hover freeze only
+applies during active scrolling.</p>
+<h3 id="84-the-freeze-is-global-not-per-subtree">8.4 The freeze is global, not per-subtree</h3>
+<p>Because <code>scrolling</code> propagates down, <strong>all descendants</strong> of a scrolling
+container are frozen. A node that's a sibling of the scroll container
+is not frozen — the <code>ancestorScrolling</code> flag comes from the container's
+own update, not from the root.</p>
+<p>So a page with a scrollable sidebar: the sidebar and its content are
+frozen during scroll, but the main content area is not. Hover works
+normally in the main area.</p>
+<h3 id="85-focus-is-still-updated">8.5 Focus is still updated</h3>
+<p>Focus changes (from <code>requestFocus</code> during <code>updateTree</code>) are still
+applied during the freeze. So if a node is focused and then a scroll
+starts, the node's <code>:focus</code> styling is unaffected. This is correct —
+focus isn't spatial.</p>
+<hr />
+<h2 id="9-scrollbar-rendering">9. Scrollbar rendering</h2>
+<p><code>ScrollController::drawScrollbar(node, parentOpacity)</code> is called from
+<code>Layout::draw</code> after content and children:</p>
+<pre><code class="language-cpp">scroll_.drawScrollbar(*this, parentOpacity);
+</code></pre>
+<p>The implementation:</p>
+<pre><code class="language-cpp">void ScrollController::drawScrollbar(const Layout&amp; node, float parentOpacity) const {
+    const auto&amp; st = node.style_.currentStyle;
+    const Rect&amp; rect = node.rect;
+
+    const bool wantV = isBarVisible(st.overflowY, state.maxScroll.y);
+    const bool wantH = isBarVisible(st.overflowX, state.maxScroll.x);
+    if (!wantV &amp;&amp; !wantH) return;
+
+    auto r = UIContext::get().renderer;
+    if (!r) return;
+
+    float op = st.opacity * parentOpacity;
+    if (op &lt;= 0.001f) return;
+
+    const float MARGIN  = 4.0f;
+    const float TRACK_W = 6.0f;
+
+    r-&gt;pushClip(rect);
+
+    const float reservedV = wantV ? (TRACK_W + MARGIN) : 0.0f;
+    const float reservedH = wantH ? (TRACK_W + MARGIN) : 0.0f;
+
+    if (wantV) {
+        Rect track = {
+            rect.x + rect.width - TRACK_W - MARGIN,
+            rect.y + MARGIN,
+            TRACK_W,
+            rect.height - MARGIN * 2 - reservedH
+        };
+        r-&gt;fillRoundedRect(track, TRACK_W * 0.5f,
+                            Color{40, 40, 40, 180}.withAlpha(op));
+
+        Rect thumb = verticalThumb(node);
+        Color thumbColor = node.hasPointerCapture()
+            ? Color{180, 180, 180, 255}
+            : Color{130, 130, 130, 220};
+        r-&gt;fillRoundedRect(thumb, TRACK_W * 0.5f, thumbColor.withAlpha(op));
+    }
+
+    if (wantH) {
+        // ... symmetric for horizontal ...
+    }
+
+    r-&gt;popClip();
+}
+</code></pre>
+<p>The scrollbar is drawn:</p>
+<ol>
+<li>Only if at least one bar is visible.</li>
+<li>With clipping to the container's rect (so the bar doesn't spill).</li>
+<li>With a semi-transparent track color.</li>
+<li>With a lighter thumb color when the container has capture (i.e.
+   during a drag).</li>
+</ol>
+<p>The thumb rect is reused from <code>verticalThumb</code> / <code>horizontalThumb</code>, so
+the drawing and the input hit-test always agree on where the thumb is.</p>
+<h3 id="91-opacity">9.1 Opacity</h3>
+<p>The scrollbar's opacity is <code>st.opacity * parentOpacity</code>. Note the
+<code>st.opacity</code> — the container's own opacity. So a faded container has a
+faded scrollbar. If the container has <code>opacity: 0</code>, the scrollbar is
+not drawn (early-out at <code>op &lt;= 0.001f</code>).</p>
+<p>The scrollbar color doesn't respond to the container's <code>color</code>
+property — it's hardcoded (dark gray track, lighter gray thumb). A
+future extension could make it stylable.</p>
+<h3 id="92-clip">9.2 Clip</h3>
+<p>The scrollbar is drawn <strong>inside</strong> a clip to <code>rect</code>. This prevents the
+bar from extending beyond the container (e.g. if the track is longer
+than the container due to some edge case). The clip is pushed and
+popped around the scrollbar drawing.</p>
+<h3 id="93-order-relative-to-children">9.3 Order relative to children</h3>
+<p>The scrollbar is drawn <strong>after</strong> children. So it's on top of everything
+the container draws, including any children. This is usually what you
+want (the bar shouldn't be hidden by the content).</p>
+<hr />
+<h2 id="10-scrollview-widget">10. <code>ScrollView</code> widget</h2>
+<p><code>ScrollView</code> is a thin wrapper:</p>
+<pre><code class="language-cpp">class ScrollView : public TLayout&lt;ScrollView&gt; {
+public:
+    explicit ScrollView(LayoutType t = LayoutType::Vertical)
+        : TLayout&lt;ScrollView&gt;(t)
+    {
+        setInteractive(true);
+        setBlocksRaycast(true);
+        setStyleTag(&quot;ScrollView&quot;);
+        getInlineDefaults().overflowX = Overflow::Scroll;
+        getInlineDefaults().overflowY = Overflow::Scroll;
+    }
+};
+</code></pre>
+<p>It sets:</p>
+<ul>
+<li><code>interactive: true</code> — so the wheel can be received.</li>
+<li><code>blocksRaycast: true</code> — so clicks don't pass through to nodes behind.</li>
+<li><code>styleTag: "ScrollView"</code> — for <code>.zstyle</code> targeting.</li>
+<li><code>overflow-x</code> and <code>overflow-y</code> to <code>Scroll</code> <strong>in inline defaults</strong>.</li>
+</ul>
+<p>The inline defaults mean a <code>.zstyle</code> rule can override them (e.g.
+<code>ScrollView { overflow-y: auto; overflow-x: hidden; }</code>). The
+<code>inlineDefaults</code> level is below CSS rules in the cascade, so any
+stylesheet rule wins.</p>
+<p>The default layout type is <code>Vertical</code>. Pass <code>Horizontal</code> explicitly for
+horizontal scrolling.</p>
+<h3 id="101-why-not-stack">10.1 Why not <code>Stack</code>?</h3>
+<p>A <code>ScrollView</code> with <code>Stack</code> would be excluded from the scroll arrange
+path (see §1). So a <code>Stack</code> <code>ScrollView</code> would clip but not scroll.
+The default <code>Vertical</code> is deliberate — it's the common case.</p>
+<p>If you want a <code>Stack</code> with clipping only, use <code>Panel</code> with
+<code>overflow: hidden</code>.</p>
+<hr />
+<h2 id="11-common-tasks">11. Common tasks</h2>
+<h3 id="111-adding-a-new-scroll-input-source">11.1 Adding a new scroll input source</h3>
+<p>For example, a gamepad joystick that scrolls. In the backend's
+<code>pollInputEvents</code> or a custom extension to <code>IPlatform</code>, add the axis
+value to <code>PointerState</code>. Then in <code>ScrollController::tickInput</code>, treat
+it like a wheel event:</p>
+<pre><code class="language-cpp">if (pointer.scrollAxis != 0.0f) {
+    state.velocity.y -= pointer.scrollAxis * AXIS_IMPULSE;
+    ctx.wheelConsumedThisFrame = true;
+}
+</code></pre>
+<h3 id="112-smooth-scroll-to-a-target">11.2 Smooth scroll to a target</h3>
+<p>The framework doesn't have a built-in "smooth scroll to". You can
+implement it in user code by setting velocity or offset over time:</p>
+<pre><code class="language-cpp">// In a custom widget's onUpdate:
+float target = 0.0f;   // top
+float current = getScrollY();
+float delta = target - current;
+if (std::abs(delta) &lt; 0.5f) {
+    scrollToY(target);
+} else {
+    scrollToY(current + delta * 0.15f);   // exponential ease
+}
+</code></pre>
+<p>Or use the velocity mechanism directly for a spring-like feel.</p>
+<h3 id="113-custom-scrollbar-rendering">11.3 Custom scrollbar rendering</h3>
+<p>Override <code>drawScrollbar</code> if you need a custom look. It's a const
+method, and the fields it reads are public:</p>
+<pre><code class="language-cpp">struct CustomScrollView : public ScrollView {
+    void drawScrollbar(const Layout&amp; node, float op) const override {
+        // ... custom drawing ...
+    }
+};
+</code></pre>
+<p>Wait, <code>drawScrollbar</code> isn't virtual — it's a concrete method of
+<code>ScrollController</code>, not <code>Layout</code>. To customize, you'd need to change
+<code>ScrollController</code> or add a hook.</p>
+<p>A cleaner approach: don't use the built-in scrollbar. Set <code>overflow:
+hidden</code> to disable it (and disable scroll input), and implement your
+own bar as a separate widget that reads <code>getScrollY()</code> / <code>getMaxScrollY()</code>
+and calls <code>scrollToY()</code>.</p>
+<h3 id="114-custom-inertia">11.4 Custom inertia</h3>
+<p>The inertia parameters (<code>WHEEL_IMPULSE</code>, <code>DECAY</code>, <code>VELOCITY_MIN</code>) are
+<code>static constexpr</code> in <code>ScrollState</code>. To change them, you'd need to
+modify the header or shadow them with a subclass of <code>ScrollState</code>
+(which isn't possible for <code>Layout</code>'s member without changing the type).</p>
+<p>In practice, the parameters are tuned for a "one wheel tick = a small
+scroll with medium deceleration" feel. If you need very different
+behavior, extend the API.</p>
+<hr />
+<h2 id="12-pitfalls">12. Pitfalls</h2>
+<p><strong><code>contentSize</code> is only meaningful for scroll containers.</strong>
+For a non-scroll node, <code>contentSize</code> is set in <code>measure</code> but never used.
+If you read it from a non-scroll node, it's the intrinsic size of the
+children — usually the same as <code>measuredSize</code> minus padding.</p>
+<p><strong><code>maxScroll</code> is clamped to zero.</strong>
+If the content fits the container, <code>maxScroll = 0</code> and no scroll input
+has any effect. <code>canScrollY</code> / <code>canScrollX</code> correctly return false, so
+the wheel / drag / track click are all no-ops.</p>
+<p><strong>The scrollbar is always drawn on top.</strong>
+It's drawn after children in <code>draw</code>, so it's on top of everything the
+container renders. If you have a child that draws over the right edge
+of the container, the scrollbar is on top of it. This is intentional.</p>
+<p><strong>The scrollbar is not stylable.</strong>
+Its width (6px), margin (4px), and colors are hardcoded. A future
+extension could expose them via <code>.zstyle</code> (<code>::scrollbar-track</code> /
+<code>::scrollbar-thumb</code> parts), but it's not implemented.</p>
+<p><strong>The hover freeze is not per-axis.</strong>
+If either axis is scrolling, both are frozen. A node that's scrolling
+vertically but not horizontally still has both <code>isHovered</code> and
+<code>isPressed</code> frozen. In practice, scrolling is usually mono-axis, so
+this doesn't matter.</p>
+<p><strong>Absolute children scroll with the content.</strong>
+<code>translateSubtree</code> doesn't skip absolute children — they're shifted
+along with the flow children. So an absolute child of a scroll
+container moves when the container scrolls. This is usually correct
+(an absolute badge inside a card should scroll with the card), but if
+you want a fixed-position child inside a scroll container, this won't
+work.</p>
+<p>Workaround: put the fixed child as a <strong>sibling</strong> of the scroll
+container, positioned absolutely over it. Or use a portal (though
+portals have their own issues).</p>
+<p><strong>Portals inside scroll containers.</strong>
+<code>translateSubtree</code> doesn't skip portals either (the check is commented
+out). A portal's <code>onUpdate</code> recomputes its <code>rect</code> each frame, which
+overrides the translation on the portal itself. But the portal's
+<strong>children</strong> are translated, so they can be offset unexpectedly.</p>
+<p>The fix: use portals <strong>outside</strong> the scroll container whenever possible.
+If you need a portal inside a scroll container (e.g. a dropdown inside
+a scrolled list), test carefully. The <code>Dropdown</code> widget does this and
+works because its list portal is repopulated each frame based on the
+trigger's position.</p>
+<p><strong>The <code>wheelConsumedThisFrame</code> flag is per-frame.</strong>
+A wheel event consumed by one scroll container is consumed for <strong>all</strong>
+containers in the same frame. A wheel event on a nested scroll
+container is only seen by the innermost one. This is intentional
+(matches most browsers' behavior), but if you want the outer container
+to also react, you'd need to disable consumption.</p>
+<p><strong><code>scrollTo</code> doesn't reset velocity.</strong>
+If you call <code>scrollTo(x, y)</code> during inertia, the velocity is still
+non-zero and will continue to move the offset on the next frame. To
+stop inertia, set <code>velocity = {0, 0}</code>:</p>
+<pre><code class="language-cpp">auto&amp; scroll = getScrollState();   // not a public API
+</code></pre>
+<p>Actually, there's no public API to access the <code>ScrollState</code>. The
+<code>scrollTo</code> methods only set <code>offset</code>. To stop inertia, you'd need to
+add a method or extend the API.</p>
+<p>In practice, <code>scrollTo</code> is used for programmatic jumps, and inertia is
+usually not active when that happens. But it's a footgun.</p>
+<p><strong><code>scrollToBottom</code> uses <code>maxScroll</code> from the last arrange.</strong>
+If the content just changed (e.g. new items added), <code>maxScroll</code> might
+be stale. The typical pattern is:</p>
+<pre><code class="language-cpp">addChildren(...);         // modifies tree, marks dirty
+// next runFrame recomputes maxScroll
+// then scrollToBottom works correctly
+</code></pre>
+<p>Calling <code>scrollToBottom</code> in the same frame as adding children might not
+scroll all the way. In practice, this is rare.</p>
+<p><strong>The scrollbar thumb size has a minimum.</strong>
+<code>thumbH = std::min(trackH, std::max(30.0f, trackH * viewportRatio))</code> —
+the minimum is 30px. For a very long content (e.g. 10000 items in a
+300px container), the thumb would be <code>300 * (300 / 10000) = 9px</code>
+without the minimum, but it's clamped to 30px. This makes the thumb
+usable but breaks the "thumb is a proportional representation"
+intuition for very long content.</p>
+<p><strong><code>applyOffsetDelta</code> translates by the delta, not the absolute offset.</strong>
+This means the translation is cumulative. If some code resets the
+subtree (e.g. by calling <code>arrangeInto</code> without resetting the applied
+offset), the next <code>applyOffsetDelta</code> would double-count. The arrange
+code handles this by resetting <code>appliedOffset = {0, 0}</code> after a full
+arrange.</p>
+<p><strong>Scroll input requires <code>isInteractive</code>.</strong>
+The wheel check has <code>node.isInteractive &amp;&amp;</code>. A non-interactive scroll
+container (e.g. one with <code>setInteractive(false)</code>) won't respond to the
+wheel. If you want a non-interactive container that scrolls, you'd
+need to either make it interactive (and accept the click interception)
+or add the input handling elsewhere.</p>
+<p>Actually, <code>ScrollView::ScrollView</code> sets <code>setInteractive(true)</code>. So the
+default is interactive. But if you build a scrollable node without
+using <code>ScrollView</code> (just a <code>Layout</code> with <code>overflow: scroll</code>), you need
+to set interactive manually.</p>
+<p><strong><code>Stack</code> with <code>overflow: scroll</code> doesn't scroll.</strong>
+The <code>arrange</code> code skips scroll handling for <code>Stack</code>. The <code>tickInput</code>
+code also skips it (<code>node.type == LayoutType::Stack</code>). So a <code>Stack</code>
+with <code>overflow: scroll</code> clips but doesn't scroll. Use <code>Vertical</code> or
+<code>Horizontal</code> for scrollable content.</p>
+<p><strong>The <code>anchor</code> for <code>scrollToTop</code> etc.</strong>
+<code>scrollToTop()</code> calls <code>scrollToY(0.0f)</code>. It assumes the "top" is
+offset 0. This is correct for a vertical scroll, but the semantic
+("show the first item") depends on the content layout. For a <code>Stack</code>
+container (which is excluded from scrolling), this doesn't work.</p>
+<p><strong>The scrollbar is not drawn during the hover freeze.</strong>
+Actually, it is — the freeze only affects hover state, not rendering.
+The scrollbar is drawn every frame the container is visible and has a
+visible bar. During a drag, the thumb color changes (lighter) but the
+drawing continues.</p>
+<p><strong>Focus and scroll interact.</strong>
+<code>requestFocus</code> on a node inside a scroll container doesn't
+automatically scroll it into view. If you want focus to scroll the
+container, you need to call <code>scrollToY</code> manually in your focus
+handling. There's no <code>scrollIntoView</code> API.</p>
+<p><strong>The scroll controller state is per-node, not shared.</strong>
+Nested scroll containers have independent state. Scrolling the inner
+one doesn't affect the outer. This is the expected behavior, but it
+means there's no "synchronized scroll" or "linked scroll" feature.</p>
+<p><strong><code>ScrollState::reset</code> clears maxScroll too.</strong>
+This is important: after a reset, <code>maxScroll = {0, 0}</code>, so no scrolling
+is possible until the next <code>updateMaxScroll</code>. This happens in the same
+<code>arrange</code> call that follows, so the reset is transient. But if you
+read <code>maxScroll</code> between the reset and the next <code>updateMaxScroll</code>,
+it's zero.</p>
+<p><strong>The scrollbar's "capture" state is used to lighten the thumb.</strong>
+<code>node.hasPointerCapture()</code> returns true during a scrollbar drag. The
+thumb color is <code>{180, 180, 180, 255}</code> during capture, else
+<code>{130, 130, 130, 220}</code>. This gives the visual feedback that the user is
+dragging. But capture can also be held by other interactions (a slider
+drag inside the container), so the scrollbar might lighten unexpectedly.</p>
+<p><strong><code>WHEEL_IMPULSE</code> and the initial velocity.</strong>
+A single wheel tick produces <code>WHEEL_IMPULSE = 400 px/s</code> of velocity.
+With exponential decay <code>0.9^60 ≈ 0.0018</code> per second, the total distance
+traveled is:</p>
+<pre><code>∫ v(t) dt = v0 * ∫ 0.9^(60t) dt = v0 / (60 * ln(1/0.9)) ≈ v0 / 6.3
+</code></pre>
+<p>For <code>v0 = 400</code>, total distance ≈ 63px. So one wheel tick scrolls about
+63px, which is a reasonable "row or two" per tick.</p>
+<p>If you want more aggressive scrolling, increase <code>WHEEL_IMPULSE</code>. The
+<code>DECAY</code> controls the "feel" — lower decay (faster decay) means a
+shorter, more snappy scroll; higher decay means a longer, smoother
+scroll.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

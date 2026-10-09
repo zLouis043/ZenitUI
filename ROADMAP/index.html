@@ -1,0 +1,2980 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>ZenitUI — Roadmap - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zenitui-roadmap" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZenitUI — Roadmap
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Bug fixes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Bug fixes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-onhoverexit-fires-on-hover-pressed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 onHoverExit fires on Hover → Pressed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-resetifoverflowchanged-uses-a-stale-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 resetIfOverflowChanged uses a stale snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-translatesubtree-translates-portals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 translateSubtree translates portals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-vec3-vec4-filter-params-scale-to-0-255" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Vec3 / Vec4 filter params scale to [0, 255]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-hittest-ignores-the-current-clip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 hitTest ignores the current clip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-notifyfocusancestors-not-called-on-click-focus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 notifyFocusAncestors not called on click-focus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-dropdown-hardcoda-height-vh30f-in-inlinebase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Dropdown hardcoda height: VH(3.0f) in inlineBase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-imperative-animations-dont-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 Imperative animations don't progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-missing-core-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Missing core API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Missing core API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-slidersetvaluefloat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Slider::setValue(float)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-layoutremoveclass-clearstyleclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Layout::removeClass / clearStyleClasses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-textinput-cursor-positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 TextInput cursor positioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-layoutscrollintoview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Layout::scrollIntoView
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-button-text-accessor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Button text accessor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-textgettext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Text::getText()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-layoutremoveallchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Layout::removeAllChildren()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-compound-selectors-in-zstyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Compound selectors in ZStyle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-test-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Test coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Test coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-scroll-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Scroll system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-textinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 TextInput
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-text-wrapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Text wrapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-dropdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Dropdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-state-transitions-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 State transitions end-to-end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-css-animations-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 CSS animations end-to-end
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-focus-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Focus scopes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-portal-hit-test-delay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Portal hit-test delay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-media-queries-on-viewport-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Media queries on viewport change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-value-without-heap-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Value without heap allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-cache-renderstyle-in-draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Cache renderStyle in draw
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-rule-indexing-by-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Rule indexing by tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-cache-animation-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Cache animation evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-avoid-double-resolvefor-per-frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Avoid double resolveFor per frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-vector-resize-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Vector resize audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-feature-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Feature completion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — Feature completion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-text-input-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Text input (advanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-font-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Font handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-calc-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 calc() extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-filter-and-effect-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Filter and effect chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-nested-render-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Nested render targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-rotation-in-drawlayer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Rotation in drawLayer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-popup-dropdown-openclose-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Popup / Dropdown open/close callbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-layouthasclass-layouthasid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Layout::hasClass, Layout::hasId
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-vector-accessor-for-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Vector accessor for callbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#510-live-reload-for-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10 Live reload for development
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-internationalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Internationalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Internationalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-unicode-aware-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Unicode-aware text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-rtl-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 RTL layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-ime-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 IME support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Tooling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 7 — Tooling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Inspector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-formatter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Formatter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-language-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Language server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-8-beyond-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 8 — Beyond 1.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-issues-not-yet-prioritized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known issues not yet prioritized
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-contribute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to contribute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zenitui-roadmap">ZenitUI — Roadmap</h1>
+<p>This document tracks the path from the current <strong>alpha</strong> state toward a
+<strong>beta</strong> release and, eventually, <strong>1.0</strong>. It's both a plan and a
+snapshot of the current state: each section lists what's done, what's
+pending, and what's blocking.</p>
+<p>It's derived from a full code + documentation review. The <strong>blocking</strong>
+items (bugs, missing API, critical test gaps) are prioritized. The
+<strong>nice-to-have</strong> items are collected at the end.</p>
+<p>Last updated: review pass after the initial documentation.</p>
+<hr />
+<h2 id="status">Status</h2>
+<p><strong>Current:</strong> 🧪 alpha — API still evolving, breaking changes expected.</p>
+<p><strong>Next milestone:</strong> 🅱️ beta — API frozen for the core, no known critical
+bugs, test coverage on every widget, documentation complete.</p>
+<p><strong>Target after that:</strong> 🚀 1.0 — feature-complete for a typical game /
+tool use case, stable API, tooling available.</p>
+<hr />
+<h2 id="phase-1-bug-fixes">Phase 1 — Bug fixes</h2>
+<p>Before anything else. These are known bugs or behaviors that don't
+match the documented intent. They should be fixed before adding new
+features.</p>
+<h3 id="11-onhoverexit-fires-on-hover-pressed">1.1 <code>onHoverExit</code> fires on <code>Hover → Pressed</code></h3>
+<p><strong>Severity:</strong> high — affects every widget that uses hover callbacks
+(tooltips, highlights).</p>
+<p><strong>Location:</strong> <code>src/Input.cpp</code>, <code>InputController::fireCallbacks</code>.</p>
+<p><strong>Problem:</strong> when a node is hovered and then pressed, the state
+transition is <code>Hover → Pressed</code>, and the current logic fires
+<code>onHoverExit</code> because <code>Pressed != Hover</code>.</p>
+<p><strong>Expected:</strong> <code>onHoverExit</code> should only fire when the pointer actually
+leaves the node. <code>Pressed</code> is a geometric subset of <code>Hover</code>.</p>
+<p><strong>Fix:</strong> treat both <code>Hover</code> and <code>Pressed</code> as "hovered" in the callback
+condition:</p>
+<pre><code class="language-cpp">bool wasHovered = (prevState == UIState::Hover || prevState == UIState::Pressed);
+bool isHovered  = (nextState  == UIState::Hover || nextState  == UIState::Pressed);
+if (isHovered &amp;&amp; !wasHovered &amp;&amp; node.onHoverEnter) node.onHoverEnter();
+else if (!isHovered &amp;&amp; wasHovered &amp;&amp; node.onHoverExit) node.onHoverExit();
+</code></pre>
+<p><strong>Test:</strong> add a test in <code>test_interaction.cpp</code> that verifies
+<code>onHoverEnter</code> fires once and <code>onHoverExit</code> doesn't fire on press.</p>
+<ul>
+<li>[x] Fix the condition in <code>InputController::fireCallbacks</code></li>
+<li>[x] Add regression test</li>
+<li>[x] Update documentation (remove the "known issue" note in
+      <code>internals/07-input-system.md</code>)</li>
+</ul>
+<hr />
+<h3 id="12-resetifoverflowchanged-uses-a-stale-snapshot">1.2 <code>resetIfOverflowChanged</code> uses a stale snapshot</h3>
+<p><strong>Severity:</strong> medium — causes spurious scroll resets in some sequences.</p>
+<p><strong>Location:</strong> <code>src/ScrollController.cpp</code>,
+<code>ScrollController::resetIfOverflowChanged</code>; <code>src/StyleResolver.cpp</code>,
+<code>StyleResolver::propagateInheritance</code>.</p>
+<p><strong>Problem:</strong> <code>resetIfOverflowChanged</code> compares the current <code>overflow</code>
+against <code>lastInherited.overflowX/Y</code>. But <code>propagateInheritance</code> only
+updates <code>lastInherited</code> when <em>some other</em> property changed — overflow
+is not in the <code>changed</code> check. So the snapshot is updated
+inconsistently, and <code>resetIfOverflowChanged</code> can see spurious changes.</p>
+<p><strong>Fix:</strong> either (a) add <code>overflowX</code> / <code>overflowY</code> to the <code>changed</code>
+check in <code>propagateInheritance</code>, or (b) give the scroll controller its
+own overflow snapshot, updated after <code>resetIfOverflowChanged</code> runs.</p>
+<p>Option (b) is cleaner — it decouples the scroll system from the
+inheritance snapshot, which has a different purpose.</p>
+<p><strong>Test:</strong> add a test that changes <code>overflow</code> without changing anything
+else and verifies that <code>reset()</code> is called exactly once.</p>
+<ul>
+<li>[x] Move the overflow snapshot into <code>ScrollController</code></li>
+<li>[x] Update <code>resetIfOverflowChanged</code> to use the local snapshot</li>
+<li>[x] Add regression test in <code>test_interaction.cpp</code></li>
+<li>[x] Remove the "known issue" note in <code>internals/08-scroll-system.md</code></li>
+</ul>
+<hr />
+<h3 id="13-translatesubtree-translates-portals">1.3 <code>translateSubtree</code> translates portals</h3>
+<p><strong>Severity:</strong> medium — affects portals inside scroll containers.</p>
+<p><strong>Location:</strong> <code>src/Measure.cpp</code>, <code>Layout::translateSubtree</code>.</p>
+<p><strong>Problem:</strong> the <code>isPortal()</code> check is commented out. Portal nodes and
+their descendants get translated by the scroll offset. The portal's own
+<code>rect</code> is usually overwritten in its <code>onUpdate</code>, but its <strong>children</strong>
+are translated, which can move them unexpectedly.</p>
+<p><strong>Expected:</strong> portals should be opaque to <code>translateSubtree</code> — their
+position is independent of the scroll container.</p>
+<p><strong>Fix:</strong> re-enable the check:</p>
+<pre><code class="language-cpp">void Layout::translateSubtree(float dx, float dy) {
+    for (auto&amp; c : children) {
+        if (c-&gt;isPortal())
+            continue;
+        c-&gt;rect.x += dx;
+        c-&gt;rect.y += dy;
+        c-&gt;translateSubtree(dx, dy);
+    }
+}
+</code></pre>
+<p><strong>Test:</strong> create a <code>ScrollView</code> with a <code>Popup</code> child, scroll it, verify
+the popup's rect doesn't move.</p>
+<ul>
+<li>[x] Re-enable the <code>isPortal()</code> check</li>
+<li>[x] Add regression test</li>
+<li>[x] Verify <code>Dropdown</code> still works inside a <code>ScrollView</code></li>
+<li>[x] Update <code>internals/08-scroll-system.md</code></li>
+</ul>
+<hr />
+<h3 id="14-vec3-vec4-filter-params-scale-to-0-255">1.4 <code>Vec3</code> / <code>Vec4</code> filter params scale to <code>[0, 255]</code></h3>
+<p><strong>Severity:</strong> medium — affects every filter that uses those types.</p>
+<p><strong>Location:</strong> <code>src/FilterRegistry.cpp</code>, <code>setParams</code>.</p>
+<p><strong>Problem:</strong> <code>Vec3</code> and <code>Vec4</code> interpret their float arguments as
+<code>[0, 1]</code>, clamp, and multiply by 255. The shader receives a <code>vec4</code> in
+<code>[0, 255]</code>. This is not what a shader author expects for a <code>vec3</code> or
+<code>vec4</code> uniform.</p>
+<p><strong>Fix (preferred):</strong> make <code>Vec3</code> / <code>Vec4</code> pass their values as-is (in
+<code>[0, 1]</code>) via a new <code>setEffectVec3</code> / updated <code>setEffectVec4</code>. Keep
+<code>Color</code> as the <code>uint8_t</code>-based type.</p>
+<p><strong>Fix (alternative):</strong> document the current behavior explicitly and
+require shaders to normalize. Worse, but cheaper.</p>
+<p><strong>Test:</strong> add a filter test that sets a <code>Vec4</code> param and verifies the
+uniform value. Requires a way to read back uniforms from the mock
+renderer.</p>
+<ul>
+<li>[x] Decide between preferred and alternative</li>
+<li>[x] Implement</li>
+<li>[x] Add test</li>
+<li>[x] Update <code>user/09-effects.md</code> and <code>api/FilterRegistry.md</code></li>
+</ul>
+<hr />
+<h3 id="15-hittest-ignores-the-current-clip">1.5 <code>hitTest</code> ignores the current clip</h3>
+<p><strong>Severity:</strong> low-medium — causes clicks on invisible parts of clipped
+nodes.</p>
+<p><strong>Location:</strong> <code>src/Measure.cpp</code>, <code>Layout::hitTest</code>.</p>
+<p><strong>Problem:</strong> the final <code>rect.contains(p)</code> check doesn't account for the
+active clip rect. A node clipped by an ancestor's <code>overflow: hidden</code> is
+still hit-testable on its full rect.</p>
+<p><strong>Fix:</strong> intersect <code>rect</code> with <code>renderer-&gt;getClipRect()</code> before
+<code>contains(p)</code>. The clip is in screen coordinates, so this requires
+careful transform handling.</p>
+<p><strong>Test:</strong> create a clipped node, hit-test outside the clip but inside
+the rect, verify no hit.</p>
+<ul>
+<li>[x] Implement clip-aware hit-testing</li>
+<li>[x] Add regression test</li>
+<li>[x] Consider performance (a <code>getClipRect()</code> call per node per
+      hit-test)</li>
+</ul>
+<hr />
+<h3 id="16-notifyfocusancestors-not-called-on-click-focus">1.6 <code>notifyFocusAncestors</code> not called on click-focus</h3>
+<p><strong>Severity:</strong> low — asymmetry between Tab and click focus.</p>
+<p><strong>Location:</strong> <code>src/Layout.cpp</code>, <code>Layout::updateTree</code>.</p>
+<p><strong>Problem:</strong> when focus is granted via click, <code>notifyFocusAncestors</code> is
+not called. So a container's <code>onDescendantFocused</code> doesn't fire on
+click, only on Tab.</p>
+<p><strong>Fix:</strong> call <code>notifyFocusAncestors</code> after the <code>requestFocus</code> in the
+pointer-pressed branch.</p>
+<p><strong>Test:</strong> create a focusable node inside a container with
+<code>onDescendantFocused</code>, click it, verify the callback fired.</p>
+<ul>
+<li>[x] Add the call</li>
+<li>[x] Add test</li>
+<li>[x] Update <code>internals/07-input-system.md</code></li>
+</ul>
+<h3 id="17-dropdown-hardcoda-height-vh30f-in-inlinebase">1.7 <code>Dropdown</code> hardcoda <code>height: VH(3.0f)</code> in <code>inlineBase</code></h3>
+<p><strong>Severity:</strong> medium — affects every dropdown whose trigger needs a
+different height than the default.</p>
+<p><strong>Location:</strong> <code>src/ui/components/Dropdown.hpp</code>, <code>Dropdown::onBuild</code>.</p>
+<p><strong>Problem:</strong> the trigger button's <code>height</code> (and most of its visual
+properties) are set with <code>getInlineBase()</code>, which wins over any
+<code>.zstyle</code> rule. A user can't change the trigger's height via CSS, and
+if they add padding larger than the baked-in height, the text gets
+clipped to invisibility.</p>
+<p><strong>Expected:</strong> visual defaults should live in <code>inlineDefaults</code> (the
+"user agent" layer), so a <code>.zstyle</code> rule can override them. Only
+structural properties — like <code>width: 100%</code>, which is what makes the
+trigger fill its dropdown — should stay in <code>inlineBase</code>.</p>
+<p><strong>Fix:</strong> in <code>onBuild</code>, move <code>height</code>, <code>background</code>, <code>radius</code>,
+<code>borderColor</code>, <code>borderWidth</code>, <code>itemsH</code>, <code>itemsV</code> from <code>inlineBase</code> to
+<code>inlineDefaults</code> for both the trigger button and the list container.</p>
+<p><strong>Test:</strong> add a test that sets <code>.dropdown-trigger { height: 60px; }</code>
+in a stylesheet and verifies the trigger's actual rect height.</p>
+<ul>
+<li>[x] Move visual properties to <code>inlineDefaults</code></li>
+<li>[x] Add regression test</li>
+<li>[x] Update <code>user/03-widgets.md</code> (Dropdown section)</li>
+</ul>
+<h3 id="18-imperative-animations-dont-progress">1.8 Imperative animations don't progress</h3>
+<p><strong>Severity:</strong> high — breaks every imperative animation that writes
+into <code>inlineBase</code>.</p>
+<p><strong>Location:</strong> <code>src/ui/layout/StyleResolver.cpp</code>,
+<code>StyleResolver::resolvePendingTransition</code>.</p>
+<p><strong>Problem:</strong> an imperative animation writes its interpolated value
+into <code>inlineBase</code> on every frame. This sets <code>pendingTransition = true</code>,
+which triggers <code>resolvePendingTransition</code> on the next frame. When the
+new target differs from the previous one, the method resets
+<code>transitionTimer = 0.0f</code> and <code>transitionStartStyle = currentStyle</code>.
+Since the target changes every frame, the timer is reset every frame
+and <code>currentStyle</code> never reaches it. As a result, imperative
+animations produce no visible movement.</p>
+<p><strong>Expected:</strong> while an imperative animation is running, the CSS
+transition system must step aside. <code>currentStyle</code> should follow the
+target directly (snap), with no interpolation — the animation itself
+provides the interpolation, and the resolver must not layer a second
+transition on top.</p>
+<p><strong>Fix:</strong> added <code>AnimationPlayer::hasActiveImperative()</code>. In
+<code>resolvePendingTransition</code>, when this returns true, <code>currentStyle</code> is
+aligned immediately to the target instead of starting a transition.</p>
+<p><strong>Test:</strong> added <code>Anim_imperative.drives_current_style_without_transition</code>
+in <code>tests/test_animations.cpp</code>.</p>
+<ul>
+<li>[x] Add <code>hasActiveImperative</code> to <code>AnimationPlayer</code></li>
+<li>[x] Update <code>resolvePendingTransition</code></li>
+<li>[x] Add the regression test</li>
+<li>[x] Update <code>internals/03-style-system.md</code></li>
+<li>[x] Update <code>internals/04-animation-system.md</code></li>
+<li>[x] Update <code>user/07-animations.md</code></li>
+</ul>
+<hr />
+<h2 id="phase-2-missing-core-api">Phase 2 — Missing core API</h2>
+<p>Small, high-impact additions that unblock common use cases. No new
+features — just filling gaps.</p>
+<h3 id="21-slidersetvaluefloat">2.1 <code>Slider::setValue(float)</code></h3>
+<p>Add a public setter that clamps to <code>[0, 1]</code> and optionally fires
+<code>onValueChanged</code>. A <code>bool notify</code> parameter (default <code>true</code>) lets
+callers suppress the callback for programmatic updates.</p>
+<ul>
+<li>[ ] Add method to <code>Slider</code></li>
+<li>[ ] Add test</li>
+<li>[ ] Update <code>user/03-widgets.md</code> and <code>api/Widgets.md</code></li>
+</ul>
+<h3 id="22-layoutremoveclass-clearstyleclasses">2.2 <code>Layout::removeClass</code> / <code>clearStyleClasses</code></h3>
+<p>Without these, CSS animations declared under a class can't be stopped
+without rebuilding the node. Also blocks dynamic styling use cases.</p>
+<ul>
+<li>[ ] Add <code>removeClass(const std::string&amp;)</code></li>
+<li>[ ] Add <code>clearStyleClasses()</code></li>
+<li>[ ] Add <code>hasClass(const std::string&amp;) const</code></li>
+<li>[ ] Add tests</li>
+<li>[ ] Update <code>api/Layout.md</code></li>
+</ul>
+<h3 id="23-textinput-cursor-positioning">2.3 <code>TextInput</code> cursor positioning</h3>
+<ul>
+<li>[ ] <code>setCursorPos(int)</code> with clamping</li>
+<li>[ ] <code>getCursorPos() const</code></li>
+<li>[ ] Click-to-position: on click, compute the cursor index from the
+      pointer's x position</li>
+<li>[ ] Add tests</li>
+<li>[ ] Update documentation</li>
+</ul>
+<h3 id="24-layoutscrollintoview">2.4 <code>Layout::scrollIntoView</code></h3>
+<p>Scroll the nearest scroll-container ancestor so the node is visible.
+Common pattern after <code>requestFocus</code>.</p>
+<ul>
+<li>[ ] Implement <code>scrollIntoView()</code> walking up to find the scroll
+      ancestor</li>
+<li>[ ] Implement <code>scrollIntoView(const Rect&amp; subRect)</code> for partial
+      visibility</li>
+<li>[ ] Add tests</li>
+<li>[ ] Update documentation</li>
+</ul>
+<h3 id="25-button-text-accessor">2.5 <code>Button</code> text accessor</h3>
+<p><code>Btn(text, cb)</code> creates a <code>Text</code> child but there's no accessor. Add:</p>
+<ul>
+<li>[ ] <code>Button::text() const</code> returning the current label</li>
+<li>[ ] <code>Button::setText(std::string)</code> updating the child</li>
+</ul>
+<h3 id="26-textgettext">2.6 <code>Text::getText()</code></h3>
+<p><code>setText</code> exists, <code>getText</code> doesn't.</p>
+<ul>
+<li>[ ] Add <code>const std::string&amp; getText() const</code></li>
+</ul>
+<h3 id="27-layoutremoveallchildren">2.7 <code>Layout::removeAllChildren()</code></h3>
+<p>A safe bulk-clear for the <code>children</code> vector. Useful for rebuilding
+lists.</p>
+<ul>
+<li>[ ] Add method</li>
+<li>[ ] Consider whether it should also clear <code>parent</code> pointers of the
+      removed children</li>
+</ul>
+<h3 id="28-compound-selectors-in-zstyle">2.8 Compound selectors in ZStyle</h3>
+<p><strong>Severity:</strong> high — ZStyle doesn't support <code>Tag.class</code>,
+<code>.class1.class2</code>, <code>Tag#id</code>, or <code>Tag.class:pseudo</code>. The parser reads
+the whole token as a single name, so <code>Button.btn-primary</code> never
+matches any node.</p>
+<p><strong>Location:</strong> <code>src/ui/StyleParser.hpp</code>, the selector-splitting step
+inside <code>parseRule</code>; <code>Style.hpp</code>, <code>SimpleSelector</code>; <code>Layout.hpp</code>,
+<code>nodeMatchesSimple</code> and <code>ruleMatches</code>.</p>
+<p><strong>Problem:</strong> a token like <code>Button.btn-primary</code> is parsed as
+<code>SimpleSelector{kind=Tag, name="Button.btn-primary"}</code>, which matches
+nothing. The parser only handles a single component per token:
+<code>Tag</code>, <code>.class</code>, <code>#id</code>, and their <code>:pseudo</code> variants. It does not
+distinguish a <em>compound</em> selector (<code>Tag.class</code>, one node) from a
+<em>descendant</em> selector (<code>Tag .class</code>, two nodes).</p>
+<p><strong>Expected:</strong> the parser must recognise compound selectors and the
+matcher must require all their components to match the same node.</p>
+<p><strong>Design options:</strong></p>
+<ul>
+<li><strong>A.</strong> Extend <code>SimpleSelector</code> with optional extra components
+  (<code>Opt&lt;TagName&gt;</code>, <code>std::vector&lt;ClassName&gt;</code>, <code>Opt&lt;IdName&gt;</code>) and
+  update <code>computeSpecificity</code>, <code>nodeMatchesSimple</code>,
+  <code>Debug::selectorToString</code>.</li>
+<li><strong>B.</strong> Introduce a <code>CompoundSelector</code> struct and change
+  <code>ThemeRule::chain</code> to <code>std::vector&lt;CompoundSelector&gt;</code>.</li>
+<li><strong>C.</strong> Pre-process the selector string at parse time: emit one
+  <code>SimpleSelector</code> per component and add a <code>bool compound</code> flag
+  on the <code>SimpleSelector</code> to indicate "same node as next".</li>
+</ul>
+<p><strong>Recommendation:</strong> option C is the smallest change and keeps the
+existing chain semantics for descendant matching.</p>
+<p><strong>Test:</strong> a stylesheet with <code>Button.btn-primary { background: red; }</code>
+applied to a <code>Button</code> with class <code>btn-primary</code> must produce a red
+button.</p>
+<ul>
+<li>[x] Extend the parser to split compound selectors</li>
+<li>[x] Update <code>nodeMatchesSimple</code> / <code>ruleMatches</code></li>
+<li>[x] Update <code>computeSpecificity</code></li>
+<li>[x] Add tests for <code>Tag.class</code>, <code>.class1.class2</code>, <code>Tag#id</code>, <code>Tag.class:hover</code></li>
+<li>[x] Update <code>user/05-zstyle.md</code> (add a section on compound selectors)</li>
+<li>[x] Update <code>api/ZStyle.md</code></li>
+</ul>
+<hr />
+<h2 id="phase-3-test-coverage">Phase 3 — Test coverage</h2>
+<p>The current test suite covers the foundations well (parsing, layout
+basics, basic interaction) but has gaps on composite widgets and the
+scroll system.</p>
+<h3 id="31-scroll-system">3.1 Scroll system</h3>
+<p>No tests currently exist for the scroll system. Add:</p>
+<ul>
+<li>[ ] <code>scrollTo</code>, <code>scrollToX/Y</code>, <code>scrollToTop/Bottom/Left/Right</code></li>
+<li>[ ] <code>getScrollX/Y</code>, <code>getMaxScrollX/Y</code> after arrange with overflow</li>
+<li>[ ] Wheel event increments velocity</li>
+<li>[ ] Inertia decays velocity over time</li>
+<li>[ ] <code>maxScroll</code> is zero when content fits</li>
+<li>[ ] Scrollbar thumb hit-test and drag</li>
+<li>[ ] <code>resetIfOverflowChanged</code> (once 1.2 is fixed)</li>
+<li>[ ] Hover freeze during scroll</li>
+</ul>
+<h3 id="32-textinput">3.2 <code>TextInput</code></h3>
+<ul>
+<li>[ ] Character insertion</li>
+<li>[ ] <code>Backspace</code> / <code>Delete</code> with cursor position</li>
+<li>[ ] <code>Left</code> / <code>Right</code> cursor movement</li>
+<li>[ ] <code>Home</code> / <code>End</code></li>
+<li>[ ] Key repeat (initial delay + interval)</li>
+<li>[ ] <code>onTextChanged</code> fires on edit</li>
+<li>[ ] <code>onSubmit</code> fires on Enter</li>
+<li>[ ] <code>Escape</code> releases focus without submitting</li>
+<li>[ ] Horizontal scroll of the cursor</li>
+<li>[ ] Click focuses the input</li>
+</ul>
+<h3 id="33-text-wrapping">3.3 <code>Text</code> wrapping</h3>
+<ul>
+<li>[ ] <code>setWrap(true)</code> with a bounded parent width</li>
+<li>[ ] Multiple lines</li>
+<li>[ ] Re-wrap on width change (<code>onLayout</code>)</li>
+<li>[ ] No wrap when parent width is unbounded</li>
+</ul>
+<h3 id="34-dropdown">3.4 <code>Dropdown</code></h3>
+<ul>
+<li>[ ] <code>setSelected</code> fires <code>onChange</code></li>
+<li>[ ] Opening the list shows options</li>
+<li>[ ] Clicking an option sets the selection and closes</li>
+<li>[ ] Clicking outside closes</li>
+<li>[ ] Flip above when no space below</li>
+<li>[ ] List scrolls when options exceed the visible area</li>
+</ul>
+<h3 id="35-state-transitions-end-to-end">3.5 State transitions end-to-end</h3>
+<ul>
+<li>[ ] <code>:hover</code> with <code>transition:</code> interpolates over N frames</li>
+<li>[ ] <code>:checked</code> with transition (Toggle knob)</li>
+<li>[ ] <code>:focus</code> styling applies on focus</li>
+<li>[ ] <code>:disabled</code> styling applies on disable</li>
+<li>[ ] Transition completes and snaps to target</li>
+</ul>
+<h3 id="36-css-animations-end-to-end">3.6 CSS animations end-to-end</h3>
+<ul>
+<li>[ ] <code>@keyframes</code> with <code>animation:</code> changes the render style</li>
+<li>[ ] <code>infinite</code> animation keeps ticking</li>
+<li>[ ] <code>alternate</code> reverses every other iteration</li>
+<li>[ ] <code>forwards</code> keeps the last keyframe</li>
+<li>[ ] <code>::part</code> animation ticks</li>
+<li>[ ] <code>onAnimationsFinished</code> fires</li>
+</ul>
+<h3 id="37-focus-scopes">3.7 Focus scopes</h3>
+<ul>
+<li>[ ] Tab stays within a scope</li>
+<li>[ ] Nested scopes: inner scope wins</li>
+<li>[ ] Focus release on click outside</li>
+<li>[ ] Focus release on disable</li>
+</ul>
+<h3 id="38-portal-hit-test-delay">3.8 Portal hit-test delay</h3>
+<ul>
+<li>[ ] Verify that a newly-opened portal becomes hit-testable on the
+      <strong>next</strong> frame, not the same one</li>
+<li>[ ] Verify that a destroyed portal is skipped</li>
+</ul>
+<h3 id="39-media-queries-on-viewport-change">3.9 Media queries on viewport change</h3>
+<ul>
+<li>[ ] Setting <code>Metrics::viewport</code> triggers a style re-resolve</li>
+<li>[ ] <code>@media (min-width: 600px)</code> matches / doesn't match based on the
+      viewport</li>
+</ul>
+<hr />
+<h2 id="phase-4-performance">Phase 4 — Performance</h2>
+<p>These are measurable wins. None are blocking, but they compound.</p>
+<h3 id="41-value-without-heap-allocation">4.1 <code>Value</code> without heap allocation</h3>
+<p><code>Value</code> uses <code>std::vector&lt;Term&gt;</code>, which allocates for any non-empty
+value. Since a <code>ComputedStyle</code> has ~30 <code>Value</code> fields and is copied
+every frame per node, this is the single largest allocation source.</p>
+<p><strong>Options:</strong></p>
+<ul>
+<li><strong>A:</strong> <code>SmallVector&lt;Term, 2&gt;</code> — covers 1 and 2 terms without
+  allocation. Requires a small custom container.</li>
+<li><strong>B:</strong> <code>std::variant&lt;Term, std::pair&lt;Term, Term&gt;, std::vector&lt;Term&gt;&gt;</code>
+  — variant covers 1 and 2 terms, vector covers 3+. More complex API.</li>
+<li><strong>C:</strong> <code>std::array&lt;Term, N&gt;</code> with a size, and a fallback to vector
+  when N is exceeded. Fixed-size array is small but wastes space for
+  the common 1-term case.</li>
+</ul>
+<p>Recommendation: <strong>A</strong> — it's the least invasive and gives the biggest
+win for the common case.</p>
+<ul>
+<li>[ ] Implement <code>SmallVector&lt;Term, 2&gt;</code></li>
+<li>[ ] Replace <code>std::vector&lt;Term&gt;</code> in <code>Value</code></li>
+<li>[ ] Benchmark before/after</li>
+<li>[ ] Verify no behavioral change</li>
+</ul>
+<h3 id="42-cache-renderstyle-in-draw">4.2 Cache <code>renderStyle</code> in <code>draw</code></h3>
+<p>Currently every node copies its <code>ComputedStyle</code> in <code>draw</code>:</p>
+<pre><code class="language-cpp">ComputedStyle renderStyle = style_.currentStyle;
+Anim::overlayCssComputed(renderStyle, anim_.css);
+</code></pre>
+<p>The copy involves <code>std::string</code>, <code>std::vector</code>, and
+<code>std::unordered_map</code> fields.</p>
+<p><strong>Options:</strong></p>
+<ul>
+<li><strong>A:</strong> A per-node cached <code>ComputedStyle renderStyle_</code> reused each
+  frame. Apply the overlay in place.</li>
+<li><strong>B:</strong> Skip the copy when there are no active animations (the common
+  case), and use <code>style_.currentStyle</code> directly.</li>
+</ul>
+<p><strong>Recommendation:</strong> <strong>B</strong> first (simple), then <strong>A</strong> if the cache needs
+to persist.</p>
+<ul>
+<li>[ ] Implement option B (fast path with no copy)</li>
+<li>[ ] Benchmark</li>
+</ul>
+<h3 id="43-rule-indexing-by-tag">4.3 Rule indexing by tag</h3>
+<p><code>StyleResolver::resolveFor</code> scans all <code>Theme::rules</code> linearly. For
+stylesheets with hundreds of rules and nodes that change state
+frequently, this is a hotspot.</p>
+<p><strong>Fix:</strong> build an index <code>unordered_map&lt;string, vector&lt;size_t&gt;&gt;</code> mapping
+tag names to rule indices. A rule with a tag in its <code>chain.back()</code> is
+indexed; rules with only a class / id in <code>chain.back()</code> go into a
+"no-tag" bucket that's always scanned.</p>
+<p>The index is built lazily and invalidated when <code>Theme::addRule</code> is
+called.</p>
+<ul>
+<li>[ ] Add the index to <code>Theme</code></li>
+<li>[ ] Update <code>resolveFor</code> to use it</li>
+<li>[ ] Benchmark with a large stylesheet</li>
+<li>[ ] Handle invalidation correctly</li>
+</ul>
+<h3 id="44-cache-animation-evaluation">4.4 Cache animation evaluation</h3>
+<p><code>tickIncremental</code> evaluates the keyframe to detect finish;
+<code>overlayCssComputed</code> evaluates it again to apply. Each evaluation
+iterates ~45 properties.</p>
+<p><strong>Fix:</strong> store the last-evaluated <code>Style</code> in the <code>ActiveCssAnimation</code>
+and reuse it if the elapsed time hasn't changed between the two calls.</p>
+<ul>
+<li>[ ] Add <code>Style cachedFrame</code> to <code>ActiveCssAnimation</code></li>
+<li>[ ] Add a <code>uint32_t cacheKey</code> (frame number or elapsed timestamp)</li>
+<li>[ ] Set / check the cache in the two call sites</li>
+<li>[ ] Benchmark</li>
+</ul>
+<h3 id="45-avoid-double-resolvefor-per-frame">4.5 Avoid double <code>resolveFor</code> per frame</h3>
+<p>When a node has a <code>pendingTransition</code>, <code>update</code> calls <code>resolveFor</code> and
+then <code>measure</code> calls it again. A "resolved this frame" flag would avoid
+the second call.</p>
+<ul>
+<li>[ ] Add <code>bool resolvedThisFrame</code> to <code>StyleResolver</code></li>
+<li>[ ] Check it in <code>measure</code></li>
+<li>[ ] Reset at the start of each <code>update</code></li>
+<li>[ ] Benchmark</li>
+</ul>
+<h3 id="46-vector-resize-audit">4.6 Vector resize audit</h3>
+<p><code>Layout::drawChildren</code> uses three member vectors (<code>drawNegZ_</code>,
+<code>drawNormal_</code>, <code>drawPosZ_</code>). They grow to the max sibling count and
+then stabilize. Verify with a benchmark that no per-frame allocation
+happens after warmup.</p>
+<ul>
+<li>[ ] Benchmark <code>drawChildren</code> allocation behavior</li>
+<li>[ ] If allocations persist, pre-reserve based on <code>children.size()</code></li>
+</ul>
+<hr />
+<h2 id="phase-5-feature-completion">Phase 5 — Feature completion</h2>
+<p>Not blocking for beta, but needed for 1.0.</p>
+<h3 id="51-text-input-advanced">5.1 Text input (advanced)</h3>
+<ul>
+<li>[ ] Selection (shift+arrow, shift+home/end)</li>
+<li>[ ] Cut / copy / paste (<code>Ctrl+C</code>, <code>Ctrl+V</code>, <code>Ctrl+X</code>)</li>
+<li>[ ] Select all (<code>Ctrl+A</code>)</li>
+<li>[ ] Undo / redo (<code>Ctrl+Z</code>, <code>Ctrl+Y</code>)</li>
+<li>[ ] Click-to-deselect</li>
+<li>[ ] Double-click to select word</li>
+<li>[ ] Triple-click to select all</li>
+</ul>
+<h3 id="52-font-handling">5.2 Font handling</h3>
+<ul>
+<li>[ ] Font fallback chain (e.g. <code>font: mont, calibri, sans</code>)</li>
+<li>[ ] Runtime font loading / registration</li>
+<li>[ ] Font metrics caching</li>
+</ul>
+<h3 id="53-calc-extensions">5.3 <code>calc()</code> extensions</h3>
+<ul>
+<li>[ ] <code>min(a, b)</code> / <code>max(a, b)</code> / <code>clamp(min, val, max)</code></li>
+<li>[ ] <code>round()</code>, <code>floor()</code>, <code>ceil()</code></li>
+<li>[ ] <code>mod()</code></li>
+</ul>
+<h3 id="54-filter-and-effect-chaining">5.4 Filter and effect chaining</h3>
+<p>Two separate limitations:</p>
+<p><strong>5.4a — Filter-to-filter chaining.</strong> Currently each filter in a
+<code>filter:</code> list reads the <strong>original</strong> <code>layerTarget_</code>, not the output
+of the previous filter. <code>filter: blur(2px), sepia(0.6)</code> produces "sepia
+on the original" instead of "sepia of blur". Only the last filter's
+output is visible on the framebuffer.</p>
+<p>Fix:
+- Ping-pong between <code>layerTarget_</code> and <code>layerScratch_</code> (already both
+  exist, both sized to <code>region</code>).
+- Update <code>applyFilter</code> to accept a "current input target" parameter.
+- <code>SinglePass</code> and <code>Silhouette</code> write to the next target instead of
+  the framebuffer; the final pass writes to the framebuffer.
+- <code>Separable</code> already ping-pongs internally; needs to read from the
+  current input and leave the result in the next target.
+- Add tests.
+- Update <code>user/09-effects.md</code> §1.5 and <code>internals/06-render-pipeline.md</code>.</p>
+<p><strong>5.4b — <code>effect:</code> and <code>filter:</code> on the same node.</strong> When both are set,
+the effect shader is pushed inside the layer target (applies to each
+draw call), then the filter chain processes the composited result.
+The visual outcome is "effect applied N times (once per draw call),
+then filter", not "effect on the composited subtree, then filter".</p>
+<p>Options:
+- Leave as is, document the behavior explicitly in <code>09-effects.md</code>.
+- Route <code>effect:</code> through the layer pipeline too (one extra pass in the
+  target) so it operates on the composited image like a <code>filter:</code>.
+- Unify both: make <code>effect:</code> a special case of <code>filter:</code> with a
+  single-pass pipeline.</p>
+<p>The unification (option 3) is the cleanest but the largest change.
+It would collapse the two properties into one and simplify the mental
+model — at the cost of a breaking change to the <code>.zstyle</code> surface.</p>
+<ul>
+<li>[ ] Decide between documenting or unifying</li>
+<li>[ ] Implement</li>
+<li>[ ] Add tests</li>
+<li>[ ] Update docs (<code>09-effects.md</code>, <code>06-render-pipeline.md</code>, <code>05-zstyle.md</code>)</li>
+</ul>
+<h3 id="55-nested-render-targets">5.5 Nested render targets</h3>
+<p>Currently the Raylib backend doesn't support nested targets, so a
+filtered node inside a filtered node falls back to inline. To lift
+this:</p>
+<ul>
+<li>[ ] Implement a target stack in the backend</li>
+<li>[ ] Update <code>isLayer</code> in <code>Layout::draw</code> to check
+      <code>supports(Feature::NestedTargets)</code></li>
+<li>[ ] Verify in tests</li>
+<li>[ ] Update documentation</li>
+</ul>
+<h3 id="56-rotation-in-drawlayer">5.6 Rotation in <code>drawLayer</code></h3>
+<p>Compute the bounding box of the transformed rect including rotation.</p>
+<ul>
+<li>[ ] Apply <code>Transform2D::rotationDeg</code> to the four corners</li>
+<li>[ ] Compute the AABB</li>
+<li>[ ] Use it for the region</li>
+<li>[ ] Add test</li>
+</ul>
+<h3 id="57-popup-dropdown-openclose-callbacks">5.7 <code>Popup</code> / <code>Dropdown</code> open/close callbacks</h3>
+<ul>
+<li>[ ] <code>Popup::onOpen</code></li>
+<li>[ ] <code>Dropdown::onOpenChanged</code></li>
+<li>[ ] <code>Modal::onShow</code> / <code>onHide</code></li>
+</ul>
+<h3 id="58-layouthasclass-layouthasid">5.8 <code>Layout::hasClass</code>, <code>Layout::hasId</code></h3>
+<ul>
+<li>[ ] Simple accessors</li>
+</ul>
+<h3 id="59-vector-accessor-for-callbacks">5.9 Vector accessor for callbacks</h3>
+<p>Currently callbacks are individual <code>std::function</code> fields. A future
+version could expose a vector for multi-listener patterns. Not critical
+but sometimes needed.</p>
+<ul>
+<li>[ ] Decide if needed</li>
+<li>[ ] If yes, add <code>addOnClickListener</code> etc.</li>
+</ul>
+<h3 id="510-live-reload-for-development">5.10 Live reload for development</h3>
+<ul>
+<li>[ ] Watch <code>.zstyle</code> files, reload on change</li>
+<li>[ ] Watch <code>.zmarkup</code> files, reload on change (requires rebuild of
+      the tree)</li>
+<li>[ ] Hot-reload integration with Raylib</li>
+</ul>
+<hr />
+<h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
+<p>Needed for non-English UIs.</p>
+<h3 id="61-unicode-aware-text">6.1 Unicode-aware text</h3>
+<p>Currently <code>Text</code> and <code>TextInput</code> are <code>char</code>-based. Unicode support
+requires:</p>
+<ul>
+<li>[ ] <code>std::u32string</code> or UTF-8 aware iteration in <code>Text</code></li>
+<li>[ ] Cluster-aware cursor movement (grapheme boundaries)</li>
+<li>[ ] <code>TextInput</code> accepting multi-byte characters</li>
+<li>[ ] Text measurement per-glyph via the backend</li>
+</ul>
+<h3 id="62-rtl-layout">6.2 RTL layout</h3>
+<ul>
+<li>[ ] Direction detection (LTR / RTL) per text run</li>
+<li>[ ] Mirroring of <code>HStack</code> when direction is RTL</li>
+<li>[ ] <code>text-align: start</code> / <code>end</code> respecting direction</li>
+<li>[ ] Bidi algorithm for mixed runs (via a library)</li>
+</ul>
+<h3 id="63-ime-support">6.3 IME support</h3>
+<ul>
+<li>[ ] <code>IPlatform</code> extension for IME composition events</li>
+<li>[ ] <code>TextInput</code> rendering the composition string with an underline</li>
+<li>[ ] Backend-specific IME integration (Raylib doesn't have it natively)</li>
+</ul>
+<hr />
+<h2 id="phase-7-tooling">Phase 7 — Tooling</h2>
+<p>Not needed for the framework itself, but for adoption.</p>
+<h3 id="71-documentation">7.1 Documentation</h3>
+<ul>
+<li>[ ] <code>docs/SUMMARY.md</code> — a navigable table of contents</li>
+<li>[ ] Review pass to remove redundancy between <code>user/</code> and <code>api/</code></li>
+<li>[ ] Standardize examples (consistent output API, consistent style)</li>
+<li>[ ] Add a "cheatsheet" page for <code>.zstyle</code> and ZMarkup</li>
+<li>[ ] Tutorial: build a complete app in 30 minutes</li>
+</ul>
+<h3 id="72-examples">7.2 Examples</h3>
+<ul>
+<li>[ ] <code>examples/hello-world/</code> — minimal</li>
+<li>[ ] <code>examples/settings-screen/</code> — a realistic settings panel</li>
+<li>[ ] <code>examples/game-menu/</code> — a game menu with animations</li>
+<li>[ ] <code>examples/editor/</code> — a text-heavy UI (demonstrates wrapping,
+      scroll, TextInput)</li>
+</ul>
+<h3 id="73-inspector">7.3 Inspector</h3>
+<p>A runtime inspector (like React DevTools):</p>
+<ul>
+<li>[ ] Tree view with live rects and states</li>
+<li>[ ] Style inspector: matching rules, resolved properties</li>
+<li>[ ] Live editing of inline styles</li>
+<li>[ ] FPS / frame time graph</li>
+<li>[ ] Would likely require a separate render target and its own UI</li>
+</ul>
+<h3 id="74-formatter">7.4 Formatter</h3>
+<ul>
+<li>[ ] <code>.zstyle</code> formatter (indentation, blank lines, sorted
+      properties)</li>
+<li>[ ] ZMarkup formatter (indentation)</li>
+<li>[ ] Integration with common editors (VS Code extension)</li>
+</ul>
+<h3 id="75-language-server">7.5 Language server</h3>
+<ul>
+<li>[ ] Syntax highlighting for <code>.zstyle</code> and ZMarkup</li>
+<li>[ ] Autocomplete for property names, tag names, class names</li>
+<li>[ ] Go-to-definition for keyframes, custom properties</li>
+<li>[ ] Diagnostics for unknown properties, typo'd names</li>
+</ul>
+<hr />
+<h2 id="phase-8-beyond-10">Phase 8 — Beyond 1.0</h2>
+<p>Long-term ideas, not committed.</p>
+<ul>
+<li>[ ] Multi-window support (requires refactoring <code>UIContext</code> away from
+      singleton)</li>
+<li>[ ] GPU-accelerated transitions (currently CPU-interpolated)</li>
+<li>[ ] Retained-mode scene graph caching</li>
+<li>[ ] Accessibility tree (screen reader support)</li>
+<li>[ ] Native platform integration (macOS menu bar, Windows title bar)</li>
+<li>[ ] Web build (WASM) via an OpenGL ES backend</li>
+<li>[ ] Mobile-specific widgets (safe area layout, on-screen keyboard
+      integration)</li>
+<li>[ ] A visual editor for <code>.zmarkup</code> + <code>.zstyle</code></li>
+</ul>
+<hr />
+<h2 id="known-issues-not-yet-prioritized">Known issues not yet prioritized</h2>
+<p>These are documented in the code or in the documentation but haven't
+been turned into roadmap items. They're either rare, low-impact, or
+require a bigger design decision.</p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Location</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collectFocusables</code> doesn't skip disabled subtrees</td>
+<td><code>Layout.cpp</code></td>
+<td>Tab reaches disabled containers' children.</td>
+</tr>
+<tr>
+<td><code>Text</code> is <code>char</code>-based, not Unicode</td>
+<td><code>Text.hpp</code></td>
+<td>Text input and rendering are ASCII-only.</td>
+</tr>
+<tr>
+<td>Font fallback chain missing</td>
+<td><code>IAssetProvider</code></td>
+<td>Missing glyphs use the default font.</td>
+</tr>
+<tr>
+<td><code>var()</code> in <code>transition:</code> / <code>animation:</code> shorthand</td>
+<td><code>StyleParser.hpp</code></td>
+<td><code>unresolvedProps</code> doesn't apply to those.</td>
+</tr>
+<tr>
+<td>Custom props not in <code>ComputedStyle::operator==</code></td>
+<td><code>Style.hpp</code></td>
+<td>Two styles differing only in custom props compare equal.</td>
+</tr>
+<tr>
+<td><code>pointerCapture</code> and <code>focusedNode</code> are weak, but <code>topmostConsumer</code> etc. are raw</td>
+<td><code>UIContext.hpp</code></td>
+<td>Raw pointers can dangle in theory.</td>
+</tr>
+<tr>
+<td><code>Style</code> macro-driven is verbose</td>
+<td><code>Style.hpp</code></td>
+<td>Adding a property touches ~1 line but generates cryptic errors.</td>
+</tr>
+<tr>
+<td><code>renderFrame</code> doesn't clear the framebuffer</td>
+<td><code>Layout.cpp</code></td>
+<td>User is responsible.</td>
+</tr>
+<tr>
+<td><code>Popup</code> <code>closeOnEscape</code> doesn't reach the popup if focus is elsewhere</td>
+<td><code>Popup.hpp</code></td>
+<td>Known limitation.</td>
+</tr>
+<tr>
+<td><code>Dropdown</code> doesn't close on <code>Escape</code></td>
+<td><code>Dropdown.hpp</code></td>
+<td>Only closes on outside click.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-to-contribute">How to contribute</h2>
+<p>See <code>CONTRIBUTING.md</code> (to be written). In the meantime:</p>
+<ul>
+<li><strong>Bug reports</strong> should include a minimal reproduction using the
+  <code>Mocks.hpp</code> fixture when possible.</li>
+<li><strong>Feature requests</strong> should reference a concrete use case.</li>
+<li><strong>Pull requests</strong> should include tests for new behavior.</li>
+<li><strong>Documentation changes</strong> should follow the existing structure
+  (<code>user/</code>, <code>internals/</code>, <code>api/</code>).</li>
+</ul>
+<hr />
+<h2 id="version-history">Version history</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alpha</td>
+<td>—</td>
+<td>Current state. API unstable.</td>
+</tr>
+<tr>
+<td>beta</td>
+<td>TBD</td>
+<td>Phase 1-3 complete. API frozen for core.</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>TBD</td>
+<td>Phase 4-5 complete. Feature-complete for typical use.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../">README</a> — overview and quick start.</li>
+<li><a href="../user/01-getting-started/">Getting Started</a> — first steps.</li>
+<li><a href="../internals/01-architecture/">Architecture</a> — how the framework is
+  built.</li>
+<li><a href="../internals/10-debug/">Debugging</a> — how to inspect runtime state.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

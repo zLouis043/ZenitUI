@@ -1,0 +1,3200 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ZStyle/">
+      
+      
+        <link rel="next" href="../../internals/01-architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>FilterRegistry — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#filterregistry-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FilterRegistry — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-filterpattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FilterPattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-filterparamtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. FilterParamType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-filterparam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FilterParam
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FilterParam">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-filterdef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. FilterDef
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. FilterDef">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-filtercontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. FilterContext
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. FilterContext">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-filtercustomfn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. FilterCustomFn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-filterregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. FilterRegistry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. FilterRegistry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adddef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add(def)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addcustomname-fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addCustom(name, fn)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#findname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-registerbuiltinfilters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. registerBuiltinFilters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. registerBuiltinFilters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blur
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drop-shadow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        drop-shadow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-applyfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. applyFilter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. applyFilter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dispatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-complete-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Complete examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Complete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-single-pass-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a single-pass filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-custom-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a custom filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overriding-a-built-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding a built-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-multiple-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using multiple filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-shader-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Shader contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Shader contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-sepiafs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal sepia.fs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimal-blurfs-separable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal blur.fs (separable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-new-filter-at-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a new filter at startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-filter-dynamically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a filter dynamically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-registered-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing registered filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unregistering-a-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unregistering a filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-filterpattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FilterPattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-filterparamtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. FilterParamType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-filterparam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FilterParam
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FilterParam">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-filterdef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. FilterDef
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. FilterDef">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-filtercontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. FilterContext
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. FilterContext">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-filtercustomfn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. FilterCustomFn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-filterregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. FilterRegistry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. FilterRegistry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adddef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add(def)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addcustomname-fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addCustom(name, fn)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#findname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-registerbuiltinfilters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. registerBuiltinFilters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. registerBuiltinFilters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blur" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blur
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drop-shadow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        drop-shadow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-applyfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. applyFilter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. applyFilter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dispatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-complete-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Complete examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Complete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-single-pass-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a single-pass filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-custom-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a custom filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overriding-a-built-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding a built-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-multiple-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using multiple filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-shader-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Shader contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Shader contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-sepiafs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal sepia.fs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimal-blurfs-separable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal blur.fs (separable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-common-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Common tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Common tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-new-filter-at-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a new filter at startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-filter-dynamically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a filter dynamically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listing-registered-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing registered filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unregistering-a-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unregistering a filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="filterregistry-api-reference"><code>FilterRegistry</code> — API Reference</h1>
+<p>The registry that maps filter names (used in <code>.zstyle</code>'s <code>filter:</code>) to
+filter definitions and their rendering pipelines.</p>
+<ul>
+<li><strong>Header</strong>: <code>FilterRegistry.hpp</code></li>
+<li><strong>Namespace</strong>: <code>ZenitUI</code></li>
+</ul>
+<p>For usage examples, see <a href="../../user/09-effects/">Effects</a>. For the
+render pipeline that invokes filters, see
+<a href="../../internals/06-render-pipeline/">Render Pipeline</a>.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<p>A filter is a post-processing pass applied to a subtree. The subtree is
+rendered into a render target (a "layer"), then the filter's pipeline
+processes that target and composites the result onto the framebuffer.</p>
+<p>The registry holds <strong>filter definitions</strong> — named descriptors that tell
+the framework:</p>
+<ul>
+<li>Which shader to use.</li>
+<li>What pattern (single-pass, separable, silhouette, custom) to run.</li>
+<li>How to map CSS arguments to shader uniforms.</li>
+</ul>
+<p>A <code>.zstyle</code> rule references a filter by name:</p>
+<pre><code class="language-css">.card {
+    filter: blur(4px);
+}
+</code></pre>
+<p>The <code>FilterRegistry</code> looks up <code>"blur"</code>, gets its <code>FilterDef</code>, and
+runs the pipeline.</p>
+<hr />
+<h2 id="2-filterpattern">2. <code>FilterPattern</code></h2>
+<pre><code class="language-cpp">enum class FilterPattern {
+    SinglePass,   // push shader, draw src → region
+    Separable,    // 2 pass (H, V) with a direction uniform
+    Silhouette,   // shadow color, two draws (shadow then src)
+    Custom        // arbitrary lambda
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Passes</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SinglePass</code></td>
+<td>1</td>
+<td>A single draw with the shader. The framework sets <code>texSize</code>.</td>
+</tr>
+<tr>
+<td><code>Separable</code></td>
+<td>2</td>
+<td>Horizontal then vertical pass, with <code>direction = {1,0}</code> and <code>{0,1}</code>. Uses <code>layerScratch_</code> for the intermediate.</td>
+</tr>
+<tr>
+<td><code>Silhouette</code></td>
+<td>2 draws</td>
+<td>Draws the subtree offset (colored by the shader), then the original on top.</td>
+</tr>
+<tr>
+<td><code>Custom</code></td>
+<td>N</td>
+<td>The registered lambda runs with full control.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-filterparamtype">3. <code>FilterParamType</code></h2>
+<pre><code class="language-cpp">enum class FilterParamType {
+    Float,
+    Vec2,
+    Vec3,
+    Vec4,
+    Color
+};
+</code></pre>
+<p>The type of a shader uniform, and how many CSS arguments it consumes.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Consumes</th>
+<th>Set with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Float</code></td>
+<td>1 arg</td>
+<td><code>setEffectFloat</code></td>
+</tr>
+<tr>
+<td><code>Vec2</code></td>
+<td>2 args</td>
+<td><code>setEffectVec2</code></td>
+</tr>
+<tr>
+<td><code>Vec3</code></td>
+<td>3 args</td>
+<td><code>setEffectVec3</code></td>
+</tr>
+<tr>
+<td><code>Vec4</code></td>
+<td>4 args</td>
+<td><code>setEffectVec4f</code></td>
+</tr>
+<tr>
+<td><code>Color</code></td>
+<td>1 arg (<code>#RRGGBB[AA]</code>)</td>
+<td><code>setEffectVec4</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Vec3</code> and <code>Vec4</code> are set via <code>setEffectVec3</code> / <code>setEffectVec4f</code>. Their
+float arguments are passed through unchanged.</p>
+<hr />
+<h2 id="4-filterparam">4. <code>FilterParam</code></h2>
+<pre><code class="language-cpp">struct FilterParam {
+    std::string     uniform;
+    FilterParamType type{FilterParamType::Float};
+    int             argIndex{0};
+    float           fdef{0.0f};      // default for Float
+    Vec2            vdef{};          // default for Vec2
+    Color           cdef{Colors::White}; // default for Color
+};
+</code></pre>
+<p>Describes one uniform to set from the CSS arguments.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uniform</code></td>
+<td>The uniform name in the shader.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>The type (see §3).</td>
+</tr>
+<tr>
+<td><code>argIndex</code></td>
+<td>Which CSS argument to read (0-based).</td>
+</tr>
+<tr>
+<td><code>fdef</code> / <code>vdef</code> / <code>cdef</code></td>
+<td>Default values per type.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="constructors">Constructors</h3>
+<pre><code class="language-cpp">// Float
+FilterParam(std::string u, FilterParamType t, int ai, float fd);
+
+// Color
+FilterParam(std::string u, FilterParamType t, int ai, Color cd);
+</code></pre>
+<p>Only these two convenience constructors exist. For <code>Vec2</code> / <code>Vec3</code> /
+<code>Vec4</code>, use aggregate initialization:</p>
+<pre><code class="language-cpp">FilterParam{.uniform = &quot;dir&quot;, .type = FilterParamType::Vec2,
+            .argIndex = 0, .vdef = {1.0f, 0.0f}}
+</code></pre>
+<h3 id="example">Example</h3>
+<p>For a <code>blur(radius)</code> filter:</p>
+<pre><code class="language-cpp">FilterParam{&quot;radius&quot;, FilterParamType::Float, 0, 4.0f}
+</code></pre>
+<ul>
+<li><code>radius</code> — the shader uniform.</li>
+<li><code>Float</code> — a single float.</li>
+<li><code>0</code> — read the CSS arg at index 0 (<code>4px</code> in <code>blur(4px)</code>).</li>
+<li><code>4.0f</code> — the default if no arg is given.</li>
+</ul>
+<hr />
+<h2 id="5-filterdef">5. <code>FilterDef</code></h2>
+<pre><code class="language-cpp">struct FilterDef {
+    std::string              name;
+    std::string              shader;
+    FilterPattern            pattern{FilterPattern::SinglePass};
+    std::vector&lt;FilterParam&gt; params;
+    FilterCustomFn           custom;   // used if pattern == Custom
+};
+</code></pre>
+<p>A registered filter descriptor.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>The name used in <code>.zstyle</code> (<code>"blur"</code>).</td>
+</tr>
+<tr>
+<td><code>shader</code></td>
+<td>The asset name registered with <code>IAssetProvider</code> (<code>"blur"</code>).</td>
+</tr>
+<tr>
+<td><code>pattern</code></td>
+<td>The pipeline pattern.</td>
+</tr>
+<tr>
+<td><code>params</code></td>
+<td>The uniform bindings.</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>The lambda for <code>Custom</code> patterns.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>name</code> and <code>shader</code> are often the same string, but they're
+independent — you can have a filter named <code>"soft-shadow"</code> that uses a
+shader named <code>"dropShadow"</code>.</p>
+<h3 id="example_1">Example</h3>
+<pre><code class="language-cpp">FilterDef{
+    .name    = &quot;sepia&quot;,
+    .shader  = &quot;sepia&quot;,
+    .pattern = FilterPattern::SinglePass,
+    .params  = {
+        {&quot;amount&quot;, FilterParamType::Float, 0, 0.7f}
+    }
+}
+</code></pre>
+<hr />
+<h2 id="6-filtercontext">6. <code>FilterContext</code></h2>
+<pre><code class="language-cpp">struct FilterContext {
+    IRenderer*       renderer{nullptr};
+    Layout*          node{nullptr};
+    TargetHandle     src{};
+    TargetHandle     scratch{};
+    Rect             region{};    // where to draw on the framebuffer
+    Rect             dst{};       // {0, 0, tw, th}: target coordinates
+    float            opacity{1.0f};
+    const FilterRef* ref{nullptr};
+};
+</code></pre>
+<p>The context passed to a filter's pipeline. Contains everything the
+filter needs to process and composite the layer.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>renderer</code></td>
+<td>The active <code>IRenderer</code>.</td>
+</tr>
+<tr>
+<td><code>node</code></td>
+<td>The filtered <code>Layout</code> node.</td>
+</tr>
+<tr>
+<td><code>src</code></td>
+<td>The render target holding the subtree.</td>
+</tr>
+<tr>
+<td><code>scratch</code></td>
+<td>A second target of the same size, for intermediate passes.</td>
+</tr>
+<tr>
+<td><code>region</code></td>
+<td>The destination rect on the framebuffer (in logical pixels).</td>
+</tr>
+<tr>
+<td><code>dst</code></td>
+<td><code>{0, 0, tw, th}</code> — the target's coordinate space.</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>The node's computed opacity (parent × own).</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td>The <code>FilterRef</code> from the CSS <code>filter:</code> list (name + args).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coordinate-systems">Coordinate systems</h3>
+<p><code>region</code> is where the filter should draw <strong>on the screen</strong>. It's the
+intersection of the node's transformed bounding box and the current
+clip, in logical pixels.</p>
+<p><code>dst</code> is the <strong>target's</strong> coordinate space, starting at <code>(0, 0)</code>. It's
+used to set the <code>texSize</code> uniform (which should be the target's
+dimensions) and as the destination rect when rendering into a target.</p>
+<h3 id="usage">Usage</h3>
+<p>Every <code>applyFilter</code> variant uses <code>ctx.src</code>, <code>ctx.region</code>, and
+<code>ctx.opacity</code>. The <code>scratch</code> target is used only by <code>Separable</code>
+patterns. The <code>node</code> and <code>ref</code> are available for filters that need
+context-specific behavior.</p>
+<hr />
+<h2 id="7-filtercustomfn">7. <code>FilterCustomFn</code></h2>
+<pre><code class="language-cpp">using FilterCustomFn = std::function&lt;void(const FilterContext&amp;)&gt;;
+</code></pre>
+<p>The signature of a custom filter. Called with a <code>FilterContext</code> and
+expected to do the whole pipeline.</p>
+<p>The custom function has full control — it can push targets, effects,
+set uniforms, and draw. It's the escape hatch for filters that don't
+fit the standard patterns.</p>
+<hr />
+<h2 id="8-filterregistry">8. <code>FilterRegistry</code></h2>
+<pre><code class="language-cpp">class FilterRegistry {
+public:
+    static FilterRegistry&amp; get();
+
+    void add(FilterDef def);
+    void addCustom(std::string name, FilterCustomFn fn);
+    const FilterDef* find(const std::string&amp; name) const;
+
+private:
+    std::unordered_map&lt;std::string, FilterDef&gt; defs_;
+};
+</code></pre>
+<p>A singleton registry of filter definitions.</p>
+<h3 id="get"><code>get()</code></h3>
+<pre><code class="language-cpp">static FilterRegistry&amp; get();
+</code></pre>
+<p>Returns the global instance. Thread-safe initialization.</p>
+<h3 id="adddef"><code>add(def)</code></h3>
+<pre><code class="language-cpp">void add(FilterDef def);
+</code></pre>
+<p>Registers a filter. If the name already exists, it's <strong>silently
+overwritten</strong>. Useful for overriding built-ins.</p>
+<pre><code class="language-cpp">FilterRegistry::get().add(FilterDef{
+    .name    = &quot;sepia&quot;,
+    .shader  = &quot;sepia&quot;,
+    .pattern = FilterPattern::SinglePass,
+    .params  = {{&quot;amount&quot;, FilterParamType::Float, 0, 0.7f}}
+});
+</code></pre>
+<h3 id="addcustomname-fn"><code>addCustom(name, fn)</code></h3>
+<pre><code class="language-cpp">void addCustom(std::string name, FilterCustomFn fn);
+</code></pre>
+<p>Convenience wrapper for a <code>Custom</code>-pattern filter.</p>
+<pre><code class="language-cpp">FilterRegistry::get().addCustom(&quot;invert&quot;, [](const FilterContext&amp; ctx) {
+    // custom pipeline
+});
+</code></pre>
+<p>Equivalent to:</p>
+<pre><code class="language-cpp">add(FilterDef{
+    .name = name,
+    .pattern = FilterPattern::Custom,
+    .custom = std::move(fn)
+});
+</code></pre>
+<h3 id="findname"><code>find(name)</code></h3>
+<pre><code class="language-cpp">const FilterDef* find(const std::string&amp; name) const;
+</code></pre>
+<p>Looks up a filter by name. Returns <code>nullptr</code> if not found.</p>
+<pre><code class="language-cpp">if (const auto* def = FilterRegistry::get().find(&quot;blur&quot;)) {
+    // def is valid
+}
+</code></pre>
+<p>The returned pointer is stable as long as the registry isn't modified
+(no <code>add</code> / <code>addCustom</code> calls). In practice, filters are registered at
+startup and then read-only.</p>
+<hr />
+<h2 id="9-registerbuiltinfilters">9. <code>registerBuiltinFilters</code></h2>
+<pre><code class="language-cpp">void registerBuiltinFilters();
+</code></pre>
+<p>Registers the built-in filters (<code>blur</code>, <code>drop-shadow</code>). Idempotent —
+calling multiple times has no effect after the first.</p>
+<p>Called automatically by <code>Layout::drawLayer</code> before applying a filter
+chain. So the built-ins are always available, even if the user never
+calls <code>registerBuiltinFilters</code> explicitly.</p>
+<h3 id="blur"><code>blur</code></h3>
+<pre><code class="language-cpp">reg.add({
+    .name    = &quot;blur&quot;,
+    .shader  = &quot;blur&quot;,
+    .pattern = FilterPattern::Separable,
+    .params  = {
+        FilterParam{&quot;radius&quot;, FilterParamType::Float, 0, 4.0f}
+    }
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Arg</th>
+<th>Type</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>radius</code></td>
+<td>float (px)</td>
+<td>4.0</td>
+<td>Blur radius.</td>
+</tr>
+</tbody>
+</table>
+<p>Requires a <code>blur</code> shader registered via <code>IAssetProvider</code>:</p>
+<pre><code class="language-cpp">assets.loadEffect(&quot;blur&quot;, &quot;assets/blur.fs&quot;);
+</code></pre>
+<h3 id="drop-shadow"><code>drop-shadow</code></h3>
+<pre><code class="language-cpp">reg.add({
+    .name    = &quot;drop-shadow&quot;,
+    .shader  = &quot;dropShadow&quot;,
+    .pattern = FilterPattern::Silhouette,
+    .params  = {
+        FilterParam{&quot;dx&quot;, FilterParamType::Float, 0, 2.0f},
+        FilterParam{&quot;dy&quot;, FilterParamType::Float, 1, 2.0f},
+        FilterParam{&quot;shadowColor&quot;, FilterParamType::Color, 2,
+                    Color{0, 0, 0, 180}}
+    }
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Arg</th>
+<th>Type</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dx</code></td>
+<td>float (px)</td>
+<td>2.0</td>
+<td>Horizontal offset.</td>
+</tr>
+<tr>
+<td><code>dy</code></td>
+<td>float (px)</td>
+<td>2.0</td>
+<td>Vertical offset.</td>
+</tr>
+<tr>
+<td><code>shadowColor</code></td>
+<td>color</td>
+<td><code>#000000B4</code></td>
+<td>Shadow color.</td>
+</tr>
+</tbody>
+</table>
+<p>Requires a <code>dropShadow</code> shader:</p>
+<pre><code class="language-cpp">assets.loadEffect(&quot;dropShadow&quot;, &quot;assets/drop_shadow.fs&quot;);
+</code></pre>
+<hr />
+<h2 id="10-applyfilter">10. <code>applyFilter</code></h2>
+<pre><code class="language-cpp">void applyFilter(const FilterDef&amp; def, const FilterContext&amp; ctx);
+</code></pre>
+<p>Runs the pipeline for a given filter definition. Called by
+<code>Layout::drawLayer</code> for each filter in the node's <code>filters</code> list.</p>
+<p>Handles:</p>
+<ul>
+<li>Setting uniforms via <code>setParams</code>.</li>
+<li>Dispatching to the pattern-specific pass function.</li>
+<li>Falling back to a plain <code>drawTarget</code> if the shader isn't valid.</li>
+</ul>
+<h3 id="dispatch">Dispatch</h3>
+<pre><code class="language-cpp">switch (def.pattern) {
+case FilterPattern::SinglePass: applySinglePass(ctx, fx);   break;
+case FilterPattern::Separable:  applySeparable(ctx, fx, def); break;
+case FilterPattern::Silhouette: applySilhouette(ctx, fx, def); break;
+case FilterPattern::Custom:     def.custom(ctx);            break;
+}
+</code></pre>
+<p>The <code>Custom</code> pattern doesn't require a shader — the lambda receives the
+context directly.</p>
+<h3 id="fallback">Fallback</h3>
+<p>If the shader name resolves to an invalid handle (shader not loaded),
+the function logs a warning and draws the target unmodified:</p>
+<pre><code class="language-cpp">if (!fx.valid()) {
+    ctx.renderer-&gt;drawTarget(ctx.src, ctx.region,
+                             Colors::White.withAlpha(ctx.opacity));
+    return;
+}
+</code></pre>
+<p>This means a missing shader is a silent failure (visually, the subtree
+renders without the filter). Check that shaders are loaded before
+relying on a filter.</p>
+<hr />
+<h2 id="11-complete-examples">11. Complete examples</h2>
+<h3 id="registering-a-single-pass-filter">Registering a single-pass filter</h3>
+<pre><code class="language-cpp">assets.loadEffect(&quot;sepia&quot;, &quot;assets/sepia.fs&quot;);
+
+FilterRegistry::get().add(FilterDef{
+    .name    = &quot;sepia&quot;,
+    .shader  = &quot;sepia&quot;,
+    .pattern = FilterPattern::SinglePass,
+    .params  = {
+        {&quot;amount&quot;, FilterParamType::Float, 0, 0.7f}
+    }
+});
+</code></pre>
+<pre><code class="language-css">.photo {
+    filter: sepia(0.8);
+}
+</code></pre>
+<h3 id="registering-a-custom-filter">Registering a custom filter</h3>
+<pre><code class="language-cpp">FilterRegistry::get().addCustom(&quot;invert-blur&quot;,
+    [](const FilterContext&amp; ctx) {
+        auto r = ctx.renderer;
+
+        // Blur the src into scratch
+        r-&gt;pushTarget(ctx.scratch);
+        r-&gt;pushEffect(assets.getEffect(&quot;blur&quot;));
+        r-&gt;setEffectVec2(assets.getEffect(&quot;blur&quot;), &quot;texSize&quot;,
+                         {ctx.dst.width, ctx.dst.height});
+        r-&gt;setEffectVec2(assets.getEffect(&quot;blur&quot;), &quot;direction&quot;, {1, 0});
+        r-&gt;drawTarget(ctx.src, ctx.dst, Colors::White);
+        r-&gt;popEffect();
+        r-&gt;popTarget();
+
+        // Draw scratch back, inverted (example)
+        r-&gt;pushEffect(assets.getEffect(&quot;invert&quot;));
+        r-&gt;drawTarget(ctx.scratch, ctx.region,
+                      Colors::White.withAlpha(ctx.opacity));
+        r-&gt;popEffect();
+    });
+</code></pre>
+<h3 id="overriding-a-built-in">Overriding a built-in</h3>
+<pre><code class="language-cpp">// Increase the default blur radius
+FilterRegistry::get().add(FilterDef{
+    .name    = &quot;blur&quot;,
+    .shader  = &quot;blur&quot;,
+    .pattern = FilterPattern::Separable,
+    .params  = {
+        FilterParam{&quot;radius&quot;, FilterParamType::Float, 0, 8.0f}
+    }
+});
+</code></pre>
+<p>Now <code>filter: blur</code> (without args) uses radius 8 instead of 4.</p>
+<h3 id="using-multiple-filters">Using multiple filters</h3>
+<pre><code class="language-css">.card {
+    filter: blur(2px), sepia(0.5);
+}
+</code></pre>
+<p>Produces two <code>FilterRef</code> in the node's style. <code>drawLayer</code> runs
+<code>applyFilter</code> for each, in order. <strong>Each filter reads the original
+<code>layerTarget_</code></strong> — they don't chain. See
+<a href="../../user/09-effects/">Effects §1.5</a> for the caveat.</p>
+<hr />
+<h2 id="12-shader-contract">12. Shader contract</h2>
+<p>A filter shader is a fragment shader. It receives:</p>
+<ul>
+<li><strong>The source texture</strong> — as <code>texture0</code> (Raylib convention).</li>
+<li><strong><code>texSize</code></strong> — a <code>vec2</code> with the target's dimensions.</li>
+<li><strong><code>direction</code></strong> — a <code>vec2</code> (only for <code>Separable</code> patterns).</li>
+<li><strong>Any uniforms declared in the <code>FilterDef::params</code></strong>.</li>
+</ul>
+<p>The framework sets <code>texSize</code> automatically before calling the shader.
+For <code>Separable</code>, it sets <code>direction</code> as well.</p>
+<h3 id="minimal-sepiafs">Minimal <code>sepia.fs</code></h3>
+<pre><code class="language-glsl">#version 330
+
+in vec2 fragTexCoord;
+in vec4 fragColor;
+out vec4 finalColor;
+
+uniform sampler2D texture0;
+uniform vec2 texSize;
+uniform float amount;
+
+void main() {
+    vec4 c = texture(texture0, fragTexCoord);
+    float r = c.r * 0.393 + c.g * 0.769 + c.b * 0.189;
+    float g = c.r * 0.349 + c.g * 0.686 + c.b * 0.168;
+    float b = c.r * 0.272 + c.g * 0.534 + c.b * 0.131;
+    vec3 sepia = vec3(r, g, b);
+    finalColor = vec4(mix(c.rgb, sepia, amount), c.a) * fragColor;
+}
+</code></pre>
+<h3 id="minimal-blurfs-separable">Minimal <code>blur.fs</code> (separable)</h3>
+<pre><code class="language-glsl">#version 330
+
+in vec2 fragTexCoord;
+in vec4 fragColor;
+out vec4 finalColor;
+
+uniform sampler2D texture0;
+uniform vec2 texSize;
+uniform vec2 direction;
+uniform float radius;
+
+void main() {
+    vec2 texel = 1.0 / texSize;
+    vec4 sum = vec4(0.0);
+    float total = 0.0;
+    for (float i = -radius; i &lt;= radius; i += 1.0) {
+        float w = 1.0 - abs(i) / (radius + 1.0);
+        sum += texture(texture0, fragTexCoord + direction * texel * i) * w;
+        total += w;
+    }
+    finalColor = (sum / total) * fragColor;
+}
+</code></pre>
+<p>The shader is loaded with <code>assets.loadEffect(name, path)</code>, which uses
+Raylib's <code>LoadShader</code>. The vertex shader defaults to Raylib's standard
+one unless you pass an explicit <code>vsPath</code>.</p>
+<hr />
+<h2 id="13-common-tasks">13. Common tasks</h2>
+<h3 id="registering-a-new-filter-at-startup">Registering a new filter at startup</h3>
+<p>Add the <code>loadEffect</code> call (to load the shader) and the <code>add</code> call (to
+register the filter) in <code>main</code>, before the first frame:</p>
+<pre><code class="language-cpp">assets.loadEffect(&quot;sepia&quot;, &quot;assets/sepia.fs&quot;);
+FilterRegistry::get().add(FilterDef{
+    .name    = &quot;sepia&quot;,
+    .shader  = &quot;sepia&quot;,
+    .pattern = FilterPattern::SinglePass,
+    .params  = {{&quot;amount&quot;, FilterParamType::Float, 0, 0.7f}}
+});
+</code></pre>
+<h3 id="adding-a-filter-dynamically">Adding a filter dynamically</h3>
+<p>You can register filters at any time, but only effects applied to
+nodes that are drawn <strong>after</strong> the registration will pick them up. A
+node that's already mid-layer (in <code>drawLayer</code>) uses the registry's
+state at the time of the lookup.</p>
+<p>In practice, register filters at startup. The registry isn't designed
+for dynamic mid-frame changes.</p>
+<h3 id="listing-registered-filters">Listing registered filters</h3>
+<p>The registry has no public iteration API. To inspect the registered
+filters, you'd need to add a method or hold your own list of names.</p>
+<h3 id="unregistering-a-filter">Unregistering a filter</h3>
+<p>There's no <code>remove</code> method. To "remove" a filter, add a new one with
+the same name and a no-op shader or a fallback pattern.</p>
+<p>In practice, the registry is populated once and not modified.</p>
+<hr />
+<h2 id="14-pitfalls">14. Pitfalls</h2>
+<p><strong>Missing shader → silent fallback.</strong></p>
+<p>If the shader name isn't registered with <code>IAssetProvider</code>, <code>applyFilter</code>
+draws the target unmodified. No error is visible to the user (only a
+warning in the log). If a filter "does nothing", check the log and
+verify the shader was loaded.</p>
+<p><strong>Missing filter name → silent fallback.</strong></p>
+<p>If a <code>.zstyle</code> rule has <code>filter: unknown</code>, <code>drawLayer</code> calls
+<code>registry.find("unknown")</code>, gets <code>nullptr</code>, and draws the target
+unmodified. Same silent behavior.</p>
+<p><strong>The registry is a singleton.</strong></p>
+<p><code>FilterRegistry::get()</code> returns the same instance from every call site.
+Filters registered in one test can affect subsequent tests. Reset
+between tests isn't provided — you'd need to <code>clear()</code> the registry
+manually (there's no public API for it, so this requires modifying the
+class or using a fresh process).</p>
+<p><strong>Multiple filters don't chain.</strong></p>
+<p>Each filter in a <code>filters</code> list reads the <strong>original</strong> target. See
+<a href="../../user/09-effects/">Effects §1.5</a>. To compose, use a <code>Custom</code>
+filter that runs the whole pipeline.</p>
+<p><strong>Rotation is ignored in region computation.</strong></p>
+<p><code>drawLayer</code> doesn't account for rotation when computing the region. A
+rotated filtered node has its layer computed as if it weren't rotated.</p>
+<p><strong>The render target has a size limit.</strong></p>
+<p><code>MAX_TARGET_DIM = 4096</code>. A filtered node larger than this falls back to
+inline rendering (no filter). If you see a large node lose its filter,
+this is why.</p>
+<p><strong>Nested filters are unsupported on the Raylib backend.</strong></p>
+<p><code>!renderer-&gt;inTarget()</code> is part of the <code>isLayer</code> check. A filtered
+node inside another filtered node falls back to inline. The inner
+filter is silently ignored.</p>
+<p><strong><code>FilterDef::custom</code> is only used for <code>Custom</code> pattern.</strong></p>
+<p>If you set <code>custom</code> on a <code>SinglePass</code> filter, it's ignored. The pattern
+determines which code path runs.</p>
+<p><strong>Shader uniforms that don't exist are silent no-ops.</strong></p>
+<p><code>setEffectFloat</code> etc. check the shader's uniform location. If the
+uniform doesn't exist in the shader, the location is <code>-1</code> and the call
+does nothing. No error, no warning. A typo'd uniform name silently does
+nothing.</p>
+<p><strong><code>FilterContext::ref</code> can be null.</strong></p>
+<p>It's set by <code>drawLayer</code> before calling <code>applyFilter</code>, but a <code>Custom</code>
+filter that's invoked outside the standard flow (e.g. from a test)
+might not have it. Check before dereferencing.</p>
+<p><strong><code>FilterRegistry::find</code> returns a pointer into the internal map.</strong></p>
+<p>The pointer is valid until the next <code>add</code> / <code>addCustom</code> call (which
+can rehash the map). Don't hold the pointer across registration calls.</p>
+<p>In practice, you look up and use the pointer immediately, which is safe.</p>
+<p><strong>The built-in filters are registered lazily.</strong></p>
+<p><code>registerBuiltinFilters</code> is called by <code>drawLayer</code> the first time a
+filter is applied. If you inspect the registry before the first frame,
+<code>blur</code> and <code>drop-shadow</code> might not be there yet. Call
+<code>registerBuiltinFilters()</code> explicitly if you need them available before
+the first frame.</p>
+<p><strong>No filter parameters from C++.</strong></p>
+<p>A filter's parameters are all defined in the <code>FilterDef</code> and read from
+the CSS arguments. There's no way to set a uniform from C++ for a
+specific node — the node's <code>.zstyle</code> determines the filter's arguments.</p>
+<p>To control a filter parameter from C++, use an imperative animation
+that updates a uniform via <code>setEffectFloat</code>, or define the parameter as
+a CSS custom property.</p>
+<p><strong>The filter runs on every frame.</strong></p>
+<p>A filtered node's layer is re-rendered every frame. There's no caching
+of the target between frames (except for the size). This means a
+filtered node is more expensive than an unfiltered one, even if the
+content hasn't changed.</p>
+<p>For static content, consider baking the filter into a texture offline,
+or caching the result manually.</p>
+<p><strong>Layout::drawLayer doesn't call <code>FilterRegistry::get()</code> every frame.</strong></p>
+<p>Wait — actually it does:</p>
+<pre><code class="language-cpp">auto&amp; registry = FilterRegistry::get();
+</code></pre>
+<p>This is a lookup, but it returns a reference to a static instance, so
+it's cheap. The cost is in <code>find</code>, which is a <code>unordered_map</code> lookup
+per filter per frame.</p>
+<p>For a node with 2 filters drawn every frame, that's 2 hash lookups per
+frame. Negligible.</p>
+<p><strong>Adding a filter with the same name as a built-in overrides it.</strong></p>
+<p>If you register a filter named <code>"blur"</code> after <code>registerBuiltinFilters</code>
+has run, your definition replaces the built-in. This is useful for
+customizing the default, but could also silently break code that
+expects the built-in behavior.</p>
+<p><strong>The registry is not thread-safe.</strong></p>
+<p><code>add</code> / <code>find</code> / <code>addCustom</code> don't lock. The registry is meant to be
+populated at startup and then read-only. Concurrent registration from
+multiple threads isn't supported.</p>
+<hr />
+<h2 id="15-see-also">15. See also</h2>
+<ul>
+<li><a href="../../user/09-effects/">Effects</a> — user-facing guide to filters and
+  effects.</li>
+<li><a href="../../internals/06-render-pipeline/">Render Pipeline</a> — where
+  <code>drawLayer</code> and <code>applyFilter</code> fit in the frame.</li>
+<li><a href="../UIContext/">Backend</a> — <code>IRenderer</code>, <code>IAssetProvider</code>, and the
+  shader loading interface.</li>
+<li><a href="../../user/05-zstyle/">ZStyle</a> — the <code>filter:</code> property grammar.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

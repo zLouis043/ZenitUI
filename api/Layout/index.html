@@ -1,0 +1,4119 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../user/10-custom-widgets/">
+      
+      
+        <link rel="next" href="../Style/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Layout — API Reference - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#layout-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Layout — API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layoutlayouttype-type-layouttypestack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout(LayoutType type = LayoutType::Stack)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ~Layout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-crtp-factory-tlayoutderived-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. CRTP factory — TLayout&lt;Derived, Base&gt;
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-classes-id-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Style — classes, id, tag
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style — classes, id, tag">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addclassconst-stdstring-classname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addClass(const std::string&amp; className)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-clsconst-stdstring-name-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; cls(const std::string&amp; name) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setidconst-stdstring-node_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setId(const std::string&amp; node_id)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-idconst-stdstring-node_id-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; id(const std::string&amp; node_id) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setstyletagconst-stdstring-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setStyleTag(const std::string&amp; t)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-stdstring-getstyletag-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const std::string&amp; getStyleTag() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-stdvectorstdstring-getstyleclasses-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const std::vector&lt;std::string&gt;&amp; getStyleClasses() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Size
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setsizevalue-w-value-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setSize(Value w, Value h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-sizevalue-w-value-h-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; size(Value w, Value h) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rect-getrect-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rect getRect() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vec2-getmeasuredsize-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vec2 getMeasuredSize() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tree
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Tree">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addchildstdshared_ptrlayout-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addChild(std::shared_ptr&lt;Layout&gt; child)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-removefromparent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void removeFromParent()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrlayout-getparent-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Layout&gt; getParent() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-hasparent-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool hasParent() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-isancestorofconst-layout-other-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isAncestorOf(const Layout* other) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdvectorstdshared_ptrlayout-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt; children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstring-nodeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::string nodeId
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-state-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. State flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. State flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setinteractivebool-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setInteractive(bool interactive)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setblocksraycastbool-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setBlocksRaycast(bool blocks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setenabledbool-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setEnabled(bool e)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-getenabled-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool getEnabled() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setcheckedbool-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setChecked(bool c)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-getchecked-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool getChecked() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setupdatewhendisabledbool-v-bool-getupdatewhendisabled-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setUpdateWhenDisabled(bool v) / bool getUpdateWhenDisabled() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setfocusablebool-f-bool-isfocusable-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setFocusable(bool f) / bool isFocusable() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setfocusscopebool-s-bool-isfocusscope-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setFocusScope(bool s) / bool isFocusScope() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setkeyboardactivatesbool-v-bool-getkeyboardactivates-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setKeyboardActivates(bool v) / bool getKeyboardActivates() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setpassthroughbool-p-bool-getpassthrough-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setPassThrough(bool p) / bool getPassThrough() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-style-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Style access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Style access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#style-getinlinebase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style&amp; getInlineBase()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-getinlinedefaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style&amp; getInlineDefaults()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setinlinebaseconst-style-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setInlineBase(const Style&amp; s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-computedstyle-getstyle-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const ComputedStyle&amp; getStyle() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-begintransition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void beginTransition()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Animations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Animations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addanimationconst-stdstring-name-stdshared_ptruianimation-anim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addAnimation(const std::string&amp; name, std::shared_ptr&lt;UIAnimation&gt; anim)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-playanimationconst-stdstring-name-bool-playreverse-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void playAnimation(const std::string&amp; name, bool playReverse = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-hasactiveanimations-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool hasActiveAnimations() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-addcssanimationconst-stdstring-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addCssAnimation(const std::string&amp; name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-stopcssanimationconst-stdstring-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void stopCssAnimation(const std::string&amp; name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdfunctionvoid-onanimationsfinished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::function&lt;void()&gt; onAnimationsFinished
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Scroll
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Scroll">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-isscrollcontainer-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isScrollContainer() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Portal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setportalbool-p-bool-isportal-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setPortal(bool p) / bool isPortal() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-capturepointer-void-releasepointer-bool-haspointercapture-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void capturePointer() / void releasePointer() / bool hasPointerCapture() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-rendering-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Rendering hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Rendering hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setbackgroundtexturetexturehandle-tex-nineslice-np-0000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setBackgroundTexture(TextureHandle tex, NineSlice np = {0,0,0,0})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setshadereffecthandle-shader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setShader(EffectHandle shader)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fonthandle-resolvefontconst-computedstyle-style-fonthandle-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FontHandle resolveFont(const ComputedStyle&amp; style, FontHandle fallback = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolvedbgtexture-resolvebgtextureconst-computedstyle-style-texturehandle-fallbacktex-nineslice-fallbackslice-0000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResolvedBgTexture resolveBgTexture(const ComputedStyle&amp; style, TextureHandle fallbackTex = {}, NineSlice fallbackSlice = {0,0,0,0})
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Callbacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-runtime-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Runtime — lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Runtime — lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-vec2-measurefloat-parent_w-float-parent_h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Vec2 measure(float parent_w, float parent_h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-arrangerect-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void arrange(Rect space)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-updatefloat-dt-bool-ancestorblocked-false-bool-scrolling-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-drawfloat-parentopacity-10f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void draw(float parentOpacity = 1.0f)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout-hittestvec2-p-bool-ancestorblocked-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout* hitTest(Vec2 p, bool ancestorBlocked = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-updatetreefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void updateTree(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-runframefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void runFrame(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-renderframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void renderFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-widget-extension-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Widget extension hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Widget extension hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onbuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onBuild()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-vec2-computeintrinsicsizefloat-availw-float-availh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Vec2 computeIntrinsicSize(float availW, float availH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onLayout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onupdatefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onUpdate(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onenabledchangedbool-nowenabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onEnabledChanged(bool nowEnabled)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-ondescendantfocusedlayout-descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onDescendantFocused(Layout* descendant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-rendercontentfloat-op-const-computedstyle-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void renderContent(float op, const ComputedStyle&amp; style)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-renderchromefloat-op-const-computedstyle-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void renderChrome(float op, const ComputedStyle&amp; style)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-partstyleconst-stdstring-partname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style partStyle(const std::string&amp; partName)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-helper-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Helper functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Helper functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodematchessimpleconst-layout-node-const-simpleselector-ss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nodeMatchesSimple(const Layout* node, const SimpleSelector&amp; ss)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rulematchesconst-themerule-r-const-layout-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ruleMatches(const ThemeRule&amp; r, const Layout* node)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdvectorconst-themerule-getmatchingrules-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::vector&lt;const ThemeRule*&gt; getMatchingRules() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-widgets-built-on-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Widgets built on Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Construction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layoutlayouttype-type-layouttypestack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout(LayoutType type = LayoutType::Stack)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ~Layout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-crtp-factory-tlayoutderived-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. CRTP factory — TLayout&lt;Derived, Base&gt;
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-classes-id-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Style — classes, id, tag
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style — classes, id, tag">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addclassconst-stdstring-classname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addClass(const std::string&amp; className)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-clsconst-stdstring-name-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; cls(const std::string&amp; name) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setidconst-stdstring-node_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setId(const std::string&amp; node_id)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-idconst-stdstring-node_id-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; id(const std::string&amp; node_id) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setstyletagconst-stdstring-t" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setStyleTag(const std::string&amp; t)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-stdstring-getstyletag-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const std::string&amp; getStyleTag() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-stdvectorstdstring-getstyleclasses-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const std::vector&lt;std::string&gt;&amp; getStyleClasses() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Size
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setsizevalue-w-value-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setSize(Value w, Value h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrderived-sizevalue-w-value-h-crtp-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Derived&gt; size(Value w, Value h) (CRTP only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rect-getrect-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rect getRect() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vec2-getmeasuredsize-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vec2 getMeasuredSize() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tree
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Tree">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addchildstdshared_ptrlayout-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addChild(std::shared_ptr&lt;Layout&gt; child)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-removefromparent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void removeFromParent()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdshared_ptrlayout-getparent-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::shared_ptr&lt;Layout&gt; getParent() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-hasparent-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool hasParent() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-isancestorofconst-layout-other-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isAncestorOf(const Layout* other) const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdvectorstdshared_ptrlayout-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt; children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstring-nodeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::string nodeId
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-state-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. State flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. State flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setinteractivebool-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setInteractive(bool interactive)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setblocksraycastbool-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setBlocksRaycast(bool blocks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setenabledbool-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setEnabled(bool e)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-getenabled-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool getEnabled() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setcheckedbool-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setChecked(bool c)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-getchecked-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool getChecked() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setupdatewhendisabledbool-v-bool-getupdatewhendisabled-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setUpdateWhenDisabled(bool v) / bool getUpdateWhenDisabled() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setfocusablebool-f-bool-isfocusable-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setFocusable(bool f) / bool isFocusable() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setfocusscopebool-s-bool-isfocusscope-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setFocusScope(bool s) / bool isFocusScope() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setkeyboardactivatesbool-v-bool-getkeyboardactivates-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setKeyboardActivates(bool v) / bool getKeyboardActivates() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setpassthroughbool-p-bool-getpassthrough-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setPassThrough(bool p) / bool getPassThrough() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-style-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Style access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Style access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#style-getinlinebase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style&amp; getInlineBase()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-getinlinedefaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style&amp; getInlineDefaults()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setinlinebaseconst-style-s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setInlineBase(const Style&amp; s)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#const-computedstyle-getstyle-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        const ComputedStyle&amp; getStyle() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-begintransition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void beginTransition()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Animations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Animations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-addanimationconst-stdstring-name-stdshared_ptruianimation-anim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addAnimation(const std::string&amp; name, std::shared_ptr&lt;UIAnimation&gt; anim)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-playanimationconst-stdstring-name-bool-playreverse-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void playAnimation(const std::string&amp; name, bool playReverse = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bool-hasactiveanimations-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool hasActiveAnimations() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-addcssanimationconst-stdstring-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void addCssAnimation(const std::string&amp; name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-stopcssanimationconst-stdstring-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void stopCssAnimation(const std::string&amp; name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdfunctionvoid-onanimationsfinished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::function&lt;void()&gt; onAnimationsFinished
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Scroll
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Scroll">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bool-isscrollcontainer-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bool isScrollContainer() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scroll-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Portal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setportalbool-p-bool-isportal-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setPortal(bool p) / bool isPortal() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-capturepointer-void-releasepointer-bool-haspointercapture-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void capturePointer() / void releasePointer() / bool hasPointerCapture() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-rendering-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Rendering hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Rendering hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-setbackgroundtexturetexturehandle-tex-nineslice-np-0000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setBackgroundTexture(TextureHandle tex, NineSlice np = {0,0,0,0})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-setshadereffecthandle-shader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void setShader(EffectHandle shader)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fonthandle-resolvefontconst-computedstyle-style-fonthandle-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FontHandle resolveFont(const ComputedStyle&amp; style, FontHandle fallback = {})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolvedbgtexture-resolvebgtextureconst-computedstyle-style-texturehandle-fallbacktex-nineslice-fallbackslice-0000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResolvedBgTexture resolveBgTexture(const ComputedStyle&amp; style, TextureHandle fallbackTex = {}, NineSlice fallbackSlice = {0,0,0,0})
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Callbacks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-runtime-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Runtime — lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Runtime — lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-vec2-measurefloat-parent_w-float-parent_h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Vec2 measure(float parent_w, float parent_h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-arrangerect-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void arrange(Rect space)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-updatefloat-dt-bool-ancestorblocked-false-bool-scrolling-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-drawfloat-parentopacity-10f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void draw(float parentOpacity = 1.0f)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout-hittestvec2-p-bool-ancestorblocked-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout* hitTest(Vec2 p, bool ancestorBlocked = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-updatetreefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void updateTree(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-runframefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void runFrame(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#void-renderframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void renderFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-widget-extension-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Widget extension hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Widget extension hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onbuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onBuild()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-vec2-computeintrinsicsizefloat-availw-float-availh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Vec2 computeIntrinsicSize(float availW, float availH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onLayout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onupdatefloat-dt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onUpdate(float dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-onenabledchangedbool-nowenabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onEnabledChanged(bool nowEnabled)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-ondescendantfocusedlayout-descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void onDescendantFocused(Layout* descendant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-rendercontentfloat-op-const-computedstyle-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void renderContent(float op, const ComputedStyle&amp; style)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-void-renderchromefloat-op-const-computedstyle-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual void renderChrome(float op, const ComputedStyle&amp; style)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#style-partstyleconst-stdstring-partname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Style partStyle(const std::string&amp; partName)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-helper-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Helper functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Helper functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nodematchessimpleconst-layout-node-const-simpleselector-ss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nodeMatchesSimple(const Layout* node, const SimpleSelector&amp; ss)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rulematchesconst-themerule-r-const-layout-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ruleMatches(const ThemeRule&amp; r, const Layout* node)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdvectorconst-themerule-getmatchingrules-const" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        std::vector&lt;const ThemeRule*&gt; getMatchingRules() const
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-widgets-built-on-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Widgets built on Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="layout-api-reference"><code>Layout</code> — API Reference</h1>
+<p>The base node type. Every widget derives from it, directly or through
+<code>TLayout&lt;Derived, Base&gt;</code>.</p>
+<pre><code class="language-cpp">namespace ZenitUI;
+
+class Layout : public std::enable_shared_from_this&lt;Layout&gt; { /* ... */ };
+</code></pre>
+<ul>
+<li><strong>Header</strong>: <code>Layout.hpp</code></li>
+<li><strong>Inherits</strong>: <code>std::enable_shared_from_this&lt;Layout&gt;</code></li>
+<li><strong>Friends</strong>: <code>StyleResolver</code>, <code>AnimationPlayer</code>, <code>InputController</code>,
+  <code>ScrollController</code></li>
+</ul>
+<p>For the full lifecycle and internals, see
+<a href="../../internals/02-lifecycle/">Lifecycle</a>.</p>
+<hr />
+<h2 id="1-construction">1. Construction</h2>
+<h3 id="layoutlayouttype-type-layouttypestack"><code>Layout(LayoutType type = LayoutType::Stack)</code></h3>
+<p>Creates a node of the given type.</p>
+<pre><code class="language-cpp">auto node = std::make_shared&lt;Layout&gt;(LayoutType::Vertical);
+</code></pre>
+<p><strong>Note:</strong> a bare <code>Layout</code> has no <code>onBuild</code> — it's fully initialized
+after construction. For subclasses with children, use the <code>::create()</code>
+factory instead (see §2).</p>
+<h3 id="layout"><code>~Layout()</code></h3>
+<p>Destroys the node. If the renderer is set, it destroys any cached
+render targets (<code>layerTarget_</code>, <code>layerScratch_</code>).</p>
+<p><strong>Note:</strong> children are destroyed with the parent, in reverse order
+(unordered across siblings).</p>
+<hr />
+<h2 id="2-crtp-factory-tlayoutderived-base">2. CRTP factory — <code>TLayout&lt;Derived, Base&gt;</code></h2>
+<p>The recommended way to define a widget. <code>TLayout</code> adds a <code>create()</code>
+factory that calls <code>onBuild()</code> after construction (when
+<code>shared_from_this()</code> is valid).</p>
+<pre><code class="language-cpp">template &lt;typename Derived, typename Base = Layout&gt;
+class TLayout : public Base {
+public:
+    template &lt;typename... Args&gt;
+    TLayout(Args&amp;&amp;... args);
+
+    template &lt;typename... Args&gt;
+    static std::shared_ptr&lt;Derived&gt; create(Args&amp;&amp;... args);
+
+    // Fluent helpers (return shared_ptr&lt;Derived&gt;)
+    std::shared_ptr&lt;Derived&gt; cls(const std::string&amp; name);
+    std::shared_ptr&lt;Derived&gt; id(const std::string&amp; node_id);
+    std::shared_ptr&lt;Derived&gt; size(Value w, Value h);
+    std::shared_ptr&lt;Derived&gt; passThrough(bool p = true);
+    std::shared_ptr&lt;Derived&gt; with(std::shared_ptr&lt;Layout&gt; c);
+    std::shared_ptr&lt;Derived&gt; self();
+
+protected:
+    virtual void onBuild() {}
+};
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-cpp">class MyWidget : public TLayout&lt;MyWidget&gt; {
+public:
+    MyWidget(int arg) : TLayout&lt;MyWidget&gt;(LayoutType::Vertical), arg_(arg) {}
+protected:
+    void onBuild() override {
+        addChild(Label(&quot;hello&quot;));
+    }
+    int arg_;
+};
+
+auto w = MyWidget::create(42);   // calls onBuild
+</code></pre>
+<p><strong>Note:</strong> <code>Base</code> allows building on top of an existing widget:</p>
+<pre><code class="language-cpp">class Popup : public TLayout&lt;Popup, Panel&gt; { /* ... */ };
+</code></pre>
+<hr />
+<h2 id="3-style-classes-id-tag">3. Style — classes, id, tag</h2>
+<h3 id="void-addclassconst-stdstring-classname"><code>void addClass(const std::string&amp; className)</code></h3>
+<p>Adds a CSS class. Sets <code>pendingTransition = true</code>.</p>
+<pre><code class="language-cpp">node-&gt;addClass(&quot;btn-primary&quot;);
+</code></pre>
+<h3 id="stdshared_ptrderived-clsconst-stdstring-name-crtp-only"><code>std::shared_ptr&lt;Derived&gt; cls(const std::string&amp; name)</code> (CRTP only)</h3>
+<p>Fluent wrapper for <code>addClass</code>. Returns <code>self()</code>.</p>
+<pre><code class="language-cpp">node-&gt;cls(&quot;card&quot;)-&gt;cls(&quot;elevated&quot;);
+</code></pre>
+<h3 id="void-setidconst-stdstring-node_id"><code>void setId(const std::string&amp; node_id)</code></h3>
+<p>Sets the node id, used by <code>#id</code> selectors in <code>.zstyle</code> and by ZMarkup's
+<code>UINode::find()</code>.</p>
+<h3 id="stdshared_ptrderived-idconst-stdstring-node_id-crtp-only"><code>std::shared_ptr&lt;Derived&gt; id(const std::string&amp; node_id)</code> (CRTP only)</h3>
+<p>Fluent wrapper for <code>setId</code>.</p>
+<h3 id="void-setstyletagconst-stdstring-t"><code>void setStyleTag(const std::string&amp; t)</code></h3>
+<p>Sets the style tag. Used by <code>TagName { ... }</code> selectors. Widgets set
+this in <code>onBuild</code> (e.g. <code>"Button"</code>, <code>"Toggle"</code>).</p>
+<pre><code class="language-cpp">node-&gt;setStyleTag(&quot;MyWidget&quot;);
+</code></pre>
+<h3 id="const-stdstring-getstyletag-const"><code>const std::string&amp; getStyleTag() const</code></h3>
+<p>Returns the current style tag.</p>
+<h3 id="const-stdvectorstdstring-getstyleclasses-const"><code>const std::vector&lt;std::string&gt;&amp; getStyleClasses() const</code></h3>
+<p>Returns the list of classes.</p>
+<hr />
+<h2 id="4-size">4. Size</h2>
+<h3 id="void-setsizevalue-w-value-h"><code>void setSize(Value w, Value h)</code></h3>
+<p>Sets <code>width</code> and <code>height</code> on the node's inline base style.</p>
+<pre><code class="language-cpp">node-&gt;setSize(Px(100), Px(50));
+node-&gt;setSize(Percent(100), Auto());
+</code></pre>
+<h3 id="stdshared_ptrderived-sizevalue-w-value-h-crtp-only"><code>std::shared_ptr&lt;Derived&gt; size(Value w, Value h)</code> (CRTP only)</h3>
+<p>Fluent wrapper for <code>setSize</code>.</p>
+<h3 id="rect-getrect-const"><code>Rect getRect() const</code></h3>
+<p>Returns the node's final rect (set by <code>arrange</code>).</p>
+<pre><code class="language-cpp">Rect r = node-&gt;getRect();
+// r.x, r.y, r.width, r.height
+</code></pre>
+<h3 id="vec2-getmeasuredsize-const"><code>Vec2 getMeasuredSize() const</code></h3>
+<p>Returns the intrinsic size computed by <code>measure</code>.</p>
+<p><strong>Note:</strong> <code>measuredSize</code> and <code>rect.size()</code> differ when the parent
+stretches or constrains the node.</p>
+<hr />
+<h2 id="5-tree">5. Tree</h2>
+<h3 id="void-addchildstdshared_ptrlayout-child"><code>void addChild(std::shared_ptr&lt;Layout&gt; child)</code></h3>
+<p>Adds a child. Sets the child's parent pointer and <code>pendingTransition</code>.</p>
+<p><strong>Warning:</strong> if <code>weak_from_this()</code> is expired (i.e. the node isn't
+managed by <code>shared_ptr</code>), the call logs a warning and returns without
+adding. Use <code>X::create()</code> instead of <code>std::make_shared&lt;X&gt;()</code>.</p>
+<h3 id="void-removefromparent"><code>void removeFromParent()</code></h3>
+<p>Marks the node for removal. The actual removal happens in the parent's
+next <code>cullRemovedChildren</code> pass (end of <code>update</code>).</p>
+<h3 id="stdshared_ptrlayout-getparent-const"><code>std::shared_ptr&lt;Layout&gt; getParent() const</code></h3>
+<p>Returns the parent, or null if this is the root.</p>
+<h3 id="bool-hasparent-const"><code>bool hasParent() const</code></h3>
+<p>True if the node has a parent.</p>
+<h3 id="bool-isancestorofconst-layout-other-const"><code>bool isAncestorOf(const Layout* other) const</code></h3>
+<p>True if <code>this</code> is an ancestor of <code>other</code> (walks up <code>other</code>'s parent
+chain).</p>
+<h3 id="stdvectorstdshared_ptrlayout-children"><code>std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt; children</code></h3>
+<p>Public vector of children. Direct manipulation is possible but
+discouraged — prefer <code>addChild</code> / <code>removeFromParent</code>.</p>
+<h3 id="stdstring-nodeid"><code>std::string nodeId</code></h3>
+<p>Public field. The node id. Set by <code>setId</code> or directly.</p>
+<hr />
+<h2 id="6-state-flags">6. State flags</h2>
+<h3 id="void-setinteractivebool-interactive"><code>void setInteractive(bool interactive)</code></h3>
+<p>Whether the node participates in hit-testing and receives events.
+Default: <code>true</code> for most nodes, <code>false</code> for <code>Panel</code> and <code>Text</code>.</p>
+<h3 id="void-setblocksraycastbool-blocks"><code>void setBlocksRaycast(bool blocks)</code></h3>
+<p>Whether the node stops hit-testing at its rect (blocking nodes behind
+it) without firing its own callbacks. Default: <code>false</code>.</p>
+<h3 id="void-setenabledbool-e"><code>void setEnabled(bool e)</code></h3>
+<p>Enables or disables the node. Disabling clears focus and pointer
+capture if this node holds them, and calls <code>onEnabledChanged(false)</code>.</p>
+<h3 id="bool-getenabled-const"><code>bool getEnabled() const</code></h3>
+<p>True if enabled.</p>
+<h3 id="void-setcheckedbool-c"><code>void setChecked(bool c)</code></h3>
+<p>Sets the checked state. Triggers a style re-resolve, so <code>:checked</code>
+rules apply.</p>
+<h3 id="bool-getchecked-const"><code>bool getChecked() const</code></h3>
+<p>True if checked.</p>
+<h3 id="state-queries">State queries</h3>
+<pre><code class="language-cpp">bool isHoveredState()   const;   // pointer over the node's rect
+bool isPressedState()   const;   // pointer down, node is press target
+bool isFocusedState()   const;   // UIContext::focusedNode == this
+bool isDisabledState()  const;   // !isEnabled
+bool isCheckedState()   const;   // same as getChecked()
+</code></pre>
+<h3 id="void-setupdatewhendisabledbool-v-bool-getupdatewhendisabled-const"><code>void setUpdateWhenDisabled(bool v)</code> / <code>bool getUpdateWhenDisabled() const</code></h3>
+<p>If <code>true</code>, <code>onUpdate(dt)</code> runs even when the node is disabled.
+Default: <code>false</code>.</p>
+<h3 id="void-setfocusablebool-f-bool-isfocusable-const"><code>void setFocusable(bool f)</code> / <code>bool isFocusable() const</code></h3>
+<p>Whether the node can be focused. <code>isFocusable()</code> returns
+<code>isFocusable_ &amp;&amp; isEnabled</code>.</p>
+<h3 id="void-setfocusscopebool-s-bool-isfocusscope-const"><code>void setFocusScope(bool s)</code> / <code>bool isFocusScope() const</code></h3>
+<p>Whether the node is a focus scope (a boundary for Tab navigation).</p>
+<h3 id="void-setkeyboardactivatesbool-v-bool-getkeyboardactivates-const"><code>void setKeyboardActivates(bool v)</code> / <code>bool getKeyboardActivates() const</code></h3>
+<p>Whether <code>Enter</code> / <code>Space</code> trigger <code>onClick</code> when the node is focused.</p>
+<h3 id="void-setpassthroughbool-p-bool-getpassthrough-const"><code>void setPassThrough(bool p)</code> / <code>bool getPassThrough() const</code></h3>
+<p>If <code>true</code>, click / press / right-click events bubble up to ancestors
+after firing on this node.</p>
+<hr />
+<h2 id="7-style-access">7. Style access</h2>
+<h3 id="style-getinlinebase"><code>Style&amp; getInlineBase()</code></h3>
+<p>Returns a mutable reference to the node's inline base style. Any
+modification triggers <code>pendingTransition = true</code>.</p>
+<p><strong>Note:</strong> the call itself sets the flag, even if you don't modify the
+style.</p>
+<pre><code class="language-cpp">node-&gt;getInlineBase().background = Colors::Blue;
+node-&gt;getInlineBase().radius = Px(8);
+</code></pre>
+<h3 id="style-getinlinedefaults"><code>Style&amp; getInlineDefaults()</code></h3>
+<p>Returns a mutable reference to the node's inline default style. Lower
+priority than CSS rules — used for widget defaults the user can
+override.</p>
+<h3 id="void-setinlinebaseconst-style-s"><code>void setInlineBase(const Style&amp; s)</code></h3>
+<p>Merges <code>s</code> into <code>inlineBase</code> via <code>overlay</code>.</p>
+<h3 id="const-computedstyle-getstyle-const"><code>const ComputedStyle&amp; getStyle() const</code></h3>
+<p>Returns the node's current resolved style (<code>style_.currentStyle</code>).
+Does <strong>not</strong> include CSS animation values (which are overlaid only at
+draw time).</p>
+<h3 id="void-begintransition"><code>void beginTransition()</code></h3>
+<p>Sets <code>pendingTransition = true</code>, resets the transition timer, and
+snapshots the current style as the transition start.</p>
+<hr />
+<h2 id="8-animations">8. Animations</h2>
+<h3 id="void-addanimationconst-stdstring-name-stdshared_ptruianimation-anim"><code>void addAnimation(const std::string&amp; name, std::shared_ptr&lt;UIAnimation&gt; anim)</code></h3>
+<p>Registers an imperative animation under <code>name</code>.</p>
+<h3 id="void-playanimationconst-stdstring-name-bool-playreverse-false"><code>void playAnimation(const std::string&amp; name, bool playReverse = false)</code></h3>
+<p>Plays the imperative animation with the given name. If the animation is
+finished forward and <code>playReverse == false</code>, restarts from 0. If
+finished reverse and <code>playReverse == true</code>, restarts from the end.</p>
+<h3 id="bool-hasactiveanimations-const"><code>bool hasActiveAnimations() const</code></h3>
+<p>True if the node or any descendant has active animations (recursive).</p>
+<h3 id="void-addcssanimationconst-stdstring-name"><code>void addCssAnimation(const std::string&amp; name)</code></h3>
+<p>Adds a CSS animation by keyframe name to the node's active list.</p>
+<h3 id="void-stopcssanimationconst-stdstring-name"><code>void stopCssAnimation(const std::string&amp; name)</code></h3>
+<p>Marks a CSS animation as finished.</p>
+<h3 id="stdfunctionvoid-onanimationsfinished"><code>std::function&lt;void()&gt; onAnimationsFinished</code></h3>
+<p>Public callback. Fires once when the node's <strong>local</strong> animations
+(imperative + CSS node + CSS parts) all stop.</p>
+<hr />
+<h2 id="9-scroll">9. Scroll</h2>
+<h3 id="bool-isscrollcontainer-const"><code>bool isScrollContainer() const</code></h3>
+<p>True if either <code>overflow-x</code> or <code>overflow-y</code> is not <code>visible</code>.</p>
+<h3 id="scroll-position">Scroll position</h3>
+<pre><code class="language-cpp">void  scrollTo(float x, float y);
+void  scrollToX(float x);
+void  scrollToY(float y);
+void  scrollToTop();
+void  scrollToBottom();
+void  scrollToLeft();
+void  scrollToRight();
+</code></pre>
+<h3 id="scroll-queries">Scroll queries</h3>
+<pre><code class="language-cpp">float getScrollX() const;
+float getScrollY() const;
+float getMaxScrollX() const;
+float getMaxScrollY() const;
+</code></pre>
+<p>All values in logical pixels.</p>
+<hr />
+<h2 id="10-portal">10. Portal</h2>
+<h3 id="void-setportalbool-p-bool-isportal-const"><code>void setPortal(bool p)</code> / <code>bool isPortal() const</code></h3>
+<p>If <code>true</code>, the node is drawn at the root's z-top and hit-tested first.
+See <a href="../../user/08-portals/">Portals</a>.</p>
+<h3 id="void-capturepointer-void-releasepointer-bool-haspointercapture-const"><code>void capturePointer()</code> / <code>void releasePointer()</code> / <code>bool hasPointerCapture() const</code></h3>
+<p>Pointer capture. While captured, all pointer events are routed to the
+node regardless of position. Capture is released automatically when the
+button is released.</p>
+<hr />
+<h2 id="11-rendering-hooks">11. Rendering hooks</h2>
+<h3 id="void-setbackgroundtexturetexturehandle-tex-nineslice-np-0000"><code>void setBackgroundTexture(TextureHandle tex, NineSlice np = {0,0,0,0})</code></h3>
+<p>Sets a fallback background texture for <code>renderChrome</code>.</p>
+<h3 id="void-setshadereffecthandle-shader"><code>void setShader(EffectHandle shader)</code></h3>
+<p>Sets a hardcoded shader applied to the node's draw calls. Deprecated in
+favor of the <code>effect</code> style property.</p>
+<h3 id="fonthandle-resolvefontconst-computedstyle-style-fonthandle-fallback"><code>FontHandle resolveFont(const ComputedStyle&amp; style, FontHandle fallback = {})</code></h3>
+<p>Resolves the <code>font</code> property via <code>IAssetProvider::getFont</code>, with a
+fallback.</p>
+<h3 id="resolvedbgtexture-resolvebgtextureconst-computedstyle-style-texturehandle-fallbacktex-nineslice-fallbackslice-0000"><code>ResolvedBgTexture resolveBgTexture(const ComputedStyle&amp; style, TextureHandle fallbackTex = {}, NineSlice fallbackSlice = {0,0,0,0})</code></h3>
+<p>Resolves the <code>background-texture</code> property via
+<code>IAssetProvider::getTexture</code>.</p>
+<hr />
+<h2 id="12-callbacks">12. Callbacks</h2>
+<p>Public <code>std::function&lt;void()&gt;</code> fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Fires on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onClick</code></td>
+<td>Press + release on the same node.</td>
+</tr>
+<tr>
+<td><code>onPress</code></td>
+<td>Pointer down on the node.</td>
+</tr>
+<tr>
+<td><code>onRelease</code></td>
+<td>Pointer up while the press target was inside the node.</td>
+</tr>
+<tr>
+<td><code>onHoverEnter</code></td>
+<td>Pointer enters the node.</td>
+</tr>
+<tr>
+<td><code>onHoverExit</code></td>
+<td>Pointer leaves the node.</td>
+</tr>
+<tr>
+<td><code>onRightClick</code></td>
+<td>Right-click on the node.</td>
+</tr>
+<tr>
+<td><code>onAnimationsFinished</code></td>
+<td>All local animations stop.</td>
+</tr>
+</tbody>
+</table>
+<p>All are <code>void()</code>. See <a href="../../user/06-events/">Events</a> for the exact
+firing conditions.</p>
+<hr />
+<h2 id="13-runtime-lifecycle">13. Runtime — lifecycle</h2>
+<p>These are called by the runtime, not by user code. They're virtual so
+they can be overridden by the engine, not by widgets.</p>
+<h3 id="virtual-vec2-measurefloat-parent_w-float-parent_h"><code>virtual Vec2 measure(float parent_w, float parent_h)</code></h3>
+<p>Bottom-up intrinsic size. Cached; short-circuits if the subtree is
+clean and the parent size is unchanged.</p>
+<h3 id="virtual-void-arrangerect-space"><code>virtual void arrange(Rect space)</code></h3>
+<p>Top-down position. Sets <code>rect</code> and arranges children. If the node is a
+scroll container, uses the scroll path.</p>
+<h3 id="virtual-void-updatefloat-dt-bool-ancestorblocked-false-bool-scrolling-false"><code>virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false)</code></h3>
+<p>Per-node update. Called recursively from <code>updateTree</code>. Handles state
+flags, style resolution, animation ticks, children update, callbacks,
+and <code>onUpdate</code>.</p>
+<h3 id="virtual-void-drawfloat-parentopacity-10f"><code>virtual void draw(float parentOpacity = 1.0f)</code></h3>
+<p>Recursive draw. Chooses inline or layer path, draws chrome + content +
+children, then the scrollbar. If the node is the root, drains
+<code>framePortals</code>.</p>
+<h3 id="layout-hittestvec2-p-bool-ancestorblocked-false"><code>Layout* hitTest(Vec2 p, bool ancestorBlocked = false)</code></h3>
+<p>Point query with z-ordered traversal. Returns the topmost node under
+<code>p</code>, or null.</p>
+<h3 id="void-updatetreefloat-dt"><code>void updateTree(float dt)</code></h3>
+<p>Entry point for the logic phase. Hit-tests the pointer, updates focus,
+runs <code>update</code> on the root.</p>
+<h3 id="void-runframefloat-dt"><code>void runFrame(float dt)</code></h3>
+<p>Convenience: <code>beginFrame</code> + <code>updateTree</code> + <code>measure</code> + <code>arrange</code>. Called
+once per frame by the user, before <code>BeginDrawing</code>.</p>
+<h3 id="void-renderframe"><code>void renderFrame()</code></h3>
+<p>Convenience: <code>renderer-&gt;beginFrame</code> + <code>draw</code> + <code>renderer-&gt;endFrame</code>.
+Called between <code>BeginDrawing</code> and <code>EndDrawing</code>.</p>
+<hr />
+<h2 id="14-widget-extension-hooks">14. Widget extension hooks</h2>
+<p>Virtual methods for subclasses. Override only what you need.</p>
+<h3 id="virtual-void-onbuild"><code>virtual void onBuild()</code></h3>
+<p>Called once after construction, when the node is managed by a
+<code>shared_ptr</code>. Set up the widget's style tag, flags, children.</p>
+<h3 id="virtual-vec2-computeintrinsicsizefloat-availw-float-availh"><code>virtual Vec2 computeIntrinsicSize(float availW, float availH)</code></h3>
+<p>Return the widget's natural size. Default: <code>{0, 0}</code>.</p>
+<h3 id="virtual-void-onlayout"><code>virtual void onLayout()</code></h3>
+<p>Called after <code>arrange</code> sets the final rect. Do <strong>not</strong> modify
+<code>measuredSize</code>.</p>
+<h3 id="virtual-void-onupdatefloat-dt"><code>virtual void onUpdate(float dt)</code></h3>
+<p>Per-frame logic. Skipped if <code>!isEnabled &amp;&amp; !updateWhenDisabled_</code>.</p>
+<h3 id="virtual-void-onenabledchangedbool-nowenabled"><code>virtual void onEnabledChanged(bool nowEnabled)</code></h3>
+<p>Called when <code>setEnabled</code> changes the state.</p>
+<h3 id="virtual-void-ondescendantfocusedlayout-descendant"><code>virtual void onDescendantFocused(Layout* descendant)</code></h3>
+<p>Called when a descendant gains focus (via Tab navigation).</p>
+<h3 id="virtual-void-rendercontentfloat-op-const-computedstyle-style"><code>virtual void renderContent(float op, const ComputedStyle&amp; style)</code></h3>
+<p>Draw the widget's own content. Called after <code>renderChrome</code>, before
+children.</p>
+<h3 id="virtual-void-renderchromefloat-op-const-computedstyle-style"><code>virtual void renderChrome(float op, const ComputedStyle&amp; style)</code></h3>
+<p>Draw the background, texture, and border. Default implementation
+handles all standard cases. Override only for custom backgrounds.</p>
+<h3 id="style-partstyleconst-stdstring-partname"><code>Style partStyle(const std::string&amp; partName)</code></h3>
+<p>Resolves a <code>::part</code> style with its own transitions and animations.
+Called from <code>renderContent</code>.</p>
+<hr />
+<h2 id="15-helper-functions">15. Helper functions</h2>
+<h3 id="nodematchessimpleconst-layout-node-const-simpleselector-ss"><code>nodeMatchesSimple(const Layout* node, const SimpleSelector&amp; ss)</code></h3>
+<p>Free function. Tests a single compound selector against a node.</p>
+<h3 id="rulematchesconst-themerule-r-const-layout-node"><code>ruleMatches(const ThemeRule&amp; r, const Layout* node)</code></h3>
+<p>Free function. Tests a full rule (chain + media query) against a node.</p>
+<h3 id="stdvectorconst-themerule-getmatchingrules-const"><code>std::vector&lt;const ThemeRule*&gt; getMatchingRules() const</code></h3>
+<p>Returns all rules that match this node (excluding <code>::part</code> rules).</p>
+<hr />
+<h2 id="16-widgets-built-on-layout">16. Widgets built on <code>Layout</code></h2>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Header</th>
+<th>Base</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Panel</code></td>
+<td><code>Layouts.hpp</code></td>
+<td><code>TLayout&lt;Panel&gt;</code></td>
+<td>Non-interactive box, blocks raycast.</td>
+</tr>
+<tr>
+<td><code>Text</code></td>
+<td><code>Text.hpp</code></td>
+<td><code>TLayout&lt;Text&gt;</code></td>
+<td>Non-interactive, wraps optionally.</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>Button.hpp</code></td>
+<td><code>TLayout&lt;Button, Panel&gt;</code></td>
+<td>Interactive, focusable, keyboard.</td>
+</tr>
+<tr>
+<td><code>ImageContainer</code></td>
+<td><code>ImageContainer.hpp</code></td>
+<td><code>TLayout&lt;ImageContainer&gt;</code></td>
+<td>Non-interactive, draws a texture.</td>
+</tr>
+<tr>
+<td><code>Toggle</code></td>
+<td><code>Toggle.hpp</code></td>
+<td><code>TLayout&lt;Toggle&gt;</code></td>
+<td>Checked state, knob child.</td>
+</tr>
+<tr>
+<td><code>Checkbox</code></td>
+<td><code>Checkbox.hpp</code></td>
+<td><code>TLayout&lt;Checkbox&gt;</code></td>
+<td>Checked state, custom render.</td>
+</tr>
+<tr>
+<td><code>Slider</code></td>
+<td><code>Slider.hpp</code></td>
+<td><code>TLayout&lt;Slider&gt;</code></td>
+<td>Value <code>[0,1]</code>, drag + keyboard.</td>
+</tr>
+<tr>
+<td><code>ProgressBar</code></td>
+<td><code>ProgressBar.hpp</code></td>
+<td><code>TLayout&lt;ProgressBar&gt;</code></td>
+<td>Value <code>[0,1]</code>, non-interactive.</td>
+</tr>
+<tr>
+<td><code>TextInput</code></td>
+<td><code>TextInput.hpp</code></td>
+<td><code>TLayout&lt;TextInput&gt;</code></td>
+<td>Editable text, focus, cursor.</td>
+</tr>
+<tr>
+<td><code>ScrollView</code></td>
+<td><code>ScrollView.hpp</code></td>
+<td><code>TLayout&lt;ScrollView&gt;</code></td>
+<td>Overflow set to scroll.</td>
+</tr>
+<tr>
+<td><code>Dropdown</code></td>
+<td><code>Dropdown.hpp</code></td>
+<td><code>TLayout&lt;Dropdown&gt;</code></td>
+<td>Select from options, portal list.</td>
+</tr>
+<tr>
+<td><code>CanvasLayout</code></td>
+<td><code>Canvas.hpp</code></td>
+<td><code>TLayout&lt;CanvasLayout&gt;</code></td>
+<td>Renders to a render target.</td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td><code>Modal.hpp</code></td>
+<td><code>TLayout&lt;Modal&gt;</code></td>
+<td>Full-screen overlay with intro animation.</td>
+</tr>
+<tr>
+<td><code>Tooltip</code></td>
+<td><code>Tooltip.hpp</code></td>
+<td><code>TLayout&lt;Tooltip, Panel&gt;</code></td>
+<td>Shows on hover after delay.</td>
+</tr>
+<tr>
+<td><code>Popup</code></td>
+<td><code>Popup.hpp</code></td>
+<td><code>TLayout&lt;Popup, Panel&gt;</code></td>
+<td>Floating panel, portal, context menus.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../../user/03-widgets/">Widgets</a> for usage.</p>
+<hr />
+<h2 id="17-see-also">17. See also</h2>
+<ul>
+<li><a href="../../internals/02-lifecycle/">Lifecycle</a> — the exact order of
+  operations per frame.</li>
+<li><a href="../../internals/03-style-system/">Style System</a> — cascade,
+  specificity, transitions.</li>
+<li><a href="../../internals/05-layout-engine/">Layout Engine</a> — measure, arrange,
+  hit-test.</li>
+<li><a href="../../user/06-events/">Events</a> — click semantics, focus, capture.</li>
+<li><a href="../../user/10-custom-widgets/">Custom Widgets</a> — writing a widget.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
