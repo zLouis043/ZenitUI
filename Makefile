@@ -1,5 +1,10 @@
 CXX      := g++
 CXXFLAGS := -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
+CPPFLAGS := -I./src -I./src/ui -I./tests
+
+OBJ_DIR := obj
+BIN_DIR := bin
+LIB_DIR := lib
 
 ifeq ($(OS),Windows_NT)
   EXE := .exe
@@ -7,60 +12,29 @@ else
   EXE :=
 endif
 
-CPPFLAGS := -I./src -I./src/ui -I./src/backend -I./src/backend/raylib -I./tests
-CPPFLAGS += -Ideps/raylib/include
-
-LDFLAGS  := -Ldeps/raylib/lib
-LIBS     := -lraylibdll -lopengl32 -lgdi32 -lwinmm
-RAYLIB_DLL := deps/raylib/lib/raylib.dll
-
 FRAMEWORK_SRCS := $(wildcard src/ui/layout/*.cpp)
 TEST_SRCS      := $(wildcard tests/*.cpp)
-BACKEND_SRCS   := src/backend/raylib/RaylibBackend.cpp
-DEMO_SRCS      := src/main.cpp
-
-OBJ_DIR := obj
-BIN_DIR := bin
-
-LIB_DIR  := lib
-LIB_NAME := libzenit.a
-LIB_BIN  := $(LIB_DIR)/$(LIB_NAME)
 
 FRAMEWORK_OBJS := $(FRAMEWORK_SRCS:%.cpp=$(OBJ_DIR)/%.o)
-BACKEND_OBJS   := $(BACKEND_SRCS:%.cpp=$(OBJ_DIR)/%.o)
 TEST_OBJS      := $(TEST_SRCS:%.cpp=$(OBJ_DIR)/%.o)
-DEMO_OBJS      := $(DEMO_SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
-DEPS := $(FRAMEWORK_OBJS:.o=.d) $(BACKEND_OBJS:.o=.d) \
-        $(TEST_OBJS:.o=.d) $(DEMO_OBJS:.o=.d)
+DEPS := $(FRAMEWORK_OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 
+LIB_BIN   := $(LIB_DIR)/libzenit.a
 TESTS_BIN := $(BIN_DIR)/tests$(EXE)
-DEMO_BIN  := $(BIN_DIR)/demo$(EXE)
 
-all: $(TESTS_BIN) $(DEMO_BIN)
+# --- Target di default ---
+all: $(LIB_BIN) $(TESTS_BIN)
+
+libzenit: $(LIB_BIN)
+
+$(LIB_BIN): $(FRAMEWORK_OBJS) | $(LIB_DIR)
+	ar rcs $@ $^
 
 $(TESTS_BIN): $(TEST_OBJS) $(LIB_BIN) | $(BIN_DIR)
 	$(CXX) $(TEST_OBJS) -L$(LIB_DIR) -lzenit -o $@
 
-$(DEMO_BIN): $(BACKEND_OBJS) $(DEMO_OBJS) $(LIB_BIN) | $(BIN_DIR)
-	$(CXX) $(BACKEND_OBJS) $(DEMO_OBJS) -L$(LIB_DIR) -lzenit \
-	    $(LDFLAGS) $(LIBS) -o $@
-	@cp $(RAYLIB_DLL) $(BIN_DIR)/
-
-$(RAYLIB_DLL):
-	@echo "ERROR: raylib.dll not found in $(RAYLIB_DLL)"
-	@echo "Try copying manually raylib.dll in bin/ or check the path."
-	@exit 1
-
 $(OBJ_DIR)/src/ui/layout/%.o: src/ui/layout/%.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
-
-$(OBJ_DIR)/src/backend/%.o: src/backend/%.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
-
-$(OBJ_DIR)/src/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
 
@@ -72,26 +46,24 @@ $(OBJ_DIR)/tests/%.o: tests/%.cpp
 
 $(BIN_DIR):
 	mkdir -p $@
-
 $(LIB_DIR):
 	mkdir -p $@
 
-$(LIB_BIN): $(FRAMEWORK_OBJS) | $(LIB_DIR)
-	ar rcs $@ $^
-
+# --- Comandi utente ---
 test: $(TESTS_BIN)
 	./$(TESTS_BIN)
 
-demo: $(DEMO_BIN)
-	./$(DEMO_BIN)
-
-run: demo
-
-lib: $(LIB_BIN)
+examples: $(LIB_BIN)
+	$(MAKE) -C examples -j8
 
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -rf $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR)
+	$(MAKE) -C examples clean
+
+run-%: $(LIB_BIN)
+	$(MAKE) -C examples
+	./examples/bin/$*/main$(EXE)
 
 rebuild: clean all
 
-.PHONY: all lib test demo run clean rebuild
+.PHONY: all libzenit test examples run-% clean rebuild
