@@ -49,6 +49,8 @@ namespace ZenitUI
 		virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
 		virtual void setEffectFloat(EffectHandle e, const char *name, float value) = 0;
 		virtual void setEffectVec2(EffectHandle e, const char *name, Vec2 value) = 0;
+		virtual void setEffectVec3(EffectHandle e, const char *name, Vec3 value) = 0;
+		virtual void setEffectVec4f(EffectHandle e, const char *name, Vec4 value) = 0;
 		virtual void setEffectVec4(EffectHandle e, const char *name, Color value) = 0;
 		virtual void clearTarget(TargetHandle t, Color c) = 0;
 		virtual bool inTarget() const = 0;
@@ -140,7 +142,7 @@ namespace ZenitUI
 				Vec2 newVp = platform->viewportSize();
 				EdgeInsets newSafe = platform->safeArea();
 				if (newVp.x != Metrics::viewport.x || newVp.y != Metrics::viewport.y ||
-				    newSafe != safeArea)
+					newSafe != safeArea)
 				{
 					viewportGeneration++;
 				}

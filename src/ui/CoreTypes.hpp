@@ -15,6 +15,16 @@ namespace ZenitUI
 	inline Vec2 operator-(Vec2 a, Vec2 b) { return {a.x - b.x, a.y - b.y}; }
 	inline Vec2 operator*(Vec2 a, float k) { return {a.x * k, a.y * k}; }
 
+	struct Vec3
+	{
+		float x{0.0f}, y{0.0f}, z{0.0f};
+	};
+
+	struct Vec4
+	{
+		float x{0.0f}, y{0.0f}, z{0.0f}, w{1.0f};
+	};
+
 	struct Rect
 	{
 		float x{0.0f}, y{0.0f}, width{0.0f}, height{0.0f};
@@ -35,10 +45,11 @@ namespace ZenitUI
 		{
 			return top == 0.0f && right == 0.0f && bottom == 0.0f && left == 0.0f;
 		}
-		bool operator==(const EdgeInsets& o) const {
+		bool operator==(const EdgeInsets &o) const
+		{
 			return top == o.top && right == o.right && bottom == o.bottom && left == o.left;
 		}
-		bool operator!=(const EdgeInsets& o) const { return !(*this == o); }
+		bool operator!=(const EdgeInsets &o) const { return !(*this == o); }
 	};
 
 	struct Color
