@@ -9,7 +9,7 @@ PCH_SRC = src/pch.hpp
 PCH_OUT = src/pch.hpp.gch
 
 CXX = g++
-CXXFLAGS = -ggdb -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
+CXXFLAGS = -ggdb -std=c++17 -Wall -Wextra -Wno-missing-field-initializers -DZENITUI_DEBUG
 
 SRC_FILES = $(shell find $(SRC_FOLDER) -name "*.cpp")
 INCLUDE_DIRS = -I./src/backend -I./src/ui
