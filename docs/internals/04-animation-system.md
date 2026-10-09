@@ -757,24 +757,26 @@ subtreeDirty_ = wasPending || pendingTransition || anyChildDirty ||
 ```
 
 - `pendingTransition` is set by imperative animation tracks (they write
-  to `inlineBase` via `getInlineBase()`).
+  to `inlineBase` via `getInlineBase()`), and by every other setter
+  that touches the style.
 - `inTransition` is true while a CSS state transition is in progress.
-- CSS **keyframe** animations do not affect `subtreeDirty_`.
+- CSS **keyframe** animations do not affect `subtreeDirty_` by
+  themselves.
 
-Wait — that's important. A node with only a CSS keyframe animation (no
-transition, no pending transition) doesn't set `subtreeDirty_` from the
-animation. So its subtree can be cached. The keyframe animation still
-renders, because the overlay is applied at draw time on `renderStyle`.
+A node with only a CSS keyframe animation (no transition, no pending
+transition) doesn't set `subtreeDirty_` from the animation. Its
+subtree can be cached. The keyframe animation still renders, because
+the overlay is applied at draw time on a local `renderStyle` copy of
+`currentStyle`.
 
-But the node's **own** style is applied to a local `renderStyle` in
-`draw`, not to `currentStyle`. Since `measure` and `arrange` use
-`currentStyle`, the animation's effect on layout is zero (as
-documented). So a CSS keyframe animation that only changes `opacity`
-or `scale` doesn't need a re-layout, and the cache is valid.
-
-A CSS keyframe animation that changes `width` or `height` **would** be
-wrong here — the node would be drawn with the animated size but laid
-out with the un-animated size. That's the documented limitation.
+An **imperative** animation, by contrast, writes into `inlineBase` and
+therefore sets `pendingTransition` every frame. This is what makes the
+value visible: on the same frame, `resolvePendingTransition` re-resolves
+the target style, sees the active imperative animation, and snaps
+`currentStyle` to the new target (see
+[Style System §4.2](03-style-system.md)). Without that snap the
+transition timer would reset on every frame and `currentStyle` would
+never advance.
 
 ### 6.1 `onAnimationsFinished`
 

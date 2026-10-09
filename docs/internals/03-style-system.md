@@ -437,9 +437,22 @@ void StyleResolver::resolvePendingTransition(Layout& node) {
     node.pendingTransition = false;
 
     if (newTarget != targetStyle) {
-        transitionStartStyle = currentStyle;
-        transitionTimer = 0.0f;
-        targetStyle = std::move(newTarget);
+        if (node.anim_.hasActiveImperative()) {
+            // An imperative animation rewrites the inline style every
+            // frame, so the target changes every frame too. A CSS
+            // transition would reset its timer on each of those
+            // changes and never make progress. The animation itself
+            // is the interpolation, so we snap currentStyle to the
+            // target and let the animation drive the visual output.
+            currentStyle = newTarget;
+            targetStyle = std::move(newTarget);
+            transitionStartStyle = currentStyle;
+            transitionTimer = 1.0f;
+        } else {
+            transitionStartStyle = currentStyle;
+            transitionTimer = 0.0f;
+            targetStyle = std::move(newTarget);
+        }
     } else {
         targetStyle = std::move(newTarget);
         if (transitionTimer >= 1.0f) {
@@ -450,11 +463,20 @@ void StyleResolver::resolvePendingTransition(Layout& node) {
 }
 ```
 
-Similar, but only restarts the transition if the new target differs
-from the current one. If the target is unchanged, it just refreshes
-`targetStyle` (in case some properties were resolved differently but
-ended up the same) and, if the transition was already done, snaps
-`currentStyle` to it.
+Similar to `beginStateTransition`, but only restarts the transition if
+the new target differs from the current one. If the target is
+unchanged, it just refreshes `targetStyle` and, if the transition was
+already done, snaps `currentStyle` to it.
+
+When an **imperative** animation is running
+(`node.anim_.hasActiveImperative()` is true), the resolver skips the
+transition entirely and sets `currentStyle = newTarget` immediately.
+This is what allows imperative animations to produce visible motion:
+the animation's track setters write into `inlineBase`, the resolver
+re-resolves the target every frame, and `currentStyle` follows it
+directly. Without this branch, every frame would restart the
+transition and `currentStyle` would never reach the target. See
+[Animation System](04-animation-system.md) §6.
 
 ### 4.3 `tick`
 
@@ -852,9 +874,9 @@ intentional: the animation changes the inline style, so the node needs
 to re-resolve. The overhead is small (one re-resolve per frame per
 animated node).
 
-But `tickImperative` runs **before** the style check in `update`. So
-within the same frame, the `pendingTransition` set by the animation is
-picked up by the `else if (pendingTransition)` branch:
+`tickImperative` runs **before** the style check in `update`, so within
+the same frame the `pendingTransition` set by the animation is picked
+up by the `else if (pendingTransition)` branch:
 
 ```cpp
 if (stateChanged) {
@@ -866,26 +888,51 @@ if (stateChanged) {
 }
 ```
 
-So an imperative animation that changes `inlineBase` will cause the
-style to re-resolve in the **same frame**. The `renderStyle` at draw
-time will reflect the animated value.
+`resolvePendingTransition` sees that an imperative animation is
+active and snaps `currentStyle` to the new target instead of starting
+a transition (see §4.2). The result is that the animated value is
+visible in the **same** frame it was written: the animation's setter
+runs, `pendingTransition` is set, the target is re-resolved, and
+`currentStyle` is updated to match. `renderStyle` at draw time then
+contains the interpolated value, since it's a copy of `currentStyle`
+with the CSS keyframe overlay applied on top.
 
 ### 8.1 Flag lifecycle
 
+Without an imperative animation running:
+
 ```
 Frame N, update:
-├── tickImperative → writes to inlineBase → sets pendingTransition
-├── ... (other update steps)
-├── pendingTransition is true, so resolvePendingTransition runs
-├── resolvePendingTransition clears pendingTransition
-├── style.tick advances transition (if any)
-├── draw uses the resolved style
+├── tickImperative: no playing animation → nothing happens
+├── ...
+├── pendingTransition might be set by a setter called earlier in update
+├── resolvePendingTransition runs, if pendingTransition is true
+│   ├── target differs → start a transition (timer = 0)
+│   ├── target same → refresh target, snap if transition done
+│   └── clears pendingTransition
+├── style.tick advances the transition (if any)
+└── draw uses currentStyle + css overlay
+```
+
+With an imperative animation running:
+
+```
+Frame N, update:
+├── tickImperative: writes to inlineBase → sets pendingTransition
+├── ...
+├── resolvePendingTransition runs
+│   ├── sees hasActiveImperative() == true
+│   ├── sets currentStyle = newTarget (snap, no transition)
+│   └── clears pendingTransition
+├── style.tick: transitionTimer already 1.0 → no-op
+└── draw uses currentStyle (already at the animated value)
 ```
 
 The animation continuously sets `pendingTransition` and the resolver
-continuously clears it. This is how an imperative animation integrates
-with the style system: by going through the same setter path as a
-normal style change.
+continuously clears it, snapping `currentStyle` to the animated value
+on each frame. Once the animation finishes (`hasActiveImperative()`
+becomes false), the next style change goes through the normal
+transition path again.
 
 ---
 

@@ -182,13 +182,28 @@ namespace ZenitUI
 	void StyleResolver::resolvePendingTransition(Layout &node)
 	{
 		ComputedStyle newTarget = resolveFor(node);
-		node.pendingTransition = false; // <-- AGGIUNTO
+		node.pendingTransition = false;
 
 		if (newTarget != targetStyle)
 		{
-			transitionStartStyle = currentStyle;
-			transitionTimer = 0.0f;
-			targetStyle = std::move(newTarget);
+			if (node.anim_.hasActiveImperative())
+			{
+				// L'animazione imperativa riscrive lo stile ogni frame. Il
+				// target cambia continuamente, quindi il sistema di
+				// transizioni resetterebbe il timer a ogni frame e non
+				// progredirebbe mai. Saltiamo la transizione e allineiamo
+				// currentStyle al target immediatamente.
+				currentStyle = newTarget;
+				targetStyle = std::move(newTarget);
+				transitionStartStyle = currentStyle;
+				transitionTimer = 1.0f;
+			}
+			else
+			{
+				transitionStartStyle = currentStyle;
+				transitionTimer = 0.0f;
+				targetStyle = std::move(newTarget);
+			}
 		}
 		else
 		{

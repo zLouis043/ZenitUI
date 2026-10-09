@@ -58,9 +58,9 @@ else if (!isHovered && wasHovered && node.onHoverExit) node.onHoverExit();
 **Test:** add a test in `test_interaction.cpp` that verifies
 `onHoverEnter` fires once and `onHoverExit` doesn't fire on press.
 
-- [ ] Fix the condition in `InputController::fireCallbacks`
-- [ ] Add regression test
-- [ ] Update documentation (remove the "known issue" note in
+- [x] Fix the condition in `InputController::fireCallbacks`
+- [x] Add regression test
+- [x] Update documentation (remove the "known issue" note in
       `internals/07-input-system.md`)
 
 ---
@@ -89,10 +89,10 @@ inheritance snapshot, which has a different purpose.
 **Test:** add a test that changes `overflow` without changing anything
 else and verifies that `reset()` is called exactly once.
 
-- [ ] Move the overflow snapshot into `ScrollController`
-- [ ] Update `resetIfOverflowChanged` to use the local snapshot
-- [ ] Add regression test in `test_interaction.cpp`
-- [ ] Remove the "known issue" note in `internals/08-scroll-system.md`
+- [x] Move the overflow snapshot into `ScrollController`
+- [x] Update `resetIfOverflowChanged` to use the local snapshot
+- [x] Add regression test in `test_interaction.cpp`
+- [x] Remove the "known issue" note in `internals/08-scroll-system.md`
 
 ---
 
@@ -127,10 +127,10 @@ void Layout::translateSubtree(float dx, float dy) {
 **Test:** create a `ScrollView` with a `Popup` child, scroll it, verify
 the popup's rect doesn't move.
 
-- [ ] Re-enable the `isPortal()` check
-- [ ] Add regression test
-- [ ] Verify `Dropdown` still works inside a `ScrollView`
-- [ ] Update `internals/08-scroll-system.md`
+- [x] Re-enable the `isPortal()` check
+- [x] Add regression test
+- [x] Verify `Dropdown` still works inside a `ScrollView`
+- [x] Update `internals/08-scroll-system.md`
 
 ---
 
@@ -156,10 +156,10 @@ require shaders to normalize. Worse, but cheaper.
 uniform value. Requires a way to read back uniforms from the mock
 renderer.
 
-- [ ] Decide between preferred and alternative
-- [ ] Implement
-- [ ] Add test
-- [ ] Update `user/09-effects.md` and `api/FilterRegistry.md`
+- [x] Decide between preferred and alternative
+- [x] Implement
+- [x] Add test
+- [x] Update `user/09-effects.md` and `api/FilterRegistry.md`
 
 ---
 
@@ -181,9 +181,9 @@ careful transform handling.
 **Test:** create a clipped node, hit-test outside the clip but inside
 the rect, verify no hit.
 
-- [ ] Implement clip-aware hit-testing
-- [ ] Add regression test
-- [ ] Consider performance (a `getClipRect()` call per node per
+- [x] Implement clip-aware hit-testing
+- [x] Add regression test
+- [x] Consider performance (a `getClipRect()` call per node per
       hit-test)
 
 ---
@@ -204,9 +204,9 @@ pointer-pressed branch.
 **Test:** create a focusable node inside a container with
 `onDescendantFocused`, click it, verify the callback fired.
 
-- [ ] Add the call
-- [ ] Add test
-- [ ] Update `internals/07-input-system.md`
+- [x] Add the call
+- [x] Add test
+- [x] Update `internals/07-input-system.md`
 
 ### 1.7 `Dropdown` hardcoda `height: VH(3.0f)` in `inlineBase`
 
@@ -233,9 +233,46 @@ trigger fill its dropdown — should stay in `inlineBase`.
 **Test:** add a test that sets `.dropdown-trigger { height: 60px; }`
 in a stylesheet and verifies the trigger's actual rect height.
 
-- [ ] Move visual properties to `inlineDefaults`
-- [ ] Add regression test
-- [ ] Update `user/03-widgets.md` (Dropdown section)
+- [x] Move visual properties to `inlineDefaults`
+- [x] Add regression test
+- [x] Update `user/03-widgets.md` (Dropdown section)
+
+### 1.8 Imperative animations don't progress
+
+**Severity:** high — breaks every imperative animation that writes
+into `inlineBase`.
+
+**Location:** `src/ui/layout/StyleResolver.cpp`,
+`StyleResolver::resolvePendingTransition`.
+
+**Problem:** an imperative animation writes its interpolated value
+into `inlineBase` on every frame. This sets `pendingTransition = true`,
+which triggers `resolvePendingTransition` on the next frame. When the
+new target differs from the previous one, the method resets
+`transitionTimer = 0.0f` and `transitionStartStyle = currentStyle`.
+Since the target changes every frame, the timer is reset every frame
+and `currentStyle` never reaches it. As a result, imperative
+animations produce no visible movement.
+
+**Expected:** while an imperative animation is running, the CSS
+transition system must step aside. `currentStyle` should follow the
+target directly (snap), with no interpolation — the animation itself
+provides the interpolation, and the resolver must not layer a second
+transition on top.
+
+**Fix:** added `AnimationPlayer::hasActiveImperative()`. In
+`resolvePendingTransition`, when this returns true, `currentStyle` is
+aligned immediately to the target instead of starting a transition.
+
+**Test:** added `Anim_imperative.drives_current_style_without_transition`
+in `tests/test_animations.cpp`.
+
+- [x] Add `hasActiveImperative` to `AnimationPlayer`
+- [x] Update `resolvePendingTransition`
+- [x] Add the regression test
+- [x] Update `internals/03-style-system.md`
+- [x] Update `internals/04-animation-system.md`
+- [x] Update `user/07-animations.md`
 
 ---
 

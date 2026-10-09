@@ -873,10 +873,14 @@ happen **around** the render target operation, not inside it. See
   `infinite` animations never stop. Keep the count low.
 - **Imperative animations** tick every frame while `playing`. Each
   track calls its setter once per frame. Tracks are cheap, but the
-  setter often writes to `getInlineBase()`, which triggers a
+  setter writes to `getInlineBase()`, which triggers a
   `pendingTransition` flag — that then forces the node's style to be
-  re-resolved. This is unavoidable but worth knowing if you animate
-  many nodes at once.
+  re-resolved. While an imperative animation is running, the resolver
+  skips the CSS transition and snaps `currentStyle` to the target, so
+  the animated value is visible on the same frame. The cost is one
+  style re-resolution per animated node per frame; for dozens of
+  simultaneous animations this can become noticeable, so keep the
+  count moderate.
 - **`::part` animations** tick every time `partStyle(name)` is called,
   which is once per frame during `renderContent`. They're essentially
   free unless you have hundreds of parts animating.
