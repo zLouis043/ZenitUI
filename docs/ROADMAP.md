@@ -499,10 +499,10 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.3 `Text` wrapping
 
-- [ ] `setWrap(true)` with a bounded parent width
-- [ ] Multiple lines
-- [ ] Re-wrap on width change (`onLayout`)
-- [ ] No wrap when parent width is unbounded
+- [x] `setWrap(true)` with a bounded parent width
+- [x] Multiple lines
+- [x] Re-wrap on width change (`onLayout`)
+- [x] No wrap when parent width is unbounded
 
 ### 3.4 `Dropdown`
 
