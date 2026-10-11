@@ -1,6 +1,8 @@
 #include "TestFramework.hpp"
 #include "Mocks.hpp"
 
+#include "UIComponents.hpp"
+
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
@@ -545,4 +547,51 @@ TEST(Interaction_focus, click_fires_on_descendant_focused)
 
     CHECK(UIContext::get().hasFocus(btn.get()));
     CHECK(container->notifyCount == 1);
+}
+
+TEST(Interaction_modal, hidden_modal_does_not_block_click)
+{
+    Env env;
+    Theme::get().clear();
+
+    int clicks = 0;
+
+    // Root: a Stack that fills the viewport.
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    // A button somewhere on the page.
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(200), Px(60));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onClick = [&clicks]{ clicks++; };
+    root->addChild(btn);
+
+    // A modal added at the root, full-screen, initially hidden.
+    auto modal = UI::Modal::create();
+    modal->size(Percent(100), Percent(100));
+    root->addChild(modal);
+
+    env.frame(root);
+
+    // While hidden, clicking where the button is must reach the button.
+    env.click(root, { 100, 30 });
+    CHECK(clicks == 1);
+
+    // Show the modal. Now it must capture the click.
+    modal->show();
+    env.frame(root);
+    env.frame(root);   // second frame so the intro animation state settles
+
+    env.click(root, { 100, 30 });
+    CHECK(clicks == 1);   // <-- still 1: modal intercepted the click
+
+    // Hide again. The button must be reachable.
+    modal->hide();
+    env.frame(root);
+    env.frame(root);
+
+    env.click(root, { 100, 30 });
+    CHECK(clicks == 2);
 }

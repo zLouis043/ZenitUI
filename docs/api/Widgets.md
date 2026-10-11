@@ -669,24 +669,44 @@ public:
 
 | Method | Description |
 |--------|-------------|
-| `show()` | Set opacity to 1, play `"Intro"` forward. |
-| `hide()` | Set opacity to 0, play `"Intro"` in reverse. |
+| `show()` | Set opacity to 1, enable input, play `"Intro"` forward. |
+| `hide()` | Set opacity to 0, disable input, play `"Intro"` in reverse. |
 
 ### Structure
 
 `onBuild()` creates:
 
 - A full-screen `Stack` with tag `"Modal"`, background black 0.6,
-  opacity 0.
-- One child: a `VStack` with class `modal-content`.
+  opacity 0. It starts **disabled** (`setEnabled(false)`).
+- One child: a `VStack` with class `modal-content`. This is where the
+  user puts content.
 
 The `"Intro"` animation translates the content from `VH(100)` to `0`
 with `ease-out-back`, over 0.4s.
 
+### Input handling
+
+The modal is disabled while hidden. `show()` enables it, `hide()`
+disables it again. This is what keeps the overlay from swallowing
+clicks meant for the page underneath: a disabled node is invisible
+to `hitTest`, so the click falls through to whatever is below.
+
+### Placement
+
+The modal is meant to be a **direct child of the root**:
+
+```cpp
+root->addChild(page);      // the page content
+root->addChild(modal);     // overlay, drawn on top
+```
+
+Placing it inside a `Vertical` / `Horizontal` container makes it
+participate in that container's flow, pushing the siblings around.
+
 ### Flags
 
-- `setInteractive(false)` (in `onBuild`; `show()` sets it to `true`).
-- `setFocusScope(true)`.
+- `setInteractive(false)` in `onBuild` (toggled by `show` / `hide`)
+- `setFocusScope(true)`
 
 ### Content access
 
@@ -699,6 +719,10 @@ modal->children[0]->addChild(Label("Are you sure?"));
 ### Style tag
 
 `"Modal"`
+
+### ZMarkup
+
+No built-in tag. Register one via `ZMarkup::Registry` if needed.
 
 ---
 

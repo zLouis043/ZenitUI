@@ -94,3 +94,5 @@ small and the assets reusable.
 | `04b_imperative_animations` | `UIAnimation` in C++: play/reverse, custom math, chaining |
 | `05_zstyle` | External `.zstyle` file: `var()`, `calc()`, `@media`, states, `::part` |
 | `06_zmarkup` | Declarative UI: `ZMarkup::build`, `UINode`, callback binding |
+| `07_effects` | `filter:` (blur, drop-shadow, sepia custom) and `effect:` (single shader) |
+| `08_portals` | Tooltip, Popup, ContextMenu, Modal |

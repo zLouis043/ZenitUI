@@ -392,6 +392,39 @@ button.
 - [x] Update `user/05-zstyle.md` (add a section on compound selectors)
 - [x] Update `api/ZStyle.md`
 
+### 2.9 `Modal` intercepts clicks while hidden
+
+**Severity:** high — a hidden `Modal` blocks input to any node under it.
+
+**Location:** `src/ui/components/Modal.hpp`, `show` / `hide` / `onBuild`.
+
+**Problem:** the `Modal` is full-screen (`width: 100%; height: 100%`) and
+`onBuild` only sets `setInteractive(false)`. Its content VStack and the
+content's descendants remain enabled and interactive. The `hitTest`
+doesn't check opacity, so the invisible content captures clicks on any
+node that happens to be under its rect — including buttons in the page
+behind it.
+
+**Expected:** while the modal is hidden, it must not participate in
+hit-testing at all. While visible, it must capture input (that's the
+point of a modal).
+
+**Fix:** `setEnabled(false)` in `onBuild` (and after `hide()`), and
+`setEnabled(true)` in `show()`. Since `hitTest` returns early when
+`!isEnabled`, disabling the modal prevents the recursion into its
+content — the click falls through to the page.
+
+**Test:** add a test that adds a `Modal` on the same tree as a
+clickable button, positioned so that the button's rect overlaps the
+modal's full-screen rect. Verify that clicking the button works while
+the modal is hidden, and does not work while the modal is shown.
+
+- [x] Disable the modal in `onBuild`
+- [x] Enable it in `show()`, disable it in `hide()`
+- [x] Add the regression test
+- [x] Update `user/03-widgets.md` (Modal section)
+- [x] Update `api/Widgets.md`
+
 ---
 
 ## Phase 3 — Test coverage
