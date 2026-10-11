@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791752024525,
+  "lastUpdate": 1791752316400,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -97,6 +97,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "frame loop 100 nodes",
             "value": 6.9473,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "cf13e87f3e1b3e945e05f655a89d1331ed763de5",
+          "message": "Still trying to make benchmarks and docs live together",
+          "timestamp": "2026-10-11T22:57:15+02:00",
+          "tree_id": "1a448c193f1076ba9a2ba8ae9a003c2a87d9b3ff",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/cf13e87f3e1b3e945e05f655a89d1331ed763de5"
+        },
+        "date": 1791752314894,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Value x1 term (Px)",
+            "value": 0.0084,
+            "unit": "us"
+          },
+          {
+            "name": "Value x2 terms (calc)",
+            "value": 0.0425,
+            "unit": "us"
+          },
+          {
+            "name": "ComputedStyle default + assign",
+            "value": 0.2878,
+            "unit": "us"
+          },
+          {
+            "name": "ComputedStyle copy",
+            "value": 0.1097,
+            "unit": "us"
+          },
+          {
+            "name": "frame loop 100 nodes",
+            "value": 6.9391,
             "unit": "us"
           }
         ]
