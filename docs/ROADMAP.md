@@ -545,8 +545,8 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.9 Media queries on viewport change
 
-- [ ] Setting `Metrics::viewport` triggers a style re-resolve
-- [ ] `@media (min-width: 600px)` matches / doesn't match based on the
+- [x] Setting `Metrics::viewport` triggers a style re-resolve
+- [x] `@media (min-width: 600px)` matches / doesn't match based on the
       viewport
 
 ---
