@@ -593,4 +593,70 @@ namespace ZenitUI
 		return nullptr;
 	}
 
+		bool Layout::scrollIntoView(float margin)
+	{
+		return scrollIntoView(getRect(), margin);
+	}
+
+	bool Layout::scrollIntoView(const Rect &subRect, float margin)
+	{
+		// Trova il primo antenato scrollabile. Non importa se è
+		// "scroll" o "auto": basta che abbia un overflow diverso da
+		// "visible" per avere uno ScrollController attivo.
+		Layout *container = getParent().get();
+		while (container)
+		{
+			if (container->isScrollContainer())
+				break;
+			container = container->getParent().get();
+		}
+		if (!container)
+			return false;
+
+		// `subRect` è in coordinate schermo (già traslato dallo scroll
+		// applicato). Il rect del container è nella sua posizione
+		// attuale, non traslato. Il confronto geometrico è quindi
+		// diretto.
+		//
+		// Nota: se ci sono container scrollabili annidati, `subRect`
+		// riflette lo scroll di *tutti* gli antenati, mentre `view`
+		// no. Il calcolo è corretto per il caso comune (un solo
+		// livello di scroll tra questo nodo e il container). Gli
+		// scroll annidati richiederebbero una conversione di coordinate
+		// più attenta.
+		const Rect &view = container->rect;
+
+		float dx = 0.0f;
+		float dy = 0.0f;
+
+		// Asse orizzontale
+		if (subRect.x < view.x + margin)
+			dx = subRect.x - (view.x + margin);
+		else if (subRect.x + subRect.width > view.x + view.width - margin)
+			dx = (subRect.x + subRect.width) - (view.x + view.width - margin);
+
+		// Asse verticale
+		if (subRect.y < view.y + margin)
+			dy = subRect.y - (view.y + margin);
+		else if (subRect.y + subRect.height > view.y + view.height - margin)
+			dy = (subRect.y + subRect.height) - (view.y + view.height - margin);
+
+		if (dx == 0.0f && dy == 0.0f)
+			return false;
+
+		float targetX = container->getScrollX() + dx;
+		float targetY = container->getScrollY() + dy;
+
+		targetX = std::clamp(targetX, 0.0f, container->getMaxScrollX());
+		targetY = std::clamp(targetY, 0.0f, container->getMaxScrollY());
+
+		// Nulla da fare se il clamp ha annullato lo spostamento.
+		if (targetX == container->getScrollX() &&
+		    targetY == container->getScrollY())
+			return false;
+
+		container->scrollTo(targetX, targetY);
+		return true;
+	}
+
 } // namespace ZenitUI

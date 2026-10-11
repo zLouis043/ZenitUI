@@ -249,7 +249,6 @@ namespace ZenitUI
 		}
 
 		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
-		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
 		bool isScrollContainer() const
 		{
 			return style_.currentStyle.overflowX != Overflow::Visible || style_.currentStyle.overflowY != Overflow::Visible;
@@ -285,6 +284,22 @@ namespace ZenitUI
 			if (isScrollContainer())
 				scrollToX(scroll_.state.maxScroll.x);
 		}
+
+		// Scrolls the nearest scrollable ancestor so this node becomes
+		// visible. Does nothing if the node has no scrollable ancestor,
+		// or if the node is already fully visible.
+		//
+		// `margin` reserves that many pixels of padding around the node
+		// inside the container's viewport. Use it to avoid the node
+		// being flush against the container's edge.
+		//
+		// Returns true if the scroll offset was changed.
+		bool scrollIntoView(float margin = 0.0f);
+
+		// Same as above, but for a sub-region of the node. Useful when
+		// the "interesting" part of the node is smaller than its full
+		// rect (a label inside a large padding, a specific line of text).
+		bool scrollIntoView(const Rect &subRect, float margin = 0.0f);
 
 		float getScrollX() const { return scroll_.state.offset.x; }
 		float getScrollY() const { return scroll_.state.offset.y; }

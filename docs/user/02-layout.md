@@ -450,6 +450,59 @@ See [Events](06-events.md) for how scroll interacts with hover and press
 states (the "hover freeze" behavior: hover is not recomputed while a
 scroll is in progress).
 
+### Programmatic scrolling
+
+The scroll position can be set from code:
+
+```cpp
+container->scrollTo(x, y);       // absolute position
+container->scrollToTop();
+container->scrollToBottom();
+container->scrollToLeft();
+container->scrollToRight();
+container->scrollToX(x);         // one axis only
+container->scrollToY(y);
+```
+
+The current position and the maximum are queryable:
+
+```cpp
+float y     = container->getScrollY();
+float maxY  = container->getMaxScrollY();
+```
+
+All values are in logical pixels, in the range `[0, maxScroll]`.
+
+### `scrollIntoView`
+
+The most common reason to scroll programmatically is to bring a node
+into view — typically after focus changes, or after appending an item
+to a list. `scrollIntoView` walks up to the nearest scrollable
+ancestor and adjusts its scroll offset just enough to make the node
+visible:
+
+```cpp
+// Make sure a focused node is visible after Tab navigation.
+node->scrollIntoView();
+
+// Reserve a small margin so the node isn't flush against the edge.
+node->scrollIntoView(/*margin=*/8.0f);
+```
+
+The method does nothing if the node has no scrollable ancestor, or if
+the node is already fully visible. It returns `true` if it changed the
+scroll offset, `false` otherwise.
+
+There is also an overload that takes a sub-rect for when only part of
+a node matters:
+
+```cpp
+// Scroll so that only the first line of a Text is visible.
+Rect firstLine = text->getRect();
+firstLine.height = lineHeight;
+text->scrollIntoView(firstLine);
+```
+
 ---
 
 ## 9. Transform
