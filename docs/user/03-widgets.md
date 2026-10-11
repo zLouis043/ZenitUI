@@ -482,24 +482,30 @@ Slider#s value=0.65 width="55%"
 ```cpp
 ui.onValueChanged("s", [](float v){ /* ... */ });
 ```
-
 ### API
 
 | Method / field | Description |
 |----------------|-------------|
 | `getValue()` | Current value in `[0, 1]`. |
-| `onValueChanged` | `std::function<void(float)>`. |
+| `setValue(float v, bool notify = true)` | Sets the value (clamped to `[0, 1]`). Fires `onValueChanged` if `notify` is true and the value actually changed. |
+| `onValueChanged` | `std::function<void(float)>`. Fires on user input and on `setValue` when `notify` is true. |
 
-There is **no** `setValue()` — the value is only changed by user input
-(drag or keyboard). To set it programmatically, use
-`getInlineBase()`… no, that doesn't work either. If you need to set the
-value from code, keep a reference to the `Slider` and add a setter in
-your own code, or wrap it.
+Example — programmatic value with no callback:
 
-> **Note:** the value is stored in a private field of `Slider`. There is
-> currently no public API to set it programmatically after construction.
-> The most common pattern is to build a small wrapper widget that owns
-> both the `Slider` and your own state.
+```cpp
+auto s = Slider::create(0.5f);
+
+// Sync from external state without triggering the reaction.
+s->setValue(savedVolume, /*notify=*/false);
+
+// Set and react, as if the user had dragged the slider.
+s->setValue(0.8f);
+```
+
+setValue does nothing if the new value equals the current one, so
+calling setValue(s->getValue()) in a loop is a safe no-op. This is
+what makes it convenient for syncing with an external source of truth
+without the risk of infinite feedback loops.
 
 ### Interaction
 

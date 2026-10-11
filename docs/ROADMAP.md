@@ -325,9 +325,9 @@ Add a public setter that clamps to `[0, 1]` and optionally fires
 `onValueChanged`. A `bool notify` parameter (default `true`) lets
 callers suppress the callback for programmatic updates.
 
-- [ ] Add method to `Slider`
-- [ ] Add test
-- [ ] Update `user/03-widgets.md` and `api/Widgets.md`
+- [x] Add method to `Slider`
+- [x] Add test
+- [x] Update `user/03-widgets.md` and `api/Widgets.md`
 
 ### 2.2 `Layout::removeClass` / `clearStyleClasses`
 
