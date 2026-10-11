@@ -274,6 +274,44 @@ in `tests/test_animations.cpp`.
 - [x] Update `internals/04-animation-system.md`
 - [x] Update `user/07-animations.md`
 
+### 1.9 `CanvasLayout` draws with wrong coordinates inside the target
+
+**Severity:** high — the canvas renders empty or clipped.
+
+**Location:** `src/ui/components/Canvas.hpp`, `CanvasLayout::draw`.
+
+**Problem:** `pushTarget()` resets the coordinate system to `(0, 0)` at
+the target's top-left, but the node's `rect` (and its children's rects,
+and `renderChrome`'s use of `rect`) are still in **screen coordinates**.
+Drawing at screen coordinates inside a target of a smaller size produces
+nothing visible: everything is drawn outside the target bounds.
+
+**Expected:** the subtree must be offset by `-rect.x, -rect.y` while
+drawing inside the target, so it starts at the target's `(0, 0)`.
+
+**Fix:** push an offset transform around the subtree draw, exactly like
+`Layout::drawLayer` does:
+
+```cpp
+Transform2D offsetTr;
+offsetTr.pivot = {0.0f, 0.0f};
+offsetTr.translate = {-rect.x, -rect.y};
+
+r->pushTarget(target);
+r->pushTransform(offsetTr);
+// ... renderChrome, renderContent, children
+r->popTransform();
+r->popTarget();
+```
+
+**Test:** render a canvas with a child that has a known color, then
+verify the target's pixels contain that color. Requires a framebuffer
+readback, so this test is easiest with the real Raylib backend rather
+than the mock.
+
+- [x] Add the offset transform
+- [x] Add a regression test (needs framebuffer readback)
+- [x] Update `user/10-custom-widgets.md` if the canvas is mentioned
 ---
 
 ## Phase 2 — Missing core API

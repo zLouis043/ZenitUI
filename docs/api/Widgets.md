@@ -639,15 +639,24 @@ public:
 - `LayoutType::Stack`, style tag `"Canvas"`.
 - `setInteractive(true)`.
 - On each draw: if the rect size changed, recreates the render target.
-- Renders the subtree into the target, then draws the target as a
-  texture.
-- Applies a custom shader (via `setShader`) if `supports(Effects)`.
+- Renders the subtree into the target. The subtree draws with an
+  offset transform of `{-rect.x, -rect.y}`, so it lands at the
+  target's `(0, 0)` rather than at its screen position. This is the
+  same trick `Layout::drawLayer` uses for filters.
+- Draws the target back to the framebuffer as a single texture,
+  applying the node's own transform (translate, scale, rotation) and
+  its `setShader` effect if `supports(Feature::Effects)`.
 
 ### Notes
 
 - The target is destroyed in the destructor.
 - Requires `supports(Feature::Effects)` for shader application.
 - No ZMarkup tag by default. Register one via `ZMarkup::Registry`.
+- The `setShader` shader is applied to the composited target, not to
+  the individual draw calls inside it. This is the main difference
+  between `CanvasLayout` and a plain node with `effect:` — the latter
+  pushes the shader around each draw call, the former sees the whole
+  subtree at once.
 
 ---
 
