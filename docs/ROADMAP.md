@@ -334,11 +334,11 @@ callers suppress the callback for programmatic updates.
 Without these, CSS animations declared under a class can't be stopped
 without rebuilding the node. Also blocks dynamic styling use cases.
 
-- [ ] Add `removeClass(const std::string&)`
-- [ ] Add `clearStyleClasses()`
-- [ ] Add `hasClass(const std::string&) const`
-- [ ] Add tests
-- [ ] Update `api/Layout.md`
+- [x] Add `removeClass(const std::string&)`
+- [x] Add `clearStyleClasses()`
+- [x] Add `hasClass(const std::string&) const`
+- [x] Add tests
+- [x] Update `api/Layout.md`
 
 ### 2.3 `TextInput` cursor positioning
 

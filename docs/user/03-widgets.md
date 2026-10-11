@@ -56,6 +56,41 @@ widget->size(VW(10), VH(5));        // set width/height
 widget->passThrough(true);          // click passes through to parent
 ```
 
+### Class management
+
+Beyond the fluent `cls()` for build time, `Layout` exposes a small set
+of methods to manage classes at runtime:
+
+```cpp
+node->addClass("highlight");      // no-op if already present
+node->removeClass("highlight");   // no-op if absent
+node->hasClass("highlight");      // -> bool
+node->clearStyleClasses();        // removes all classes
+```
+
+These are the same operations `cls()` performs, but usable at any point
+in the frame — typically from a callback, an `onUpdate`, or an external
+controller.
+
+`removeClass` is what makes it possible to start and stop a CSS
+animation declared under a class, without rebuilding the node:
+
+```css
+.pulse { animation: pulse 1s infinite; }
+```
+
+```cpp
+btn->addClass("pulse");    // starts the animation
+// ...
+btn->removeClass("pulse"); // stops it immediately
+```
+
+`addClass` is idempotent: calling it twice with the same name does not
+create duplicates. This is different from the raw `styleClasses` vector
+(which is exposed through `getStyleClasses()` as a `const&` and cannot
+be modified directly), and it matches the behavior you'd expect from
+CSS class manipulation.
+
 ### Inline style
 
 ```cpp

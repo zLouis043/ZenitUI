@@ -44,9 +44,45 @@ namespace ZenitUI
 		friend struct InputController;
 		friend struct ScrollController;
 
+		// Adds a CSS class. No-op if the class is already present,
+		// so calling it twice does not create duplicates.
 		void addClass(const std::string &className)
 		{
+			for (const auto &c : styleClasses)
+				if (c == className)
+					return;
 			styleClasses.push_back(className);
+			pendingTransition = true;
+		}
+
+		// Removes every occurrence of the class. No-op if the class
+		// isn't present.
+		void removeClass(const std::string &className)
+		{
+			auto it = std::remove(styleClasses.begin(),
+								  styleClasses.end(),
+								  className);
+			if (it == styleClasses.end())
+				return;
+			styleClasses.erase(it, styleClasses.end());
+			pendingTransition = true;
+		}
+
+		// True if the class is currently set on this node.
+		bool hasClass(const std::string &className) const
+		{
+			for (const auto &c : styleClasses)
+				if (c == className)
+					return true;
+			return false;
+		}
+
+		// Removes every class. No-op if there were none.
+		void clearStyleClasses()
+		{
+			if (styleClasses.empty())
+				return;
+			styleClasses.clear();
 			pendingTransition = true;
 		}
 		void setId(const std::string &node_id)
@@ -120,8 +156,9 @@ namespace ZenitUI
 		// keeps it alive; only the tree relationship is broken.
 		void removeAllChildren()
 		{
-			for (auto& c : children)
-				if (c) c->parent.reset();
+			for (auto &c : children)
+				if (c)
+					c->parent.reset();
 			children.clear();
 			pendingTransition = true;
 		}
@@ -652,11 +689,6 @@ namespace ZenitUI
 			return p;
 		}
 
-		std::shared_ptr<Derived> cls(const std::string &name)
-		{
-			this->addClass(name);
-			return self();
-		}
 		std::shared_ptr<Derived> id(const std::string &node_id)
 		{
 			this->setId(node_id);
