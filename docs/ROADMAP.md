@@ -365,8 +365,8 @@ Common pattern after `requestFocus`.
 
 `Btn(text, cb)` creates a `Text` child but there's no accessor. Add:
 
-- [ ] `Button::text() const` returning the current label
-- [ ] `Button::setText(std::string)` updating the child
+- [x] `Button::text() const` returning the current label
+- [x] `Button::setText(std::string)` updating the child
 
 ### 2.6 `Text::getText()`
 

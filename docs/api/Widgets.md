@@ -156,6 +156,13 @@ The `Button(std::function<void()> cb)` constructor sets:
 | `Btn(text, cb)` | Same, with a callback. |
 | `Button::create(cb)` | Full control — no text child added. |
 
+### Methods
+
+| Method | Description |
+|--------|-------------|
+| `text()` | Returns the current label as `std::string`. Empty if the button has no `Text` child. |
+| `setText(const std::string&)` | Replaces the label. Creates one if missing, with class `"btn-text"`. |
+
 ### Style tag
 
 `"Button"`
