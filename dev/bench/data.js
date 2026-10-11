@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791751422615,
+  "lastUpdate": 1791752024525,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -48,6 +48,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "frame loop 100 nodes",
             "value": 8.3771,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "2f00a3884d2f5bc9cd1a0d4cb540f829c8a0de89",
+          "message": "Fixed docs.yml that was previously forcing itself onto the benchmarks workflow deleting its history",
+          "timestamp": "2026-10-11T22:52:50+02:00",
+          "tree_id": "e5a2ea74b6fdc05327f107363c385ec30e165bd1",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/2f00a3884d2f5bc9cd1a0d4cb540f829c8a0de89"
+        },
+        "date": 1791752022618,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Value x1 term (Px)",
+            "value": 0.0084,
+            "unit": "us"
+          },
+          {
+            "name": "Value x2 terms (calc)",
+            "value": 0.0425,
+            "unit": "us"
+          },
+          {
+            "name": "ComputedStyle default + assign",
+            "value": 0.2896,
+            "unit": "us"
+          },
+          {
+            "name": "ComputedStyle copy",
+            "value": 0.1101,
+            "unit": "us"
+          },
+          {
+            "name": "frame loop 100 nodes",
+            "value": 6.9473,
             "unit": "us"
           }
         ]
