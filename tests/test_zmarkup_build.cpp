@@ -169,3 +169,57 @@ TEST(Widget_text, getText_returns_current_content)
     env.frame(root);
     CHECK(txt->getText() == "world");
 }
+
+TEST(Widget_button, text_returns_current_label)
+{
+    Env env;
+
+    auto btn = UI::Btn("hello");
+    CHECK(btn->text() == "hello");
+
+    // setText updates the existing label, doesn't create a new child.
+    int before = (int)btn->children.size();
+    btn->setText("world");
+    CHECK(btn->text() == "world");
+    CHECK((int)btn->children.size() == before);
+}
+
+TEST(Widget_button, setText_on_bare_button_creates_label)
+{
+    Env env;
+
+    // Button::create(cb) has no text child by default.
+    auto btn = UI::Button::create(nullptr);
+    CHECK(btn->children.empty());
+    CHECK(btn->text() == "");
+
+    btn->setText("added");
+    CHECK((int)btn->children.size() == 1);
+    CHECK(btn->text() == "added");
+
+    // The label has the standard class so CSS targeting it still works.
+    const auto& classes = btn->children[0]->getStyleClasses();
+    bool hasBtnText = false;
+    for (const auto& c : classes)
+        if (c == "btn-text") hasBtnText = true;
+    CHECK(hasBtnText);
+}
+
+TEST(Widget_button, setText_does_not_touch_non_text_first_child)
+{
+    Env env;
+
+    // A button whose first child is not a Text (unusual but possible).
+    auto btn = UI::Button::create(nullptr);
+    auto img = std::make_shared<Layout>(LayoutType::Stack);
+    btn->addChild(img);
+
+    // text() returns "" because the first child is not Text.
+    CHECK(btn->text() == "");
+
+    // setText adds a new Text child. img stays in place.
+    btn->setText("label");
+    CHECK((int)btn->children.size() == 2);
+    CHECK(btn->children[0] == img);
+    CHECK(btn->text() == "");   // first child is still img, not the new label
+}

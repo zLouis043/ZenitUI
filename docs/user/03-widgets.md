@@ -206,28 +206,23 @@ The ZMarkup factory uses `Btn(text)`, so a `Text` child with class
 
 ### API
 
-`Button` itself only adds:
+`Button` inherits all the common `Layout` API. On top of that:
 
-- `setInteractive(true)`
-- `setFocusable(true)`
-- `setKeyboardActivates(true)`
-- default `items-h: center`, `items-v: center`
-- style tag `"Button"`
+| Method | Description |
+|--------|-------------|
+| `text()` | Returns the current label as `std::string`. Empty if the button has no `Text` child (e.g. built via `Button::create(cb)` and never given one). |
+| `setText(const std::string&)` | Replaces the label. If the button has no `Text` child yet, creates one with class `"btn-text"` — same class `Btn(...)` uses. |
 
-Everything else (background, padding, radius, hover effects) comes from
-`.zstyle`.
-
-The callback is set through the constructor:
+Example:
 
 ```cpp
-auto b = Button::create([]{ /* ... */ });
-```
+auto b = Btn("Save", []{ save(); });
+b->setText("Saving...");        // updates the existing label
+std::printf("%s\n", b->text().c_str());   // "Saving..."
 
-or, after building from ZMarkup, through the `UINode` handle:
-
-```cpp
-ui.onClick("go", []{ /* ... */ });
-```
+// Works on a bare Button too: creates the label on first call.
+auto raw = Button::create([]{});   // no text child
+raw->setText("New");               // creates a Text child with class "btn-text"
 
 ### Styling
 
