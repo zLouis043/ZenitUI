@@ -539,9 +539,9 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.8 Portal hit-test delay
 
-- [ ] Verify that a newly-opened portal becomes hit-testable on the
+- [x] Verify that a newly-opened portal becomes hit-testable on the
       **next** frame, not the same one
-- [ ] Verify that a destroyed portal is skipped
+- [x] Verify that a destroyed portal is skipped
 
 ### 3.9 Media queries on viewport change
 
