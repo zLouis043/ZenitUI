@@ -96,3 +96,4 @@ small and the assets reusable.
 | `06_zmarkup` | Declarative UI: `ZMarkup::build`, `UINode`, callback binding |
 | `07_effects` | `filter:` (blur, drop-shadow, sepia custom) and `effect:` (single shader) |
 | `08_portals` | Tooltip, Popup, ContextMenu, Modal |
+| `09_custom_widget` | Writing a widget from scratch: `TLayout`, `::part`, `onUpdate` 
