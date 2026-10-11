@@ -883,24 +883,37 @@ animation.
 
 ```cpp
 auto modal = Modal::create();
-modal->children[0]->addChild(Label("Are you sure?"));
-modal->addChild(...) → don't. Use the content VStack inside.
 
-// Actually: children[0] is the content VStack with class "modal-content"
+// modal->children[0] is the content VStack with class "modal-content".
 auto content = modal->children[0];
 content->addChild(Label("Are you sure?"));
 content->addChild(Btn("OK", [modal]{ modal->hide(); }));
 
-parent->addChild(modal);
+// The modal lives at the root, so it covers the whole viewport.
+root->addChild(modal);
 modal->show();
+```
+
+**Note:** place the modal as a **direct child of the root**, not inside
+a `Vertical` / `Horizontal` container. The modal is `width: 100%;
+height: 100%` and it's designed to overlay the whole viewport, not to
+flow inside a layout column.
+
+```cpp
+// ✅ correct
+root->addChild(page);     // the page content
+root->addChild(modal);    // overlay, drawn on top of the page
+
+// ❌ wrong — the modal will be pushed by the container's flow
+page->addChild(modal);
 ```
 
 ### API
 
 | Method | Description |
 |--------|-------------|
-| `show()` | Set opacity to 1 and play the intro animation. |
-| `hide()` | Set opacity to 0 and play the intro in reverse. |
+| `show()` | Set opacity to 1, enable input, play `"Intro"` forward. |
+| `hide()` | Set opacity to 0, disable input, play `"Intro"` in reverse. |
 
 ### Structure
 
@@ -911,8 +924,21 @@ modal->show();
 - One child: a `VStack` with class `modal-content`. This is where you
   put your content.
 
-The intro animation (`"Intro"`) translates the content from `VH(100)`
-(bottom) to `0` using `ease-out-back`.
+The `"Intro"` animation translates the content from `VH(100)` (bottom)
+to `0` using `ease-out-back`, over 0.4s.
+
+### Input handling
+
+The modal is **disabled** while hidden (`setEnabled(false)` in
+`onBuild`), and enabled again by `show()`. This is what makes the
+overlay safe:
+
+- While hidden: the modal doesn't participate in hit-testing, so
+  clicks on the page behind it reach their targets normally.
+- While shown: the modal intercepts input, as a modal should.
+
+Without this, the full-screen invisible modal would swallow clicks
+meant for the page underneath.
 
 ### Styling
 

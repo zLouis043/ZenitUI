@@ -474,6 +474,13 @@ ancestor, the scope falls back to the root (`this` in `updateTree`).
 Scopes can nest. The nearest one wins. So a modal inside a modal cycles
 through the innermost modal's focusables only.
 
+Il grep ha fatto il suo lavoro. **Un solo file va aggiornato**: `docs/user/06-events.md` (righe 479-490 circa). Tutti gli altri riferimenti sono coerenti col nuovo comportamento.
+
+## `docs/user/06-events.md` — sezione §8.3
+
+Cerca la sottosezione **`### 8.3 Focus scope and onBuild`** dentro §8 "Focus scopes". È questa:
+
+```markdown
 ### 8.3 Focus scope and `onBuild`
 
 `Modal::onBuild` sets `setFocusScope(true)` and calls `setInteractive(false)`
@@ -490,6 +497,35 @@ void onBuild() override {
 
 The scope itself isn't focusable (it's a container), but it's the
 boundary for Tab navigation inside it.
+
+### 8.3 Focus scope and `onBuild`
+
+A modal is a focus scope: pressing `Tab` inside it cycles through its
+focusable descendants only, not the whole tree.
+
+```cpp
+void onBuild() override {
+    setInteractive(false);
+    setEnabled(false);       // hidden by default: no hit-test, no flow
+    setStyleTag("Modal");
+    setFocusScope(true);
+    ...
+}
+```
+
+Three things to note:
+
+- **`setFocusScope(true)`** makes the modal the boundary for Tab
+  navigation. While it's open, `Tab` doesn't escape it.
+- **`setInteractive(false)`** on the modal itself: it's a container, not
+  a clickable node.
+- **`setEnabled(false)`** while hidden is what makes the overlay safe.
+  A disabled node is invisible to `hitTest`, so its full-screen content
+  doesn't swallow clicks meant for the page underneath. `show()`
+  enables it, `hide()` disables it again.
+
+`Modal` is the canonical example, but any full-screen overlay that
+covers the viewport should follow the same pattern.
 
 ---
 
