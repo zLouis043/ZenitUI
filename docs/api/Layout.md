@@ -100,10 +100,48 @@ class Popup : public TLayout<Popup, Panel> { /* ... */ };
 
 ### `void addClass(const std::string& className)`
 
-Adds a CSS class. Sets `pendingTransition = true`.
+Adds a CSS class. Sets `pendingTransition = true`. No-op if the class
+is already present, so calling it twice does not create duplicates.
 
 ```cpp
 node->addClass("btn-primary");
+node->addClass("btn-primary");   // ignored
+```
+
+### `void removeClass(const std::string& className)`
+
+Removes every occurrence of the class. Sets `pendingTransition = true`
+if something was actually removed.
+
+```cpp
+node->removeClass("btn-primary");
+node->removeClass("missing");     // no-op
+```
+
+Removing a class is what makes CSS animations declared under it stop
+without having to rebuild the node:
+
+```cpp
+// .pulse { animation: pulse 1s infinite; }
+btn->addClass("pulse");   // starts the animation
+// ...
+btn->removeClass("pulse"); // stops it, immediately
+```
+
+### `bool hasClass(const std::string& className) const`
+
+True if the class is currently set on this node.
+
+```cpp
+if (node->hasClass("highlight")) { /* ... */ }
+```
+
+### `void clearStyleClasses()`
+
+Removes every class in one shot. No-op if there were none.
+
+```cpp
+node->clearStyleClasses();
 ```
 
 ### `std::shared_ptr<Derived> cls(const std::string& name)` (CRTP only)
@@ -113,6 +151,9 @@ Fluent wrapper for `addClass`. Returns `self()`.
 ```cpp
 node->cls("card")->cls("elevated");
 ```
+
+There is no fluent counterpart for `removeClass` — removal is a runtime
+operation, not part of the construction chain.
 
 ### `void setId(const std::string& node_id)`
 
