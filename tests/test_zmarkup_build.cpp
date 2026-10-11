@@ -223,3 +223,101 @@ TEST(Widget_button, setText_does_not_touch_non_text_first_child)
     CHECK(btn->children[0] == img);
     CHECK(btn->text() == "");   // first child is still img, not the new label
 }
+
+TEST(Widget_layout, removeAllChildren_clears_children)
+{
+    Env env;
+
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    parent->addChild(Label("a"));
+    parent->addChild(Label("b"));
+    parent->addChild(Label("c"));
+
+    CHECK((int)parent->children.size() == 3);
+
+    parent->removeAllChildren();
+    CHECK(parent->children.empty());
+}
+
+TEST(Widget_layout, removeAllChildren_resets_parent_pointer)
+{
+    Env env;
+
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    auto child  = Label("hello");
+    parent->addChild(child);
+
+    CHECK(child->hasParent());
+    CHECK(child->getParent() == parent);
+
+    parent->removeAllChildren();
+
+    CHECK(!child->hasParent());
+    CHECK(child->getParent() == nullptr);
+}
+
+TEST(Widget_layout, removeAllChildren_on_empty_is_noop)
+{
+    Env env;
+
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    parent->removeAllChildren();   // non deve crashare
+    CHECK(parent->children.empty());
+}
+
+TEST(Widget_layout, removeAllChildren_keeps_removed_alive)
+{
+    Env env;
+
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    auto child  = Label("keep me");
+    parent->addChild(child);
+
+    parent->removeAllChildren();
+
+    // Il caller mantiene uno shared_ptr → il figlio è ancora vivo,
+    // solo staccato dall'albero.
+    CHECK(child.use_count() > 0);
+    CHECK(child->getText() == "keep me");
+}
+
+TEST(Widget_layout, removeAllChildren_does_not_touch_grandchildren)
+{
+    Env env;
+
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    auto mid    = std::make_shared<Layout>(LayoutType::Stack);
+    auto leaf   = Label("leaf");
+
+    mid->addChild(leaf);
+    parent->addChild(mid);
+
+    parent->removeAllChildren();
+
+    CHECK(parent->children.empty());
+    CHECK(!mid->hasParent());
+    // mid conserva ancora il suo figlio: solo il legame con parent è rotto.
+    CHECK((int)mid->children.size() == 1);
+    CHECK(mid->children[0] == leaf);
+    CHECK(leaf->hasParent());
+}
+
+TEST(Widget_layout, removeAllChildren_allows_readd_elsewhere)
+{
+    Env env;
+
+    auto a = std::make_shared<Layout>(LayoutType::Stack);
+    auto b = std::make_shared<Layout>(LayoutType::Stack);
+    auto child = Label("shared");
+
+    a->addChild(child);
+    a->removeAllChildren();
+
+    // Ora posso attaccare lo stesso figlio a un altro parent.
+    b->addChild(child);
+
+    CHECK(child->hasParent());
+    CHECK(child->getParent() == b);
+    CHECK((int)a->children.size() == 0);
+    CHECK((int)b->children.size() == 1);
+}
