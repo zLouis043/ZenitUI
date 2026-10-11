@@ -506,12 +506,12 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.4 `Dropdown`
 
-- [ ] `setSelected` fires `onChange`
-- [ ] Opening the list shows options
-- [ ] Clicking an option sets the selection and closes
-- [ ] Clicking outside closes
-- [ ] Flip above when no space below
-- [ ] List scrolls when options exceed the visible area
+- [x] `setSelected` fires `onChange`
+- [x] Opening the list shows options
+- [x] Clicking an option sets the selection and closes
+- [x] Clicking outside closes
+- [x] Flip above when no space below
+- [x] List scrolls when options exceed the visible area
 
 ### 3.5 State transitions end-to-end
 
