@@ -399,20 +399,13 @@ Let me trace: pointer enters a node.
   - Second condition: `prev == Hover && next != Hover`? Yes.
   - `onHoverExit` fires. ⚠️
 
-So yes, pressing a node fires `onHoverExit`. This is likely a bug in
-the current implementation. It should probably be:
-
-```cpp
-if ((nextState == UIState::Hover || nextState == UIState::Pressed)
-    && prevState != UIState::Hover && prevState != UIState::Pressed
-    && onHoverEnter)
-    onHoverEnter();
-```
-
-Or the hover state should be tracked separately from the UI state.
-
-I'll note this as a known issue rather than describe the behavior as
-intended.
+The two conditions treat `Hover` and `Pressed` as the same logical
+state for the purpose of hover callbacks: a pressed node is also
+hovered. So the transition `Hover → Pressed` does **not** fire
+`onHoverExit`. Only a transition that leaves both states (to `Idle` or
+`Disabled`) fires it. This matches what users expect from a UI
+toolkit: pressing a button is a continuation of hovering it, not an
+exit.
 
 **Press** fires on `pointer.pressed` (rising edge) if the press path
 includes this node. The path check:

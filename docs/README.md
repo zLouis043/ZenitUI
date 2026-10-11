@@ -4,7 +4,8 @@
 > system, a Flexbox-inspired layout engine, and an optional declarative DSL
 > (**ZMarkup**) for building interfaces without writing C++ boilerplate.
 
-**Status:** 🧪 *alpha* — the API is still evolving. Expect breaking changes.
+**Status:** 🗓️ *beta* — the core API is frozen. See [ROADMAP](ROADMAP.md)
+for what's still planned.
 
 ---
 

@@ -1339,16 +1339,23 @@ within the outer one's viewport. The wheel event goes to the
 consumes it via `wheelConsumedThisFrame = true`. The outer one doesn't
 see it. This is the intended behavior (matches most UI frameworks).
 
-**`hitTest` doesn't handle `clip` boundaries.**
-A node partially clipped by an ancestor's `overflow: hidden` is still
-fully hit-testable. Clicking on the invisible (clipped) part still
-hits the node. This is a known limitation — the `rect.contains(p)`
-check doesn't account for the clip rect.
+**`hitTest` respects the active clip.**
 
-Workaround: use `setInteractive(false)` on the clipped portion, or
-make the clip explicit via separate nodes. In practice, this rarely
-matters because clipped content is usually off-screen or hidden behind
-a visible element.
+When walking the tree during hit-testing, each node that has
+`overflow != Visible` on either axis restricts the clip for its
+descendants. A node clipped by an ancestor's `overflow: hidden` is
+**not** hit-testable outside the visible region — clicking on the
+invisible part does not reach it.
+
+The clip is intersected with the parent's clip, so nested clips
+compose correctly. Portals are exempt: they are tested at the root,
+before the main tree, and they don't inherit any ancestor's clip.
+
+Note that the clip is computed from the `rect` in screen space, which
+is correct for translation-only transforms. A node that both clips
+**and** applies a scale or rotation has its clip approximated by the
+axis-aligned bounding box of its transformed rect. This is a rare
+combination in practice.
 
 **`translateSubtree` translates `rect` of descendants, not `measuredSize`.**
 This is correct — `measuredSize` is intrinsic and doesn't change with
