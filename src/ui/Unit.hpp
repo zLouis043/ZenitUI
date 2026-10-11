@@ -2,6 +2,7 @@
 
 #include "Common.hpp"
 #include "CoreTypes.hpp"
+#include "SmallVector.hpp"
 
 namespace ZenitUI {
 
@@ -26,7 +27,7 @@ struct Value {
         }
     };
 
-    std::vector<Term> terms;
+     SmallVector<Term, 2> terms;
 
     Value() = default;
     Value(float pixels) : terms{{pixels, Unit::Pixel}} {}

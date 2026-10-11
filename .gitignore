@@ -23,3 +23,6 @@ src/pch.hpp.gch
 Thumbs.db
 
 *.log
+
+do_not_use_this_file.sh
+dont_know_what_this_file_is.txt
