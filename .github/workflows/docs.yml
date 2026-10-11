@@ -3,17 +3,17 @@ name: Publish Documentation
 on:
   push:
     branches:
-      - main # Esegue il deploy solo quando i cambiamenti arrivano sul main
+      - main
       - master
 
 permissions:
-  contents: write # Necessario per fare il push sul branch gh-pages
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del codice
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -21,8 +21,16 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Installa MkDocs Material
+      - name: Install MkDocs Material
         run: pip install mkdocs-material
 
-      - name: Deploy su GitHub Pages
-        run: mkdocs gh-deploy --force
+      - name: Build site
+        run: mkdocs build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          keep_files: true      # preserve dev/bench/ written by the benchmarks workflow
+          force_orphan: false   # keep the commit history
