@@ -515,20 +515,20 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.5 State transitions end-to-end
 
-- [ ] `:hover` with `transition:` interpolates over N frames
-- [ ] `:checked` with transition (Toggle knob)
-- [ ] `:focus` styling applies on focus
-- [ ] `:disabled` styling applies on disable
-- [ ] Transition completes and snaps to target
+- [x] `:hover` with `transition:` interpolates over N frames
+- [x] `:checked` with transition (Toggle knob)
+- [x] `:focus` styling applies on focus
+- [x] `:disabled` styling applies on disable
+- [x] Transition completes and snaps to target
 
 ### 3.6 CSS animations end-to-end
 
-- [ ] `@keyframes` with `animation:` changes the render style
-- [ ] `infinite` animation keeps ticking
-- [ ] `alternate` reverses every other iteration
-- [ ] `forwards` keeps the last keyframe
-- [ ] `::part` animation ticks
-- [ ] `onAnimationsFinished` fires
+- [x] `@keyframes` with `animation:` changes the render style
+- [x] `infinite` animation keeps ticking
+- [x] `alternate` reverses every other iteration
+- [x] `forwards` keeps the last keyframe
+- [x] `::part` animation ticks
+- [x] `onAnimationsFinished` fires
 
 ### 3.7 Focus scopes
 
