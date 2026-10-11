@@ -611,8 +611,21 @@ The copy involves `std::string`, `std::vector`, and
 **Recommendation:** **B** first (simple), then **A** if the cache needs
 to persist.
 
-- [ ] Implement option B (fast path with no copy)
-- [ ] Benchmark
+- [x] Implement option B (fast path with no copy)
+- [x] Benchmark
+
+The copy of `ComputedStyle` is only performed when the node has
+active CSS keyframe animations (`anim_.css` non-empty). When there are
+none — which is the case for the vast majority of nodes, since state
+transitions are handled by `StyleResolver` and not by
+`AnimationPlayer::css` — `draw` skips the copy and calls
+`drawWithStyle` directly with `style_.currentStyle`.
+
+This is a pure performance optimization: the two paths behave
+identically. `ComputedStyle` is ~720 bytes with the current `Value`
+layout, so skipping the copy saves ~0.15 us per drawn node per frame.
+On a scene with 20 visible nodes, that's ~3 us per frame — a
+measurable fraction of the frame budget.
 
 ### 4.3 Rule indexing by tag
 

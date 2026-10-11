@@ -666,6 +666,7 @@ namespace ZenitUI
 		void cullRemovedChildren();
 		void recomputeDirty(bool wasPending, const ComputedStyle &styleBefore);
 		void resolveEffectIfNeeded(const ComputedStyle &style);
+		void drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity);
 		void drawInline(const ComputedStyle &renderStyle, float globalOp);
 		void drawLayer(const ComputedStyle &renderStyle, float globalOp);
 		void drawChildren(float globalOp);
