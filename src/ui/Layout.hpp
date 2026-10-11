@@ -108,6 +108,23 @@ namespace ZenitUI
 			pendingTransition = true;
 		}
 		void removeFromParent() { wantsRemoval = true; }
+		// Removes every child in one shot. Unlike `removeFromParent` on
+		// each child, this is immediate: the `children` vector is cleared
+		// right away, and each removed child's `parent` pointer is reset
+		// to null.
+		//
+		// Use this to rebuild the content of a container (a list, a
+		// settings panel) without having to allocate a new node.
+		//
+		// Note: any shared_ptr the caller still holds to a removed child
+		// keeps it alive; only the tree relationship is broken.
+		void removeAllChildren()
+		{
+			for (auto& c : children)
+				if (c) c->parent.reset();
+			children.clear();
+			pendingTransition = true;
+		}
 		std::shared_ptr<Layout> getParent() const { return parent.lock(); }
 		bool hasParent() const { return !parent.expired(); }
 

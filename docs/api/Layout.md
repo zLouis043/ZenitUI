@@ -190,6 +190,35 @@ adding. Use `X::create()` instead of `std::make_shared<X>()`.
 Marks the node for removal. The actual removal happens in the parent's
 next `cullRemovedChildren` pass (end of `update`).
 
+### `void removeAllChildren()`
+
+Clears every entry in the `children` vector in one shot, and resets
+each removed child's `parent` pointer to null.
+
+```cpp
+parent->removeAllChildren();
+// parent->children is now empty
+// each removed child: hasParent() == false
+```
+
+Unlike `removeFromParent()` on each child, this is **immediate**: the
+`children` vector is cleared during the call, not deferred to the next
+`cullRemovedChildren` pass.
+
+The grandchildren are not touched. Removing a child only breaks the
+link between that child and its parent; the child keeps its own
+`children` intact. If you still hold a `shared_ptr` to a removed child,
+it stays alive — only the tree relationship is broken.
+
+Use it to rebuild the content of a container (a list, a settings panel)
+without allocating a new node:
+
+```cpp
+list->removeAllChildren();
+for (const auto& item : newItems)
+    list->addChild(Label(item));
+```
+
 ### `std::shared_ptr<Layout> getParent() const`
 
 Returns the parent, or null if this is the root.

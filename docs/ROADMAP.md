@@ -379,8 +379,8 @@ Common pattern after `requestFocus`.
 A safe bulk-clear for the `children` vector. Useful for rebuilding
 lists.
 
-- [ ] Add method
-- [ ] Consider whether it should also clear `parent` pointers of the
+- [x] Add method
+- [x] Consider whether it should also clear `parent` pointers of the
       removed children
 
 ### 2.8 Compound selectors in ZStyle
