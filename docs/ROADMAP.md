@@ -532,10 +532,10 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.7 Focus scopes
 
-- [ ] Tab stays within a scope
-- [ ] Nested scopes: inner scope wins
-- [ ] Focus release on click outside
-- [ ] Focus release on disable
+- [x] Tab stays within a scope
+- [x] Nested scopes: inner scope wins
+- [x] Focus release on click outside
+- [x] Focus release on disable
 
 ### 3.8 Portal hit-test delay
 
