@@ -600,7 +600,54 @@ void onUpdate(float dt) override {
 For key repeat, you need to implement it yourself — see `TextInput` for
 a full example using `repeatStates`.
 
-### 5.4 Pointer capture (drag)
+### 5.4 Custom mouse handling in `onUpdate`
+
+Some widgets need to react to clicks that go beyond "something clicked
+inside my rect" — a rating's stars, a colour picker's swatches, a
+toolbar's buttons drawn in `renderContent`. In that case, the widget
+reads the pointer in `onUpdate` and decides what to do based on where
+the pointer is.
+
+**The check that decides whether this widget received the click is
+`UIContext::get().topmostConsumer == this`, not `rect.contains(pos)`.**
+
+```cpp
+void onUpdate(float) override {
+    auto& ctx = UIContext::get();
+
+    if (!ctx.pointer.pressed) return;
+    if (ctx.topmostConsumer != this) return;
+
+    // The click is ours. Compute what sub-region it hit.
+    float localX = ctx.pointer.pos.x - rect.x;
+    int index = (int)(localX / itemWidth_);
+    index = std::clamp(index, 0, itemCount_ - 1);
+    selectIndex(index);
+}
+```
+
+`topmostConsumer` is set by `hitTest` before `update` runs, so it's
+already up to date when `onUpdate` is called. It reflects z-order,
+portals and blocking rules — every check the framework performs
+during hit-testing. A geometric `rect.contains()` ignores all of that
+and can match a node that is not actually on top of the click, or can
+match two overlapping nodes in the same frame.
+
+For this to work correctly, the widget must call `setBlocksRaycast(true)`
+in `onBuild`. Without it, the node is passed through during hit-test
+and `topmostConsumer` will point to an ancestor (or nothing at all),
+never to the widget.
+
+```cpp
+void onBuild() override {
+    setStyleTag("MyWidget");
+    setInteractive(true);
+    setBlocksRaycast(true);   // required for topmostConsumer to point here
+    setFocusable(true);
+}
+```
+
+### 5.5 Pointer capture (drag)
 
 For drag-style interactions, use the pointer capture API:
 
@@ -623,7 +670,7 @@ Call `releasePointer()` explicitly if you need to end the drag early.
 
 See `Slider::onUpdate` for a complete example.
 
-### 5.5 Portal widgets
+### 5.6 Portal widgets
 
 If your widget floats above the tree (dropdown list, tooltip, popup),
 set `setPortal(true)` in `onBuild` and compute the rect in `onUpdate`:

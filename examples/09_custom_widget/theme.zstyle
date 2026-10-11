@@ -1,0 +1,84 @@
+/* =========================================================================
+   ZenitUI — Example 09: Custom widget
+   Styling for the Rating widget and the surrounding page.
+   ========================================================================= */
+
+:root {
+    --bg:        #141418;
+    --surface:   #1e1e24;
+    --primary:   #4a9eff;
+    --text:      #e8e8ee;
+    --text-dim:  #9090a0;
+    --star:      #ffc83c;
+    --star-dim:  #4a4a55;
+}
+
+Stack#root {
+    width: 100%;
+    height: 100%;
+    items-h: stretch;
+    items-v: stretch;
+}
+
+.page {
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    padding: 3vh 3vw;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    items-h: stretch;
+    items-v: start;
+}
+
+.panel {
+    background: var(--surface);
+    radius: 8px;
+    padding: 14px;
+    gap: 14px;
+    width: 100%;
+}
+
+.title {
+    color: var(--primary);
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+.row {
+    gap: 16px;
+    items-v: center;
+    width: 100%;
+}
+
+.row-label {
+    color: var(--text-dim);
+    font-size: 13px;
+    min-width: 200px;
+}
+
+.value-label {
+    color: var(--primary);
+    font-size: 14px;
+    min-width: 60px;
+}
+
+/* --- The custom widget ------------------------------------------------ */
+Rating {
+    font-size: 32px;       /* drives the star size in computeIntrinsicSize */
+    gap: 6px;
+}
+
+Rating::star {
+    color: var(--star);       /* filled stars */
+    background: var(--star-dim); /* empty stars */
+}
+
+Rating:hover::star {
+    color: #ffd966;           /* warmer when hovered */
+}
+
+Rating:focus::star {
+    background: #5a5a70;      /* slightly lighter empty when focused */
+}
