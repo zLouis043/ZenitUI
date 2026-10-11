@@ -5,6 +5,31 @@
 
 namespace ZenitUI
 {
+		void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
+	{
+		auto renderer = UIContext::get().renderer;
+		if (!renderer)
+			return;
+
+		resolveEffectIfNeeded(renderStyle);
+
+		float globalOp = renderStyle.opacity * parentOpacity;
+		if (globalOp <= 0.001f)
+			return;
+
+		const bool isLayer =
+			!renderStyle.filters.empty() &&
+			renderer->supports(Feature::Effects) &&
+			rect.width > 0.0f && rect.height > 0.0f &&
+			!renderer->inTarget(); // Raylib non ha texture mode annidate
+
+		if (isLayer)
+			drawLayer(renderStyle, globalOp);
+		else
+			drawInline(renderStyle, globalOp);
+
+		scroll_.drawScrollbar(*this, parentOpacity);
+	}
 
 	// =========================================================================
 	//  RENDER
@@ -36,26 +61,23 @@ namespace ZenitUI
 				return;
 		}
 
-		ComputedStyle renderStyle = style_.currentStyle;
-		Anim::overlayCssComputed(renderStyle, anim_.css);
-		resolveEffectIfNeeded(renderStyle);
-
-		float globalOp = renderStyle.opacity * parentOpacity;
-		if (globalOp <= 0.001f)
-			return;
-
-		const bool isLayer =
-			!renderStyle.filters.empty() &&
-			renderer->supports(Feature::Effects) &&
-			rect.width > 0.0f && rect.height > 0.0f &&
-			!renderer->inTarget(); // Raylib non ha texture mode annidate
-
-		if (isLayer)
-			drawLayer(renderStyle, globalOp);
+		// Fast path: no CSS keyframe animations. No copy of the
+		// ComputedStyle is needed — draw directly with currentStyle.
+		// This covers the vast majority of nodes (state transitions
+		// use StyleResolver, not AnimationPlayer::css).
+		if (anim_.css.empty())
+		{
+			drawWithStyle(style_.currentStyle, parentOpacity);
+		}
 		else
-			drawInline(renderStyle, globalOp);
-
-		scroll_.drawScrollbar(*this, parentOpacity);
+		{
+			// Slow path: overlay the current keyframe values onto a
+			// copy of currentStyle. The copy is the price we pay for
+			// CSS @keyframes animation.
+			ComputedStyle renderStyle = style_.currentStyle;
+			Anim::overlayCssComputed(renderStyle, anim_.css);
+			drawWithStyle(renderStyle, parentOpacity);
+		}
 
 		if (!hasParent())
 		{
