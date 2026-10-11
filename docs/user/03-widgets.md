@@ -653,9 +653,37 @@ The `value` attribute sets the initial text.
 | `setText(std::string)` | Replace the content. |
 | `getText()` | Current content. |
 | `clear()` | Empty the input. |
+| `getCursorPos()` | Cursor index in `[0, text.size()]`. |
+| `setCursorPos(int)` | Sets the cursor. Clamped to `[0, text.size()]`. |
 | `setFont(FontHandle)` | Override the resolved font. |
 | `onTextChanged` | `std::function<void(const std::string&)>`, fires on any edit. |
 | `onSubmit` | `std::function<void(const std::string&)>`, fires on `Enter`. |
+
+### Cursor position
+
+The cursor is an index into the string:
+
+- `0` → before the first character.
+- `text.size()` → after the last character.
+
+`setCursorPos(v)` clamps `v` to `[0, text.size()]`, so out-of-range
+values are safe. Calling `setText` with a shorter string also clamps
+the current position.
+
+```cpp
+auto input = TextInput::create("Hello world");
+
+input->setCursorPos(0);              // before 'H'
+input->setCursorPos(100);            // clamped to 11 (after 'd')
+
+int p = input->getCursorPos();       // 11
+```
+
+Clicking anywhere in the widget sets the cursor to the character
+boundary nearest to the click's x coordinate. The computation is done
+by measuring the prefix string, so it accounts for kerning and
+`letter-spacing` correctly. You don't need to call `setCursorPos`
+manually for click-to-position.
 
 ### Interaction
 

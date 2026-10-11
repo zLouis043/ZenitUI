@@ -451,9 +451,27 @@ public:
 | `setText(std::string)` | Replace content. |
 | `getText()` | Current content. |
 | `clear()` | Equivalent to `setText("")`. |
+| `getCursorPos()` | Cursor index in `[0, text.size()]`. |
+| `setCursorPos(int)` | Sets the cursor. Clamped to `[0, text.size()]`. |
 | `setFont(FontHandle)` | Override the resolved font. |
 | `onTextChanged` | Fires on any edit. |
 | `onSubmit` | Fires on `Enter` (before losing focus). |
+
+### Cursor position
+
+The cursor is a plain index into the string:
+
+- `0` → before the first character.
+- `text.size()` → after the last character.
+
+`setCursorPos(v)` clamps `v` to `[0, text.size()]`, so passing a value
+out of range is safe. `setText` also clamps the current cursor if the
+new content is shorter than the old position.
+
+Clicking the widget sets the cursor to the character boundary nearest
+to the pointer's x coordinate. This is handled internally — the widget
+computes the target index by measuring the prefix string, so it
+accounts for kerning and `letter-spacing` correctly.
 
 ### Keyboard behavior
 
