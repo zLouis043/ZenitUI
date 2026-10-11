@@ -1,0 +1,65 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  bench:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      - name: Build library
+        run: make -j4 libzenit
+
+      - name: Build benchmark
+        run: make -C benchmarks
+
+      - name: Run benchmark
+        run: ./benchmarks/bin/bench --json > benchmark-output.json
+
+      - name: Show benchmark output
+        run: cat benchmark-output.json
+
+      - name: Store benchmark result (push)
+        if: github.event_name == 'push'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ZenitUI benchmarks
+          tool: 'customSmallerIsBetter'
+          output-file-path: benchmark-output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
+
+      - name: Store benchmark result (PR comment)
+        if: github.event_name == 'pull_request'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ZenitUI benchmarks
+          tool: 'customSmallerIsBetter'
+          output-file-path: benchmark-output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: false
+          comment-on-alert: true
+          alert-threshold: '150%'
+          fail-on-alert: false
+          summary-always: true

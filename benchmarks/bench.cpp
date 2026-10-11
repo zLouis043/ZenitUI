@@ -1,14 +1,14 @@
 // ZenitUI — Benchmarks (Fase 4)
 //
-// Measures the performance impact of the SmallVector change in
-// Unit.hpp, plus a baseline frame benchmark for future Phase 4 work.
-//
-// Build:   make bench
-// Run:     ./benchmarks/bin/bench
+// Usage:
+//   ./bench                 human-readable output
+//   ./bench --json          JSON output for CI (github-action-benchmark)
 
 #include <chrono>
 #include <cstdio>
+#include <cstring>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Style.hpp"
@@ -23,25 +23,37 @@ using namespace ZenitUI::UI;
 using clock_t_ = std::chrono::high_resolution_clock;
 
 // ---------------------------------------------------------------------------
-//  Reporting
+//  Results
 // ---------------------------------------------------------------------------
 
-static void report(const char* name,
-                    int iterations,
-                    clock_t_::time_point t0,
-                    clock_t_::time_point t1)
+struct BenchResult
 {
-    double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
-    double us_per = (iterations > 0) ? (ms * 1000.0 / iterations) : 0.0;
-    std::printf("%-40s  %8d iters  %8.3f ms  %10.4f us/iter\n",
-                name, iterations, ms, us_per);
+    std::string name;
+    std::string unit;      // "us" (microseconds) for all our benchmarks
+    double      value;     // per-iteration value, in `unit`
+};
+
+static std::vector<BenchResult>& results()
+{
+    static std::vector<BenchResult> r;
+    return r;
 }
 
-// Time the given function, running it `repeats` times and taking the
-// minimum duration (best-of-N avoids spurious slow runs from the OS
-// scheduler).
+static void record(const std::string& name, double us_per_iter)
+{
+    results().push_back({ name, "us", us_per_iter });
+}
+
+// ---------------------------------------------------------------------------
+//  Timing helper: best of N runs
+// ---------------------------------------------------------------------------
+
 template <typename Fn>
-static void best_of(const char* name, int iterations, int repeats, Fn fn)
+static void best_of(const std::string& name,
+                     int iterations,
+                     int repeats,
+                     bool quiet,
+                     Fn fn)
 {
     double best_ms = 1e30;
     for (int r = 0; r < repeats; ++r)
@@ -54,31 +66,35 @@ static void best_of(const char* name, int iterations, int repeats, Fn fn)
     }
     double us_per = (iterations > 0)
         ? (best_ms * 1000.0 / iterations) : 0.0;
-    std::printf("%-40s  %8d iters  %8.3f ms  %10.4f us/iter\n",
-                name, iterations, best_ms, us_per);
+
+    if (!quiet)
+        std::printf("%-40s  %8d iters  %8.3f ms  %10.4f us/iter\n",
+                    name.c_str(), iterations, best_ms, us_per);
+
+    record(name, us_per);
 }
 
 // ---------------------------------------------------------------------------
 //  Benchmark 1: Value construction
 // ---------------------------------------------------------------------------
 
-static void bench_value_1term()
+static void bench_value_1term(bool quiet)
 {
     constexpr int N = 1'000'000;
     std::vector<Value> v(N);
 
-    best_of("Value x1 term (Px)", N, 3, [&] {
+    best_of("Value x1 term (Px)", N, 3, quiet, [&] {
         for (int i = 0; i < N; ++i)
             v[i] = Value::px(100.0f);
     });
 }
 
-static void bench_value_2term()
+static void bench_value_2term(bool quiet)
 {
     constexpr int N = 1'000'000;
     std::vector<Value> v(N);
 
-    best_of("Value x2 terms (calc)", N, 3, [&] {
+    best_of("Value x2 terms (calc)", N, 3, quiet, [&] {
         for (int i = 0; i < N; ++i)
             v[i] = Value::percent(100.0f) - Value::px(20.0f);
     });
@@ -88,12 +104,12 @@ static void bench_value_2term()
 //  Benchmark 2: ComputedStyle
 // ---------------------------------------------------------------------------
 
-static void bench_computed_style()
+static void bench_computed_style(bool quiet)
 {
     constexpr int N = 200'000;
     std::vector<ComputedStyle> v(N);
 
-    best_of("ComputedStyle default + assign", N, 3, [&] {
+    best_of("ComputedStyle default + assign", N, 3, quiet, [&] {
         for (int i = 0; i < N; ++i)
         {
             ComputedStyle s;
@@ -106,7 +122,7 @@ static void bench_computed_style()
         }
     });
 
-    best_of("ComputedStyle copy", N, 3, [&] {
+    best_of("ComputedStyle copy", N, 3, quiet, [&] {
         for (int i = 1; i < N; ++i)
             v[i] = v[0];
     });
@@ -155,7 +171,7 @@ static std::shared_ptr<Layout> make_tree(int nodes)
     return root;
 }
 
-static void bench_frame()
+static void bench_frame(bool quiet)
 {
     constexpr int NODES  = 100;
     constexpr int FRAMES = 500;
@@ -163,39 +179,76 @@ static void bench_frame()
     Env env;
     auto root = make_tree(NODES);
 
-    // Warm-up: 10 frame per stabilizzare cache e layout.
     for (int i = 0; i < 10; ++i)
         env.frame(root);
 
-    // Muovi il mouse per attivare le transizioni (l'animazione
-    // coinvolge lo style resolver e la dirty propagation).
     env.platform.moveMouse({100.0f, 50.0f});
 
-    best_of("frame loop 100 nodes", NODES * FRAMES, 3, [&] {
+    best_of("frame loop 100 nodes", NODES * FRAMES, 3, quiet, [&] {
         for (int i = 0; i < FRAMES; ++i)
             env.frame(root);
     });
 }
 
 // ---------------------------------------------------------------------------
+//  JSON output
+// ---------------------------------------------------------------------------
+
+static void print_json()
+{
+    // Format accepted by github-action-benchmark `customSmallerIsBetter`:
+    // an array of {name, unit, value}.
+    std::printf("[\n");
+    const auto& r = results();
+    for (size_t i = 0; i < r.size(); ++i)
+    {
+        std::printf(
+            "  {\"name\": \"%s\", \"unit\": \"%s\", \"value\": %.4f}%s\n",
+            r[i].name.c_str(),
+            r[i].unit.c_str(),
+            r[i].value,
+            (i + 1 < r.size()) ? "," : "");
+    }
+    std::printf("]\n");
+}
+
+// ---------------------------------------------------------------------------
 //  Main
 // ---------------------------------------------------------------------------
 
-int main()
+int main(int argc, char** argv)
 {
-    std::printf("\nZenitUI benchmarks — Phase 4.1\n");
-    std::printf("==============================\n\n");
+    bool json = false;
+    for (int i = 1; i < argc; ++i)
+    {
+        if (std::strcmp(argv[i], "--json") == 0)
+            json = true;
+    }
 
-    std::printf("--- Value construction -----------------------------------------\n");
-    bench_value_1term();
-    bench_value_2term();
+    const bool quiet = json;
 
-    std::printf("\n--- ComputedStyle ----------------------------------------------\n");
-    bench_computed_style();
+    if (!json)
+    {
+        std::printf("\nZenitUI benchmarks — Phase 4.1\n");
+        std::printf("==============================\n\n");
 
-    std::printf("\n--- Frame loop -------------------------------------------------\n");
-    bench_frame();
+        std::printf("--- Value construction -----------------------------------------\n");
+    }
+    bench_value_1term(quiet);
+    bench_value_2term(quiet);
 
-    std::printf("\n");
+    if (!json)
+        std::printf("\n--- ComputedStyle ----------------------------------------------\n");
+    bench_computed_style(quiet);
+
+    if (!json)
+        std::printf("\n--- Frame loop -------------------------------------------------\n");
+    bench_frame(quiet);
+
+    if (json)
+        print_json();
+    else
+        std::printf("\n");
+
     return 0;
 }
