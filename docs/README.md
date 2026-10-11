@@ -147,6 +147,7 @@ See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
 - [Scroll System](internals/08-scroll-system.md) — `ScrollState`, arrange, inertia
 - [Backend](internals/09-backend.md) — implementing `IRenderer` / `IPlatform`
 - [Debugging](internals/10-debug.md) — dumps, logging, headless tests
+- [Benchmarks](internals/11-benchmarks.md) — performance tracking and the CI chart
 
 ### API reference
 
