@@ -447,6 +447,72 @@ float getMaxScrollY() const;
 
 All values in logical pixels.
 
+Ottimo, 843 check. Chiudiamo la 2.4 con la documentazione.
+
+## Blocco 4 — Documentazione (2 file, li mando separati)
+
+### File 1 di 2 — `docs/api/Layout.md`
+
+Cerca la sezione **`## 9. Scroll`**. Attualmente contiene:
+
+```markdown
+### Scroll position
+
+```cpp
+void  scrollTo(float x, float y);
+void  scrollToX(float x);
+void  scrollToY(float y);
+void  scrollToTop();
+void  scrollToBottom();
+void  scrollToLeft();
+void  scrollToRight();
+```
+
+### Scroll queries
+
+```cpp
+float getScrollX() const;
+float getScrollY() const;
+float getMaxScrollX() const;
+float getMaxScrollY() const;
+```
+
+All values in logical pixels.
+
+### `bool scrollIntoView(float margin = 0.0f)`
+
+Scrolls the nearest scrollable ancestor so this node becomes visible.
+Returns `true` if the scroll offset was changed, `false` if the node
+has no scrollable ancestor or was already fully visible.
+
+```cpp
+void onFocus() {
+    // Make sure the focused node is visible after Tab navigation.
+    scrollIntoView(/*margin=*/8.0f);
+}
+```
+
+`margin` reserves that many pixels of breathing room between the node
+and the container's edge. Without it, the node ends up flush against
+the border.
+
+### `bool scrollIntoView(const Rect& subRect, float margin = 0.0f)`
+
+Same as above, but scrolls to make `subRect` (in the node's
+coordinates) visible instead of the node's full `rect`. Useful when
+the "interesting" part of a node is smaller than its bounding box —
+a specific line of a `Text`, a specific cell of a grid.
+
+```cpp
+// Scroll so that only the first line of a Text is visible.
+Rect firstLine = text->getRect();
+firstLine.height = lineHeight;
+text->scrollIntoView(firstLine);
+```
+
+The two overloads return the same thing. The no-argument version is
+equivalent to `scrollIntoView(getRect(), 0.0f)`.
+
 ---
 
 ## 10. Portal

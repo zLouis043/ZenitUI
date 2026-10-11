@@ -354,12 +354,12 @@ without rebuilding the node. Also blocks dynamic styling use cases.
 Scroll the nearest scroll-container ancestor so the node is visible.
 Common pattern after `requestFocus`.
 
-- [ ] Implement `scrollIntoView()` walking up to find the scroll
+- [x] Implement `scrollIntoView()` walking up to find the scroll
       ancestor
-- [ ] Implement `scrollIntoView(const Rect& subRect)` for partial
+- [x] Implement `scrollIntoView(const Rect& subRect)` for partial
       visibility
-- [ ] Add tests
-- [ ] Update documentation
+- [x] Add tests
+- [x] Update documentation
 
 ### 2.5 `Button` text accessor
 
