@@ -342,12 +342,12 @@ without rebuilding the node. Also blocks dynamic styling use cases.
 
 ### 2.3 `TextInput` cursor positioning
 
-- [ ] `setCursorPos(int)` with clamping
-- [ ] `getCursorPos() const`
-- [ ] Click-to-position: on click, compute the cursor index from the
+- [x] `setCursorPos(int)` with clamping
+- [x] `getCursorPos() const`
+- [x] Click-to-position: on click, compute the cursor index from the
       pointer's x position
-- [ ] Add tests
-- [ ] Update documentation
+- [x] Add tests
+- [x] Update documentation
 
 ### 2.4 `Layout::scrollIntoView`
 

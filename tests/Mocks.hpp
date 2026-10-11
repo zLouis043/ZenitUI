@@ -245,6 +245,10 @@ namespace ZenitUI::Test
         {
             nextEvents.keys.push_back(key);
         }
+        void holdKey(int key)
+        {
+            nextEvents.held.push_back(key);
+        }
         void typeChar(int c)
         {
             nextEvents.chars.push_back(c);
