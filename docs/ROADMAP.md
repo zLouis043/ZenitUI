@@ -475,27 +475,27 @@ scroll system.
 
 No tests currently exist for the scroll system. Add:
 
-- [ ] `scrollTo`, `scrollToX/Y`, `scrollToTop/Bottom/Left/Right`
-- [ ] `getScrollX/Y`, `getMaxScrollX/Y` after arrange with overflow
-- [ ] Wheel event increments velocity
-- [ ] Inertia decays velocity over time
-- [ ] `maxScroll` is zero when content fits
-- [ ] Scrollbar thumb hit-test and drag
-- [ ] `resetIfOverflowChanged` (once 1.2 is fixed)
-- [ ] Hover freeze during scroll
+- [x] `scrollTo`, `scrollToX/Y`, `scrollToTop/Bottom/Left/Right`
+- [x] `getScrollX/Y`, `getMaxScrollX/Y` after arrange with overflow
+- [x] Wheel event increments velocity
+- [x] Inertia decays velocity over time
+- [x] `maxScroll` is zero when content fits
+- [x] Scrollbar thumb hit-test and drag
+- [x] `resetIfOverflowChanged` (once 1.2 is fixed)
+- [x] Hover freeze during scroll
 
 ### 3.2 `TextInput`
 
 - [ ] Character insertion
 - [ ] `Backspace` / `Delete` with cursor position
-- [ ] `Left` / `Right` cursor movement
-- [ ] `Home` / `End`
+- [x] `Left` / `Right` cursor movement
+- [x] `Home` / `End`
 - [ ] Key repeat (initial delay + interval)
 - [ ] `onTextChanged` fires on edit
 - [ ] `onSubmit` fires on Enter
 - [ ] `Escape` releases focus without submitting
 - [ ] Horizontal scroll of the cursor
-- [ ] Click focuses the input
+- [x] Click focuses the input
 
 ### 3.3 `Text` wrapping
 

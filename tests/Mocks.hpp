@@ -183,6 +183,7 @@ namespace ZenitUI::Test
             nextPointer.released = false;
             nextPointer.rightPressed = false;
             nextPointer.rightReleased = false;
+            nextPointer.wheelY = 0.0f;
             return p;
         }
         InputEvents pollInputEvents() override
@@ -248,6 +249,10 @@ namespace ZenitUI::Test
         void holdKey(int key)
         {
             nextEvents.held.push_back(key);
+        }
+        void scrollWheel(float delta)
+        {
+            nextPointer.wheelY = delta;
         }
         void typeChar(int c)
         {
