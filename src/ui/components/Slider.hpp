@@ -19,6 +19,23 @@ public:
 
     float getValue() const { return value; }
 
+    // Sets the slider's value. Clamped to [0, 1].
+    //
+    // By default, fires `onValueChanged` if the value actually changed.
+    // Pass `notify = false` for programmatic updates that should not
+    // trigger callbacks — e.g. syncing from an external state, or
+    // restoring a saved value without re-running the reaction.
+    void setValue(float v, bool notify = true)
+    {
+        float clamped = std::clamp(v, 0.0f, 1.0f);
+        if (clamped == value)
+            return;
+        value = clamped;
+        pendingTransition = true;
+        if (notify && onValueChanged)
+            onValueChanged(value);
+    }
+
 protected:
     Vec2 computeIntrinsicSize(float, float) override
     {

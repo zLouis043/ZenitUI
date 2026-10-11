@@ -334,10 +334,13 @@ public:
 | Name | Type | Description |
 |------|------|-------------|
 | `getValue()` | `float` | Current value in `[0, 1]`. |
-| `onValueChanged` | `std::function<void(float)>` | Fires during drag or on keyboard step. |
+| `setValue(float v, bool notify = true)` | `void` | Sets the value (clamped to `[0, 1]`). Fires `onValueChanged` if `notify` is true and the value actually changed. |
+| `onValueChanged` | `std::function<void(float)>` | Fires on user input and on `setValue` (when `notify` is true). |
 
-**Note:** there is no public `setValue()` — the value is only changed
-by user input.
+`setValue` does nothing (and does not fire the callback) if the new
+value equals the current one. Pass `notify = false` for programmatic
+updates that should not trigger reactions — e.g. restoring a saved
+value or syncing from external state.
 
 ### Intrinsic size
 
