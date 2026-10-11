@@ -486,15 +486,15 @@ No tests currently exist for the scroll system. Add:
 
 ### 3.2 `TextInput`
 
-- [ ] Character insertion
-- [ ] `Backspace` / `Delete` with cursor position
+- [x] Character insertion
+- [x] `Backspace` / `Delete` with cursor position
 - [x] `Left` / `Right` cursor movement
 - [x] `Home` / `End`
-- [ ] Key repeat (initial delay + interval)
-- [ ] `onTextChanged` fires on edit
-- [ ] `onSubmit` fires on Enter
-- [ ] `Escape` releases focus without submitting
-- [ ] Horizontal scroll of the cursor
+- [x] Key repeat (initial delay + interval)
+- [x] `onTextChanged` fires on edit
+- [x] `onSubmit` fires on Enter
+- [x] `Escape` releases focus without submitting
+- [x] Horizontal scroll of the cursor
 - [x] Click focuses the input
 
 ### 3.3 `Text` wrapping

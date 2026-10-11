@@ -7,6 +7,42 @@ using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
 // ============================================================
+//  Scene helper: TextInput con focus, in una scena minima.
+// ============================================================
+
+struct TextInputScene
+{
+    std::shared_ptr<Layout>    root;
+    std::shared_ptr<UI::TextInput> ti;
+};
+
+static TextInputScene makeFocusedInput(Env& env,
+                                        const std::string& initial = "")
+{
+    TextInputScene s;
+
+    s.ti = UI::TextInput::create(initial);
+    s.ti->getInlineBase().padding = Spacing(Px(0));
+    s.ti->getInlineBase().letterSpacing = Px(0);
+    s.ti->getInlineBase().minWidth = Px(200);
+
+    s.root = std::make_shared<Layout>(LayoutType::Stack);
+    s.root->size(Percent(100), Percent(100));
+    s.root->addChild(s.ti);
+
+    env.frame(s.root);
+    env.frame(s.root);
+
+    // Click per dare focus.
+    Rect r = s.ti->getRect();
+    env.click(s.root, { r.x + r.width * 0.5f, r.center().y });
+    env.frame(s.root);
+    env.frame(s.root);
+
+    return s;
+}
+
+// ============================================================
 //  TextInput: cursor position
 // ============================================================
 
@@ -190,4 +226,279 @@ TEST(Widget_textinput, home_end_move_cursor)
     env.platform.pressKey(Key::Home);
     env.frame(root);
     CHECK(ti->getCursorPos() == 0);
+}
+
+
+// ============================================================
+//  Editing: insertion, backspace, delete
+// ============================================================
+
+TEST(Widget_textinput, type_chars_inserts_at_cursor)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "");
+
+    env.platform.typeChar('h');
+    env.platform.typeChar('i');
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "hi");
+    CHECK(s.ti->getCursorPos() == 2);
+}
+
+TEST(Widget_textinput, type_char_replaces_cursor_position)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "ac");
+
+    // Sposta il cursore dopo 'a' (tra 'a' e 'c').
+    s.ti->setCursorPos(1);
+    env.frame(s.root);
+
+    env.platform.typeChar('b');
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "abc");
+    CHECK(s.ti->getCursorPos() == 2);
+}
+
+TEST(Widget_textinput, backspace_removes_before_cursor)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abc");
+
+    s.ti->setCursorPos(2);
+
+    env.platform.holdKey(Key::Backspace);
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "ac");
+    CHECK(s.ti->getCursorPos() == 1);
+}
+
+TEST(Widget_textinput, backspace_at_start_is_noop)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abc");
+
+    s.ti->setCursorPos(0);
+
+    env.platform.holdKey(Key::Backspace);
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "abc");
+    CHECK(s.ti->getCursorPos() == 0);
+}
+
+TEST(Widget_textinput, delete_removes_at_cursor)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abc");
+
+    s.ti->setCursorPos(1);
+
+    env.platform.holdKey(Key::Delete);
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "ac");
+    CHECK(s.ti->getCursorPos() == 1);
+}
+
+TEST(Widget_textinput, delete_at_end_is_noop)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abc");
+
+    s.ti->setCursorPos(3);
+
+    env.platform.holdKey(Key::Delete);
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == "abc");
+    CHECK(s.ti->getCursorPos() == 3);
+}
+
+// ============================================================
+//  Callbacks
+// ============================================================
+
+TEST(Widget_textinput, onTextChanged_fires_on_edit)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "");
+
+    int calls = 0;
+    std::string last;
+    s.ti->onTextChanged = [&](const std::string& t) {
+        calls++;
+        last = t;
+    };
+
+    env.platform.typeChar('a');
+    env.frame(s.root);
+
+    CHECK(calls == 1);
+    CHECK(last == "a");
+
+    env.platform.typeChar('b');
+    env.frame(s.root);
+
+    CHECK(calls == 2);
+    CHECK(last == "ab");
+}
+
+TEST(Widget_textinput, onTextChanged_does_not_fire_when_no_change)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abc");
+
+    int calls = 0;
+    s.ti->onTextChanged = [&](const std::string&) { calls++; };
+
+    // Backspace all'inizio non cambia nulla.
+    s.ti->setCursorPos(0);
+    env.frame(s.root);
+
+    env.platform.pressKey(Key::Backspace);
+    env.frame(s.root);
+
+    CHECK(calls == 0);
+}
+
+// ============================================================
+//  Enter / Escape
+// ============================================================
+
+TEST(Widget_textinput, enter_fires_onSubmit_and_releases_focus)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "hello");
+
+    int calls = 0;
+    std::string submitted;
+    s.ti->onSubmit = [&](const std::string& t) {
+        calls++;
+        submitted = t;
+    };
+
+    CHECK(UIContext::get().hasFocus(s.ti.get()));
+
+    env.platform.pressKey(Key::Enter);
+    env.frame(s.root);
+
+    CHECK(calls == 1);
+    CHECK(submitted == "hello");
+    CHECK(!UIContext::get().hasFocus(s.ti.get()));
+}
+
+TEST(Widget_textinput, escape_releases_focus_without_submit)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "hello");
+
+    int calls = 0;
+    s.ti->onSubmit = [&](const std::string&) { calls++; };
+
+    CHECK(UIContext::get().hasFocus(s.ti.get()));
+
+    env.platform.pressKey(Key::Escape);
+    env.frame(s.root);
+
+    CHECK(calls == 0);
+    CHECK(!UIContext::get().hasFocus(s.ti.get()));
+}
+
+// ============================================================
+//  Key repeat
+// ============================================================
+
+TEST(Widget_textinput, key_repeat_deletes_multiple)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abcdef");
+
+    // Cursore alla fine.
+    s.ti->setCursorPos(6);
+
+    // Tieni premuto Backspace per 1 secondo (60 frame a 60 fps).
+    // Repeat: delay 0.4s, interval 0.04s → dopo 1s dovrebbe aver
+    // cancellato (1s - 0.4s) / 0.04s + 1 ≈ 16 caratteri, ma il testo
+    // è solo 6. Quindi il testo diventa "".
+    for (int i = 0; i < 60; ++i)
+    {
+        env.platform.holdKey(Key::Backspace);
+        env.frame(s.root);
+    }
+
+    CHECK(s.ti->getText() == "");
+    CHECK(s.ti->getCursorPos() == 0);
+}
+
+TEST(Widget_textinput, key_repeat_stops_when_released)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "abcdefghij");
+
+    s.ti->setCursorPos(10);
+
+    // Tieni premuto per 10 frame.
+    for (int i = 0; i < 10; ++i)
+    {
+        env.platform.holdKey(Key::Backspace);
+        env.frame(s.root);
+    }
+
+    std::string afterHold = s.ti->getText();
+
+    // Rilascia (nessun holdKey) per 30 frame.
+    for (int i = 0; i < 30; ++i)
+    {
+        env.frame(s.root);
+    }
+
+    // Il testo è rimasto lo stesso.
+    CHECK(s.ti->getText() == afterHold);
+}
+
+// ============================================================
+//  Horizontal scroll of the cursor
+// ============================================================
+
+TEST(Widget_textinput, cursor_scrolls_into_view_when_long)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "");
+
+    const std::string longText = "this is a very long text that will not fit";
+    s.ti->setText(longText);
+    s.ti->setCursorPos((int)longText.size());
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == longText);
+    CHECK(s.ti->getCursorPos() == (int)longText.size());
+}
+
+TEST(Widget_textinput, type_after_scroll_keeps_cursor_at_end)
+{
+    Env env;
+    auto s = makeFocusedInput(env, "");
+
+    // Riempi il campo.
+    for (int i = 0; i < 30; ++i)
+    {
+        env.platform.typeChar('x');
+        env.frame(s.root);
+    }
+
+    CHECK(s.ti->getText() == std::string(30, 'x'));
+    CHECK(s.ti->getCursorPos() == 30);
+
+    // L'ultimo carattere digitato deve essere visibile, il che
+    // significa che il cursore è alla fine e non è stato spostato
+    // dallo scroll.
+    env.platform.typeChar('y');
+    env.frame(s.root);
+
+    CHECK(s.ti->getText() == std::string(30, 'x') + "y");
+    CHECK(s.ti->getCursorPos() == 31);
 }

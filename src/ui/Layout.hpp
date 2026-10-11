@@ -703,7 +703,11 @@ namespace ZenitUI
 			static_cast<TLayout<Derived, Base> *>(p.get())->onBuild();
 			return p;
 		}
-
+		std::shared_ptr<Derived> cls(const std::string &name)
+		{
+			this->addClass(name);
+			return self();
+		}
 		std::shared_ptr<Derived> id(const std::string &node_id)
 		{
 			this->setId(node_id);
