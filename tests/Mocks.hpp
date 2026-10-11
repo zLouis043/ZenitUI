@@ -64,6 +64,8 @@ namespace ZenitUI::Test
         std::vector<CapturedVec4> capturedVec4f;
         std::vector<CapturedColor> capturedColor;
 
+        std::vector<Transform2D> transformHistory;
+
         void fillRect(Rect, Color) override { fillRectCount++; }
         void fillRoundedRect(Rect, float, Color) override {}
         void fillCircle(Vec2, float, Color) override {}
@@ -86,7 +88,10 @@ namespace ZenitUI::Test
             return {w, size};
         }
 
-        void pushTransform(const Transform2D &) override {}
+        void pushTransform(const Transform2D &t) override
+        {
+            transformHistory.push_back(t);
+        }
         void popTransform() override {}
         void pushEffect(EffectHandle) override {}
         void popEffect() override {}
@@ -342,6 +347,7 @@ namespace ZenitUI::Test
             renderer.capturedVec3.clear();
             renderer.capturedVec4f.clear();
             renderer.capturedColor.clear();
+            renderer.transformHistory.clear();
             renderer.currentClip = {0, 0, 1e9f, 1e9f};
         }
 
