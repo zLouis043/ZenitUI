@@ -15,13 +15,23 @@ Last updated: review pass after the initial documentation.
 
 ## Status
 
-**Current:** 🧪 alpha — API still evolving, breaking changes expected.
+**Current:** 🗓️ beta — the core API is frozen, no known critical bugs,
+test coverage on every widget, documentation complete. Breaking
+changes are still possible for post-beta work (Phases 4–8) but the
+surface described in Phases 1–3 is stable.
 
-**Next milestone:** 🅱️ beta — API frozen for the core, no known critical
-bugs, test coverage on every widget, documentation complete.
+**Next milestone:** 🚀 1.0 — feature-complete for a typical game /
+tool use case, stable API, tooling available. Requires Phases 4 and 5.
 
-**Target after that:** 🚀 1.0 — feature-complete for a typical game /
-tool use case, stable API, tooling available.
+**What "beta" means in this project:**
+
+- Phase 1 (bug fixes) — complete.
+- Phase 2 (missing core API) — complete.
+- Phase 3 (test coverage) — complete.
+- Documentation — audited and updated.
+
+Phases 4–8 are post-beta work. They are additive and don't require
+breaking the API.
 
 ---
 
@@ -908,9 +918,9 @@ See `CONTRIBUTING.md` (to be written). In the meantime:
 
 | Version | Date | Notes |
 |---------|------|-------|
-| alpha | — | Current state. API unstable. |
-| beta | TBD | Phase 1-3 complete. API frozen for core. |
-| 1.0 | TBD | Phase 4-5 complete. Feature-complete for typical use. |
+| alpha | — | Initial state. API unstable. |
+| beta | 2026-10-11 | Phase 1–3 complete. API frozen for the core. |
+| 1.0 | TBD | Phase 4–5 complete. Feature-complete for typical use. |
 
 ---
 

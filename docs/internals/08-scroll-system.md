@@ -568,27 +568,16 @@ void Layout::translateSubtree(float dx, float dy) {
 Recursively shifts every descendant's `rect`. The node's own `rect` is
 not shifted — the container stays fixed, only its content moves.
 
-**Note:** absolute children and portals are also translated. Absolute
-children of a scroll container will scroll with the content, which is
-usually what you want. Portals, however, are supposed to be
-independent of the scroll (they position themselves in screen space).
-Translating them will break their positioning.
+**Note:** absolute children are translated along with the flow
+children, so they scroll with the content. This is usually what you
+want (an absolute-positioned badge inside a card should scroll with
+the card).
 
-Looking at the code, there's a commented-out check:
-
-```cpp
-//if (c->isPortal())
-//    continue;
-```
-
-So the portal exclusion was considered but not enabled. In practice,
-portals inside a scroll container are rare, and the issue is masked by
-the portal's `onUpdate` setting its own `rect` each frame. The
-translate shift is overwritten by the portal's position computation.
-But the recursion still shifts the portal's children, which can be
-visible.
-
-This is a known issue.
+Portals, however, are **not** translated. They position themselves in
+screen space and must be independent of the scroll offset. The
+`translateSubtree` method skips any child whose `isPortal()` returns
+true, so neither the portal's own `rect` nor its descendants are
+affected by scrolling.
 
 ### 5.5 `updateMaxScroll`
 
