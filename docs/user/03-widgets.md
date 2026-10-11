@@ -146,6 +146,7 @@ can be a bare flag (defaults to `true`) or `wrap=false` / `wrap=true`.
 | Method | Description |
 |--------|-------------|
 | `setText(std::string)` | Replace the text. |
+| `getText()` | Returns the current text as `const std::string&`. |
 | `setFont(FontHandle)` | Override the resolved font. |
 | `setWrap(bool)` | Enable / disable wrapping. |
 | `getWrap()` | Query the current setting. |
