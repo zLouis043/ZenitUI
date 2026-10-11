@@ -372,7 +372,7 @@ Common pattern after `requestFocus`.
 
 `setText` exists, `getText` doesn't.
 
-- [ ] Add `const std::string& getText() const`
+- [x] Add `const std::string& getText() const`
 
 ### 2.7 `Layout::removeAllChildren()`
 

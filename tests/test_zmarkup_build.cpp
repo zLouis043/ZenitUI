@@ -3,6 +3,7 @@
 #include "ZMarkup.hpp"
 
 using namespace ZenitUI;
+using namespace ZenitUI::UI;
 using namespace ZenitUI::Test;
 
 // ============================================================
@@ -148,4 +149,23 @@ TEST(Widget_dropdown, css_can_override_trigger_height)
 
     auto trigger = dd->children[0];
     CHECK_NEAR(trigger->getRect().height, 60.0f, 1.0f);
+}
+
+TEST(Widget_text, getText_returns_current_content)
+{
+    Env env;
+
+    auto txt = Text::create("hello");
+    CHECK(txt->getText() == "hello");
+
+    txt->setText("world");
+    CHECK(txt->getText() == "world");
+
+    // Integration: verify that setText takes effect after a frame.
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(txt);
+
+    env.frame(root);
+    CHECK(txt->getText() == "world");
 }

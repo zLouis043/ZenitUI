@@ -100,6 +100,7 @@ std::shared_ptr<Text> Label(std::string t);
 | Method | Effect |
 |--------|--------|
 | `setText(std::string)` | Replace content. Sets `text_dirty` and `pendingTransition`. |
+| `getText()` | Returns the current content as `const std::string&`. |
 | `setFont(FontHandle)` | Override the resolved font. |
 | `setWrap(bool)` | Enable / disable word wrapping. |
 | `getWrap()` | Current wrapping state. |
