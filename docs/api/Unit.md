@@ -54,7 +54,11 @@ struct Value {
         bool operator==(const Term& o) const;
     };
 
-    std::vector<Term> terms;
+    // Inline storage for up to 2 terms. A `Value` with 1 or 2 terms
+    // (Px(8), calc(100% - 20px)) allocates nothing on the heap.
+    // Beyond 2 terms the container falls back to a std::vector. See
+    // SmallVector.hpp for the container's semantics and limits.
+    SmallVector<Term, 2> terms;
 
     Value() = default;
     Value(float pixels);
@@ -64,9 +68,11 @@ struct Value {
 };
 ```
 
-A `Value` is a vector of `Term`s. Empty means `Auto`. A single term
-is the common case (`Px(10)` has one term). Multiple terms come from
-`calc()` (e.g. `calc(100% - 20px)` has two terms).
+A `Value` is a list of `Term`s. Empty means `Auto`. The list lives
+in an `SmallVector<Term, 2>`, which stores up to 2 terms inline. This
+is transparent to the caller: the container supports the same subset
+of `std::vector`'s API that `Value` uses (`size`, `operator[]`,
+range-for, `push_back`, `clear`, `reserve`).
 
 ### 2.1 Construction
 
@@ -431,6 +437,18 @@ with its node), but it's different from other properties.
 After normalization, only one `Percent` term remains, with the sum of
 all the original coefficients. So `Percent(30) + Percent(20)` becomes
 `Percent(50)`, not two separate terms.
+
+**`terms` is not a `std::vector`.**
+
+`Value::terms` is a `SmallVector<Term, 2>`, not a `std::vector<Term>`.
+It exposes the same subset of the API that `Value` needs, but not
+the full `std::vector` interface. If you need to iterate, index, or
+`push_back`, it works. If you need `erase`, `insert`, or `resize`,
+convert first or don't rely on those.
+
+The type is also `SmallVector<Term, 2>` — the `2` is part of the type.
+Two `Value`s with different N are different types, but for `Value`
+there's only one instantiation, so this is invisible.
 
 ---
 

@@ -543,6 +543,15 @@ For `Value`, `auto` on either side causes a **snap** (returns `b` if
 `t > 0`, else `a`). Mixed units are interpolated term-by-term,
 including units present in only one side.
 
+The result of a mixed-unit lerp can have **up to 7 terms** — one per
+`Unit`. For example, interpolating `Px(0)` with `Percent(100)` gives a
+2-term result; a more unusual lerp across all 7 units gives a
+7-term result. `Value::terms` is a `SmallVector<Term, 2>`, which
+allocates to the heap once the third term is added. In practice this
+is rare: transitions between two unit-consistent values keep the same
+term count, and the lerp itself doesn't grow beyond the union of the
+input units.
+
 ### Enum-like types (snap)
 
 ```cpp
@@ -787,6 +796,17 @@ Interpolating `Px(0)` to `Percent(100)` at `t = 0.5` produces
 has more terms than either input. For repeatedly-recomputed values
 (e.g. in a transition tick), the term count stays bounded because the
 lerp is between fixed endpoints, not accumulated.
+
+The maximum term count is 7 (one per `Unit`), and it's reached only
+when the two inputs have disjoint unit sets. In practice this doesn't
+happen: a transition on `width` typically moves between two `Px` or
+two `Percent` values, producing a result with the same term count as
+the inputs.
+
+`Value::terms` is a `SmallVector<Term, 2>`, so a 1-2 term result is
+allocation-free. A 3+ term result allocates once, on the first push
+that overflows the inline storage. See [Unit](Unit.md) for the
+container's semantics and limits.
 
 **`customProps` are not part of `operator==`.**
 

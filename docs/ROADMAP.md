@@ -584,10 +584,10 @@ every frame per node, this is the single largest allocation source.
 Recommendation: **A** — it's the least invasive and gives the biggest
 win for the common case.
 
-- [ ] Implement `SmallVector<Term, 2>`
-- [ ] Replace `std::vector<Term>` in `Value`
-- [ ] Benchmark before/after
-- [ ] Verify no behavioral change
+- [x] Implement `SmallVector<Term, 2>`
+- [x] Replace `std::vector<Term>` in `Value`
+- [x] Benchmark before/after
+- [x] Verify no behavioral change
 
 ### 4.2 Cache `renderStyle` in `draw`
 

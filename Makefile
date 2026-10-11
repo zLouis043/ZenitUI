@@ -66,4 +66,10 @@ run-%: $(LIB_BIN)
 
 rebuild: clean all
 
-.PHONY: all libzenit test examples run-% clean rebuild
+bench: $(LIB_BIN)
+	$(MAKE) -C benchmarks
+
+bench-run: bench
+	$(MAKE) -C benchmarks run
+
+.PHONY: all libzenit test examples run-% bench bench-run clean rebuild
