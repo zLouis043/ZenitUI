@@ -1,0 +1,3691 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../04-zmarkup/">
+      
+      
+        <link rel="next" href="../06-events/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>ZStyle - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zstyle" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZStyle
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../internals/01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-loading-stylesheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Loading stylesheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Loading stylesheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registration-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-syntax-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Syntax overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Selectors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Selectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-compound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Compound
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Descendant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 ::part
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-multiple-selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Multiple selectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-specificity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Specificity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-property-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Property reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Property reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Spacing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-flex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Flex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Transform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Visual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-typography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Typography
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Overflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Transitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Animations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-custom-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Custom properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Custom properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-a-custom-property" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a custom property
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoping-and-inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoping and inheritance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chained-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chained references
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-custom-props-dont-type-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important: custom props don't type-check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-easing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Easing functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-keyframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. @keyframes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. @keyframes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-fill-of-missing-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-fill of missing properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-whitelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property whitelist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. @media
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. @media">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-inline-attributes-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Inline attributes (ZMarkup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-full-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Full example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internals/10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-loading-stylesheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Loading stylesheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Loading stylesheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registration-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-syntax-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Syntax overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Selectors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Selectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-compound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Compound
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-descendant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Descendant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 ::part
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-multiple-selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Multiple selectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-specificity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Specificity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-property-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Property reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Property reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-spacing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Spacing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-flex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Flex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Transform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Visual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-typography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Typography
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-overflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Overflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Transitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Animations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-custom-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Custom properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Custom properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-a-custom-property" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a custom property
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoping-and-inheritance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoping and inheritance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chained-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chained references
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-custom-props-dont-type-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important: custom props don't type-check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-easing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Easing functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-keyframes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. @keyframes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. @keyframes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-fill-of-missing-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-fill of missing properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-whitelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property whitelist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. @media
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. @media">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-inline-attributes-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Inline attributes (ZMarkup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-full-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Full example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zstyle">ZStyle</h1>
+<p><code>.zstyle</code> is ZenitUI's stylesheet language. It looks like CSS, and it
+borrows most of its syntax — selectors, cascade, <code>@keyframes</code>,
+<code>@media</code>, custom properties, <code>calc()</code> — but it's not CSS. The property
+set is different, and a few semantic rules have been simplified or
+changed to fit a UI framework that has no DOM.</p>
+<p>This document is the reference for the language. For internals (how the
+cascade is resolved, how specificity is computed, how transitions are
+ticked), see <a href="../../internals/03-style-system/">Style System</a>.</p>
+<hr />
+<h2 id="1-loading-stylesheets">1. Loading stylesheets</h2>
+<p>There are two entry points:</p>
+<pre><code class="language-cpp">#include &quot;StyleParser.hpp&quot;
+using namespace ZenitUI;
+
+// From a file
+ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;);
+
+// From a string
+ZMarkup::loadStyleString(R&quot;(
+    Button {
+        background: #0079F1;
+        radius: 8px;
+    }
+)&quot;);
+</code></pre>
+<p>Both append rules to the global <code>Theme</code>. Rules accumulate — calling
+<code>loadStyleFile</code> multiple times stacks the stylesheets in load order.
+For the same specificity, later rules win.</p>
+<p>To start over:</p>
+<pre><code class="language-cpp">Theme::get().clear();
+</code></pre>
+<p>That clears the rules, the keyframes, and the <code>:root</code> block.</p>
+<h3 id="registration-order">Registration order</h3>
+<p>Fonts, textures, and shaders referenced by name in <code>.zstyle</code> must be
+registered with <code>IAssetProvider</code> <strong>before</strong> the first frame. The parser
+doesn't resolve them; <code>Layout::resolveFont</code> / <code>resolveBgTexture</code> do, at
+style-resolution time.</p>
+<pre><code class="language-cpp">assets.loadFont(&quot;calibri&quot;, &quot;assets/calibri.ttf&quot;);
+assets.loadTexture(&quot;bubble&quot;, &quot;assets/bubble.png&quot;);
+assets.loadEffect(&quot;blur&quot;, &quot;assets/blur.fs&quot;);
+
+ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;);
+</code></pre>
+<hr />
+<h2 id="2-syntax-overview">2. Syntax overview</h2>
+<pre><code class="language-css">/* A rule: selector { declarations } */
+Button {
+    background: #0079F1;
+    radius: 8px;
+}
+
+/* State pseudo-classes */
+Button:hover   { background: #3296FF; }
+Button:pressed { background: #505050; }
+Button:focus   { border-color: #FDF900; border-width: 2px; }
+Toggle:checked { background: #00E430; }
+Button:disabled{ opacity: 0.4; }
+
+/* Descendant */
+.card Button { margin: 4px; }
+.card .card-title { color: #FF0000; }
+
+/* ::part */
+Slider::track { background: #1717cf; }
+Slider::knob  { color: #d6ff32; }
+
+/* Custom properties */
+:root {
+    --primary: #0079F1;
+    --radius: 8px;
+}
+Button { background: var(--primary); }
+
+/* Keyframes */
+@keyframes pulse {
+    0%   { scale: 1.00; }
+    50%  { scale: 1.18; }
+    100% { scale: 1.00; }
+}
+.btn-pulse { animation: pulse 1.2s ease-in-out infinite; }
+
+/* Media queries */
+@media (max-width: 700px) {
+    .card-desc { color: #FF0000; }
+}
+</code></pre>
+<p>Comments: <code>/* ... */</code> (block) and <code>// ...</code> (line). Line comments inside
+strings are preserved — the stripper knows about quotes.</p>
+<hr />
+<h2 id="3-selectors">3. Selectors</h2>
+<h3 id="31-tag">3.1 Tag</h3>
+<p>Matches a node whose <strong>style tag</strong> equals the name. The style tag is
+set automatically by widgets (<code>Button</code>, <code>Toggle</code>, <code>Text</code>, …) and can be
+overridden with <code>Layout::setStyleTag()</code>.</p>
+<pre><code class="language-css">Button { ... }
+Toggle { ... }
+Slider { ... }
+Text   { ... }
+</code></pre>
+<p>The special tags <code>VStack</code>, <code>HStack</code>, <code>Stack</code>, <code>Panel</code>, <code>Spacer</code>,
+<code>ScrollView</code>, <code>Dropdown</code>, <code>Popup</code>, <code>Tooltip</code>, <code>Modal</code>, <code>TextInput</code>,
+<code>Checkbox</code>, <code>ProgressBar</code>, <code>ImageContainer</code>, <code>Canvas</code> are set by the
+corresponding helpers.</p>
+<h3 id="32-class">3.2 Class</h3>
+<p>Matches a node whose <code>getStyleClasses()</code> contains the name. Classes are
+added via <code>Layout::cls("name")</code> or <code>.name</code> in ZMarkup.</p>
+<pre><code class="language-css">.card { ... }
+.btn-primary { ... }
+.setting-row { ... }
+</code></pre>
+<h3 id="33-id">3.3 Id</h3>
+<p>Matches a node whose <code>nodeId</code> equals the name. Ids are set via
+<code>Layout::id("name")</code> or <code>#name</code> in ZMarkup.</p>
+<pre><code class="language-css">#root { width: 100%; height: 100%; }
+#save { background: green; }
+</code></pre>
+<h3 id="34-compound">3.4 Compound</h3>
+<p>A single token can combine a tag, any number of classes, and an id. All
+components must match the <strong>same node</strong>.</p>
+<pre><code class="language-css">Button.btn-primary { ... }       /* Button with class btn-primary */
+Button#save { ... }              /* Button with id save */
+Panel.card.elevated { ... }      /* Panel with two classes */
+Button.btn-primary#save { ... }  /* all three */
+</code></pre>
+<p>States can be attached to the whole compound:</p>
+<pre><code class="language-css">Button.btn-primary:hover { ... }
+Toggle.primary:checked { ... }
+</code></pre>
+<p>The order between <code>.class</code> and <code>#id</code> doesn't matter, and the tag is
+optional (as with <code>.btn-primary</code> alone). The one rule is: <strong>no spaces</strong>
+inside a compound. A space starts a new descendant selector token.</p>
+<pre><code class="language-css">.card Button.btn-primary   /* two tokens: .card, then Button.btn-primary */
+.cardButton.btn-primary    /* one token: tag &quot;.cardButton&quot; + class */
+</code></pre>
+<p>Note that the parser splits on the first <code>.</code> or <code>#</code> in each token; every
+subsequent <code>.name</code> or <code>#name</code> is a component of the same compound. This
+means a class name cannot contain a literal <code>.</code> or <code>#</code> — matching CSS.</p>
+<h3 id="35-descendant">3.5 Descendant</h3>
+<p>A space-separated chain matches a node that has an ancestor matching
+each earlier token. Unlike CSS, <strong>only descendant</strong> (not child, not
+sibling) combinators are supported.</p>
+<pre><code class="language-css">.card Text { ... }               /* any Text inside a .card */
+.demo-content .card .card-title { ... }
+</code></pre>
+<p>The chain is matched right-to-left. <code>.card Text</code> matches a <code>Text</code> whose
+<strong>nearest</strong> matching ancestor for the <code>.card</code> part exists somewhere up
+the chain — intervening nodes are fine.</p>
+<h3 id="36-states">3.6 States</h3>
+<p>States are pseudo-classes appended to a compound selector, using a single
+<code>:</code>. Multiple states can be chained:</p>
+<pre><code class="language-css">Button:hover { ... }
+Button:pressed { ... }
+Button:focus { ... }
+Toggle:checked { ... }
+Button:disabled { ... }
+
+Toggle:checked:hover { ... }
+Button:focus:pressed { ... }
+</code></pre>
+<p>Supported states:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Matches when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:hover</code></td>
+<td><code>Layout::isHoveredState()</code> is true.</td>
+</tr>
+<tr>
+<td><code>:pressed</code></td>
+<td><code>Layout::isPressedState()</code> is true.</td>
+</tr>
+<tr>
+<td><code>:focus</code></td>
+<td><code>Layout::isFocusedState()</code> is true.</td>
+</tr>
+<tr>
+<td><code>:checked</code></td>
+<td><code>Layout::isCheckedState()</code> is true.</td>
+</tr>
+<tr>
+<td><code>:disabled</code></td>
+<td><code>Layout::isDisabledState()</code> is true (i.e. <code>!isEnabled</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>Unknown states are ignored silently.</p>
+<p>The state applies to the compound it's attached to. <code>Toggle:checked
+.toggle-knob</code> matches a <code>.toggle-knob</code> <strong>descendant</strong> of a checked
+<code>Toggle</code>. <code>Toggle:checked.toggle-knob</code> (no space) would match a
+<code>Toggle</code> <strong>that also has</strong> the <code>.toggle-knob</code> class, which is not what
+you want.</p>
+<h3 id="37-part">3.7 <code>::part</code></h3>
+<p>Double colon introduces a <strong>part</strong> name. Parts are pseudo-elements
+painted by a widget's <code>renderContent</code> — a slider track, a checkbox
+mark, a text-input cursor. They are styled by dedicated rules, not by
+the normal cascade.</p>
+<pre><code class="language-css">Slider::track { background: #1717cf; }
+Slider::fill  { color: #d6ff32; }
+Slider::knob  { color: #d6ff32; }
+
+Checkbox::box  { background: #1574b0; }
+Checkbox::mark { color: #ea0404; }
+
+ProgressBar::track { background: #cc1c9d; }
+ProgressBar::fill  { color: #69FF32; }
+
+TextInput::cursor { color: #FF6600; border-width: 3px; }
+</code></pre>
+<p>A <code>::part</code> selector cannot have descendants (<code>Slider::track Text</code> is
+invalid). It can have states on the compound before <code>::</code>:</p>
+<pre><code class="language-css">Slider:hover::knob { animation: knobGlow 0.6s ease-in-out infinite; }
+Checkbox:disabled::mark { color: #808080; }
+</code></pre>
+<p>The state is checked against the <strong>widget</strong>, not against the part. So
+<code>Checkbox:disabled::mark</code> matches while the Checkbox is disabled.</p>
+<h3 id="38-multiple-selectors">3.8 Multiple selectors</h3>
+<p>A comma splits a rule into several independent rules, each with its own
+specificity:</p>
+<pre><code class="language-css">Button, Toggle, Checkbox {
+    border-width: 2px;
+}
+</code></pre>
+<h3 id="39-specificity">3.9 Specificity</h3>
+<p>Specificity is computed like CSS but with only three buckets:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ids</td>
+<td>1 (per id)</td>
+</tr>
+<tr>
+<td>Classes + states</td>
+<td>1 (per class or pseudo-class)</td>
+</tr>
+<tr>
+<td>Tags</td>
+<td>1 (per tag)</td>
+</tr>
+</tbody>
+</table>
+<p>Compared lexicographically: <code>(ids, classes, tags)</code>. So one id beats any
+number of classes, one class beats any number of tags.</p>
+<pre><code class="language-css">Button             /* (0, 0, 1) */
+.btn-primary       /* (0, 1, 0) */
+Button.btn-primary /* (0, 1, 1) */
+#save              /* (1, 0, 0) */
+Button:hover       /* (0, 1, 1) */
+Toggle:checked     /* (0, 1, 1) */
+.card Button       /* (0, 1, 1) */
+</code></pre>
+<p>Ties are broken by <strong>declaration order</strong> — later rules win. Loading two
+stylesheets stacks them: everything from the second file is "later"
+than everything from the first.</p>
+<p><strong>Inline styles win regardless of specificity.</strong> <code>getInlineBase()</code> and
+ZMarkup attributes are applied after the cascade, so <code>Button
+background="red"</code> beats any <code>.zstyle</code> rule for the same property.</p>
+<hr />
+<h2 id="4-property-reference">4. Property reference</h2>
+<p>Every property listed here can be set in three places:</p>
+<ol>
+<li><code>.zstyle</code> rules (subject to cascade).</li>
+<li>Inline style, via <code>getInlineBase()</code>.</li>
+<li>Inline style, via ZMarkup attribute.</li>
+</ol>
+<p>The parser understands every property as a <em>string</em> and dispatches it
+to a typed setter. Unknown properties are logged as warnings and
+ignored — they never break the parse.</p>
+<h3 id="41-sizing">4.1 Sizing</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>min-width</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>min-height</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>max-width</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>max-height</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">.card {
+    width: 100%;
+    height: auto;
+    min-width: 80px;
+    max-width: 60vw;
+}
+</code></pre>
+<h3 id="42-spacing">4.2 Spacing</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>padding</code></td>
+<td>Spacing</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>margin</code></td>
+<td>Spacing</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td>Value</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Spacing accepts 1, 2, 3, or 4 values (CSS-style):</p>
+<pre><code class="language-css">.pad { padding: 8px; }                    /* all sides */
+.pad { padding: 8px 16px; }               /* vertical | horizontal */
+.pad { padding: 1px 2px 3px; }            /* top | horizontal | bottom */
+.pad { padding: 1px 2px 3px 4px; }        /* top | right | bottom | left */
+</code></pre>
+<p>Each value can be any supported unit, including <code>vw</code> / <code>vh</code> / <code>pw</code> /
+<code>ph</code>.</p>
+<h3 id="43-flex">4.3 Flex</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grow</code></td>
+<td>float</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>shrink</code></td>
+<td>float</td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">.spacer-grow { grow: 1; }
+.demo-sidebar { shrink: 0; }
+</code></pre>
+<h3 id="44-alignment">4.4 Alignment</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>justify</code></td>
+<td>Justify</td>
+<td><code>start</code></td>
+</tr>
+<tr>
+<td><code>items-h</code></td>
+<td>Align</td>
+<td><code>start</code></td>
+</tr>
+<tr>
+<td><code>items-v</code></td>
+<td>Align</td>
+<td><code>start</code></td>
+</tr>
+<tr>
+<td><code>align-h</code></td>
+<td>Align</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>align-v</code></td>
+<td>Align</td>
+<td><code>auto</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Justify</code>: <code>start</code>, <code>center</code>, <code>end</code>, <code>space-between</code>.
+<code>Align</code>: <code>auto</code>, <code>start</code>, <code>center</code>, <code>end</code>, <code>stretch</code>.</p>
+<pre><code class="language-css">.row { justify: space-between; }
+.root { items-h: center; items-v: center; }
+.card { align-h: stretch; }
+</code></pre>
+<h3 id="45-position">4.5 Position</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td><code>static</code> | <code>relative</code> | <code>absolute</code></td>
+<td><code>static</code></td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>left</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>right</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>bottom</code></td>
+<td>Value</td>
+<td><code>auto</code></td>
+</tr>
+<tr>
+<td><code>z-index</code></td>
+<td>number | <code>auto</code></td>
+<td><code>auto</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">.badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
+</code></pre>
+<p><code>relative</code> currently behaves like <code>static</code> for layout — it only affects
+stacking (a node with <code>position != static</code> and <code>z-index != auto</code> becomes
+a stacking context).</p>
+<h3 id="46-transform">4.6 Transform</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>translate-x</code></td>
+<td>Value</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>translate-y</code></td>
+<td>Value</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td>float</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>rotation</code></td>
+<td>float (degrees)</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>translate-x</code> / <code>translate-y</code> resolve against <strong>the node's own width /
+height</strong> (self-relative). Pivot is always the node's center.</p>
+<pre><code class="language-css">.hover-box {
+    transition: scale 0.15s ease-out-back;
+}
+.hover-box:hover {
+    scale: 1.05;
+    translate-y: -2px;
+}
+</code></pre>
+<h3 id="47-visual">4.7 Visual</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>background</code></td>
+<td>Color</td>
+<td><code>transparent</code></td>
+</tr>
+<tr>
+<td><code>background-texture</code></td>
+<td>TextureRef</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>tint</code></td>
+<td>Color</td>
+<td><code>#FFFFFF</code></td>
+</tr>
+<tr>
+<td><code>border-color</code></td>
+<td>Color</td>
+<td><code>transparent</code></td>
+</tr>
+<tr>
+<td><code>border-width</code></td>
+<td>Value</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td>Value</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td>float</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>box-shadow</code></td>
+<td>BoxShadow</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">.card {
+    background: #2A2A32FF;
+    background-texture: bubble;
+    background-texture: npatches 16 16 16 16;   /* nine-slice */
+    border-color: #3A3A40FF;
+    border-width: 1px;
+    radius: 8px;
+    opacity: 1.0;
+    box-shadow: 4px 4px 8px #00000080;
+    tint: #FFFFFFFF;
+}
+</code></pre>
+<p><code>box-shadow</code> syntax: <code>x y blur color</code>. Color is optional (defaults to
+<code>#00000080</code>). Blur is approximated with 5 stacked rounded rects, not a
+true Gaussian blur.</p>
+<h3 id="48-typography">4.8 Typography</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>font</code></td>
+<td>string</td>
+<td><code>""</code> (backend default)</td>
+</tr>
+<tr>
+<td><code>font-size</code></td>
+<td>Value</td>
+<td><code>20</code></td>
+</tr>
+<tr>
+<td><code>letter-spacing</code></td>
+<td>Value</td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td>Color</td>
+<td><code>#FFFFFF</code></td>
+</tr>
+<tr>
+<td><code>text-align</code></td>
+<td>Align</td>
+<td><code>auto</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">Text {
+    font: calibri;
+    font-size: 3vh;
+    letter-spacing: 2px;
+    color: #FFFFFF;
+    text-align: center;
+}
+</code></pre>
+<p><code>font</code> is resolved at style time via <code>IAssetProvider::getFont(name)</code>. If
+the name isn't registered, the backend default font is used.</p>
+<p>The properties <code>font</code>, <code>font-size</code>, <code>color</code>, <code>letter-spacing</code>, and
+<code>text-align</code> are <strong>inherited</strong> by descendants. All other properties are
+not.</p>
+<h3 id="49-overflow">4.9 Overflow</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>overflow</code></td>
+<td>Overflow</td>
+<td><code>visible</code></td>
+</tr>
+<tr>
+<td><code>overflow-x</code></td>
+<td>Overflow</td>
+<td><code>visible</code></td>
+</tr>
+<tr>
+<td><code>overflow-y</code></td>
+<td>Overflow</td>
+<td><code>visible</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Overflow</code>: <code>visible</code>, <code>hidden</code>, <code>scroll</code>, <code>auto</code>.</p>
+<pre><code class="language-css">.panel {
+    overflow: hidden;
+}
+.scrollable {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+</code></pre>
+<p><strong>Computed value rule:</strong> if one axis is <code>visible</code> and the other isn't,
+the <code>visible</code> axis is promoted to <code>auto</code>. This matches CSS's
+computed-value rule so that clipping behaves predictably. This happens
+in <code>ComputedStyle::from</code>, so <code>getStyle()</code> reports the promoted value.</p>
+<h3 id="410-effects">4.10 Effects</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter</code></td>
+<td>comma-separated filter list</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>effect</code></td>
+<td>string (shader name)</td>
+<td><code>""</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-css">.card {
+    filter: blur(4px);
+    filter: blur(2px), drop-shadow(2px, 2px, #000000);
+    filter: sepia(0.8);
+}
+
+.btn-primary {
+    effect: hueShift;
+}
+</code></pre>
+<ul>
+<li><code>filter</code> puts the node in a <strong>layer</strong>. Its subtree is rendered into a
+  render target and then the filter chain is applied. This has a cost
+  (one target per filtered node, ping-pong for separable filters). Use
+  it sparingly.</li>
+<li><code>effect</code> applies an arbitrary shader as a single pass. <code>effect</code> and
+  <code>filter</code> can coexist.</li>
+</ul>
+<p>For the built-in filters and how to register custom ones, see
+<a href="../09-effects/">Effects</a>.</p>
+<h3 id="411-transitions">4.11 Transitions</h3>
+<p><code>transition</code> is a comma-separated list of specs:</p>
+<pre><code class="language-css">.element {
+    transition: background 0.25s ease-out, scale 0.12s ease-out-back;
+}
+</code></pre>
+<p>Each spec is: <code>&lt;property&gt; &lt;duration&gt; &lt;easing&gt;</code>, where:</p>
+<ul>
+<li><code>&lt;property&gt;</code> is a property name, or <code>all</code>.</li>
+<li><code>&lt;duration&gt;</code> is <code>0.25s</code> or <code>250ms</code>.</li>
+<li><code>&lt;easing&gt;</code> is one of the easing names (see §6).</li>
+</ul>
+<p>Longhand forms override the shorthand for the properties they mention:</p>
+<pre><code class="language-css">.element {
+    transition: background 0.25s ease-out, scale 0.12s;
+    transition-delay: 0.05s;         /* applies to all specs */
+    transition-duration: 0.3s;       /* overrides the duration of all specs */
+    transition-timing-function: linear;  /* overrides the easing of all specs */
+}
+</code></pre>
+<p>The longhand forms require a preceding <code>transition</code> — using
+<code>transition-delay</code> alone logs a warning and is ignored.</p>
+<h3 id="412-animations">4.12 Animations</h3>
+<p><code>animation</code> is a comma-separated list of specs:</p>
+<pre><code class="language-css">.pulse {
+    animation: pulse 1.2s ease-in-out infinite;
+}
+.blink {
+    animation: blink 0.5s linear forwards;
+}
+.combo {
+    animation: fadeIn 0.3s ease-out, glow 1s infinite alternate;
+}
+</code></pre>
+<p>Each spec is: <code>&lt;keyframe-name&gt; &lt;duration&gt; &lt;easing&gt; &lt;iterations&gt; &lt;direction&gt; &lt;fill-mode&gt;</code>, where:</p>
+<ul>
+<li><code>&lt;duration&gt;</code> is <code>0.25s</code> or <code>250ms</code>.</li>
+<li><code>&lt;iterations&gt;</code> is a number or <code>infinite</code>.</li>
+<li><code>&lt;direction&gt;</code> is <code>alternate</code> (or absent).</li>
+<li><code>&lt;fill-mode&gt;</code> is <code>forwards</code> (or absent).</li>
+</ul>
+<p>Longhand overrides:</p>
+<pre><code class="language-css">.element {
+    animation: pulse 1.2s;
+    animation-delay: 0.2s;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: 3;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+}
+</code></pre>
+<p>The <code>animation-name</code> is resolved against <code>Theme::get().keyframes</code> at
+tick time. Unknown names are silently treated as "no animation".</p>
+<p>For the semantics (fill-forwards, alternate, how CSS animations
+interact with imperative animations), see
+<a href="../07-animations/">Animations</a> and
+<a href="../../internals/04-animation-system/">Animation System</a>.</p>
+<hr />
+<h2 id="5-custom-properties">5. Custom properties</h2>
+<p>Custom properties start with <code>--</code>. They're stored as <strong>raw strings</strong>,
+resolved at cascade time, and can hold any value — including whole
+<code>calc()</code> expressions, color tokens, or references to other custom
+properties.</p>
+<pre><code class="language-css">:root {
+    --primary:    #0079F1;
+    --primary-hi: #3296FF;
+    --danger:     #BE2137;
+    --pad:        1.5vh 2vw;
+    --radius:     8px;
+}
+</code></pre>
+<h3 id="using-a-custom-property">Using a custom property</h3>
+<p><code>var(--name)</code>:</p>
+<pre><code class="language-css">.btn-primary {
+    background: var(--primary);
+    radius: var(--radius);
+    padding: var(--pad);
+}
+</code></pre>
+<p><code>var()</code> works <strong>anywhere</strong> a value is expected, and it can appear inside
+<code>calc()</code> or be part of a larger expression:</p>
+<pre><code class="language-css">.box {
+    width: calc(100% - var(--inset) * 2);
+}
+</code></pre>
+<h3 id="scoping-and-inheritance">Scoping and inheritance</h3>
+<p>Custom properties are <strong>inherited</strong> by descendants, like in CSS. The
+resolution happens in <code>StyleResolver::resolveFor</code>:</p>
+<ol>
+<li>Start with the parent's custom props (or <code>theme.root.customProps</code> if
+   the node has no parent).</li>
+<li>Merge the node's own custom props (winning on conflicts).</li>
+<li>Resolve any pending <code>var()</code> references using the merged set.</li>
+</ol>
+<p>This means a custom property defined on <code>:root</code> is available everywhere,
+and a rule that redefines <code>--primary</code> on <code>.card</code> only affects <code>.card</code>
+and its descendants.</p>
+<h3 id="chained-references">Chained references</h3>
+<p>A custom property can reference another custom property:</p>
+<pre><code class="language-css">:root {
+    --a: var(--b);
+    --b: #00FF00;
+}
+.x { color: var(--a); }    /* resolves to #00FF00 */
+</code></pre>
+<p>The resolver iterates up to 10 times to expand nested references. If a
+name doesn't resolve, the <code>var()</code> is left as-is and the property setter
+fails (usually logging a warning and leaving the property unset).</p>
+<h3 id="important-custom-props-dont-type-check">Important: custom props don't type-check</h3>
+<p><code>--radius: 8px</code> and <code>--radius: 8foo</code> are both valid strings. The value
+is only validated when it's substituted into a concrete property. If
+<code>--radius</code> is <code>"banana"</code>, <code>radius: var(--radius)</code> fails to parse and
+leaves <code>radius</code> unset.</p>
+<hr />
+<h2 id="6-easing-functions">6. Easing functions</h2>
+<p>The <code>TransitionFunction</code> enum supports a fixed set of curves:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>CSS equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>linear</code></td>
+<td><code>linear</code></td>
+</tr>
+<tr>
+<td><code>ease-in-quad</code></td>
+<td><code>cubic-bezier(0.55, 0.085, 0.68, 0.53)</code> (approx)</td>
+</tr>
+<tr>
+<td><code>ease-out-quad</code></td>
+<td><code>cubic-bezier(0.25, 0.46, 0.45, 0.94)</code> (approx)</td>
+</tr>
+<tr>
+<td><code>ease-in-out-quad</code></td>
+<td>symmetric in/out quadratic</td>
+</tr>
+<tr>
+<td><code>ease-in-cubic</code></td>
+<td><code>t³</code></td>
+</tr>
+<tr>
+<td><code>ease-out-cubic</code></td>
+<td><code>1 - (1-t)³</code></td>
+</tr>
+<tr>
+<td><code>ease-in-out-cubic</code></td>
+<td>symmetric in/out cubic</td>
+</tr>
+<tr>
+<td><code>ease-in-back</code></td>
+<td>overshoots at start</td>
+</tr>
+<tr>
+<td><code>ease-out-back</code></td>
+<td>overshoots at end (bounce back)</td>
+</tr>
+<tr>
+<td><code>ease-out-elastic</code></td>
+<td>elastic oscillation</td>
+</tr>
+<tr>
+<td><code>ease-out-bounce</code></td>
+<td>bounce at end</td>
+</tr>
+</tbody>
+</table>
+<p>Short aliases are also accepted:</p>
+<table>
+<thead>
+<tr>
+<th>Alias</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ease</code></td>
+<td><code>ease-in-out-quad</code></td>
+</tr>
+<tr>
+<td><code>ease-in</code></td>
+<td><code>ease-in-quad</code></td>
+</tr>
+<tr>
+<td><code>ease-out</code></td>
+<td><code>ease-out-quad</code></td>
+</tr>
+<tr>
+<td><code>ease-in-out</code></td>
+<td><code>ease-in-out-quad</code></td>
+</tr>
+</tbody>
+</table>
+<p>Parsing is lenient about formatting: <code>EaseOutBack</code>, <code>ease-out-back</code>,
+<code>EASE_OUT_BACK</code>, <code>easeoutback</code> all parse to <code>EaseOutBack</code>.</p>
+<p>Unknown names cause <code>parseEasing</code> to return false; the caller keeps its
+default (<code>Linear</code> for transitions, <code>Linear</code> for animations).</p>
+<hr />
+<h2 id="7-keyframes">7. <code>@keyframes</code></h2>
+<pre><code class="language-css">@keyframes pulse {
+    0%   { scale: 1.00; }
+    50%  { scale: 1.18; }
+    100% { scale: 1.00; }
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+</code></pre>
+<p>Frame timestamps can be:</p>
+<ul>
+<li><code>0%</code> … <code>100%</code>.</li>
+<li><code>from</code> (equivalent to <code>0%</code>).</li>
+<li><code>to</code> (equivalent to <code>100%</code>).</li>
+</ul>
+<p>Frames are <strong>sorted by time</strong> at parse time. The engine does <strong>not</strong>
+require the first frame to be <code>0%</code> or the last to be <code>100%</code>.</p>
+<h3 id="auto-fill-of-missing-properties">Auto-fill of missing properties</h3>
+<p>If a property appears in some frames but not others, the missing ones
+are auto-filled from the <strong>nearest neighbor</strong> (previous frame wins, then
+next frame). A warning is logged for each auto-filled keyframe:</p>
+<pre><code>@keyframes pulse {
+    0%   { scale: 1.00; }
+    50%  { scale: 1.18; opacity: 0.5; }
+    100% { scale: 1.00; }
+}
+</code></pre>
+<p>Here <code>opacity</code> is missing in frames <code>0%</code> and <code>100%</code>. It gets auto-filled
+from the nearest frame that has it (the <code>50%</code> frame), so all three
+frames end up with <code>opacity: 0.5</code>.</p>
+<p>The warning is there to nudge you to be explicit — auto-fill is
+convenient but can hide bugs.</p>
+<h3 id="property-whitelist">Property whitelist</h3>
+<p>Every property is allowed in a keyframe. All the properties from §4
+work, including <code>scale</code>, <code>rotation</code>, <code>translate-x/y</code>, <code>opacity</code>, colors,
+and <code>radius</code>.</p>
+<p>Because keyframes are stored as a <code>Style</code> (same struct as CSS rules),
+any property that can appear in a normal rule can also be animated.</p>
+<hr />
+<h2 id="8-media">8. <code>@media</code></h2>
+<pre><code class="language-css">@media (max-width: 700px) {
+    .card-desc { color: #FF0000; }
+}
+
+@media (min-width: 900px) {
+    .card-desc { color: #00FF00; }
+}
+
+@media (min-width: 600px) and (orientation: landscape) {
+    .demo-panel { padding: 2vh 2vw; }
+}
+</code></pre>
+<h3 id="supported-conditions">Supported conditions</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>min-width</code></td>
+<td>pixels</td>
+</tr>
+<tr>
+<td><code>max-width</code></td>
+<td>pixels</td>
+</tr>
+<tr>
+<td><code>min-height</code></td>
+<td>pixels</td>
+</tr>
+<tr>
+<td><code>max-height</code></td>
+<td>pixels</td>
+</tr>
+<tr>
+<td><code>orientation</code></td>
+<td><code>landscape</code>, <code>portrait</code></td>
+</tr>
+<tr>
+<td><code>min-aspect-ratio</code></td>
+<td><code>16/9</code> or <code>1.77</code></td>
+</tr>
+<tr>
+<td><code>max-aspect-ratio</code></td>
+<td><code>16/9</code> or <code>1.77</code></td>
+</tr>
+</tbody>
+</table>
+<p>Conditions can be combined with <code>and</code>. There is no <code>or</code>, no <code>not</code>, no
+comma-separated list.</p>
+<h3 id="evaluation-context">Evaluation context</h3>
+<p>Media conditions are evaluated against <code>Metrics::viewport</code> — the
+<strong>logical</strong> viewport size reported by <code>IPlatform::viewportSize()</code>, not
+the physical window size. On HiDPI or with a DPI scale other than 1.0,
+these two differ.</p>
+<p>When <code>Metrics::viewport</code> changes between frames, <code>UIContext</code> bumps its
+<code>viewportGeneration</code> counter. Each node compares it against its last
+seen value and forces a style re-resolution if it changed — so media
+queries react to window resizes without any extra code.</p>
+<hr />
+<h2 id="9-inline-attributes-zmarkup">9. Inline attributes (ZMarkup)</h2>
+<p>Any attribute in ZMarkup that isn't one of the reserved ones
+(<code>passthrough</code>, <code>value</code>, <code>checked</code>, <code>options</code>, <code>wrap</code>) is passed to
+<code>applyStyleAttr(getInlineBase(), key, value)</code>. This is the same function
+the <code>.zstyle</code> parser uses, so the following keys are accepted:</p>
+<pre><code>width          height         min-width      min-height
+max-width      max-height     gap            grow
+shrink         padding        margin         background
+color          tint           border-color   border-width
+radius         opacity        scale          rotation
+translate-x    translate-y    top            left
+right          bottom         font-size      letter-spacing
+items-h        items-v        align-h        align-v
+justify        text-align     position       z-index
+font           background-texture            effect
+</code></pre>
+<p>Values follow the same grammar as in <code>.zstyle</code>, including <code>calc()</code> and
+<code>var()</code> (though <code>var()</code> inside an inline attribute is unusual — you
+already have the value in C++, so just use it).</p>
+<pre><code class="language-html">Button &quot;OK&quot; width=&quot;120px&quot; height=&quot;40px&quot; background=&quot;#0079F1&quot; radius=&quot;8px&quot;
+Panel position=&quot;absolute&quot; top=&quot;8px&quot; right=&quot;8px&quot; z-index=&quot;10&quot;
+Slider value=0.5 width=&quot;55%&quot;
+</code></pre>
+<p>Inline attributes have <strong>higher priority than any <code>.zstyle</code> rule</strong>,
+including state rules. If you set <code>background</code> inline, a <code>.zstyle</code> rule
+<code>Button:hover { background: ... }</code> will have no visible effect on that
+button. Prefer classes for anything you want to vary by state.</p>
+<hr />
+<h2 id="10-full-example">10. Full example</h2>
+<p>A real stylesheet from the demo, abbreviated:</p>
+<pre><code class="language-css">:root {
+    --primary:    #0079F1;
+    --primary-hi: #3296FF;
+    --danger:     #BE2137;
+    --danger-hi:  #E62937;
+    font: calibri;
+}
+
+Toggle {
+    width: 10vh;
+    height: 5vh;
+    radius: 50ph;
+    background: #505050;
+    transition: background 0.15s linear, opacity 0.2s ease-out;
+}
+Toggle:hover    { background: #606060; }
+Toggle:focus    { border-color: #FDF900; border-width: 2px; }
+Toggle:disabled { background: #3A3A40; opacity: 0.5; }
+Toggle:checked  { background: #00E430; }
+
+Toggle .toggle-knob {
+    position: absolute;
+    width:  60ph;
+    height: 60ph;
+    top:    20ph;
+    left:   20ph;
+    radius: 50%;
+    background: #FFFFFF;
+    transition: left 0.28s ease-out-cubic;
+}
+Toggle:checked .toggle-knob {
+    left: calc(100pw - 80ph);
+}
+
+Checkbox::box  { background: #1574b0; radius: 6px; }
+Checkbox::mark { color: #ea0404; }
+
+@keyframes knobGlow {
+    0%   { color: #d6ff32; }
+    50%  { color: #ffffff; }
+    100% { color: #d6ff32; }
+}
+
+Slider::track { background: #1717cf; radius: 4px; }
+Slider::knob  { color: #d6ff32; }
+Slider:hover::knob {
+    animation: knobGlow 0.6s ease-in-out infinite;
+}
+
+.btn-primary {
+    background: var(--primary);
+    radius: 8px;
+    padding: 1.5vh 2vw;
+    min-width: 80px;
+    margin: 0 4px;
+    effect: hueShift;
+    transition: background 0.25s ease-out-quad, scale 0.12s ease-out-back;
+}
+.btn-primary:hover   { background: var(--primary-hi); scale: 1.15; }
+.btn-primary:pressed { background: #505050; scale: 0.90; }
+.btn-primary:focus   { border-color: #FDF900; border-width: 2px; }
+.btn-primary:disabled{ background: #000000; color: #808080FF; opacity: 0.4; }
+
+@keyframes pulse {
+    0%   { scale: 1.00; }
+    50%  { scale: 1.18; }
+    100% { scale: 1.00; }
+}
+.btn-pulse { animation: pulse 1.2s ease-in-out infinite; }
+
+@media (max-width: 700px) {
+    .card-desc { color: #FF0000; }
+}
+@media (min-width: 900px) {
+    .card-desc { color: #00FF00; }
+}
+</code></pre>
+<hr />
+<h2 id="11-pitfalls">11. Pitfalls</h2>
+<p><strong>Inline style vs <code>.zstyle</code> state.</strong></p>
+<pre><code class="language-css">/* Never applies: inline background beats this rule */
+Button:hover { background: red; }
+</code></pre>
+<pre><code class="language-cpp">auto b = Btn(&quot;x&quot;);
+b-&gt;getInlineBase().background = Colors::Blue;   // wins
+</code></pre>
+<p>Use classes for anything state-dependent.</p>
+<p><strong><code>%</code> in <code>translate-x</code>.</strong>
+<code>translate-x: 50%</code> resolves against the node's own width, not the
+parent's. Same for <code>translate-y</code>.</p>
+<p><strong><code>overflow: visible</code> + <code>overflow-x: hidden</code>.</strong>
+The computed value promotes <code>overflow-y</code> to <code>auto</code>, and the node becomes
+a scroll container. If you only want horizontal clipping with no scroll
+on the vertical axis, set both explicitly (<code>overflow-y: hidden</code>).</p>
+<p><strong>Custom properties don't cascade through states.</strong>
+<code>--x</code> defined in <code>Button:hover</code> doesn't retroactively apply to
+non-hovered descendants in the same frame. Custom props are resolved
+per node per frame in the cascade order.</p>
+<p><strong><code>var()</code> in a value that isn't typed.</strong></p>
+<pre><code class="language-css">--x: not-a-color;
+.color { background: var(--x); }
+</code></pre>
+<p><code>background</code> fails to parse and stays unset. There's no error — the
+warning goes through <code>Logger</code>, which the default <code>ConsoleLogger</code> prints
+to <code>stderr</code>.</p>
+<p><strong>Selector order matters within the same specificity.</strong></p>
+<pre><code class="language-css">Button { background: blue; }
+Button { background: red; }
+</code></pre>
+<p>The second rule wins (same specificity, later order). If you intended
+one to be a fallback, you need higher specificity on the second rule.</p>
+<p><strong>Media queries don't re-evaluate when the viewport changes size
+mid-frame.</strong> They're checked during style resolution, which happens
+inside <code>updateTree</code>. If the viewport changes between <code>beginFrame</code> and
+<code>updateTree</code> (which it does — the platform is polled at the start of
+the frame), the new value is used for that same frame. This is usually
+what you want, but it's worth knowing.</p>
+<p><strong><code>::part</code> cannot be inherited.</strong>
+<code>Slider::track { color: ... }</code> doesn't affect anything inside the track;
+there's no DOM. The part is painted with the resolved style and nothing
+else.</p>
+<p><strong>Animation and transition on the same property.</strong>
+If both a CSS animation and a transition target the same property, the
+animation overlays the transition result. The overlay happens in
+<code>Layout::draw</code> via <code>Anim::overlayCssComputed</code>, <em>not</em> in the current
+style. So <code>getStyle()</code> reports the transition value; only the render
+path sees the animated value. This is a known limitation of the current
+implementation.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

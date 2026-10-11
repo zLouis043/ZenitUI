@@ -1,0 +1,3784 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../01-architecture/">
+      
+      
+        <link rel="next" href="../03-style-system/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lifecycle - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lifecycle" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lifecycle
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-architecture/" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-frame-level-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Frame-level flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-beginframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. beginFrame(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. beginFrame(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-beginframe-does-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What beginFrame does not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dt-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The dt snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-viewport-generation-counter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The viewport generation counter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-updatetreedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. updateTree(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. updateTree(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-hit-testing-the-pointer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Hit-testing the pointer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-setting-hover-press-release-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Setting hover / press / release targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-focus-from-click" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Focus from click
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-tab-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Tab navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-recursive-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Recursive update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-post-update-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Post-update cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-per-node-updatedt-ancestorblocked-ancestorscrolling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Per-node update(dt, ancestorBlocked, ancestorScrolling)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Per-node update(dt, ancestorBlocked, ancestorScrolling)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-style-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Style initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-scroll-reset-on-overflow-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Scroll reset on overflow change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-viewport-generation-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Viewport generation check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-imperative-animation-tick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Imperative animation tick
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-flag-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Flag updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 State machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-style-transition-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Style transition trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-style-and-animation-ticks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Style and animation ticks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-onanimationsfinished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 onAnimationsFinished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-recurse-into-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Recurse into children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-input-post-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Input post-processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-cull-removed-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.13 Cull removed children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-dirty-recomputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.14 Dirty recomputation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-onupdatedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15 onUpdate(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-measureparentw-parenth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. measure(parentW, parentH)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. measure(parentW, parentH)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-cache-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Cache check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-style-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Style resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-available-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Available space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-intrinsic-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-children-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Children measure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Gap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-final-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Final size
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-arrangerect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. arrange(rect)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. arrange(rect)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-set-rect-and-detect-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Set rect and detect movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-scroll-containers-vs-normal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Scroll containers vs normal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-onlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 onLayout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-arrangeintospace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 arrangeInto(space)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-flow-arrangement-vertical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Flow arrangement (Vertical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-stack-arrangement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Stack arrangement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-absolute-positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Absolute positioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-portals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Portals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-drawparentopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. draw(parentOpacity)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. draw(parentOpacity)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-portal-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Portal registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-frustum-culling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Frustum culling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-render-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Render style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-choose-inline-or-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Choose inline or layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-scrollbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Scrollbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-portal-drain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Portal drain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-when-things-happen-that-surprise-people" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. When things happen that surprise people
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ordering-summary-one-page-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ordering summary (one-page cheat sheet)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-what-to-override-and-what-not-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. What to override and what not to
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-debugging-the-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Debugging the lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-frame-level-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Frame-level flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-beginframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. beginFrame(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. beginFrame(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-beginframe-does-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What beginFrame does not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dt-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The dt snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-viewport-generation-counter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The viewport generation counter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-updatetreedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. updateTree(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. updateTree(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-hit-testing-the-pointer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Hit-testing the pointer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-setting-hover-press-release-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Setting hover / press / release targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-focus-from-click" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Focus from click
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-tab-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Tab navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-recursive-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Recursive update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-post-update-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Post-update cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-per-node-updatedt-ancestorblocked-ancestorscrolling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Per-node update(dt, ancestorBlocked, ancestorScrolling)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Per-node update(dt, ancestorBlocked, ancestorScrolling)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-style-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Style initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-scroll-reset-on-overflow-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Scroll reset on overflow change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-viewport-generation-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Viewport generation check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-imperative-animation-tick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Imperative animation tick
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-flag-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Flag updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 State machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-style-transition-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 Style transition trigger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49-style-and-animation-ticks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Style and animation ticks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#410-onanimationsfinished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.10 onAnimationsFinished
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-recurse-into-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.11 Recurse into children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-input-post-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.12 Input post-processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-cull-removed-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.13 Cull removed children
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-dirty-recomputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.14 Dirty recomputation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-onupdatedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.15 onUpdate(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-measureparentw-parenth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. measure(parentW, parentH)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. measure(parentW, parentH)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-cache-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Cache check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-style-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Style resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-available-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Available space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-intrinsic-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Intrinsic size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-children-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Children measure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-gap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Gap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-final-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Final size
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-arrangerect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. arrange(rect)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. arrange(rect)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-set-rect-and-detect-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Set rect and detect movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-scroll-containers-vs-normal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Scroll containers vs normal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-onlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 onLayout()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-arrangeintospace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 arrangeInto(space)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-flow-arrangement-vertical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Flow arrangement (Vertical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-stack-arrangement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Stack arrangement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-absolute-positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Absolute positioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-portals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Portals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-drawparentopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. draw(parentOpacity)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. draw(parentOpacity)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-portal-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Portal registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-frustum-culling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Frustum culling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-render-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Render style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-choose-inline-or-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Choose inline or layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-scrollbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Scrollbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-portal-drain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Portal drain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-when-things-happen-that-surprise-people" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. When things happen that surprise people
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ordering-summary-one-page-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ordering summary (one-page cheat sheet)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-what-to-override-and-what-not-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. What to override and what not to
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-debugging-the-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Debugging the lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="lifecycle">Lifecycle</h1>
+<p>This document is the precise, step-by-step description of what happens
+during a frame. It's a reference for contributors who need to know the
+exact order of operations, which flags are set when, and what each
+virtual hook sees.</p>
+<p>If you're modifying the core, read this before touching <code>Layout::update</code>,
+<code>Layout::measure</code>, <code>Layout::arrange</code>, or <code>Layout::draw</code>.</p>
+<hr />
+<h2 id="1-frame-level-flow">1. Frame-level flow</h2>
+<p>The user's main loop calls two methods on the root <code>Layout</code>:</p>
+<pre><code class="language-cpp">while (!WindowShouldClose()) {
+    float dt = GetFrameTime();
+
+    root-&gt;runFrame(dt);      // logic: input, style, animation, layout
+
+    BeginDrawing();
+    ClearBackground(BLACK);
+    root-&gt;renderFrame();     // draw
+    EndDrawing();
+}
+</code></pre>
+<p>Both methods are defined on <code>Layout</code> and are documented as "called by
+the runtime, not overridable". They're the entry points from user code
+into the framework.</p>
+<pre><code>runFrame(dt)
+  ├── UIContext::beginFrame(dt)
+  ├── updateTree(dt)
+  │     ├── hit-test → topmostConsumer
+  │     ├── focus handling
+  │     └── update(dt)         [recursive, per node]
+  ├── measure(viewport)
+  └── arrange(viewport rect)
+
+renderFrame()
+  ├── renderer-&gt;beginFrame()
+  ├── draw(1.0f)               [recursive, per node]
+  └── renderer-&gt;endFrame()
+</code></pre>
+<p>The split between logic and draw is not arbitrary. <code>measure</code> / <code>arrange</code>
+don't touch the GPU, and <code>draw</code> doesn't touch input. Keeping them
+separate is what makes the framework testable headlessly and lets the
+two phases run at different rates if needed.</p>
+<hr />
+<h2 id="2-beginframedt">2. <code>beginFrame(dt)</code></h2>
+<p>Called once per frame, on the <code>UIContext</code> singleton.</p>
+<pre><code class="language-cpp">void UIContext::beginFrame(float delta_time) {
+    dt = delta_time;
+    time += delta_time;
+
+    // Clear per-frame flags
+    wheelConsumedThisFrame = false;
+    clickConsumed = false;
+    rightClickConsumed = false;
+    topmostConsumer = nullptr;
+    hoverTarget = nullptr;
+    releaseTarget = nullptr;
+
+    // Rotate the portal buffers
+    activePortals = std::move(framePortals);
+    framePortals.clear();
+
+    // Poll platform
+    if (platform) {
+        Vec2 newVp = platform-&gt;viewportSize();
+        EdgeInsets newSafe = platform-&gt;safeArea();
+        if (newVp.x != Metrics::viewport.x ||
+            newVp.y != Metrics::viewport.y ||
+            newSafe != safeArea)
+        {
+            viewportGeneration++;
+        }
+        Metrics::viewport = newVp;
+        safeArea = newSafe;
+        pointer = platform-&gt;pointer();
+        shiftHeld = platform-&gt;shiftHeld();
+        inputEvents = platform-&gt;pollInputEvents();
+        dpiScale = platform-&gt;dpiScale();
+
+        if (renderer) renderer-&gt;setDpiScale(dpiScale);
+    }
+}
+</code></pre>
+<h3 id="what-beginframe-does-not-do">What <code>beginFrame</code> <strong>does not</strong> do</h3>
+<ul>
+<li>It doesn't hit-test. That's <code>updateTree</code>.</li>
+<li>It doesn't set <code>pressTarget</code>. That's <code>updateTree</code>.</li>
+<li>It doesn't grant or release focus. That's <code>updateTree</code>.</li>
+<li>It doesn't resolve styles. That's <code>update</code>.</li>
+</ul>
+<h3 id="the-dt-snapshot">The <code>dt</code> snapshot</h3>
+<p><code>UIContext::dt</code> is the only place <code>dt</code> is stored. Subsystems read it
+via <code>UIContext::get().dt</code> rather than passing it down. This avoids
+parameter threading through deep call chains (<code>ScrollController::tickInertia</code>
+reads <code>ctx.dt</code>, <code>TextInput::onUpdate</code> receives <code>dt</code> as a parameter, but
+inconsistent — see the source).</p>
+<h3 id="the-viewport-generation-counter">The viewport generation counter</h3>
+<p>Whenever <code>Metrics::viewport</code> or <code>safeArea</code> changes, <code>viewportGeneration</code>
+is incremented. Each <code>Layout</code> caches the last seen generation in
+<code>lastViewportGen_</code> and compares it in <code>update</code>:</p>
+<pre><code class="language-cpp">uint32_t gen = UIContext::get().viewportGeneration;
+if (gen != lastViewportGen_) {
+    lastViewportGen_ = gen;
+    pendingTransition = true;
+}
+</code></pre>
+<p>This forces a style re-resolution on resize, which is what makes <code>@media</code>
+queries react to viewport changes. Without it, a resize would change the
+available space but not the resolved styles.</p>
+<hr />
+<h2 id="3-updatetreedt">3. <code>updateTree(dt)</code></h2>
+<p>Called on the root. Orchestrates input, focus, and the recursive update.</p>
+<h3 id="31-hit-testing-the-pointer">3.1 Hit-testing the pointer</h3>
+<pre><code class="language-cpp">auto captured = ctx.pointerCapture.lock();
+if (!captured || !captured-&gt;getEnabled()) {
+    ctx.pointerCapture.reset();
+    ctx.topmostConsumer = hitTest(ctx.pointer.pos, false);
+} else {
+    ctx.topmostConsumer = captured.get();
+}
+</code></pre>
+<p>Two cases:</p>
+<ul>
+<li><strong>No capture</strong>: hit-test normally, get the topmost interactive or
+  blocking node at the cursor.</li>
+<li><strong>Capture active and enabled</strong>: the captured node becomes
+  <code>topmostConsumer</code>, regardless of position. This is how drag
+  interactions work.</li>
+</ul>
+<p>If the captured node was disabled, capture is dropped and normal
+hit-testing resumes.</p>
+<h3 id="32-setting-hover-press-release-targets">3.2 Setting hover / press / release targets</h3>
+<pre><code class="language-cpp">ctx.hoverTarget = ctx.topmostConsumer;
+if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
+if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
+</code></pre>
+<ul>
+<li><code>hoverTarget</code> — updated every frame.</li>
+<li><code>pressTarget</code> — set only on the frame of a press.</li>
+<li><code>releaseTarget</code> — set only on the frame of a release.</li>
+</ul>
+<p>These are used later by <code>InputController::updateFlags</code> and
+<code>fireCallbacks</code>.</p>
+<h3 id="33-focus-from-click">3.3 Focus from click</h3>
+<pre><code class="language-cpp">if (ctx.pointer.pressed) {
+    if (ctx.topmostConsumer &amp;&amp; ctx.topmostConsumer-&gt;isFocusable()) {
+        ctx.requestFocus(ctx.topmostConsumer-&gt;shared_from_this());
+    } else {
+        ctx.releaseFocus();
+    }
+}
+</code></pre>
+<p>Clicking on a focusable node focuses it. Clicking anywhere else releases
+focus. This is the only place focus changes from a click.</p>
+<h3 id="34-tab-navigation">3.4 Tab navigation</h3>
+<pre><code class="language-cpp">for (int k : ctx.inputEvents.keys) {
+    if (k != Key::Tab) continue;
+
+    Layout *scope = this;
+    {
+        auto focused = ctx.focusedNode.lock();
+        if (focused) {
+            Layout *n = focused.get();
+            while (n) {
+                if (n-&gt;isFocusScope()) { scope = n; break; }
+                n = n-&gt;getParent().get();
+            }
+        }
+    }
+
+    std::vector&lt;Layout *&gt; focusables;
+    collectFocusables(scope, focusables);
+    if (focusables.empty()) break;
+
+    auto cur = ctx.focusedNode.lock();
+    Layout *curPtr = cur.get();
+    int idx = -1;
+    for (size_t i = 0; i &lt; focusables.size(); ++i)
+        if (focusables[i] == curPtr) { idx = (int)i; break; }
+
+    int next = 0;
+    if (idx &gt;= 0) {
+        int n = (int)focusables.size();
+        next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+    }
+    ctx.requestFocus(focusables[next]-&gt;shared_from_this());
+    notifyFocusAncestors(ctx.focusedNode.lock().get());
+}
+</code></pre>
+<p>Steps:</p>
+<ol>
+<li>Find the focus scope: walk up from the currently focused node until
+   a node with <code>isFocusScope()</code> is found, or fall back to the root.</li>
+<li>Collect all focusable nodes within that scope, in pre-order.</li>
+<li>Find the current focus index.</li>
+<li>Compute the next index (<code>+1</code> or <code>-1</code> with <code>Shift</code>, modulo size).</li>
+<li>Focus the next node.</li>
+<li>Notify all ancestors of the newly focused node (fires
+   <code>onDescendantFocused</code>).</li>
+</ol>
+<p>Only the <strong>first</strong> Tab event per frame is processed (the <code>break</code> after
+the switch). Multiple Tab keys in the same frame are collapsed into one.</p>
+<h3 id="35-recursive-update">3.5 Recursive update</h3>
+<pre><code class="language-cpp">update(dt, false);
+</code></pre>
+<p>Calls the per-node <code>update</code> (see §4) with <code>ancestorBlocked = false</code> and
+<code>scrolling = false</code>. The arguments propagate down to children.</p>
+<h3 id="36-post-update-cleanup">3.6 Post-update cleanup</h3>
+<pre><code class="language-cpp">if (ctx.pointer.released)   ctx.pressTarget = nullptr;
+if (!ctx.pointer.down &amp;&amp; !ctx.pointerCapture.expired())
+    ctx.pointerCapture.reset();
+</code></pre>
+<ul>
+<li><code>pressTarget</code> is cleared after the frame where the release happened.
+  This is what makes <code>pressTarget != releaseTarget</code> checks in the next
+  frame evaluate correctly.</li>
+<li>Pointer capture is released automatically when the button is up. A
+  widget can hold capture across frames while the button is down, and
+  it's dropped as soon as the button is released.</li>
+</ul>
+<p>Note the ordering: <code>pressTarget</code> is cleared <strong>after</strong> <code>update</code> runs,
+so during <code>update</code> both <code>pressTarget</code> and <code>releaseTarget</code> are available
+for click validation.</p>
+<hr />
+<h2 id="4-per-node-updatedt-ancestorblocked-ancestorscrolling">4. Per-node <code>update(dt, ancestorBlocked, ancestorScrolling)</code></h2>
+<p>Called for every node, depth-first. This is the bulk of the framework's
+logic.</p>
+<h3 id="41-snapshot">4.1 Snapshot</h3>
+<pre><code class="language-cpp">bool wasPending = pendingTransition;
+ComputedStyle styleBefore = style_.currentStyle;
+</code></pre>
+<p>Both are captured at the start so that <code>recomputeDirty</code> at the end can
+compare against them.</p>
+<h3 id="42-style-initialization">4.2 Style initialization</h3>
+<pre><code class="language-cpp">initStyleIfNeeded();
+</code></pre>
+<p>If this node has never been styled (first frame), resolve its initial
+style:</p>
+<pre><code class="language-cpp">void initStyleIfNeeded() {
+    if (!styleInitialized) {
+        styleInitialized = true;
+        style_.currentStyle = style_.targetStyle =
+            style_.transitionStartStyle = style_.resolveFor(*this);
+        pendingTransition = false;
+        anim_.syncCss(*this);
+    }
+}
+</code></pre>
+<p>The initial style comes from the cascade, with the state flags as they
+are (usually all false → <code>Idle</code>).</p>
+<h3 id="43-scroll-reset-on-overflow-change">4.3 Scroll reset on overflow change</h3>
+<pre><code class="language-cpp">scroll_.resetIfOverflowChanged(*this);
+</code></pre>
+<p>If the node's <code>overflow-x</code> or <code>overflow-y</code> changed since last frame,
+reset the scroll state (offset, velocity, drag start). This prevents
+"phantom scroll" when a container stops being scrollable.</p>
+<h3 id="44-viewport-generation-check">4.4 Viewport generation check</h3>
+<pre><code class="language-cpp">uint32_t gen = UIContext::get().viewportGeneration;
+if (gen != lastViewportGen_) {
+    lastViewportGen_ = gen;
+    pendingTransition = true;
+}
+</code></pre>
+<p>Forces a style re-resolution on viewport change, which is how media
+queries react.</p>
+<h3 id="45-imperative-animation-tick">4.5 Imperative animation tick</h3>
+<pre><code class="language-cpp">bool localAnimBlocks = anim_.tickImperative(*this, dt);
+bool blockSubtree = ancestorBlocked || localAnimBlocks;
+bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive &amp;&amp; blocksRaycast);
+</code></pre>
+<p><code>tickImperative</code> walks the <code>imperative</code> map, advances <code>elapsed</code> for each
+playing animation, applies each track's setter, and returns whether any
+animation has <code>blocksInput == true</code>. The returned value <strong>and</strong> the
+inherited <code>ancestorBlocked</code> compose to form <code>blockSubtree</code>.</p>
+<p><code>selfBlocked</code> is true if the subtree is blocked, the node is disabled,
+or the node isn't interactive but blocks raycast. Blocked nodes don't
+update their hover / pressed flags.</p>
+<h3 id="46-flag-updates">4.6 Flag updates</h3>
+<pre><code class="language-cpp">const bool scrolling = ancestorScrolling || scroll_.scrolling;
+input_.updateFlags(*this, selfBlocked, scrolling);
+</code></pre>
+<p><code>updateFlags</code> (in <code>Input.cpp</code>):</p>
+<ul>
+<li>If <code>scrolling</code> is true: only update <code>isFocused</code>; skip hover and press
+  (the "hover freeze").</li>
+<li>Otherwise: update <code>isHovered</code> (pointer inside <code>rect</code>, if not blocked),
+  <code>isPressed</code> (pointer down and press target is this node or a
+  descendant, walking up through <code>passThrough</code>), and <code>isFocused</code>.</li>
+</ul>
+<h3 id="47-state-machine">4.7 State machine</h3>
+<pre><code class="language-cpp">UIState prevState = style_.currentState;
+UIState nextState = input_.computeNextState(*this);
+bool stateChanged = (style_.currentState != nextState);
+</code></pre>
+<p><code>computeNextState</code> returns:</p>
+<ul>
+<li><code>Disabled</code> if <code>!isEnabled</code>.</li>
+<li><code>Pressed</code> if <code>isPressed</code>.</li>
+<li><code>Hover</code> if <code>isHovered</code>.</li>
+<li><code>Idle</code> otherwise.</li>
+</ul>
+<p>The priority is: Disabled &gt; Pressed &gt; Hover &gt; Idle. A disabled node
+never reports Pressed, even if the pointer is over it.</p>
+<h3 id="48-style-transition-trigger">4.8 Style transition trigger</h3>
+<pre><code class="language-cpp">if (stateChanged) {
+    style_.beginStateTransition(*this, nextState);
+    anim_.syncCss(*this);
+} else if (pendingTransition) {
+    style_.resolvePendingTransition(*this);
+    anim_.syncCss(*this);
+}
+</code></pre>
+<p>Two paths:</p>
+<ul>
+<li><strong>State changed</strong>: snapshot the current style as the transition start,
+  set <code>currentState = nextState</code>, resolve the new target style, and
+  reset the transition timer.</li>
+<li><strong>Pending transition</strong> (some property was set this frame, e.g. via
+  <code>getInlineBase()</code>): re-resolve the target style and, if it differs,
+  restart the transition.</li>
+</ul>
+<p>In both paths, <code>anim_.syncCss</code> is called to keep the CSS animation list
+in sync with the new <code>targetStyle.animations</code>.</p>
+<h3 id="49-style-and-animation-ticks">4.9 Style and animation ticks</h3>
+<pre><code class="language-cpp">style_.tick(*this, dt);
+anim_.tickCss(*this, dt);
+style_.propagateInheritance(*this);
+</code></pre>
+<ul>
+<li><code>style_.tick</code> advances the CSS transition timer. If the timer reaches
+  1.0, <code>currentStyle = targetStyle</code>.</li>
+<li><code>anim_.tickCss</code> advances each active CSS keyframe animation.</li>
+<li><code>propagateInheritance</code> compares the node's current inherited properties
+  and state flags to the last snapshot, and if anything changed, marks
+  each child as inheritance-dirty (via <code>markInheritanceDirty</code>).</li>
+</ul>
+<h3 id="410-onanimationsfinished">4.10 <code>onAnimationsFinished</code></h3>
+<pre><code class="language-cpp">{
+    bool anyLocal = anim_.hasActiveLocal();
+    if (hadLocalAnimationsLast_ &amp;&amp; !anyLocal &amp;&amp; onAnimationsFinished)
+        onAnimationsFinished();
+    hadLocalAnimationsLast_ = anyLocal;
+}
+</code></pre>
+<p>The callback fires <strong>once</strong> when the node transitions from "has active
+animations" to "no active animations". <code>hasActiveLocal</code> checks
+imperative, CSS node, and CSS part animations on this node, but not its
+descendants.</p>
+<h3 id="411-recurse-into-children">4.11 Recurse into children</h3>
+<pre><code class="language-cpp">size_t n = children.size();
+for (size_t i = 0; i &lt; n; ++i)
+    children[i]-&gt;update(dt, blockSubtree, scrolling);
+</code></pre>
+<p>Depth-first, in declaration order. The <code>blockSubtree</code> and <code>scrolling</code>
+flags propagate down.</p>
+<p>Note: the size is captured before the loop. This prevents issues if a
+child is added during update (which can happen if a widget's callback
+calls <code>addChild</code>). The new child will be updated on the <strong>next</strong> frame.</p>
+<h3 id="412-input-post-processing">4.12 Input post-processing</h3>
+<pre><code class="language-cpp">scroll_.tickInput(*this);
+input_.handleKeyInput(*this);
+input_.fireCallbacks(*this, prevState, nextState, stateChanged);
+</code></pre>
+<ul>
+<li><code>tickInput</code> handles scroll: wheel events, scrollbar drag, inertia.
+  It calls <code>state.tickInertia(ctx.dt)</code> at the end.</li>
+<li><code>handleKeyInput</code> fires <code>onClick</code> via <code>Enter</code> / <code>Space</code> if the node
+  is focused and <code>keyboardActivates_</code> is true.</li>
+<li><code>fireCallbacks</code> fires the input callbacks in the right order:</li>
+<li><code>onHoverEnter</code> / <code>onHoverExit</code> on state change.</li>
+<li><code>onPress</code> on <code>pointer.pressed</code> (if the press path includes this node).</li>
+<li><code>onRelease</code> on <code>pointer.released</code> (if the release path includes
+    this node).</li>
+<li><code>onClick</code> on a valid click (press target and release target both
+    include this node, and not consumed).</li>
+<li><code>onRightClick</code> on <code>pointer.rightPressed</code> if the node is hovered.</li>
+</ul>
+<p>Note: callbacks are fired <strong>after</strong> children have been updated. So the
+order of callback invocation across the tree is bottom-up within a
+subtree (children before parents), which matches the bubbling semantics
+of click events.</p>
+<h3 id="413-cull-removed-children">4.13 Cull removed children</h3>
+<pre><code class="language-cpp">cullRemovedChildren();
+</code></pre>
+<p>Erases children whose <code>wantsRemoval</code> flag is set (<code>removeFromParent()</code>
+was called). This is the only place the <code>children</code> vector is modified
+due to removal.</p>
+<h3 id="414-dirty-recomputation">4.14 Dirty recomputation</h3>
+<pre><code class="language-cpp">recomputeDirty(wasPending, styleBefore);
+</code></pre>
+<p>Determines whether this node's subtree needs a re-measure. A node is
+dirty if:</p>
+<ul>
+<li>It was pending at the start of the frame (<code>wasPending</code>).</li>
+<li>It's pending now (<code>pendingTransition</code>).</li>
+<li>Any child's subtree is dirty.</li>
+<li>Its style changed (<code>style_.currentStyle != styleBefore</code>).</li>
+<li>It's in the middle of a transition (<code>transitionTimer &lt; 1.0</code>).</li>
+</ul>
+<p><code>subtreeDirty_</code> is the cached flag used by <code>measure</code> to skip work.</p>
+<h3 id="415-onupdatedt">4.15 <code>onUpdate(dt)</code></h3>
+<pre><code class="language-cpp">if (isEnabled || updateWhenDisabled_)
+    onUpdate(dt);
+</code></pre>
+<p>The per-widget update. Skipped if the node is disabled and
+<code>updateWhenDisabled_</code> is false.</p>
+<p>This is where custom widgets handle their own per-frame logic (drag,
+input processing, local state updates).</p>
+<hr />
+<h2 id="5-measureparentw-parenth">5. <code>measure(parentW, parentH)</code></h2>
+<p>Recursive, but with an early-out for clean subtrees.</p>
+<h3 id="51-cache-check">5.1 Cache check</h3>
+<pre><code class="language-cpp">if (!subtreeDirty_ &amp;&amp; parent_w == lastMeasureW_ &amp;&amp; parent_h == lastMeasureH_)
+    return measuredSize;
+lastMeasureW_ = parent_w;
+lastMeasureH_ = parent_h;
+</code></pre>
+<p>If the subtree is clean and the parent size hasn't changed, return the
+cached <code>measuredSize</code>. Otherwise proceed.</p>
+<h3 id="52-style-resolution">5.2 Style resolution</h3>
+<pre><code class="language-cpp">if (!styleInitialized) {
+    styleInitialized = true;
+    style_.currentStyle = style_.targetStyle =
+        style_.transitionStartStyle = style_.resolveFor(*this);
+    pendingTransition = false;
+}
+
+ComputedStyle calcStyle = pendingTransition ? style_.resolveFor(*this)
+                                            : style_.currentStyle;
+</code></pre>
+<p>Uses <code>currentStyle</code> for measurement unless there's a pending transition,
+in which case it re-resolves to get the target size. This means
+mid-transition sizing uses the target (not the interpolated) value —
+deliberate, to avoid layout jitter during transitions.</p>
+<h3 id="53-available-space">5.3 Available space</h3>
+<pre><code class="language-cpp">float pl = calcStyle.padding.left.resolveH(parent_w, parent_h);
+float pr = calcStyle.padding.right.resolveH(parent_w, parent_h);
+float pt = calcStyle.padding.top.resolveV(parent_w, parent_h);
+float pb = calcStyle.padding.bottom.resolveV(parent_w, parent_h);
+
+float availW = calcStyle.width.isAuto()  ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
+float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
+
+float innerW = std::max(0.0f, availW - pl - pr);
+float innerH = std::max(0.0f, availH - pt - pb);
+
+// Scroll containers measure without main-axis constraint
+if (type == LayoutType::Vertical &amp;&amp; calcStyle.overflowY != Overflow::Visible)
+    innerH = 1e9f;
+if (type == LayoutType::Horizontal &amp;&amp; calcStyle.overflowX != Overflow::Visible)
+    innerW = 1e9f;
+</code></pre>
+<p><code>innerW</code> / <code>innerH</code> are the space available for children. For scroll
+containers, the main axis is unbounded so children can be larger than
+the container.</p>
+<h3 id="54-intrinsic-size">5.4 Intrinsic size</h3>
+<pre><code class="language-cpp">Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
+</code></pre>
+<p>The widget's own size, before children are accounted for. For <code>Text</code>
+it's the measured text box, for <code>Checkbox</code> it's <code>font-size × 1.4</code>, etc.</p>
+<h3 id="55-children-measure">5.5 Children measure</h3>
+<pre><code class="language-cpp">for (auto&amp; c : children) {
+    Vec2 cs = c-&gt;measure(innerW, innerH);
+    if (c-&gt;getStyle().position == Position::Absolute || c-&gt;isPortal())
+        continue;
+
+    // accumulate margins + sizes
+    float childTotalW = cs.x + ml + mr;
+    float childTotalH = cs.y + mt + mb;
+
+    if (type == Horizontal) {
+        totalMainSize += childTotalW;
+        maxCrossSize = max(maxCrossSize, childTotalH);
+    } else if (type == Vertical) {
+        totalMainSize += childTotalH;
+        maxCrossSize = max(maxCrossSize, childTotalW);
+    } else if (type == Stack) {
+        contentSize.x = max(contentSize.x, childTotalW);
+        contentSize.y = max(contentSize.y, childTotalH);
+    }
+    visibleChildren++;
+}
+</code></pre>
+<p>Children are measured first (so they know their own intrinsic sizes),
+then combined. Absolute children and portals are measured but not
+counted in the flow size.</p>
+<h3 id="56-gap">5.6 Gap</h3>
+<pre><code class="language-cpp">if (type == Horizontal) {
+    if (visibleChildren &gt; 1) totalMainSize += gapX * (visibleChildren - 1);
+    contentSize.x = max(contentSize.x, totalMainSize);
+    contentSize.y = max(contentSize.y, maxCrossSize);
+} else if (type == Vertical) {
+    if (visibleChildren &gt; 1) totalMainSize += gapY * (visibleChildren - 1);
+    contentSize.x = max(contentSize.x, maxCrossSize);
+    contentSize.y = max(contentSize.y, totalMainSize);
+}
+</code></pre>
+<p><code>Stack</code> doesn't use gaps.</p>
+<h3 id="57-final-size">5.7 Final size</h3>
+<pre><code class="language-cpp">scroll_.contentSize = contentSize;   // save for scroll
+
+float finalW = calcStyle.width.isAuto()  ? (contentSize.x + pl + pr) : availW;
+float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
+
+float minW = calcStyle.minWidth.isAuto() ? 0.0f : calcStyle.minWidth.resolveH(parent_w, parent_h);
+float maxW = calcStyle.maxWidth.isAuto() ? 1e9f : calcStyle.maxWidth.resolveH(parent_w, parent_h);
+float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolveV(parent_w, parent_h);
+float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolveV(parent_w, parent_h);
+
+measuredSize = {clamp(finalW, minW, maxW), clamp(finalH, minH, maxH)};
+return measuredSize;
+</code></pre>
+<p>The <code>contentSize</code> is stored on the <code>ScrollController</code> so it can be used
+later to determine <code>maxScroll</code>. The final size applies <code>min-*</code> / <code>max-*</code>
+clamps as the last step.</p>
+<hr />
+<h2 id="6-arrangerect">6. <code>arrange(rect)</code></h2>
+<p>Recursive, top-down.</p>
+<h3 id="61-set-rect-and-detect-movement">6.1 Set rect and detect movement</h3>
+<pre><code class="language-cpp">const bool positionChanged = (space.x != rect.x || space.y != rect.y);
+rect = space;
+</code></pre>
+<p>If the position changed since last arrange, scroll containers may need
+a full re-arrange (their virtual content coordinates shift).</p>
+<h3 id="62-scroll-containers-vs-normal">6.2 Scroll containers vs normal</h3>
+<pre><code class="language-cpp">if (isScrollContainer() &amp;&amp; type != LayoutType::Stack) {
+    if (scroll_.needsFullArrange(*this, positionChanged)) {
+        Rect arrangeSpace = scroll_.computeArrangeSpace(*this, space);
+        arrangeInto(arrangeSpace);
+        scroll_.arrangeInitialized = true;
+        scroll_.appliedOffset = {0, 0};
+    }
+    scroll_.applyOffsetDelta(*this);
+    scroll_.updateMaxScroll(*this, space);
+} else {
+    arrangeInto(space);
+    scroll_.arrangeInitialized = true;
+}
+</code></pre>
+<ul>
+<li>Normal nodes: <code>arrangeInto(space)</code> directly.</li>
+<li>Scroll containers: check if a full re-arrange is needed, expand the
+  arrange space if so, then apply the scroll offset and update
+  <code>maxScroll</code>.</li>
+</ul>
+<p><code>arrangeInto</code> sets the positions of all children. <code>applyOffsetDelta</code>
+translates the whole subtree by the difference between the current
+scroll offset and the last applied one (<code>translateSubtree</code>).</p>
+<h3 id="63-onlayout">6.3 <code>onLayout()</code></h3>
+<pre><code class="language-cpp">onLayout();
+</code></pre>
+<p>Called after <code>arrangeInto</code> and the scroll handling. This is where widgets
+can react to their final size (Text wrapping uses it).</p>
+<h3 id="64-arrangeintospace">6.4 <code>arrangeInto(space)</code></h3>
+<pre><code class="language-cpp">float pl = ... padding left ...
+float pr = ... padding right ...
+float pt = ... padding top ...
+float pb = ... padding bottom ...
+
+Rect inner = {
+    space.x + pl,
+    space.y + pt,
+    max(0, space.width - pl - pr),
+    max(0, space.height - pt - pb)
+};
+
+arrangeAbsoluteAndPortals(inner);
+
+if (type == Vertical)    arrangeVerticalFlow(inner, gapY);
+else if (type == Horizontal) arrangeHorizontalFlow(inner, gapX);
+else if (type == Stack)  arrangeStackFlow(inner);
+</code></pre>
+<p>The inner rect is the arrange space minus padding. Absolute and portal
+children are arranged first into the inner rect. Then flow children are
+laid out according to the container type.</p>
+<h3 id="65-flow-arrangement-vertical">6.5 Flow arrangement (Vertical)</h3>
+<p>The algorithm, in <code>arrangeVerticalFlow</code>:</p>
+<ol>
+<li>Sum the fixed heights of all in-flow children: <code>margin-top + measuredSize.y + margin-bottom</code>.</li>
+<li>Sum <code>grow</code> and <code>shrink</code> across all children.</li>
+<li>Add <code>gapY × (N - 1)</code>.</li>
+<li>Compute <code>freeSpace = inner.height - totalFixedH</code>.</li>
+<li>If <code>freeSpace &gt; 0</code> and <code>totalGrow == 0</code>, apply <code>justify</code>:</li>
+<li><code>Center</code> → offset start by <code>freeSpace / 2</code>.</li>
+<li><code>End</code> → offset start by <code>freeSpace</code>.</li>
+<li><code>SpaceBetween</code> → distribute <code>freeSpace / (N-1)</code> between children.</li>
+<li>For each child:</li>
+<li>Height: <code>measuredSize.y + grow-share</code> or <code>+ shrink-share</code>,
+     clamped by <code>min-height</code> / <code>max-height</code>.</li>
+<li>Width: <code>measuredSize.x</code>, clamped by <code>min-width</code> / <code>max-width</code>,
+     clamped by available width (inner width - margins).</li>
+<li>Cross-axis alignment (<code>alignH</code> on the child or <code>itemsH</code> on the
+     container):<ul>
+<li><code>Stretch</code> → width = available width.</li>
+<li><code>Center</code> → offset x by <code>(availW - w) / 2</code>.</li>
+<li><code>End</code> → offset x by <code>availW - w</code>.</li>
+</ul>
+</li>
+<li>Call <code>c-&gt;arrange({x, y, w, h})</code>.</li>
+</ol>
+<p>The <code>grow</code> / <code>shrink</code> computation uses the total across all children
+with that property:</p>
+<pre><code class="language-cpp">if (freeSpace &gt; 0 &amp;&amp; totalGrow &gt; 0 &amp;&amp; cst.grow &gt; 0)
+    ch += freeSpace * (cst.grow / totalGrow);
+else if (freeSpace &lt; 0 &amp;&amp; totalShrink &gt; 0 &amp;&amp; cst.shrink &gt; 0)
+    ch += freeSpace * (cst.shrink / totalShrink);
+</code></pre>
+<p>Horizontal is symmetric (swap width/height, gapX/gapY, alignH/alignV).</p>
+<h3 id="66-stack-arrangement">6.6 Stack arrangement</h3>
+<p><code>arrangeStackFlow</code> iterates in-flow children and positions each one
+independently:</p>
+<ul>
+<li><code>availW</code> = inner width minus the child's margins.</li>
+<li><code>availH</code> = inner height minus the child's margins.</li>
+<li><code>cw</code> = clamped <code>measuredSize.x</code> against <code>min-*</code>, <code>max-*</code>, and <code>availW</code>.</li>
+<li><code>ch</code> = same for height.</li>
+<li>Positioned at <code>(inner.x + margin-left, inner.y + margin-top)</code>,
+  then adjusted by <code>alignH</code> / <code>alignV</code> / <code>itemsH</code> / <code>itemsV</code>.</li>
+</ul>
+<p>Since there's no flow, children overlap unless positioned differently
+(by margins, alignment, or absolute positioning).</p>
+<h3 id="67-absolute-positioning">6.7 Absolute positioning</h3>
+<p><code>arrangeAbsolute(c, cst, in)</code> handles a single absolute child:</p>
+<ul>
+<li>Parse <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code> — each can be set or <code>auto</code>.</li>
+<li>Horizontal:</li>
+<li><code>left + right</code> set and <code>width: auto</code> → stretch.</li>
+<li><code>left</code> only → position from left.</li>
+<li><code>right</code> only → position from right.</li>
+<li>Neither → position at start (with margin).</li>
+<li>Vertical: symmetric.</li>
+</ul>
+<p>The stretch case computes <code>w = in.width - L - R - ml - mr</code> and positions
+at <code>in.x + L + ml</code>.</p>
+<h3 id="68-portals">6.8 Portals</h3>
+<pre><code class="language-cpp">if (c-&gt;isPortal()) {
+    c-&gt;arrange({inner.x, inner.y, c-&gt;measuredSize.x, c-&gt;measuredSize.y});
+    continue;
+}
+</code></pre>
+<p>Portals get a default arrangement at the parent's inner origin with
+their own measured size. They typically override <code>arrange</code> to be a
+no-op and position themselves in <code>onUpdate</code>.</p>
+<hr />
+<h2 id="7-drawparentopacity">7. <code>draw(parentOpacity)</code></h2>
+<p>Recursive, top-down. Draws the subtree.</p>
+<h3 id="71-portal-registration">7.1 Portal registration</h3>
+<pre><code class="language-cpp">if (isPortal_) {
+    UIContext::get().framePortals.push_back(weak_from_this());
+    return;
+}
+</code></pre>
+<p>Portal nodes don't draw themselves; they register for later drawing at
+the root.</p>
+<h3 id="72-frustum-culling">7.2 Frustum culling</h3>
+<pre><code class="language-cpp">if (rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f) {
+    Rect clip = renderer-&gt;getClipRect();
+    float m = 40.0f;
+    if (rect.x &gt; clip.x + clip.width + m ||
+        rect.x + rect.width &lt; clip.x - m ||
+        rect.y &gt; clip.y + clip.height + m ||
+        rect.y + rect.height &lt; clip.y - m)
+        return;
+}
+</code></pre>
+<p>If the node is entirely outside the current clip (with a 40px margin
+for anti-aliasing and blurs), skip it entirely. This is the primary
+performance optimization for large scrollable lists.</p>
+<h3 id="73-render-style">7.3 Render style</h3>
+<pre><code class="language-cpp">ComputedStyle renderStyle = style_.currentStyle;
+Anim::overlayCssComputed(renderStyle, anim_.css);
+resolveEffectIfNeeded(renderStyle);
+
+float globalOp = renderStyle.opacity * parentOpacity;
+if (globalOp &lt;= 0.001f) return;
+</code></pre>
+<p><code>renderStyle</code> is the style used for drawing, with CSS animation values
+overlaid on top of the current style. <code>resolveEffectIfNeeded</code> looks up
+the effect name to a shader handle if it changed.</p>
+<p>If the effective opacity is below a threshold, skip entirely.</p>
+<h3 id="74-choose-inline-or-layer">7.4 Choose inline or layer</h3>
+<pre><code class="language-cpp">const bool isLayer =
+    !renderStyle.filters.empty() &amp;&amp;
+    renderer-&gt;supports(Feature::Effects) &amp;&amp;
+    rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f &amp;&amp;
+    !renderer-&gt;inTarget();
+
+if (isLayer) drawLayer(renderStyle, globalOp);
+else         drawInline(renderStyle, globalOp);
+</code></pre>
+<p><code>drawLayer</code> renders the subtree to a target and applies filters.
+<code>drawInline</code> draws directly. See <a href="../06-render-pipeline/">Render Pipeline</a>
+for the details.</p>
+<h3 id="75-scrollbar">7.5 Scrollbar</h3>
+<pre><code class="language-cpp">scroll_.drawScrollbar(*this, parentOpacity);
+</code></pre>
+<p>Drawn after the content and children, on top. Uses <code>parentOpacity</code>
+(not <code>globalOp</code>) — the scrollbar's own opacity comes from the node's
+style.</p>
+<h3 id="76-portal-drain">7.6 Portal drain</h3>
+<pre><code class="language-cpp">if (!hasParent()) {
+    auto portals = UIContext::get().framePortals;
+    for (auto &amp;wp : portals) {
+        auto sp = wp.lock();
+        if (!sp) continue;
+        bool wasPortal = sp-&gt;isPortal();
+        sp-&gt;setPortal(false);
+        sp-&gt;draw(1.0f);
+        sp-&gt;setPortal(wasPortal);
+    }
+}
+</code></pre>
+<p>Only the root runs this. Each portal is drawn with the flag temporarily
+cleared, so it renders normally (with its own children and effects).</p>
+<p>Note: <code>framePortals</code> is copied first. This is important because
+<code>sp-&gt;draw()</code> might register <strong>new</strong> portals (a portal's child can also
+be a portal), and iterating while modifying would invalidate the
+iterator.</p>
+<p>Also: <code>activePortals</code> for the current frame was already moved out of
+<code>framePortals</code> in <code>beginFrame</code>. So <code>framePortals</code> here contains only
+the portals registered <strong>this</strong> frame — plus any registered by earlier
+portals in this same loop.</p>
+<hr />
+<h2 id="8-when-things-happen-that-surprise-people">8. When things happen that surprise people</h2>
+<p>A few non-obvious ordering facts:</p>
+<p><strong>Callbacks fire bottom-up, during update, before measure.</strong>
+<code>onClick</code> fires during <code>Layout::update</code>, which is before <code>measure</code> and
+<code>arrange</code> in the same frame. So if your callback reads <code>getRect()</code>, it
+sees the rect from the <strong>previous</strong> frame. This is fine in practice
+(you usually just want to change state, which will be reflected next
+frame), but worth knowing.</p>
+<p><strong>Style changes take effect next frame.</strong>
+If <code>onClick</code> sets <code>getInlineBase().background = ...</code>, the change is
+<code>pendingTransition = true</code> for the current node. The current frame's
+<code>draw</code> uses the old style; the next frame's <code>update</code> resolves the new
+style, and the next frame's <code>draw</code> shows it. If you want the change
+immediate, you'd need to call <code>style_.resolvePendingTransition(*this)</code>
+manually — but this is not public API.</p>
+<p><strong>Portals have a one-frame delay to appear.</strong>
+A portal registers itself in <code>framePortals</code> when it's drawn. The root
+drains <code>framePortals</code> at the end of the same <code>draw</code>. So a portal created
+and made visible this frame <strong>is drawn this frame</strong>. But hit-testing
+uses <code>activePortals</code>, which is the <em>previous</em> frame's <code>framePortals</code>.
+So the portal becomes clickable next frame.</p>
+<p><strong><code>removeFromParent</code> is deferred.</strong>
+<code>removeFromParent()</code> sets <code>wantsRemoval = true</code>. The actual removal
+from <code>children</code> happens in <code>cullRemovedChildren</code>, at the end of the
+same node's update. Until then, the node is still in the tree and
+participates in measure/arrange/draw.</p>
+<p><strong><code>setEnabled(false)</code> clears focus and capture immediately.</strong>
+Unlike <code>removeFromParent</code>, disabling doesn't defer. It clears
+<code>UIContext::focusedNode</code> and <code>UIContext::pointerCapture</code> if they point
+to this node, and calls <code>onEnabledChanged(false)</code>.</p>
+<p><strong>Multiple Tab presses in the same frame.</strong>
+Only the first is processed. The loop in <code>updateTree</code> breaks after
+handling the first <code>Key::Tab</code>.</p>
+<p><strong><code>update</code> recurses before firing callbacks.</strong>
+Children are updated first, then the node's own callbacks fire. So a
+<code>Button</code> inside a <code>VStack</code> will have its <code>onClick</code> fire <strong>before</strong> the
+<code>VStack</code>'s <code>onClick</code> would fire (if it weren't consumed). This is the
+"bubble up" order.</p>
+<p><strong><code>measure</code> may re-resolve style.</strong>
+If a node has <code>pendingTransition</code>, <code>measure</code> calls
+<code>style_.resolveFor(*this)</code> again to get the target size. This is in
+addition to the <code>update</code> call that already resolved it. The cost is
+acceptable because <code>pendingTransition</code> is a one-frame flag, but it means
+<code>resolveFor</code> can run twice on a single frame for a node.</p>
+<p><strong>Animation overlays are not visible to <code>getStyle()</code>.</strong>
+<code>getStyle()</code> returns <code>style_.currentStyle</code>, which does <strong>not</strong> include
+CSS animation values. The overlay is applied in <code>draw</code> on a local
+<code>renderStyle</code>. So if you read <code>getStyle().opacity</code> during a CSS animation,
+you get the transition value, not the animated one.</p>
+<hr />
+<h2 id="9-ordering-summary-one-page-cheat-sheet">9. Ordering summary (one-page cheat sheet)</h2>
+<p>For a single node, in one frame:</p>
+<pre><code>update(dt)
+├── snapshot wasPending, styleBefore
+├── initStyleIfNeeded (first frame only)
+├── scroll.resetIfOverflowChanged
+├── viewportGeneration check
+├── tickImperative → blockSubtree
+├── input.updateFlags → isHovered, isPressed, isFocused
+├── computeNextState
+├── beginStateTransition OR resolvePendingTransition
+├── style.tick (transition)
+├── anim.tickCss (keyframes)
+├── style.propagateInheritance
+├── onAnimationsFinished (if just finished)
+├── for each child: child.update(...)
+├── scroll.tickInput
+├── input.handleKeyInput
+├── input.fireCallbacks → onHoverEnter/Exit, onPress, onRelease, onClick, onRightClick
+├── cullRemovedChildren
+├── recomputeDirty
+└── onUpdate(dt) [if enabled or updateWhenDisabled]
+
+measure(parentW, parentH)
+├── early-out if clean and parent size unchanged
+├── initStyleIfNeeded (safety)
+├── calcStyle = pendingTransition ? resolveFor : currentStyle
+├── compute innerW, innerH (with scroll main-axis unbounded)
+├── computeIntrinsicSize → contentSize
+├── for each child: child.measure(innerW, innerH)
+├── accumulate totalMainSize, maxCrossSize, gap
+├── scroll.contentSize = contentSize
+├── finalW, finalH, clamped by min/max
+└── measuredSize = {finalW, finalH}
+
+arrange(rect)
+├── positionChanged = space.xy != rect.xy
+├── rect = space
+├── if scroll container:
+│     ├── if needsFullArrange: arrangeInto(computeArrangeSpace)
+│     ├── applyOffsetDelta → translateSubtree
+│     └── updateMaxScroll
+│   else:
+│     └── arrangeInto(space)
+└── onLayout()
+
+draw(parentOpacity)
+├── if portal: register in framePortals; return
+├── frustum cull
+├── renderStyle = currentStyle + css animation overlay
+├── resolveEffectIfNeeded
+├── globalOp = renderStyle.opacity * parentOpacity; early-out if ~0
+├── drawLayer OR drawInline
+├── scroll.drawScrollbar
+└── if root: drain framePortals
+</code></pre>
+<hr />
+<h2 id="10-what-to-override-and-what-not-to">10. What to override and what not to</h2>
+<p>When you write a custom widget, the rules are:</p>
+<ul>
+<li><strong>Override</strong>: <code>onBuild</code>, <code>computeIntrinsicSize</code>, <code>renderContent</code>,
+  <code>renderChrome</code> (rarely), <code>onUpdate</code>, <code>onLayout</code>, <code>onEnabledChanged</code>,
+  <code>onDescendantFocused</code>.</li>
+<li><strong>Do not override</strong>: <code>update</code>, <code>measure</code>, <code>arrange</code>, <code>draw</code>,
+  <code>updateTree</code>, <code>runFrame</code>, <code>renderFrame</code>, <code>hitTest</code>. These are the
+  framework's entry points and are called by the runtime.</li>
+</ul>
+<p>The only exception is <code>arrange</code>. Floating widgets (Popup, Tooltip,
+Dropdown's list) override it to compute their own position:</p>
+<pre><code class="language-cpp">void arrange(Rect) override { /* no-op */ }
+</code></pre>
+<p>If you override <code>arrange</code>, you're responsible for calling <code>arrangeInto</code>
+yourself, with the rect you want. The base implementation calls
+<code>arrangeInto(space)</code> for you.</p>
+<hr />
+<h2 id="11-debugging-the-lifecycle">11. Debugging the lifecycle</h2>
+<p>The <code>ZENITUI_DEBUG</code> macro enables <code>Debug::dump*</code> helpers:</p>
+<pre><code class="language-cpp">#define ZENITUI_DEBUG
+#include &quot;Debug.hpp&quot;
+
+Debug::dumpTree(*root);
+Debug::dumpStyle(*someNode);
+Debug::dumpTheme();
+Debug::dumpParts(*slider);
+</code></pre>
+<p><code>dumpTree</code> prints the tree with rects and state flags:</p>
+<pre><code>- Stack#root  [800x600 @ 0,0]
+  - Button.btn-primary  [120x40 @ 340,280] {H}
+    - Text.btn-text  [80x20 @ 360,290]
+</code></pre>
+<p>The state flags legend:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>H</code></td>
+<td>Hovered</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>Pressed</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Focused</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Checked</td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td>Disabled</td>
+</tr>
+</tbody>
+</table>
+<p><code>dumpStyle</code> prints the matching rules for a node, with their specificity:</p>
+<pre><code>=== Node ===
+  tag      : Button
+  classes  : .btn-primary
+  state    : H
+  rect     : (340, 280  120x40)
+  style    : size=auto x auto bg=#0079F1FF ...
+  matches  : 3 rule(s)
+spec=0.1.0] .btn-primary
+      -&gt; { background=#0079F1FF, radius=8px, ... }
+spec=0.1.0] .btn-primary:hover
+      -&gt; { background=#3296FFFF, scale=1.15 }
+</code></pre>
+<p>For runtime logging, <code>Logger</code> routes to a <code>ConsoleLogger</code> by default,
+which prints to stderr:</p>
+<pre><code>[WARN ] [StyleParser] assets/game.zstyle(45:10): unknown property 'foo'. Ignored.
+</code></pre>
+<p>To install a custom logger:</p>
+<pre><code class="language-cpp">Logger::set(&amp;myLogger);
+</code></pre>
+<hr />
+<h2 id="12-where-to-go-next">12. Where to go next</h2>
+<ul>
+<li><strong><a href="../03-style-system/">Style System</a></strong> — how <code>resolveFor</code>, <code>tick</code>,
+  and <code>propagateInheritance</code> work in detail.</li>
+<li><strong><a href="../04-animation-system/">Animation System</a></strong> — imperative, CSS,
+  <code>::part</code>, and the overlay mechanism.</li>
+<li><strong><a href="../05-layout-engine/">Layout Engine</a></strong> — the measure/arrange
+  algorithms in depth.</li>
+<li><strong><a href="../06-render-pipeline/">Render Pipeline</a></strong> — inline vs layer,
+  filters, transforms, clipping.</li>
+<li><strong><a href="../07-input-system/">Input System</a></strong> — the flag/state model,
+  callbacks, focus.</li>
+<li><strong><a href="../08-scroll-system/">Scroll System</a></strong> — <code>ScrollState</code>, arrange
+  expansion, thumb geometry.</li>
+<li><strong><a href="../09-backend/">Backend</a></strong> — the interfaces you implement to port
+  ZenitUI.</li>
+<li><strong><a href="../10-debug/">Debugging</a></strong> — dumps, logging, the test fixture.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

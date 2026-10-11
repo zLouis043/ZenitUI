@@ -1,0 +1,2972 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../api/FilterRegistry/">
+      
+      
+        <link rel="next" href="../02-lifecycle/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Architecture - ZenitUI Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZenitUI Documentation" class="md-header__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZenitUI Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../GLOSSARY/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/01-getting-started/" class="md-tabs__link">
+          
+  
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/Layout/" class="md-tabs__link">
+          
+  
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Internals
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZenitUI Documentation" class="md-nav__button md-logo" aria-label="ZenitUI Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ZenitUI Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zLouis043/ZenitUI" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/01-getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/02-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/03-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/04-zmarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/05-zstyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/06-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/07-animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/08-portals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Portals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/09-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/10-custom-widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theme — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/UIContext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UIContext — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Unit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit and Value — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/Widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZMarkup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZMarkup — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ZStyle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ZStyle — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/FilterRegistry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FilterRegistry — API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-kind-of-framework-is-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What kind of framework is this?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-frame-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The frame pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The frame pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-runframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 runFrame(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 runFrame(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beginframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        beginFrame(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updatetreedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updateTree(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurew-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        measure(w, h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrangerect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arrange(rect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-per-node-updatedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Per-node update(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-renderframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 renderFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-hittestp-ancestorblocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 hitTest(p, ancestorBlocked)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-data-flow-between-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Data flow between subsystems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Data flow between subsystems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-input-state-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Input → state → style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-layout-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Layout → scroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-animation-style-render" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Animation → style → render
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-portal-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Portal registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-filter-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Filter resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ownership-and-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Ownership and lifetime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Ownership and lifetime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-callbacks-that-capture-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Callbacks that capture nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-render-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Render targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Subsystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-why-separate-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Why separate files?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-whats-friend-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What's friend and why
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-backend-interface-in-one-paragraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Backend interface in one paragraph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Testing strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-design-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Design trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-style-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-animation-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-layout-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-render-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Render Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-input-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-scroll-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scroll System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-kind-of-framework-is-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What kind of framework is this?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-frame-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The frame pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The frame pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-runframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 runFrame(dt)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 runFrame(dt)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beginframedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        beginFrame(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updatetreedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        updateTree(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurew-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        measure(w, h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrangerect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arrange(rect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-per-node-updatedt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Per-node update(dt)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-renderframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 renderFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-hittestp-ancestorblocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 hitTest(p, ancestorBlocked)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-data-flow-between-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Data flow between subsystems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Data flow between subsystems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-input-state-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Input → state → style
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-layout-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Layout → scroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-animation-style-render" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Animation → style → render
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-portal-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Portal registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-filter-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Filter resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ownership-and-lifetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Ownership and lifetime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Ownership and lifetime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-callbacks-that-capture-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Callbacks that capture nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-render-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Render targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Subsystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-why-separate-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Why separate files?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-whats-friend-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. What's friend and why
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-backend-interface-in-one-paragraph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Backend interface in one paragraph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Testing strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-design-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Design trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="architecture">Architecture</h1>
+<p>This document is the bird's-eye view of how ZenitUI is put together:
+which pieces exist, what each one owns, and how data flows between them
+during a frame. It's the map you should read before diving into the
+individual subsystem documents.</p>
+<p>If you only read one internals file, read this one.</p>
+<hr />
+<h2 id="1-what-kind-of-framework-is-this">1. What kind of framework is this?</h2>
+<p>ZenitUI is a <strong>retained-mode</strong> UI framework:</p>
+<ul>
+<li>Every widget is a persistent object (<code>Layout</code> and subclasses) that
+  lives across frames.</li>
+<li>The tree is built once and mutated incrementally (add/remove children,
+  change styles, change state).</li>
+<li>There's no diffing, no virtual tree, no reconciler. What you build is
+  what runs.</li>
+</ul>
+<p>This is in contrast to <strong>immediate-mode</strong> frameworks (like Dear ImGui),
+where the whole UI is re-declared every frame and thrown away. Retained
+mode is the right choice when:</p>
+<ul>
+<li>You have many widgets and want to avoid re-declaring them.</li>
+<li>You want real node identity (each widget has a stable <code>shared_ptr</code>).</li>
+<li>You want CSS-like cascade and state transitions.</li>
+<li>You want to build declaratively (ZMarkup) or imperatively (C++) with
+  the same underlying model.</li>
+</ul>
+<p>The trade-off is more bookkeeping: a <code>Layout</code> node carries more state
+than an immediate-mode "draw call".</p>
+<hr />
+<h2 id="2-layers">2. Layers</h2>
+<p>ZenitUI is organized in six conceptual layers. Each one depends only on
+the ones below it, never above.</p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Authoring                                                    │
+│    C++ widget API  ·  ZMarkup DSL  ·  ZStyle stylesheets      │
+├──────────────────────────────────────────────────────────────┤
+│  Node model                                                   │
+│    Layout  (tree, rect, state flags, callbacks)               │
+│    TLayout&lt;Derived, Base&gt;  (CRTP factory + fluent helpers)    │
+├──────────────────────────────────────────────────────────────┤
+│  Subsystems                                                   │
+│    StyleResolver  ·  AnimationPlayer  ·  InputController      │
+│    ScrollController  ·  FilterRegistry                        │
+├──────────────────────────────────────────────────────────────┤
+│  Runtime                                                      │
+│    UIContext (singleton)  ·  Metrics  ·  Theme                │
+├──────────────────────────────────────────────────────────────┤
+│  Backend interfaces                                           │
+│    IRenderer  ·  IPlatform  ·  IAssetProvider                 │
+├──────────────────────────────────────────────────────────────┤
+│  Backend implementation                                       │
+│    RaylibBackend  ·  any other renderer/platform you write    │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="authoring">Authoring</h3>
+<p>Two ways to build a tree, both producing the same <code>Layout</code> objects:</p>
+<ul>
+<li><strong>C++</strong>: <code>auto b = Btn("OK", cb);</code></li>
+<li><strong>ZMarkup</strong>: <code>ZMarkup::build("Button \"OK\"")</code></li>
+</ul>
+<p>Plus a <code>.zstyle</code> stylesheet language parsed into <code>ThemeRule</code>s, loaded
+into the global <code>Theme</code>.</p>
+<h3 id="node-model">Node model</h3>
+<p><code>Layout</code> is the single node type. It's not pure virtual — it's concrete
+and usable directly. Subclasses (widgets) override specific hooks. The
+node owns:</p>
+<ul>
+<li>Its type (<code>Stack</code> / <code>Vertical</code> / <code>Horizontal</code>).</li>
+<li>Its <code>rect</code> (computed during <code>arrange</code>).</li>
+<li>Its <code>measuredSize</code> (computed during <code>measure</code>).</li>
+<li>Its flags (<code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>, <code>isEnabled</code>,
+  <code>isChecked_</code>, <code>isPortal_</code>, <code>passThrough_</code>, ...).</li>
+<li>Its children (<code>std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt;</code>).</li>
+<li>Its four subsystems (<code>style_</code>, <code>anim_</code>, <code>input_</code>, <code>scroll_</code>).</li>
+<li>Its callbacks (<code>onClick</code>, <code>onHoverEnter</code>, ...).</li>
+</ul>
+<p><code>TLayout&lt;Derived, Base&gt;</code> is the CRTP helper that adds:</p>
+<ul>
+<li>A <code>static create(...)</code> factory that calls <code>onBuild()</code> after
+  construction.</li>
+<li>Fluent helpers (<code>cls</code>, <code>id</code>, <code>size</code>, <code>with</code>, <code>passThrough</code>) that
+  return <code>shared_ptr&lt;Derived&gt;</code>.</li>
+</ul>
+<p>The base <code>Base</code> parameter lets you build on top of an existing widget:
+<code>Popup : TLayout&lt;Popup, Panel&gt;</code>, <code>Tooltip : TLayout&lt;Tooltip, Panel&gt;</code>.</p>
+<h3 id="subsystems">Subsystems</h3>
+<p>Each subsystem is a small struct, <code>friend</code>-accessible from <code>Layout</code>.
+They don't own a <code>Layout</code> reference; they're called by <code>Layout</code>'s
+lifecycle methods with <code>*this</code> as a parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Subsystem</th>
+<th>Owns</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StyleResolver</code></td>
+<td>Cascade inputs (inline defaults/base/states), computed style, transitions, part states</td>
+<td><code>Theme</code>, <code>Layout</code> state flags</td>
+</tr>
+<tr>
+<td><code>AnimationPlayer</code></td>
+<td>Imperative animations, CSS node animations, <code>::part</code> animations</td>
+<td><code>Layout</code>, <code>Theme::keyframes</code></td>
+</tr>
+<tr>
+<td><code>InputController</code></td>
+<td>(Nothing) — stateless dispatcher over <code>Layout</code> flags and <code>UIContext</code></td>
+<td><code>UIContext</code>, <code>Layout</code></td>
+</tr>
+<tr>
+<td><code>ScrollController</code></td>
+<td><code>ScrollState</code> (offset, velocity, drag start), scrollbar geometry</td>
+<td><code>Layout</code> style, <code>UIContext</code> pointer/wheel</td>
+</tr>
+<tr>
+<td><code>FilterRegistry</code></td>
+<td>Named filter definitions (built-ins + custom)</td>
+<td><code>IRenderer</code>, <code>IAssetProvider</code></td>
+</tr>
+</tbody>
+</table>
+<p>The subsystems are not independently ticked from outside. They're called
+by <code>Layout::update</code>, <code>Layout::measure</code>, <code>Layout::arrange</code>, and
+<code>Layout::draw</code>. This keeps the frame order under one roof.</p>
+<h3 id="runtime">Runtime</h3>
+<p><code>UIContext</code> is a singleton that holds:</p>
+<ul>
+<li>The three backend pointers.</li>
+<li>The current input snapshot (<code>pointer</code>, <code>inputEvents</code>, <code>shiftHeld</code>).</li>
+<li>Focus state (<code>focusedNode</code>).</li>
+<li>Pointer capture (<code>pointerCapture</code>).</li>
+<li>Portal registries (<code>activePortals</code>, <code>framePortals</code>).</li>
+<li>Frame clock (<code>dt</code>, <code>time</code>).</li>
+<li>Viewport generation counter.</li>
+<li>A RNG (used by <code>TextInput</code> for nothing important, but available).</li>
+</ul>
+<p><code>Metrics::viewport</code> holds the current logical viewport size, updated
+each <code>beginFrame</code>. It's used by <code>Value::resolveH/V</code> for <code>vw</code>/<code>vh</code>.</p>
+<p><code>Theme</code> is the global stylesheet: a list of <code>ThemeRule</code>s, a <code>root</code>
+style, and a map of <code>KeyframeAnimation</code>s. It's populated by the
+<code>.zstyle</code> parser and read by <code>StyleResolver</code>.</p>
+<h3 id="backend-interfaces">Backend interfaces</h3>
+<p>Three abstract classes define everything the framework needs from the
+outside world:</p>
+<ul>
+<li><strong><code>IRenderer</code></strong> — drawing primitives, text measurement, clip,
+  transform, render target, shader push/pop, <code>supports(Feature)</code>.</li>
+<li><strong><code>IPlatform</code></strong> — window size, pointer state, input events, time,
+  DPI, safe area.</li>
+<li><strong><code>IAssetProvider</code></strong> — get font/texture/shader by string name.</li>
+</ul>
+<p>Nothing in the framework above these interfaces knows about Raylib,
+SDL, OpenGL, Metal, or any concrete graphics API.</p>
+<h3 id="backend-implementation">Backend implementation</h3>
+<p><code>RaylibBackend.hpp/cpp</code> provides <code>RaylibRenderer</code>, <code>RaylibPlatform</code>,
+and <code>RaylibAssetProvider</code>. This is the only place where the codebase
+includes <code>&lt;raylib.h&gt;</code>. To port ZenitUI to another backend, you write
+three new classes implementing the same interfaces — no core changes.</p>
+<hr />
+<h2 id="3-the-frame-pipeline">3. The frame pipeline</h2>
+<p>Every frame has two phases, called separately by the user's main loop.</p>
+<pre><code class="language-cpp">// Phase 1: logic (no GPU calls)
+root-&gt;runFrame(dt);
+
+// Phase 2: draw (no input reads)
+BeginDrawing();
+root-&gt;renderFrame();
+EndDrawing();
+</code></pre>
+<h3 id="31-runframedt">3.1 <code>runFrame(dt)</code></h3>
+<pre><code class="language-cpp">void Layout::runFrame(float dt) {
+    UIContext::get().beginFrame(dt);
+    updateTree(dt);
+    measure(Metrics::viewport.x, Metrics::viewport.y);
+    arrange({0, 0, Metrics::viewport.x, Metrics::viewport.y});
+}
+</code></pre>
+<p>Four sub-phases:</p>
+<h4 id="beginframedt"><code>beginFrame(dt)</code></h4>
+<p>Polls the platform:</p>
+<ul>
+<li>Updates <code>Metrics::viewport</code>, <code>safeArea</code>, <code>pointer</code>, <code>inputEvents</code>,
+  <code>shiftHeld</code>, <code>dpiScale</code>.</li>
+<li>Increments <code>viewportGeneration</code> if the viewport or safe area changed.</li>
+<li>Clears per-frame flags: <code>clickConsumed</code>, <code>rightClickConsumed</code>,
+  <code>wheelConsumedThisFrame</code>, <code>topmostConsumer</code>, <code>hoverTarget</code>,
+  <code>releaseTarget</code>.</li>
+<li>Swaps <code>activePortals ← framePortals</code> (portals from last frame become
+  the hit-test set for this frame).</li>
+</ul>
+<p>It does <strong>not</strong> read the pointer or hit-test. That's <code>updateTree</code>'s job.</p>
+<h4 id="updatetreedt"><code>updateTree(dt)</code></h4>
+<p>Runs the input pass and then the per-node update:</p>
+<ol>
+<li>Hit-test the pointer to find <code>topmostConsumer</code>.</li>
+<li>Set <code>hoverTarget = topmostConsumer</code>.</li>
+<li>If pointer pressed, set <code>pressTarget = hoverTarget</code>; if released,
+   <code>releaseTarget = hoverTarget</code>.</li>
+<li>Focus handling:</li>
+<li>On press: focus <code>topmostConsumer</code> if focusable, else release.</li>
+<li>On <code>Tab</code>: cycle through focusables within the current scope.</li>
+<li>Call <code>update(dt, false, false)</code> on the root — which recursively
+   walks the tree, running the per-node update (see §3.2).</li>
+<li>Cleanup: if the pointer was released, <code>pressTarget = nullptr</code>; if
+   the button is up and capture is set, release capture.</li>
+</ol>
+<h4 id="measurew-h"><code>measure(w, h)</code></h4>
+<p>Recursive, top-down-then-bottom-up. Each node:</p>
+<ol>
+<li>Resolves its style if needed.</li>
+<li>Computes its available inner size (parent size minus padding).</li>
+<li>Calls <code>computeIntrinsicSize(availW, availH)</code>.</li>
+<li>Recurses into children to get their measured sizes.</li>
+<li>Combines children sizes according to <code>LayoutType</code> (max for <code>Stack</code>,
+   sum for <code>Vertical</code>/<code>Horizontal</code>).</li>
+<li>Adds padding, applies <code>min-*</code> / <code>max-*</code>, produces <code>measuredSize</code>.</li>
+</ol>
+<p>The result is cached. <code>measure</code> short-circuits if neither the node's
+subtree is dirty nor the parent size changed.</p>
+<h4 id="arrangerect"><code>arrange(rect)</code></h4>
+<p>Recursive, top-down. Each node:</p>
+<ol>
+<li>Sets its <code>rect</code> from the incoming space.</li>
+<li>Splits the space into <code>padding</code> inner box.</li>
+<li>Arranges absolute children and portals into the inner box.</li>
+<li>Arranges flow children (<code>Vertical</code> / <code>Horizontal</code> / <code>Stack</code>) with
+   flex (<code>grow</code> / <code>shrink</code> / <code>gap</code> / <code>justify</code> / <code>items-*</code>).</li>
+<li>Calls <code>onLayout()</code> for widgets that need to react to final size.</li>
+</ol>
+<p>If the node is a scroll container, <code>arrange</code> delegates to
+<code>ScrollController</code>, which may expand the arrange space to fit content
+and applies the scroll offset via <code>translateSubtree</code>.</p>
+<h3 id="32-per-node-updatedt">3.2 Per-node <code>update(dt)</code></h3>
+<p>Called for every node in the tree, depth-first. It's the heart of the
+framework. In order:</p>
+<ol>
+<li><code>initStyleIfNeeded</code> — on the first frame, resolve the initial style.</li>
+<li><code>scroll_.resetIfOverflowChanged</code> — reset scroll if <code>overflow</code>
+   changed.</li>
+<li>Viewport generation check — if the viewport changed, force a
+   <code>pendingTransition</code>.</li>
+<li><code>anim_.tickImperative(*this, dt)</code> — tick imperative animations.
+   Returns whether they block input.</li>
+<li>Compute <code>blockSubtree</code> and <code>selfBlocked</code>.</li>
+<li><code>input_.updateFlags(*this, selfBlocked, scrolling)</code> — update
+   <code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>. Skipped if <code>scrolling</code> is
+   true (hover freeze).</li>
+<li>Compute the new <code>UIState</code> (<code>Idle</code> / <code>Hover</code> / <code>Pressed</code> / <code>Disabled</code>).</li>
+<li>If the state changed, <code>style_.beginStateTransition(...)</code>. Else if
+   <code>pendingTransition</code>, <code>style_.resolvePendingTransition(...)</code>.</li>
+<li><code>style_.tick(*this, dt)</code> — tick the CSS transition.</li>
+<li><code>anim_.tickCss(*this, dt)</code> — tick CSS keyframe animations.</li>
+<li><code>style_.propagateInheritance(*this)</code> — notify children if inherited
+    props changed.</li>
+<li><code>onAnimationsFinished</code> if the node just became animation-free.</li>
+<li>Recurse into children with <code>update(dt, blockSubtree, scrolling)</code>.</li>
+<li><code>scroll_.tickInput(*this)</code> — handle wheel, drag, inertia.</li>
+<li><code>input_.handleKeyInput(*this)</code> — Enter/Space activation.</li>
+<li><code>input_.fireCallbacks(*this, prev, next, changed)</code> — hover, press,
+    release, click, right-click.</li>
+<li><code>cullRemovedChildren()</code> — remove children with <code>wantsRemoval</code>.</li>
+<li><code>recomputeDirty(...)</code> — update <code>subtreeDirty_</code>.</li>
+<li><code>onUpdate(dt)</code> if <code>isEnabled || updateWhenDisabled_</code>.</li>
+</ol>
+<p>The order matters. Read it carefully before changing anything.</p>
+<h3 id="33-renderframe">3.3 <code>renderFrame()</code></h3>
+<pre><code class="language-cpp">void Layout::renderFrame() {
+    auto* r = UIContext::get().renderer;
+    r-&gt;beginFrame();       // e.g. push DPI matrix
+    draw();
+    r-&gt;endFrame();
+}
+</code></pre>
+<p><code>draw(opacity)</code> on the root recursively draws the tree. Each node:</p>
+<ol>
+<li>If <code>isPortal_</code>, register itself in <code>framePortals</code> and return.</li>
+<li>Frustum cull: if the node's <code>rect</code> is far outside the current clip,
+   skip.</li>
+<li>Compute <code>renderStyle = currentStyle + CSS animation overlay</code>.</li>
+<li>Resolve the effect (shader) name to a handle if needed.</li>
+<li>Compute <code>globalOp = renderStyle.opacity * parentOpacity</code>.</li>
+<li>Choose <code>drawInline</code> or <code>drawLayer</code> based on whether the node has
+   filters and whether the renderer supports them.</li>
+<li>Draw children in z-order.</li>
+<li>Draw the scrollbar if this is a scroll container.</li>
+<li>If this is the root, drain <code>framePortals</code> and draw each one.</li>
+</ol>
+<p><code>drawInline</code>:</p>
+<pre><code>push transform (if identity is false)
+push effect (if node has effect)
+push filter effect (if currentEffect_ is valid)
+push clip (if overflow is not visible)
+renderChrome (background, box-shadow, border)
+renderContent (widget-specific)
+drawChildren (z-ordered)
+pop clip
+pop filter effect
+pop effect
+pop transform
+</code></pre>
+<p><code>drawLayer</code>:</p>
+<ol>
+<li>Compute the transformed bounding box.</li>
+<li>Intersect with the current clip → <code>region</code>.</li>
+<li>Ensure two render targets are sized to <code>region</code>.</li>
+<li><code>pushTarget(layerTarget_)</code>.</li>
+<li>Apply the offset transform so the subtree draws at (0, 0) of the
+   target.</li>
+<li>Draw chrome + content + children.</li>
+<li><code>popTarget()</code>.</li>
+<li>Run the filter chain on the target.</li>
+<li><code>drawTarget(layerTarget_, region, ...)</code>.</li>
+</ol>
+<h3 id="34-hittestp-ancestorblocked">3.4 <code>hitTest(p, ancestorBlocked)</code></h3>
+<p>Recursive, top-down, z-ordered. Returns the topmost node that:</p>
+<ul>
+<li>Is not blocked by an ancestor.</li>
+<li>Is enabled.</li>
+<li>Contains the point in its <code>rect</code>.</li>
+<li>Is <code>isInteractive</code> or <code>blocksRaycast</code>.</li>
+</ul>
+<p>Order:</p>
+<ol>
+<li>If this is the root, test portals first (reverse order).</li>
+<li>Apply the current transform inverse to <code>p</code>.</li>
+<li>Partition children into <code>negZ</code>, <code>normalFlow</code>, <code>posZ</code> (stacking
+   contexts with negative / no / positive z-index).</li>
+<li>Test <code>posZ</code> (reversed), then <code>normalFlow</code> (reversed), then <code>negZ</code>.</li>
+<li>If no child hit, test <code>this</code> (if it qualifies).</li>
+</ol>
+<p>This is the same z-order as <code>drawChildren</code>, reversed. Topmost pixel
+under the cursor is the topmost interactive node.</p>
+<hr />
+<h2 id="4-data-flow-between-subsystems">4. Data flow between subsystems</h2>
+<p>The subsystems are not independent. They share state through <code>Layout</code>
+and <code>UIContext</code>. The main flows:</p>
+<h3 id="41-input-state-style">4.1 Input → state → style</h3>
+<pre><code>IPlatform → UIContext.pointer, UIContext.inputEvents
+  ↓
+Layout::updateTree → hitTest → topmostConsumer
+  ↓
+Layout::update → InputController::updateFlags
+  ↓
+Layout.isHovered / isPressed / isFocused
+  ↓
+InputController::computeNextState → UIState
+  ↓
+StyleResolver::beginStateTransition / resolvePendingTransition
+  ↓
+StyleResolver resolves matching rules using the flags (via ruleMatches)
+  ↓
+ComputedStyle.targetStyle
+  ↓
+StyleResolver::tick → currentStyle
+  ↓
+Layout::draw → renderChrome / renderContent
+</code></pre>
+<h3 id="42-layout-scroll">4.2 Layout → scroll</h3>
+<pre><code>measure → measuredSize + contentSize (ScrollController::contentSize)
+  ↓
+arrange → if isScrollContainer:
+    ScrollController::computeArrangeSpace (may expand)
+    ScrollController::applyOffsetDelta → translateSubtree on children
+    ScrollController::updateMaxScroll
+  ↓
+ScrollController::tickInput (wheel, drag, inertia)
+  ↓
+draw → ScrollController::drawScrollbar
+</code></pre>
+<h3 id="43-animation-style-render">4.3 Animation → style → render</h3>
+<pre><code>AnimationPlayer::tickImperative → writes to getInlineBase() → pendingTransition
+  ↓
+AnimationPlayer::tickCss → updates css[] active animations
+  ↓
+Layout::draw → Anim::overlayCssComputed(renderStyle, anim_.css)
+  ↓
+renderStyle is the effective style used for drawing
+</code></pre>
+<p>The important detail: <code>renderStyle</code> is computed <strong>at draw time</strong> and
+includes the current CSS animation values. The <code>currentStyle</code> stored in
+<code>StyleResolver</code> does <strong>not</strong> include them. This is why <code>getStyle()</code>
+returns the transition value, not the animated value.</p>
+<h3 id="44-portal-registration">4.4 Portal registration</h3>
+<pre><code>Layout::draw (portal node) → UIContext.framePortals.push_back(weak_from_this())
+  ↓
+Layout::draw (root, end) → iterates framePortals → draws each
+  ↓
+Next frame: beginFrame → activePortals = move(framePortals)
+  ↓
+hitTest → iterates activePortals → the portal becomes clickable
+</code></pre>
+<p>The one-frame delay is intentional (see <a href="../../user/08-portals/">Portals</a>
+§8).</p>
+<h3 id="45-filter-resolution">4.5 Filter resolution</h3>
+<pre><code>ComputedStyle.filters (vector&lt;FilterRef&gt;)
+  ↓
+Layout::drawLayer → for each FilterRef:
+    FilterRegistry::find(ref-&gt;name) → FilterDef
+  ↓
+applyFilter(def, FilterContext{...})
+  ↓
+pattern-specific pass: SinglePass / Separable / Silhouette / Custom
+  ↓
+IRenderer::pushEffect / setEffect* / drawTarget / popEffect
+</code></pre>
+<p>If the shader name isn't registered with <code>IAssetProvider</code>, the effect
+handle is invalid and <code>drawTarget</code> is called without a filter (fallback).</p>
+<hr />
+<h2 id="5-ownership-and-lifetime">5. Ownership and lifetime</h2>
+<h3 id="51-nodes">5.1 Nodes</h3>
+<ul>
+<li>Children are owned by their parent's <code>children</code> vector
+  (<code>shared_ptr&lt;Layout&gt;</code>).</li>
+<li>A child holds a <code>weak_ptr&lt;Layout&gt;</code> to its parent.</li>
+<li><code>removeFromParent</code> sets <code>wantsRemoval = true</code>. The parent erases the
+  child during the next <code>cullRemovedChildren</code> pass.</li>
+</ul>
+<p>There are no cycles by default. The <code>weak_ptr</code> to parent prevents the
+obvious one.</p>
+<h3 id="52-callbacks-that-capture-nodes">5.2 Callbacks that capture nodes</h3>
+<p>Callbacks stored on a node often capture other nodes. This can create
+cycles:</p>
+<pre><code class="language-cpp">node-&gt;addAnimation(&quot;a&quot;, anim);
+anim-&gt;onFinished = [node] { /* ... */ };   // cycle: node → anim → lambda → node
+</code></pre>
+<p>Break it with <code>weak_ptr</code>:</p>
+<pre><code class="language-cpp">std::weak_ptr&lt;Layout&gt; weak = node;
+anim-&gt;onFinished = [weak] {
+    if (auto n = weak.lock()) n-&gt;playAnimation(&quot;b&quot;);
+};
+</code></pre>
+<p>The framework does this internally where needed (<code>ContextMenu</code> captures
+<code>weak_ptr&lt;Popup&gt;</code>, <code>Tooltip::attach</code> captures <code>shared_ptr&lt;Tooltip&gt;</code> which
+is fine because the tooltip is owned by the owner).</p>
+<h3 id="53-render-targets">5.3 Render targets</h3>
+<p>Each node that uses <code>drawLayer</code> owns two <code>TargetHandle</code>s
+(<code>layerTarget_</code>, <code>layerScratch_</code>). They're created lazily and destroyed
+in <code>~Layout</code>. They're not shared between nodes.</p>
+<h3 id="54-subsystems">5.4 Subsystems</h3>
+<p>All four subsystems are members of <code>Layout</code>, by value. They don't hold
+<code>shared_ptr</code> to the node. They're accessed via <code>friend</code>-private methods
+and passed <code>*this</code> as a parameter.</p>
+<p><code>AnimationPlayer::imperative</code> stores <code>shared_ptr&lt;UIAnimation&gt;</code>. The
+animation is owned by the player. Users create it and pass it via
+<code>addAnimation</code>.</p>
+<p><code>StyleResolver::partTransitions</code> stores <code>Style</code> objects and timers, no
+pointers.</p>
+<p><code>ScrollController</code> stores <code>ScrollState</code> (POD).</p>
+<p><code>InputController</code> stores nothing.</p>
+<hr />
+<h2 id="6-why-separate-files">6. Why separate files?</h2>
+<p>The <code>src/</code> folder splits the <code>Layout</code> implementation into focused files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Concern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Layout.cpp</code></td>
+<td>Orchestration: <code>update</code>, <code>updateTree</code>, <code>runFrame</code>, <code>renderFrame</code>, <code>recomputeDirty</code>, <code>UIContext::requestFocus</code>.</td>
+</tr>
+<tr>
+<td><code>Measure.cpp</code></td>
+<td><code>measure</code>, <code>arrange</code>, <code>arrangeInto</code>, <code>arrangeAbsolute</code>, <code>arrangeVerticalFlow</code>, <code>arrangeHorizontalFlow</code>, <code>arrangeStackFlow</code>, <code>hitTest</code>.</td>
+</tr>
+<tr>
+<td><code>Render.cpp</code></td>
+<td><code>draw</code>, <code>drawInline</code>, <code>drawLayer</code>, <code>drawChildren</code>, <code>resolveEffectIfNeeded</code>.</td>
+</tr>
+<tr>
+<td><code>StyleResolver.cpp</code></td>
+<td>Cascade resolution, state transitions, part styles, inheritance propagation.</td>
+</tr>
+<tr>
+<td><code>AnimationPlayer.cpp</code></td>
+<td>Imperative + CSS ticking, keyframe evaluation.</td>
+</tr>
+<tr>
+<td><code>Input.cpp</code></td>
+<td><code>updateFlags</code>, <code>computeNextState</code>, <code>fireCallbacks</code>, <code>handleKeyInput</code>.</td>
+</tr>
+<tr>
+<td><code>ScrollController.cpp</code></td>
+<td>Scroll arrange, input, thumb geometry.</td>
+</tr>
+<tr>
+<td><code>FilterRegistry.cpp</code></td>
+<td>Registry, param binding, built-in filters, <code>applyFilter</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The split is by <strong>phase and subsystem</strong>, not by class. All these files
+implement methods declared on <code>Layout</code> (or on the free functions in
+<code>Anim</code> and the <code>FilterRegistry</code> class).</p>
+<p>The <code>Layout</code> class itself is a single header with the full API. It's
+large (~700 lines) but the implementation is spread out, so each file
+stays readable.</p>
+<hr />
+<h2 id="7-whats-friend-and-why">7. What's <code>friend</code> and why</h2>
+<p><code>Layout</code> declares four friends:</p>
+<pre><code class="language-cpp">friend struct StyleResolver;
+friend struct AnimationPlayer;
+friend struct InputController;
+friend struct ScrollController;
+</code></pre>
+<p>This is how the subsystems access private members of <code>Layout</code> (flags,
+<code>style_</code>, <code>anim_</code>, <code>scroll_</code>, <code>pendingTransition</code>, <code>subtreeDirty_</code>) and
+how they mutate state that's conceptually private but part of the
+node's lifecycle.</p>
+<p>The alternative — making every field public — would blur the API. The
+friend approach keeps the public interface small while letting the
+subsystems run the show.</p>
+<p><code>AnimationPlayer</code> also accesses <code>style_.targetStyle.animations</code> and
+<code>style_.currentStyle</code> directly. <code>ScrollController</code> reads
+<code>node.style_.currentStyle</code>. <code>StyleResolver</code> reads <code>node.getParent()</code>,
+<code>node.children</code>, the flags.</p>
+<p><code>FilterRegistry</code> is not a friend — it's a static singleton accessed
+through <code>get()</code>, and <code>applyFilter</code> takes a <code>FilterContext</code> with all the
+information it needs. It only interacts with <code>IRenderer</code> and reads the
+<code>FilterRef</code> from the context.</p>
+<hr />
+<h2 id="8-backend-interface-in-one-paragraph">8. Backend interface in one paragraph</h2>
+<p>The three backend interfaces are the contract with the outside world:</p>
+<ul>
+<li><code>IPlatform</code> gives you <strong>time, input, and viewport</strong>. It's polled once
+  per frame in <code>beginFrame</code>. It has no drawing responsibility.</li>
+<li><code>IRenderer</code> gives you <strong>drawing primitives, text measurement, and
+  compositing state</strong> (clip, transform, effect, target). It's called
+  during <code>draw</code>. Every draw call is inside a single <code>beginFrame</code> /
+  <code>endFrame</code> pair, matching the host's frame boundary.</li>
+<li><code>IAssetProvider</code> gives you <strong>named resources</strong>: fonts, textures,
+  shaders. It's called during style resolution (<code>resolveFont</code>,
+  <code>resolveBgTexture</code>, <code>resolveEffectIfNeeded</code>) and during filter
+  application (<code>FilterRegistry::find</code> returns a def whose <code>shader</code> is
+  resolved via <code>assets-&gt;getEffect(name)</code>).</li>
+</ul>
+<p>The interfaces are small (a few dozen methods total) and never expose
+backend-specific types. The only enum passed across is <code>Feature</code>
+(currently <code>Effects</code> and <code>NestedTargets</code>), so the framework can degrade
+gracefully when a backend doesn't support a feature.</p>
+<p>See <a href="../09-backend/">Backend</a> for the full list of methods and how to
+implement a new one.</p>
+<hr />
+<h2 id="9-testing-strategy">9. Testing strategy</h2>
+<p>The framework is designed to be testable without a window. The
+<code>tests/Mocks.hpp</code> provides:</p>
+<ul>
+<li><code>MockRenderer</code> — records calls, provides a deterministic
+  <code>measureText</code> (8px per char + spacing), tracks clip intersection.</li>
+<li><code>MockPlatform</code> — scriptable pointer, input events, viewport.</li>
+<li><code>MockAssetProvider</code> — returns empty handles (so no assets are loaded
+  in tests).</li>
+<li><code>Env</code> — a fixture that installs the mocks in <code>UIContext</code>, clears
+  <code>Theme</code>, and provides <code>frame(root, dt)</code> and <code>click(root, pos)</code>
+  helpers.</li>
+</ul>
+<p>Tests exercise the real <code>Layout</code> code with these mocks. The mock
+renderer supports <code>supports(Feature::Effects) == false</code>, so filters are
+skipped in tests unless explicitly enabled.</p>
+<p>This is why the framework doesn't have a <code>TestingMode</code> flag or a "headless"
+build variant: the backend abstraction is already the seam.</p>
+<hr />
+<h2 id="10-design-trade-offs">10. Design trade-offs</h2>
+<p>A few decisions worth knowing about:</p>
+<p><strong>Single <code>Layout</code> class, no virtual hierarchy for node types.</strong>
+Widgets are subclasses, but the tree uses <code>shared_ptr&lt;Layout&gt;</code>. There's
+no <code>Widget</code> base, no visitor pattern. Type checks are done by tag name
+or by <code>static_pointer_cast</code> when a typed handle is needed. This is
+simpler than a full class hierarchy but requires discipline (don't
+<code>static_pointer_cast</code> to the wrong type).</p>
+<p><strong>Subsystems as <code>friend</code> structs, not virtual classes.</strong>
+<code>StyleResolver</code>, <code>AnimationPlayer</code>, <code>InputController</code>,
+<code>ScrollController</code> are concrete. There's no polymorphic dispatch between
+them. Adding a new subsystem means adding a member to <code>Layout</code> and a
+new friend declaration. This is faster and simpler than an interface
+hierarchy, but it means you can't swap implementations.</p>
+<p><strong>Style as a flat struct with <code>Opt&lt;T&gt;</code> fields.</strong>
+<code>Style</code> has ~40 fields, each wrapped in <code>Opt&lt;T&gt;</code>. The macro
+<code>BUBBLE_STYLE_PROPS(X)</code> expands to all of them, and every operation
+(overlay, lerp, comparison, iteration) uses the same macro. This is
+verbose at the macro level but keeps the code consistent: adding a
+property means adding one line to the macro and everything else updates.</p>
+<p><strong>Custom properties stored as raw strings, resolved lazily.</strong>
+<code>--x: #FF0000</code> is stored as <code>"#FF0000"</code>. <code>var(--x)</code> is substituted at
+cascade time. This matches CSS and allows custom properties to hold
+values that aren't parseable until the cascade is resolved. The cost is
+a string map per node per frame — measurable but small.</p>
+<p><strong>Transitions per-property, not per-node.</strong>
+Each property in <code>transition:</code> has its own duration and easing. This
+matches CSS but is more complex than a single "duration + easing" per
+node. The implementation uses <code>TransitionSpec</code> and <code>lerpStyleTimed</code>,
+which reads the spec per property.</p>
+<p><strong><code>filters</code> snap, <code>effects</code> push/pop.</strong>
+Filter chains don't interpolate; they switch at <code>t &gt; 0</code>. This is a
+known limitation. The <code>effect:</code> shader is a push/pop around the node's
+draw calls, not a transitioned property. Neither is as flexible as
+CSS's <code>filter:</code> interpolation, but both are simple and predictable.</p>
+<p><strong>Portals are a flag, not a separate tree.</strong>
+A portal is still a child of its logical parent for lifetime purposes.
+Only drawing and hit-testing are rerouted. This means the portal's
+position is computed by the portal itself (via <code>onUpdate</code>), not by the
+parent's <code>arrange</code>. Simpler than a separate portal tree, but the
+positioning responsibility shifts to the widget.</p>
+<p><strong>The frame pipeline is not customizable.</strong>
+You can't override the order of <code>update</code> → <code>measure</code> → <code>arrange</code> →
+<code>draw</code>. Widgets hook in via virtual methods, but the phases are fixed.
+This is intentional — it's what makes the framework's behavior
+predictable across widgets.</p>
+<hr />
+<h2 id="11-where-to-go-next">11. Where to go next</h2>
+<ul>
+<li><strong><a href="../02-lifecycle/">Lifecycle</a></strong> — the exact order of operations per
+  frame, with pseudocode.</li>
+<li><strong><a href="../03-style-system/">Style System</a></strong> — how the cascade resolves, how
+  specificity works, how inheritance propagates.</li>
+<li><strong><a href="../04-animation-system/">Animation System</a></strong> — imperative vs CSS,
+  the overlay mechanism, the dirty system.</li>
+<li><strong><a href="../05-layout-engine/">Layout Engine</a></strong> — intrinsic size, flow
+  algorithms, absolute positioning, dirty tracking.</li>
+<li><strong><a href="../06-render-pipeline/">Render Pipeline</a></strong> — inline vs layer, the
+  filter pass, the transform stack.</li>
+<li><strong><a href="../07-input-system/">Input System</a></strong> — state FSM, focus, capture,
+  the click semantics.</li>
+<li><strong><a href="../08-scroll-system/">Scroll System</a></strong> — <code>ScrollState</code>, arrange
+  expansion, inertia, scrollbar geometry.</li>
+<li><strong><a href="../09-backend/">Backend</a></strong> — implementing <code>IRenderer</code> / <code>IPlatform</code>
+  / <code>IAssetProvider</code>.</li>
+<li><strong><a href="../10-debug/">Debugging</a></strong> — <code>Debug::dump*</code>, <code>Logger</code>, the mock
+  fixture.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
