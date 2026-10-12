@@ -3,6 +3,7 @@ build/
 out/
 obj/
 lib/
+benchmarks/bin/
 *.o
 *.obj
 *.a

@@ -20,13 +20,35 @@ namespace ZenitUI
 		};
 		std::vector<Match> matches;
 
-		for (const auto &r : theme.rules)
+		// Use the by-tag index built by Theme::addRule.
+		//
+		// A rule whose rightmost selector is a tag can only match a
+		// node with that same tag. So we scan only the bucket for the
+		// node's tag, plus the "no tag" bucket (class/id rightmost),
+		// which can match any node.
+		//
+		// ::part rules are not in the index — they are resolved by
+		// `partFor`, not here.
 		{
-			if (!r.part.empty())
-				continue;
-			if (!ruleMatches(r, &node))
-				continue;
-			matches.push_back({&r});
+			const std::string &tag = node.getStyleTag();
+
+			auto it = theme.rulesByTag.find(tag);
+			if (it != theme.rulesByTag.end())
+			{
+				for (size_t idx : it->second)
+				{
+					const auto &r = theme.rules[idx];
+					if (ruleMatches(r, &node))
+						matches.push_back({&r});
+				}
+			}
+
+			for (size_t idx : theme.rulesNoTag)
+			{
+				const auto &r = theme.rules[idx];
+				if (ruleMatches(r, &node))
+					matches.push_back({&r});
+			}
 		}
 
 		std::stable_sort(matches.begin(), matches.end(),
