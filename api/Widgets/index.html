@@ -4646,6 +4646,10 @@ public:
 <td><code>onChange</code></td>
 <td>Fires when selection changes (user or programmatic).</td>
 </tr>
+<tr>
+<td><code>onOpenChanged</code></td>
+<td><code>std::function&lt;void(bool)&gt;</code>. Fires when the dropdown opens (<code>true</code>) or closes (<code>false</code>). Also fires when a disable forces the dropdown closed.</td>
+</tr>
 </tbody>
 </table>
 <h3 id="internal-structure">Internal structure</h3>
@@ -4758,6 +4762,14 @@ public:
 <tr>
 <td><code>hide()</code></td>
 <td>Set opacity to 0, disable input, play <code>"Intro"</code> in reverse.</td>
+</tr>
+<tr>
+<td><code>onShow</code></td>
+<td><code>std::function&lt;void()&gt;</code>. Fires at the end of <code>show()</code>.</td>
+</tr>
+<tr>
+<td><code>onHide</code></td>
+<td><code>std::function&lt;void()&gt;</code>. Fires at the end of <code>hide()</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -4926,6 +4938,10 @@ public:
 <tr>
 <td><code>onClose</code></td>
 <td>Fires on close.</td>
+</tr>
+<tr>
+<td><code>onOpen</code></td>
+<td><code>std::function&lt;void()&gt;</code>. Fires when the popup opens.</td>
 </tr>
 </tbody>
 </table>
