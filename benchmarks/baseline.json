@@ -5,24 +5,25 @@
 # A change of more than 20% (either direction) is flagged by
 # `bench --check`.
 
-parse.zstyle.200rules 495
-parse.zmarkup.100elements 3.8
-micro.Value.construct_1term 0.004225
-micro.Value.construct_2term 0.017083
-micro.Value.lerp 0.01846
-micro.ComputedStyle.from 0.512345
-micro.ComputedStyle.copy 0.645965
-micro.evaluateKeyframes 0.32579
-micro.tickCss.100 10.057
-micro.tickImperative.100 198.756
-micro.tree.addChild.1000 32.52
-micro.tree.removeAllChildren.1000 14.35
-micro.SmallVector.push_back_inline 0.002829
-system.frame.static100 164.396
-system.frame.200rules 1632.78
-system.frame.transitions100 168.602
-system.frame.animated100 275.022
-system.frame.wide200 315.304
-system.frame.layout_stress 179.986
-system.frame.mixed200 481.83
-system.frame.large1000 1653.1
+parse.zstyle.200rules 471.6
+parse.zmarkup.100elements 3.855
+micro.Value.construct_1term 0.003221
+micro.Value.construct_2term 0.017051
+micro.Value.lerp 0.018297
+micro.ComputedStyle.from 0.66201
+micro.ComputedStyle.copy 0.612675
+micro.evaluateKeyframes 0.315005
+micro.tickCss.100 0.889
+micro.tickCssAndOverlay.100 33.019
+micro.tickImperative.100 40.916
+micro.tree.addChild.1000 32.255
+micro.tree.removeAllChildren.1000 13.435
+micro.SmallVector.push_back_inline 0.002732
+system.frame.static100 42.7
+system.frame.200rules 296.815
+system.frame.transitions100 52.802
+system.frame.animated100 113.026
+system.frame.wide200 85.39
+system.frame.layout_stress 47.932
+system.frame.mixed200 118.468
+system.frame.large1000 498.455
