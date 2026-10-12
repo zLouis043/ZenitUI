@@ -740,17 +740,66 @@ if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM) {
 }
 ```
 
-### 7.5 Effect on the same node as a filter
+### 7.5 `effect:` and `filter:` on the same node
 
-If a node has both `filter:` and `effect:`:
+A node can have both properties at once. They operate at different
+levels of the render pipeline, and understanding which is which
+explains why the combination behaves the way it does.
 
-1. The effect is applied **inside** the render target — every draw call
-   in the subtree gets the shader.
-2. Then the filter chain processes the composited result.
+#### What each one does
 
-This means the effect is applied twice-ish: once per draw call inside
-the target, and the result is then filtered. Usually not what you want.
-Pick one.
+**`effect:`** pushes a shader around the node's own draw calls. Every
+primitive the node draws (background, border, text, children) is
+rasterized with the shader active. The shader sees each primitive
+individually — it does not see the composited subtree image.
+
+**`filter:`** renders the subtree into an offscreen target, then runs
+the filter chain on the composited image. The filter sees the whole
+subtree at once, with all its layers already blended.
+
+#### What happens when both are set
+
+1. The effect shader is pushed.
+2. The subtree is rendered into `layerTarget_` with the shader active.
+   So each draw call inside the subtree is processed by the shader
+   **individually**.
+3. The filter chain runs on the resulting composited image.
+
+The result: the shader is applied N times, once per draw call inside
+the subtree. Then the composite is filtered.
+
+#### Why this is intentional
+
+The two properties serve different purposes:
+
+- **`effect:`** is for per-primitive shaders: hue rotation on a specific
+  shape, custom vertex manipulation, a per-fragment tint that must be
+  applied to the node's geometry directly. When applied to a single
+  primitive, it's cheap and predictable.
+- **`filter:`** is for image-level effects: blur, drop-shadow, sepia,
+  anything that needs to read neighboring pixels of the composited
+  result.
+
+Using them together is rare but valid — for example, a node that
+needs a per-primitive hue shift **and** a global blur on top.
+
+#### When NOT to combine them
+
+If you want a single shader to process the **composited subtree**, use
+`filter:` with a `Custom` filter that pushes the shader. This gives
+you the "one shader, whole image" semantics without the per-draw-call
+multiplication.
+
+If you want per-primitive processing only, use `effect:` alone. Don't
+add a `filter:` unless you actually need image-level composition.
+
+#### Cost
+
+Both properties are more expensive than either alone. The effect adds
+a shader push/pop around each draw call inside the subtree; the filter
+adds a render target and at least one full-screen pass. Combining them
+means paying both costs. If you're seeing performance issues on a
+specific node, check whether both are actually needed.
 
 ---
 

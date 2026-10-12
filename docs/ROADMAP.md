@@ -881,27 +881,38 @@ invalid one is the last in the chain and writes to `ctx.region` with
 - [x] Update `internals/06-render-pipeline.md` §4.5 and Pitfalls
 - [x] Update `api/FilterRegistry.md` §6 and §7
 
-**5.4b — `effect:` and `filter:` on the same node.** When both are set,
-the effect shader is pushed inside the layer target (applies to each
-draw call), then the filter chain processes the composited result.
-The visual outcome is "effect applied N times (once per draw call),
-then filter", not "effect on the composited subtree, then filter".
+**5.4b — `effect:` and `filter:` on the same node.** ✅ Done (documentation).
 
-Options:
-- Leave as is, document the behavior explicitly in `09-effects.md`.
-- Route `effect:` through the layer pipeline too (one extra pass in the
-  target) so it operates on the composited image like a `filter:`.
-- Unify both: make `effect:` a special case of `filter:` with a
-  single-pass pipeline.
+The two properties operate at different pipeline levels:
 
-The unification (option 3) is the cleanest but the largest change.
-It would collapse the two properties into one and simplify the mental
-model — at the cost of a breaking change to the `.zstyle` surface.
+- `effect:` pushes a shader around the node's own draw calls. Each
+  primitive is processed individually — the shader does not see the
+  composited subtree.
+- `filter:` renders the subtree into a target and processes the
+  composited image.
 
-- [ ] Decide between documenting or unifying
-- [ ] Implement
-- [ ] Add tests
-- [ ] Update docs (`09-effects.md`, `06-render-pipeline.md`, `05-zstyle.md`)
+When both are set, the effect runs first (during the subtree render
+into the layer target, once per draw call), then the filter chain
+runs on the composite. This is intentional: the two serve different
+purposes and combining them is valid but rare.
+
+Decision: document rather than unify. Unifying would collapse the
+two properties into one at the cost of a breaking change to the
+`.zstyle` surface, and would lose the ability to express per-primitive
+shaders. Not worth it for a rare use case.
+
+- [x] Document the behavior in `user/09-effects.md` §7.5
+- [x] Explain the pipeline order, when each is appropriate, and how
+      to get "one shader on the composite" semantics via a `Custom`
+      filter
+- [x] Note the cost when both are used together
+- [ ] (Deferred) If per-primitive shader needs grow, revisit and
+      consider making `effect:` a shorthand for a single-pass
+      `Custom` filter that operates on the composite
+
+A future revisit could unify `effect:` as a shorthand for a
+single-pass `Custom` filter, but the current split is preserved
+because it covers the per-primitive use case cleanly.
 
 ### 5.5 Nested render targets
 
