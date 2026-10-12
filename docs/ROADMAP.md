@@ -943,7 +943,7 @@ Compute the bounding box of the transformed rect including rotation.
 
 ### 5.8 `Layout::hasClass`, `Layout::hasId`
 
-- [ ] Simple accessors
+- [x] Simple accessors
 
 ### 5.9 Vector accessor for callbacks
 

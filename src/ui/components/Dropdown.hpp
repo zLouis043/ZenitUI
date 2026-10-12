@@ -35,9 +35,12 @@ namespace ZenitUI::UI
                 return;
             isOpen = o;
             applyOpenState();
+            if (onOpenChanged)
+                onOpenChanged(isOpen);
         }
 
         std::function<void(int, const std::string &)> onChange;
+        std::function<void(bool)> onOpenChanged;
 
     protected:
         void onEnabledChanged(bool nowEnabled) override
@@ -46,6 +49,8 @@ namespace ZenitUI::UI
             {
                 isOpen = false;
                 applyOpenState();
+                if (onOpenChanged)
+                    onOpenChanged(false);
             }
         }
 

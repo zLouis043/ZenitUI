@@ -582,6 +582,7 @@ public:
 | `setSelected(int)` | Programmatic selection. Fires `onChange`. |
 | `getOpen()` / `setOpen(bool)` | Open state control. |
 | `onChange` | Fires when selection changes (user or programmatic). |
+| `onOpenChanged` | `std::function<void(bool)>`. Fires when the dropdown opens (`true`) or closes (`false`). Also fires when a disable forces the dropdown closed. |
 
 ### Internal structure
 
@@ -709,6 +710,8 @@ public:
 |--------|-------------|
 | `show()` | Set opacity to 1, enable input, play `"Intro"` forward. |
 | `hide()` | Set opacity to 0, disable input, play `"Intro"` in reverse. |
+| `onShow` | `std::function<void()>`. Fires at the end of `show()`. |
+| `onHide` | `std::function<void()>`. Fires at the end of `hide()`. |
 
 ### Structure
 
@@ -851,6 +854,7 @@ public:
 | `closeOnEscape` | Close on `Escape`. Default `true`. |
 | `offsetBelow` | Distance from anchor. Default `4.0f`. |
 | `onClose` | Fires on close. |
+| `onOpen` | `std::function<void()>`. Fires when the popup opens. |
 
 ### Behavior
 
