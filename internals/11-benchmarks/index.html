@@ -1398,16 +1398,89 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-is-measured" class="md-nav__link">
+    <nav class="md-nav" aria-label="Running locally">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-the-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is measured
+        Updating the baseline
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#framework-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Framework design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-median-not-best-of-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why median, not best-of-N
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preventing-dead-code-elimination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing dead-code elimination
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-five-frame-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five frame scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1488,95 +1561,231 @@
 
 <h1 id="benchmarks">Benchmarks</h1>
 <p>ZenitUI has a set of benchmarks that track the performance of the
-core subsystems over time. They run on every push to <code>main</code>/<code>master</code>
-and comment on every pull request.</p>
+core subsystems over time. They run on every push to <code>main</code>/<code>master</code>,
+comment on every pull request, and generate a chart on
+<a href="https://zlouis043.github.io/ZenitUI/dev/bench/">the project's GitHub Pages site</a>.</p>
 <h2 id="running-locally">Running locally</h2>
 <p>From the repository root:</p>
 <pre><code class="language-bash">make bench-run
 </code></pre>
-<p>This builds <code>lib/libzenit.a</code> and <code>benchmarks/bin/bench</code>, then runs
-the benchmarks with human-readable output.</p>
+<p>This builds <code>lib/libzenit.a</code> and <code>benchmarks/bin/bench</code>, runs all
+benchmarks, and compares the results against <code>benchmarks/baseline.json</code>.</p>
+<p>Output is human-readable: one line per benchmark with median, best,
+worst, and standard deviation. At the end, a comparison table shows the
+delta against the baseline, with <code>! REG</code> on regressions above 20% and
+<code>+ IMP</code> on improvements above 20%.</p>
 <p>For JSON output (used by CI):</p>
 <pre><code class="language-bash">./benchmarks/bin/bench --json
 </code></pre>
-<h2 id="what-is-measured">What is measured</h2>
+<h3 id="updating-the-baseline">Updating the baseline</h3>
+<p>When a benchmark change is intentional (an optimization that shifts
+values by more than noise), regenerate the baseline:</p>
+<pre><code class="language-bash">make bench-update
+</code></pre>
+<p>This overwrites <code>benchmarks/baseline.json</code> with the current medians.
+The file is versioned and should be committed together with the change
+that motivated it.</p>
+<p><strong>Don't update the baseline to silence a regression.</strong> If a benchmark
+got slower, investigate first. The baseline tracks the current <em>known
+good</em> state of the framework.</p>
+<h2 id="framework-design">Framework design</h2>
+<p>The benchmarks live in <code>benchmarks/</code>:</p>
+<ul>
+<li><code>bench_framework.hpp</code> — the runner (header-only).</li>
+<li><code>benches.cpp</code> — the benchmark definitions.</li>
+<li><code>main.cpp</code> — entry point.</li>
+<li><code>baseline.json</code> — the current reference values.</li>
+</ul>
+<p>Each benchmark is a <code>Runner::add</code> call with:</p>
+<ul>
+<li>A <strong>name</strong> (<code>area.subarea.name</code>, e.g. <code>micro.Value.construct_1term</code>).</li>
+<li>A <strong>category</strong> (used for grouping in the human output).</li>
+<li><strong>Iterations</strong> per run (the body is called this many times between
+  the two clock reads).</li>
+<li>A <strong>setup</strong> callback (called before every run, including the
+  warm-up, to restore a known state).</li>
+<li>A <strong>body</strong> callback (called <code>iterations</code> times per run).</li>
+</ul>
+<p>The runner:</p>
+<ol>
+<li>Runs the body once as a warm-up (not measured).</li>
+<li>For each of 5 repeats: calls setup, then times <code>iterations</code> calls
+   to body.</li>
+<li>Reports the <strong>median</strong> of the 5 runs.</li>
+</ol>
+<h3 id="why-median-not-best-of-n">Why median, not best-of-N</h3>
+<ul>
+<li><strong>Best-of-N hides regressions.</strong> A regression that only slows the
+  typical case but leaves the best case untouched will not show up.</li>
+<li><strong>Median is robust to scheduler noise.</strong> On shared CI runners,
+  occasional slow runs are common; the median ignores them.</li>
+<li><strong>Median is stable with few runs.</strong> Five samples are enough for a
+  reliable median, while best-of-N needs many more to be meaningful.</li>
+</ul>
+<p>The <code>best</code>, <code>worst</code>, and <code>stddev</code> are reported for diagnostics. If
+<code>stddev / median</code> exceeds 15%, the runner flags the entry as noisy.</p>
+<h3 id="preventing-dead-code-elimination">Preventing dead-code elimination</h3>
+<p>Bodies write to a global <code>g_sink</code> (a <code>float</code>), which <code>main</code> reads once
+at the end. Without this, the compiler would eliminate the entire body
+of a micro-benchmark that has no observable output.</p>
+<h2 id="coverage">Coverage</h2>
+<p>The 24 benchmarks cover every area of the framework where per-frame
+or per-operation cost matters. The areas are fixed: a new one is added
+only if the framework gains a new subsystem, and removed only if a
+subsystem disappears in a rewrite.</p>
 <table>
 <thead>
 <tr>
-<th>Benchmark</th>
-<th>Measures</th>
+<th>Category</th>
+<th>Benchmarks</th>
+<th>What they measure</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Value x1 term (Px)</code></td>
-<td>Construction of a single-term <code>Value</code> (e.g. <code>Px(8)</code>).</td>
+<td><code>parsing</code></td>
+<td><code>zstyle.200rules</code>, <code>zmarkup.100elements</code></td>
+<td><code>loadStyleString</code> and <code>ZMarkup::build</code></td>
 </tr>
 <tr>
-<td><code>Value x2 terms (calc)</code></td>
-<td>Construction of a two-term <code>Value</code> (e.g. <code>calc(100% - 20px)</code>).</td>
+<td><code>value</code></td>
+<td><code>construct_1term</code>, <code>construct_2term</code>, <code>lerp</code></td>
+<td><code>Value</code> construction and interpolation</td>
 </tr>
 <tr>
-<td><code>ComputedStyle default + assign</code></td>
-<td>Constructing a <code>ComputedStyle</code> from scratch, then assigning it.</td>
+<td><code>computed_style</code></td>
+<td><code>from</code>, <code>copy</code></td>
+<td><code>ComputedStyle</code> resolution and copy</td>
 </tr>
 <tr>
-<td><code>ComputedStyle copy</code></td>
-<td>Copy-assigning an existing <code>ComputedStyle</code>.</td>
+<td><code>animation</code></td>
+<td><code>evaluateKeyframes</code>, <code>tickCss.100</code>, <code>tickImperative.100</code></td>
+<td>Keyframe evaluation and animation ticks</td>
 </tr>
 <tr>
-<td><code>frame loop 100 nodes</code></td>
-<td>Full <code>frame()</code> on a 100-node tree with hover transitions, using the mock renderer.</td>
+<td><code>tree</code></td>
+<td><code>addChild.1000</code>, <code>removeAllChildren.1000</code></td>
+<td>Tree mutation</td>
+</tr>
+<tr>
+<td><code>small_vector</code></td>
+<td><code>push_back_inline</code></td>
+<td>The <code>SmallVector</code> container</td>
+</tr>
+<tr>
+<td><code>frame</code></td>
+<td><code>static100</code>, <code>200rules</code>, <code>transitions100</code>, <code>animated100</code>, <code>wide200</code></td>
+<td>Full frame loop in different scenarios</td>
 </tr>
 </tbody>
 </table>
-<p>All benchmarks report the <strong>best of 3 runs</strong>, in microseconds per
-iteration. Lower is better.</p>
+<h3 id="the-five-frame-scenarios">The five frame scenarios</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Nodes</th>
+<th>Rules</th>
+<th>Active state changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system.frame.static100</code></td>
+<td>100</td>
+<td>0</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>system.frame.200rules</code></td>
+<td>100</td>
+<td>200</td>
+<td>Style re-resolve on every node per frame</td>
+</tr>
+<tr>
+<td><code>system.frame.transitions100</code></td>
+<td>100</td>
+<td>2</td>
+<td>Hover transitions on alternating nodes</td>
+</tr>
+<tr>
+<td><code>system.frame.animated100</code></td>
+<td>100</td>
+<td>1 (<code>@keyframes</code>)</td>
+<td>CSS animation on every node</td>
+</tr>
+<tr>
+<td><code>system.frame.wide200</code></td>
+<td>200 siblings</td>
+<td>0</td>
+<td>Z-index sort on every frame</td>
+</tr>
+</tbody>
+</table>
+<p>Together they cover the four hot paths in <code>Layout::update</code> /
+<code>Layout::measure</code> / <code>Layout::draw</code>: caching, style resolution,
+transitions, animation overlay, and z-sorting.</p>
 <h2 id="where-results-are-stored">Where results are stored</h2>
 <p>The <code>github-action-benchmark</code> action pushes results to the <code>gh-pages</code>
-branch, under <code>dev/bench/</code>. The rendered chart is available at:</p>
+branch, under <code>dev/bench/</code>. The rendered chart is at:</p>
 <pre><code>https://zlouis043.github.io/ZenitUI/dev/bench/
 </code></pre>
-<p>Each benchmark has its own line, with a history of all pushes.</p>
+<p>Each benchmark has its own line. The values are medians in
+microseconds; lower is better.</p>
 <h2 id="reading-the-chart">Reading the chart</h2>
 <p>The absolute numbers depend on the CI runner (a shared GitHub-hosted
 Ubuntu machine) and are <strong>not</strong> comparable to local numbers on your
-own machine. What matters is the <strong>trend</strong>: a sudden jump on a specific
-push indicates a regression introduced by that commit.</p>
-<p>CI noise on the same runner is typically 5-15%. The alert threshold is
-set to 150% (i.e. a benchmark that becomes 1.5× slower triggers a
-comment on the PR), which is loose enough to avoid false positives.</p>
+own machine. What matters is the <strong>trend</strong>: a sudden jump on a
+specific push indicates a regression introduced by that commit.</p>
+<p>CI noise on the same runner is typically 5-15%. The alert threshold
+is set to 150% — a benchmark has to become 1.5× slower to trigger a
+PR comment. This is loose enough to avoid false positives while still
+catching real regressions.</p>
+<p>The <code>baseline.json</code> file in the repo is a <strong>local</strong> reference,
+separate from the CI chart. It captures the developer's "known good"
+state on their machine and is used by <code>make bench-run</code>.</p>
 <h2 id="adding-a-new-benchmark">Adding a new benchmark</h2>
 <ol>
-<li>Open <code>benchmarks/bench.cpp</code>.</li>
-<li>Add a new <code>bench_*</code> function using <code>best_of(...)</code>.</li>
-<li>Call it from <code>main</code>, in the appropriate section.</li>
-<li>The JSON output is generated automatically — no extra config.</li>
+<li>Open <code>benchmarks/benches.cpp</code>.</li>
+<li>Add a new <code>R.add(...)</code> call in the appropriate category.</li>
+<li>If the body operates on pre-built data, add the shared storage to
+   the anonymous namespace at the top of the file and rebuild it in
+   <code>setup()</code>.</li>
 </ol>
-<p>Use the same iteration counts as the existing benchmarks (in the
-millions for micro, hundreds of thousands for <code>ComputedStyle</code>, and
-<code>NODES * FRAMES</code> for the frame loop). If a benchmark takes less than
-a few milliseconds to run, it's too fast to be reliable; increase
-<code>repeats</code>.</p>
+<p>Use iteration counts that give each run at least a few milliseconds
+of work:</p>
+<ul>
+<li>Micro-benchmarks (single operations): millions of iterations.</li>
+<li>Small scenarios (100-element loops): thousands of iterations.</li>
+<li>Frame loops: hundreds of frames.</li>
+</ul>
+<p>If a run takes less than 1 ms, increase <code>iterations</code>.</p>
 <h2 id="pitfalls">Pitfalls</h2>
-<p><strong>Numbers vary between runs.</strong> A single CI run is not authoritative;
-look at the trend across several runs.</p>
-<p><strong>Benchmarks are not precision measurements.</strong> They are smoke tests
-for "did something get significantly slower". Treat a 20% swing as
-noise; treat a 200% swing as a real regression.</p>
+<p><strong>Numbers vary between runs.</strong> A single run is not authoritative; look
+at the trend across several runs.</p>
+<p><strong>Benchmarks are smoke tests, not precision measurements.</strong> They catch
+"did something get significantly slower". Treat a 20% swing as noise;
+treat a 200% swing as a real regression.</p>
 <p><strong>The mock renderer is used.</strong> No GPU work is measured. What's
-measured is the layout, style, and update logic, which is where the
-bulk of the per-frame CPU cost lives.</p>
-<p><strong>The frame loop only exercises ~20 nodes of the 100.</strong> The frustum
-culling skips nodes outside the viewport. To stress the full tree,
-either use a smaller viewport, or make the tree wider than the
-viewport.</p>
+measured is the layout, style, and update logic — the CPU cost per
+frame. Backend timing is out of scope; use a profiler for that.</p>
+<p><strong>Local numbers and CI numbers are not comparable.</strong> Different CPUs,
+different scheduling, different OS. Only the trend on a single system
+is meaningful.</p>
+<p><strong>The baseline is per-machine.</strong> If you develop on two machines (say,
+a desktop and a laptop), the baseline committed by one may not match
+the other. Either keep a single-machine baseline and ignore the
+comparison output on the other, or use the <code>--update</code> flag per machine
+and don't commit.</p>
+<p><strong>Frame benchmarks use the mock renderer with a small viewport.</strong> Only
+about 20 of 100 nodes are visible after frustum culling. To stress the
+full tree, either use a smaller viewport or a wider tree.</p>
 <h2 id="see-also">See also</h2>
 <ul>
 <li><a href="../../ROADMAP/">ROADMAP</a> — Phase 4 tracks the benchmarked
   optimizations.</li>
 <li><a href="../10-debug/">Debugging</a> — the test fixture used by the frame
-  benchmark.</li>
+  benchmarks.</li>
 </ul>
 
 
