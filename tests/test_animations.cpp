@@ -225,3 +225,52 @@ TEST(Anim_imperative, drives_current_style_without_transition)
 
     CHECK_NEAR(node->getStyle().opacity, 1.0f, 1e-3);
 }
+
+// ---------- sampleActiveCached ----------
+
+TEST(Anim_sampleActiveCached, returns_same_value_as_sampleActive)
+{
+    ActiveCssAnimation a;
+    a.duration = 1.0f;
+    a.iterations = 4;
+    a.alternate = true;
+    a.elapsed = 1.75f;
+
+    bool fin1 = false;
+    float t1 = sampleActive(a, fin1);
+
+    bool fin2 = false;
+    float t2 = sampleActiveCached(a, fin2);
+
+    CHECK_NEAR(t1, t2, 1e-6);
+    CHECK(fin1 == fin2);
+}
+
+TEST(Anim_sampleActiveCached, reuses_cache_when_elapsed_unchanged)
+{
+    ActiveCssAnimation a;
+    a.duration = 1.0f;
+    a.iterations = 1;
+    a.elapsed = 0.5f;
+
+    // Prime the cache.
+    bool fin1 = false;
+    float t1 = sampleActiveCached(a, fin1);
+    CHECK_NEAR(t1, 0.5f, 1e-4);
+    CHECK_NEAR(a.cachedSampleElapsed, 0.5f, 1e-6);
+
+    // Change elapsed to a value that would give a different result,
+    // but don't touch the cache: the second call must recompute.
+    a.elapsed = 0.75f;
+    bool fin2 = false;
+    float t2 = sampleActiveCached(a, fin2);
+    CHECK_NEAR(t2, 0.75f, 1e-4);
+    CHECK_NEAR(a.cachedSampleElapsed, 0.75f, 1e-6);
+
+    // Call again without changing elapsed: the cached value is
+    // returned and cachedSampleElapsed doesn't move.
+    bool fin3 = false;
+    float t3 = sampleActiveCached(a, fin3);
+    CHECK_NEAR(t3, 0.75f, 1e-4);
+    CHECK_NEAR(a.cachedSampleElapsed, 0.75f, 1e-6);
+}

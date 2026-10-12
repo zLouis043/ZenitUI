@@ -226,6 +226,35 @@ namespace Bench
               Anim::tickIncremental(sharedTickCssAnims(), 1.0f / 60.0f);
               g_sink += (float)sharedTickCssAnims().size(); });
 
+        R.add("micro.tickCssAndOverlay.100", "animation",
+              /*iterations=*/1000,
+              /*setup=*/[]
+              {
+          Theme::get().clear();
+          ZMarkup::loadStyleString(R"(
+              @keyframes k { 0% { opacity: 0.0; } 100% { opacity: 1.0; } }
+          )");
+          auto& anims = sharedTickCssAnims();
+          anims.clear();
+          for (int i = 0; i < 100; ++i)
+          {
+              ActiveCssAnimation a;
+              a.name       = "k";
+              a.duration   = 1.0f;
+              a.iterations = -1;
+              a.elapsed    = 0.5f;
+              anims.push_back(a);
+          } },
+              /*body=*/[]
+              {
+          auto& anims = sharedTickCssAnims();
+          // Tick: advances elapsed and populates the cache.
+          Anim::tickIncremental(anims, 1.0f / 60.0f);
+          // Overlay: reads the cache instead of recomputing sampleActive.
+          ComputedStyle out;
+          Anim::overlayCssComputed(out, anims);
+          g_sink += (float)anims.size(); });
+
         R.add("micro.tickImperative.100", "animation",
               /*iterations=*/500,
               /*setup=*/[]
