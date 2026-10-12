@@ -90,7 +90,7 @@ of a micro-benchmark that has no observable output.
 
 ## Coverage
 
-The 24 benchmarks cover every area of the framework where per-frame
+The 27 benchmarks cover every area of the framework where per-frame
 or per-operation cost matters. The areas are fixed: a new one is added
 only if the framework gains a new subsystem, and removed only if a
 subsystem disappears in a rewrite.
@@ -103,21 +103,31 @@ subsystem disappears in a rewrite.
 | `animation` | `evaluateKeyframes`, `tickCss.100`, `tickImperative.100` | Keyframe evaluation and animation ticks |
 | `tree` | `addChild.1000`, `removeAllChildren.1000` | Tree mutation |
 | `small_vector` | `push_back_inline` | The `SmallVector` container |
-| `frame` | `static100`, `200rules`, `transitions100`, `animated100`, `wide200` | Full frame loop in different scenarios |
+| `frame` | `static100`, `layout_stress`, `200rules`, `transitions100`, `animated100`, `wide200`, `mixed200`, `large1000` | Full frame loop in different scenarios |
 
-### The five frame scenarios
+### The frame scenarios
 
-| Name | Nodes | Rules | Active state changes |
-|------|-------|-------|----------------------|
-| `system.frame.static100` | 100 | 0 | None |
+| Name | Nodes | Rules | Active state |
+|------|-------|-------|--------------|
+| `system.frame.static100` | 100 | 0 | None (measures tree traversal + draw culling only) |
+| `system.frame.layout_stress` | 100 | 0 | Container width toggles each frame (forces measure + arrange) |
 | `system.frame.200rules` | 100 | 200 | Style re-resolve on every node per frame |
 | `system.frame.transitions100` | 100 | 2 | Hover transitions on alternating nodes |
 | `system.frame.animated100` | 100 | 1 (`@keyframes`) | CSS animation on every node |
 | `system.frame.wide200` | 200 siblings | 0 | Z-index sort on every frame |
+| `system.frame.mixed200` | 200 | 2 | 1 animated, 1 hovered, 10 dirty, 188 static |
+| `system.frame.large1000` | 1000 | 0 | Long list with frustum culling |
 
-Together they cover the four hot paths in `Layout::update` /
-`Layout::measure` / `Layout::draw`: caching, style resolution,
-transitions, animation overlay, and z-sorting.
+The five original scenarios cover individual hot paths in isolation.
+The three added after review cover the cases that don't show up in
+those isolated tests:
+
+- `layout_stress` measures the real measure + arrange cost, not the
+  early-exit tree traversal that `static100` measures.
+- `mixed200` measures the shape of a real frame, where only a
+  fraction of the nodes change in any given frame.
+- `large1000` measures the cost of iterating a large tree with culling
+  active — the realistic case for a long scrollable list.
 
 ## Where results are stored
 
