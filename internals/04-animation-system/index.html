@@ -1344,6 +1344,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#24b-sampleactivecached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4b sampleActiveCached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#25-evaluatekeyframes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2164,6 +2175,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#24b-sampleactivecached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4b sampleActiveCached
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#25-evaluatekeyframes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2939,6 +2961,45 @@ Sets <code>finished</code> if the total elapsed exceeds the total duration.</p>
 edge case where <code>elapsed</code> exactly equals <code>total</code>: without the clamp,
 <code>floor(t / duration)</code> would point to the <em>next</em> iteration, which
 doesn't exist.</p>
+<h3 id="24b-sampleactivecached">2.4b <code>sampleActiveCached</code></h3>
+<p><code>sampleActiveCached</code> is a thin wrapper around <code>sampleActive</code> that
+caches the result keyed on <code>elapsed</code>. It exists because on every frame
+<code>sampleActive</code> is called twice per animation:</p>
+<ol>
+<li>In <code>tickIncremental</code> (or <code>tickAbsolute</code>), to detect whether the
+   animation just finished.</li>
+<li>In <code>overlayCssComputed</code> (or <code>overlayCssStyle</code>), to compute <code>localT</code>
+   for the keyframe evaluation.</li>
+</ol>
+<p>Between those two calls, <code>elapsed</code> doesn't change (the tick advances
+it, the overlay reads it). The cached result is therefore guaranteed
+to be identical, and the second call is free.</p>
+<pre><code class="language-cpp">inline float sampleActiveCached(const ActiveCssAnimation&amp; a, bool&amp; finished) {
+    if (a.cachedSampleElapsed == a.elapsed) {
+        finished = a.cachedFinished;
+        return a.cachedLocalT;
+    }
+    a.cachedLocalT = sampleActive(a, finished);
+    a.cachedFinished = finished;
+    a.cachedSampleElapsed = a.elapsed;
+    return a.cachedLocalT;
+}
+</code></pre>
+<p>The cache fields on <code>ActiveCssAnimation</code> are <code>mutable</code>, because
+<code>sampleActive</code> is logically a read-only query — it doesn't change the
+animation's timing, only reports what the current state is.</p>
+<p>The cache is invalidated automatically whenever <code>elapsed</code> differs from
+<code>cachedSampleElapsed</code>. There's no frame counter involved: the elapsed
+time itself is the cache key. This means the cache survives across
+frames if <code>dt == 0</code> (nothing changed), and is invalidated on the first
+frame where the animation advances.</p>
+<p><strong>Note on the implementation vs the ROADMAP entry.</strong> The ROADMAP
+originally proposed caching <code>evaluateKeyframes</code>, on the assumption that
+it was evaluated twice per frame. Reading the actual code shows that's
+not the case: <code>evaluateKeyframes</code> is only called from the overlay
+phase, once per frame. The double call is on <code>sampleActive</code>, which is
+cheaper but still measurable across many animations. The implemented
+fix targets <code>sampleActive</code>, which is the actual hotspot.</p>
 <h3 id="25-evaluatekeyframes">2.5 <code>evaluateKeyframes</code></h3>
 <pre><code class="language-cpp">inline Style evaluateKeyframes(const KeyframeAnimation&amp; anim,
                                 float localT,

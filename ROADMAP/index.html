@@ -2717,16 +2717,33 @@ the matching cost.</p>
 <li>[x] Handle invalidation correctly (<code>clear</code> resets both indices)</li>
 </ul>
 <h3 id="44-cache-animation-evaluation">4.4 Cache animation evaluation</h3>
-<p><code>tickIncremental</code> evaluates the keyframe to detect finish;
-<code>overlayCssComputed</code> evaluates it again to apply. Each evaluation
-iterates ~45 properties.</p>
-<p><strong>Fix:</strong> store the last-evaluated <code>Style</code> in the <code>ActiveCssAnimation</code>
-and reuse it if the elapsed time hasn't changed between the two calls.</p>
+<p><strong>Severity:</strong> low — measurable improvement, not blocking.</p>
+<p><strong>Location:</strong> <code>src/ui/AnimPrimitives.hpp</code>, <code>src/ui/layout/AnimationPlayer.cpp</code>.</p>
+<p><strong>Problem:</strong> <code>sampleActive</code> is called twice per animation per frame:
+once in the tick phase (<code>tickIncremental</code> / <code>tickAbsolute</code>) to detect
+whether the animation just finished, and once in the overlay phase
+(<code>overlayCssComputed</code> / <code>overlayCssStyle</code>) to compute <code>localT</code> for the
+keyframe evaluation. Between the two calls, <code>elapsed</code> doesn't change,
+so the second call is guaranteed to return the same value as the first.</p>
+<p><strong>Expected:</strong> compute <code>sampleActive</code> once per animation per frame and
+reuse the result in the overlay phase.</p>
+<p><strong>Fix (implemented):</strong> added <code>sampleActiveCached</code>, a thin wrapper around
+<code>sampleActive</code> that caches <code>localT</code> and <code>finished</code> keyed on <code>elapsed</code>.
+The cache fields (<code>cachedSampleElapsed</code>, <code>cachedLocalT</code>, <code>cachedFinished</code>)
+are <code>mutable</code> on <code>ActiveCssAnimation</code> because <code>sampleActive</code> is logically
+a read-only query. There's no frame counter: the elapsed time itself is
+the cache key, so the cache is invalidated automatically whenever the
+animation advances, and it survives across frames if <code>dt == 0</code>.</p>
+<p><strong>Benchmark:</strong> <code>micro.tickCss.100</code> improved by 9.1% (10.06 → 9.14 µs).
+<code>system.frame.animated100</code> improved by 1.8% (275 → 270 µs).</p>
 <ul>
-<li>[ ] Add <code>Style cachedFrame</code> to <code>ActiveCssAnimation</code></li>
-<li>[ ] Add a <code>uint32_t cacheKey</code> (frame number or elapsed timestamp)</li>
-<li>[ ] Set / check the cache in the two call sites</li>
-<li>[ ] Benchmark</li>
+<li>[x] Add <code>cachedSampleElapsed</code> / <code>cachedLocalT</code> / <code>cachedFinished</code> to <code>ActiveCssAnimation</code></li>
+<li>[x] Add <code>sampleActiveCached</code> wrapper in <code>AnimPrimitives.hpp</code></li>
+<li>[x] Use <code>sampleActiveCached</code> in <code>tickIncremental</code>, <code>tickAbsolute</code>,
+      <code>overlayCssStyle</code>, <code>overlayCssComputed</code></li>
+<li>[x] Add <code>micro.tickCssAndOverlay.100</code> benchmark</li>
+<li>[x] Add regression tests in <code>test_animations.cpp</code></li>
+<li>[x] Update <code>internals/04-animation-system.md</code></li>
 </ul>
 <h3 id="45-avoid-double-resolvefor-per-frame">4.5 Avoid double <code>resolveFor</code> per frame</h3>
 <p>When a node has a <code>pendingTransition</code>, <code>update</code> calls <code>resolveFor</code> and
