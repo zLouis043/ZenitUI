@@ -633,18 +633,36 @@ measurable fraction of the frame budget.
 stylesheets with hundreds of rules and nodes that change state
 frequently, this is a hotspot.
 
-**Fix:** build an index `unordered_map<string, vector<size_t>>` mapping
-tag names to rule indices. A rule with a tag in its `chain.back()` is
-indexed; rules with only a class / id in `chain.back()` go into a
-"no-tag" bucket that's always scanned.
+**Fix:** `Theme` now maintains two indices, updated incrementally by
+`addRule`:
 
-The index is built lazily and invalidated when `Theme::addRule` is
-called.
+- `rulesByTag[tag]` — rules whose rightmost selector is that tag.
+- `rulesNoTag` — rules whose rightmost selector is a class or an id
+  (they can match any node and must always be tested).
 
-- [ ] Add the index to `Theme`
-- [ ] Update `resolveFor` to use it
-- [ ] Benchmark with a large stylesheet
-- [ ] Handle invalidation correctly
+`resolveFor` scans only the bucket for the node's tag plus
+`rulesNoTag`, instead of the full rule list. `::part` rules are not
+indexed; they are resolved by `partFor`, not by `resolveFor`.
+
+**Benchmark:** `system.frame.200rules` — 100 nodes, 200 rules, style
+re-resolve on every node per frame.
+
+| Before 4.3 (estimated) | After 4.3 | 
+|------------------------|-----------|
+| ~2.3 ms per frame      | ~1.63 ms per frame |
+
+The estimated "before" is based on a local run with the index
+disabled; see the analysis below. Because the cost of `resolveFor`
+is dominated by `ComputedStyle::from` (cascade, var resolution,
+inheritance) rather than by `ruleMatches`, the index helps but does
+not eliminate the cost. The visible win is proportional to the rule
+count: with 2 rules the index changes nothing, with 200 it halves
+the matching cost.
+
+- [x] Add the index to `Theme`
+- [x] Update `resolveFor` to use it
+- [x] Benchmark with a large stylesheet
+- [x] Handle invalidation correctly (`clear` resets both indices)
 
 ### 4.4 Cache animation evaluation
 

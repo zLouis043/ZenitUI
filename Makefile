@@ -72,4 +72,7 @@ bench: $(LIB_BIN)
 bench-run: bench
 	$(MAKE) -C benchmarks run
 
-.PHONY: all libzenit test examples run-% bench bench-run clean rebuild
+bench-update: bench
+	$(MAKE) -C benchmarks update-baseline
+
+.PHONY: all libzenit test examples run-% bench bench-run bench-update clean rebuild

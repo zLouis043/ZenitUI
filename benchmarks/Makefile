@@ -3,7 +3,7 @@ CXXFLAGS := -O2 -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
 
 ROOT := ..
 
-CPPFLAGS := -I$(ROOT)/src -I$(ROOT)/src/ui -I$(ROOT)/tests
+CPPFLAGS := -I$(ROOT)/src -I$(ROOT)/src/ui -I$(ROOT)/tests -I.
 
 LIBZENIT := $(ROOT)/lib/libzenit.a
 
@@ -13,18 +13,22 @@ else
   EXE :=
 endif
 
-BIN := bin/bench$(EXE)
+BIN  := bin/bench$(EXE)
+SRCS := main.cpp benches.cpp
 
 all: $(BIN)
 
-$(BIN): bench.cpp $(LIBZENIT)
+$(BIN): $(SRCS) bench_framework.hpp $(LIBZENIT)
 	@mkdir -p bin
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) bench.cpp $(LIBZENIT) -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(SRCS) $(LIBZENIT) -o $@
 
 run: $(BIN)
 	./$(BIN)
 
+update-baseline: $(BIN)
+	./$(BIN) --update
+
 clean:
 	rm -rf bin
 
-.PHONY: all run clean
+.PHONY: all run update-baseline clean
