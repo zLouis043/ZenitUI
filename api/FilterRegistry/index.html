@@ -2650,6 +2650,7 @@ shader named <code>"dropShadow"</code>.</p>
     Layout*          node{nullptr};
     TargetHandle     src{};
     TargetHandle     scratch{};
+    TargetHandle     write_target{};
     Rect             region{};    // where to draw on the framebuffer
     Rect             dst{};       // {0, 0, tw, th}: target coordinates
     float            opacity{1.0f};
@@ -2683,6 +2684,10 @@ filter needs to process and composite the layer.</p>
 <td>A second target of the same size, for intermediate passes.</td>
 </tr>
 <tr>
+<td><code>write_target</code></td>
+<td>Where the filter should write its result. If valid, render into this target using <code>pushTarget</code> / <code>popTarget</code>. If invalid, this is the last filter in the chain: write to <code>region</code> on the framebuffer, applying <code>opacity</code>.</td>
+</tr>
+<tr>
 <td><code>region</code></td>
 <td>The destination rect on the framebuffer (in logical pixels).</td>
 </tr>
@@ -2707,11 +2712,19 @@ clip, in logical pixels.</p>
 <p><code>dst</code> is the <strong>target's</strong> coordinate space, starting at <code>(0, 0)</code>. It's
 used to set the <code>texSize</code> uniform (which should be the target's
 dimensions) and as the destination rect when rendering into a target.</p>
+<p><code>write_target</code> decides <strong>where the result goes</strong>. In a single-filter
+node, it's invalid — the filter writes directly to the framebuffer at
+<code>region</code> with <code>opacity</code> applied. In a multi-filter chain, every filter
+except the last receives a valid <code>write_target</code> and must render into
+it at full opacity; the last filter writes to the framebuffer. See
+<a href="../../internals/06-render-pipeline/">Render Pipeline §4.5</a> for the
+ping-pong mechanism.</p>
 <h3 id="usage">Usage</h3>
-<p>Every <code>applyFilter</code> variant uses <code>ctx.src</code>, <code>ctx.region</code>, and
-<code>ctx.opacity</code>. The <code>scratch</code> target is used only by <code>Separable</code>
-patterns. The <code>node</code> and <code>ref</code> are available for filters that need
-context-specific behavior.</p>
+<p>Every <code>applyFilter</code> variant reads from <code>ctx.src</code> and writes to either
+<code>ctx.write_target</code> (if valid) or the framebuffer at <code>ctx.region</code> (if
+not). The <code>scratch</code> target is used only by <code>Separable</code> patterns for
+the H-pass intermediate. <code>opacity</code> is applied only when writing to the
+framebuffer — intermediate writes to <code>write_target</code> use full opacity.</p>
 <hr />
 <h2 id="7-filtercustomfn">7. <code>FilterCustomFn</code></h2>
 <pre><code class="language-cpp">using FilterCustomFn = std::function&lt;void(const FilterContext&amp;)&gt;;
@@ -2721,6 +2734,14 @@ expected to do the whole pipeline.</p>
 <p>The custom function has full control — it can push targets, effects,
 set uniforms, and draw. It's the escape hatch for filters that don't
 fit the standard patterns.</p>
+<p><strong>Custom filters must honor <code>ctx.write_target</code>.</strong> When it's valid, the
+filter is not the last in the chain: render into the target (push it,
+draw, pop it) and don't apply opacity. When it's invalid, the filter is
+the last one: render to the framebuffer at <code>ctx.region</code>, applying
+<code>ctx.opacity</code>.</p>
+<p>A <code>Custom</code> filter that ignores <code>write_target</code> and always writes to the
+framebuffer will produce a correct result only when it's the last (or
+only) filter. In a chain it will short-circuit the composition.</p>
 <hr />
 <h2 id="8-filterregistry">8. <code>FilterRegistry</code></h2>
 <pre><code class="language-cpp">class FilterRegistry {

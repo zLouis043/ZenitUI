@@ -1535,6 +1535,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.5 Apply the filter chain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-filters-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Filters chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-opacity-is-applied-once-on-the-last-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Opacity is applied once, on the last filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-separable-filters-need-a-third-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Separable filters need a third target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2347,6 +2397,56 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="4.5 Apply the filter chain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-filters-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Filters chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-opacity-is-applied-once-on-the-last-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Opacity is applied once, on the last filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-separable-filters-need-a-third-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Separable filters need a third target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3187,14 +3287,22 @@ transform). So a point <code>p</code> in the node's local space becomes
 <h3 id="45-apply-the-filter-chain">4.5 Apply the filter chain</h3>
 <pre><code class="language-cpp">registerBuiltinFilters();
 
+if (!layerSeparable_.valid() ||
+    layerSeparable_.width != tw || layerSeparable_.height != th)
+{
+    if (layerSeparable_.valid())
+        renderer-&gt;destroyTarget(layerSeparable_);
+    layerSeparable_ = renderer-&gt;createTarget(tw, th);
+    if (!layerSeparable_.valid()) return;
+}
+
 FilterContext ctx;
-ctx.renderer = renderer;
-ctx.node = this;
-ctx.src = layerTarget_;
-ctx.scratch = layerScratch_;
-ctx.region = region;
-ctx.dst = {0, 0, (float)tw, (float)th};
-ctx.opacity = globalOp;
+ctx.renderer     = renderer;
+ctx.node         = this;
+ctx.scratch      = layerSeparable_;
+ctx.region       = region;
+ctx.dst          = {0, 0, (float)tw, (float)th};
+ctx.opacity      = globalOp;
 
 auto&amp; registry = FilterRegistry::get();
 
@@ -3204,31 +3312,71 @@ if (renderStyle.filters.empty()) {
     return;
 }
 
-for (const auto&amp; f : renderStyle.filters) {
-    ctx.ref = &amp;f;
-    if (const auto* def = registry.find(f.name)) {
+const size_t numFilters = renderStyle.filters.size();
+TargetHandle currentRead  = layerTarget_;
+TargetHandle currentWrite = layerScratch_;
+
+for (size_t i = 0; i &lt; numFilters; ++i) {
+    const bool isLast = (i == numFilters - 1);
+
+    ctx.ref          = &amp;renderStyle.filters[i];
+    ctx.src          = currentRead;
+    ctx.write_target = isLast ? TargetHandle{} : currentWrite;
+
+    if (const auto* def = registry.find(ctx.ref-&gt;name)) {
         applyFilter(*def, ctx);
     } else {
-        renderer-&gt;drawTarget(layerTarget_, region,
-                             Colors::White.withAlpha(globalOp));
+        // Unknown filter: draw unmodified to the same destination
+        // the filter would have written to.
+        if (isLast) {
+            renderer-&gt;drawTarget(currentRead, region,
+                                 Colors::White.withAlpha(globalOp));
+        } else {
+            renderer-&gt;pushTarget(currentWrite);
+            renderer-&gt;drawTarget(currentRead, ctx.dst, Colors::White);
+            renderer-&gt;popTarget();
+        }
     }
+
+    if (!isLast)
+        std::swap(currentRead, currentWrite);
 }
 </code></pre>
-<p><code>registerBuiltinFilters</code> is idempotent — it ensures <code>blur</code> and
-<code>drop-shadow</code> are registered before the chain runs.</p>
-<p>For each filter in <code>renderStyle.filters</code>:</p>
+<p>Three things changed compared to a single-filter pass:</p>
+<h4 id="1-filters-chain">1. Filters chain</h4>
+<p>Each filter reads the previous filter's output. The chain alternates
+between <code>layerTarget_</code> and <code>layerScratch_</code>:</p>
 <ul>
-<li>If the filter name is registered, <code>applyFilter(def, ctx)</code> runs the
-  filter's pattern-specific pipeline.</li>
-<li>If not registered (missing shader or typo), fallback: draw the target
-  directly.</li>
+<li>Filter 0: <code>read = layerTarget_</code>, <code>write = layerScratch_</code>.</li>
+<li>Filter 1: <code>read = layerScratch_</code>, <code>write = layerTarget_</code>.</li>
+<li>Filter 2: <code>read = layerTarget_</code>, <code>write = layerScratch_</code>.</li>
+<li>...</li>
+<li>Filter N-1 (last): <code>read = &lt;whatever&gt;</code>, <code>write = framebuffer</code>.</li>
 </ul>
-<p>The fallback is silent — no error, no log. The node just renders
-unfiltered.</p>
-<p><strong>Note:</strong> in a <code>filters</code> list with two filters, both <code>applyFilter</code>
-calls read from <code>layerTarget_</code> (the original). They don't chain — the
-second doesn't see the first's output. This is documented in
-<a href="../../user/09-effects/">Effects §1.5</a>.</p>
+<p>The swap after each iteration is what makes the alternation work: what
+was just written becomes the next filter's input.</p>
+<h4 id="2-opacity-is-applied-once-on-the-last-filter">2. Opacity is applied once, on the last filter</h4>
+<p><code>ctx.opacity</code> is <code>globalOp</code> (the node's opacity times all ancestors).
+It's used only when the last filter writes to the framebuffer. All
+intermediate writes use <code>Colors::White</code> and go into a target, which
+starts transparent. If we applied opacity at every step, it would
+compound: a node at 0.5 with two filters would produce a result at
+0.25.</p>
+<h4 id="3-separable-filters-need-a-third-target">3. Separable filters need a third target</h4>
+<p><code>blur</code> is a <code>Separable</code> pattern: horizontal pass into an intermediate,
+then vertical pass into the destination. If the intermediate were one
+of the two ping-pong targets, the V-pass would overwrite what the
+H-pass just read. Hence <code>layerSeparable_</code>, allocated once per
+<code>drawLayer</code> call (with the same dimensions as the other two).</p>
+<h4 id="fallback">Fallback</h4>
+<p>If <code>registry.find(name)</code> returns <code>nullptr</code> (shader not registered, typo
+in <code>.zstyle</code>, missing asset), the code draws the current source
+unmodified to the same destination the filter would have written to.
+The chain continues: subsequent filters read that unmodified image
+instead of skipping the step entirely.</p>
+<p>This means a broken filter in the middle of a chain is not a hard
+failure — it degrades to a pass-through. The visual result is "as if
+that filter weren't there", with the other filters still applied.</p>
 <h3 id="46-applyfilter-patterns">4.6 <code>applyFilter</code> patterns</h3>
 <p><code>applyFilter</code> dispatches by <code>def.pattern</code>. The four patterns:</p>
 <p><strong>SinglePass</strong>:</p>
@@ -3768,11 +3916,6 @@ computed from the transformed rect).</p>
 A rotated filtered node will have its region computed as if it weren't
 rotated. The filter runs, but on a slightly wrong region. This is a
 known limitation.</p>
-<p><strong>Multiple filters don't chain.</strong>
-Each filter reads <code>layerTarget_</code>, not the previous filter's output.
-For blur + sepia, the sepia operates on the original, not the blurred
-version. The result is "sepia blended with blur" rather than "sepia of
-blur". See <a href="../../user/09-effects/">Effects</a> for workarounds.</p>
 <p><strong><code>box-shadow</code> is not a Gaussian blur.</strong>
 It's 5 stacked rounded rects. For large blur radii, the approximation
 is visible (stepped edges). For small radii, it's indistinguishable.</p>

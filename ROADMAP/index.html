@@ -2916,21 +2916,38 @@ framework code.</p>
 </ul>
 <h3 id="54-filter-and-effect-chaining">5.4 Filter and effect chaining</h3>
 <p>Two separate limitations:</p>
-<p><strong>5.4a — Filter-to-filter chaining.</strong> Currently each filter in a
-<code>filter:</code> list reads the <strong>original</strong> <code>layerTarget_</code>, not the output
-of the previous filter. <code>filter: blur(2px), sepia(0.6)</code> produces "sepia
-on the original" instead of "sepia of blur". Only the last filter's
-output is visible on the framebuffer.</p>
-<p>Fix:
-- Ping-pong between <code>layerTarget_</code> and <code>layerScratch_</code> (already both
-  exist, both sized to <code>region</code>).
-- Update <code>applyFilter</code> to accept a "current input target" parameter.
-- <code>SinglePass</code> and <code>Silhouette</code> write to the next target instead of
-  the framebuffer; the final pass writes to the framebuffer.
-- <code>Separable</code> already ping-pongs internally; needs to read from the
-  current input and leave the result in the next target.
-- Add tests.
-- Update <code>user/09-effects.md</code> §1.5 and <code>internals/06-render-pipeline.md</code>.</p>
+<p><strong>5.4a — Filter-to-filter chaining.</strong> ✅ Done.</p>
+<p>Each filter in a <code>filter:</code> list now reads the previous filter's output
+instead of the original <code>layerTarget_</code>. <code>filter: blur(2px), sepia(0.6)</code>
+composes as <code>sepia(blur(original))</code>, matching CSS's order semantics.</p>
+<p>The chain uses a ping-pong between <code>layerTarget_</code> and <code>layerScratch_</code>:
+each filter reads from one target and writes to the other, alternating
+per step. The last filter writes to the framebuffer with the node's
+opacity applied; intermediate writes use full opacity to avoid
+compounding alpha.</p>
+<p>A third target (<code>layerSeparable_</code>) was added to <code>Layout</code> for <code>Separable</code>
+patterns (blur): their H-pass intermediate would otherwise overwrite
+one of the two ping-pong targets mid-computation. It's allocated
+lazily, with the same dimensions as the other two.</p>
+<p><code>FilterContext</code> gained a <code>write_target</code> field. A filter that receives
+a valid <code>write_target</code> renders into it; a filter that receives an
+invalid one is the last in the chain and writes to <code>ctx.region</code> with
+<code>ctx.opacity</code> applied. Custom filters must honor this contract.</p>
+<ul>
+<li>[x] Add <code>write_target</code> to <code>FilterContext</code></li>
+<li>[x] Update <code>applySinglePass</code> / <code>applySeparable</code> / <code>applySilhouette</code>
+      to write to <code>write_target</code> when valid</li>
+<li>[x] Add <code>layerSeparable_</code> to <code>Layout</code> (allocated lazily in <code>drawLayer</code>)</li>
+<li>[x] Rewrite the chain loop in <code>drawLayer</code> to ping-pong between the
+      two main targets</li>
+<li>[x] Extend <code>MockRenderer</code> to support effects and count <code>pushTarget</code></li>
+<li>[x] Add <code>Filter_chaining.two_filters_ping_pong_through_targets</code> test</li>
+<li>[x] Verify visually in <code>examples/07_effects</code> (three new cards:
+      blur → sepia, blur → sepia → drop-shadow, drop-shadow → blur)</li>
+<li>[x] Update <code>user/09-effects.md</code> §1.5, §3.3, §7</li>
+<li>[x] Update <code>internals/06-render-pipeline.md</code> §4.5 and Pitfalls</li>
+<li>[x] Update <code>api/FilterRegistry.md</code> §6 and §7</li>
+</ul>
 <p><strong>5.4b — <code>effect:</code> and <code>filter:</code> on the same node.</strong> When both are set,
 the effect shader is pushed inside the layer target (applies to each
 draw call), then the filter chain processes the composited result.
