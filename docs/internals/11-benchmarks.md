@@ -199,6 +199,16 @@ and don't commit.
 about 20 of 100 nodes are visible after frustum culling. To stress the
 full tree, either use a smaller viewport or a wider tree.
 
+**The library must be built with `-O2`.**
+
+Every benchmark number depends on the library being optimized. If the
+`Makefile` is ever changed so that `-O2` is dropped from the default
+build, or if a local environment overrides `CXXFLAGS`, all benchmark
+numbers will be inflated by 3–10x depending on the benchmark. A useful
+smell test: if *every* benchmark jumps by a suspiciously uniform factor
+between two commits, and some of them touch completely unrelated code,
+the build profile is the first thing to check.
+
 ## See also
 
 - [ROADMAP](../ROADMAP.md) — Phase 4 tracks the benchmarked

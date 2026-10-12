@@ -177,6 +177,38 @@ namespace Bench
               ComputedStyle b = a;
               g_sink += b.width.terms[0].coeff; });
 
+        R.add("micro.ComputedStyle.from_with_parent", "computed_style",
+              /*iterations=*/200'000,
+              /*setup=*/[]
+              {
+                  // Un parent "ragionevole" con alcune proprietà ereditate settate.
+              },
+              /*body=*/[]
+              {
+          static int i = 0;
+          static const ComputedStyle parent = [] {
+              ComputedStyle p;
+              p.font = "calibri";
+              p.color = Color{200, 200, 200, 255};
+              p.fontSize = Value::px(16.0f);
+              p.letterSpacing = Value::px(1.0f);
+              p.textAlign = Align::Start;
+              return p;
+          }();
+
+          Style s;
+          // Solo proprietà non ereditate, così che ognuna di esse
+          // debba passare attraverso isInheritedProp quando resolveFor
+          // consulta il parent.
+          s.width    = Value::px(100.0f + (float)(i++ & 0xF));
+          s.height   = Value::px(50.0f);
+          s.padding  = Spacing(Value::px(8.0f));
+          s.margin   = Spacing(Value::px(4.0f));
+          s.background = Color{40, 40, 45, 255};
+
+          ComputedStyle c = ComputedStyle::from(s, &parent, nullptr);
+          g_sink += c.width.terms[0].coeff; });
+
         // =======================================================================
         //  Animation
         // =======================================================================
