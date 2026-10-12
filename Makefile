@@ -1,5 +1,11 @@
 CXX      := g++
-CXXFLAGS := -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
+BUILD ?= release
+ifeq ($(BUILD),debug)
+  CXXFLAGS := -O0 -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
+else
+  CXXFLAGS := -O2 -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
+endif
+
 CPPFLAGS := -I./src -I./src/ui -I./tests
 
 OBJ_DIR := obj
