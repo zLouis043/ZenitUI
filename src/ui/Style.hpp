@@ -110,34 +110,34 @@ namespace ZenitUI
 	};
 
 	// Un "elemento" di un selettore composto. Es. per "Toggle:checked .knob"
-    // la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
-    //
-    // Supporta i selettori composti: `Button.btn-primary`, `.card.elevated`,
-    // `Button#save`, `Button.btn-primary:hover`. In quel caso `name`/`kind`
-    // contengono il primo componente, e `extras` contiene i successivi.
-    // Tutti devono matchare lo stesso nodo.
-    struct SimpleSelector
-    {
-        enum class Kind
-        {
-            Tag,
-            Class,
-            Id
-        };
+	// la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
+	//
+	// Supporta i selettori composti: `Button.btn-primary`, `.card.elevated`,
+	// `Button#save`, `Button.btn-primary:hover`. In quel caso `name`/`kind`
+	// contengono il primo componente, e `extras` contiene i successivi.
+	// Tutti devono matchare lo stesso nodo.
+	struct SimpleSelector
+	{
+		enum class Kind
+		{
+			Tag,
+			Class,
+			Id
+		};
 
-        std::string name;
-        Kind kind{Kind::Tag};
+		std::string name;
+		Kind kind{Kind::Tag};
 
-        // Componenti aggiuntivi del compound selector. Ogni coppia è
-        // (tipo, nome). Vuoto = selectore semplice (retro-compat).
-        std::vector<std::pair<Kind, std::string>> extras;
+		// Componenti aggiuntivi del compound selector. Ogni coppia è
+		// (tipo, nome). Vuoto = selectore semplice (retro-compat).
+		std::vector<std::pair<Kind, std::string>> extras;
 
-        bool requireHover{false};
-        bool requirePressed{false};
-        bool requireFocus{false};
-        bool requireDisabled{false};
-        bool requireChecked{false};
-    };
+		bool requireHover{false};
+		bool requirePressed{false};
+		bool requireFocus{false};
+		bool requireDisabled{false};
+		bool requireChecked{false};
+	};
 
 	// Un filtro CSS (post-process): "blur(4px)", "drop-shadow(2px, 2px, #000)".
 	// Il Layout lo traduce in un EffectHandle per nome; gli args restano raw.
@@ -230,7 +230,21 @@ namespace ZenitUI
 
 	inline bool isInheritedProp(std::string_view name)
 	{
-		return name == "font" || name == "fontSize" || name == "color" || name == "letterSpacing" || name == "textAlign";
+		switch (name.size())
+		{
+		case 4:
+			return name == "font";
+		case 5:
+			return name == "color";
+		case 8:
+			return name == "fontSize";
+		case 9:
+			return name == "textAlign";
+		case 13:
+			return name == "letterSpacing";
+		default:
+			return false;
+		}
 	}
 
 	struct Style; // forward

@@ -699,16 +699,61 @@ animation advances, and it survives across frames if `dt == 0`.
 - [x] Add regression tests in `test_animations.cpp`
 - [x] Update `internals/04-animation-system.md`
 
-### 4.5 Avoid double `resolveFor` per frame
+### 4.5 Optimize `isInheritedProp`
 
-When a node has a `pendingTransition`, `update` calls `resolveFor` and
-then `measure` calls it again. A "resolved this frame" flag would avoid
-the second call.
+**Severity:** low — measurable on style resolution, not blocking.
 
-- [ ] Add `bool resolvedThisFrame` to `StyleResolver`
-- [ ] Check it in `measure`
-- [ ] Reset at the start of each `update`
-- [ ] Benchmark
+**Location:** `src/ui/Style.hpp`, `isInheritedProp`.
+
+**Problem:** `isInheritedProp` is called once per non-set property per
+call to `ComputedStyle::from` when a parent is present. For a typical
+style resolution, that's ~40 calls per node per frame. Each call is a
+chain of up to 5 string comparisons:
+
+```cpp
+return name == "font" || name == "fontSize" || name == "color"
+    || name == "letterSpacing" || name == "textAlign";
+```
+
+For the ~40 non-inherited properties, which is the vast majority, this
+walks the entire chain and returns false.
+
+**Expected:** short-circuit on a property's string length, since the
+five inherited names have unique lengths (4, 5, 8, 9, 13).
+
+**Fix (implemented):** dispatch on `name.size()` with a switch, then
+do a single string comparison inside each case:
+
+```cpp
+inline bool isInheritedProp(std::string_view name)
+{
+    switch (name.size()) {
+        case 4:  return name == "font";
+        case 5:  return name == "color";
+        case 8:  return name == "fontSize";
+        case 9:  return name == "textAlign";
+        case 13: return name == "letterSpacing";
+        default: return false;
+    }
+}
+```
+
+For a property with a length that doesn't match any of the five (e.g.
+`width` → 5, `padding` → 7, `background` → 10), the switch returns false
+after a single integer comparison. For a property with a matching
+length (e.g. `width` → 5, `minWidth` → 8, `minHeight` → 9), the single
+string comparison discriminates correctly.
+
+**Benchmark:** `micro.ComputedStyle.from_with_parent` added to
+isolate the cost of the parent branch (the pre-existing
+`micro.ComputedStyle.from` passes `nullptr` as parent, so it never
+exercised `isInheritedProp`).
+
+- [x] Add `micro.ComputedStyle.from_with_parent` benchmark
+- [x] Rewrite `isInheritedProp` with a length-based switch
+- [x] Add unit tests for the length-collision cases
+- [x] Benchmark (measure improvement)
+- [x] Update `api/Style.md` §"Inheritance"
 
 ### 4.6 Vector resize audit
 
@@ -719,6 +764,43 @@ happens after warmup.
 
 - [ ] Benchmark `drawChildren` allocation behavior
 - [ ] If allocations persist, pre-reserve based on `children.size()`
+
+### 4.7 Build system: `-O2` by default
+
+**Severity:** critical — all previous benchmark numbers were measured
+against an unoptimized library.
+
+**Location:** `Makefile` (repository root).
+
+**Problem:** the library was compiled with `-ggdb` only, no `-O2`. The
+benchmarks linked the debug library, so every measurement was inflated
+by 3–10x. This was discovered when `cf17e3dc` (the commit that added
+the 4.4 cache) showed every single benchmark jumping by ~2x compared
+to the previous commit — a pattern too uniform to be a code
+regression, and specifically impossible for benchmarks like
+`micro.tree.addChild.1000` that touch no animation code.
+
+**Fix (implemented):** the default `BUILD` profile is now `release`
+(`-O2 -ggdb`). `make BUILD=debug` restores the old behavior for
+interactive debugging. The fix was verified by rebuilding locally
+and observing 50–90% improvements across every benchmark dominated by
+framework code.
+
+**Benchmark deltas after the fix (local):**
+
+| Benchmark                    | Before | After | Δ |
+|------------------------------|--------|-------|---|
+| `micro.tickCss.100`          | 10.06  | 0.91  | -91% |
+| `micro.tickImperative.100`   | 198.8  | 41.5  | -79% |
+| `system.frame.static100`     | 164.4  | 42.96 | -74% |
+| `system.frame.200rules`      | 1632.8 | 295.6 | -82% |
+| `system.frame.animated100`   | 275.0  | 114.9 | -58% |
+| `system.frame.large1000`     | 1653.1 | 500.8 | -70% |
+
+- [x] Change `Makefile` default to `-O2 -ggdb`
+- [x] Add `BUILD=debug` opt-out
+- [x] Regenerate `benchmarks/baseline.json`
+- [x] Update `internals/11-benchmarks.md` with a note on build profiles
 
 ---
 

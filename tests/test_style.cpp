@@ -502,3 +502,35 @@ TEST(Style_computedValue, both_scroll_stay_scroll) {
     CHECK(c.overflowX == Overflow::Scroll);
     CHECK(c.overflowY == Overflow::Scroll);
 }
+
+TEST(Style_isInheritedProp, all_known_props)
+{
+    CHECK(isInheritedProp("font"));
+    CHECK(isInheritedProp("fontSize"));
+    CHECK(isInheritedProp("color"));
+    CHECK(isInheritedProp("letterSpacing"));
+    CHECK(isInheritedProp("textAlign"));
+}
+
+TEST(Style_isInheritedProp, same_length_non_inherited)
+{
+    // Queste hanno lunghezze che collidono con le proprietà ereditate.
+    // Devono tutte restituire false.
+    CHECK(!isInheritedProp("width"));      // 5, collide con "color"
+    CHECK(!isInheritedProp("grow"));       // 4, collide con "font"
+    CHECK(!isInheritedProp("minWidth"));   // 8, collide con "fontSize"
+    CHECK(!isInheritedProp("maxWidth"));   // 8, collide con "fontSize"
+    CHECK(!isInheritedProp("minHeight"));  // 9, collide con "textAlign"
+    CHECK(!isInheritedProp("maxHeight"));  // 9, collide con "textAlign"
+    CHECK(!isInheritedProp("position"));   // 8, collide con "fontSize"
+    CHECK(!isInheritedProp("overflow"));   // 8, collide con "fontSize"
+    CHECK(!isInheritedProp("tint"));       // 4, collide con "font"
+    CHECK(!isInheritedProp("left"));       // 4, collide con "font"
+}
+
+TEST(Style_isInheritedProp, empty_and_unknown)
+{
+    CHECK(!isInheritedProp(""));
+    CHECK(!isInheritedProp("nonexistent"));
+    CHECK(!isInheritedProp("Font"));   // case-sensitive
+}
