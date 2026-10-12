@@ -164,6 +164,17 @@ Sets the node id, used by `#id` selectors in `.zstyle` and by ZMarkup's
 
 Fluent wrapper for `setId`.
 
+### `bool hasId(const std::string& id) const`
+
+True if the node's id matches the given string. Returns false if the
+node has no id, or if the input is empty. Useful for conditional
+logic that doesn't want to read the public `nodeId` field directly.
+
+```cpp
+if (node->hasId("save-button")) {
+    // ...
+}
+
 ### `void setStyleTag(const std::string& t)`
 
 Sets the style tag. Used by `TagName { ... }` selectors. Widgets set
