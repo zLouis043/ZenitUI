@@ -845,22 +845,41 @@ Not blocking for beta, but needed for 1.0.
 
 Two separate limitations:
 
-**5.4a — Filter-to-filter chaining.** Currently each filter in a
-`filter:` list reads the **original** `layerTarget_`, not the output
-of the previous filter. `filter: blur(2px), sepia(0.6)` produces "sepia
-on the original" instead of "sepia of blur". Only the last filter's
-output is visible on the framebuffer.
+**5.4a — Filter-to-filter chaining.** ✅ Done.
 
-Fix:
-- Ping-pong between `layerTarget_` and `layerScratch_` (already both
-  exist, both sized to `region`).
-- Update `applyFilter` to accept a "current input target" parameter.
-- `SinglePass` and `Silhouette` write to the next target instead of
-  the framebuffer; the final pass writes to the framebuffer.
-- `Separable` already ping-pongs internally; needs to read from the
-  current input and leave the result in the next target.
-- Add tests.
-- Update `user/09-effects.md` §1.5 and `internals/06-render-pipeline.md`.
+Each filter in a `filter:` list now reads the previous filter's output
+instead of the original `layerTarget_`. `filter: blur(2px), sepia(0.6)`
+composes as `sepia(blur(original))`, matching CSS's order semantics.
+
+The chain uses a ping-pong between `layerTarget_` and `layerScratch_`:
+each filter reads from one target and writes to the other, alternating
+per step. The last filter writes to the framebuffer with the node's
+opacity applied; intermediate writes use full opacity to avoid
+compounding alpha.
+
+A third target (`layerSeparable_`) was added to `Layout` for `Separable`
+patterns (blur): their H-pass intermediate would otherwise overwrite
+one of the two ping-pong targets mid-computation. It's allocated
+lazily, with the same dimensions as the other two.
+
+`FilterContext` gained a `write_target` field. A filter that receives
+a valid `write_target` renders into it; a filter that receives an
+invalid one is the last in the chain and writes to `ctx.region` with
+`ctx.opacity` applied. Custom filters must honor this contract.
+
+- [x] Add `write_target` to `FilterContext`
+- [x] Update `applySinglePass` / `applySeparable` / `applySilhouette`
+      to write to `write_target` when valid
+- [x] Add `layerSeparable_` to `Layout` (allocated lazily in `drawLayer`)
+- [x] Rewrite the chain loop in `drawLayer` to ping-pong between the
+      two main targets
+- [x] Extend `MockRenderer` to support effects and count `pushTarget`
+- [x] Add `Filter_chaining.two_filters_ping_pong_through_targets` test
+- [x] Verify visually in `examples/07_effects` (three new cards:
+      blur → sepia, blur → sepia → drop-shadow, drop-shadow → blur)
+- [x] Update `user/09-effects.md` §1.5, §3.3, §7
+- [x] Update `internals/06-render-pipeline.md` §4.5 and Pitfalls
+- [x] Update `api/FilterRegistry.md` §6 and §7
 
 **5.4b — `effect:` and `filter:` on the same node.** When both are set,
 the effect shader is pushed inside the layer target (applies to each

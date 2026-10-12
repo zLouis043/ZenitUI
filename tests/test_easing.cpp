@@ -52,13 +52,13 @@ TEST(Easing, out_back_overshoots) {
 // ------------------------------------------------------------
 
 TEST(Easing, parse_linear) {
-    TransitionFunction fn;
+    TransitionFunction fn  = TransitionFunction::Linear;
     CHECK(parseEasing("linear", fn));
     CHECK(fn == TransitionFunction::Linear);
 }
 
 TEST(Easing, parse_aliases_are_normalized) {
-    TransitionFunction fn;
+    TransitionFunction fn  = TransitionFunction::Linear;
 
     CHECK(parseEasing("ease-out-back", fn));
     CHECK(fn == TransitionFunction::EaseOutBack);
@@ -74,7 +74,7 @@ TEST(Easing, parse_aliases_are_normalized) {
 }
 
 TEST(Easing, parse_generic_ease) {
-    TransitionFunction fn;
+    TransitionFunction fn  = TransitionFunction::Linear;
     CHECK(parseEasing("ease", fn));
     CHECK(fn == TransitionFunction::EaseInOutQuad);
     CHECK(parseEasing("ease-in", fn));

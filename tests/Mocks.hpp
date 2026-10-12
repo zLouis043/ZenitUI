@@ -66,6 +66,9 @@ namespace ZenitUI::Test
 
         std::vector<Transform2D> transformHistory;
 
+        int pushTargetCount{0};
+        bool supportsEffects{false};
+
         void fillRect(Rect, Color) override { fillRectCount++; }
         void fillRoundedRect(Rect, float, Color) override {}
         void fillCircle(Vec2, float, Color) override {}
@@ -119,9 +122,13 @@ namespace ZenitUI::Test
 
         Rect getClipRect() const override { return currentClip; }
 
-        TargetHandle createTarget(int, int) override { return {}; }
+        TargetHandle createTarget(int w, int h) override
+        {
+            static uint32_t nextId = 1000; // sopra i valori usati altrove
+            return TargetHandle{nextId++, w, h};
+        }
         void destroyTarget(TargetHandle) override {}
-        void pushTarget(TargetHandle) override {}
+        void pushTarget(TargetHandle) override { pushTargetCount++; }
         void popTarget() override {}
         void drawTarget(TargetHandle, Rect, Color) override {}
 
@@ -154,7 +161,12 @@ namespace ZenitUI::Test
         void endFrame() override {}
         void setDpiScale(float) override {}
 
-        bool supports(Feature) const override { return false; }
+        bool supports(Feature f) const override
+        {
+            if (f == Feature::Effects)
+                return supportsEffects;
+            return false;
+        }
     };
 
     // ============================================================
@@ -350,6 +362,8 @@ namespace ZenitUI::Test
             renderer.drawTextCount = 0;
             renderer.pushClipCount = 0;
             renderer.popClipCount = 0;
+            renderer.pushTargetCount = 0;
+            renderer.supportsEffects  = false;
             renderer.clipStack.clear();
             renderer.capturedFloat.clear();
             renderer.capturedVec2.clear();

@@ -30,7 +30,7 @@ using namespace ZenitUI::UI;
 //  Helpers
 // ---------------------------------------------------------------------------
 
-static std::shared_ptr<Layout> Row(const std::string& title,
+static std::shared_ptr<Layout> Row(const std::string &title,
                                    std::shared_ptr<Layout> content)
 {
     auto row = std::make_shared<Layout>(LayoutType::Horizontal);
@@ -44,7 +44,7 @@ static std::shared_ptr<Layout> Row(const std::string& title,
     return row;
 }
 
-static std::shared_ptr<Layout> Card(const std::string& text, const char* cls)
+static std::shared_ptr<Layout> Card(const std::string &text, const char *cls)
 {
     auto c = std::make_shared<Layout>(LayoutType::Stack);
     c->cls("card");
@@ -62,35 +62,33 @@ int main()
     InitWindow(760, 540, "ZenitUI — 07 Effects");
     SetTargetFPS(60);
 
-    RaylibRenderer      renderer;
-    RaylibPlatform      platform;
+    RaylibRenderer renderer;
+    RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
     UIContext::get().renderer = &renderer;
     UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext::get().assets = &assets;
 
     // -----------------------------------------------------------------------
     //  Load shaders used by both `filter:` and `effect:`.
     //  Paths are relative to the repository root.
     // -----------------------------------------------------------------------
-    assets.loadEffect("blur",       "assets/blur.fs");
+    assets.loadEffect("blur", "assets/blur.fs");
     assets.loadEffect("dropShadow", "assets/drop_shadow.fs");
-    assets.loadEffect("hueShift",   "assets/hue_shift.fs");
-    assets.loadEffect("sepia",      "assets/sepia.fs");
+    assets.loadEffect("hueShift", "assets/hue_shift.fs");
+    assets.loadEffect("sepia", "assets/sepia.fs");
 
     // -----------------------------------------------------------------------
     //  Register the sepia filter. `blur` and `drop-shadow` are built-in
     //  (registered lazily on first use); `sepia` is user-defined.
     // -----------------------------------------------------------------------
     FilterRegistry::get().add(FilterDef{
-        .name    = "sepia",
-        .shader  = "sepia",
+        .name = "sepia",
+        .shader = "sepia",
         .pattern = FilterPattern::SinglePass,
-        .params  = {
-            {"amount", FilterParamType::Float, 0, 0.8f}
-        }
-    });
+        .params = {
+            {"amount", FilterParamType::Float, 0, 0.8f}}});
 
     // -----------------------------------------------------------------------
     //  Stylesheet.
@@ -115,7 +113,14 @@ int main()
     panel->addChild(Row("2. filter: drop-shadow", Card("shadow", "filter-shadow")));
     panel->addChild(Row("3. filter: sepia (custom)", Card("sepia", "filter-sepia")));
     panel->addChild(Row("4. effect: hueShift", Card("hue shift", "effect-hue")));
-    panel->addChild(Row("5. two filters (only last shown)", Card("both", "filter-both")));
+    panel->addChild(Row("5. two filters chained (blur -> sepia)",
+                        Card("blur -> sepia", "filter-both")));
+
+    panel->addChild(Row("6. three filters chained (blur -> sepia -> drop-shadow)",
+                        Card("blur -> sepia -> shadow", "filter-triple")));
+
+    panel->addChild(Row("7. reversed order (drop-shadow -> blur)",
+                        Card("shadow -> blur", "filter-reversed")));
 
     page->addChild(panel);
 

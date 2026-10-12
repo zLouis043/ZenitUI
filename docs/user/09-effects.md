@@ -121,27 +121,63 @@ double-blending and matches what you'd expect from CSS.
 
 ### 1.5 Multiple filters
 
-The filter chain runs left-to-right:
+Filters **chain**. The subtree is rendered once into `layerTarget_`,
+then each filter in the list processes the *output of the previous
+filter*. The result of the last filter is composited onto the
+framebuffer.
 
 ```css
-.card {
-    filter: blur(4px), sepia(0.5);
-}
+.card { filter: blur(2px), sepia(0.6); }
 ```
 
-The subtree is rendered into `layerTarget_`. Then:
+Produces `sepia(blur(original))`:
 
-1. `blur` reads `layerTarget_` and writes back to the framebuffer
-   (or `layerScratch_` for the separable two-pass).
-2. `sepia` reads `layerTarget_` again (the original, not the blurred
-   version — see §5.2) and writes the final result.
+1. The subtree is rendered into `layerTarget_`.
+2. `blur` reads `layerTarget_` and writes its output into
+   `layerScratch_`.
+3. `sepia` reads `layerScratch_` and writes the final result into the
+   framebuffer.
 
-This is a limitation of the current implementation: filters don't chain
-in the sense of "the second reads the output of the first". Each filter
-reads the **original target**. For most cases (single filter, or filters
-that don't depend on previous output) this is fine. For chains that
-need true composition, use a `FilterPattern::Custom` filter that runs
-the whole pipeline itself.
+Order matters. `blur(2px), sepia(0.6)` and `sepia(0.6), blur(2px)` are
+visibly different: the first blurs the card, then tints it sepia; the
+second tints the card, then blurs the tinted result. In general, `f1,
+f2` produces `f2(f1(x))`, matching CSS's semantics.
+
+#### The ping-pong
+
+The chain alternates between two render targets:
+
+- **Filter 0** reads `layerTarget_`, writes `layerScratch_`.
+- **Filter 1** reads `layerScratch_`, writes `layerTarget_`.
+- **Filter 2** reads `layerTarget_`, writes `layerScratch_`.
+- ...
+- **The last filter** writes to the **framebuffer** at the node's
+  region, not to a target.
+
+A third target (`layerSeparable_`) exists for `Separable` filters (like
+`blur`). The blur is implemented as two passes: horizontal into
+`layerSeparable_`, then vertical into the destination. Without a third
+target, the H-pass would overwrite the read target mid-computation.
+
+#### Opacity
+
+The node's `opacity` is applied only on the **last** filter, when the
+result is written to the framebuffer. Intermediate passes work at full
+opacity to avoid compounding alpha. This means a node with
+`opacity: 0.5; filter: blur(2px), sepia(0.6)` produces an image that
+is blurred, seppia-toned, and 50% transparent — not blurred at 50%,
+then sepia'd at 50%, then composited at 50% again.
+
+#### Custom filters
+
+The `FilterContext` now exposes a `write_target` field. A `Custom`
+filter must honor it: when `write_target` is valid, render into that
+target (using `pushTarget` / `popTarget`) instead of the framebuffer.
+When `write_target` is invalid, the filter is the last in the chain and
+should write to `ctx.region` with `ctx.opacity` applied.
+
+See [FilterRegistry](../api/FilterRegistry.md) for the full
+`FilterContext` contract.
 
 ---
 
@@ -255,21 +291,34 @@ Requires `dropShadow.fs` to be loaded and registered under the name
 assets.loadEffect("dropShadow", "assets/drop_shadow.fs");
 ```
 
-### 3.3 Chaining `blur` + `drop-shadow`
+### 3.3 Chaining `blur` and `drop-shadow`
 
-The intended pattern is:
+Both built-in filters compose with each other and with custom filters.
+The order affects the result:
 
 ```css
-.card {
-    filter: drop-shadow(2px, 2px, #000), blur(2px);
-}
+/* Blur the card, then add a sharp drop-shadow of the blurred silhouette. */
+.card-a { filter: blur(2px), drop-shadow(3px, 3px, #000000cc); }
+
+/* Add a sharp drop-shadow of the original silhouette, then blur the
+   whole image (shadow included). The shadow ends up soft. */
+.card-b { filter: drop-shadow(3px, 3px, #000000cc), blur(2px); }
 ```
 
-But because filters read the *original* target rather than chaining,
-this doesn't produce a blurred drop-shadow. It produces "a drop shadow
-composited with a blurred version of the original". For a true blurred
-drop-shadow, you'd write a custom `Silhouette` filter that does the
-blur internally.
+`card-a` produces a blurred card with a **sharp** shadow around it —
+the shadow is applied after the blur, on the already-blurred silhouette.
+
+`card-b` produces a blurred card with a **soft** shadow — the blur
+runs last and smears the previously sharp shadow.
+
+For a soft drop-shadow on a sharp card, the two are not enough:
+`drop-shadow` produces a solid silhouette, not a blurred one. Chain a
+blur **after** the shadow to soften it, but keep in mind the blur will
+also affect the card itself. To blur only the shadow, write a
+`Custom` filter that runs `silhouette → blur → composite original`.
+
+See [Effects §1.5](#15-multiple-filters) for how the chain alternates
+between targets.
 
 ---
 
@@ -659,14 +708,7 @@ without the effect.
 Workaround: don't nest filters. If you need composition, use a `Custom`
 filter on the outer node that does the whole pipeline.
 
-### 7.2 Filters don't chain
-
-As noted in §1.5, each filter in a list reads the **original** target,
-not the output of the previous filter. This is by design in the current
-implementation. For most single-filter cases it doesn't matter. For
-chains, write a `Custom` filter.
-
-### 7.3 Rotation ignored
+### 7.2 Rotation ignored
 
 `drawLayer` computes the transformed bounding box from `scale` and
 `translate`, but not `rotation`. A rotated node with a filter will have
@@ -674,13 +716,13 @@ its region computed as if it weren't rotated. The filter will still run,
 but the region may be slightly too small or too large. In practice,
 rotating a filtered node is rare.
 
-### 7.4 No `FilterRef` interpolation
+### 7.3 No `FilterRef` interpolation
 
 `transition: filter 0.3s` has no visible effect — the `filters` list
 snaps to the target at `t > 0`. To animate filter parameters, drive a
 uniform via an imperative animation, or make the change instantaneous.
 
-### 7.5 Render target size
+### 7.4 Render target size
 
 The render target is sized to the intersection of the transformed rect
 and the current clip. For a filtered node that fills the viewport, this
@@ -698,7 +740,7 @@ if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM) {
 }
 ```
 
-### 7.6 Effect on the same node as a filter
+### 7.5 Effect on the same node as a filter
 
 If a node has both `filter:` and `effect:`:
 

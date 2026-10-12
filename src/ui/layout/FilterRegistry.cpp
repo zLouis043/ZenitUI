@@ -10,6 +10,24 @@ namespace ZenitUI
     //  Registry
     // =========================================================================
 
+    // Draw ctx.src to the current destination (target if write_target valid,
+    // else framebuffer at ctx.region). Used by the fallback path and by
+    // patterns that write the original image without a shader.
+    static void drawUnmodified(const FilterContext &c)
+    {
+        if (c.write_target.valid())
+        {
+            c.renderer->pushTarget(c.write_target);
+            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+            c.renderer->popTarget();
+        }
+        else
+        {
+            c.renderer->drawTarget(c.src, c.region,
+                                   Colors::White.withAlpha(c.opacity));
+        }
+    }
+
     FilterRegistry &FilterRegistry::get()
     {
         static FilterRegistry r;
@@ -129,14 +147,26 @@ namespace ZenitUI
     {
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
-        c.renderer->drawTarget(c.src, c.region, Colors::White.withAlpha(c.opacity));
+
+        if (c.write_target.valid())
+        {
+            c.renderer->pushTarget(c.write_target);
+            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+            c.renderer->popTarget();
+        }
+        else
+        {
+            c.renderer->drawTarget(c.src, c.region,
+                                   Colors::White.withAlpha(c.opacity));
+        }
+
         c.renderer->popEffect();
     }
 
     static void applySeparable(const FilterContext &c, EffectHandle fx,
                                const FilterDef & /*def*/)
     {
-        // Pass H: src → scratch
+        // H pass: src -> scratch
         c.renderer->pushTarget(c.scratch);
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
@@ -145,19 +175,29 @@ namespace ZenitUI
         c.renderer->popEffect();
         c.renderer->popTarget();
 
-        // Pass V: scratch → framebuffer
+        // V pass: scratch -> write_target (or framebuffer)
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
         c.renderer->setEffectVec2(fx, "direction", {0.0f, 1.0f});
-        c.renderer->drawTarget(c.scratch, c.region, Colors::White.withAlpha(c.opacity));
+
+        if (c.write_target.valid())
+        {
+            c.renderer->pushTarget(c.write_target);
+            c.renderer->drawTarget(c.scratch, c.dst, Colors::White);
+            c.renderer->popTarget();
+        }
+        else
+        {
+            c.renderer->drawTarget(c.scratch, c.region,
+                                   Colors::White.withAlpha(c.opacity));
+        }
+
         c.renderer->popEffect();
     }
 
     static void applySilhouette(const FilterContext &c, EffectHandle fx,
                                 const FilterDef &def)
     {
-        // Gli argomenti dx/dy e shadowColor vengono settati da setParams.
-        // Cerchiamo dx/dy per spostare il draw.
         float dx = 2.0f, dy = 2.0f;
         for (const auto &p : def.params)
         {
@@ -166,15 +206,37 @@ namespace ZenitUI
             if (p.uniform == "dy" && p.argIndex < (int)c.ref->args.size())
                 dy = parseLengthArg(c.ref->args[p.argIndex]);
         }
-        Rect shadowDst = {c.region.x + dx, c.region.y + dy,
-                          c.region.width, c.region.height};
 
-        c.renderer->pushEffect(fx);
-        c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
-        c.renderer->drawTarget(c.src, shadowDst, Colors::White.withAlpha(c.opacity));
-        c.renderer->popEffect();
+        if (c.write_target.valid())
+        {
+            c.renderer->pushTarget(c.write_target);
 
-        c.renderer->drawTarget(c.src, c.region, Colors::White.withAlpha(c.opacity));
+            // Shadow pass
+            Rect shadowDst = {c.dst.x + dx, c.dst.y + dy,
+                              c.dst.width, c.dst.height};
+            c.renderer->pushEffect(fx);
+            c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
+            c.renderer->drawTarget(c.src, shadowDst, Colors::White);
+            c.renderer->popEffect();
+
+            // Original on top
+            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+
+            c.renderer->popTarget();
+        }
+        else
+        {
+            Rect shadowRegion = {c.region.x + dx, c.region.y + dy,
+                                 c.region.width, c.region.height};
+            c.renderer->pushEffect(fx);
+            c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
+            c.renderer->drawTarget(c.src, shadowRegion,
+                                   Colors::White.withAlpha(c.opacity));
+            c.renderer->popEffect();
+
+            c.renderer->drawTarget(c.src, c.region,
+                                   Colors::White.withAlpha(c.opacity));
+        }
     }
 
     void applyFilter(const FilterDef &def, const FilterContext &ctx)
@@ -188,13 +250,15 @@ namespace ZenitUI
 
         auto *assets = UIContext::get().assets;
         if (!assets)
+        {
+            drawUnmodified(ctx);
             return;
+        }
+
         EffectHandle fx = assets->getEffect(def.shader);
         if (!fx.valid())
         {
-            // Shader mancante: fallback (disegna senza filtro).
-            ctx.renderer->drawTarget(ctx.src, ctx.region,
-                                     Colors::White.withAlpha(ctx.opacity));
+            drawUnmodified(ctx);
             return;
         }
 
