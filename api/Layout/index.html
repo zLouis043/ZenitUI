@@ -984,10 +984,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#void-setstyletagconst-stdstring-t" class="md-nav__link">
+  <a href="#bool-hasidconst-stdstring-id-const" class="md-nav__link">
     <span class="md-ellipsis">
       
-        void setStyleTag(const std::string&amp; t)
+        bool hasId(const std::string&amp; id) const
       
     </span>
   </a>
@@ -2749,10 +2749,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#void-setstyletagconst-stdstring-t" class="md-nav__link">
+  <a href="#bool-hasidconst-stdstring-id-const" class="md-nav__link">
     <span class="md-ellipsis">
       
-        void setStyleTag(const std::string&amp; t)
+        bool hasId(const std::string&amp; id) const
       
     </span>
   </a>
@@ -3902,10 +3902,21 @@ operation, not part of the construction chain.</p>
 <code>UINode::find()</code>.</p>
 <h3 id="stdshared_ptrderived-idconst-stdstring-node_id-crtp-only"><code>std::shared_ptr&lt;Derived&gt; id(const std::string&amp; node_id)</code> (CRTP only)</h3>
 <p>Fluent wrapper for <code>setId</code>.</p>
-<h3 id="void-setstyletagconst-stdstring-t"><code>void setStyleTag(const std::string&amp; t)</code></h3>
-<p>Sets the style tag. Used by <code>TagName { ... }</code> selectors. Widgets set
-this in <code>onBuild</code> (e.g. <code>"Button"</code>, <code>"Toggle"</code>).</p>
-<pre><code class="language-cpp">node-&gt;setStyleTag(&quot;MyWidget&quot;);
+<h3 id="bool-hasidconst-stdstring-id-const"><code>bool hasId(const std::string&amp; id) const</code></h3>
+<p>True if the node's id matches the given string. Returns false if the
+node has no id, or if the input is empty. Useful for conditional
+logic that doesn't want to read the public <code>nodeId</code> field directly.</p>
+<pre><code class="language-cpp">if (node-&gt;hasId(&quot;save-button&quot;)) {
+    // ...
+}
+
+### `void setStyleTag(const std::string&amp; t)`
+
+Sets the style tag. Used by `TagName { ... }` selectors. Widgets set
+this in `onBuild` (e.g. `&quot;Button&quot;`, `&quot;Toggle&quot;`).
+
+```cpp
+node-&gt;setStyleTag(&quot;MyWidget&quot;);
 </code></pre>
 <h3 id="const-stdstring-getstyletag-const"><code>const std::string&amp; getStyleTag() const</code></h3>
 <p>Returns the current style tag.</p>
