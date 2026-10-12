@@ -500,14 +500,22 @@ transform). So a point `p` in the node's local space becomes
 ```cpp
 registerBuiltinFilters();
 
+if (!layerSeparable_.valid() ||
+    layerSeparable_.width != tw || layerSeparable_.height != th)
+{
+    if (layerSeparable_.valid())
+        renderer->destroyTarget(layerSeparable_);
+    layerSeparable_ = renderer->createTarget(tw, th);
+    if (!layerSeparable_.valid()) return;
+}
+
 FilterContext ctx;
-ctx.renderer = renderer;
-ctx.node = this;
-ctx.src = layerTarget_;
-ctx.scratch = layerScratch_;
-ctx.region = region;
-ctx.dst = {0, 0, (float)tw, (float)th};
-ctx.opacity = globalOp;
+ctx.renderer     = renderer;
+ctx.node         = this;
+ctx.scratch      = layerSeparable_;
+ctx.region       = region;
+ctx.dst          = {0, 0, (float)tw, (float)th};
+ctx.opacity      = globalOp;
 
 auto& registry = FilterRegistry::get();
 
@@ -517,34 +525,82 @@ if (renderStyle.filters.empty()) {
     return;
 }
 
-for (const auto& f : renderStyle.filters) {
-    ctx.ref = &f;
-    if (const auto* def = registry.find(f.name)) {
+const size_t numFilters = renderStyle.filters.size();
+TargetHandle currentRead  = layerTarget_;
+TargetHandle currentWrite = layerScratch_;
+
+for (size_t i = 0; i < numFilters; ++i) {
+    const bool isLast = (i == numFilters - 1);
+
+    ctx.ref          = &renderStyle.filters[i];
+    ctx.src          = currentRead;
+    ctx.write_target = isLast ? TargetHandle{} : currentWrite;
+
+    if (const auto* def = registry.find(ctx.ref->name)) {
         applyFilter(*def, ctx);
     } else {
-        renderer->drawTarget(layerTarget_, region,
-                             Colors::White.withAlpha(globalOp));
+        // Unknown filter: draw unmodified to the same destination
+        // the filter would have written to.
+        if (isLast) {
+            renderer->drawTarget(currentRead, region,
+                                 Colors::White.withAlpha(globalOp));
+        } else {
+            renderer->pushTarget(currentWrite);
+            renderer->drawTarget(currentRead, ctx.dst, Colors::White);
+            renderer->popTarget();
+        }
     }
+
+    if (!isLast)
+        std::swap(currentRead, currentWrite);
 }
 ```
 
-`registerBuiltinFilters` is idempotent — it ensures `blur` and
-`drop-shadow` are registered before the chain runs.
+Three things changed compared to a single-filter pass:
 
-For each filter in `renderStyle.filters`:
+#### 1. Filters chain
 
-- If the filter name is registered, `applyFilter(def, ctx)` runs the
-  filter's pattern-specific pipeline.
-- If not registered (missing shader or typo), fallback: draw the target
-  directly.
+Each filter reads the previous filter's output. The chain alternates
+between `layerTarget_` and `layerScratch_`:
 
-The fallback is silent — no error, no log. The node just renders
-unfiltered.
+- Filter 0: `read = layerTarget_`, `write = layerScratch_`.
+- Filter 1: `read = layerScratch_`, `write = layerTarget_`.
+- Filter 2: `read = layerTarget_`, `write = layerScratch_`.
+- ...
+- Filter N-1 (last): `read = <whatever>`, `write = framebuffer`.
 
-**Note:** in a `filters` list with two filters, both `applyFilter`
-calls read from `layerTarget_` (the original). They don't chain — the
-second doesn't see the first's output. This is documented in
-[Effects §1.5](../user/09-effects.md).
+The swap after each iteration is what makes the alternation work: what
+was just written becomes the next filter's input.
+
+#### 2. Opacity is applied once, on the last filter
+
+`ctx.opacity` is `globalOp` (the node's opacity times all ancestors).
+It's used only when the last filter writes to the framebuffer. All
+intermediate writes use `Colors::White` and go into a target, which
+starts transparent. If we applied opacity at every step, it would
+compound: a node at 0.5 with two filters would produce a result at
+0.25.
+
+#### 3. Separable filters need a third target
+
+`blur` is a `Separable` pattern: horizontal pass into an intermediate,
+then vertical pass into the destination. If the intermediate were one
+of the two ping-pong targets, the V-pass would overwrite what the
+H-pass just read. Hence `layerSeparable_`, allocated once per
+`drawLayer` call (with the same dimensions as the other two).
+
+#### Fallback
+
+If `registry.find(name)` returns `nullptr` (shader not registered, typo
+in `.zstyle`, missing asset), the code draws the current source
+unmodified to the same destination the filter would have written to.
+The chain continues: subsequent filters read that unmodified image
+instead of skipping the step entirely.
+
+This means a broken filter in the middle of a chain is not a hard
+failure — it degrades to a pass-through. The visual result is "as if
+that filter weren't there", with the other filters still applied.
+
 
 ### 4.6 `applyFilter` patterns
 
@@ -1215,12 +1271,6 @@ computed from the transformed rect).
 A rotated filtered node will have its region computed as if it weren't
 rotated. The filter runs, but on a slightly wrong region. This is a
 known limitation.
-
-**Multiple filters don't chain.**
-Each filter reads `layerTarget_`, not the previous filter's output.
-For blur + sepia, the sepia operates on the original, not the blurred
-version. The result is "sepia blended with blur" rather than "sepia of
-blur". See [Effects](../user/09-effects.md) for workarounds.
 
 **`box-shadow` is not a Gaussian blur.**
 It's 5 stacked rounded rects. For large blur radii, the approximation

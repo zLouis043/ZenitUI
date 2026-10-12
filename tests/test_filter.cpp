@@ -1,9 +1,11 @@
 #include "TestFramework.hpp"
 #include "StyleParser.hpp"
 #include "Theme.hpp"
+#include "Mocks.hpp"
 
 using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
+using namespace ZenitUI::Test;
 
 TEST(Parser_filter, single_blur) {
     Theme t;
@@ -53,4 +55,36 @@ TEST(Parser_filter, empty_value_leaves_empty_vector) {
         CHECK(t.rules[0].style.filters.value.empty());
     else
         CHECK(true);
+}
+
+TEST(Filter_chaining, two_filters_ping_pong_through_targets)
+{
+    Env env;
+    env.renderer.supportsEffects = true;   // <-- attiva il path "layer"
+
+    env.assets.registerEffect("fx1");
+    env.assets.registerEffect("fx2");
+
+    FilterRegistry::get().add(FilterDef{
+        .name = "fx1", .shader = "fx1",
+        .pattern = FilterPattern::SinglePass, .params = {}});
+    FilterRegistry::get().add(FilterDef{
+        .name = "fx2", .shader = "fx2",
+        .pattern = FilterPattern::SinglePass, .params = {}});
+
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->size(Px(100), Px(100));
+    node->getInlineBase().filters = std::vector<FilterRef>{
+        {"fx1", {}}, {"fx2", {}}};
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(node);
+
+    env.frame(root);
+
+    // Subtree render: 1 pushTarget (into layerTarget_)
+    // Filter 0 (fx1, not last): 1 pushTarget (into currentWrite)
+    // Filter 1 (fx2, last): 0 pushTarget (writes to framebuffer)
+    CHECK(env.renderer.pushTargetCount == 2);
 }

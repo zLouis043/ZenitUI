@@ -189,6 +189,7 @@ struct FilterContext {
     Layout*          node{nullptr};
     TargetHandle     src{};
     TargetHandle     scratch{};
+    TargetHandle     write_target{};
     Rect             region{};    // where to draw on the framebuffer
     Rect             dst{};       // {0, 0, tw, th}: target coordinates
     float            opacity{1.0f};
@@ -205,6 +206,7 @@ filter needs to process and composite the layer.
 | `node` | The filtered `Layout` node. |
 | `src` | The render target holding the subtree. |
 | `scratch` | A second target of the same size, for intermediate passes. |
+| `write_target` | Where the filter should write its result. If valid, render into this target using `pushTarget` / `popTarget`. If invalid, this is the last filter in the chain: write to `region` on the framebuffer, applying `opacity`. |
 | `region` | The destination rect on the framebuffer (in logical pixels). |
 | `dst` | `{0, 0, tw, th}` — the target's coordinate space. |
 | `opacity` | The node's computed opacity (parent × own). |
@@ -220,12 +222,21 @@ clip, in logical pixels.
 used to set the `texSize` uniform (which should be the target's
 dimensions) and as the destination rect when rendering into a target.
 
+`write_target` decides **where the result goes**. In a single-filter
+node, it's invalid — the filter writes directly to the framebuffer at
+`region` with `opacity` applied. In a multi-filter chain, every filter
+except the last receives a valid `write_target` and must render into
+it at full opacity; the last filter writes to the framebuffer. See
+[Render Pipeline §4.5](../internals/06-render-pipeline.md) for the
+ping-pong mechanism.
+
 ### Usage
 
-Every `applyFilter` variant uses `ctx.src`, `ctx.region`, and
-`ctx.opacity`. The `scratch` target is used only by `Separable`
-patterns. The `node` and `ref` are available for filters that need
-context-specific behavior.
+Every `applyFilter` variant reads from `ctx.src` and writes to either
+`ctx.write_target` (if valid) or the framebuffer at `ctx.region` (if
+not). The `scratch` target is used only by `Separable` patterns for
+the H-pass intermediate. `opacity` is applied only when writing to the
+framebuffer — intermediate writes to `write_target` use full opacity.
 
 ---
 
@@ -241,6 +252,16 @@ expected to do the whole pipeline.
 The custom function has full control — it can push targets, effects,
 set uniforms, and draw. It's the escape hatch for filters that don't
 fit the standard patterns.
+
+**Custom filters must honor `ctx.write_target`.** When it's valid, the
+filter is not the last in the chain: render into the target (push it,
+draw, pop it) and don't apply opacity. When it's invalid, the filter is
+the last one: render to the framebuffer at `ctx.region`, applying
+`ctx.opacity`.
+
+A `Custom` filter that ignores `write_target` and always writes to the
+framebuffer will produce a correct result only when it's the last (or
+only) filter. In a chain it will short-circuit the composition.
 
 ---
 

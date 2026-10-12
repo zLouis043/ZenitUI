@@ -80,7 +80,20 @@ Panel {
     background: #c8344a;
 }
 
-/* --- 5. two filters: each reads the original target. ---------------- */
+/* --- 5. two filters chained: blur first, then sepia ---------------- */
 .filter-both {
     filter: blur(2px), sepia(0.6);
+}
+
+/* --- 6. three filters chained: blur -> sepia -> shadow -------------- */
+.filter-triple {
+    filter: blur(2px), sepia(0.6), drop-shadow(3px, 3px, #000000cc);
+}
+
+/* --- 7. reversed order: shadow -> blur ------------------------------ */
+/* Blur AFTER a shadow smears the shadow, which is visibly different
+   from the shadow applied AFTER a blur (row 5 vs row 7). If the filter
+   chain were broken, these two would look identical. */
+.filter-reversed {
+    filter: drop-shadow(3px, 3px, #000000cc), blur(2px);
 }

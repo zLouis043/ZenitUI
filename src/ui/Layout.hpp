@@ -30,6 +30,8 @@ namespace ZenitUI
 					r->destroyTarget(layerTarget_);
 				if (layerScratch_.valid())
 					r->destroyTarget(layerScratch_);
+				if (layerSeparable_.valid())
+					r->destroyTarget(layerSeparable_);
 			}
 		}
 
@@ -494,11 +496,12 @@ namespace ZenitUI
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
-		TargetHandle layerTarget_;	 // render target per il path "filter"
-		TargetHandle layerScratch_;	 // secondo target per blur separabile
-		EffectHandle customEffect;	 // cache dell'handle risolto
-		std::string effectName_;	 // nome stile, per detect cambio
-		EffectHandle currentEffect_; // cache dell'handle risolto
+		TargetHandle layerTarget_;	  // ping-pong A
+		TargetHandle layerScratch_;	  // ping-pong B
+		TargetHandle layerSeparable_; // intermediate for Separable filters
+		EffectHandle customEffect;	  // cache dell'handle risolto
+		std::string effectName_;	  // nome stile, per detect cambio
+		EffectHandle currentEffect_;  // cache dell'handle risolto
 		bool hasShader{false};
 
 		AnimationPlayer anim_;

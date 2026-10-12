@@ -5,7 +5,7 @@
 
 namespace ZenitUI
 {
-		void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
+	void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
 	{
 		auto renderer = UIContext::get().renderer;
 		if (!renderer)
@@ -238,11 +238,24 @@ namespace ZenitUI
 
 		registerBuiltinFilters();
 
+		// Allocate the third target for Separable intermediates. It's only
+		// used by Separable filters, but allocating it unconditionally keeps
+		// the code simpler and the memory cost is bounded by the region size
+		// (same as the other two targets).
+		if (!layerSeparable_.valid() ||
+			layerSeparable_.width != tw || layerSeparable_.height != th)
+		{
+			if (layerSeparable_.valid())
+				renderer->destroyTarget(layerSeparable_);
+			layerSeparable_ = renderer->createTarget(tw, th);
+			if (!layerSeparable_.valid())
+				return;
+		}
+
 		FilterContext ctx;
 		ctx.renderer = renderer;
 		ctx.node = this;
-		ctx.src = layerTarget_;
-		ctx.scratch = layerScratch_;
+		ctx.scratch = layerSeparable_; // renamed: this is the Separable intermediate
 		ctx.region = region;
 		ctx.dst = {0, 0, (float)tw, (float)th};
 		ctx.opacity = globalOp;
@@ -251,21 +264,50 @@ namespace ZenitUI
 
 		if (renderStyle.filters.empty())
 		{
-			renderer->drawTarget(layerTarget_, region, Colors::White.withAlpha(globalOp));
+			renderer->drawTarget(layerTarget_, region,
+								 Colors::White.withAlpha(globalOp));
 			return;
 		}
 
-		for (const auto &f : renderStyle.filters)
-		{
-			ctx.ref = &f;
+		// Ping-pong between layerTarget_ and layerScratch_ across filters.
+		// The last filter writes to the framebuffer (region); all previous
+		// ones write to a target so the next filter can read from it.
+		const size_t numFilters = renderStyle.filters.size();
+		TargetHandle currentRead = layerTarget_;
+		TargetHandle currentWrite = layerScratch_;
 
-			if (const auto *def = registry.find(f.name))
+		for (size_t i = 0; i < numFilters; ++i)
+		{
+			const bool isLast = (i == numFilters - 1);
+
+			ctx.ref = &renderStyle.filters[i];
+			ctx.src = currentRead;
+			ctx.write_target = isLast ? TargetHandle{} : currentWrite;
+
+			if (const auto *def = registry.find(ctx.ref->name))
 			{
 				applyFilter(*def, ctx);
 			}
 			else
 			{
-				renderer->drawTarget(layerTarget_, region, Colors::White.withAlpha(globalOp));
+				// Unknown filter: draw unmodified to the same destination the
+				// filter would have written to.
+				if (isLast)
+				{
+					renderer->drawTarget(currentRead, region,
+										 Colors::White.withAlpha(globalOp));
+				}
+				else
+				{
+					renderer->pushTarget(currentWrite);
+					renderer->drawTarget(currentRead, ctx.dst, Colors::White);
+					renderer->popTarget();
+				}
+			}
+
+			if (!isLast)
+			{
+				std::swap(currentRead, currentWrite);
 			}
 		}
 	}

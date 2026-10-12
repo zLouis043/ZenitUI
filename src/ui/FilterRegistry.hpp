@@ -48,10 +48,12 @@ struct FilterParam {
 struct FilterContext {
     IRenderer*       renderer{nullptr};
     Layout*          node{nullptr};
-    TargetHandle     src{};
-    TargetHandle     scratch{};
-    Rect             region{};    // dove disegnare sul framebuffer
-    Rect             dst{};       // {0, 0, tw, th}: coordinate del target
+    TargetHandle     src{};           // read from here (was already present)
+    TargetHandle     scratch{};       // Separable intermediate
+    TargetHandle     write_target{};  // NEW: write to this target,
+                                      //      or framebuffer if invalid
+    Rect             region{};        // framebuffer destination (last filter only)
+    Rect             dst{};           // {0, 0, tw, th}: target coords
     float            opacity{1.0f};
     const FilterRef* ref{nullptr};
 };
