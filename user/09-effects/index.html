@@ -1171,13 +1171,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#75-effect-on-the-same-node-as-a-filter" class="md-nav__link">
+  <a href="#75-effect-and-filter-on-the-same-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.5 Effect on the same node as a filter
+        7.5 effect: and filter: on the same node
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="7.5 effect: and filter: on the same node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-each-one-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each one does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-when-both-are-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What happens when both are set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-intentional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is intentional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-combine-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to combine them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2353,13 +2414,74 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#75-effect-on-the-same-node-as-a-filter" class="md-nav__link">
+  <a href="#75-effect-and-filter-on-the-same-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.5 Effect on the same node as a filter
+        7.5 effect: and filter: on the same node
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="7.5 effect: and filter: on the same node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-each-one-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each one does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-when-both-are-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What happens when both are set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-intentional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this is intentional
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-combine-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to combine them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3061,16 +3183,54 @@ this in either dimension, the layer path falls back to <code>drawInline</code>:<
     return;
 }
 </code></pre>
-<h3 id="75-effect-on-the-same-node-as-a-filter">7.5 Effect on the same node as a filter</h3>
-<p>If a node has both <code>filter:</code> and <code>effect:</code>:</p>
+<h3 id="75-effect-and-filter-on-the-same-node">7.5 <code>effect:</code> and <code>filter:</code> on the same node</h3>
+<p>A node can have both properties at once. They operate at different
+levels of the render pipeline, and understanding which is which
+explains why the combination behaves the way it does.</p>
+<h4 id="what-each-one-does">What each one does</h4>
+<p><strong><code>effect:</code></strong> pushes a shader around the node's own draw calls. Every
+primitive the node draws (background, border, text, children) is
+rasterized with the shader active. The shader sees each primitive
+individually — it does not see the composited subtree image.</p>
+<p><strong><code>filter:</code></strong> renders the subtree into an offscreen target, then runs
+the filter chain on the composited image. The filter sees the whole
+subtree at once, with all its layers already blended.</p>
+<h4 id="what-happens-when-both-are-set">What happens when both are set</h4>
 <ol>
-<li>The effect is applied <strong>inside</strong> the render target — every draw call
-   in the subtree gets the shader.</li>
-<li>Then the filter chain processes the composited result.</li>
+<li>The effect shader is pushed.</li>
+<li>The subtree is rendered into <code>layerTarget_</code> with the shader active.
+   So each draw call inside the subtree is processed by the shader
+   <strong>individually</strong>.</li>
+<li>The filter chain runs on the resulting composited image.</li>
 </ol>
-<p>This means the effect is applied twice-ish: once per draw call inside
-the target, and the result is then filtered. Usually not what you want.
-Pick one.</p>
+<p>The result: the shader is applied N times, once per draw call inside
+the subtree. Then the composite is filtered.</p>
+<h4 id="why-this-is-intentional">Why this is intentional</h4>
+<p>The two properties serve different purposes:</p>
+<ul>
+<li><strong><code>effect:</code></strong> is for per-primitive shaders: hue rotation on a specific
+  shape, custom vertex manipulation, a per-fragment tint that must be
+  applied to the node's geometry directly. When applied to a single
+  primitive, it's cheap and predictable.</li>
+<li><strong><code>filter:</code></strong> is for image-level effects: blur, drop-shadow, sepia,
+  anything that needs to read neighboring pixels of the composited
+  result.</li>
+</ul>
+<p>Using them together is rare but valid — for example, a node that
+needs a per-primitive hue shift <strong>and</strong> a global blur on top.</p>
+<h4 id="when-not-to-combine-them">When NOT to combine them</h4>
+<p>If you want a single shader to process the <strong>composited subtree</strong>, use
+<code>filter:</code> with a <code>Custom</code> filter that pushes the shader. This gives
+you the "one shader, whole image" semantics without the per-draw-call
+multiplication.</p>
+<p>If you want per-primitive processing only, use <code>effect:</code> alone. Don't
+add a <code>filter:</code> unless you actually need image-level composition.</p>
+<h4 id="cost">Cost</h4>
+<p>Both properties are more expensive than either alone. The effect adds
+a shader push/pop around each draw call inside the subtree; the filter
+adds a render target and at least one full-screen pass. Combining them
+means paying both costs. If you're seeing performance issues on a
+specific node, check whether both are actually needed.</p>
 <hr />
 <h2 id="8-complete-example">8. Complete example</h2>
 <p>A filtered card with a custom filter:</p>
