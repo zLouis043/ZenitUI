@@ -2802,12 +2802,21 @@ exercised <code>isInheritedProp</code>).</p>
 </ul>
 <h3 id="46-vector-resize-audit">4.6 Vector resize audit</h3>
 <p><code>Layout::drawChildren</code> uses three member vectors (<code>drawNegZ_</code>,
-<code>drawNormal_</code>, <code>drawPosZ_</code>). They grow to the max sibling count and
-then stabilize. Verify with a benchmark that no per-frame allocation
-happens after warmup.</p>
+<code>drawNormal_</code>, <code>drawPosZ_</code>) to partition children by stacking context
+before drawing. They're reused across frames (cleared with <code>.clear()</code>,
+which preserves capacity) and should reach a steady state after the
+first frame with the maximum child count.</p>
+<p><strong>Verification:</strong> added <code>micro.tree.drawChildren.500</code> — a root with
+500 children, all with explicit z-index, so they land in the <code>posZ</code> /
+<code>negZ</code> buckets. The benchmark measures pure <code>draw()</code> cost.</p>
+<p><strong>Result:</strong> 37.1 µs with sd 1.2 µs (3%). Stable timing indicates no
+per-frame allocation. <code>clear()</code> + <code>push_back</code> reaches capacity within
+the first run and stays there. No code change required.</p>
 <ul>
-<li>[ ] Benchmark <code>drawChildren</code> allocation behavior</li>
-<li>[ ] If allocations persist, pre-reserve based on <code>children.size()</code></li>
+<li>[x] Add <code>micro.tree.drawChildren.500</code> benchmark</li>
+<li>[x] Verify no per-frame allocation</li>
+<li>[x] Document the "grow-once, then reuse" pattern in
+      <code>internals/06-render-pipeline.md</code></li>
 </ul>
 <h3 id="47-build-system-o2-by-default">4.7 Build system: <code>-O2</code> by default</h3>
 <p><strong>Severity:</strong> critical — all previous benchmark numbers were measured

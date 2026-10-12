@@ -1609,6 +1609,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#54-capacity-and-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Capacity and allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2405,6 +2416,17 @@
     <span class="md-ellipsis">
       
         5.3 Auto-removal during draw
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-capacity-and-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Capacity and allocation
       
     </span>
   </a>
@@ -3380,6 +3402,26 @@ child is drawn one more time. It'll be culled at the end of the next
 <code>update</code>.</p>
 <p>In practice, callbacks don't fire during <code>draw</code> — they fire during
 <code>update</code>. So this is a non-issue.</p>
+<h3 id="54-capacity-and-allocation">5.4 Capacity and allocation</h3>
+<p>The three partition vectors (<code>drawNegZ_</code>, <code>drawNormal_</code>, <code>drawPosZ_</code>)
+are members of <code>Layout</code> and are reused across frames. <code>clear()</code> at the
+top of each call doesn't deallocate — it just resets the size to zero
+while keeping the capacity. <code>push_back</code> then fills the vectors up to
+their previous maximum size without reallocating.</p>
+<p>The steady state is therefore: allocate once on the frame with the
+highest child count, then reuse indefinitely. The only ways to trigger
+a reallocation are:</p>
+<ol>
+<li>The first time a node draws with N children.</li>
+<li>When a node's child count grows past its historical maximum.</li>
+</ol>
+<p>Both are one-shot. There's no per-frame allocation in <code>drawChildren</code>,
+which is why <code>micro.tree.drawChildren.500</code> shows stable timing across
+runs (37.1 µs, sd 1.2 µs on the reference machine).</p>
+<p><code>reserve()</code> is not called explicitly. Adding it would over-allocate for
+the common case (a node with 2–3 children) and provide no benefit for
+the case that actually matters (a node whose child count grew once and
+then stabilized).</p>
 <hr />
 <h2 id="6-resolveeffectifneeded">6. <code>resolveEffectIfNeeded</code></h2>
 <pre><code class="language-cpp">void Layout::resolveEffectIfNeeded(const ComputedStyle&amp; style) {

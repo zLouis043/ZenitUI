@@ -1814,6 +1814,17 @@ numbers will be inflated by 3–10x depending on the benchmark. A useful
 smell test: if <em>every</em> benchmark jumps by a suspiciously uniform factor
 between two commits, and some of them touch completely unrelated code,
 the build profile is the first thing to check.</p>
+<p><strong>The CI runner is not stable across runs.</strong></p>
+<p>GitHub-hosted runners for <code>ubuntu-latest</code> are provisioned from a pool
+of heterogeneous hardware. Across benchmark runs on this repository,
+we've observed ~2x jumps between runs that are not correlated with any
+code change — including runs on the <em>same</em> commit. This means the
+chart should be read as a trend over many commits, not as a comparison
+between two adjacent points.</p>
+<p>For per-optimization validation, use the local <code>baseline.json</code> and
+<code>make bench-run</code>. The CI chart is useful for catching catastrophic
+regressions (&gt;2x) and for the long-term trend, but not for measuring
+the impact of individual improvements.</p>
 <h2 id="see-also">See also</h2>
 <ul>
 <li><a href="../../ROADMAP/">ROADMAP</a> — Phase 4 tracks the benchmarked
