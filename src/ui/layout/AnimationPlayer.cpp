@@ -72,7 +72,7 @@ void Anim::tickIncremental(std::vector<ActiveCssAnimation>& anims, float dt)
             continue;
         }
         bool fin = false;
-        (void)sampleActive(anim, fin);
+        (void)sampleActiveCached(anim, fin);
         if (fin)
             anim.finished = true;
     }
@@ -98,7 +98,7 @@ void Anim::tickAbsolute(std::vector<ActiveCssAnimation>& anims, double now)
             continue;
         }
         bool fin = false;
-        (void)sampleActive(anim, fin);
+        (void)sampleActiveCached(anim, fin);
         if (fin)
             anim.finished = true;
     }
@@ -118,7 +118,7 @@ void Anim::overlayCssStyle(Style& out, const std::vector<ActiveCssAnimation>& an
         if (it == Theme::get().keyframes.end())
             continue;
         bool fin = false;
-        float localT = sampleActive(anim, fin);
+        float localT = sampleActiveCached(anim, fin);
         if (fin && !anim.fillForwards)
             continue;
         Style frame = evaluateKeyframes(it->second, localT, anim.ease);
@@ -134,7 +134,7 @@ void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAni
         if (it == Theme::get().keyframes.end())
             continue;
         bool fin = false;
-        float localT = sampleActive(anim, fin);
+        float localT = sampleActiveCached(anim, fin);
         if (fin && !anim.fillForwards)
             continue;
         Style frame = evaluateKeyframes(it->second, localT, anim.ease);

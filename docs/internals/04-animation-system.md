@@ -295,6 +295,52 @@ edge case where `elapsed` exactly equals `total`: without the clamp,
 `floor(t / duration)` would point to the *next* iteration, which
 doesn't exist.
 
+### 2.4b `sampleActiveCached`
+
+`sampleActiveCached` is a thin wrapper around `sampleActive` that
+caches the result keyed on `elapsed`. It exists because on every frame
+`sampleActive` is called twice per animation:
+
+1. In `tickIncremental` (or `tickAbsolute`), to detect whether the
+   animation just finished.
+2. In `overlayCssComputed` (or `overlayCssStyle`), to compute `localT`
+   for the keyframe evaluation.
+
+Between those two calls, `elapsed` doesn't change (the tick advances
+it, the overlay reads it). The cached result is therefore guaranteed
+to be identical, and the second call is free.
+
+```cpp
+inline float sampleActiveCached(const ActiveCssAnimation& a, bool& finished) {
+    if (a.cachedSampleElapsed == a.elapsed) {
+        finished = a.cachedFinished;
+        return a.cachedLocalT;
+    }
+    a.cachedLocalT = sampleActive(a, finished);
+    a.cachedFinished = finished;
+    a.cachedSampleElapsed = a.elapsed;
+    return a.cachedLocalT;
+}
+```
+
+The cache fields on `ActiveCssAnimation` are `mutable`, because
+`sampleActive` is logically a read-only query — it doesn't change the
+animation's timing, only reports what the current state is.
+
+The cache is invalidated automatically whenever `elapsed` differs from
+`cachedSampleElapsed`. There's no frame counter involved: the elapsed
+time itself is the cache key. This means the cache survives across
+frames if `dt == 0` (nothing changed), and is invalidated on the first
+frame where the animation advances.
+
+**Note on the implementation vs the ROADMAP entry.** The ROADMAP
+originally proposed caching `evaluateKeyframes`, on the assumption that
+it was evaluated twice per frame. Reading the actual code shows that's
+not the case: `evaluateKeyframes` is only called from the overlay
+phase, once per frame. The double call is on `sampleActive`, which is
+cheaper but still measurable across many animations. The implemented
+fix targets `sampleActive`, which is the actual hotspot.
+
 ### 2.5 `evaluateKeyframes`
 
 ```cpp

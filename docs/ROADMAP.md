@@ -666,17 +666,38 @@ the matching cost.
 
 ### 4.4 Cache animation evaluation
 
-`tickIncremental` evaluates the keyframe to detect finish;
-`overlayCssComputed` evaluates it again to apply. Each evaluation
-iterates ~45 properties.
+**Severity:** low — measurable improvement, not blocking.
 
-**Fix:** store the last-evaluated `Style` in the `ActiveCssAnimation`
-and reuse it if the elapsed time hasn't changed between the two calls.
+**Location:** `src/ui/AnimPrimitives.hpp`, `src/ui/layout/AnimationPlayer.cpp`.
 
-- [ ] Add `Style cachedFrame` to `ActiveCssAnimation`
-- [ ] Add a `uint32_t cacheKey` (frame number or elapsed timestamp)
-- [ ] Set / check the cache in the two call sites
-- [ ] Benchmark
+**Problem:** `sampleActive` is called twice per animation per frame:
+once in the tick phase (`tickIncremental` / `tickAbsolute`) to detect
+whether the animation just finished, and once in the overlay phase
+(`overlayCssComputed` / `overlayCssStyle`) to compute `localT` for the
+keyframe evaluation. Between the two calls, `elapsed` doesn't change,
+so the second call is guaranteed to return the same value as the first.
+
+**Expected:** compute `sampleActive` once per animation per frame and
+reuse the result in the overlay phase.
+
+**Fix (implemented):** added `sampleActiveCached`, a thin wrapper around
+`sampleActive` that caches `localT` and `finished` keyed on `elapsed`.
+The cache fields (`cachedSampleElapsed`, `cachedLocalT`, `cachedFinished`)
+are `mutable` on `ActiveCssAnimation` because `sampleActive` is logically
+a read-only query. There's no frame counter: the elapsed time itself is
+the cache key, so the cache is invalidated automatically whenever the
+animation advances, and it survives across frames if `dt == 0`.
+
+**Benchmark:** `micro.tickCss.100` improved by 9.1% (10.06 → 9.14 µs).
+`system.frame.animated100` improved by 1.8% (275 → 270 µs).
+
+- [x] Add `cachedSampleElapsed` / `cachedLocalT` / `cachedFinished` to `ActiveCssAnimation`
+- [x] Add `sampleActiveCached` wrapper in `AnimPrimitives.hpp`
+- [x] Use `sampleActiveCached` in `tickIncremental`, `tickAbsolute`,
+      `overlayCssStyle`, `overlayCssComputed`
+- [x] Add `micro.tickCssAndOverlay.100` benchmark
+- [x] Add regression tests in `test_animations.cpp`
+- [x] Update `internals/04-animation-system.md`
 
 ### 4.5 Avoid double `resolveFor` per frame
 
