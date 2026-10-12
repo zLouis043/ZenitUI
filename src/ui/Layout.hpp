@@ -79,6 +79,14 @@ namespace ZenitUI
 			return false;
 		}
 
+		// True if the node's id matches. The id is set via setId() (or the
+		// `id` fluent helper, or `#name` in ZMarkup). Returns false if the
+		// node has no id, or if the given id is empty.
+		bool hasId(const std::string &targetId) const
+		{
+			return !targetId.empty() && nodeId == targetId;
+		}
+
 		// Removes every class. No-op if there were none.
 		void clearStyleClasses()
 		{

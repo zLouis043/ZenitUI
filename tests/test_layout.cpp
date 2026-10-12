@@ -280,3 +280,31 @@ TEST(Layout_hitTest, clipped_area_not_hit) {
     // Non deve colpire inner.
     CHECK(root->hitTest({300, 50}, false) != inner.get());
 }
+
+TEST(Layout_hasId, true_when_matching)
+{
+    freshTheme();
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->setId("save-button");
+
+    CHECK(node->hasId("save-button"));
+    CHECK(!node->hasId("cancel-button"));
+}
+
+TEST(Layout_hasId, false_when_no_id)
+{
+    freshTheme();
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+
+    CHECK(!node->hasId("anything"));
+    CHECK(!node->hasId(""));
+}
+
+TEST(Layout_hasId, empty_input_always_false)
+{
+    freshTheme();
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->setId("");
+
+    CHECK(!node->hasId(""));
+}
