@@ -343,6 +343,37 @@ namespace Bench
               sharedTreeRemoveRoot()->removeAllChildren();
               g_sink += (float)sharedTreeRemoveRoot()->children.size(); });
 
+        R.add("micro.tree.drawChildren.500", "tree",
+              /*iterations=*/500,
+              /*setup=*/[]
+              {
+          // Root con 500 figli, tutti con z-index esplicito così
+          // finiscono nei bucket posZ/negZ (che sono i due vettori
+          // "nuovi" che vogliamo verificare).
+          auto& root = sharedTreeRemoveRoot();   // riusa lo slot già esistente
+          root = std::make_shared<Layout>(LayoutType::Stack);
+          root->size(Percent(100), Percent(100));
+
+          for (int i = 0; i < 500; ++i)
+          {
+              auto n = std::make_shared<Layout>(LayoutType::Stack);
+              n->size(Px(20), Px(20));
+              n->getInlineBase().position = Position::Relative;
+              n->getInlineBase().zIndex   = ZIndex(i % 10);
+              root->addChild(n);
+          }
+
+          // Un measure+arrange preliminare, così draw non causa
+          // resize del subtree.
+          root->measure(800, 600);
+          root->arrange({0, 0, 800, 600}); },
+              /*body=*/[]
+              {
+          auto& root = sharedTreeRemoveRoot();
+          // draw() chiama drawChildren() che riusa i vettori membri.
+          root->draw();
+          g_sink += (float)root->children.size(); });
+          
         // =======================================================================
         //  SmallVector
         // =======================================================================

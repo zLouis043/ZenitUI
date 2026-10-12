@@ -209,6 +209,20 @@ smell test: if *every* benchmark jumps by a suspiciously uniform factor
 between two commits, and some of them touch completely unrelated code,
 the build profile is the first thing to check.
 
+**The CI runner is not stable across runs.**
+
+GitHub-hosted runners for `ubuntu-latest` are provisioned from a pool
+of heterogeneous hardware. Across benchmark runs on this repository,
+we've observed ~2x jumps between runs that are not correlated with any
+code change — including runs on the *same* commit. This means the
+chart should be read as a trend over many commits, not as a comparison
+between two adjacent points.
+
+For per-optimization validation, use the local `baseline.json` and
+`make bench-run`. The CI chart is useful for catching catastrophic
+regressions (>2x) and for the long-term trend, but not for measuring
+the impact of individual improvements.
+
 ## See also
 
 - [ROADMAP](../ROADMAP.md) — Phase 4 tracks the benchmarked

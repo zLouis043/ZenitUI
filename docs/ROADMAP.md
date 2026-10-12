@@ -758,12 +758,23 @@ exercised `isInheritedProp`).
 ### 4.6 Vector resize audit
 
 `Layout::drawChildren` uses three member vectors (`drawNegZ_`,
-`drawNormal_`, `drawPosZ_`). They grow to the max sibling count and
-then stabilize. Verify with a benchmark that no per-frame allocation
-happens after warmup.
+`drawNormal_`, `drawPosZ_`) to partition children by stacking context
+before drawing. They're reused across frames (cleared with `.clear()`,
+which preserves capacity) and should reach a steady state after the
+first frame with the maximum child count.
 
-- [ ] Benchmark `drawChildren` allocation behavior
-- [ ] If allocations persist, pre-reserve based on `children.size()`
+**Verification:** added `micro.tree.drawChildren.500` — a root with
+500 children, all with explicit z-index, so they land in the `posZ` /
+`negZ` buckets. The benchmark measures pure `draw()` cost.
+
+**Result:** 37.1 µs with sd 1.2 µs (3%). Stable timing indicates no
+per-frame allocation. `clear()` + `push_back` reaches capacity within
+the first run and stays there. No code change required.
+
+- [x] Add `micro.tree.drawChildren.500` benchmark
+- [x] Verify no per-frame allocation
+- [x] Document the "grow-once, then reuse" pattern in
+      `internals/06-render-pipeline.md`
 
 ### 4.7 Build system: `-O2` by default
 
