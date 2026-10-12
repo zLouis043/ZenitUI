@@ -1805,10 +1805,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#45-avoid-double-resolvefor-per-frame" class="md-nav__link">
+  <a href="#45-optimize-isinheritedprop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.5 Avoid double resolveFor per frame
+        4.5 Optimize isInheritedProp
       
     </span>
   </a>
@@ -1820,6 +1820,17 @@
     <span class="md-ellipsis">
       
         4.6 Vector resize audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-build-system-o2-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Build system: -O2 by default
       
     </span>
   </a>
@@ -2745,15 +2756,49 @@ animation advances, and it survives across frames if <code>dt == 0</code>.</p>
 <li>[x] Add regression tests in <code>test_animations.cpp</code></li>
 <li>[x] Update <code>internals/04-animation-system.md</code></li>
 </ul>
-<h3 id="45-avoid-double-resolvefor-per-frame">4.5 Avoid double <code>resolveFor</code> per frame</h3>
-<p>When a node has a <code>pendingTransition</code>, <code>update</code> calls <code>resolveFor</code> and
-then <code>measure</code> calls it again. A "resolved this frame" flag would avoid
-the second call.</p>
+<h3 id="45-optimize-isinheritedprop">4.5 Optimize <code>isInheritedProp</code></h3>
+<p><strong>Severity:</strong> low — measurable on style resolution, not blocking.</p>
+<p><strong>Location:</strong> <code>src/ui/Style.hpp</code>, <code>isInheritedProp</code>.</p>
+<p><strong>Problem:</strong> <code>isInheritedProp</code> is called once per non-set property per
+call to <code>ComputedStyle::from</code> when a parent is present. For a typical
+style resolution, that's ~40 calls per node per frame. Each call is a
+chain of up to 5 string comparisons:</p>
+<pre><code class="language-cpp">return name == &quot;font&quot; || name == &quot;fontSize&quot; || name == &quot;color&quot;
+    || name == &quot;letterSpacing&quot; || name == &quot;textAlign&quot;;
+</code></pre>
+<p>For the ~40 non-inherited properties, which is the vast majority, this
+walks the entire chain and returns false.</p>
+<p><strong>Expected:</strong> short-circuit on a property's string length, since the
+five inherited names have unique lengths (4, 5, 8, 9, 13).</p>
+<p><strong>Fix (implemented):</strong> dispatch on <code>name.size()</code> with a switch, then
+do a single string comparison inside each case:</p>
+<pre><code class="language-cpp">inline bool isInheritedProp(std::string_view name)
+{
+    switch (name.size()) {
+        case 4:  return name == &quot;font&quot;;
+        case 5:  return name == &quot;color&quot;;
+        case 8:  return name == &quot;fontSize&quot;;
+        case 9:  return name == &quot;textAlign&quot;;
+        case 13: return name == &quot;letterSpacing&quot;;
+        default: return false;
+    }
+}
+</code></pre>
+<p>For a property with a length that doesn't match any of the five (e.g.
+<code>width</code> → 5, <code>padding</code> → 7, <code>background</code> → 10), the switch returns false
+after a single integer comparison. For a property with a matching
+length (e.g. <code>width</code> → 5, <code>minWidth</code> → 8, <code>minHeight</code> → 9), the single
+string comparison discriminates correctly.</p>
+<p><strong>Benchmark:</strong> <code>micro.ComputedStyle.from_with_parent</code> added to
+isolate the cost of the parent branch (the pre-existing
+<code>micro.ComputedStyle.from</code> passes <code>nullptr</code> as parent, so it never
+exercised <code>isInheritedProp</code>).</p>
 <ul>
-<li>[ ] Add <code>bool resolvedThisFrame</code> to <code>StyleResolver</code></li>
-<li>[ ] Check it in <code>measure</code></li>
-<li>[ ] Reset at the start of each <code>update</code></li>
-<li>[ ] Benchmark</li>
+<li>[x] Add <code>micro.ComputedStyle.from_with_parent</code> benchmark</li>
+<li>[x] Rewrite <code>isInheritedProp</code> with a length-based switch</li>
+<li>[x] Add unit tests for the length-collision cases</li>
+<li>[x] Benchmark (measure improvement)</li>
+<li>[x] Update <code>api/Style.md</code> §"Inheritance"</li>
 </ul>
 <h3 id="46-vector-resize-audit">4.6 Vector resize audit</h3>
 <p><code>Layout::drawChildren</code> uses three member vectors (<code>drawNegZ_</code>,
@@ -2763,6 +2808,77 @@ happens after warmup.</p>
 <ul>
 <li>[ ] Benchmark <code>drawChildren</code> allocation behavior</li>
 <li>[ ] If allocations persist, pre-reserve based on <code>children.size()</code></li>
+</ul>
+<h3 id="47-build-system-o2-by-default">4.7 Build system: <code>-O2</code> by default</h3>
+<p><strong>Severity:</strong> critical — all previous benchmark numbers were measured
+against an unoptimized library.</p>
+<p><strong>Location:</strong> <code>Makefile</code> (repository root).</p>
+<p><strong>Problem:</strong> the library was compiled with <code>-ggdb</code> only, no <code>-O2</code>. The
+benchmarks linked the debug library, so every measurement was inflated
+by 3–10x. This was discovered when <code>cf17e3dc</code> (the commit that added
+the 4.4 cache) showed every single benchmark jumping by ~2x compared
+to the previous commit — a pattern too uniform to be a code
+regression, and specifically impossible for benchmarks like
+<code>micro.tree.addChild.1000</code> that touch no animation code.</p>
+<p><strong>Fix (implemented):</strong> the default <code>BUILD</code> profile is now <code>release</code>
+(<code>-O2 -ggdb</code>). <code>make BUILD=debug</code> restores the old behavior for
+interactive debugging. The fix was verified by rebuilding locally
+and observing 50–90% improvements across every benchmark dominated by
+framework code.</p>
+<p><strong>Benchmark deltas after the fix (local):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>Before</th>
+<th>After</th>
+<th>Δ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>micro.tickCss.100</code></td>
+<td>10.06</td>
+<td>0.91</td>
+<td>-91%</td>
+</tr>
+<tr>
+<td><code>micro.tickImperative.100</code></td>
+<td>198.8</td>
+<td>41.5</td>
+<td>-79%</td>
+</tr>
+<tr>
+<td><code>system.frame.static100</code></td>
+<td>164.4</td>
+<td>42.96</td>
+<td>-74%</td>
+</tr>
+<tr>
+<td><code>system.frame.200rules</code></td>
+<td>1632.8</td>
+<td>295.6</td>
+<td>-82%</td>
+</tr>
+<tr>
+<td><code>system.frame.animated100</code></td>
+<td>275.0</td>
+<td>114.9</td>
+<td>-58%</td>
+</tr>
+<tr>
+<td><code>system.frame.large1000</code></td>
+<td>1653.1</td>
+<td>500.8</td>
+<td>-70%</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>[x] Change <code>Makefile</code> default to <code>-O2 -ggdb</code></li>
+<li>[x] Add <code>BUILD=debug</code> opt-out</li>
+<li>[x] Regenerate <code>benchmarks/baseline.json</code></li>
+<li>[x] Update <code>internals/11-benchmarks.md</code> with a note on build profiles</li>
 </ul>
 <hr />
 <h2 id="phase-5-feature-completion">Phase 5 — Feature completion</h2>
