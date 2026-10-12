@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791800650565,
+  "lastUpdate": 1791807071866,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -389,6 +389,140 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.large1000",
             "value": 1141.21,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "cf17e3dc76235aa3fc5f926a754cfc2b21c55feb",
+          "message": "Completed 4.4 of the ROADMAP.md, added another benchmark and test and updated docs",
+          "timestamp": "2026-10-12T14:10:03+02:00",
+          "tree_id": "2d32198fe35041bd46563edd9ac95ed2149700ee",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/cf17e3dc76235aa3fc5f926a754cfc2b21c55feb"
+        },
+        "date": 1791807071321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 346.145,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.81264,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.0124782,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0519025,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0438496,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.80556,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.972605,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.404388,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 14.832,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 64.1141,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 276.74,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 15.5043,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 7.15888,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00935161,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 236.856,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 2099.31,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 241.107,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 342.967,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 487.688,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 263.494,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 680.933,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 2368.25,
             "unit": "us"
           }
         ]
