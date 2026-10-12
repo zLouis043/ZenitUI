@@ -595,3 +595,34 @@ TEST(Interaction_modal, hidden_modal_does_not_block_click)
     env.click(root, { 100, 30 });
     CHECK(clicks == 2);
 }
+
+TEST(Interaction_modal, show_and_hide_callbacks)
+{
+    Env env;
+    Theme::get().clear();
+
+    auto modal = UI::Modal::create();
+    int showCount = 0;
+    int hideCount = 0;
+    modal->onShow = [&] { showCount++; };
+    modal->onHide = [&] { hideCount++; };
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(modal);
+
+    env.frame(root);
+
+    modal->show();
+    CHECK(showCount == 1);
+    CHECK(hideCount == 0);
+
+    modal->hide();
+    CHECK(showCount == 1);
+    CHECK(hideCount == 1);
+
+    modal->show();
+    modal->hide();
+    CHECK(showCount == 2);
+    CHECK(hideCount == 2);
+}

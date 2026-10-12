@@ -226,3 +226,30 @@ TEST(Portal_timing, last_registered_portal_wins_overlap)
     CHECK(secondClicks == 1);
     CHECK(firstClicks == 0);
 }
+
+TEST(Popup_callbacks, onOpen_fires)
+{
+    Env env;
+    Theme::get().clear();
+
+    auto popup = UI::Popup::create();
+    auto content = std::make_shared<Layout>(LayoutType::Stack);
+    content->addChild(UI::Label("test"));
+    popup->setContent(content);
+
+    int openCount = 0;
+    popup->onOpen = [&] { openCount++; };
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(popup);
+
+    env.frame(root);
+
+    popup->openAt({100, 100});
+    CHECK(openCount == 1);
+
+    popup->close();
+    popup->openAt({200, 200});
+    CHECK(openCount == 2);
+}

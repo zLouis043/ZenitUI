@@ -21,6 +21,8 @@ namespace ZenitUI::UI
             vis.opacity = 1.0f;
             setInlineBase(vis);
             content->playAnimation("Intro", false);
+            if (onShow)
+                onShow();
         }
         void hide()
         {
@@ -30,7 +32,12 @@ namespace ZenitUI::UI
             hid.opacity = 0.0f;
             setInlineBase(hid);
             content->playAnimation("Intro", true);
+            if (onHide)
+                onHide();
         }
+
+        std::function<void()> onShow;
+        std::function<void()> onHide;
 
     protected:
         void onBuild() override

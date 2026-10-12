@@ -264,3 +264,38 @@ TEST(Dropdown_option, clicking_option_selects)
     CHECK(s.dd->getSelected() == 1);
     CHECK(!s.dd->getOpen());   // si chiude dopo la selezione
 }
+
+TEST(Dropdown_callbacks, onOpenChanged_fires_on_open_and_close)
+{
+    Env env;
+    auto s = makeDropdown(env);
+
+    std::vector<bool> states;
+    s.dd->onOpenChanged = [&](bool v) { states.push_back(v); };
+
+    s.dd->setOpen(true);
+    s.dd->setOpen(false);
+    s.dd->setOpen(false);   // no-op, non deve chiamare il callback
+
+    CHECK(states.size() == 2);
+    CHECK(states[0] == true);
+    CHECK(states[1] == false);
+}
+
+TEST(Dropdown_callbacks, onOpenChanged_fires_on_disable_close)
+{
+    Env env;
+    auto s = makeDropdown(env);
+
+    int calls = 0;
+    bool lastValue = true;
+    s.dd->onOpenChanged = [&](bool v) { calls++; lastValue = v; };
+
+    s.dd->setOpen(true);
+    calls = 0;   // reset, ci interessa solo la chiusura per disable
+
+    s.dd->setEnabled(false);
+
+    CHECK(calls == 1);
+    CHECK(lastValue == false);
+}
