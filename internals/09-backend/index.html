@@ -1434,10 +1434,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-shiftheld" class="md-nav__link">
+  <a href="#24-modifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 shiftHeld()
+        2.4 modifiers()
       
     </span>
   </a>
@@ -2118,10 +2118,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#24-shiftheld" class="md-nav__link">
+  <a href="#24-modifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 shiftHeld()
+        2.4 modifiers()
       
     </span>
   </a>
@@ -2767,7 +2767,7 @@ public:
     virtual Vec2 viewportSize() = 0;
     virtual PointerState pointer() = 0;
     virtual double time() = 0;
-    virtual bool shiftHeld() = 0;
+    virtual ModifierState modifiers() = 0;
     virtual InputEvents pollInputEvents() = 0;
     virtual float dpiScale() = 0;
     virtual EdgeInsets safeArea() = 0;
@@ -2819,16 +2819,32 @@ Raylib convention. The scroll system negates it internally.</p>
 </ul>
 <p>The value doesn't need to start at zero — it just needs to be monotonic
 and to advance at wall-clock rate. Raylib returns <code>GetTime()</code> directly.</p>
-<h3 id="24-shiftheld">2.4 <code>shiftHeld()</code></h3>
-<p>Returns whether <code>Shift</code> is currently down. Used by:</p>
+<h3 id="24-modifiers">2.4 <code>modifiers()</code></h3>
+<p>Returns the modifier keys currently held, as a <code>ModifierState</code>:</p>
+<pre><code class="language-cpp">struct ModifierState {
+    bool shift{false};
+    bool ctrl {false};
+    bool alt  {false};
+    bool super{false};
+};
+</code></pre>
+<p>Used by:</p>
 <ul>
-<li>Tab navigation (reverse direction).</li>
-<li>Scroll (horizontal wheel).</li>
-<li><code>Slider</code> (fine step).</li>
+<li>
+<p>Tab navigation (reverse direction when <code>shift</code> is held).</p>
+</li>
+<li>
+<p>Scroll (horizontal wheel when <code>shift</code> is held).</p>
+</li>
+<li>
+<p><code>Slider</code> (fine step when <code>shift</code> is held).</p>
+</li>
 </ul>
-<p>Only <code>Shift</code> is exposed. Other modifiers (Ctrl, Alt, Meta) aren't part
-of the interface. Adding one means extending the interface and updating
-every backend.</p>
+<p>Only these four modifiers are exposed. Adding a new one (e.g. "hyper")
+means adding a field to <code>ModifierState</code> and updating every backend to
+fill it. The struct exists so that the "which keys are held" question
+has a single answer, rather than N independent <code>IsKeyDown</code> chains
+scattered across the framework.</p>
 <h3 id="25-pollinputevents">2.5 <code>pollInputEvents()</code></h3>
 <p>Returns the keyboard events for this frame:</p>
 <pre><code class="language-cpp">struct InputEvents {

@@ -2720,7 +2720,7 @@ state.</p>
 <p>These fields are overwritten every <code>beginFrame</code>:</p>
 <pre><code class="language-cpp">PointerState pointer;
 InputEvents inputEvents;
-bool shiftHeld{false};
+ModifierState modifiers;
 float dt{0.0f};
 double time{0.0};
 float dpiScale{1.0f};
@@ -3166,7 +3166,7 @@ node can't be focused by clicking.</p>
     int next = 0;
     if (idx &gt;= 0) {
         int n = (int)focusables.size();
-        next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+        next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
     }
     ctx.requestFocus(focusables[next]-&gt;shared_from_this());
     notifyFocusAncestors(ctx.focusedNode.lock().get());
@@ -3583,9 +3583,10 @@ backend maps it. In the Raylib backend, only the keys in <code>kMap</code> are
 mapped to <code>Key::*</code> codes, and <code>A</code> isn't among them.</p>
 <h3 id="73-modifier-keys">7.3 Modifier keys</h3>
 <p>Only <code>Shift</code> is tracked:</p>
-<pre><code class="language-cpp">bool shiftHeld{false};
+<pre><code class="language-cpp">ModifierState modifiers;
 </code></pre>
-<p>Updated from <code>platform-&gt;shiftHeld()</code> each <code>beginFrame</code>. Used by:</p>
+<p>Updated from <code>platform-&gt;modifiers()</code> each <code>beginFrame</code>. The struct
+carries <code>shift</code>, <code>ctrl</code>, <code>alt</code>, <code>super</code> as bool members. Used by:</p>
 <ul>
 <li>Tab navigation (reverse direction).</li>
 <li>Scroll (horizontal wheel).</li>

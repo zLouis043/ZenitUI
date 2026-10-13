@@ -3422,11 +3422,11 @@ keeps the drag stable.</p>
     !node.hasPointerCapture() &amp;&amp; rect.contains(pointer.pos))
 {
     if (pointer.wheelY != 0.0f) {
-        if (ctx.shiftHeld &amp;&amp; canScrollX) {
+        if (ctx.ctx.modifiers.shift &amp;&amp; canScrollX) {
             state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
             ctx.wheelConsumedThisFrame = true;
         }
-        else if (!ctx.shiftHeld &amp;&amp; canScrollY) {
+        else if (!ctx.ctx.modifiers.shift &amp;&amp; canScrollY) {
             state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
             ctx.wheelConsumedThisFrame = true;
         }

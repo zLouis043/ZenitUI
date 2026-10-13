@@ -2408,7 +2408,7 @@ by <code>Layout::update</code>, <code>Layout::measure</code>, <code>Layout::arra
 <p><code>UIContext</code> is a singleton that holds:</p>
 <ul>
 <li>The three backend pointers.</li>
-<li>The current input snapshot (<code>pointer</code>, <code>inputEvents</code>, <code>shiftHeld</code>).</li>
+<li>The current input snapshot (<code>pointer</code>, <code>inputEvents</code>, <code>modifiers</code>).</li>
 <li>Focus state (<code>focusedNode</code>).</li>
 <li>Pointer capture (<code>pointerCapture</code>).</li>
 <li>Portal registries (<code>activePortals</code>, <code>framePortals</code>).</li>
@@ -2462,7 +2462,7 @@ EndDrawing();
 <p>Polls the platform:</p>
 <ul>
 <li>Updates <code>Metrics::viewport</code>, <code>safeArea</code>, <code>pointer</code>, <code>inputEvents</code>,
-  <code>shiftHeld</code>, <code>dpiScale</code>.</li>
+  <code>modifiers</code>, <code>dpiScale</code>.</li>
 <li>Increments <code>viewportGeneration</code> if the viewport or safe area changed.</li>
 <li>Clears per-frame flags: <code>clickConsumed</code>, <code>rightClickConsumed</code>,
   <code>wheelConsumedThisFrame</code>, <code>topmostConsumer</code>, <code>hoverTarget</code>,

@@ -1074,10 +1074,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#shiftheld" class="md-nav__link">
+  <a href="#modifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        shiftHeld
+        modifiers
       
     </span>
   </a>
@@ -2170,10 +2170,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#shiftheld" class="md-nav__link">
+  <a href="#modifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        shiftHeld
+        modifiers
       
     </span>
   </a>
@@ -2714,7 +2714,7 @@ public:
     virtual Vec2 viewportSize() = 0;
     virtual PointerState pointer() = 0;
     virtual double time() = 0;
-    virtual bool shiftHeld() = 0;
+    virtual ModifierState modifiers() = 0;
     virtual InputEvents pollInputEvents() = 0;
     virtual float dpiScale() = 0;
     virtual EdgeInsets safeArea() = 0;
@@ -2776,7 +2776,7 @@ Always set all three.</p>
 <p>These fields are overwritten every <code>beginFrame</code> from <code>platform</code>:</p>
 <pre><code class="language-cpp">PointerState pointer;
 InputEvents  inputEvents;
-bool         shiftHeld{false};
+ModifierState modifiers;
 float        dt{0.0f};
 double       time{0.0};
 float        dpiScale{1.0f};
@@ -2803,9 +2803,22 @@ one-frame edges. <code>down</code> is level.</p>
 </code></pre>
 <p><code>chars</code> are text input, <code>keys</code> / <code>held</code> are physical keys mapped to
 <code>Key::*</code> codes.</p>
-<h3 id="shiftheld"><code>shiftHeld</code></h3>
-<p>Whether <code>Shift</code> is down. The only modifier tracked. Used by Tab
-(reverse direction), scroll (horizontal wheel), and Slider (fine step).</p>
+<h3 id="modifiers"><code>modifiers</code></h3>
+<p>The modifier keys currently held, as reported by <code>IPlatform::modifiers()</code>.
+A <code>ModifierState</code> struct with four bool members: <code>shift</code>, <code>ctrl</code>, <code>alt</code>,
+<code>super</code> (the key called "Super" on Linux, "Cmd" on macOS, "Win" on
+Windows; Raylib exposes it as <code>KEY_LEFT_SUPER</code> / <code>KEY_RIGHT_SUPER</code>).</p>
+<p>Used by:</p>
+<ul>
+<li><code>Layout::updateTree</code> for Tab reverse navigation (<code>modifiers.shift</code>).</li>
+<li><code>ScrollController</code> for horizontal wheel scrolling (<code>modifiers.shift</code>).</li>
+<li><code>Slider</code> for fine-grained keyboard stepping (<code>modifiers.shift</code>).</li>
+<li>User code that needs to react to Ctrl / Alt / Super.</li>
+</ul>
+<p>The struct is preferred over individual bool fields because it groups
+the concept ("modifier keys") in one place. Adding a new modifier in
+the future is a new field here, not a new method on <code>IPlatform</code> and a
+new field on <code>UIContext</code>.</p>
 <h3 id="dt-time"><code>dt</code> / <code>time</code></h3>
 <ul>
 <li><code>dt</code> — the frame delta, in seconds. Passed in by the user to
@@ -2976,7 +2989,7 @@ without creating its own RNG.</p>
 <li>Poll the platform:</li>
 <li><code>viewportSize</code>, <code>safeArea</code> → update <code>Metrics::viewport</code>, check
      for changes → increment <code>viewportGeneration</code>.</li>
-<li><code>pointer</code>, <code>shiftHeld</code>, <code>pollInputEvents</code>, <code>dpiScale</code> → update
+<li><code>pointer</code>, <code>modifiers</code>, <code>pollInputEvents</code>, <code>dpiScale</code> → update
      the corresponding fields.</li>
 <li>Call <code>renderer-&gt;setDpiScale(dpiScale)</code>.</li>
 </ol>
@@ -3030,7 +3043,7 @@ UIContext::get().assets   = &amp;assets;
 <pre><code class="language-cpp">btn-&gt;onClick = []{
     auto&amp; ctx = UIContext::get();
     std::printf(&quot;clicked at %.0f,%.0f shift=%d\n&quot;,
-        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.shiftHeld);
+        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.modifiers.shift);
 };
 </code></pre>
 <h3 id="manual-focus-control">Manual focus control</h3>

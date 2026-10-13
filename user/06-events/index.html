@@ -2793,7 +2793,7 @@ blink when disabled.</p>
 will yield a flat list in this order: outer buttons, then inner ones.</p>
 <h3 id="71-shifttab">7.1 Shift+Tab</h3>
 <p>With <code>Shift</code> held, Tab walks the list backwards:</p>
-<pre><code class="language-cpp">next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+<pre><code class="language-cpp">next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
 </code></pre>
 <p>The <code>+ n</code> is to handle <code>idx = 0</code> correctly (<code>-1</code> mod <code>n</code> would be <code>-1</code>
 in C++).</p>
@@ -2981,10 +2981,10 @@ becomes false.</p>
 <p>Wheel events are delivered to the node under the cursor, if it's a
 scroll container and <code>isInteractive</code>:</p>
 <pre><code class="language-cpp">if (pointer.wheelY != 0.0f) {
-    if (ctx.shiftHeld &amp;&amp; canScrollX) {
+    if (ctx.modifiers.shift &amp;&amp; canScrollX) {
         state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
         ctx.wheelConsumedThisFrame = true;
-    } else if (!ctx.shiftHeld &amp;&amp; canScrollY) {
+    } else if (!ctx.modifiers.shift &amp;&amp; canScrollY) {
         state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
         ctx.wheelConsumedThisFrame = true;
     }
@@ -3134,7 +3134,7 @@ root-&gt;addChild(ui.root());
 <p>A single frame goes through these stages, in order:</p>
 <ol>
 <li><code>UIContext::beginFrame(dt)</code> — polls <code>IPlatform</code>, updates
-   <code>pointer</code>, <code>inputEvents</code>, <code>shiftHeld</code>, and <strong>clears</strong>:
+   <code>pointer</code>, <code>inputEvents</code>, <code>modifiers</code>, and <strong>clears</strong>:
    <code>topmostConsumer</code>, <code>hoverTarget</code>, <code>releaseTarget</code>,
    <code>clickConsumed</code>, <code>rightClickConsumed</code>, <code>wheelConsumedThisFrame</code>.</li>
 <li><code>Layout::updateTree(dt)</code> — hit-tests the pointer, updates
@@ -3213,7 +3213,7 @@ keys), read <code>UIContext::get()</code>:</p>
 <pre><code class="language-cpp">btn-&gt;onClick = []{
     auto &amp;ctx = UIContext::get();
     std::printf(&quot;clicked at %.0f,%.0f shift=%d\n&quot;,
-        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.shiftHeld);
+        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.modifiers.shift);
 };
 </code></pre>
 <p>This is by design — most widgets don't need the details, and dropping

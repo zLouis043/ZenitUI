@@ -2867,7 +2867,7 @@ two phases run at different rates if needed.</p>
         Metrics::viewport = newVp;
         safeArea = newSafe;
         pointer = platform-&gt;pointer();
-        shiftHeld = platform-&gt;shiftHeld();
+        modifiers = platform-&gt;modifiers();
         inputEvents = platform-&gt;pollInputEvents();
         dpiScale = platform-&gt;dpiScale();
 
@@ -2975,7 +2975,7 @@ focus. This is the only place focus changes from a click.</p>
     int next = 0;
     if (idx &gt;= 0) {
         int n = (int)focusables.size();
-        next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+        next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
     }
     ctx.requestFocus(focusables[next]-&gt;shared_from_this());
     notifyFocusAncestors(ctx.focusedNode.lock().get());
