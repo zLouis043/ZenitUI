@@ -1946,6 +1946,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Content access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From ZMarkup:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2132,7 +2149,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#from-zmarkup" class="md-nav__link">
+  <a href="#from-zmarkup_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         From ZMarkup
@@ -3605,6 +3622,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Content access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From ZMarkup:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -3791,7 +3825,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#from-zmarkup" class="md-nav__link">
+  <a href="#from-zmarkup_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         From ZMarkup
@@ -4805,13 +4839,45 @@ participate in that container's flow, pushing the siblings around.</p>
 <li><code>setFocusScope(true)</code></li>
 </ul>
 <h3 id="content-access">Content access</h3>
-<p>The content is <code>children[0]</code>:</p>
-<pre><code class="language-cpp">modal-&gt;children[0]-&gt;addChild(Label(&quot;Are you sure?&quot;));
+<p>The content slot is <code>modal-&gt;children[0]</code>, the wrapper VStack that
+<code>onBuild()</code> creates with the "Intro" animation. Content added here
+participates in the intro transition automatically.</p>
+<p>Two equivalent ways to add content:</p>
+<p><strong>From C++:</strong></p>
+<pre><code class="language-cpp">auto modal = Modal::create();
+modal-&gt;contentTarget()-&gt;addChild(Label(&quot;Are you sure?&quot;));
+modal-&gt;contentTarget()-&gt;addChild(Btn(&quot;OK&quot;, [modal]{ modal-&gt;hide(); }));
 </code></pre>
+<p>Using <code>contentTarget()</code> instead of<code>children[0]</code> is preferred: it's the
+same node, but the intent is clear and it won't break if the internal
+structure changes.</p>
+<h4 id="from-zmarkup">From ZMarkup:</h4>
+<pre><code class="language-zmarkup">Modal#dialog {
+    VStack.modal-box {
+        Label &quot;Are you sure?&quot;
+        HStack {
+            Button#ok &quot;OK&quot;
+            Button#cancel &quot;Cancel&quot;
+        }
+    }
+}
+</code></pre>
+<p>Markup children under a <code>Modal</code> element go into the content slot
+automatically (see <code>Layout::contentTarget()</code> in the
+<a href="../Layout/">Layout API</a>). No C++ injection needed.</p>
 <h3 id="style-tag_10">Style tag</h3>
 <p><code>"Modal"</code></p>
 <h3 id="zmarkup_9">ZMarkup</h3>
-<p>No built-in tag. Register one via <code>ZMarkup::Registry</code> if needed.</p>
+<p>Registered as <code>Modal</code> in the default registry. Children written in a
+<code>{ ... }</code> block are attached to the content slot, so they animate with
+the modal's intro.</p>
+<pre><code class="language-zmarkup">Modal#dialog {
+    VStack.modal-box {
+        Label &quot;Confirm?&quot;
+        Button#yes &quot;YES&quot;
+    }
+}
+</code></pre>
 <hr />
 <h2 id="tooltip"><code>Tooltip</code></h2>
 <p>Hover-triggered floating label.</p>
@@ -4982,7 +5048,7 @@ its callback and closes the popup.</p>
 btn-&gt;cls(&quot;btn-primary&quot;);
 root-&gt;addChild(btn);
 </code></pre>
-<h3 id="from-zmarkup">From ZMarkup</h3>
+<h3 id="from-zmarkup_1">From ZMarkup</h3>
 <pre><code class="language-cpp">auto ui = ZMarkup::build(R&quot;(
     VStack {
         Text &quot;Hello&quot;

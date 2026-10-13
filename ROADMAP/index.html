@@ -3229,36 +3229,64 @@ a file and returns a <code>UINode</code>. Missing file → null root + error log
 <li>[x] 5.12d — Add <code>loadMarkupFile</code></li>
 </ul>
 <h3 id="513-content-slot-for-composite-widgets">5.13 Content slot for composite widgets</h3>
-<p><strong>Not started.</strong></p>
-<p>Composite widgets (<code>Modal</code>, <code>Dropdown</code>, <code>Toggle</code>, <code>Popup</code>, <code>Tooltip</code>)
-build their internal structure in <code>onBuild()</code>. When ZMarkup adds
-children to such a widget, they become <em>siblings</em> of the internal
-content wrapper, not children of it:</p>
-<pre><code class="language-zmarkup">Modal {
-  Label &quot;Are you sure?&quot; // ends up as sibling of modal's content
-}
-</code></pre>
-<p>The current workaround is to inject the content from C++:</p>
-<pre><code class="language-cpp">auto modal = ui.find&lt;Modal&gt;(&quot;m&quot;);
-modal-&gt;children[0]-&gt;addChild(Label(&quot;Are you sure?&quot;));
-</code></pre>
-<p>This is not obvious, and it's the single biggest source of confusion
-in the ZMarkup user experience.</p>
-<p>Proposed design: a virtual <code>Layout* contentTarget()</code> that returns
-the node children should be attached to. Default: this. Composite
-widgets override it to point at their content wrapper. ZMarkup::create
-uses <code>contentTarget()</code> instead of <code>addChild()</code> directly.</p>
-<p>Touch points: <code>Layout.hpp</code> (add virtual), 5 widgets (override),
-<code>ZMarkup.hpp</code> (create loop). Estimated: half a day, plus tests.</p>
-<p>Deferred until after 5.12 ships, because it changes the semantics of
-a core operation and deserves its own session.</p>
+<p><strong>Done for <code>Modal</code>. Others left as default.</strong></p>
+<p>Composite widgets build internal structure in <code>onBuild()</code>. When ZMarkup
+adds children to such a widget, those children used to become siblings
+of the internal content wrapper instead of children of it. This broke
+the wrapper's animations — the most visible case was <code>Modal</code>, whose
+"Intro" slide didn't apply to markup children.</p>
+<p><strong>Design (implemented):</strong> a virtual <code>Layout::contentTarget()</code> returning
+the node children should be attached to. Default: <code>this</code>. <code>Modal</code>
+overrides it to return its internal <code>content</code> VStack. <code>ZMarkup::create</code>
+now attaches children via <code>contentTarget()</code> instead of calling
+<code>addChild()</code> directly.</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Overrides <code>contentTarget()</code>?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Layout</code>, <code>Panel</code>, <code>VStack</code>, <code>HStack</code>, <code>Stack</code>, <code>Text</code>, <code>Button</code>, <code>Checkbox</code>, <code>Slider</code>, <code>ProgressBar</code>, <code>TextInput</code>, <code>ScrollView</code>, <code>Canvas</code></td>
+<td>No (default <code>return this</code>)</td>
+<td>No internal wrapper</td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td>Yes → <code>content</code> VStack</td>
+<td>Children need to live inside the animated wrapper</td>
+</tr>
+<tr>
+<td><code>Popup</code></td>
+<td>No</td>
+<td>Content is the direct children; no wrapper</td>
+</tr>
+<tr>
+<td><code>Dropdown</code></td>
+<td>No</td>
+<td>Internal structure (trigger + list) isn't a content slot</td>
+</tr>
+<tr>
+<td><code>Toggle</code></td>
+<td>No</td>
+<td>Knob is decorative; children are unusual and default behavior is documented</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>[] Add <code>Layout::contentTarget()</code> virtual, default returns <code>this</code></li>
-<li>[] Override in Modal, Dropdown, Toggle, Popup, Tooltip</li>
-<li>[] Update ZMarkup::create to use contentTarget</li>
-<li>[] Add tests for each composite widget</li>
-<li>[] Update user/04-zmarkup.md §"Children" with the new semantics text</li>
+<li>[x] Add <code>Layout::contentTarget()</code> virtual, default returns <code>this</code></li>
+<li>[x] Override in <code>Modal</code></li>
+<li>[x] Update <code>ZMarkup::create</code> to use <code>contentTarget()</code></li>
+<li>[x] Add tests (3: Modal-with-children, Stack-with-children, nested layout)</li>
+<li>[x] Update <code>user/04-zmarkup.md</code> §2.6</li>
+<li>[x] Update <code>api/Layout.md</code> §5</li>
+<li>[x] Update <code>api/Widgets.md</code> (<code>Modal</code> section)</li>
 </ul>
+<p>If a future widget needs its own content slot, the override is a
+one-liner. The pattern is settled.</p>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>

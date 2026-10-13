@@ -1106,6 +1106,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#virtual-layout-contenttarget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Layout* contentTarget()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#void-removefromparent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2871,6 +2882,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#virtual-layout-contenttarget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        virtual Layout* contentTarget()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#void-removefromparent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3947,6 +3969,34 @@ stretches or constrains the node.</p>
 <p><strong>Warning:</strong> if <code>weak_from_this()</code> is expired (i.e. the node isn't
 managed by <code>shared_ptr</code>), the call logs a warning and returns without
 adding. Use <code>X::create()</code> instead of <code>std::make_shared&lt;X&gt;()</code>.</p>
+<h3 id="virtual-layout-contenttarget"><code>virtual Layout* contentTarget()</code></h3>
+<p>Returns the node to which ZMarkup attaches children. Default: <code>this</code>.</p>
+<p>Composite widgets that build an internal content wrapper override this
+to return the wrapper instead. Currently only <code>Modal</code> does — its
+<code>onBuild</code> creates a <code>content</code> VStack with the "Intro" animation, and
+<code>contentTarget()</code> returns that VStack. Children written in markup
+under a <code>Modal</code> element end up inside the wrapper, and therefore get
+animated by it automatically.</p>
+<pre><code class="language-cpp">// Default behavior (plain Layout, Panel, VStack, HStack, ...):
+// contentTarget() returns the node itself.
+auto stack = std::make_shared&lt;Layout&gt;(LayoutType::Vertical);
+stack-&gt;contentTarget() == stack.get();   // true
+
+// Modal: contentTarget() returns the internal content wrapper.
+auto modal = Modal::create();
+modal-&gt;contentTarget() != modal.get();   // true
+modal-&gt;contentTarget() == modal-&gt;children[0].get();  // true
+</code></pre>
+<p><em>When to override</em>: if you write a custom widget that builds an
+internal wrapper and wants ZMarkup children to participate in the
+wrapper's layout/animation, override <code>contentTarget()</code>. Don't override
+it just to "protect" the widget from children — that's not what it's
+for.</p>
+<p><em>When NOT to use it directly</em>: regular C++ code rarely needs to
+call <code>contentTarget()</code>. Use <code>addChild()</code> on the widget and the
+framework routes to the right place, the same way ZMarkup does.
+<code>contentTarget()</code> exists so that <code>ZMarkup::create</code> (which doesn't know
+the widget type) can attach children correctly.</p>
 <h3 id="void-removefromparent"><code>void removeFromParent()</code></h3>
 <p>Marks the node for removal. The actual removal happens in the parent's
 next <code>cullRemovedChildren</code> pass (end of <code>update</code>).</p>

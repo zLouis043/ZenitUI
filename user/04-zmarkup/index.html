@@ -2329,11 +2329,31 @@ separated by whitespace). Nesting is unlimited.</p>
     }
 }
 </code></pre>
-<p>Children are added to the parent via <code>addChild()</code>. For composite widgets
-(<code>Toggle</code>, <code>Dropdown</code>, <code>Modal</code>), the children of the ZMarkup element are
-<strong>appended after</strong> the ones created by <code>onBuild()</code>. This is usually not
-what you want for <code>Toggle</code> — its knob is an internal child, and adding
-your own children will stack them in the same <code>Stack</code> layer.</p>
+<p>Children are added to the parent's <strong>content target</strong>. For most widgets
+the content target is the widget itself, so <code>{ ... }</code> children end up
+directly inside the widget, exactly as <code>addChild()</code> would do.</p>
+<p>For composite widgets that have an internal content wrapper — currently
+only <code>Modal</code> — the content target is the wrapper. This means:</p>
+<pre><code class="language-zmarkup">Modal#dialog {
+VStack.modal-box {
+Label &quot;Are you sure?&quot;
+}
+}
+</code></pre>
+<p>The <code>VStack.modal-box</code> ends up <strong>inside</strong> the modal's content wrapper,
+not as a sibling of it. Since the wrapper owns the "Intro" animation
+that slides the modal content into view, markup children participate
+in that animation automatically. No C++ injection needed:</p>
+<pre><code class="language-cpp">auto ui = ZMarkup::loadMarkupFile(&quot;assets/ui/menu.zmarkup&quot;);
+auto modal = ui.find&lt;Modal&gt;(&quot;dialog&quot;);
+modal-&gt;show();   // the modal-box slides in, animated
+</code></pre>
+<p>For other composite widgets (<code>Toggle</code>, <code>Dropdown</code>), the content target
+is the widget itself — same as a plain <code>Layout</code>. Adding children to a
+<code>Toggle</code> via markup stacks them on top of the knob in the same <code>Stack</code>
+layer, which is usually not what you want. Use <code>Toggle</code> without markup
+children, and configure its look through <code>.zstyle</code> instead.</p>
+<p>For the full contract, see Layout::contentTarget() in the <a href="../../api/Layout/">Layout API</a></p>
 <h3 id="27-comments">2.7 Comments</h3>
 <p><code>//</code> starts a line comment. Everything from <code>//</code> to the end of the line
 is ignored.</p>
