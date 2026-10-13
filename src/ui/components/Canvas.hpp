@@ -60,11 +60,17 @@ namespace ZenitUI::UI
             tr.rotationDeg = style_.currentStyle.rotation;
             tr.scale = style_.currentStyle.scale;
 
+            // Resolve the shader to apply. Priority: `effect:` property
+            // (if set and resolvable), then `setShader()` handle, then
+            // nothing. Same priority as regular Layout nodes.
+            EffectHandle fx = resolveActiveEffect();
+            const bool applyFx = fx.valid() && r->supports(Feature::Effects);
+
             r->pushTransform(tr);
-            if (hasShader && r->supports(Feature::Effects))
-                r->pushEffect(customEffect);
+            if (applyFx)
+                r->pushEffect(fx);
             r->drawTarget(target, rect, Colors::White.withAlpha(op));
-            if (hasShader && r->supports(Feature::Effects))
+            if (applyFx)
                 r->popEffect();
             r->popTransform();
         }

@@ -72,3 +72,49 @@ TEST(Canvas, offset_transform_matches_canvas_rect)
     }
     CHECK(found);
 }
+
+TEST(Canvas, effect_property_pushes_shader)
+{
+    Env env;
+    env.renderer.supportsEffects = true;
+    env.assets.registerEffect("wave_post");
+
+    auto canvas = CanvasLayout::create();
+    canvas->size(Px(200), Px(150));
+
+    // The `effect:` property on a node is normally consumed by
+    // Layout::draw(). CanvasLayout overrides draw() entirely, so
+    // before 5.14 this property was silently ignored on a canvas.
+    // The fix routes it through resolveActiveEffect().
+    canvas->getInlineBase().effect = "wave_post";
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(canvas);
+
+    env.frame(root);
+
+    // The mock reports supportsEffects = true, so the canvas
+    // should have pushed the effect exactly once around the
+    // final composite step.
+    CHECK(env.renderer.pushEffectCount >= 1);
+    CHECK(env.renderer.lastPushedEffect.valid());
+}
+
+TEST(Canvas, no_effect_means_no_push)
+{
+    Env env;
+    env.renderer.supportsEffects = true;
+
+    auto canvas = CanvasLayout::create();
+    canvas->size(Px(200), Px(150));
+
+    // No `effect:` property, no setShader() call.
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(canvas);
+
+    env.frame(root);
+
+    CHECK(env.renderer.pushEffectCount == 0);
+}

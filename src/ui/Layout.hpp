@@ -564,6 +564,28 @@ namespace ZenitUI
 		// c'è onUpdate, che di default non gira quando il nodo è disabilitato.
 		virtual void onEnabledChanged(bool /*nowEnabled*/) {}
 
+		// Resolves the effect to apply to this node's draw call,
+		// considering both possible sources.
+		//
+		// Priority:
+		//   1. `effect:` style property (resolved against assets).
+		//   2. `setShader()` handle set from C++.
+		//   3. Invalid handle (no effect).
+		//
+		// Subclasses that override draw() — currently only CanvasLayout —
+		// should call this instead of touching `currentEffect_` or
+		// `customEffect` directly, so that the priority stays consistent
+		// with the rest of the framework.
+		EffectHandle resolveActiveEffect()
+		{
+			resolveEffectIfNeeded(style_.currentStyle);
+			if (currentEffect_.valid())
+				return currentEffect_;
+			if (hasShader)
+				return customEffect;
+			return {};
+		}
+
 		// Disegno del contenuto del widget.
 		// Chiamato DOPO renderChrome, PRIMA dei figli.
 		virtual void renderContent(float /*op*/, const ComputedStyle & /*style*/) {}
