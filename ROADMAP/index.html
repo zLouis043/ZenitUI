@@ -1964,6 +1964,67 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#511-layouthpp-restructuring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11 Layout.hpp restructuring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.11 Layout.hpp restructuring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#511a-group-state-flags-into-a-bitfield-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11a — Group state flags into a bitfield struct
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#511b-event-listener-array-59" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11b — Event listener array (5.9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#511c-remove-friend-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11c — Remove friend declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#511d-split-into-domnode-stylednode-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.11d — Split into DOMNode / StyledNode / Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2990,18 +3051,25 @@ this:</p>
 <li>[ ] Update documentation</li>
 </ul>
 <h3 id="56-rotation-in-drawlayer">5.6 Rotation in <code>drawLayer</code></h3>
-<p>Compute the bounding box of the transformed rect including rotation.</p>
+<p>The transformed bounding box used for the filter region now accounts
+for rotation, not just scale and translate. The four corners of <code>rect</code>
+are transformed by <code>applyTransform</code> (translate, scale, rotate around
+the node's center), then the AABB is taken from the four results.</p>
+<p>This matches the same transform used by <code>transformClipToScreen</code> (in
+the backend) and by <code>hitTest</code> in its inverse form, so "the node's
+transformed area" is computed consistently everywhere.</p>
 <ul>
-<li>[ ] Apply <code>Transform2D::rotationDeg</code> to the four corners</li>
-<li>[ ] Compute the AABB</li>
-<li>[ ] Use it for the region</li>
-<li>[ ] Add test</li>
+<li>[x] Apply <code>Transform2D::rotationDeg</code> to the four corners</li>
+<li>[x] Compute the AABB</li>
+<li>[x] Use it for the region</li>
+<li>[x] Add test (<code>Filter_rotation.region_covers_rotated_bbox</code>)</li>
+<li>[x] Remove the "rotation ignored" pitfall from internals/06-render-pipeline.md</li>
 </ul>
 <h3 id="57-popup-dropdown-openclose-callbacks">5.7 <code>Popup</code> / <code>Dropdown</code> open/close callbacks</h3>
 <ul>
-<li>[ ] <code>Popup::onOpen</code></li>
-<li>[ ] <code>Dropdown::onOpenChanged</code></li>
-<li>[ ] <code>Modal::onShow</code> / <code>onHide</code></li>
+<li>[x] <code>Popup::onOpen</code></li>
+<li>[x] <code>Dropdown::onOpenChanged</code></li>
+<li>[x] <code>Modal::onShow</code> / <code>onHide</code></li>
 </ul>
 <h3 id="58-layouthasclass-layouthasid">5.8 <code>Layout::hasClass</code>, <code>Layout::hasId</code></h3>
 <ul>
@@ -3021,6 +3089,93 @@ but sometimes needed.</p>
 <li>[ ] Watch <code>.zmarkup</code> files, reload on change (requires rebuild of
       the tree)</li>
 <li>[ ] Hot-reload integration with Raylib</li>
+</ul>
+<h3 id="511-layouthpp-restructuring">5.11 <code>Layout.hpp</code> restructuring</h3>
+<p><code>Layout.hpp</code> is the largest single header in the project. It declares
+~50 public methods, ~20 protected boolean flags, ~20 protected fields,
+four <code>friend struct</code> declarations, and the entire CRTP helper
+<code>TLayout&lt;Derived, Base&gt;</code>. Every widget includes it, so it's on the
+critical path for compile time.</p>
+<p>Four strategies have been identified, in increasing order of scope and
+risk. They're listed here for context — not all of them should be
+adopted.</p>
+<h4 id="511a-group-state-flags-into-a-bitfield-struct">5.11a — Group state flags into a bitfield struct</h4>
+<p>Today, the ~20 boolean flags on <code>Layout</code> are declared individually:</p>
+<pre><code class="language-cpp">bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
+     wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
+bool isFocused{false};
+bool isFocusable_{false};
+// ... etc
+</code></pre>
+<p>Grouping them into a single bitfield struct would:</p>
+<ul>
+<li>Cut ~20 bytes per node (marginal but real on large trees).</li>
+<li>Remove ~20 lines from the header.</li>
+<li>Make the state of a node readable at a glance.</li>
+</ul>
+<p>The caveat: bitfield layout is implementation-defined by the ABI, and
+you can't take the address of an individual bitfield member. The
+current code reads flags by value (<code>node.isHovered</code>, <code>node.getEnabled()</code>)
+and only ever takes the address of the whole <code>Layout</code> (e.g.
+<code>ctx.hasFocus(&amp;node)</code>), so the conversion is technically compatible.
+But it needs careful testing, especially for anything that relies on
+<code>memcmp</code> / <code>operator==</code> on a <code>Layout</code> (unlikely, but worth checking).</p>
+<p>Priority: medium. Not blocking, low risk if tested.</p>
+<h4 id="511b-event-listener-array-59">5.11b — Event listener array (5.9)</h4>
+<p>See 5.9. Already planned.</p>
+<h4 id="511c-remove-friend-declarations">5.11c — Remove <code>friend</code> declarations</h4>
+<p>The four subsystems (<code>StyleResolver</code>, <code>AnimationPlayer</code>,
+<code>InputController</code>, <code>ScrollController</code>) are <code>friend</code>s of <code>Layout</code> so
+they can write directly into its private state during the frame.</p>
+<p>Removing the <code>friend</code>s would force the subsystems to operate on an
+explicit state struct, with <code>Layout</code> applying the result:</p>
+<pre><code class="language-cpp">auto newState = input_.computeState(rect, ctx.pointer);
+if (newState.isHovered != flags.isHovered) {
+    flags.isHovered = newState.isHovered;
+    flags.pendingTransition = true;
+}
+</code></pre>
+<p>This is cleaner on paper. But it costs: one struct construction +
+return + copy per subsystem per node per frame. On <code>system.frame.large1000</code>
+(1000 nodes), that's measurable. The <code>friend</code> approach is what keeps
+the per-node update path tight.</p>
+<p><strong>Decision: not recommended.</strong> The <code>friend</code> declarations are a
+deliberate design choice, not a smell. If future profiling shows the
+subsystems are hot spots, optimize them within the current structure
+instead of paying the composition cost.</p>
+<h4 id="511d-split-into-domnode-stylednode-layout">5.11d — Split into <code>DOMNode</code> / <code>StyledNode</code> / <code>Layout</code></h4>
+<p>The "fat node" pattern is what every retained-mode UI framework ends
+up with (HTMLElement in the browser, Node/Node2D in Godot, etc.). A
+three-level hierarchy would separate:</p>
+<ol>
+<li><code>DOMNode</code> — parent, children, <code>addChild</code>, <code>removeFromParent</code>,
+   <code>nodeId</code>, event listeners.</li>
+<li><code>StyledNode : DOMNode</code> — classes, tag, <code>StyleResolver</code>,
+   <code>AnimationPlayer</code>.</li>
+<li><code>Layout : StyledNode</code> — <code>rect</code>, <code>measure</code>, <code>arrange</code>, <code>draw</code>,
+   <code>ScrollController</code>.</li>
+</ol>
+<p>This is the "correct" architecture for a large framework. But:</p>
+<ul>
+<li>It breaks the <code>TLayout&lt;Derived, Base = Layout&gt;</code> CRTP pattern. Every
+  widget would need to pick its base explicitly.</li>
+<li>It breaks the public API. Code that does <code>node-&gt;size(...)</code> would
+  need to know whether <code>size</code> lives on <code>StyledNode</code> or <code>Layout</code>.</li>
+<li>It changes <code>friend</code> targets and every existing include.</li>
+</ul>
+<p><strong>Decision: deferred to post-1.0.</strong> Not worth the churn while the
+framework is still in beta. Revisit when:
+- Compile time becomes a real problem (&gt;30s incremental builds on a
+  typical machine).
+- Multiple stakeholders need to work on style / layout / DOM in
+  parallel without stepping on each other.
+- A plugin system needs to expose "just the tree" without the drawing
+  half.</p>
+<ul>
+<li>[ ] 5.11a — Group state flags into a bitfield struct (low risk)</li>
+<li>[ ] 5.11b — Listener array (tracked in 5.9)</li>
+<li>[x] 5.11c — Remove <code>friend</code> — declined, deliberate design choice</li>
+<li>[ ] 5.11d — Split hierarchy — deferred to post-1.0</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
