@@ -928,18 +928,26 @@ this:
 
 ### 5.6 Rotation in `drawLayer`
 
-Compute the bounding box of the transformed rect including rotation.
+The transformed bounding box used for the filter region now accounts
+for rotation, not just scale and translate. The four corners of `rect`
+are transformed by `applyTransform` (translate, scale, rotate around
+the node's center), then the AABB is taken from the four results.
 
-- [ ] Apply `Transform2D::rotationDeg` to the four corners
-- [ ] Compute the AABB
-- [ ] Use it for the region
-- [ ] Add test
+This matches the same transform used by `transformClipToScreen` (in
+the backend) and by `hitTest` in its inverse form, so "the node's
+transformed area" is computed consistently everywhere.
+
+- [x] Apply `Transform2D::rotationDeg` to the four corners
+- [x] Compute the AABB
+- [x] Use it for the region
+- [x] Add test (`Filter_rotation.region_covers_rotated_bbox`)
+- [x] Remove the "rotation ignored" pitfall from internals/06-render-pipeline.md
 
 ### 5.7 `Popup` / `Dropdown` open/close callbacks
 
-- [ ] `Popup::onOpen`
-- [ ] `Dropdown::onOpenChanged`
-- [ ] `Modal::onShow` / `onHide`
+- [x] `Popup::onOpen`
+- [x] `Dropdown::onOpenChanged`
+- [x] `Modal::onShow` / `onHide`
 
 ### 5.8 `Layout::hasClass`, `Layout::hasId`
 
@@ -960,6 +968,112 @@ but sometimes needed.
 - [ ] Watch `.zmarkup` files, reload on change (requires rebuild of
       the tree)
 - [ ] Hot-reload integration with Raylib
+
+### 5.11 `Layout.hpp` restructuring
+
+`Layout.hpp` is the largest single header in the project. It declares
+~50 public methods, ~20 protected boolean flags, ~20 protected fields,
+four `friend struct` declarations, and the entire CRTP helper
+`TLayout<Derived, Base>`. Every widget includes it, so it's on the
+critical path for compile time.
+
+Four strategies have been identified, in increasing order of scope and
+risk. They're listed here for context — not all of them should be
+adopted.
+
+#### 5.11a — Group state flags into a bitfield struct
+
+Today, the ~20 boolean flags on `Layout` are declared individually:
+
+```cpp
+bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
+     wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
+bool isFocused{false};
+bool isFocusable_{false};
+// ... etc
+```
+
+Grouping them into a single bitfield struct would:
+
+- Cut ~20 bytes per node (marginal but real on large trees).
+- Remove ~20 lines from the header.
+- Make the state of a node readable at a glance.
+
+The caveat: bitfield layout is implementation-defined by the ABI, and
+you can't take the address of an individual bitfield member. The
+current code reads flags by value (`node.isHovered`, `node.getEnabled()`)
+and only ever takes the address of the whole `Layout` (e.g.
+`ctx.hasFocus(&node)`), so the conversion is technically compatible.
+But it needs careful testing, especially for anything that relies on
+`memcmp` / `operator==` on a `Layout` (unlikely, but worth checking).
+
+Priority: medium. Not blocking, low risk if tested.
+
+#### 5.11b — Event listener array (5.9)
+
+See 5.9. Already planned.
+
+#### 5.11c — Remove `friend` declarations
+
+The four subsystems (`StyleResolver`, `AnimationPlayer`,
+`InputController`, `ScrollController`) are `friend`s of `Layout` so
+they can write directly into its private state during the frame.
+
+Removing the `friend`s would force the subsystems to operate on an
+explicit state struct, with `Layout` applying the result:
+
+```cpp
+auto newState = input_.computeState(rect, ctx.pointer);
+if (newState.isHovered != flags.isHovered) {
+    flags.isHovered = newState.isHovered;
+    flags.pendingTransition = true;
+}
+```
+
+This is cleaner on paper. But it costs: one struct construction +
+return + copy per subsystem per node per frame. On `system.frame.large1000`
+(1000 nodes), that's measurable. The `friend` approach is what keeps
+the per-node update path tight.
+
+**Decision: not recommended.** The `friend` declarations are a
+deliberate design choice, not a smell. If future profiling shows the
+subsystems are hot spots, optimize them within the current structure
+instead of paying the composition cost.
+
+#### 5.11d — Split into `DOMNode` / `StyledNode` / `Layout`
+
+The "fat node" pattern is what every retained-mode UI framework ends
+up with (HTMLElement in the browser, Node/Node2D in Godot, etc.). A
+three-level hierarchy would separate:
+
+1. `DOMNode` — parent, children, `addChild`, `removeFromParent`,
+   `nodeId`, event listeners.
+2. `StyledNode : DOMNode` — classes, tag, `StyleResolver`,
+   `AnimationPlayer`.
+3. `Layout : StyledNode` — `rect`, `measure`, `arrange`, `draw`,
+   `ScrollController`.
+
+This is the "correct" architecture for a large framework. But:
+
+- It breaks the `TLayout<Derived, Base = Layout>` CRTP pattern. Every
+  widget would need to pick its base explicitly.
+- It breaks the public API. Code that does `node->size(...)` would
+  need to know whether `size` lives on `StyledNode` or `Layout`.
+- It changes `friend` targets and every existing include.
+
+**Decision: deferred to post-1.0.** Not worth the churn while the
+framework is still in beta. Revisit when:
+- Compile time becomes a real problem (>30s incremental builds on a
+  typical machine).
+- Multiple stakeholders need to work on style / layout / DOM in
+  parallel without stepping on each other.
+- A plugin system needs to expose "just the tree" without the drawing
+  half.
+
+- [ ] 5.11a — Group state flags into a bitfield struct (low risk)
+- [ ] 5.11b — Listener array (tracked in 5.9)
+- [x] 5.11c — Remove `friend` — declined, deliberate design choice
+- [ ] 5.11d — Split hierarchy — deferred to post-1.0
 
 ---
 

@@ -32,6 +32,12 @@ namespace ZenitUI::Test
         std::vector<Rect> clipStack;
         Rect currentClip{0, 0, 1e9f, 1e9f};
 
+        // Dimensions of the last render target created via createTarget().
+        // Used by tests that verify the filter region computation (e.g. after
+        // a rotation, the target must be large enough to cover the rotated AABB).
+        int lastCreatedTargetW{0};
+        int lastCreatedTargetH{0};
+
         struct CapturedFloat
         {
             std::string name;
@@ -124,7 +130,9 @@ namespace ZenitUI::Test
 
         TargetHandle createTarget(int w, int h) override
         {
-            static uint32_t nextId = 1000; // sopra i valori usati altrove
+            lastCreatedTargetW = w;
+            lastCreatedTargetH = h;
+            static uint32_t nextId = 1000;
             return TargetHandle{nextId++, w, h};
         }
         void destroyTarget(TargetHandle) override {}
@@ -363,7 +371,7 @@ namespace ZenitUI::Test
             renderer.pushClipCount = 0;
             renderer.popClipCount = 0;
             renderer.pushTargetCount = 0;
-            renderer.supportsEffects  = false;
+            renderer.supportsEffects = false;
             renderer.clipStack.clear();
             renderer.capturedFloat.clear();
             renderer.capturedVec2.clear();
@@ -372,6 +380,8 @@ namespace ZenitUI::Test
             renderer.capturedColor.clear();
             renderer.transformHistory.clear();
             renderer.currentClip = {0, 0, 1e9f, 1e9f};
+            renderer.lastCreatedTargetW = 0;
+            renderer.lastCreatedTargetH = 0;
         }
 
         // Esegue un singolo frame di UI: beginFrame + update + measure + arrange.

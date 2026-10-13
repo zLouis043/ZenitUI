@@ -53,7 +53,6 @@ Short description.
 - OS: Windows 11
 - Compiler: MSVC 19.38
 - Backend: Raylib 5.5
-```
 
 ---
 
@@ -129,7 +128,7 @@ should compile and pass tests on its own when possible.
 Commit message style: short imperative subject line, blank line, then
 details if needed.
 
-```
+```txt
 Fix onHoverExit firing on Hover -> Pressed
 
 The state comparison treated Pressed as "not hovered", which fired
@@ -277,3 +276,4 @@ Open a discussion (if enabled) or an issue with the `question` label.
 - [Roadmap](docs/ROADMAP.md) — planned work and known issues.
 - [Architecture](docs/internals/01-architecture.md) — how the framework
   is built.
+  
