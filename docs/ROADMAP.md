@@ -1075,6 +1075,87 @@ framework is still in beta. Revisit when:
 - [x] 5.11c — Remove `friend` — declined, deliberate design choice
 - [ ] 5.11d — Split hierarchy — deferred to post-1.0
 
+### 5.12 ZMarkup / ZStyle ergonomics
+
+Four small gaps that made the DSL awkward for anything beyond the
+simplest markup. All resolved.
+
+**5.12a — Canvas / Modal / Popup in `registerBuiltins`.** ✅
+
+Previously, using these three widgets from ZMarkup required building a
+custom `Registry` in user code, for no reason. They're regular widgets
+with no constructor arguments, so they belong in the default registry.
+
+`Tooltip` (needs an owner) and `ImageContainer` (needs a texture) stay
+unregistered — those genuinely can't be expressed by the grammar.
+
+**5.12b — `UINode::context()`.** ✅
+
+`UINode` held a `BuildContext` internally but didn't expose it. Any
+user who wanted to look up nodes by id from outside of `find()`, or
+who wanted to extend a tree at runtime with the same registry, had to
+re-run `parse` + `Registry` + `create` manually. `context()` returns
+the shared pointer directly.
+
+**5.12c — `rgb()` / `rgba()` in `.zstyle`.** ✅
+
+The color parser handled named colors and hex only. `rgb(r, g, b)`
+and `rgba(r, g, b, a)` are now recognized, with values clamped to
+their valid ranges. Components follow the CSS convention: 0–255 for
+the color channels, 0.0–1.0 for alpha.
+
+**5.12d — `ZMarkup::loadMarkupFile`.** ✅
+
+Symmetric to `ZMarkup::loadStyleFile`. Reads a `.zmarkup` source from
+a file and returns a `UINode`. Missing file → null root + error log.
+
+- [x] 5.12a — Register Canvas / Modal / Popup
+- [x] 5.12b — Expose `UINode::context()`
+- [x] 5.12c — Support `rgb()` / `rgba()`
+- [x] 5.12d — Add `loadMarkupFile`
+
+### 5.13 Content slot for composite widgets
+
+**Not started.**
+
+Composite widgets (`Modal`, `Dropdown`, `Toggle`, `Popup`, `Tooltip`)
+build their internal structure in `onBuild()`. When ZMarkup adds
+children to such a widget, they become *siblings* of the internal
+content wrapper, not children of it:
+
+```zmarkup
+Modal {
+  Label "Are you sure?" // ends up as sibling of modal's content
+}
+```
+
+The current workaround is to inject the content from C++:
+
+```cpp
+auto modal = ui.find<Modal>("m");
+modal->children[0]->addChild(Label("Are you sure?"));
+```
+
+This is not obvious, and it's the single biggest source of confusion
+in the ZMarkup user experience.
+
+Proposed design: a virtual `Layout* contentTarget()` that returns
+the node children should be attached to. Default: this. Composite
+widgets override it to point at their content wrapper. ZMarkup::create
+uses `contentTarget()` instead of `addChild()` directly.
+
+Touch points: `Layout.hpp` (add virtual), 5 widgets (override),
+`ZMarkup.hpp` (create loop). Estimated: half a day, plus tests.
+
+Deferred until after 5.12 ships, because it changes the semantics of
+a core operation and deserves its own session.
+
+- [] Add `Layout::contentTarget()` virtual, default returns `this`
+- [] Override in Modal, Dropdown, Toggle, Popup, Tooltip
+- [] Update ZMarkup::create to use contentTarget
+- [] Add tests for each composite widget
+- [] Update user/04-zmarkup.md §"Children" with the new semantics text
+
 ---
 
 ## Phase 6 — Internationalization

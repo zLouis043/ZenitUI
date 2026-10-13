@@ -571,6 +571,7 @@ public:
     void setOpen(bool o);
 
     std::function<void(int, const std::string&)> onChange;
+    std::function<void(bool)>                    onOpenChanged;
 };
 ```
 
@@ -701,6 +702,9 @@ public:
 
     void show();
     void hide();
+
+    std::function<void()> onShow;
+    std::function<void()> onHide;
 };
 ```
 
@@ -834,6 +838,7 @@ public:
     bool closeOnClickOutside{true};
     bool closeOnEscape{true};
     float offsetBelow{4.0f};
+    std::function<void()> onOpen;
     std::function<void()> onClose;
 
     void arrange(Rect) override;   // no-op

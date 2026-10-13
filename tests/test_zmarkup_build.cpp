@@ -321,3 +321,51 @@ TEST(Widget_layout, removeAllChildren_allows_readd_elsewhere)
     CHECK((int)a->children.size() == 0);
     CHECK((int)b->children.size() == 1);
 }
+
+TEST(ZMarkupBuild, canvas_is_registered)
+{
+    auto ui = ZMarkup::build(R"(Canvas#c)");
+    CHECK(ui.root() != nullptr);
+    auto node = ui.find("c");
+    CHECK(node != nullptr);
+    CHECK(node->getStyleTag() == "Canvas");
+}
+
+TEST(ZMarkupBuild, modal_is_registered)
+{
+    auto ui = ZMarkup::build(R"(Modal#m)");
+    CHECK(ui.root() != nullptr);
+    auto node = ui.find("m");
+    CHECK(node != nullptr);
+    CHECK(node->getStyleTag() == "Modal");
+}
+
+TEST(ZMarkupBuild, popup_is_registered)
+{
+    auto ui = ZMarkup::build(R"(Popup#p)");
+    CHECK(ui.root() != nullptr);
+    auto node = ui.find("p");
+    CHECK(node != nullptr);
+    CHECK(node->getStyleTag() == "Popup");
+}
+
+TEST(ZMarkupBuild, context_is_exposed)
+{
+    auto ui = ZMarkup::build(R"(
+        Stack {
+            Text#a "hello"
+            Text#b "world"
+        }
+    )");
+    auto ctx = ui.context();
+    CHECK(ctx != nullptr);
+    CHECK(ctx->byId.count("a") == 1);
+    CHECK(ctx->byId.count("b") == 1);
+}
+
+TEST(ZMarkupBuild, loadMarkupFile_missing_returns_null_root)
+{
+    auto ui = ZMarkup::loadMarkupFile("nonexistent_file_xyz.zmarkup");
+    CHECK(ui.root() == nullptr);
+    CHECK(ui.context() != nullptr);
+}

@@ -182,3 +182,54 @@ TEST(ValueParsers_justifyToken, all) {
     CHECK(parseJustifyToken("space-between") == Justify::SpaceBetween);
     CHECK(!parseJustifyToken("spacearound").has_value());
 }
+
+TEST(ValueParsers_colorToken, rgb_with_spaces)
+{
+    auto c = parseColorToken("rgb(255, 128, 0)");
+    CHECK(c.has_value());
+    CHECK(c->r == 255);
+    CHECK(c->g == 128);
+    CHECK(c->b == 0);
+    CHECK(c->a == 255);
+}
+
+TEST(ValueParsers_colorToken, rgba_with_alpha)
+{
+    auto c = parseColorToken("rgba(255, 128, 0, 0.5)");
+    CHECK(c.has_value());
+    CHECK(c->r == 255);
+    CHECK(c->g == 128);
+    CHECK(c->b == 0);
+    // 0.5 * 255 = 127.5, rounded to 128
+    CHECK(c->a == 128);
+}
+
+TEST(ValueParsers_colorToken, rgb_clamps_out_of_range)
+{
+    auto c = parseColorToken("rgb(300, -20, 128)");
+    CHECK(c.has_value());
+    CHECK(c->r == 255);
+    CHECK(c->g == 0);
+    CHECK(c->b == 128);
+}
+
+TEST(ValueParsers_colorToken, rgba_full_alpha)
+{
+    auto c = parseColorToken("rgba(0, 0, 0, 1.0)");
+    CHECK(c.has_value());
+    CHECK(c->a == 255);
+}
+
+TEST(ValueParsers_colorToken, rgba_zero_alpha)
+{
+    auto c = parseColorToken("rgba(255, 255, 255, 0.0)");
+    CHECK(c.has_value());
+    CHECK(c->a == 0);
+}
+
+TEST(ValueParsers_colorToken, rgb_wrong_arg_count)
+{
+    CHECK(!parseColorToken("rgb(255, 128)").has_value());
+    CHECK(!parseColorToken("rgb(255, 128, 0, 0.5)").has_value());
+    CHECK(!parseColorToken("rgba(255, 128, 0)").has_value());
+}

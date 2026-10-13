@@ -11,6 +11,8 @@
 #include "StyleAttr.hpp"
 
 #include <charconv>
+#include <filesystem>
+#include <fstream>
 #include <optional>
 #include <sstream>
 
@@ -282,6 +284,9 @@ inline void registerBuiltins(Registry& r) {
     r.reg("Slider",  [](const Element& e) { return Slider::create(e.attrFloat("value", 0.5f)); });
     r.reg("Toggle",  [](const Element& e) { return Toggle::create(e.attrBool("checked", false)); });
     r.reg("ScrollView", [](const Element&) { return ScrollView::create(); });
+    r.reg("Canvas", [](const Element&) { return CanvasLayout::create(); });
+    r.reg("Modal",  [](const Element&) { return Modal::create(); });
+    r.reg("Popup",  [](const Element&) { return Popup::create(); });
 }
 
 // =========================================================================
@@ -293,6 +298,13 @@ public:
         : root_(std::move(root)), ctx_(std::move(ctx)) {}
 
     std::shared_ptr<Layout> root() const { return root_; }
+
+    // Returns the BuildContext used to construct this tree. Useful when
+    // you need to look up nodes by id outside of find(), or when you
+    // want to extend the tree at runtime with additional elements built
+    // through the same registry (e.g. injecting content into a composite
+    // widget after its onBuild has run).
+    std::shared_ptr<BuildContext> context() const { return ctx_; }
 
     std::shared_ptr<Layout> find(const std::string& id) const {
         auto it = ctx_->byId.find(id);
@@ -351,6 +363,24 @@ inline UINode build(std::string_view source) {
     auto el = parse(source);
     auto root = registry.create(el, *ctx);
     return UINode(root, ctx);
+}
+
+// Reads a ZMarkup source from a file and builds it. Returns a UINode
+// with a null root if the file can't be opened. Errors are logged.
+//
+// Symmetric to ZMarkup::loadStyleFile for .zstyle sources.
+inline UINode loadMarkupFile(const std::filesystem::path& path)
+{
+    std::ifstream f(path, std::ios::binary);
+    if (!f)
+    {
+        logError("ZMarkup", path.string(), 0, 0,
+                 "impossibile aprire il file");
+        return UINode(nullptr, std::make_shared<BuildContext>());
+    }
+    std::stringstream ss;
+    ss << f.rdbuf();
+    return build(ss.str());
 }
 
 } // namespace ZenitUI::ZMarkup
