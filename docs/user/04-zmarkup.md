@@ -182,11 +182,39 @@ VStack {
 }
 ```
 
-Children are added to the parent via `addChild()`. For composite widgets
-(`Toggle`, `Dropdown`, `Modal`), the children of the ZMarkup element are
-**appended after** the ones created by `onBuild()`. This is usually not
-what you want for `Toggle` — its knob is an internal child, and adding
-your own children will stack them in the same `Stack` layer.
+Children are added to the parent's **content target**. For most widgets
+the content target is the widget itself, so `{ ... }` children end up
+directly inside the widget, exactly as `addChild()` would do.
+
+For composite widgets that have an internal content wrapper — currently
+only `Modal` — the content target is the wrapper. This means:
+
+```zmarkup
+Modal#dialog {
+VStack.modal-box {
+Label "Are you sure?"
+}
+}
+```
+
+The `VStack.modal-box` ends up **inside** the modal's content wrapper,
+not as a sibling of it. Since the wrapper owns the "Intro" animation
+that slides the modal content into view, markup children participate
+in that animation automatically. No C++ injection needed:
+
+```cpp
+auto ui = ZMarkup::loadMarkupFile("assets/ui/menu.zmarkup");
+auto modal = ui.find<Modal>("dialog");
+modal->show();   // the modal-box slides in, animated
+```
+
+For other composite widgets (`Toggle`, `Dropdown`), the content target
+is the widget itself — same as a plain `Layout`. Adding children to a
+`Toggle` via markup stacks them on top of the knob in the same `Stack`
+layer, which is usually not what you want. Use `Toggle` without markup
+children, and configure its look through `.zstyle` instead.
+
+For the full contract, see Layout::contentTarget() in the [Layout API](../api/Layout.md)
 
 ### 2.7 Comments
 

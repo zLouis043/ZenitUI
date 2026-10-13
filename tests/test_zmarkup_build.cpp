@@ -369,3 +369,93 @@ TEST(ZMarkupBuild, loadMarkupFile_missing_returns_null_root)
     CHECK(ui.root() == nullptr);
     CHECK(ui.context() != nullptr);
 }
+
+TEST(ZMarkupBuild, modal_children_go_into_content_slot)
+{
+    auto ui = ZMarkup::build(R"(
+        Modal#m {
+            Label#lbl "hello"
+        }
+    )");
+
+    auto modal = ui.find("m");
+    auto lbl   = ui.find("lbl");
+
+    CHECK(modal != nullptr);
+    CHECK(lbl   != nullptr);
+    CHECK(modal->getStyleTag() == "Modal");
+
+    // Il Modal ha un solo figlio diretto: il wrapper `content` creato
+    // da onBuild(). Non ha un figlio diretto `lbl`.
+    CHECK((int)modal->children.size() == 1);
+
+    // Il wrapper ha la Label come figlio.
+    auto content = modal->children[0];
+    CHECK((int)content->children.size() == 1);
+    CHECK(content->children[0] == lbl);
+
+    // La Label ha il wrapper come parent, non il Modal.
+    CHECK(lbl->getParent() == content);
+    CHECK(lbl->getParent() != modal);
+}
+
+TEST(ZMarkupBuild, stack_children_go_direct)
+{
+    auto ui = ZMarkup::build(R"(
+        Stack#s {
+            Label#lbl "hello"
+        }
+    )");
+
+    auto stack = ui.find("s");
+    auto lbl   = ui.find("lbl");
+
+    CHECK(stack != nullptr);
+    CHECK(lbl   != nullptr);
+
+    // Un Layout normale: nessun content slot, i figli finiscono
+    // direttamente dentro `stack`.
+    CHECK((int)stack->children.size() == 1);
+    CHECK(stack->children[0] == lbl);
+    CHECK(lbl->getParent() == stack);
+}
+
+TEST(ZMarkupBuild, modal_with_nested_layout)
+{
+    auto ui = ZMarkup::build(R"(
+        Modal#m {
+            VStack#box {
+                Label#title "Quit?"
+                HStack#row {
+                    Button#yes "YES"
+                    Button#no "NO"
+                }
+            }
+        }
+    )");
+
+    auto modal = ui.find("m");
+    auto box   = ui.find("box");
+    auto title = ui.find("title");
+    auto row   = ui.find("row");
+    auto yes   = ui.find("yes");
+    auto no    = ui.find("no");
+
+    CHECK(modal != nullptr);
+    CHECK(box   != nullptr);
+    CHECK(title != nullptr);
+    CHECK(row   != nullptr);
+    CHECK(yes   != nullptr);
+    CHECK(no    != nullptr);
+
+    // box è dentro content, non direttamente dentro modal
+    CHECK(box->getParent() == modal->children[0]);
+
+    // title, row dentro box
+    CHECK(title->getParent() == box);
+    CHECK(row->getParent()   == box);
+
+    // yes, no dentro row
+    CHECK(yes->getParent() == row);
+    CHECK(no->getParent()  == row);
+}

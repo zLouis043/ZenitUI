@@ -153,6 +153,18 @@ namespace ZenitUI
 			children.push_back(std::move(child));
 			pendingTransition = true;
 		}
+
+		// Returns the node to which ZMarkup should attach children. Default
+		// returns `this`. Composite widgets (Modal) override it to point at
+		// their internal content slot, so that markup children end up
+		// inside the widget's styled content area rather than as siblings
+		// of the widget's internal nodes.
+		//
+		// Regular C++ code should not need this: use addChild() directly on
+		// the widget and it will route to the same place the widget considers
+		// its content area.
+		virtual Layout *contentTarget() { return this; }
+
 		void removeFromParent() { wantsRemoval = true; }
 		// Removes every child in one shot. Unlike `removeFromParent` on
 		// each child, this is immediate: the `children` vector is cleared

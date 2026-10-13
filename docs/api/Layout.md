@@ -237,6 +237,41 @@ Adds a child. Sets the child's parent pointer and `pendingTransition`.
 managed by `shared_ptr`), the call logs a warning and returns without
 adding. Use `X::create()` instead of `std::make_shared<X>()`.
 
+### `virtual Layout* contentTarget()`
+
+Returns the node to which ZMarkup attaches children. Default: `this`.
+
+Composite widgets that build an internal content wrapper override this
+to return the wrapper instead. Currently only `Modal` does — its
+`onBuild` creates a `content` VStack with the "Intro" animation, and
+`contentTarget()` returns that VStack. Children written in markup
+under a `Modal` element end up inside the wrapper, and therefore get
+animated by it automatically.
+
+```cpp
+// Default behavior (plain Layout, Panel, VStack, HStack, ...):
+// contentTarget() returns the node itself.
+auto stack = std::make_shared<Layout>(LayoutType::Vertical);
+stack->contentTarget() == stack.get();   // true
+
+// Modal: contentTarget() returns the internal content wrapper.
+auto modal = Modal::create();
+modal->contentTarget() != modal.get();   // true
+modal->contentTarget() == modal->children[0].get();  // true
+```
+
+*When to override*: if you write a custom widget that builds an
+internal wrapper and wants ZMarkup children to participate in the
+wrapper's layout/animation, override `contentTarget()`. Don't override
+it just to "protect" the widget from children — that's not what it's
+for.
+
+*When NOT to use it directly*: regular C++ code rarely needs to
+call `contentTarget()`. Use `addChild()` on the widget and the
+framework routes to the right place, the same way ZMarkup does.
+`contentTarget()` exists so that `ZMarkup::create` (which doesn't know
+the widget type) can attach children correctly.
+
 ### `void removeFromParent()`
 
 Marks the node for removal. The actual removal happens in the parent's
