@@ -1269,6 +1269,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        context()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#onclick-onpress-onrelease-onhoverenter-onhoverexit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1314,6 +1325,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="7. build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loadmarkupfilepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadMarkupFile(path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2142,6 +2170,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        context()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#onclick-onpress-onrelease-onhoverenter-onhoverexit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2187,6 +2226,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="7. build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loadmarkupfilepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loadMarkupFile(path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2623,6 +2679,18 @@ unknown keys.</p>
 <td><code>ScrollView</code></td>
 <td><code>ScrollView::create()</code></td>
 </tr>
+<tr>
+<td><code>Canvas</code></td>
+<td><code>CanvasLayout::create()</code></td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td><code>Modal::create()</code></td>
+</tr>
+<tr>
+<td><code>Popup</code></td>
+<td><code>Popup::create()</code></td>
+</tr>
 </tbody>
 </table>
 <h3 id="extending-with-custom-tags">Extending with custom tags</h3>
@@ -2640,9 +2708,15 @@ auto ctx = std::make_shared&lt;BuildContext&gt;();
 auto root = reg.create(el, *ctx);
 UINode ui(root, ctx);
 </code></pre>
-<p><strong>Note:</strong> there's no way to add tags to the <strong>default</strong> registry used
-by <code>ZMarkup::build</code>. That registry is a private static. To use custom
-tags, build the tree manually with your own registry.</p>
+<p><strong>Note:</strong> the default registry used by <code>ZMarkup::build</code> is a private
+static. It now includes <code>Canvas</code>, <code>Modal</code>, and <code>Popup</code> alongside the
+other built-ins (see the table above). Custom tags still require
+building the tree manually with your own <code>Registry</code>, but the need for
+this is now limited to genuinely user-defined widgets — not to widgets
+that ship with the framework.</p>
+<p><code>Tooltip</code> (needs an owner) and <code>ImageContainer</code> (needs a texture) stay
+unregistered, because the markup grammar has no way to express their
+constructor arguments.</p>
 <hr />
 <h2 id="6-uinode">6. <code>UINode</code></h2>
 <p>The handle returned by <code>build</code>. Provides lookups and typed bindings.</p>
@@ -2651,8 +2725,9 @@ public:
     UINode(std::shared_ptr&lt;Layout&gt; root,
            std::shared_ptr&lt;BuildContext&gt; ctx);
 
-    std::shared_ptr&lt;Layout&gt; root() const;
-    std::shared_ptr&lt;Layout&gt; find(const std::string&amp; id) const;
+    std::shared_ptr&lt;Layout&gt;        root() const;
+    std::shared_ptr&lt;BuildContext&gt;  context() const;
+    std::shared_ptr&lt;Layout&gt;        find(const std::string&amp; id) const;
 
     template &lt;typename T = Layout&gt;
     std::shared_ptr&lt;T&gt; find(const std::string&amp; id) const;
@@ -2681,6 +2756,23 @@ auto slider = ui.find&lt;Slider&gt;(&quot;volume&quot;);     // shared_ptr&lt;Sl
 doesn't match <code>T</code>, using the returned pointer is undefined behavior.
 Use the typed <code>on*</code> helpers when possible (they do the cast safely and
 no-op if the id doesn't exist or the type doesn't match).</p>
+<h3 id="context"><code>context()</code></h3>
+<p>Returns the <code>BuildContext</code> used to build the tree. The context holds
+the id → node map (byId).</p>
+<pre><code class="language-cpp">auto ui = ZMarkup::build(source);
+auto ctx = ui.context();
+
+// Look up a node by id without going through find():
+auto it = ctx-&gt;byId.find(&quot;save&quot;);
+if (it != ctx-&gt;byId.end()) {
+    auto save = it-&gt;second;
+    // ...
+}
+</code></pre>
+<p>Most of the time <code>find()</code> is enough and more ergonomic. <code>context()</code>
+is the escape hatch for bulk inspection (iterate every id, check for
+duplicates) or for extending a tree at runtime with a custom registry.</p>
+<p>See <a href="../../user/04-zmarkup/">ZMarkup</a> for the full discussion.</p>
 <h3 id="onclick-onpress-onrelease-onhoverenter-onhoverexit"><code>onClick</code> / <code>onPress</code> / <code>onRelease</code> / <code>onHoverEnter</code> / <code>onHoverExit</code></h3>
 <p>Bind a <code>void()</code> callback to the corresponding <code>Layout</code> field.</p>
 <pre><code class="language-cpp">ui.onClick(&quot;ok&quot;, []{ std::printf(&quot;clicked\n&quot;); });
@@ -2729,6 +2821,24 @@ if (!ui.root()) {
     std::printf(&quot;build failed\n&quot;);
     return;
 }
+</code></pre>
+<h3 id="loadmarkupfilepath"><code>loadMarkupFile(path)</code></h3>
+<pre><code class="language-cpp">inline UINode loadMarkupFile(const std::filesystem::path&amp; path);
+</code></pre>
+<p>Reads a ZMarkup source from a file and calls <code>build</code> on its contents.
+Symmetric to <code>loadStyleFile</code> for <code>.zstyle</code>.</p>
+<pre><code class="language-cpp">auto ui = ZMarkup::loadMarkupFile(&quot;assets/ui/main_menu.zmarkup&quot;);
+if (!ui.root()) {
+    // file not found, or empty; error logged via Logger
+    return;
+}
+parent-&gt;addChild(ui.root());
+</code></pre>
+<p>Returns a <code>UINode</code> with a null root if the file can't be opened.
+The error is logged; <code>context()</code> still returns a valid (empty)
+<code>BuildContext</code>. This matches the behavior of <code>build</code> on empty input,
+so the caller-side check is the same:</p>
+<pre><code class="language-cpp">if (!ui.root()) { /* handle failure */ }
 </code></pre>
 <hr />
 <h2 id="8-style-loading">8. Style loading</h2>

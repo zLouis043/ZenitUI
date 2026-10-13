@@ -4619,6 +4619,7 @@ public:
     void setOpen(bool o);
 
     std::function&lt;void(int, const std::string&amp;)&gt; onChange;
+    std::function&lt;void(bool)&gt;                    onOpenChanged;
 };
 </code></pre>
 <h3 id="methods-fields_2">Methods / fields</h3>
@@ -4744,6 +4745,9 @@ public:
 
     void show();
     void hide();
+
+    std::function&lt;void()&gt; onShow;
+    std::function&lt;void()&gt; onHide;
 };
 </code></pre>
 <h3 id="methods_4">Methods</h3>
@@ -4885,6 +4889,7 @@ public:
     bool closeOnClickOutside{true};
     bool closeOnEscape{true};
     float offsetBelow{4.0f};
+    std::function&lt;void()&gt; onOpen;
     std::function&lt;void()&gt; onClose;
 
     void arrange(Rect) override;   // no-op

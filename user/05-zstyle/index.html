@@ -864,6 +864,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#471-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7.1 Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#48-typography" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2179,6 +2190,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#471-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7.1 Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#48-typography" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3033,6 +3055,30 @@ height</strong> (self-relative). Pivot is always the node's center.</p>
 <p><code>box-shadow</code> syntax: <code>x y blur color</code>. Color is optional (defaults to
 <code>#00000080</code>). Blur is approximated with 5 stacked rounded rects, not a
 true Gaussian blur.</p>
+<h3 id="471-colors">4.7.1 Colors</h3>
+<p>Four properties accept a color value: <code>background</code>, <code>color</code>, <code>tint</code>,
+<code>border-color</code>. (Plus <code>box-shadow</code>'s color component.)</p>
+<p>Three formats are supported:</p>
+<p><strong>Named colors</strong> — a small fixed set:</p>
+<p><code>white</code>, <code>black</code>, <code>transparent</code>, <code>blank</code>, <code>red</code>, <code>maroon</code>, <code>green</code>,
+<code>blue</code>, <code>yellow</code>, <code>gray</code>, <code>darkgray</code>, <code>lightgray</code>.</p>
+<p><strong>Hex</strong> — with or without alpha:</p>
+<pre><code class="language-css">.color-a { background: #F00;        /* #RGB           */
+           color:      #F00F;       /* #RGBA          */
+           border-color: #FF0000;   /* #RRGGBB        */
+           tint: #FF0000FF; }       /* #RRGGBBAA      */
+</code></pre>
+<p><code>rgb()</code> and <code>rgba()</code> — with the CSS convention (0–255 for the
+color channels, 0.0–1.0 for alpha):</p>
+<pre><code class="language-css">.overlay { background: rgba(0, 0, 0, 0.5); }
+.accent  { color: rgb(74, 158, 255); }
+</code></pre>
+<p>Values outside the valid range are clamped. <code>rgb()</code> expects exactly
+three arguments; <code>rgba()</code> expects four. Spaces after commas are
+ignored (<code>rgb(255, 128, 0)</code>and <code>rgb(255,128,0)</code> are equivalent).</p>
+<p><code>hsl()</code> is not supported. Hex remains the recommended format when you
+want the value to be terse; <code>rgb()</code>/<code>rgba()</code> are useful when the alpha
+channel is important and the hex form would be less readable.</p>
 <h3 id="48-typography">4.8 Typography</h3>
 <table>
 <thead>

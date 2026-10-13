@@ -2025,6 +2025,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#512-zmarkup-zstyle-ergonomics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.12 ZMarkup / ZStyle ergonomics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#513-content-slot-for-composite-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.13 Content slot for composite widgets
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3176,6 +3198,66 @@ framework is still in beta. Revisit when:
 <li>[ ] 5.11b — Listener array (tracked in 5.9)</li>
 <li>[x] 5.11c — Remove <code>friend</code> — declined, deliberate design choice</li>
 <li>[ ] 5.11d — Split hierarchy — deferred to post-1.0</li>
+</ul>
+<h3 id="512-zmarkup-zstyle-ergonomics">5.12 ZMarkup / ZStyle ergonomics</h3>
+<p>Four small gaps that made the DSL awkward for anything beyond the
+simplest markup. All resolved.</p>
+<p><strong>5.12a — Canvas / Modal / Popup in <code>registerBuiltins</code>.</strong> ✅</p>
+<p>Previously, using these three widgets from ZMarkup required building a
+custom <code>Registry</code> in user code, for no reason. They're regular widgets
+with no constructor arguments, so they belong in the default registry.</p>
+<p><code>Tooltip</code> (needs an owner) and <code>ImageContainer</code> (needs a texture) stay
+unregistered — those genuinely can't be expressed by the grammar.</p>
+<p><strong>5.12b — <code>UINode::context()</code>.</strong> ✅</p>
+<p><code>UINode</code> held a <code>BuildContext</code> internally but didn't expose it. Any
+user who wanted to look up nodes by id from outside of <code>find()</code>, or
+who wanted to extend a tree at runtime with the same registry, had to
+re-run <code>parse</code> + <code>Registry</code> + <code>create</code> manually. <code>context()</code> returns
+the shared pointer directly.</p>
+<p><strong>5.12c — <code>rgb()</code> / <code>rgba()</code> in <code>.zstyle</code>.</strong> ✅</p>
+<p>The color parser handled named colors and hex only. <code>rgb(r, g, b)</code>
+and <code>rgba(r, g, b, a)</code> are now recognized, with values clamped to
+their valid ranges. Components follow the CSS convention: 0–255 for
+the color channels, 0.0–1.0 for alpha.</p>
+<p><strong>5.12d — <code>ZMarkup::loadMarkupFile</code>.</strong> ✅</p>
+<p>Symmetric to <code>ZMarkup::loadStyleFile</code>. Reads a <code>.zmarkup</code> source from
+a file and returns a <code>UINode</code>. Missing file → null root + error log.</p>
+<ul>
+<li>[x] 5.12a — Register Canvas / Modal / Popup</li>
+<li>[x] 5.12b — Expose <code>UINode::context()</code></li>
+<li>[x] 5.12c — Support <code>rgb()</code> / <code>rgba()</code></li>
+<li>[x] 5.12d — Add <code>loadMarkupFile</code></li>
+</ul>
+<h3 id="513-content-slot-for-composite-widgets">5.13 Content slot for composite widgets</h3>
+<p><strong>Not started.</strong></p>
+<p>Composite widgets (<code>Modal</code>, <code>Dropdown</code>, <code>Toggle</code>, <code>Popup</code>, <code>Tooltip</code>)
+build their internal structure in <code>onBuild()</code>. When ZMarkup adds
+children to such a widget, they become <em>siblings</em> of the internal
+content wrapper, not children of it:</p>
+<pre><code class="language-zmarkup">Modal {
+  Label &quot;Are you sure?&quot; // ends up as sibling of modal's content
+}
+</code></pre>
+<p>The current workaround is to inject the content from C++:</p>
+<pre><code class="language-cpp">auto modal = ui.find&lt;Modal&gt;(&quot;m&quot;);
+modal-&gt;children[0]-&gt;addChild(Label(&quot;Are you sure?&quot;));
+</code></pre>
+<p>This is not obvious, and it's the single biggest source of confusion
+in the ZMarkup user experience.</p>
+<p>Proposed design: a virtual <code>Layout* contentTarget()</code> that returns
+the node children should be attached to. Default: this. Composite
+widgets override it to point at their content wrapper. ZMarkup::create
+uses <code>contentTarget()</code> instead of <code>addChild()</code> directly.</p>
+<p>Touch points: <code>Layout.hpp</code> (add virtual), 5 widgets (override),
+<code>ZMarkup.hpp</code> (create loop). Estimated: half a day, plus tests.</p>
+<p>Deferred until after 5.12 ships, because it changes the semantics of
+a core operation and deserves its own session.</p>
+<ul>
+<li>[] Add <code>Layout::contentTarget()</code> virtual, default returns <code>this</code></li>
+<li>[] Override in Modal, Dropdown, Toggle, Popup, Tooltip</li>
+<li>[] Update ZMarkup::create to use contentTarget</li>
+<li>[] Add tests for each composite widget</li>
+<li>[] Update user/04-zmarkup.md §"Children" with the new semantics text</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>

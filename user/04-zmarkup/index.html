@@ -730,6 +730,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#loading-from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading from a file
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -824,6 +835,17 @@
     <span class="md-ellipsis">
       
         The Element struct
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-the-buildcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing the BuildContext
       
     </span>
   </a>
@@ -1874,6 +1896,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#loading-from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading from a file
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1968,6 +2001,17 @@
     <span class="md-ellipsis">
       
         The Element struct
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-the-buildcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessing the BuildContext
       
     </span>
   </a>
@@ -2177,6 +2221,21 @@ the sections below.</p>
 <td><code>ScrollView</code></td>
 <td></td>
 </tr>
+<tr>
+<td><code>Canvas</code></td>
+<td><code>CanvasLayout</code></td>
+<td>Renders subtree into an offscreen target.</td>
+</tr>
+<tr>
+<td><code>Modal</code></td>
+<td><code>Modal</code></td>
+<td>Full-screen overlay with intro animation. Content goes into <code>contentTarget()</code> (see below).</td>
+</tr>
+<tr>
+<td><code>Popup</code></td>
+<td><code>Popup</code></td>
+<td>Floating panel; requires C++ to call <code>openBelow</code>/<code>openAt</code>.</td>
+</tr>
 </tbody>
 </table>
 <p>Tags are <strong>case-sensitive</strong>. <code>Button</code> and <code>button</code> are different — only
@@ -2320,6 +2379,10 @@ parent-&gt;addChild(root);
 <td>The root <code>Layout</code> of the built tree.</td>
 </tr>
 <tr>
+<td><code>context()</code></td>
+<td>The <code>BuildContext</code> used to build the tree. Escape hatch for looking up nodes by id outside of <code>find()</code>. See §6.</td>
+</tr>
+<tr>
 <td><code>find(id)</code></td>
 <td>Find a node by id, returns <code>shared_ptr&lt;Layout&gt;</code>.</td>
 </tr>
@@ -2378,6 +2441,18 @@ if (auto toggle = ui.find&lt;Toggle&gt;(&quot;mute&quot;)) {
 <p><code>find&lt;T&gt;</code> uses <code>std::static_pointer_cast</code>, so you must be sure of the
 type — otherwise you'll get undefined behavior when the cast is used.
 Prefer the typed <code>on*</code> helpers when possible.</p>
+<h3 id="loading-from-a-file">Loading from a file</h3>
+<pre><code class="language-cpp">auto ui = ZMarkup::loadMarkupFile(&quot;assets/ui/main_menu.zmarkup&quot;);
+if (!ui.root()) {
+    // file not found or empty; see the log for details
+    return;
+}
+root-&gt;addChild(ui.root());
+</code></pre>
+<p>Symmetric to <code>ZMarkup::loadStyleFile</code> for <code>.zstyle</code> sources.</p>
+<p>Missing file → null root. The error is logged via <code>Logger</code>, so a
+custom logger will see it. The <code>UINode</code> is always usable: <code>context()</code>
+returns a valid (empty) context even when the root is null.</p>
 <hr />
 <h2 id="4-common-patterns">4. Common patterns</h2>
 <h3 id="41-settings-row">4.1 Settings row</h3>
@@ -2527,6 +2602,49 @@ else (classes, id, attrs, children) is handled by the registry.</p>
 <p><code>attrFloat</code> / <code>attrBool</code> do a best-effort parse and return the default
 on failure. <code>attr</code> returns an empty string (or the given default) if the
 key isn't present.</p>
+<h3 id="accessing-the-buildcontext">Accessing the BuildContext</h3>
+<p>The default <code>ZMarkup::build</code> and <code>loadMarkupFile</code> create a
+<code>BuildContext</code> internally and store it in the returned <code>UINode</code>.
+<code>context()</code> exposes it:</p>
+<pre><code class="language-cpp">auto ui = ZMarkup::build(source);
+auto ctx = ui.context();
+
+// ctx-&gt;byId[&quot;save&quot;] is the node with id &quot;save&quot;, or absent
+auto it = ctx-&gt;byId.find(&quot;save&quot;);
+if (it != ctx-&gt;byId.end()) {
+    auto save = it-&gt;second;
+    // ...
+}
+</code></pre>
+<p>Most of the time <code>find()</code> is enough and more ergonomic. <code>context()</code>
+is the escape hatch for two cases:</p>
+<ul>
+<li>
+<p>Bulk inspection. Iterating every id in the tree, checking for
+  duplicates, or building a map from id → node for external use.
+  <code>find()</code> is per-id; <code>context()</code> gives the whole map.</p>
+</li>
+<li>
+<p>Extending a tree at runtime. If you built the tree with a
+  custom Registry (see above), you can use the same registry
+  and the same BuildContext to add more nodes later, and they'll
+  be registered in the same id map:</p>
+</li>
+</ul>
+<pre><code class="language-cpp">auto ui = /* built with custom registry + context */;
+auto ctx = ui.context();
+
+auto el = ZMarkup::parse(R&quot;(Button#new &quot;Added later&quot;)&quot;);
+auto node = myRegistry.create(el, *ctx);
+ui.root()-&gt;addChild(node);
+
+// ctx-&gt;byId now contains &quot;new&quot; as well
+</code></pre>
+<p>The <code>BuildContext</code> is a plain struct holding a single
+<code>unordered_map&lt;string, shared_ptr&lt;Layout&gt;&gt;</code>. It's safe to keep the
+shared pointer around as long as you need it. Trees built by
+<code>ZMarkup::build</code> share nothing with each other — each call produces
+its own context.</p>
 <hr />
 <h2 id="7-interaction-with-zstyle">7. Interaction with <code>.zstyle</code></h2>
 <p>Attributes in ZMarkup are <strong>inline styles</strong>. They have the <strong>highest</strong>
