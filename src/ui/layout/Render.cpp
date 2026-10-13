@@ -140,22 +140,26 @@ namespace ZenitUI
 	{
 		auto renderer = UIContext::get().renderer;
 
-		// rect e getClipRect() sono entrambe in coordinate schermo.
-		// La regione visibile è la loro intersezione.
-		// Calcola il bounding box del nodo DOPO il transform (scale + translate).
-		// Rotation ignorata: rara su nodi con filter. Se servirà, si aggiunge.
-		const float scale = renderStyle.scale;
-		const float tx = renderStyle.translateX.resolveSelfH(rect.width, rect.height);
-		const float ty = renderStyle.translateY.resolveSelfV(rect.width, rect.height);
-		const Vec2 pivot = rect.center();
+		// Compute the axis-aligned bounding box of the node after its full
+		// transform: translate + scale + rotation, in that order, around
+		// the node's center.
+		//
+		// Rotation matters here. A 100x100 square rotated 45 degrees has
+		// an AABB of ~141x141. Ignoring rotation would clip the filtered
+		// result at the corners.
+		Transform2D currTr = currentTransform(renderStyle);
 
-		const float tW = rect.width * scale;
-		const float tH = rect.height * scale;
+		Vec2 p0 = applyTransform(currTr, {rect.x, rect.y});
+		Vec2 p1 = applyTransform(currTr, {rect.x + rect.width, rect.y});
+		Vec2 p2 = applyTransform(currTr, {rect.x, rect.y + rect.height});
+		Vec2 p3 = applyTransform(currTr, {rect.x + rect.width, rect.y + rect.height});
 
-		Rect transformedRect = {
-			pivot.x - tW * 0.5f + tx,
-			pivot.y - tH * 0.5f + ty,
-			tW, tH};
+		float minX = std::min({p0.x, p1.x, p2.x, p3.x});
+		float maxX = std::max({p0.x, p1.x, p2.x, p3.x});
+		float minY = std::min({p0.y, p1.y, p2.y, p3.y});
+		float maxY = std::max({p0.y, p1.y, p2.y, p3.y});
+
+		Rect transformedRect = {minX, minY, maxX - minX, maxY - minY};
 
 		// Regione visibile = intersezione fra il bbox trasformato e il clip.
 		Rect clip = renderer->getClipRect();

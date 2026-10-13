@@ -345,29 +345,38 @@ offscreen target, then the filter chain is applied.
 
 ### 4.1 Transformed bounding box
 
-```cpp
-const float scale = renderStyle.scale;
-const float tx = renderStyle.translateX.resolveSelfH(rect.width, rect.height);
-const float ty = renderStyle.translateY.resolveSelfV(rect.width, rect.height);
-const Vec2 pivot = rect.center();
+The region computation starts by computing the **axis-aligned bounding
+box** of the node after its full transform. All three transform
+components are applied: translate, scale, and rotation. The transform
+is built by `currentTransform(renderStyle)`, which uses the node's
+center as pivot.
 
-const float tW = rect.width * scale;
-const float tH = rect.height * scale;
+The AABB is computed by transforming the four corners of `rect` with
+`applyTransform`, then taking min/max on each axis:
+
+```cpp
+Vec2 p0 = applyTransform(tr, {rect.x,               rect.y});
+Vec2 p1 = applyTransform(tr, {rect.x + rect.width,  rect.y});
+Vec2 p2 = applyTransform(tr, {rect.x,               rect.y + rect.height});
+Vec2 p3 = applyTransform(tr, {rect.x + rect.width,  rect.y + rect.height});
 
 Rect transformedRect = {
-    pivot.x - tW * 0.5f + tx,
-    pivot.y - tH * 0.5f + ty,
-    tW, tH
+    std::min({p0.x, p1.x, p2.x, p3.x}),
+    std::min({p0.y, p1.y, p2.y, p3.y}),
+    std::max({p0.x, p1.x, p2.x, p3.x}) - <min>,
+    std::max({p0.y, p1.y, p2.y, p3.y}) - <min>
 };
 ```
 
-Computes the AABB of the node after applying **scale** and
-**translate**. Rotation is ignored — a rotated filtered node will have
-its region computed as if it weren't rotated. This is a documented
-limitation; the code has a comment about it.
+Rotation is why this matters: a 100x100 square rotated 45 degrees has
+an AABB of ~141x141. If the region ignored rotation, the filter result
+would be clipped at the corners.
 
-The pivot is the node's center (matching the transform convention in
-`pushTransform`), so the bounding box is centered at `pivot + translate`.
+`applyTransform` is the same function the renderer uses for the clip
+AABB (`transformClipToScreen` in the Raylib backend) and that
+hitTest uses in its inverse form (`applyInverseTransform`). Keeping
+all three consistent guarantees that "the node's transformed area" is
+computed the same way everywhere in the framework.
 
 ### 4.2 Region
 
@@ -1266,11 +1275,6 @@ it relies on the target's bounds instead. This is mostly invisible but
 can cause content to be drawn slightly outside the container if the
 target is larger than the rect (which happens when the region is
 computed from the transformed rect).
-
-**Rotation is ignored in `drawLayer`'s region computation.**
-A rotated filtered node will have its region computed as if it weren't
-rotated. The filter runs, but on a slightly wrong region. This is a
-known limitation.
 
 **`box-shadow` is not a Gaussian blur.**
 It's 5 stacked rounded rects. For large blur radii, the approximation
