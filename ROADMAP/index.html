@@ -1954,10 +1954,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#510-live-reload-for-development" class="md-nav__link">
+  <a href="#510-live-reload-for-zstyle-delegated-to-the-consumer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.10 Live reload for development
+        5.10 Live reload for .zstyle — delegated to the consumer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#510a-uicontextinvalidatestyles-small-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.10a UIContext::invalidateStyles() — small helper
       
     </span>
   </a>
@@ -3116,12 +3127,43 @@ but sometimes needed.</p>
 <li>[ ] Decide if needed</li>
 <li>[ ] If yes, add <code>addOnClickListener</code> etc.</li>
 </ul>
-<h3 id="510-live-reload-for-development">5.10 Live reload for development</h3>
+<h3 id="510-live-reload-for-zstyle-delegated-to-the-consumer">5.10 Live reload for <code>.zstyle</code> — delegated to the consumer</h3>
+<p><strong>Moved out of the library scope.</strong></p>
+<p>Hot reload is a consumer concern, not a library concern. ZenitUI
+provides all the primitives a project needs to implement it externally:</p>
 <ul>
-<li>[ ] Watch <code>.zstyle</code> files, reload on change</li>
-<li>[ ] Watch <code>.zmarkup</code> files, reload on change (requires rebuild of
-      the tree)</li>
-<li>[ ] Hot-reload integration with Raylib</li>
+<li><code>Theme::get().clear()</code> resets the loaded stylesheets.</li>
+<li><code>ZMarkup::loadStyleFile(path)</code> reloads them.</li>
+<li><code>UIContext::get().invalidateStyles()</code> (added in 5.10a, see below)
+  forces every node to re-resolve on the next frame.</li>
+</ul>
+<p>The decision of <em>when</em> to reload (file mtime polling, native file
+watchers, editor integration) and <em>what</em> to reload (all stylesheets,
+just the one that changed) belongs to the project. The project for example
+implements its own in <code>src/core/StyleHotReload.hpp</code>.</p>
+<p>This is the pattern for future proposals: if the feature only makes
+sense for one kind of consumer, it stays out of the library.</p>
+<h3 id="510a-uicontextinvalidatestyles-small-helper">5.10a <code>UIContext::invalidateStyles()</code> — small helper</h3>
+<p>Currently the only way to force a full style re-resolve is to bump
+<code>UIContext::viewportGeneration</code> manually:</p>
+<pre><code class="language-cpp">UIContext::get().viewportGeneration++;
+</code></pre>
+<p>This works, but it's using a media-query counter for a purpose it
+wasn't designed for. The intent isn't obvious from the call site.</p>
+<p>Add a <code>void invalidateStyles()</code> method that bumps the counter (and
+does nothing else for now, but is the natural place for future
+invalidation logic):</p>
+<pre><code class="language-cpp">void invalidateStyles() { viewportGeneration++; }
+</code></pre>
+<p>Callers become self-documenting:</p>
+<pre><code class="language-cpp">Theme::get().clear();
+ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;);
+UIContext::get().invalidateStyles();
+</code></pre>
+<ul>
+<li>[x] Add <code>UIContext::invalidateStyles()</code></li>
+<li>[x] Update <code>api/UIContext.md</code></li>
+<li>[x] Update the live-reload example in <code>user/05-zstyle.md</code> (if it exists)</li>
 </ul>
 <h3 id="511-layouthpp-restructuring">5.11 <code>Layout.hpp</code> restructuring</h3>
 <p><code>Layout.hpp</code> is the largest single header in the project. It declares

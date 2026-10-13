@@ -1253,6 +1253,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="11. Viewport generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-invalidatestyles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void invalidateStyles()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2332,6 +2349,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="11. Viewport generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#void-invalidatestyles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        void invalidateStyles()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2896,6 +2930,30 @@ implications.</p>
 changes. Each <code>Layout</code> caches the last seen generation and forces a
 style re-resolve if it changed.</p>
 <p>This is how media queries react to viewport changes.</p>
+<h3 id="void-invalidatestyles"><code>void invalidateStyles()</code></h3>
+<p>Forces a full style re-resolution on the next frame for every node in
+the tree.</p>
+<pre><code class="language-cpp">void invalidateStyles() { viewportGeneration++; }
+</code></pre>
+<p>The implementation bumps <code>viewportGeneration</code>, which every node
+compares against its cached value in <code>update()</code>. When the counter
+differs, the node re-resolves its style, which is exactly what the
+framework already does on viewport changes.</p>
+<p><strong>When to use</strong>: after modifying the global <code>Theme</code> at runtime — for
+example, after clearing it and loading a new set of stylesheets:</p>
+<pre><code class="language-cpp">Theme::get().clear();
+ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;);
+UIContext::get().invalidateStyles();
+</code></pre>
+<p>Without this call, the theme change would only take effect on nodes
+that happen to re-resolve for another reason (a state change, a hover,
+a pending transition). Nodes sitting idle would keep their old resolved
+style indefinitely.</p>
+<p>Reuse of the viewport counter: the same <code>viewportGeneration</code>
+mechanism is used for media-query re-evaluation on viewport resize.
+There's no semantic conflict — the counter's meaning is "the cached
+style may be stale, re-resolve on the next update", whether the cause
+is a viewport change or a theme reload.</p>
 <hr />
 <h2 id="12-rng">12. RNG</h2>
 <pre><code class="language-cpp">std::mt19937 rng;
