@@ -1149,6 +1149,38 @@ now attaches children via `contentTarget()` instead of calling
 If a future widget needs its own content slot, the override is a
 one-liner. The pattern is settled.
 
+### 5.14 CanvasLayout respects `effect:`
+
+**Done.**
+
+`CanvasLayout` is the only widget that overrides `Layout::draw()`
+completely, because it renders its subtree into an offscreen target
+and composites the result. The consequence was that `effect:` in
+`.zstyle` never reached the canvas — the effect was resolved during
+`Layout::draw()`, which the canvas bypasses. Binding a shader required
+`setShader()` from C++, even though the docs mark that API as a
+legacy path.
+
+Fix: `Layout` gains a protected helper `resolveActiveEffect()` that
+returns the effect to apply, with a documented priority:
+
+1. `effect:` from the current style (if resolved to a valid handle).
+2. `setShader()` handle (if set).
+3. Invalid handle (no effect).
+
+`CanvasLayout::draw()` calls `resolveActiveEffect()` and pushes the
+returned handle around the final `drawTarget`. Other widgets are
+unaffected — they go through `Layout::draw()`, which already calls
+`resolveEffectIfNeeded` and pushes `currentEffect_` in the same
+priority order.
+
+- [x] Add `Layout::resolveActiveEffect()` (protected)
+- [x] Use it in `CanvasLayout::draw()`
+- [x] Add `pushEffectCount` to `MockRenderer`
+- [x] Add test (`Canvas.effect_property_pushes_shader`)
+- [x] Update `api/Widgets.md` CanvasLayout section
+- [x] Update `api/Layout.md` §14 with the new hook
+
 ---
 
 ## Phase 6 — Internationalization

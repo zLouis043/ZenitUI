@@ -682,12 +682,39 @@ public:
 
 - The target is destroyed in the destructor.
 - Requires `supports(Feature::Effects)` for shader application.
-- No ZMarkup tag by default. Register one via `ZMarkup::Registry`.
-- The `setShader` shader is applied to the composited target, not to
-  the individual draw calls inside it. This is the main difference
-  between `CanvasLayout` and a plain node with `effect:` — the latter
-  pushes the shader around each draw call, the former sees the whole
-  subtree at once.
+- Registered as `Canvas` in the default ZMarkup registry.
+- The shader is applied to the **composited** target, not to the
+  individual draw calls inside it. This is the main difference between
+  `CanvasLayout` and a plain node with `effect:` — the latter pushes
+  the shader around each draw call, the former sees the whole subtree
+  at once.
+
+### Binding the shader
+
+Two ways, with a documented priority:
+
+1. **`effect:` in `.zstyle`** (preferred, when the shader name is
+   static):
+
+```css
+   .wave-background {
+       effect: wave_post;
+   }
+```
+
+2. **`setShader(EffectHandle)`** from C++ (useful when the shader
+   depends on runtime state that the stylesheet can't express):
+
+```cpp
+canvas->setShader(assets.getEffect("wave_post"));
+```
+
+If both are set, `effect:` wins. When neither is set, no shader is
+applied — the composited target is drawn directly.
+
+Resolution goes through `Layout::resolveActiveEffect()`, which is the
+same helper `Layout::draw()` uses. This means a canvas node behaves
+like any other styled node with respect to `effect:`.
 
 ---
 

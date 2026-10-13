@@ -712,6 +712,35 @@ handles all standard cases. Override only for custom backgrounds.
 Resolves a `::part` style with its own transitions and animations.
 Called from `renderContent`.
 
+### `EffectHandle resolveActiveEffect()`
+
+Protected helper that resolves the effect shader to apply to this
+node, considering both sources. Returns an `EffectHandle` — possibly
+invalid if neither source is set.
+
+Priority:
+
+1. The `effect:` property from `currentStyle`, resolved via
+   `IAssetProvider::getEffect(name)`.
+2. The `setShader()` handle set from C++.
+3. Invalid handle (no effect).
+
+```cpp
+EffectHandle fx = resolveActiveEffect();
+if (fx.valid() && renderer->supports(Feature::Effects))
+    renderer->pushEffect(fx);
+```
+
+**When to call it**: any widget that overrides `draw()` and needs to
+apply the node's effect. Currently only `CanvasLayout` does. Regular
+widgets that go through `Layout::draw()` don't need to call this — the
+framework resolves and pushes the effect for them in drawInline /
+`drawLayer`.
+
+**Why it exists**: the "priority" between `effect:` and `setShader()`
+needs to be identical everywhere. Putting it in one place means a
+subclass can't accidentally implement a different rule.
+
 ---
 
 ## 15. Helper functions

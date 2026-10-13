@@ -74,6 +74,8 @@ namespace ZenitUI::Test
 
         int pushTargetCount{0};
         bool supportsEffects{false};
+        int pushEffectCount{0};
+        EffectHandle lastPushedEffect{};
 
         void fillRect(Rect, Color) override { fillRectCount++; }
         void fillRoundedRect(Rect, float, Color) override {}
@@ -102,7 +104,11 @@ namespace ZenitUI::Test
             transformHistory.push_back(t);
         }
         void popTransform() override {}
-        void pushEffect(EffectHandle) override {}
+        void pushEffect(EffectHandle e) override
+        {
+            pushEffectCount++;
+            lastPushedEffect = e;
+        }
         void popEffect() override {}
 
         void pushClip(Rect r) override
@@ -371,6 +377,8 @@ namespace ZenitUI::Test
             renderer.pushClipCount = 0;
             renderer.popClipCount = 0;
             renderer.pushTargetCount = 0;
+            renderer.pushEffectCount = 0;
+            renderer.lastPushedEffect = {};
             renderer.supportsEffects = false;
             renderer.clipStack.clear();
             renderer.capturedFloat.clear();
