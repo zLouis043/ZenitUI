@@ -1116,45 +1116,38 @@ a file and returns a `UINode`. Missing file → null root + error log.
 
 ### 5.13 Content slot for composite widgets
 
-**Not started.**
+**Done for `Modal`. Others left as default.**
 
-Composite widgets (`Modal`, `Dropdown`, `Toggle`, `Popup`, `Tooltip`)
-build their internal structure in `onBuild()`. When ZMarkup adds
-children to such a widget, they become *siblings* of the internal
-content wrapper, not children of it:
+Composite widgets build internal structure in `onBuild()`. When ZMarkup
+adds children to such a widget, those children used to become siblings
+of the internal content wrapper instead of children of it. This broke
+the wrapper's animations — the most visible case was `Modal`, whose
+"Intro" slide didn't apply to markup children.
 
-```zmarkup
-Modal {
-  Label "Are you sure?" // ends up as sibling of modal's content
-}
-```
+**Design (implemented):** a virtual `Layout::contentTarget()` returning
+the node children should be attached to. Default: `this`. `Modal`
+overrides it to return its internal `content` VStack. `ZMarkup::create`
+now attaches children via `contentTarget()` instead of calling
+`addChild()` directly.
 
-The current workaround is to inject the content from C++:
+| Widget | Overrides `contentTarget()`? | Why |
+|--------|------------------------------|-----|
+| `Layout`, `Panel`, `VStack`, `HStack`, `Stack`, `Text`, `Button`, `Checkbox`, `Slider`, `ProgressBar`, `TextInput`, `ScrollView`, `Canvas` | No (default `return this`) | No internal wrapper |
+| `Modal` | Yes → `content` VStack | Children need to live inside the animated wrapper |
+| `Popup` | No | Content is the direct children; no wrapper |
+| `Dropdown` | No | Internal structure (trigger + list) isn't a content slot |
+| `Toggle` | No | Knob is decorative; children are unusual and default behavior is documented |
 
-```cpp
-auto modal = ui.find<Modal>("m");
-modal->children[0]->addChild(Label("Are you sure?"));
-```
+- [x] Add `Layout::contentTarget()` virtual, default returns `this`
+- [x] Override in `Modal`
+- [x] Update `ZMarkup::create` to use `contentTarget()`
+- [x] Add tests (3: Modal-with-children, Stack-with-children, nested layout)
+- [x] Update `user/04-zmarkup.md` §2.6
+- [x] Update `api/Layout.md` §5
+- [x] Update `api/Widgets.md` (`Modal` section)
 
-This is not obvious, and it's the single biggest source of confusion
-in the ZMarkup user experience.
-
-Proposed design: a virtual `Layout* contentTarget()` that returns
-the node children should be attached to. Default: this. Composite
-widgets override it to point at their content wrapper. ZMarkup::create
-uses `contentTarget()` instead of `addChild()` directly.
-
-Touch points: `Layout.hpp` (add virtual), 5 widgets (override),
-`ZMarkup.hpp` (create loop). Estimated: half a day, plus tests.
-
-Deferred until after 5.12 ships, because it changes the semantics of
-a core operation and deserves its own session.
-
-- [] Add `Layout::contentTarget()` virtual, default returns `this`
-- [] Override in Modal, Dropdown, Toggle, Popup, Tooltip
-- [] Update ZMarkup::create to use contentTarget
-- [] Add tests for each composite widget
-- [] Update user/04-zmarkup.md §"Children" with the new semantics text
+If a future widget needs its own content slot, the override is a
+one-liner. The pattern is settled.
 
 ---
 

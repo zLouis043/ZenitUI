@@ -755,11 +755,41 @@ participate in that container's flow, pushing the siblings around.
 
 ### Content access
 
-The content is `children[0]`:
+The content slot is `modal->children[0]`, the wrapper VStack that
+`onBuild()` creates with the "Intro" animation. Content added here
+participates in the intro transition automatically.
+
+Two equivalent ways to add content:
+
+**From C++:**
 
 ```cpp
-modal->children[0]->addChild(Label("Are you sure?"));
+auto modal = Modal::create();
+modal->contentTarget()->addChild(Label("Are you sure?"));
+modal->contentTarget()->addChild(Btn("OK", [modal]{ modal->hide(); }));
 ```
+
+Using `contentTarget()` instead of` children[0]` is preferred: it's the
+same node, but the intent is clear and it won't break if the internal
+structure changes.
+
+#### From ZMarkup:
+
+```zmarkup
+Modal#dialog {
+    VStack.modal-box {
+        Label "Are you sure?"
+        HStack {
+            Button#ok "OK"
+            Button#cancel "Cancel"
+        }
+    }
+}
+```
+
+Markup children under a `Modal` element go into the content slot
+automatically (see `Layout::contentTarget()` in the
+[Layout API](./Layout.md)). No C++ injection needed.
 
 ### Style tag
 
@@ -767,7 +797,18 @@ modal->children[0]->addChild(Label("Are you sure?"));
 
 ### ZMarkup
 
-No built-in tag. Register one via `ZMarkup::Registry` if needed.
+Registered as `Modal` in the default registry. Children written in a
+`{ ... }` block are attached to the content slot, so they animate with
+the modal's intro.
+
+```zmarkup
+Modal#dialog {
+    VStack.modal-box {
+        Label "Confirm?"
+        Button#yes "YES"
+    }
+}
+```
 
 ---
 
