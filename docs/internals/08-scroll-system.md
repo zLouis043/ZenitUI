@@ -783,11 +783,11 @@ if (!ctx.wheelConsumedThisFrame && node.isInteractive &&
     !node.hasPointerCapture() && rect.contains(pointer.pos))
 {
     if (pointer.wheelY != 0.0f) {
-        if (ctx.shiftHeld && canScrollX) {
+        if (ctx.ctx.modifiers.shift && canScrollX) {
             state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
             ctx.wheelConsumedThisFrame = true;
         }
-        else if (!ctx.shiftHeld && canScrollY) {
+        else if (!ctx.ctx.modifiers.shift && canScrollY) {
             state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
             ctx.wheelConsumedThisFrame = true;
         }

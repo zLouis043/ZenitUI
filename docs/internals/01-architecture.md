@@ -122,7 +122,7 @@ by `Layout::update`, `Layout::measure`, `Layout::arrange`, and
 `UIContext` is a singleton that holds:
 
 - The three backend pointers.
-- The current input snapshot (`pointer`, `inputEvents`, `shiftHeld`).
+- The current input snapshot (`pointer`, `inputEvents`, `modifiers`).
 - Focus state (`focusedNode`).
 - Pointer capture (`pointerCapture`).
 - Portal registries (`activePortals`, `framePortals`).
@@ -192,7 +192,7 @@ Four sub-phases:
 Polls the platform:
 
 - Updates `Metrics::viewport`, `safeArea`, `pointer`, `inputEvents`,
-  `shiftHeld`, `dpiScale`.
+  `modifiers`, `dpiScale`.
 - Increments `viewportGeneration` if the viewport or safe area changed.
 - Clears per-frame flags: `clickConsumed`, `rightClickConsumed`,
   `wheelConsumedThisFrame`, `topmostConsumer`, `hoverTarget`,

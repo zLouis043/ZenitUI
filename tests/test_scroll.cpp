@@ -209,7 +209,7 @@ TEST(Scroll_wheel, shift_switches_to_horizontal)
     Rect r = sv->getRect();
     env.platform.moveMouse({r.x + r.width * 0.5f,
                             r.y + r.height * 0.5f});
-    env.platform.shiftDown = true;
+    env.platform.mods.shift = true;
     env.frame(root);
 
     env.platform.scrollWheel(-1.0f);

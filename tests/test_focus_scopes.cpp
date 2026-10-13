@@ -93,7 +93,7 @@ TEST(FocusScope_tab, shift_tab_reverses_within_scope)
     UIContext::get().requestFocus(b);
     env.frame(root);
 
-    env.platform.shiftDown = true;
+    env.platform.mods.shift = true;
     env.platform.pressKey(Key::Tab);
     env.frame(root);
     CHECK(UIContext::get().hasFocus(a.get()));

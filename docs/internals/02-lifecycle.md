@@ -88,7 +88,7 @@ void UIContext::beginFrame(float delta_time) {
         Metrics::viewport = newVp;
         safeArea = newSafe;
         pointer = platform->pointer();
-        shiftHeld = platform->shiftHeld();
+        modifiers = platform->modifiers();
         inputEvents = platform->pollInputEvents();
         dpiScale = platform->dpiScale();
 
@@ -220,7 +220,7 @@ for (int k : ctx.inputEvents.keys) {
     int next = 0;
     if (idx >= 0) {
         int n = (int)focusables.size();
-        next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+        next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
     }
     ctx.requestFocus(focusables[next]->shared_from_this());
     notifyFocusAncestors(ctx.focusedNode.lock().get());

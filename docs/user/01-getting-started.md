@@ -68,7 +68,7 @@ are all referenced by string.
 `UIContext` is a singleton. It owns:
 
 - the three backend pointers,
-- the current input snapshot (`pointer`, `inputEvents`, `shiftHeld`),
+- the current input snapshot (`pointer`, `inputEvents`, `modifiers`),
 - the focus / pointer-capture / portal registries,
 - the frame clock (`dt`, `time`).
 

@@ -69,7 +69,7 @@ namespace ZenitUI
 		virtual Vec2 viewportSize() = 0;
 		virtual PointerState pointer() = 0;
 		virtual double time() = 0;
-		virtual bool shiftHeld() = 0;
+		virtual ModifierState modifiers() = 0;
 		virtual InputEvents pollInputEvents() = 0;
 		virtual float dpiScale() = 0;
 		virtual EdgeInsets safeArea() = 0;
@@ -96,7 +96,7 @@ namespace ZenitUI
 		float dpiScale{1.0f};
 		EdgeInsets safeArea;
 		bool wheelConsumedThisFrame{false};
-		bool shiftHeld{false};
+		ModifierState modifiers;
 		bool clickConsumed{false};
 		void consumeClick() { clickConsumed = true; }
 		bool rightClickConsumed{false};
@@ -160,7 +160,7 @@ namespace ZenitUI
 				Metrics::viewport = newVp;
 				safeArea = newSafe;
 				pointer = platform->pointer();
-				shiftHeld = platform->shiftHeld();
+				modifiers = platform->modifiers();
 				inputEvents = platform->pollInputEvents();
 				dpiScale = platform->dpiScale();
 				if (renderer)

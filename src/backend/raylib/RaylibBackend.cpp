@@ -37,9 +37,14 @@ namespace ZenitUI
 	}
 	double RaylibPlatform::time() { return GetTime(); }
 
-	bool RaylibPlatform::shiftHeld()
+	ModifierState RaylibPlatform::modifiers()
 	{
-		return IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+		ModifierState m;
+		m.shift = IsKeyDown(KEY_LEFT_SHIFT)   || IsKeyDown(KEY_RIGHT_SHIFT);
+		m.ctrl  = IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+		m.alt   = IsKeyDown(KEY_LEFT_ALT)     || IsKeyDown(KEY_RIGHT_ALT);
+		m.super = IsKeyDown(KEY_LEFT_SUPER)   || IsKeyDown(KEY_RIGHT_SUPER);
+		return m;
 	}
 
 	InputEvents RaylibPlatform::pollInputEvents()

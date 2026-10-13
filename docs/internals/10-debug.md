@@ -489,7 +489,7 @@ class MockPlatform : public IPlatform {
 public:
     Vec2 viewport{800.0f, 600.0f};
     double currentTime{0.0};
-    bool shiftDown{false};
+    ModifierState mods;
 
     PointerState nextPointer;
     InputEvents nextEvents;

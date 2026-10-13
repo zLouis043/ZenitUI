@@ -126,6 +126,19 @@ namespace ZenitUI
 		float wheelY{0.0f};
 	};
 
+	// Modifier keys currently held. Reported once per frame by the
+	// platform, alongside the pointer and keyboard events. Grouped into
+	// a struct so that adding a new modifier (e.g. "hyper") is a new
+	// field here, not a new method on IPlatform and a new bool on
+	// UIContext.
+	struct ModifierState
+	{
+		bool shift{false};
+		bool ctrl {false};
+		bool alt  {false};
+		bool super{false};
+	};
+
 	struct Metrics
 	{
 		static inline Vec2 viewport{1280.0f, 720.0f};
