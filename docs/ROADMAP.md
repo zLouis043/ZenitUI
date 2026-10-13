@@ -962,12 +962,57 @@ but sometimes needed.
 - [ ] Decide if needed
 - [ ] If yes, add `addOnClickListener` etc.
 
-### 5.10 Live reload for development
+### 5.10 Live reload for `.zstyle` — delegated to the consumer
 
-- [ ] Watch `.zstyle` files, reload on change
-- [ ] Watch `.zmarkup` files, reload on change (requires rebuild of
-      the tree)
-- [ ] Hot-reload integration with Raylib
+**Moved out of the library scope.**
+
+Hot reload is a consumer concern, not a library concern. ZenitUI
+provides all the primitives a project needs to implement it externally:
+
+- `Theme::get().clear()` resets the loaded stylesheets.
+- `ZMarkup::loadStyleFile(path)` reloads them.
+- `UIContext::get().invalidateStyles()` (added in 5.10a, see below)
+  forces every node to re-resolve on the next frame.
+
+The decision of *when* to reload (file mtime polling, native file
+watchers, editor integration) and *what* to reload (all stylesheets,
+just the one that changed) belongs to the project. The project for example
+implements its own in `src/core/StyleHotReload.hpp`.
+
+This is the pattern for future proposals: if the feature only makes
+sense for one kind of consumer, it stays out of the library.
+
+### 5.10a `UIContext::invalidateStyles()` — small helper
+
+Currently the only way to force a full style re-resolve is to bump
+`UIContext::viewportGeneration` manually:
+
+```cpp
+UIContext::get().viewportGeneration++;
+```
+
+This works, but it's using a media-query counter for a purpose it
+wasn't designed for. The intent isn't obvious from the call site.
+
+Add a `void invalidateStyles()` method that bumps the counter (and
+does nothing else for now, but is the natural place for future
+invalidation logic):
+
+```cpp
+void invalidateStyles() { viewportGeneration++; }
+```
+
+Callers become self-documenting:
+
+```cpp
+Theme::get().clear();
+ZMarkup::loadStyleFile("assets/game.zstyle");
+UIContext::get().invalidateStyles();
+```
+
+- [x] Add `UIContext::invalidateStyles()`
+- [x] Update `api/UIContext.md`
+- [x] Update the live-reload example in `user/05-zstyle.md` (if it exists)
 
 ### 5.11 `Layout.hpp` restructuring
 

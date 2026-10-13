@@ -421,6 +421,40 @@ style re-resolve if it changed.
 
 This is how media queries react to viewport changes.
 
+### `void invalidateStyles()`
+
+Forces a full style re-resolution on the next frame for every node in
+the tree.
+
+```cpp
+void invalidateStyles() { viewportGeneration++; }
+```
+
+The implementation bumps `viewportGeneration`, which every node
+compares against its cached value in `update()`. When the counter
+differs, the node re-resolves its style, which is exactly what the
+framework already does on viewport changes.
+
+**When to use**: after modifying the global `Theme` at runtime — for
+example, after clearing it and loading a new set of stylesheets:
+
+```cpp
+Theme::get().clear();
+ZMarkup::loadStyleFile("assets/game.zstyle");
+UIContext::get().invalidateStyles();
+```
+
+Without this call, the theme change would only take effect on nodes
+that happen to re-resolve for another reason (a state change, a hover,
+a pending transition). Nodes sitting idle would keep their old resolved
+style indefinitely.
+
+Reuse of the viewport counter: the same `viewportGeneration`
+mechanism is used for media-query re-evaluation on viewport resize.
+There's no semantic conflict — the counter's meaning is "the cached
+style may be stale, re-resolve on the next update", whether the cause
+is a viewport change or a theme reload.
+
 ---
 
 ## 12. RNG

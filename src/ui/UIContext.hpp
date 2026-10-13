@@ -108,6 +108,17 @@ namespace ZenitUI
 
 		uint32_t viewportGeneration{0};
 
+		// Force a full style re-resolution on the next frame for every
+		// node in the tree. The mechanism reuses the viewport-generation
+		// counter that already drives media-query re-evaluation: bumping
+		// it forces every node to re-resolve its style on the next
+		// update, regardless of whether the viewport actually changed.
+		//
+		// Intended use: after swapping the contents of the global Theme
+		// (e.g. reloading stylesheets at runtime). See StyleParser.hpp
+		// for the load functions.
+		void invalidateStyles() { viewportGeneration++; }
+
 		Layout *topmostConsumer{nullptr};
 
 		Layout *hoverTarget{nullptr};	// topmost sotto il mouse (geometrico)
