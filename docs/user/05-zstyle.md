@@ -469,6 +469,43 @@ height** (self-relative). Pivot is always the node's center.
 `#00000080`). Blur is approximated with 5 stacked rounded rects, not a
 true Gaussian blur.
 
+### 4.7.1 Colors
+
+Four properties accept a color value: `background`, `color`, `tint`,
+`border-color`. (Plus `box-shadow`'s color component.)
+
+Three formats are supported:
+
+**Named colors** — a small fixed set:
+
+`white`, `black`, `transparent`, `blank`, `red`, `maroon`, `green`,
+`blue`, `yellow`, `gray`, `darkgray`, `lightgray`.
+
+**Hex** — with or without alpha:
+
+```css
+.color-a { background: #F00;        /* #RGB           */
+           color:      #F00F;       /* #RGBA          */
+           border-color: #FF0000;   /* #RRGGBB        */
+           tint: #FF0000FF; }       /* #RRGGBBAA      */
+```
+
+`rgb()` and `rgba()` — with the CSS convention (0–255 for the
+color channels, 0.0–1.0 for alpha):
+
+```css
+.overlay { background: rgba(0, 0, 0, 0.5); }
+.accent  { color: rgb(74, 158, 255); }
+```
+
+Values outside the valid range are clamped. `rgb()` expects exactly
+three arguments; `rgba()` expects four. Spaces after commas are
+ignored (`rgb(255, 128, 0) `and `rgb(255,128,0)` are equivalent).
+
+`hsl()` is not supported. Hex remains the recommended format when you
+want the value to be terse; `rgb()`/`rgba()` are useful when the alpha
+channel is important and the hex form would be less readable.
+
 ### 4.8 Typography
 
 | Property | Type | Default |

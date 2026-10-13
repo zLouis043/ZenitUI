@@ -191,7 +191,56 @@ inline std::optional<Color> parseColorToken(std::string_view s) {
     if (s == "gray")        return Colors::Gray;
     if (s == "darkgray")    return Colors::DarkGray;
     if (s == "lightgray")   return Colors::LightGray;
+        // rgb(r, g, b) and rgba(r, g, b, a)
+    //
+    // Component values follow the CSS convention: 0-255 for r/g/b,
+    // 0.0-1.0 for the alpha channel. The values are clamped and rounded.
+    if (s.size() > 4 && s[0] == 'r' && s[1] == 'g' && s[2] == 'b')
+    {
+        bool hasAlpha = (s[3] == 'a');
+        size_t paren = s.find('(');
+        if (paren != std::string_view::npos && s.back() == ')')
+        {
+            std::string_view inner = s.substr(paren + 1, s.size() - paren - 2);
+            std::vector<float> parts;
+            std::string cur;
+            for (char c : inner)
+            {
+                if (c == ',')
+                {
+                    try { parts.push_back(std::stof(cur)); }
+                    catch (...) { return std::nullopt; }
+                    cur.clear();
+                }
+                else if (!std::isspace((unsigned char)c))
+                {
+                    cur.push_back(c);
+                }
+            }
+            if (!cur.empty())
+            {
+                try { parts.push_back(std::stof(cur)); }
+                catch (...) { return std::nullopt; }
+            }
 
+            const size_t expected = hasAlpha ? 4 : 3;
+            if (parts.size() != expected)
+                return std::nullopt;
+
+            auto clamp255 = [](float v) -> uint8_t {
+                return (uint8_t)std::clamp((int)std::lround(v), 0, 255);
+            };
+
+            uint8_t r = clamp255(parts[0]);
+            uint8_t g = clamp255(parts[1]);
+            uint8_t b = clamp255(parts[2]);
+            uint8_t a = hasAlpha
+                ? clamp255(parts[3] * 255.0f)
+                : (uint8_t)255;
+
+            return Color{r, g, b, a};
+        }
+    }
     if (!s.empty() && s[0] == '#') {
         std::string h(s.substr(1));
         auto hex = [](char c) -> int {

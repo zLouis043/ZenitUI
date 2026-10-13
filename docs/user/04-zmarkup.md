@@ -88,6 +88,9 @@ The first identifier is the tag. It maps to a factory registered with the
 | `TextInput` | `TextInput` | |
 | `Dropdown` | `Dropdown` | |
 | `ScrollView` | `ScrollView` | |
+| `Canvas` | `CanvasLayout` | Renders subtree into an offscreen target. |
+| `Modal` | `Modal` | Full-screen overlay with intro animation. Content goes into `contentTarget()` (see below). |
+| `Popup` | `Popup` | Floating panel; requires C++ to call `openBelow`/`openAt`. |
 
 Tags are **case-sensitive**. `Button` and `button` are different — only
 `Button` is registered by default.
@@ -231,6 +234,7 @@ parent->addChild(root);
 | Method | Description |
 |--------|-------------|
 | `root()` | The root `Layout` of the built tree. |
+| `context()` | The `BuildContext` used to build the tree. Escape hatch for looking up nodes by id outside of `find()`. See §6. |
 | `find(id)` | Find a node by id, returns `shared_ptr<Layout>`. |
 | `find<T>(id)` | Typed lookup — `ui.find<Slider>("vol")`. |
 | `onClick(id, cb)` | Bind `onClick`. |
@@ -269,6 +273,23 @@ if (auto toggle = ui.find<Toggle>("mute")) {
 `find<T>` uses `std::static_pointer_cast`, so you must be sure of the
 type — otherwise you'll get undefined behavior when the cast is used.
 Prefer the typed `on*` helpers when possible.
+
+### Loading from a file
+
+```cpp
+auto ui = ZMarkup::loadMarkupFile("assets/ui/main_menu.zmarkup");
+if (!ui.root()) {
+    // file not found or empty; see the log for details
+    return;
+}
+root->addChild(ui.root());
+```
+
+Symmetric to `ZMarkup::loadStyleFile` for `.zstyle` sources.
+
+Missing file → null root. The error is logged via `Logger`, so a
+custom logger will see it. The `UINode` is always usable: `context()`
+returns a valid (empty) context even when the root is null.
 
 ---
 
@@ -459,6 +480,53 @@ struct Element {
 `attrFloat` / `attrBool` do a best-effort parse and return the default
 on failure. `attr` returns an empty string (or the given default) if the
 key isn't present.
+
+### Accessing the BuildContext
+
+The default `ZMarkup::build` and `loadMarkupFile` create a
+`BuildContext` internally and store it in the returned `UINode`.
+`context()` exposes it:
+
+```cpp
+auto ui = ZMarkup::build(source);
+auto ctx = ui.context();
+
+// ctx->byId["save"] is the node with id "save", or absent
+auto it = ctx->byId.find("save");
+if (it != ctx->byId.end()) {
+    auto save = it->second;
+    // ...
+}
+```
+
+Most of the time `find()` is enough and more ergonomic. `context()`
+is the escape hatch for two cases:
+
+- Bulk inspection. Iterating every id in the tree, checking for
+  duplicates, or building a map from id → node for external use.
+  `find()` is per-id; `context()` gives the whole map.
+
+- Extending a tree at runtime. If you built the tree with a
+  custom Registry (see above), you can use the same registry
+  and the same BuildContext to add more nodes later, and they'll
+  be registered in the same id map:
+
+```cpp
+auto ui = /* built with custom registry + context */;
+auto ctx = ui.context();
+
+auto el = ZMarkup::parse(R"(Button#new "Added later")");
+auto node = myRegistry.create(el, *ctx);
+ui.root()->addChild(node);
+
+// ctx->byId now contains "new" as well
+```
+
+The `BuildContext` is a plain struct holding a single
+`unordered_map<string, shared_ptr<Layout>>`. It's safe to keep the
+shared pointer around as long as you need it. Trees built by
+`ZMarkup::build` share nothing with each other — each call produces
+its own context.
 
 ---
 

@@ -277,6 +277,9 @@ The built-in tags:
 | `Slider` | `Slider::create(e.attrFloat("value", 0.5f))` |
 | `Toggle` | `Toggle::create(e.attrBool("checked"))` |
 | `ScrollView` | `ScrollView::create()` |
+| `Canvas` | `CanvasLayout::create()` |
+| `Modal` | `Modal::create()` |
+| `Popup` | `Popup::create()` |
 
 ### Extending with custom tags
 
@@ -296,9 +299,16 @@ auto root = reg.create(el, *ctx);
 UINode ui(root, ctx);
 ```
 
-**Note:** there's no way to add tags to the **default** registry used
-by `ZMarkup::build`. That registry is a private static. To use custom
-tags, build the tree manually with your own registry.
+**Note:** the default registry used by `ZMarkup::build` is a private
+static. It now includes `Canvas`, `Modal`, and `Popup` alongside the
+other built-ins (see the table above). Custom tags still require
+building the tree manually with your own `Registry`, but the need for
+this is now limited to genuinely user-defined widgets — not to widgets
+that ship with the framework.
+
+`Tooltip` (needs an owner) and `ImageContainer` (needs a texture) stay
+unregistered, because the markup grammar has no way to express their
+constructor arguments.
 
 ---
 
@@ -312,8 +322,9 @@ public:
     UINode(std::shared_ptr<Layout> root,
            std::shared_ptr<BuildContext> ctx);
 
-    std::shared_ptr<Layout> root() const;
-    std::shared_ptr<Layout> find(const std::string& id) const;
+    std::shared_ptr<Layout>        root() const;
+    std::shared_ptr<BuildContext>  context() const;
+    std::shared_ptr<Layout>        find(const std::string& id) const;
 
     template <typename T = Layout>
     std::shared_ptr<T> find(const std::string& id) const;
@@ -352,6 +363,29 @@ The typed version uses `std::static_pointer_cast`. If the actual type
 doesn't match `T`, using the returned pointer is undefined behavior.
 Use the typed `on*` helpers when possible (they do the cast safely and
 no-op if the id doesn't exist or the type doesn't match).
+
+### `context()`
+
+Returns the `BuildContext` used to build the tree. The context holds
+the id → node map (byId).
+
+```cpp
+auto ui = ZMarkup::build(source);
+auto ctx = ui.context();
+
+// Look up a node by id without going through find():
+auto it = ctx->byId.find("save");
+if (it != ctx->byId.end()) {
+    auto save = it->second;
+    // ...
+}
+```
+
+Most of the time `find()` is enough and more ergonomic. `context()`
+is the escape hatch for bulk inspection (iterate every id, check for
+duplicates) or for extending a tree at runtime with a custom registry.
+
+See [ZMarkup](../user/04-zmarkup.md) for the full discussion.
 
 ### `onClick` / `onPress` / `onRelease` / `onHoverEnter` / `onHoverExit`
 
@@ -429,6 +463,33 @@ if (!ui.root()) {
     std::printf("build failed\n");
     return;
 }
+```
+
+### `loadMarkupFile(path)`
+
+```cpp
+inline UINode loadMarkupFile(const std::filesystem::path& path);
+```
+
+Reads a ZMarkup source from a file and calls `build` on its contents.
+Symmetric to `loadStyleFile` for `.zstyle`.
+
+```cpp
+auto ui = ZMarkup::loadMarkupFile("assets/ui/main_menu.zmarkup");
+if (!ui.root()) {
+    // file not found, or empty; error logged via Logger
+    return;
+}
+parent->addChild(ui.root());
+```
+
+Returns a `UINode` with a null root if the file can't be opened.
+The error is logged; `context()` still returns a valid (empty)
+`BuildContext`. This matches the behavior of `build` on empty input,
+so the caller-side check is the same:
+
+```cpp
+if (!ui.root()) { /* handle failure */ }
 ```
 
 ---
