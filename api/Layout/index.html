@@ -1940,6 +1940,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#effecthandle-resolveactiveeffect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EffectHandle resolveActiveEffect()
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3716,6 +3727,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#effecthandle-resolveactiveeffect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EffectHandle resolveActiveEffect()
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4297,6 +4319,29 @@ handles all standard cases. Override only for custom backgrounds.</p>
 <h3 id="style-partstyleconst-stdstring-partname"><code>Style partStyle(const std::string&amp; partName)</code></h3>
 <p>Resolves a <code>::part</code> style with its own transitions and animations.
 Called from <code>renderContent</code>.</p>
+<h3 id="effecthandle-resolveactiveeffect"><code>EffectHandle resolveActiveEffect()</code></h3>
+<p>Protected helper that resolves the effect shader to apply to this
+node, considering both sources. Returns an <code>EffectHandle</code> — possibly
+invalid if neither source is set.</p>
+<p>Priority:</p>
+<ol>
+<li>The <code>effect:</code> property from <code>currentStyle</code>, resolved via
+   <code>IAssetProvider::getEffect(name)</code>.</li>
+<li>The <code>setShader()</code> handle set from C++.</li>
+<li>Invalid handle (no effect).</li>
+</ol>
+<pre><code class="language-cpp">EffectHandle fx = resolveActiveEffect();
+if (fx.valid() &amp;&amp; renderer-&gt;supports(Feature::Effects))
+    renderer-&gt;pushEffect(fx);
+</code></pre>
+<p><strong>When to call it</strong>: any widget that overrides <code>draw()</code> and needs to
+apply the node's effect. Currently only <code>CanvasLayout</code> does. Regular
+widgets that go through <code>Layout::draw()</code> don't need to call this — the
+framework resolves and pushes the effect for them in drawInline /
+<code>drawLayer</code>.</p>
+<p><strong>Why it exists</strong>: the "priority" between <code>effect:</code> and <code>setShader()</code>
+needs to be identical everywhere. Putting it in one place means a
+subclass can't accidentally implement a different rule.</p>
 <hr />
 <h2 id="15-helper-functions">15. Helper functions</h2>
 <h3 id="nodematchessimpleconst-layout-node-const-simpleselector-ss"><code>nodeMatchesSimple(const Layout* node, const SimpleSelector&amp; ss)</code></h3>

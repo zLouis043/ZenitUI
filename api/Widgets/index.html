@@ -1865,6 +1865,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#binding-the-shader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binding the shader
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3541,6 +3552,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#binding-the-shader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binding the shader
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4763,13 +4785,34 @@ public:
 <ul>
 <li>The target is destroyed in the destructor.</li>
 <li>Requires <code>supports(Feature::Effects)</code> for shader application.</li>
-<li>No ZMarkup tag by default. Register one via <code>ZMarkup::Registry</code>.</li>
-<li>The <code>setShader</code> shader is applied to the composited target, not to
-  the individual draw calls inside it. This is the main difference
-  between <code>CanvasLayout</code> and a plain node with <code>effect:</code> — the latter
-  pushes the shader around each draw call, the former sees the whole
-  subtree at once.</li>
+<li>Registered as <code>Canvas</code> in the default ZMarkup registry.</li>
+<li>The shader is applied to the <strong>composited</strong> target, not to the
+  individual draw calls inside it. This is the main difference between
+  <code>CanvasLayout</code> and a plain node with <code>effect:</code> — the latter pushes
+  the shader around each draw call, the former sees the whole subtree
+  at once.</li>
 </ul>
+<h3 id="binding-the-shader">Binding the shader</h3>
+<p>Two ways, with a documented priority:</p>
+<ol>
+<li><strong><code>effect:</code> in <code>.zstyle</code></strong> (preferred, when the shader name is
+   static):</li>
+</ol>
+<pre><code class="language-css">   .wave-background {
+       effect: wave_post;
+   }
+</code></pre>
+<ol>
+<li><strong><code>setShader(EffectHandle)</code></strong> from C++ (useful when the shader
+   depends on runtime state that the stylesheet can't express):</li>
+</ol>
+<pre><code class="language-cpp">canvas-&gt;setShader(assets.getEffect(&quot;wave_post&quot;));
+</code></pre>
+<p>If both are set, <code>effect:</code> wins. When neither is set, no shader is
+applied — the composited target is drawn directly.</p>
+<p>Resolution goes through <code>Layout::resolveActiveEffect()</code>, which is the
+same helper <code>Layout::draw()</code> uses. This means a canvas node behaves
+like any other styled node with respect to <code>effect:</code>.</p>
 <hr />
 <h2 id="modal"><code>Modal</code></h2>
 <p>Full-screen overlay with a centered content panel and intro animation.</p>

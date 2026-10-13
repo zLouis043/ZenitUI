@@ -2047,6 +2047,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#514-canvaslayout-respects-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.14 CanvasLayout respects effect:
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3287,6 +3298,35 @@ now attaches children via <code>contentTarget()</code> instead of calling
 </ul>
 <p>If a future widget needs its own content slot, the override is a
 one-liner. The pattern is settled.</p>
+<h3 id="514-canvaslayout-respects-effect">5.14 CanvasLayout respects <code>effect:</code></h3>
+<p><strong>Done.</strong></p>
+<p><code>CanvasLayout</code> is the only widget that overrides <code>Layout::draw()</code>
+completely, because it renders its subtree into an offscreen target
+and composites the result. The consequence was that <code>effect:</code> in
+<code>.zstyle</code> never reached the canvas — the effect was resolved during
+<code>Layout::draw()</code>, which the canvas bypasses. Binding a shader required
+<code>setShader()</code> from C++, even though the docs mark that API as a
+legacy path.</p>
+<p>Fix: <code>Layout</code> gains a protected helper <code>resolveActiveEffect()</code> that
+returns the effect to apply, with a documented priority:</p>
+<ol>
+<li><code>effect:</code> from the current style (if resolved to a valid handle).</li>
+<li><code>setShader()</code> handle (if set).</li>
+<li>Invalid handle (no effect).</li>
+</ol>
+<p><code>CanvasLayout::draw()</code> calls <code>resolveActiveEffect()</code> and pushes the
+returned handle around the final <code>drawTarget</code>. Other widgets are
+unaffected — they go through <code>Layout::draw()</code>, which already calls
+<code>resolveEffectIfNeeded</code> and pushes <code>currentEffect_</code> in the same
+priority order.</p>
+<ul>
+<li>[x] Add <code>Layout::resolveActiveEffect()</code> (protected)</li>
+<li>[x] Use it in <code>CanvasLayout::draw()</code></li>
+<li>[x] Add <code>pushEffectCount</code> to <code>MockRenderer</code></li>
+<li>[x] Add test (<code>Canvas.effect_property_pushes_shader</code>)</li>
+<li>[x] Update <code>api/Widgets.md</code> CanvasLayout section</li>
+<li>[x] Update <code>api/Layout.md</code> §14 with the new hook</li>
+</ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>
