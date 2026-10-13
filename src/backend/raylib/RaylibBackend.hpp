@@ -18,7 +18,7 @@ namespace ZenitUI
 		Vec2 viewportSize() override;
 		PointerState pointer() override;
 		double time() override;
-		bool shiftHeld() override;
+		ModifierState modifiers() override;
 		InputEvents pollInputEvents() override;
 		float dpiScale() override;
 		EdgeInsets safeArea() override;

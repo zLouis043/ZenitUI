@@ -57,7 +57,7 @@ public:
     virtual Vec2 viewportSize() = 0;
     virtual PointerState pointer() = 0;
     virtual double time() = 0;
-    virtual bool shiftHeld() = 0;
+    virtual ModifierState modifiers() = 0;
     virtual InputEvents pollInputEvents() = 0;
     virtual float dpiScale() = 0;
     virtual EdgeInsets safeArea() = 0;
@@ -124,17 +124,32 @@ This is used by:
 The value doesn't need to start at zero — it just needs to be monotonic
 and to advance at wall-clock rate. Raylib returns `GetTime()` directly.
 
-### 2.4 `shiftHeld()`
+### 2.4 `modifiers()`
 
-Returns whether `Shift` is currently down. Used by:
+Returns the modifier keys currently held, as a `ModifierState`:
 
-- Tab navigation (reverse direction).
-- Scroll (horizontal wheel).
-- `Slider` (fine step).
+```cpp
+struct ModifierState {
+    bool shift{false};
+    bool ctrl {false};
+    bool alt  {false};
+    bool super{false};
+};
+```
 
-Only `Shift` is exposed. Other modifiers (Ctrl, Alt, Meta) aren't part
-of the interface. Adding one means extending the interface and updating
-every backend.
+Used by:
+
+- Tab navigation (reverse direction when `shift` is held).
+
+- Scroll (horizontal wheel when `shift` is held).
+
+- `Slider` (fine step when `shift` is held).
+
+Only these four modifiers are exposed. Adding a new one (e.g. "hyper")
+means adding a field to `ModifierState` and updating every backend to
+fill it. The struct exists so that the "which keys are held" question
+has a single answer, rather than N independent `IsKeyDown` chains
+scattered across the framework.
 
 ### 2.5 `pollInputEvents()`
 

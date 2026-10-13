@@ -405,7 +405,7 @@ will yield a flat list in this order: outer buttons, then inner ones.
 With `Shift` held, Tab walks the list backwards:
 
 ```cpp
-next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
 ```
 
 The `+ n` is to handle `idx = 0` correctly (`-1` mod `n` would be `-1`
@@ -663,10 +663,10 @@ scroll container and `isInteractive`:
 
 ```cpp
 if (pointer.wheelY != 0.0f) {
-    if (ctx.shiftHeld && canScrollX) {
+    if (ctx.modifiers.shift && canScrollX) {
         state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
         ctx.wheelConsumedThisFrame = true;
-    } else if (!ctx.shiftHeld && canScrollY) {
+    } else if (!ctx.modifiers.shift && canScrollY) {
         state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
         ctx.wheelConsumedThisFrame = true;
     }
@@ -813,7 +813,7 @@ The `.zstyle` for the button (assuming `game.zstyle` is loaded):
 A single frame goes through these stages, in order:
 
 1. `UIContext::beginFrame(dt)` — polls `IPlatform`, updates
-   `pointer`, `inputEvents`, `shiftHeld`, and **clears**:
+   `pointer`, `inputEvents`, `modifiers`, and **clears**:
    `topmostConsumer`, `hoverTarget`, `releaseTarget`,
    `clickConsumed`, `rightClickConsumed`, `wheelConsumedThisFrame`.
 2. `Layout::updateTree(dt)` — hit-tests the pointer, updates
@@ -923,7 +923,7 @@ keys), read `UIContext::get()`:
 btn->onClick = []{
     auto &ctx = UIContext::get();
     std::printf("clicked at %.0f,%.0f shift=%d\n",
-        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.shiftHeld);
+        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.modifiers.shift);
 };
 ```
 

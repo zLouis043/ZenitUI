@@ -106,7 +106,7 @@ public:
     virtual Vec2 viewportSize() = 0;
     virtual PointerState pointer() = 0;
     virtual double time() = 0;
-    virtual bool shiftHeld() = 0;
+    virtual ModifierState modifiers() = 0;
     virtual InputEvents pollInputEvents() = 0;
     virtual float dpiScale() = 0;
     virtual EdgeInsets safeArea() = 0;
@@ -199,7 +199,7 @@ These fields are overwritten every `beginFrame` from `platform`:
 ```cpp
 PointerState pointer;
 InputEvents  inputEvents;
-bool         shiftHeld{false};
+ModifierState modifiers;
 float        dt{0.0f};
 double       time{0.0};
 float        dpiScale{1.0f};
@@ -237,10 +237,24 @@ struct InputEvents {
 `chars` are text input, `keys` / `held` are physical keys mapped to
 `Key::*` codes.
 
-### `shiftHeld`
+### `modifiers`
 
-Whether `Shift` is down. The only modifier tracked. Used by Tab
-(reverse direction), scroll (horizontal wheel), and Slider (fine step).
+The modifier keys currently held, as reported by `IPlatform::modifiers()`.
+A `ModifierState` struct with four bool members: `shift`, `ctrl`, `alt`,
+`super` (the key called "Super" on Linux, "Cmd" on macOS, "Win" on
+Windows; Raylib exposes it as `KEY_LEFT_SUPER` / `KEY_RIGHT_SUPER`).
+
+Used by:
+
+- `Layout::updateTree` for Tab reverse navigation (`modifiers.shift`).
+- `ScrollController` for horizontal wheel scrolling (`modifiers.shift`).
+- `Slider` for fine-grained keyboard stepping (`modifiers.shift`).
+- User code that needs to react to Ctrl / Alt / Super.
+
+The struct is preferred over individual bool fields because it groups
+the concept ("modifier keys") in one place. Adding a new modifier in
+the future is a new field here, not a new method on `IPlatform` and a
+new field on `UIContext`.
 
 ### `dt` / `time`
 
@@ -487,7 +501,7 @@ The per-frame entry point. Called from `Layout::runFrame`. Handles:
 4. Poll the platform:
    - `viewportSize`, `safeArea` → update `Metrics::viewport`, check
      for changes → increment `viewportGeneration`.
-   - `pointer`, `shiftHeld`, `pollInputEvents`, `dpiScale` → update
+   - `pointer`, `modifiers`, `pollInputEvents`, `dpiScale` → update
      the corresponding fields.
    - Call `renderer->setDpiScale(dpiScale)`.
 
@@ -566,7 +580,7 @@ UIContext::get().assets   = &assets;
 btn->onClick = []{
     auto& ctx = UIContext::get();
     std::printf("clicked at %.0f,%.0f shift=%d\n",
-        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.shiftHeld);
+        ctx.pointer.pos.x, ctx.pointer.pos.y, ctx.modifiers.shift);
 };
 ```
 

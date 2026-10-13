@@ -30,7 +30,7 @@ These fields are overwritten every `beginFrame`:
 ```cpp
 PointerState pointer;
 InputEvents inputEvents;
-bool shiftHeld{false};
+ModifierState modifiers;
 float dt{0.0f};
 double time{0.0};
 float dpiScale{1.0f};
@@ -578,7 +578,7 @@ for (int k : ctx.inputEvents.keys) {
     int next = 0;
     if (idx >= 0) {
         int n = (int)focusables.size();
-        next = ctx.shiftHeld ? (idx - 1 + n) % n : (idx + 1) % n;
+        next = ctx.modifiers.shift ? (idx - 1 + n) % n : (idx + 1) % n;
     }
     ctx.requestFocus(focusables[next]->shared_from_this());
     notifyFocusAncestors(ctx.focusedNode.lock().get());
@@ -1110,10 +1110,11 @@ mapped to `Key::*` codes, and `A` isn't among them.
 Only `Shift` is tracked:
 
 ```cpp
-bool shiftHeld{false};
+ModifierState modifiers;
 ```
 
-Updated from `platform->shiftHeld()` each `beginFrame`. Used by:
+Updated from `platform->modifiers()` each `beginFrame`. The struct
+carries `shift`, `ctrl`, `alt`, `super` as bool members. Used by:
 
 - Tab navigation (reverse direction).
 - Scroll (horizontal wheel).

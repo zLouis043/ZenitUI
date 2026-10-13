@@ -230,8 +230,8 @@ namespace ZenitUI
 			if (idx >= 0)
 			{
 				int n = (int)focusables.size();
-				next = ctx.shiftHeld ? (idx - 1 + n) % n
-									 : (idx + 1) % n;
+				next = ctx.modifiers.shift ? (idx - 1 + n) % n
+										   : (idx + 1) % n;
 			}
 			ctx.requestFocus(focusables[next]->shared_from_this());
 			notifyFocusAncestors(ctx.focusedNode.lock().get());

@@ -192,14 +192,14 @@ namespace ZenitUI::Test
     public:
         Vec2 viewport{800.0f, 600.0f};
         double currentTime{0.0};
-        bool shiftDown{false};
+        ModifierState mods;
 
         PointerState nextPointer;
         InputEvents nextEvents;
 
         Vec2 viewportSize() override { return viewport; }
         double time() override { return currentTime; }
-        bool shiftHeld() override { return shiftDown; }
+        ModifierState modifiers() override { return mods; }
 
         PointerState pointer() override
         {
@@ -365,7 +365,7 @@ namespace ZenitUI::Test
 
             platform.viewport = {800.0f, 600.0f};
             platform.currentTime = 0.0;
-            platform.shiftDown = false;
+            platform.mods = {};
             platform.nextPointer = {};
             platform.nextEvents = {};
             platform.safe = {};
