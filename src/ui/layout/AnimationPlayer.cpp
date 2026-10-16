@@ -155,7 +155,7 @@ void AnimationPlayer::play(Layout& node, const std::string& name, bool playRever
 
     auto& state = it->second;
     state.reverse = playReverse;
-    state.playing = true;
+    state.playing = 1;
 
     if (!state.reverse && state.elapsed >= state.anim->duration)
         state.elapsed = 0.0f;
@@ -219,7 +219,7 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
         for (auto& track : s.anim->tracks)
             track->apply(t, &node);
 
-        node.pendingTransition = true;
+        node.internal_.pendingTransition = 1;
 
         if (justFinished)
         {

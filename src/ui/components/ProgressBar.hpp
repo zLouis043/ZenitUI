@@ -19,7 +19,7 @@ public:
     void setValue(float v)
     {
         value = std::clamp(v, 0.0f, 1.0f);
-        pendingTransition = true;
+        internal_.pendingTransition = 1;
     }
     float getValue() const { return value; }
 
@@ -52,7 +52,7 @@ protected:
         float w = rect.width * value;
         if (w > 0.5f)
         {
-            Color fillColor = isEnabled ? style.color : Color{90, 90, 95, 255};
+            Color fillColor = config.enabled ? style.color : Color{90, 90, 95, 255};
             if (fillStyle.color.is_set)
                 fillColor = fillStyle.color.value;
 

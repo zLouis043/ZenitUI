@@ -23,7 +23,7 @@ namespace ZenitUI
 
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
-		if (!subtreeDirty_ &&
+		if (!internal_.subtreeDirty &&
 			parent_w == lastMeasureW_ &&
 			parent_h == lastMeasureH_)
 		{
@@ -32,13 +32,13 @@ namespace ZenitUI
 		lastMeasureW_ = parent_w;
 		lastMeasureH_ = parent_h;
 
-		if (!styleInitialized)
+		if (!internal_.styleInitialized)
 		{
-			styleInitialized = true;
+			internal_.styleInitialized = 1;
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
-			pendingTransition = false;
+			internal_.pendingTransition = 0;
 		}
-		ComputedStyle calcStyle = pendingTransition ? style_.resolveFor(*this) : style_.currentStyle;
+		ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this) : style_.currentStyle;
 
 		// --- Spazio disponibile interno ---
 		float pl = calcStyle.padding.left.resolveH(parent_w, parent_h);
@@ -504,7 +504,7 @@ namespace ZenitUI
 
 	Layout *Layout::hitTest(Vec2 p, bool ancestorBlocked, const Rect *clipLocal)
 	{
-		if (ancestorBlocked || !isEnabled)
+		if (ancestorBlocked || !config.enabled)
 			return nullptr;
 
 		// Clip check: se il punto è fuori dal clip del parent, questo ramo
@@ -530,7 +530,7 @@ namespace ZenitUI
 					return hit;
 			}
 		}
-		if (isPortal_)
+		if (config.portal)
 			return nullptr;
 
 		Transform2D tr = currentTransform(style_.currentStyle);
@@ -586,7 +586,7 @@ namespace ZenitUI
 
 		if (rect.width > 0 && rect.height > 0 &&
 			rect.contains(p) &&
-			(isInteractive || blocksRaycast))
+			(config.interactive || config.blocksRaycast))
 		{
 			return this;
 		}

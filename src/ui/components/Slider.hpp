@@ -32,7 +32,7 @@ namespace ZenitUI::UI
             if (clamped == value)
                 return;
             value = clamped;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
             if (notify && onValueChanged)
                 onValueChanged(value);
         }
@@ -46,7 +46,7 @@ namespace ZenitUI::UI
 
         void onUpdate(float) override
         {
-            if (isFocused)
+            if (state.focused)
             {
                 auto &ev = UIContext::get().inputEvents;
                 constexpr float STEP = 0.05f;
@@ -74,7 +74,7 @@ namespace ZenitUI::UI
                 }
             }
 
-            if (isPressed && !hasPointerCapture())
+            if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
             }
@@ -103,7 +103,7 @@ namespace ZenitUI::UI
             float th = rect.height * 0.3f;
             Rect trackRect = {rect.x, rect.y + (rect.height - th) * 0.5f, rect.width, th};
 
-            Color trackColor = isEnabled ? Colors::DarkGray : Color{55, 55, 60, 255};
+            Color trackColor = config.enabled ? Colors::DarkGray : Color{55, 55, 60, 255};
             if (trackStyle.background.is_set)
                 trackColor = trackStyle.background.value;
 
@@ -113,14 +113,14 @@ namespace ZenitUI::UI
 
             r->fillRoundedRect(trackRect, trackRadius, trackColor.withAlpha(op));
 
-            Color fillColor = isEnabled ? style.color : Color{100, 100, 105, 255};
+            Color fillColor = config.enabled ? style.color : Color{100, 100, 105, 255};
             if (fillStyle.color.is_set)
                 fillColor = fillStyle.color.value;
 
             Rect fillRect = {trackRect.x, trackRect.y, trackRect.width * value, trackRect.height};
             r->fillRoundedRect(fillRect, trackRadius, fillColor.withAlpha(op));
 
-            Color knobColor = isEnabled ? style.color : Color{130, 130, 135, 255};
+            Color knobColor = config.enabled ? style.color : Color{130, 130, 135, 255};
             if (knobStyle.color.is_set)
                 knobColor = knobStyle.color.value;
 

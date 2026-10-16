@@ -17,11 +17,77 @@
 
 namespace ZenitUI
 {
+	// =========================================================================
+	//  Node flag groups
+	//
+	//  Layout carries three conceptually distinct groups of boolean state.
+	//  Splitting them into bitfield structs has three effects:
+	//
+	//    1. Memory: 3 * uint32_t = 12 bytes, vs ~19-24 bytes for individual
+	//       bool fields (padding included). Matters at 1000+ node counts.
+	//
+	//    2. Readability: `node.state.hovered` vs `node.isHovered`,
+	//       `node.config.interactive` vs `node.isInteractive`. The prefix
+	//       tells you at a glance which group a flag belongs to.
+	//
+	//    3. Extensibility: adding a new flag is a new bit in one of the
+	//       three structs, not a new bool field in Layout. Future features
+	//       (mouse buttons, additional state) can be added without
+	//       growing Layout's field count.
+	//
+	//  Group meanings:
+	//    - NodeState:    per-frame runtime state, computed by the framework
+	//                    from input, animated by the style system.
+	//    - NodeConfig:   static configuration, set by the constructor or
+	//                    by user code via setters. Changes rarely.
+	//    - NodeInternal: framework bookkeeping. Not part of the public
+	//                    surface, not meaningful to user code.
+	// =========================================================================
+
+	struct NodeState
+	{
+		uint32_t hovered : 1;
+		uint32_t pressed : 1;
+		uint32_t focused : 1;
+		uint32_t checked : 1;
+	};
+
+	struct NodeConfig
+	{
+		uint32_t interactive : 1;
+		uint32_t blocksRaycast : 1;
+		uint32_t enabled : 1;
+		uint32_t focusable : 1;
+		uint32_t focusScope : 1;
+		uint32_t keyboardActivates : 1;
+		uint32_t updateWhenDisabled : 1;
+		uint32_t portal : 1;
+		uint32_t passThrough : 1;
+	};
+
+	struct NodeInternal
+	{
+		uint32_t subtreeDirty : 1;
+		uint32_t styleInitialized : 1;
+		uint32_t pendingTransition : 1;
+		uint32_t hadLocalAnimationsLast : 1;
+		uint32_t wantsRemoval : 1;
+		uint32_t pressedInChain : 1;
+	};
 
 	class Layout : public std::enable_shared_from_this<Layout>
 	{
 	public:
-		Layout(LayoutType type = LayoutType::Stack) : type(type) {}
+		Layout(LayoutType type = LayoutType::Stack) : type(type)
+		{
+			// Non-zero defaults, matching the previous bool field
+			// initializers: interactive, enabled, subtree dirty, and
+			// pending transition all start true.
+			config.interactive = 1;
+			config.enabled = 1;
+			internal_.subtreeDirty = 1;
+			internal_.pendingTransition = 1;
+		}
 		virtual ~Layout()
 		{
 			if (auto *r = UIContext::get().renderer)
@@ -54,7 +120,7 @@ namespace ZenitUI
 				if (c == className)
 					return;
 			styleClasses.push_back(className);
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 
 		// Removes every occurrence of the class. No-op if the class
@@ -67,7 +133,7 @@ namespace ZenitUI
 			if (it == styleClasses.end())
 				return;
 			styleClasses.erase(it, styleClasses.end());
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 
 		// True if the class is currently set on this node.
@@ -93,7 +159,7 @@ namespace ZenitUI
 			if (styleClasses.empty())
 				return;
 			styleClasses.clear();
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 		void setId(const std::string &node_id)
 		{
@@ -108,7 +174,7 @@ namespace ZenitUI
 		{
 			style_.inlineBase.width = w;
 			style_.inlineBase.height = h;
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 
 		// --- API fluent (ritornano shared_from_this, NON usare nel costruttore) ---
@@ -151,7 +217,7 @@ namespace ZenitUI
 
 			child->parent = weak_from_this();
 			children.push_back(std::move(child));
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 
 		// Returns the node to which ZMarkup should attach children. Default
@@ -165,7 +231,7 @@ namespace ZenitUI
 		// its content area.
 		virtual Layout *contentTarget() { return this; }
 
-		void removeFromParent() { wantsRemoval = true; }
+		void removeFromParent() { internal_.wantsRemoval = 1; }
 		// Removes every child in one shot. Unlike `removeFromParent` on
 		// each child, this is immediate: the `children` vector is cleared
 		// right away, and each removed child's `parent` pointer is reset
@@ -182,7 +248,7 @@ namespace ZenitUI
 				if (c)
 					c->parent.reset();
 			children.clear();
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 		std::shared_ptr<Layout> getParent() const { return parent.lock(); }
 		bool hasParent() const { return !parent.expired(); }
@@ -202,15 +268,15 @@ namespace ZenitUI
 		}
 
 		// --- Stato / stile ---
-		void setInteractive(bool interactive) { isInteractive = interactive; }
-		void setBlocksRaycast(bool blocks) { blocksRaycast = blocks; }
+		void setInteractive(bool interactive) { config.interactive = interactive ? 1 : 0; }
+		void setBlocksRaycast(bool blocks) { config.blocksRaycast = blocks ? 1 : 0; }
 
 		void setEnabled(bool e)
 		{
-			if (isEnabled == e)
+			if ((config.enabled != 0) == e)
 				return;
-			isEnabled = e;
-			pendingTransition = true;
+			config.enabled = e ? 1 : 0;
+			internal_.pendingTransition = 1;
 
 			if (!e)
 			{
@@ -223,41 +289,39 @@ namespace ZenitUI
 
 			onEnabledChanged(e);
 		}
-		bool getEnabled() const { return isEnabled; }
+		bool getEnabled() const { return config.enabled != 0; }
 
 		void setChecked(bool c)
 		{
-			if (isChecked_ == c)
+			if ((state.checked != 0) == c)
 				return;
-			isChecked_ = c;
-			pendingTransition = true;
-			// La propagazione al sottoalbero è gestita centralmente in update(),
-			// tramite il confronto con lastSnapshot.
+			state.checked = c ? 1 : 0;
+			internal_.pendingTransition = 1;
 		}
-		bool getChecked() const { return isChecked_; }
+		bool getChecked() const { return state.checked != 0; }
 
-		bool isHoveredState() const { return isHovered; }
-		bool isPressedState() const { return isPressed; }
-		bool isFocusedState() const { return isFocused; }
-		bool isDisabledState() const { return !isEnabled; }
-		bool isCheckedState() const { return isChecked_; }
+		bool isHoveredState() const { return state.hovered != 0; }
+		bool isPressedState() const { return state.pressed != 0; }
+		bool isFocusedState() const { return state.focused != 0; }
+		bool isDisabledState() const { return config.enabled == 0; }
+		bool isCheckedState() const { return state.checked != 0; }
 
-		void setUpdateWhenDisabled(bool v) { updateWhenDisabled_ = v; }
-		bool getUpdateWhenDisabled() const { return updateWhenDisabled_; }
+		void setUpdateWhenDisabled(bool v) { config.updateWhenDisabled = v ? 1 : 0; }
+		bool getUpdateWhenDisabled() const { return config.updateWhenDisabled != 0; }
 
 		void beginTransition()
 		{
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 			style_.transitionTimer = 0.0f;
 			style_.transitionStartStyle = style_.currentStyle;
 		}
 
-		void setFocusable(bool f) { isFocusable_ = f; }
-		bool isFocusable() const { return isFocusable_ && isEnabled; }
-		bool getFocused() const { return isFocused; }
+		void setFocusable(bool f) { config.focusable = f ? 1 : 0; }
+		bool isFocusable() const { return config.focusable != 0 && config.enabled != 0; }
+		bool getFocused() const { return state.focused != 0; }
 
-		void setFocusScope(bool s) { isFocusScope_ = s; }
-		bool isFocusScope() const { return isFocusScope_; }
+		void setFocusScope(bool s) { config.focusScope = s ? 1 : 0; }
+		bool isFocusScope() const { return config.focusScope != 0; }
 
 		void notifyDescendantFocused(Layout *descendant) { onDescendantFocused(descendant); }
 
@@ -330,13 +394,13 @@ namespace ZenitUI
 
 		void setPortal(bool p)
 		{
-			isPortal_ = p;
-			pendingTransition = true;
+			config.portal = p ? 1 : 0;
+			internal_.pendingTransition = 1;
 		}
-		bool isPortal() const { return isPortal_; }
+		bool isPortal() const { return config.portal != 0; }
 
-		void setPassThrough(bool p) { passThrough_ = p; }
-		bool getPassThrough() const { return passThrough_; }
+		void setPassThrough(bool p) { config.passThrough = p ? 1 : 0; }
+		bool getPassThrough() const { return config.passThrough != 0; }
 
 		// Pointer capture: finché un nodo ha il capture attivo, ogni evento
 		// pointer viene indirizzato a lui, indipendentemente dalla posizione
@@ -358,8 +422,8 @@ namespace ZenitUI
 			return UIContext::get().pointerCapture.lock().get() == this;
 		}
 
-		void setKeyboardActivates(bool v) { keyboardActivates_ = v; }
-		bool getKeyboardActivates() const { return keyboardActivates_; }
+		void setKeyboardActivates(bool v) { config.keyboardActivates = v ? 1 : 0; }
+		bool getKeyboardActivates() const { return config.keyboardActivates != 0; }
 
 		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {})
 		{
@@ -400,16 +464,16 @@ namespace ZenitUI
 		void setInlineBase(const Style &s)
 		{
 			style_.inlineBase.overlay(s);
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 		Style &getInlineBase()
 		{
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 			return style_.inlineBase;
 		}
 		Style &getInlineDefaults()
 		{
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 			return style_.inlineDefaults;
 		}
 
@@ -490,25 +554,13 @@ namespace ZenitUI
 		uint32_t lastViewportGen_{0};
 		Rect rect{0, 0, 0, 0};
 		Vec2 measuredSize{0, 0};
-		bool subtreeDirty_{true};
 		float lastMeasureW_{-1.0f};
 		float lastMeasureH_{-1.0f};
 		ScrollController scroll_;
-		bool styleInitialized{false};
-		bool isInteractive{true}, blocksRaycast{false}, isHovered{false},
-			wantsRemoval{false}, pendingTransition{true}, isEnabled{true};
-		bool isFocused{false};
-		bool isFocusable_{false};
-		bool isFocusScope_{false};
-		bool isPressed{false};
-		bool isPortal_{false};
-		bool passThrough_{false};
-		bool keyboardActivates_{false};
-		bool updateWhenDisabled_{false};
-		bool pressedInChain_{false};
-		bool isChecked_{false};
-		bool hadLocalAnimationsLast_{false};
 
+		NodeState state{};
+		NodeConfig config{};
+		NodeInternal internal_{};
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
 		StyleResolver style_;
@@ -533,8 +585,8 @@ namespace ZenitUI
 
 		void markInheritanceDirty()
 		{
-			pendingTransition = true;
-			subtreeDirty_ = true;
+			internal_.pendingTransition = 1;
+			internal_.subtreeDirty = 1;
 			for (auto &c : children)
 				c->markInheritanceDirty();
 		}

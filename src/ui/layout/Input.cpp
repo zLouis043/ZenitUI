@@ -20,19 +20,19 @@ namespace ZenitUI
 			// Durante lo scroll congeliamo l'hover: evita di marcare dirty
 			// ogni bottone attraversato dal mouse mentre la lista scorre.
 			bool focusNow = ctx.hasFocus(&node);
-			if (focusNow != node.isFocused)
+			if (focusNow != node.state.focused)
 			{
-				node.isFocused = focusNow;
-				node.pendingTransition = true;
+				node.state.focused = focusNow;
+				node.internal_.pendingTransition = 1;
 			}
 			return;
 		}
 
-		node.isHovered = false;
+		node.state.hovered = 0;
 		if (!selfBlocked && node.rect.width > 0 && node.rect.height > 0)
-			node.isHovered = node.rect.contains(pointer.pos);
+			node.state.hovered = node.rect.contains(pointer.pos);
 
-		node.isPressed = false;
+		node.state.pressed = 0;
 		if (pointer.down && ctx.pressTarget)
 		{
 			Layout *n = ctx.pressTarget;
@@ -40,7 +40,7 @@ namespace ZenitUI
 			{
 				if (n == &node)
 				{
-					node.isPressed = true;
+					node.state.pressed = 1;
 					break;
 				}
 				if (!n->getPassThrough())
@@ -50,20 +50,20 @@ namespace ZenitUI
 		}
 
 		bool focusNow = ctx.hasFocus(&node);
-		if (focusNow != node.isFocused)
+		if (focusNow != node.state.focused)
 		{
-			node.isFocused = focusNow;
-			node.pendingTransition = true;
+			node.state.focused = focusNow;
+			node.internal_.pendingTransition = 1;
 		}
 	}
 
 	UIState InputController::computeNextState(const Layout &node) const
 	{
-		if (!node.isEnabled)
+		if (!node.config.enabled)
 			return UIState::Disabled;
-		if (node.isPressed)
+		if (node.state.pressed)
 			return UIState::Pressed;
-		if (node.isHovered)
+		if (node.state.hovered)
 			return UIState::Hover;
 		return UIState::Idle;
 	}
@@ -91,7 +91,7 @@ namespace ZenitUI
 			{
 				if (node.onPress)
 					node.onPress();
-				if (!node.passThrough_)
+				if (!node.config.passThrough)
 					ctx.consumeClick();
 			}
 		}
@@ -109,18 +109,18 @@ namespace ZenitUI
 				if (node.onClick && !ctx.clickConsumed)
 				{
 					node.onClick();
-					if (!node.passThrough_)
+					if (!node.config.passThrough)
 						ctx.consumeClick();
 				}
 			}
 		}
 
-		if (pointer.rightPressed && node.isHovered && node.onRightClick)
+		if (pointer.rightPressed && node.state.hovered && node.onRightClick)
 		{
 			if (!ctx.rightClickConsumed)
 			{
 				node.onRightClick();
-				if (!node.passThrough_)
+				if (!node.config.passThrough)
 					ctx.consumeRightClick();
 			}
 		}
@@ -128,7 +128,7 @@ namespace ZenitUI
 
 	void InputController::handleKeyInput(Layout &node)
 	{
-		if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+		if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
 			return;
 
 		auto &ev = UIContext::get().inputEvents;

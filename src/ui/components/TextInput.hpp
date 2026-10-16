@@ -19,7 +19,7 @@ namespace ZenitUI::UI
 
             onClick = [this]()
             {
-                if (!isEnabled)
+                if (!config.enabled)
                     return;
                 UIContext::get().requestFocus(shared_from_this());
 
@@ -28,7 +28,7 @@ namespace ZenitUI::UI
                 auto &ctx = UIContext::get();
                 float localX = ctx.pointer.pos.x - rect.x;
                 cursorPos = cursorIndexFromX(localX);
-                pendingTransition = true;
+                internal_.pendingTransition = 1;
             };
 
             style_.inlineBase.background = Color{30, 30, 36, 255};
@@ -37,7 +37,7 @@ namespace ZenitUI::UI
             style_.inlineBase.padding = Spacing(VH(1.2f), VW(1.5f));
             style_.inlineBase.borderColor = Color{60, 60, 70, 255};
             style_.inlineBase.borderWidth = Px(1.0f);
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         void setText(std::string t)
@@ -45,7 +45,7 @@ namespace ZenitUI::UI
             text = std::move(t);
             cursorPos = std::min(cursorPos, (int)text.size());
             text_dirty = true;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
         const std::string &getText() const { return text; }
         void clear() { setText(""); }
@@ -58,13 +58,13 @@ namespace ZenitUI::UI
         void setCursorPos(int pos)
         {
             cursorPos = std::clamp(pos, 0, (int)text.size());
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         void setFont(FontHandle f)
         {
             defaultFont = f;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         std::function<void(const std::string &)> onTextChanged;
@@ -229,7 +229,7 @@ namespace ZenitUI::UI
             {
                 if (onTextChanged)
                     onTextChanged(text);
-                pendingTransition = true;
+                internal_.pendingTransition = 1;
             }
 
             {
@@ -271,10 +271,10 @@ namespace ZenitUI::UI
 
             Vec2 pos = {rect.x + pl - scrollX, rect.y + (rect.height - fs) * 0.5f - fs * 0.1f};
 
-            Color textColor = isEnabled ? style.color : Color{120, 120, 125, 255};
+            Color textColor = config.enabled ? style.color : Color{120, 120, 125, 255};
             r->drawText(f, text, pos, fs, sp, textColor.withAlpha(op));
 
-            if (hasFocusCache && isEnabled && cursorBlink < 0.5f)
+            if (hasFocusCache && config.enabled && cursorBlink < 0.5f)
             {
                 Style cursorStyle = partStyle("cursor");
                 Color cursorColor = cursorStyle.color.is_set
