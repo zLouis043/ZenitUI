@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+#include <array>
 #include <random>
 #include <sstream>
 #include <algorithm>

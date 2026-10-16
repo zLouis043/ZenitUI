@@ -26,13 +26,36 @@ namespace ZenitUI
 		float dS = dpiScale();
 		PointerState s;
 		s.pos = {mp.x / dS, mp.y / dS};
-		s.down = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-		s.pressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-		s.released = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
-		s.rightDown = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
-		s.rightPressed = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
-		s.rightReleased = IsMouseButtonReleased(MOUSE_BUTTON_RIGHT);
 		s.wheelY = GetMouseWheelMove();
+
+		// Canonical per-button state.
+		auto &left = s[MouseButton::Left];
+		auto &right = s[MouseButton::Right];
+		auto &mid = s[MouseButton::Middle];
+
+		left.down = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+		left.pressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+		left.released = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
+
+		right.down = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+		right.pressed = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
+		right.released = IsMouseButtonReleased(MOUSE_BUTTON_RIGHT);
+
+#if defined(MOUSE_BUTTON_MIDDLE)
+		mid.down = IsMouseButtonDown(MOUSE_BUTTON_MIDDLE);
+		mid.pressed = IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE);
+		mid.released = IsMouseButtonReleased(MOUSE_BUTTON_MIDDLE);
+#endif
+
+		// Legacy mirror. Kept until every call site is migrated to the
+		// array-based API. Removed once the migration is complete.
+		s.down = left.down;
+		s.pressed = left.pressed;
+		s.released = left.released;
+		s.rightDown = right.down;
+		s.rightPressed = right.pressed;
+		s.rightReleased = right.released;
+
 		return s;
 	}
 	double RaylibPlatform::time() { return GetTime(); }
@@ -40,10 +63,10 @@ namespace ZenitUI
 	ModifierState RaylibPlatform::modifiers()
 	{
 		ModifierState m;
-		m.shift = IsKeyDown(KEY_LEFT_SHIFT)   || IsKeyDown(KEY_RIGHT_SHIFT);
-		m.ctrl  = IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
-		m.alt   = IsKeyDown(KEY_LEFT_ALT)     || IsKeyDown(KEY_RIGHT_ALT);
-		m.super = IsKeyDown(KEY_LEFT_SUPER)   || IsKeyDown(KEY_RIGHT_SUPER);
+		m.shift = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+		m.ctrl = IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+		m.alt = IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT);
+		m.super = IsKeyDown(KEY_LEFT_SUPER) || IsKeyDown(KEY_RIGHT_SUPER);
 		return m;
 	}
 

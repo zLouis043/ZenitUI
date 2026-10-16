@@ -204,14 +204,24 @@ namespace ZenitUI::Test
         PointerState pointer() override
         {
             PointerState p = nextPointer;
-            // Auto-clear di pressed/released: durano un solo frame
+            // Auto-clear di pressed/released: durano un solo frame.
+            // Aggiorniamo sia i campi legacy sia l'array canonico.
             nextPointer.pressed = false;
             nextPointer.released = false;
             nextPointer.rightPressed = false;
             nextPointer.rightReleased = false;
             nextPointer.wheelY = 0.0f;
+
+            nextPointer[MouseButton::Left].pressed = false;
+            nextPointer[MouseButton::Left].released = false;
+            nextPointer[MouseButton::Right].pressed = false;
+            nextPointer[MouseButton::Right].released = false;
+            nextPointer[MouseButton::Middle].pressed = false;
+            nextPointer[MouseButton::Middle].released = false;
+
             return p;
         }
+
         InputEvents pollInputEvents() override
         {
             InputEvents e = nextEvents;
@@ -238,35 +248,84 @@ namespace ZenitUI::Test
             nextPointer.down = true;
             nextPointer.pressed = true;
             nextPointer.released = false;
+            auto &b = nextPointer[MouseButton::Left];
+            b.down = true;
+            b.pressed = true;
+            b.released = false;
         }
+
         void releaseLeft(Vec2 pos)
         {
             nextPointer.pos = pos;
             nextPointer.down = false;
             nextPointer.pressed = false;
             nextPointer.released = true;
+            auto &b = nextPointer[MouseButton::Left];
+            b.down = false;
+            b.pressed = false;
+            b.released = true;
         }
+
         void holdLeft(Vec2 pos)
         {
-            // Frame successivi al press: still down, no edge
             nextPointer.pos = pos;
             nextPointer.down = true;
             nextPointer.pressed = false;
             nextPointer.released = false;
+            auto &b = nextPointer[MouseButton::Left];
+            b.down = true;
+            b.pressed = false;
+            b.released = false;
         }
+
         void pressRight(Vec2 pos)
         {
             nextPointer.pos = pos;
             nextPointer.rightDown = true;
             nextPointer.rightPressed = true;
             nextPointer.rightReleased = false;
+            auto &b = nextPointer[MouseButton::Right];
+            b.down = true;
+            b.pressed = true;
+            b.released = false;
         }
+
         void releaseRight(Vec2 pos)
         {
             nextPointer.pos = pos;
             nextPointer.rightDown = false;
             nextPointer.rightPressed = false;
             nextPointer.rightReleased = true;
+            auto &b = nextPointer[MouseButton::Right];
+            b.down = false;
+            b.pressed = false;
+            b.released = true;
+        }
+        void pressMiddle(Vec2 pos)
+        {
+            nextPointer.pos = pos;
+            auto &b = nextPointer[MouseButton::Middle];
+            b.down = true;
+            b.pressed = true;
+            b.released = false;
+        }
+
+        void releaseMiddle(Vec2 pos)
+        {
+            nextPointer.pos = pos;
+            auto &b = nextPointer[MouseButton::Middle];
+            b.down = false;
+            b.pressed = false;
+            b.released = true;
+        }
+
+        void holdMiddle(Vec2 pos)
+        {
+            nextPointer.pos = pos;
+            auto &b = nextPointer[MouseButton::Middle];
+            b.down = true;
+            b.pressed = false;
+            b.released = false;
         }
         void pressKey(int key)
         {
@@ -355,6 +414,7 @@ namespace ZenitUI::Test
             ctx.releaseTarget = nullptr;
             ctx.clickConsumed = false;
             ctx.rightClickConsumed = false;
+            ctx.buttonConsumed.fill(false);
             ctx.wheelConsumedThisFrame = false;
             ctx.pointer = {};
             ctx.inputEvents = {};
