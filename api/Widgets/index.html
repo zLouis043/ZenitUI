@@ -4114,7 +4114,7 @@ std::shared_ptr&lt;Text&gt; Label(std::string t);
 <tbody>
 <tr>
 <td><code>setText(std::string)</code></td>
-<td>Replace content. Sets <code>text_dirty</code> and <code>pendingTransition</code>.</td>
+<td>Replace content. Sets <code>text_dirty</code> and <code>internal_.pendingTransition</code>.</td>
 </tr>
 <tr>
 <td><code>getText()</code></td>
@@ -4297,7 +4297,7 @@ public:
 </ul>
 <h3 id="structure">Structure</h3>
 <p>The knob is a <code>Layout(Stack)</code> with <code>interactive: false</code>,
-<code>blocksRaycast: false</code>, and class <code>toggle-knob</code>. Its position must be
+<code>config.blocksRaycast = 0</code>, and class <code>toggle-knob</code>. Its position must be
 set entirely from <code>.zstyle</code>.</p>
 <h3 id="zmarkup_2">ZMarkup</h3>
 <pre><code>Toggle#t checked=true

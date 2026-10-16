@@ -2413,13 +2413,13 @@ has run. Use it for:</p>
 </ul>
 <p><code>Slider</code> uses it for drag:</p>
 <pre><code class="language-cpp">void onUpdate(float) override {
-    if (isFocused) {
+    if (state.focused) {
         auto&amp; ev = UIContext::get().inputEvents;
         constexpr float STEP = 0.05f;
         // ... read keys, update value ...
     }
 
-    if (isPressed &amp;&amp; !hasPointerCapture())
+    if (state.pressed &amp;&amp; !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture() &amp;&amp; rect.width &gt; 0.0f) {
@@ -2443,10 +2443,10 @@ scroll:</p>
 }
 </code></pre>
 <p><strong>When is <code>onUpdate</code> called?</strong> The base <code>Layout::update</code> only calls it
-if <code>isEnabled || updateWhenDisabled_</code>. If your widget needs to update
+if <code>config.enabled || config.updateWhenDisabled</code>. If your widget needs to update
 while disabled, call <code>setUpdateWhenDisabled(true)</code>.</p>
 <p><strong>When is <code>onUpdate</code> NOT called?</strong> During a <code>blocksInput</code> animation, or
-if the node is disabled and <code>updateWhenDisabled_</code> is false.</p>
+if the node is disabled and <code>config.updateWhenDisabled</code> is 0.</p>
 <h3 id="36-onlayout">3.6 <code>onLayout()</code></h3>
 <pre><code class="language-cpp">virtual void onLayout() {}
 </code></pre>
@@ -2499,7 +2499,7 @@ when disabled. <code>Dropdown</code> uses it to close the list:</p>
 Useful for containers that want to highlight when any child is focused:</p>
 <pre><code class="language-cpp">void onDescendantFocused(Layout*) override {
     getInlineBase().borderColor = Colors::Yellow;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 </code></pre>
 <p>Only <code>Layout::notifyFocusAncestors</code> calls this, and only during Tab
@@ -2588,7 +2588,7 @@ just sets up the interactive flags:</p>
 </code></pre>
 <h3 id="52-toggle-style-state">5.2 Toggle-style state</h3>
 <p>For widgets that have a binary state (checked / unchecked), use the
-built-in <code>isChecked_</code> flag and <code>setChecked</code>:</p>
+built-in <code>state.checked</code> flag and <code>setChecked</code>:</p>
 <pre><code class="language-cpp">class MyToggle : public TLayout&lt;MyToggle&gt; {
 public:
     MyToggle(bool state = false) : TLayout&lt;MyToggle&gt;(LayoutType::Stack) {
@@ -2609,7 +2609,7 @@ public:
     std::function&lt;void(bool)&gt; onToggle;
 };
 </code></pre>
-<p><code>setChecked</code> updates the flag and sets <code>pendingTransition</code>, which
+<p><code>setChecked</code> updates the flag and sets <code>internal_.pendingTransition</code>, which
 re-resolves the style on the next update. So a <code>.zstyle</code> rule like
 <code>MyToggle:checked { background: green; }</code> will apply automatically.</p>
 <h3 id="53-focus-based-input">5.3 Focus-based input</h3>
@@ -2678,7 +2678,7 @@ never to the widget.</p>
 <h3 id="55-pointer-capture-drag">5.5 Pointer capture (drag)</h3>
 <p>For drag-style interactions, use the pointer capture API:</p>
 <pre><code class="language-cpp">void onUpdate(float) override {
-    if (isPressed &amp;&amp; !hasPointerCapture())
+    if (state.pressed &amp;&amp; !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture()) {
@@ -2837,7 +2837,7 @@ public:
         int old = rating_;
         rating_ = std::clamp(r, 0, maxStars_);
         if (rating_ != old) {
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
             if (onRatingChanged) onRatingChanged(rating_);
         }
     }
@@ -3006,7 +3006,7 @@ transition. It's designed to be called once per frame per part, inside
 wastes cycles and can trigger the part's transition in the wrong frame.</p>
 <p><strong>Focus and Tab.</strong></p>
 <p>If your widget handles keyboard input but isn't focusable, it will
-never receive <code>Enter</code>/<code>Space</code> via <code>keyboardActivates</code>. Set
+never receive <code>Enter</code>/<code>Space</code> via <code>config.keyboardActivates</code>. Set
 <code>setFocusable(true)</code> and, if you want Enter/Space to fire <code>onClick</code>,
 <code>setKeyboardActivates(true)</code>.</p>
 <p><strong>Child widgets should be non-interactive.</strong></p>

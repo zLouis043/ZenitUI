@@ -2065,7 +2065,7 @@ floating widget.</p>
 <p>When a portal node is drawn, instead of painting itself, it pushes a
 <code>weak_ptr</code> to itself into <code>UIContext::framePortals</code>:</p>
 <pre><code class="language-cpp">void Layout::draw(float parentOpacity) {
-    if (isPortal_) {
+    if (config.portal) {
         UIContext::get().framePortals.push_back(weak_from_this());
         return;
     }
@@ -2303,7 +2303,7 @@ private:
 <ul>
 <li>It's kept alive by the parent's <code>children</code> vector.</li>
 <li>It's removed when the parent is removed (<code>removeFromParent</code> cascades
-  via <code>wantsRemoval</code>).</li>
+  via <code>internal_.wantsRemoval</code>).</li>
 <li>It's drawn in the parent's <code>draw()</code> pass — but only registered, not
   painted. The painting happens at the root.</li>
 </ul>

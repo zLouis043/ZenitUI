@@ -3157,7 +3157,7 @@ fine because scroll containers are vertical.</p>
 <p>Non-scroll containers just call <code>arrangeInto(space)</code>.</p>
 <h3 id="52-needsfullarrange">5.2 <code>needsFullArrange</code></h3>
 <pre><code class="language-cpp">bool ScrollController::needsFullArrange(const Layout&amp; node, bool positionChanged) const {
-    return !arrangeInitialized || node.subtreeDirty_ || positionChanged;
+    eturn !arrangeInitialized || node.internal_.subtreeDirty || positionChanged;
 }
 </code></pre>
 <p>A full arrange is needed if:</p>
@@ -3418,7 +3418,7 @@ intuition.</p>
 computed from the original, not from the previous frame's offset. This
 keeps the drag stable.</p>
 <h3 id="65-wheel">6.5 Wheel</h3>
-<pre><code class="language-cpp">if (!ctx.wheelConsumedThisFrame &amp;&amp; node.isInteractive &amp;&amp;
+<pre><code class="language-cpp">if (!ctx.wheelConsumedThisFrame &amp;&amp; node.config.interactive &amp;&amp;
     !node.hasPointerCapture() &amp;&amp; rect.contains(pointer.pos))
 {
     if (pointer.wheelY != 0.0f) {
@@ -3436,7 +3436,7 @@ keeps the drag stable.</p>
 <p>Conditions:</p>
 <ul>
 <li><code>!wheelConsumedThisFrame</code> — no node has consumed the wheel this frame.</li>
-<li><code>node.isInteractive</code> — the node is interactive (default true for most).</li>
+<li><code>node.config.interactive</code> — the node is interactive (default true for most).</li>
 <li><code>!hasPointerCapture</code> — not currently in a capture (avoid double-handling).</li>
 <li><code>rect.contains(pointer.pos)</code> — the pointer is over the container.</li>
 </ul>
@@ -3558,14 +3558,14 @@ ancestor is scrolling". It propagates down through the tree.</p>
 <p><code>updateFlags</code>:</p>
 <pre><code class="language-cpp">if (scrolling) {
     bool focusNow = ctx.hasFocus(&amp;node);
-    if (focusNow != node.isFocused) {
-        node.isFocused = focusNow;
-        node.pendingTransition = true;
+    if (focusNow != (node.state.focused != 0)) {
+        node.state.focused = focusNow ? 1 : 0;
+        node.internal_.pendingTransition = 1;
     }
     return;
 }
 </code></pre>
-<p>During scroll, only <code>isFocused</code> is updated. <code>isHovered</code> and <code>isPressed</code>
+<p>During scroll, only <code>state.focused</code> is updated. <code>state.hovered</code> and <code>state.pressed</code>
 are not touched — they keep their previous values.</p>
 <h3 id="82-why">8.2 Why</h3>
 <p>Without this, scrolling a list of 100 buttons would fire <code>onHoverEnter</code>
@@ -3696,7 +3696,7 @@ public:
 <p>It sets:</p>
 <ul>
 <li><code>interactive: true</code> — so the wheel can be received.</li>
-<li><code>blocksRaycast: true</code> — so clicks don't pass through to nodes behind.</li>
+<li><code>config.blocksRaycast = 1</code> — so clicks don't pass through to nodes behind.</li>
 <li><code>styleTag: "ScrollView"</code> — for <code>.zstyle</code> targeting.</li>
 <li><code>overflow-x</code> and <code>overflow-y</code> to <code>Scroll</code> <strong>in inline defaults</strong>.</li>
 </ul>
@@ -3782,8 +3782,8 @@ extension could expose them via <code>.zstyle</code> (<code>::scrollbar-track</c
 <code>::scrollbar-thumb</code> parts), but it's not implemented.</p>
 <p><strong>The hover freeze is not per-axis.</strong>
 If either axis is scrolling, both are frozen. A node that's scrolling
-vertically but not horizontally still has both <code>isHovered</code> and
-<code>isPressed</code> frozen. In practice, scrolling is usually mono-axis, so
+vertically but not horizontally still has both <code>state.hovered</code> and
+<code>state.pressed</code> frozen. In practice, scrolling is usually mono-axis, so
 this doesn't matter.</p>
 <p><strong>Absolute children scroll with the content.</strong>
 <code>translateSubtree</code> doesn't skip absolute children — they're shifted
@@ -3844,8 +3844,8 @@ subtree (e.g. by calling <code>arrangeInto</code> without resetting the applied
 offset), the next <code>applyOffsetDelta</code> would double-count. The arrange
 code handles this by resetting <code>appliedOffset = {0, 0}</code> after a full
 arrange.</p>
-<p><strong>Scroll input requires <code>isInteractive</code>.</strong>
-The wheel check has <code>node.isInteractive &amp;&amp;</code>. A non-interactive scroll
+<p><strong>Scroll input requires <code>config.interactive</code>.</strong>
+The wheel check has <code>node.config.interactive  &amp;&amp;</code>. A non-interactive scroll
 container (e.g. one with <code>setInteractive(false)</code>) won't respond to the
 wheel. If you want a non-interactive container that scrolls, you'd
 need to either make it interactive (and accept the click interception)

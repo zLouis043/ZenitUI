@@ -1504,10 +1504,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#45-transition-and-pendingtransition" class="md-nav__link">
+  <a href="#45-transition-and-internal_pendingtransition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.5 Transition and pendingTransition
+        4.5 Transition and internal_.pendingTransition
       
     </span>
   </a>
@@ -1664,15 +1664,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-the-pendingtransition-flag" class="md-nav__link">
+  <a href="#8-the-internal_pendingtransition-flag" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. The pendingTransition flag
+        8. The internal_.pendingTransition flag
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. The pendingTransition flag">
+    <nav class="md-nav" aria-label="8. The internal_.pendingTransition flag">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2285,10 +2285,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#45-transition-and-pendingtransition" class="md-nav__link">
+  <a href="#45-transition-and-internal_pendingtransition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.5 Transition and pendingTransition
+        4.5 Transition and internal_.pendingTransition
       
     </span>
   </a>
@@ -2445,15 +2445,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-the-pendingtransition-flag" class="md-nav__link">
+  <a href="#8-the-internal_pendingtransition-flag" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8. The pendingTransition flag
+        8. The internal_.pendingTransition flag
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8. The pendingTransition flag">
+    <nav class="md-nav" aria-label="8. The internal_.pendingTransition flag">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2865,9 +2865,9 @@ style ready to use.</p>
 <li><strong><code>initStyleIfNeeded</code></strong> — on the first frame, to initialize
    <code>currentStyle = targetStyle = transitionStartStyle</code>.</li>
 <li><strong><code>beginStateTransition</code></strong> — when the state machine changes state.</li>
-<li><strong><code>resolvePendingTransition</code></strong> — when <code>pendingTransition</code> was set
+<li><strong><code>resolvePendingTransition</code></strong> — when <code>internal_.pendingTransition</code> was set
    (some property was changed via <code>getInlineBase()</code> or similar).</li>
-<li><strong><code>measure</code></strong> — if <code>pendingTransition</code> is still set, to get the
+<li><strong><code>measure</code></strong> — if <code>internal_.pendingTransition</code> is still set, to get the
    target size.</li>
 </ol>
 <p>The result is cached in <code>targetStyle</code>. <code>currentStyle</code> only changes when
@@ -2881,7 +2881,7 @@ duration).</p>
     transitionTimer = 0.0f;
     transitionStartStyle = currentStyle;
     targetStyle = resolveFor(node);
-    node.pendingTransition = false;
+    node.internal_.pendingTransition = 0;
 }
 </code></pre>
 <p>Snapshot the current style, resolve the new target, reset the timer. The
@@ -2890,7 +2890,7 @@ state change is now in progress; <code>tick</code> will interpolate from
 <h3 id="42-resolvependingtransition">4.2 <code>resolvePendingTransition</code></h3>
 <pre><code class="language-cpp">void StyleResolver::resolvePendingTransition(Layout&amp; node) {
     ComputedStyle newTarget = resolveFor(node);
-    node.pendingTransition = false;
+    node.internal_.pendingTransition = 0;
 
     if (newTarget != targetStyle) {
         if (node.anim_.hasActiveImperative()) {
@@ -3007,18 +3007,18 @@ true immediately after <code>realElapsed &gt; 0</code>). Actually, <code>t &gt; 
 returns <code>b</code> as soon as <code>t &gt; 0</code>, which is the first tick after the
 transition starts. So a snap happens on the first frame of the
 transition. This is intentional — better than a late switch.</p>
-<h3 id="45-transition-and-pendingtransition">4.5 Transition and <code>pendingTransition</code></h3>
-<p>The <code>pendingTransition</code> flag is set by:</p>
+<h3 id="45-transition-and-internal_pendingtransition">4.5 Transition and <code>internal_.pendingTransition</code></h3>
+<p>The <code>internal_.pendingTransition</code> flag is set by:</p>
 <ul>
 <li><code>getInlineBase()</code> (returns a mutable reference, so the caller will
   probably modify it).</li>
 <li><code>setInlineBase(style)</code>.</li>
 <li><code>addClass</code>, <code>setId</code>, <code>setSize</code>, <code>setEnabled</code>, <code>setChecked</code>,
   <code>setPortal</code>, <code>addChild</code>, <code>beginTransition</code>, <code>markInheritanceDirty</code>.</li>
-<li><code>Text::setText</code>, <code>TextInput::setText</code>, <code>Slider</code> (via <code>pendingTransition</code>
+<li><code>Text::setText</code>, <code>TextInput::setText</code>, <code>Slider</code> (via <code>internal_.pendingTransition</code>
   directly).</li>
 </ul>
-<p>When <code>pendingTransition</code> is true at the start of <code>update</code>, the resolver
+<p>When <code>internal_.pendingTransition</code> is 1 at the start of <code>update</code>, the resolver
 re-resolves the target style. If it differs from the current target,
 the transition restarts.</p>
 <p>The flag is cleared inside <code>resolvePendingTransition</code> and
@@ -3064,13 +3064,13 @@ the value from the parent.</p>
 changed since the last frame, each child is marked inheritance-dirty
 via <code>markInheritanceDirty</code>:</p>
 <pre><code class="language-cpp">void markInheritanceDirty() {
-    pendingTransition = true;
-    subtreeDirty_ = true;
+    internal_.pendingTransition = 1;
+    internal_.subtreeDirty = 1;
     for (auto&amp; c : children)
         c-&gt;markInheritanceDirty();
 }
 </code></pre>
-<p>The child's <code>pendingTransition</code> flag is set, so its own <code>update</code> will
+<p>The child's <code>internal_.pendingTransition</code> flag is set, so its own <code>update</code> will
 re-resolve on the next frame (or the same frame, if it hasn't been
 processed yet).</p>
 <h3 id="53-state-flag-propagation">5.3 State flag propagation</h3>
@@ -3090,7 +3090,7 @@ selectors, so they need the same propagation mechanism.</p>
 <p>Custom properties also inherit (they're merged in <code>ComputedStyle::from</code>
 via <code>parent-&gt;customProps</code>). But the propagation mechanism doesn't
 explicitly track them — the change is detected indirectly because any
-style change sets <code>pendingTransition</code> on the node, which re-resolves
+style change sets <code>internal_.pendingTransition</code> on the node, which re-resolves
 its style and, if the custom props changed, produces a different
 <code>ComputedStyle</code>, which then triggers propagation on the next frame.</p>
 <p>This can cause a one-frame delay in custom property propagation in some
@@ -3219,8 +3219,8 @@ always set in <code>ComputedStyle</code>), so it detects value changes but not
 "setness" changes — but by that point, setness has been resolved to
 concrete values anyway.</p>
 <hr />
-<h2 id="8-the-pendingtransition-flag">8. The <code>pendingTransition</code> flag</h2>
-<p><code>pendingTransition</code> is a per-node flag that means "something about my
+<h2 id="8-the-internal_pendingtransition-flag">8. The <code>internal_.pendingTransition</code> flag</h2>
+<p><code>internal_.pendingTransition</code> is a per-node flag that means "something about my
 style changed, re-resolve on the next update". It's set by every setter
 that could affect the resolved style:</p>
 <ul>
@@ -3247,17 +3247,17 @@ that could affect the resolved style:</p>
     [](Layout* l, float v) { l-&gt;getInlineBase().opacity = v; });
 </code></pre>
 <p>Every frame that the animation ticks, the setter calls
-<code>getInlineBase()</code>, which sets <code>pendingTransition = true</code>. This is
+<code>getInlineBase()</code>, which sets <code>internal_.pendingTransition = 1</code>. This is
 intentional: the animation changes the inline style, so the node needs
 to re-resolve. The overhead is small (one re-resolve per frame per
 animated node).</p>
 <p><code>tickImperative</code> runs <strong>before</strong> the style check in <code>update</code>, so within
-the same frame the <code>pendingTransition</code> set by the animation is picked
-up by the <code>else if (pendingTransition)</code> branch:</p>
+the same frame the <code>internal_.pendingTransition</code> set by the animation is picked
+up by the <code>else if (internal_.pendingTransition)</code> branch:</p>
 <pre><code class="language-cpp">if (stateChanged) {
     style_.beginStateTransition(*this, nextState);
     anim_.syncCss(*this);
-} else if (pendingTransition) {
+} else if (internal_.pendingTransition) {
     style_.resolvePendingTransition(*this);
     anim_.syncCss(*this);
 }
@@ -3266,7 +3266,7 @@ up by the <code>else if (pendingTransition)</code> branch:</p>
 active and snaps <code>currentStyle</code> to the new target instead of starting
 a transition (see §4.2). The result is that the animated value is
 visible in the <strong>same</strong> frame it was written: the animation's setter
-runs, <code>pendingTransition</code> is set, the target is re-resolved, and
+runs, <code>internal_.pendingTransition</code> is set, the target is re-resolved, and
 <code>currentStyle</code> is updated to match. <code>renderStyle</code> at draw time then
 contains the interpolated value, since it's a copy of <code>currentStyle</code>
 with the CSS keyframe overlay applied on top.</p>
@@ -3275,26 +3275,26 @@ with the CSS keyframe overlay applied on top.</p>
 <pre><code>Frame N, update:
 ├── tickImperative: no playing animation → nothing happens
 ├── ...
-├── pendingTransition might be set by a setter called earlier in update
-├── resolvePendingTransition runs, if pendingTransition is true
+├── internal_.pendingTransition might be set by a setter called earlier in update
+├── resolvePendingTransition runs, if internal_.pendingTransition is 1
 │   ├── target differs → start a transition (timer = 0)
 │   ├── target same → refresh target, snap if transition done
-│   └── clears pendingTransition
+│   └── clears internal_.pendingTransition
 ├── style.tick advances the transition (if any)
 └── draw uses currentStyle + css overlay
 </code></pre>
 <p>With an imperative animation running:</p>
 <pre><code>Frame N, update:
-├── tickImperative: writes to inlineBase → sets pendingTransition
+├── tickImperative: writes to inlineBase → sets internal_.pendingTransition
 ├── ...
 ├── resolvePendingTransition runs
 │   ├── sees hasActiveImperative() == true
 │   ├── sets currentStyle = newTarget (snap, no transition)
-│   └── clears pendingTransition
+│   └── clears internal_.pendingTransition
 ├── style.tick: transitionTimer already 1.0 → no-op
 └── draw uses currentStyle (already at the animated value)
 </code></pre>
-<p>The animation continuously sets <code>pendingTransition</code> and the resolver
+<p>The animation continuously sets <code>internal_.pendingTransition</code> and the resolver
 continuously clears it, snapping <code>currentStyle</code> to the animated value
 on each frame. Once the animation finishes (<code>hasActiveImperative()</code>
 becomes false), the next style change goes through the normal
@@ -3327,7 +3327,7 @@ automatically.</p>
 <p>The matching and sorting code is feature-agnostic, so no changes there.</p>
 <h3 id="93-adding-a-new-state">9.3 Adding a new state</h3>
 <ol>
-<li>Add the flag to <code>Layout</code> (like <code>isFocused</code>).</li>
+<li>Add the flag to <code>NodeState</code> (like <code>focused</code>).</li>
 <li>Update <code>InputController::updateFlags</code> to set it.</li>
 <li>Add <code>requireX</code> to <code>SimpleSelector</code> and <code>nodeMatchesSimple</code>.</li>
 <li>Update the parser to recognize the pseudo-class.</li>
@@ -3337,10 +3337,10 @@ automatically.</p>
 </ol>
 <hr />
 <h2 id="10-pitfalls">10. Pitfalls</h2>
-<p><strong>Styles are re-resolved on every <code>pendingTransition</code>.</strong>
+<p><strong>Styles are re-resolved on every <code>internal_.pendingTransition</code>.</strong>
 The resolver does the full cascade (matching all rules, sorting,
 overlaying, resolving <code>var()</code>) on every <code>update</code> where the node's
-<code>pendingTransition</code> is true. For a typical node, this is once at
+<code>internal_.pendingTransition</code> is 1. For a typical node, this is once at
 initialization and then only when the state changes or a property is
 set. For an animated node, it's once per frame. <code>Theme::rules</code> is a
 linear list — a stylesheet with thousands of rules will make resolution
@@ -3381,7 +3381,7 @@ the CSS rule has lower specificity).</p>
 <p><strong><code>propagateInheritance</code> doesn't compare all properties.</strong>
 Only the inherited ones plus the state flags. Custom properties and
 <code>transitions</code> / <code>animations</code> are not compared. A change to a custom
-property on a parent will propagate via the normal <code>pendingTransition</code>
+property on a parent will propagate via the normal <code>internal_.pendingTransition</code>
 mechanism (the parent's style changes, and <code>ComputedStyle::from</code> for
 the child reads the parent's <code>customProps</code>), but not via
 <code>propagateInheritance</code>. In practice, this is fine because the child

@@ -1732,10 +1732,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-isinteractive-blocksraycast" class="md-nav__link">
+  <a href="#65-configinteractive-configblocksraycastt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5 isInteractive || blocksRaycast
+        6.5 config.interactive || config.blocksRaycastt
       
     </span>
   </a>
@@ -2551,10 +2551,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-isinteractive-blocksraycast" class="md-nav__link">
+  <a href="#65-configinteractive-configblocksraycastt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5 isInteractive || blocksRaycast
+        6.5 config.interactive || config.blocksRaycastt
       
     </span>
   </a>
@@ -2758,7 +2758,7 @@ that run every frame, in this order:</p>
 <p>Every <code>Layout</code> node has a small set of fields that drive layout:</p>
 <pre><code class="language-cpp">Rect rect{0, 0, 0, 0};              // final position and size (set by arrange)
 Vec2 measuredSize{0, 0};            // intrinsic size (set by measure)
-bool subtreeDirty_{true};           // &quot;needs re-measure&quot;
+NodeInternal internal_;             // bookkeeping (subtreeDirty, pendingTransition, ...)
 float lastMeasureW_{-1.0f};         // cached parent width
 float lastMeasureH_{-1.0f};         // cached parent height
 LayoutType type;                    // Stack / Vertical / Horizontal
@@ -2787,7 +2787,7 @@ space and by <code>drawScrollbar</code> to compute the thumb size.</p>
 <p>Called bottom-up: the parent passes its inner available size, and the
 node computes its intrinsic size from that.</p>
 <h3 id="21-cache-check">2.1 Cache check</h3>
-<pre><code class="language-cpp">if (!subtreeDirty_ &amp;&amp;
+<pre><code class="language-cpp">if (!internal_.subtreeDirty &amp;&amp;
     parent_w == lastMeasureW_ &amp;&amp;
     parent_h == lastMeasureH_)
 {
@@ -2804,18 +2804,18 @@ lastMeasureH_ = parent_h;
 <p>If both are true, return the cached <code>measuredSize</code> without recursing.
 This is the primary performance optimization: a static UI measures once
 and then returns instantly for every subsequent frame.</p>
-<p><code>subtreeDirty_</code> is set by <code>recomputeDirty</code> at the end of <code>update</code>, and
+<p><code>internal_.subtreeDirty</code> is set by <code>recomputeDirty</code> at the end of <code>update</code>, and
 by <code>markInheritanceDirty</code> when a parent's inherited properties change.
-When <code>subtreeDirty_</code> is true, the cache is invalidated.</p>
+When <code>internal_.subtreeDirty</code> is 1, the cache is invalidated.</p>
 <h3 id="22-style-resolution">2.2 Style resolution</h3>
-<pre><code class="language-cpp">if (!styleInitialized) {
-    styleInitialized = true;
+<pre><code class="language-cpp">if (!internal_.styleInitialized) {
+    internal_.styleInitialized = 1;
     style_.currentStyle = style_.targetStyle =
         style_.transitionStartStyle = style_.resolveFor(*this);
-    pendingTransition = false;
+    internal_.pendingTransition = 0;
 }
 
-ComputedStyle calcStyle = pendingTransition
+ComputedStyle calcStyle = internal_.pendingTransition
     ? style_.resolveFor(*this)
     : style_.currentStyle;
 </code></pre>
@@ -3478,7 +3478,7 @@ absolute child. It won't — that's the semantic of absolute positioning.</p>
 <h2 id="6-hit-testing">6. Hit-testing</h2>
 <h3 id="61-hittestp-ancestorblocked">6.1 <code>hitTest(p, ancestorBlocked)</code></h3>
 <pre><code class="language-cpp">Layout* Layout::hitTest(Vec2 p, bool ancestorBlocked) {
-    if (ancestorBlocked || !isEnabled) return nullptr;
+    if (ancestorBlocked || !config.enabled) return nullptr;
 
     if (!hasParent()) {
         // Root: test portals first, in reverse order
@@ -3494,7 +3494,7 @@ absolute child. It won't — that's the semantic of absolute positioning.</p>
             if (hit) return hit;
         }
     }
-    if (isPortal_) return nullptr;
+    if (config.portal) return nullptr;
 
     Transform2D tr = currentTransform(style_.currentStyle);
     Vec2 pChildren = applyInverseTransform(tr, p);
@@ -3522,7 +3522,7 @@ absolute child. It won't — that's the semantic of absolute positioning.</p>
         if (Layout* hit = (*it)-&gt;hitTest(pChildren, false)) return hit;
 
     if (rect.width &gt; 0 &amp;&amp; rect.height &gt; 0 &amp;&amp; rect.contains(p) &amp;&amp;
-        (isInteractive || blocksRaycast))
+        (config.interactive || config.blocksRaycast))
     {
         return this;
     }
@@ -3610,40 +3610,40 @@ children's</strong> space (for the recursive call).</p>
 It uses <code>p</code> directly for its own rect check, and <code>pChildren</code> (the
 inverse-transformed <code>p</code>) for recursing into children.</p>
 <h3 id="64-blocking">6.4 Blocking</h3>
-<pre><code class="language-cpp">if (ancestorBlocked || !isEnabled) return nullptr;
+<pre><code class="language-cpp">if (ancestorBlocked || !config.enabled) return nullptr;
 </code></pre>
 <p>Two cases where a node is invisible to hit-testing:</p>
 <ul>
-<li><strong><code>ancestorBlocked</code></strong>: an ancestor had <code>blocksRaycast = true</code> and
+<li><strong><code>ancestorBlocked</code></strong>: an ancestor had <code>config.blocksRaycast = 1</code> and
   stopped the recursion. This is passed down explicitly.</li>
-<li><strong><code>!isEnabled</code></strong>: a disabled node is not hit-testable, but its
+<li><strong><code>!config.enabled</code></strong>: a disabled node is not hit-testable, but its
   children <strong>are</strong> tested first (the early return is before the
   children loop). So a disabled container with enabled children still
   lets children be hit.</li>
 </ul>
 <p>Wait, let me re-check. The early return is:</p>
-<pre><code class="language-cpp">if (ancestorBlocked || !isEnabled) return nullptr;
+<pre><code class="language-cpp">if (ancestorBlocked || !config.enabled) return nullptr;
 </code></pre>
 <p>This is at the top of <code>hitTest</code>. So if the node is disabled, it returns
 null <strong>before testing children</strong>. Children of a disabled node are not
 hit-testable.</p>
 <p>That's the intended behavior — a disabled container disables its whole
 subtree.</p>
-<h3 id="65-isinteractive-blocksraycast">6.5 <code>isInteractive || blocksRaycast</code></h3>
+<h3 id="65-configinteractive-configblocksraycastt">6.5 <code>config.interactive || config.blocksRaycastt</code></h3>
 <pre><code class="language-cpp">if (rect.width &gt; 0 &amp;&amp; rect.height &gt; 0 &amp;&amp; rect.contains(p) &amp;&amp;
-    (isInteractive || blocksRaycast))
+    (config.interactive || config.blocksRaycast))
 {
     return this;
 }
 </code></pre>
 <p>A node is hit-testable if it's interactive <strong>or</strong> blocks raycast.
-A non-interactive node with <code>blocksRaycast = true</code> stops the hit-test
+A non-interactive node with <code>config.blocksRaycast = 1</code> stops the hit-test
 at itself: nodes behind it don't get the event, but it doesn't fire
 <code>onClick</code>. This is what <code>Panel</code> uses (it blocks raycast but isn't
 interactive).</p>
-<p>A non-interactive node with <code>blocksRaycast = false</code> is fully
+<p>A non-interactive node with <code>config.blocksRaycast = 0</code> is fully
 transparent to hit-testing: events pass through.</p>
-<p>A default <code>Layout</code> has <code>isInteractive = true</code> and <code>blocksRaycast = false</code>,
+<p>A default <code>Layout</code> has <code>config.interactive = 1</code> and <code>config.blocksRaycast = 0</code>,
 so it's hit-testable and doesn't block.</p>
 <h3 id="66-the-roots-special-case">6.6 The root's special case</h3>
 <p>Only the root (no parent) iterates <code>activePortals</code>. This means:</p>
@@ -3657,25 +3657,25 @@ created this frame isn't hit-testable until next frame. See
 <a href="../../user/08-portals/">Portals</a> §8 for the discussion.</p>
 <hr />
 <h2 id="7-dirty-tracking">7. Dirty tracking</h2>
-<p>The dirty flag (<code>subtreeDirty_</code>) is recomputed at the end of <code>update</code>:</p>
+<p>The dirty flag (<code>internal_.subtreeDirty</code>) is recomputed at the end of <code>update</code>:</p>
 <pre><code class="language-cpp">void Layout::recomputeDirty(bool wasPending, const ComputedStyle&amp; styleBefore) {
     bool anyChildDirty = false;
     for (auto&amp; c : children) {
-        if (c-&gt;subtreeDirty_) { anyChildDirty = true; break; }
+        if (c-&gt;internal_.subtreeDirty) { anyChildDirty = true; break; }
     }
 
     bool styleChanged = (style_.currentStyle != styleBefore);
     bool inTransition = (style_.transitionTimer &lt; 1.0f);
 
-    subtreeDirty_ = wasPending || pendingTransition || anyChildDirty ||
+    internal_.subtreeDirty = wasPending || internal_.pendingTransition || anyChildDirty ||
                     styleChanged || inTransition;
 }
 </code></pre>
 <p>A node is dirty if <strong>any</strong> of:</p>
 <ul>
-<li><code>wasPending</code> — the node had <code>pendingTransition</code> at the start of this
+<li><code>wasPending</code> — the node had <code>internal_.pendingTransition</code> at the start of this
   update.</li>
-<li><code>pendingTransition</code> — the node still has it now (some setter ran
+<li><code>internal_.pendingTransition</code> — the node still has it now (some setter ran
   during update).</li>
 <li><code>anyChildDirty</code> — any direct child is dirty.</li>
 <li><code>styleChanged</code> — <code>currentStyle</code> differs from the snapshot at the
@@ -3700,8 +3700,8 @@ down to the changed node (and not beyond, thanks to the early-out in
 <h3 id="72-inheritance-dirty">7.2 Inheritance dirty</h3>
 <p><code>markInheritanceDirty</code> is a separate propagation:</p>
 <pre><code class="language-cpp">void markInheritanceDirty() {
-    pendingTransition = true;
-    subtreeDirty_ = true;
+    internal_.pendingTransition = 1;
+    internal_.subtreeDirty = 1;
     for (auto&amp; c : children)
         c-&gt;markInheritanceDirty();
 }
@@ -3715,8 +3715,8 @@ they all need to re-resolve their styles (and thus re-measure). A
 change to <code>color</code> on a parent means every descendant's text color
 needs to be re-resolved.</p>
 <h3 id="73-measure-cache">7.3 Measure cache</h3>
-<p><code>measure</code> checks <code>subtreeDirty_</code> plus the parent size:</p>
-<pre><code class="language-cpp">if (!subtreeDirty_ &amp;&amp; parent_w == lastMeasureW_ &amp;&amp;
+<p><code>measure</code> checks <code>internal_.subtreeDirty</code> plus the parent size:</p>
+<pre><code class="language-cpp">if (!internal_.subtreeDirty &amp;&amp; parent_w == lastMeasureW_ &amp;&amp;
     parent_h == lastMeasureH_)
 {
     return measuredSize;
@@ -3731,11 +3731,11 @@ they use <code>%</code> or <code>grow</code>). The early-out only kicks in when 
 same.</p>
 <h3 id="74-dirtiness-during-the-frame">7.4 Dirtiness during the frame</h3>
 <p>A node's dirty flag is computed <strong>at the end of its own update</strong>. So
-during the frame, a node's <code>subtreeDirty_</code> reflects the state from the
+during the frame, a node's <code>internal_.subtreeDirty</code> reflects the state from the
 previous frame. This matters for <code>measure</code>, which runs after all
 updates:</p>
 <ul>
-<li>If a setter ran during update and set <code>pendingTransition</code>, the node's
+<li>If a setter ran during update and set <code>internal_.pendingTransition</code>, the node's
   <code>recomputeDirty</code> at the end of update will mark it dirty.</li>
 <li>The subsequent <code>measure</code> will see the dirty flag and re-measure.</li>
 </ul>
@@ -3745,14 +3745,14 @@ frames), the flag isn't recomputed until the next update. But
 which might be false — this is why the framework requires <code>runFrame</code>
 to be called every frame.</p>
 <p>There's no "force measure" API. To force a re-measure, set a property
-that triggers <code>pendingTransition</code>, then call <code>runFrame</code>.</p>
+that triggers <code>internal_.pendingTransition</code>, then call <code>runFrame</code>.</p>
 <h3 id="75-viewportgeneration">7.5 <code>viewportGeneration</code></h3>
 <p>When <code>Metrics::viewport</code> changes, <code>viewportGeneration</code> is incremented.
 Each node compares it in <code>update</code>:</p>
 <pre><code class="language-cpp">uint32_t gen = UIContext::get().viewportGeneration;
 if (gen != lastViewportGen_) {
     lastViewportGen_ = gen;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 </code></pre>
 <p>This forces a style re-resolution, which changes the target style (via
@@ -3803,7 +3803,7 @@ clamp in <code>arrangeVerticalFlow</code> after the main-axis size is computed.<
 <hr />
 <h2 id="9-pitfalls">9. Pitfalls</h2>
 <p><strong><code>measure</code> may call <code>resolveFor</code> twice per frame.</strong>
-If <code>pendingTransition</code> is true when <code>measure</code> runs, it calls
+If <code>internal_.pendingTransition</code> is 1 when <code>measure</code> runs, it calls
 <code>style_.resolveFor(*this)</code> to get the target style. This is in addition
 to the <code>resolvePendingTransition</code> already called during <code>update</code>. Two
 full cascades per frame for a node in transition. Measurable but usually
@@ -3903,7 +3903,7 @@ container's <code>items-h</code> / <code>items-v</code>, for positioning.</p>
 <p><strong>The order of the dirty checks in <code>recomputeDirty</code>.</strong>
 <code>anyChildDirty</code> is computed by iterating children <strong>before</strong> the node's
 own flags are checked. If a child was just added this frame, it's in
-<code>children</code> and its <code>subtreeDirty_</code> is <code>true</code> (from its constructor),
+<code>children</code> and its <code>internal_.subtreeDirty</code> is <code>1</code> (from its constructor),
 so the parent is marked dirty. Correct.</p>
 <p>If a child was just removed this frame (via <code>cullRemovedChildren</code>),
 it's no longer in <code>children</code>, so it doesn't affect the parent. Also

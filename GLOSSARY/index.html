@@ -1992,7 +1992,7 @@ critical bugs, test coverage on every widget. See <a href="../ROADMAP/">ROADMAP<
 <p><strong>Bubble (input)</strong>
 The propagation of a click, press, or right-click event from the
 innermost hit node up through its ancestors. Controlled by
-<code>passThrough</code>.</p>
+<code>config.passThrough</code>.</p>
 <hr />
 <h2 id="c">C</h2>
 <p><strong>Cascade</strong>
@@ -2031,9 +2031,9 @@ A flag on a <code>Layout</code> node indicating that its subtree needs
 re-measuring. Set by state changes, style changes, pending transitions,
 and inherited-property propagation.</p>
 <p><strong>Disabled</strong>
-A node state (<code>!isEnabled</code>) that:
+A node state (<code>config.enabled == 0</code>) that:
 - Does not receive hit-test.
-- Does not receive <code>onUpdate</code> (unless <code>updateWhenDisabled</code>).
+- Does not receive <code>onUpdate</code> (unless <code>config.updateWhenDisabled</code>).
 - Is not focusable.
 - Matches <code>:disabled</code> selectors.</p>
 <hr />
@@ -2054,10 +2054,10 @@ with <code>filter: &lt;name&gt;(&lt;args&gt;)</code> in <code>.zstyle</code>. Re
 subtree is rendered into a render target first). Registered with
 <code>FilterRegistry</code>.</p>
 <p><strong>Flag (state)</strong>
-A boolean on <code>Layout</code> that describes runtime state: <code>isHovered</code>,
-<code>isPressed</code>, <code>isFocused</code>, <code>isEnabled</code>, <code>isChecked_</code>, <code>isInteractive</code>,
-<code>isPortal_</code>, <code>passThrough_</code>, etc. Flags drive <code>:hover</code>, <code>:checked</code>,
-and other state selectors.</p>
+A bit in one of the three bitfield structs on <code>Layout</code>:
+- <code>state</code> (runtime state — <code>hovered</code>, <code>pressed</code>, <code>focused</code>, <code>checked</code>
+- <code>config</code> (static config — <code>interactive</code>, <code>enabled</code>, <code>blocksRaycast</code>, <code>portal</code>, <code>passThrough</code>)
+- <code>internal_</code> (framework bookkeeping). Flags drive <code>:hover</code>, <code>:checked</code>, and other state selectors.</p>
 <p><strong>Focus</strong>
 The routing of keyboard events to a single node. Set by click, Tab,
 or <code>requestFocus</code>. Only one node is focused at a time, globally.</p>

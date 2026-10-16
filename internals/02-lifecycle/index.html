@@ -2895,7 +2895,7 @@ is incremented. Each <code>Layout</code> caches the last seen generation in
 <pre><code class="language-cpp">uint32_t gen = UIContext::get().viewportGeneration;
 if (gen != lastViewportGen_) {
     lastViewportGen_ = gen;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 </code></pre>
 <p>This forces a style re-resolution on resize, which is what makes <code>@media</code>
@@ -3020,7 +3020,7 @@ for click validation.</p>
 <p>Called for every node, depth-first. This is the bulk of the framework's
 logic.</p>
 <h3 id="41-snapshot">4.1 Snapshot</h3>
-<pre><code class="language-cpp">bool wasPending = pendingTransition;
+<pre><code class="language-cpp">bool wasPending = internal_.pendingTransition;
 ComputedStyle styleBefore = style_.currentStyle;
 </code></pre>
 <p>Both are captured at the start so that <code>recomputeDirty</code> at the end can
@@ -3031,11 +3031,11 @@ compare against them.</p>
 <p>If this node has never been styled (first frame), resolve its initial
 style:</p>
 <pre><code class="language-cpp">void initStyleIfNeeded() {
-    if (!styleInitialized) {
-        styleInitialized = true;
+    if (!internal_.styleInitialized) {
+        internal_.styleInitialized = 1;
         style_.currentStyle = style_.targetStyle =
             style_.transitionStartStyle = style_.resolveFor(*this);
-        pendingTransition = false;
+        internal_.pendingTransition = 0;
         anim_.syncCss(*this);
     }
 }
@@ -3052,7 +3052,7 @@ reset the scroll state (offset, velocity, drag start). This prevents
 <pre><code class="language-cpp">uint32_t gen = UIContext::get().viewportGeneration;
 if (gen != lastViewportGen_) {
     lastViewportGen_ = gen;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 </code></pre>
 <p>Forces a style re-resolution on viewport change, which is how media
@@ -3060,7 +3060,7 @@ queries react.</p>
 <h3 id="45-imperative-animation-tick">4.5 Imperative animation tick</h3>
 <pre><code class="language-cpp">bool localAnimBlocks = anim_.tickImperative(*this, dt);
 bool blockSubtree = ancestorBlocked || localAnimBlocks;
-bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive &amp;&amp; blocksRaycast);
+bool selfBlocked = blockSubtree || !config.enabled || (!config.interactive &amp;&amp; config.blocksRaycast);
 </code></pre>
 <p><code>tickImperative</code> walks the <code>imperative</code> map, advances <code>elapsed</code> for each
 playing animation, applies each track's setter, and returns whether any
@@ -3075,11 +3075,11 @@ input_.updateFlags(*this, selfBlocked, scrolling);
 </code></pre>
 <p><code>updateFlags</code> (in <code>Input.cpp</code>):</p>
 <ul>
-<li>If <code>scrolling</code> is true: only update <code>isFocused</code>; skip hover and press
+<li>If <code>scrolling</code> is true: only update <code>state.focused</code>; skip hover and press
   (the "hover freeze").</li>
-<li>Otherwise: update <code>isHovered</code> (pointer inside <code>rect</code>, if not blocked),
-  <code>isPressed</code> (pointer down and press target is this node or a
-  descendant, walking up through <code>passThrough</code>), and <code>isFocused</code>.</li>
+<li>Otherwise: update <code>state.hovered</code> (pointer inside <code>rect</code>, if not blocked),
+  <code>state.pressed</code> (pointer down and press target is this node or a
+  descendant, walking up through <code>config.passThrough</code>), and <code>state.focused</code>.</li>
 </ul>
 <h3 id="47-state-machine">4.7 State machine</h3>
 <pre><code class="language-cpp">UIState prevState = style_.currentState;
@@ -3088,9 +3088,9 @@ bool stateChanged = (style_.currentState != nextState);
 </code></pre>
 <p><code>computeNextState</code> returns:</p>
 <ul>
-<li><code>Disabled</code> if <code>!isEnabled</code>.</li>
-<li><code>Pressed</code> if <code>isPressed</code>.</li>
-<li><code>Hover</code> if <code>isHovered</code>.</li>
+<li><code>Disabled</code> if <code>!config.enabled</code>.</li>
+<li><code>Pressed</code> if <code>state.pressed</code>.</li>
+<li><code>Hover</code> if <code>state.hovered</code>.</li>
 <li><code>Idle</code> otherwise.</li>
 </ul>
 <p>The priority is: Disabled &gt; Pressed &gt; Hover &gt; Idle. A disabled node
@@ -3099,7 +3099,7 @@ never reports Pressed, even if the pointer is over it.</p>
 <pre><code class="language-cpp">if (stateChanged) {
     style_.beginStateTransition(*this, nextState);
     anim_.syncCss(*this);
-} else if (pendingTransition) {
+} else if (internal_.pendingTransition) {
     style_.resolvePendingTransition(*this);
     anim_.syncCss(*this);
 }
@@ -3131,9 +3131,9 @@ style_.propagateInheritance(*this);
 <h3 id="410-onanimationsfinished">4.10 <code>onAnimationsFinished</code></h3>
 <pre><code class="language-cpp">{
     bool anyLocal = anim_.hasActiveLocal();
-    if (hadLocalAnimationsLast_ &amp;&amp; !anyLocal &amp;&amp; onAnimationsFinished)
+    if (internal_.hadLocalAnimationsLast &amp;&amp; !anyLocal &amp;&amp; onAnimationsFinished)
         onAnimationsFinished();
-    hadLocalAnimationsLast_ = anyLocal;
+    internal_.hadLocalAnimationsLast = anyLocal ? 1 : 0;
 }
 </code></pre>
 <p>The callback fires <strong>once</strong> when the node transitions from "has active
@@ -3159,7 +3159,7 @@ input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 <li><code>tickInput</code> handles scroll: wheel events, scrollbar drag, inertia.
   It calls <code>state.tickInertia(ctx.dt)</code> at the end.</li>
 <li><code>handleKeyInput</code> fires <code>onClick</code> via <code>Enter</code> / <code>Space</code> if the node
-  is focused and <code>keyboardActivates_</code> is true.</li>
+  is focused and <code>config.keyboardActivates</code> is true.</li>
 <li><code>fireCallbacks</code> fires the input callbacks in the right order:</li>
 <li><code>onHoverEnter</code> / <code>onHoverExit</code> on state change.</li>
 <li><code>onPress</code> on <code>pointer.pressed</code> (if the press path includes this node).</li>
@@ -3176,7 +3176,7 @@ of click events.</p>
 <h3 id="413-cull-removed-children">4.13 Cull removed children</h3>
 <pre><code class="language-cpp">cullRemovedChildren();
 </code></pre>
-<p>Erases children whose <code>wantsRemoval</code> flag is set (<code>removeFromParent()</code>
+<p>Erases children whose <code>internal_.wantsRemoval</code> flag is set (<code>removeFromParent()</code>
 was called). This is the only place the <code>children</code> vector is modified
 due to removal.</p>
 <h3 id="414-dirty-recomputation">4.14 Dirty recomputation</h3>
@@ -3186,25 +3186,25 @@ due to removal.</p>
 dirty if:</p>
 <ul>
 <li>It was pending at the start of the frame (<code>wasPending</code>).</li>
-<li>It's pending now (<code>pendingTransition</code>).</li>
+<li>It's pending now (<code>internal_.pendingTransition</code>).</li>
 <li>Any child's subtree is dirty.</li>
 <li>Its style changed (<code>style_.currentStyle != styleBefore</code>).</li>
 <li>It's in the middle of a transition (<code>transitionTimer &lt; 1.0</code>).</li>
 </ul>
-<p><code>subtreeDirty_</code> is the cached flag used by <code>measure</code> to skip work.</p>
+<p><code>internal_.subtreeDirty</code> is the cached flag used by <code>measure</code> to skip work.</p>
 <h3 id="415-onupdatedt">4.15 <code>onUpdate(dt)</code></h3>
-<pre><code class="language-cpp">if (isEnabled || updateWhenDisabled_)
+<pre><code class="language-cpp">if (config.enabled || config.updateWhenDisabled)
     onUpdate(dt);
 </code></pre>
 <p>The per-widget update. Skipped if the node is disabled and
-<code>updateWhenDisabled_</code> is false.</p>
+<code>config.updateWhenDisabled</code> is 0.</p>
 <p>This is where custom widgets handle their own per-frame logic (drag,
 input processing, local state updates).</p>
 <hr />
 <h2 id="5-measureparentw-parenth">5. <code>measure(parentW, parentH)</code></h2>
 <p>Recursive, but with an early-out for clean subtrees.</p>
 <h3 id="51-cache-check">5.1 Cache check</h3>
-<pre><code class="language-cpp">if (!subtreeDirty_ &amp;&amp; parent_w == lastMeasureW_ &amp;&amp; parent_h == lastMeasureH_)
+<pre><code class="language-cpp">if (!internal_.subtreeDirty &amp;&amp; parent_w == lastMeasureW_ &amp;&amp; parent_h == lastMeasureH_)
     return measuredSize;
 lastMeasureW_ = parent_w;
 lastMeasureH_ = parent_h;
@@ -3212,15 +3212,15 @@ lastMeasureH_ = parent_h;
 <p>If the subtree is clean and the parent size hasn't changed, return the
 cached <code>measuredSize</code>. Otherwise proceed.</p>
 <h3 id="52-style-resolution">5.2 Style resolution</h3>
-<pre><code class="language-cpp">if (!styleInitialized) {
-    styleInitialized = true;
+<pre><code class="language-cpp">if (!internal_.styleInitialized) {
+    internal_.styleInitialized = 1;
     style_.currentStyle = style_.targetStyle =
         style_.transitionStartStyle = style_.resolveFor(*this);
-    pendingTransition = false;
+    internal_.pendingTransition = 0;
 }
 
-ComputedStyle calcStyle = pendingTransition ? style_.resolveFor(*this)
-                                            : style_.currentStyle;
+ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this)
+                                                      : style_.currentStyle;
 </code></pre>
 <p>Uses <code>currentStyle</code> for measurement unless there's a pending transition,
 in which case it re-resolves to get the target size. This means
@@ -3427,7 +3427,7 @@ independently:</p>
 <p>The stretch case computes <code>w = in.width - L - R - ml - mr</code> and positions
 at <code>in.x + L + ml</code>.</p>
 <h3 id="68-portals">6.8 Portals</h3>
-<pre><code class="language-cpp">if (c-&gt;isPortal()) {
+<pre><code class="language-cpp">if (c-&gt;config.portal) {
     c-&gt;arrange({inner.x, inner.y, c-&gt;measuredSize.x, c-&gt;measuredSize.y});
     continue;
 }
@@ -3439,7 +3439,7 @@ no-op and position themselves in <code>onUpdate</code>.</p>
 <h2 id="7-drawparentopacity">7. <code>draw(parentOpacity)</code></h2>
 <p>Recursive, top-down. Draws the subtree.</p>
 <h3 id="71-portal-registration">7.1 Portal registration</h3>
-<pre><code class="language-cpp">if (isPortal_) {
+<pre><code class="language-cpp">if (config.portal) {
     UIContext::get().framePortals.push_back(weak_from_this());
     return;
 }
@@ -3525,7 +3525,7 @@ sees the rect from the <strong>previous</strong> frame. This is fine in practice
 frame), but worth knowing.</p>
 <p><strong>Style changes take effect next frame.</strong>
 If <code>onClick</code> sets <code>getInlineBase().background = ...</code>, the change is
-<code>pendingTransition = true</code> for the current node. The current frame's
+<code>internal_.pendingTransition = 1</code> for the current node. The current frame's
 <code>draw</code> uses the old style; the next frame's <code>update</code> resolves the new
 style, and the next frame's <code>draw</code> shows it. If you want the change
 immediate, you'd need to call <code>style_.resolvePendingTransition(*this)</code>
@@ -3537,7 +3537,7 @@ and made visible this frame <strong>is drawn this frame</strong>. But hit-testin
 uses <code>activePortals</code>, which is the <em>previous</em> frame's <code>framePortals</code>.
 So the portal becomes clickable next frame.</p>
 <p><strong><code>removeFromParent</code> is deferred.</strong>
-<code>removeFromParent()</code> sets <code>wantsRemoval = true</code>. The actual removal
+<code>removeFromParent()</code> sets <code>internal_.wantsRemoval = 1</code>. The actual removal
 from <code>children</code> happens in <code>cullRemovedChildren</code>, at the end of the
 same node's update. Until then, the node is still in the tree and
 participates in measure/arrange/draw.</p>
@@ -3554,10 +3554,10 @@ Children are updated first, then the node's own callbacks fire. So a
 <code>VStack</code>'s <code>onClick</code> would fire (if it weren't consumed). This is the
 "bubble up" order.</p>
 <p><strong><code>measure</code> may re-resolve style.</strong>
-If a node has <code>pendingTransition</code>, <code>measure</code> calls
+If a node has <code>internal_.pendingTransition</code>, <code>measure</code> calls
 <code>style_.resolveFor(*this)</code> again to get the target size. This is in
 addition to the <code>update</code> call that already resolved it. The cost is
-acceptable because <code>pendingTransition</code> is a one-frame flag, but it means
+acceptable because <code>internal_.pendingTransition</code> is a one-frame flag, but it means
 <code>resolveFor</code> can run twice on a single frame for a node.</p>
 <p><strong>Animation overlays are not visible to <code>getStyle()</code>.</strong>
 <code>getStyle()</code> returns <code>style_.currentStyle</code>, which does <strong>not</strong> include
@@ -3573,7 +3573,7 @@ you get the transition value, not the animated one.</p>
 ├── scroll.resetIfOverflowChanged
 ├── viewportGeneration check
 ├── tickImperative → blockSubtree
-├── input.updateFlags → isHovered, isPressed, isFocused
+├── input.updateFlags → state.hovered, state.pressed, state.focused
 ├── computeNextState
 ├── beginStateTransition OR resolvePendingTransition
 ├── style.tick (transition)
@@ -3586,12 +3586,12 @@ you get the transition value, not the animated one.</p>
 ├── input.fireCallbacks → onHoverEnter/Exit, onPress, onRelease, onClick, onRightClick
 ├── cullRemovedChildren
 ├── recomputeDirty
-└── onUpdate(dt) [if enabled or updateWhenDisabled]
+└── onUpdate(dt) [if config.enabled or config.updateWhenDisabled]
 
 measure(parentW, parentH)
 ├── early-out if clean and parent size unchanged
 ├── initStyleIfNeeded (safety)
-├── calcStyle = pendingTransition ? resolveFor : currentStyle
+├── calcStyle = internal_.pendingTransition ? resolveFor : currentStyle
 ├── compute innerW, innerH (with scroll main-axis unbounded)
 ├── computeIntrinsicSize → contentSize
 ├── for each child: child.measure(innerW, innerH)

@@ -3121,7 +3121,7 @@ anim_.tickCss(*this, dt);       // CSS keyframes
 <ul>
 <li><strong>Imperative animations run before the state machine.</strong> This means an
   animation that changes <code>opacity</code> will affect the current frame's
-  rendered output, but the node's <code>isEnabled</code> / <code>isHovered</code> flags are
+  rendered output, but the node's <code>config.enabled</code> / <code>state.hovered</code> flags are
   computed with the animation's effect already applied.</li>
 <li><strong>CSS transitions run after the state machine.</strong> A <code>:hover</code> state
   change resolves the new target style and starts a transition, which
@@ -3134,7 +3134,7 @@ anim_.tickCss(*this, dt);       // CSS keyframes
 <p>If an imperative animation has <code>blocksInput = true</code> (the default), its
 node and its subtree are marked as "blocked" for the current frame:</p>
 <pre><code class="language-cpp">bool blockSubtree = ancestorBlocked || localAnimBlocks;
-bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive &amp;&amp; blocksRaycast);
+bool selfBlocked = blockSubtree || !config.enabled || (!config.interactive &amp;&amp; config.blocksRaycast);
 </code></pre>
 <p>Blocked nodes don't update their hover/pressed flags, and their
 descendants inherit the block. This is why <code>Modal</code> with <code>blocksInput</code>
@@ -3149,7 +3149,7 @@ from "has active animations" to "has none":</p>
 </code></pre>
 <p>"Active" means: imperative animations in play, CSS node animations,
 or <code>::part</code> animations. It's tracked with a per-node
-<code>hadLocalAnimationsLast_</code> flag.</p>
+<code>internal_.hadLocalAnimationsLast</code> flag.</p>
 <p>This is useful for cleanup:</p>
 <pre><code class="language-cpp">auto fade = std::make_shared&lt;UIAnimation&gt;(0.3f);
 fade-&gt;addTrack&lt;float&gt;(1.0f, 0.0f,
@@ -3352,7 +3352,7 @@ happen <strong>around</strong> the render target operation, not inside it. See
 <li><strong>Imperative animations</strong> tick every frame while <code>playing</code>. Each
   track calls its setter once per frame. Tracks are cheap, but the
   setter writes to <code>getInlineBase()</code>, which triggers a
-  <code>pendingTransition</code> flag — that then forces the node's style to be
+  <code>internal_.pendingTransition</code> flag — that then forces the node's style to be
   re-resolved. While an imperative animation is running, the resolver
   skips the CSS transition and snaps <code>currentStyle</code> to the target, so
   the animated value is visible on the same frame. The cost is one
@@ -3363,7 +3363,7 @@ happen <strong>around</strong> the render target operation, not inside it. See
   which is once per frame during <code>renderContent</code>. They're essentially
   free unless you have hundreds of parts animating.</li>
 <li><strong>The "dirty" system</strong>: a node in an active transition or animation
-  keeps <code>subtreeDirty_ = true</code>, which prevents measure caching. Once
+  keeps <code>internal_.subtreeDirty = 1</code>, which prevents measure caching. Once
   all animations stop, the subtree can be cached again.</li>
 </ul>
 <p>For 60fps budgets, the rule of thumb is: transitions and part

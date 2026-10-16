@@ -3282,7 +3282,7 @@ currently set up.</p>
 <h3 id="53-my-click-doesnt-fire">5.3 "My click doesn't fire"</h3>
 <ol>
 <li>Is the node <code>interactive</code>? <code>setInteractive(true)</code>.</li>
-<li>Does it <code>blocksRaycast</code>? Check the parent chain.</li>
+<li>Does it <code>config.blocksRaycast = 1</code>? Check the parent chain.</li>
 <li>Is there a node on top that's consuming? Use
    <code>UIContext::get().topmostConsumer</code> after a frame.</li>
 <li>Is the press and release on the same node? A drag-out-drag-in
@@ -3305,7 +3305,7 @@ currently set up.</p>
 <li>Is the <code>animation</code> / <code>transition</code> property parsed? Check
    <code>dumpStyle</code> output.</li>
 <li>Is the keyframe name defined? Check <code>dumpTheme</code>.</li>
-<li>Is the state correct? <code>:hover</code> needs <code>isHovered</code>, <code>:checked</code>
+<li>Is the state correct? <code>:hover</code> needs <code>state.hovered = 1</code>, <code>:checked</code>
    needs <code>setChecked(true)</code>.</li>
 <li>Is the animation ticked? <code>tickCss</code> runs every frame in <code>update</code>.</li>
 <li>For imperative: is <code>addAnimation</code> + <code>playAnimation</code> called? Is

@@ -3150,7 +3150,7 @@ no API for this — set <code>anim-&gt;delay = 0</code> from the callback).</p>
         for (auto&amp; track : s.anim-&gt;tracks)
             track-&gt;apply(t, &amp;node);
 
-        node.pendingTransition = true;
+        node.internal_.pendingTransition = 1;
 
         if (justFinished) {
             auto cb = s.anim-&gt;onFinished;
@@ -3175,7 +3175,7 @@ any active animation has <code>blocksInput</code>.</p>
    completion doesn't fire <code>onFinished</code>).</li>
 <li>Compute <code>t = elapsed / duration</code>.</li>
 <li>Apply each track with <code>t</code>.</li>
-<li>Set <code>node.pendingTransition = true</code>, so the style system re-resolves.</li>
+<li>Set <code>node.internal_.pendingTransition = 1</code>, so the style system re-resolves.</li>
 <li>If <code>justFinished</code>, copy the callback and call it.</li>
 </ol>
 <p>The callback is copied <strong>before</strong> being invoked, because the callback
@@ -3379,24 +3379,24 @@ is a pending state transition). The relevant logic is in
 <code>Layout::recomputeDirty</code>:</p>
 <pre><code class="language-cpp">bool inTransition = (style_.transitionTimer &lt; 1.0f);
 
-subtreeDirty_ = wasPending || pendingTransition || anyChildDirty ||
+internal_.subtreeDirty = wasPending || internal_.pendingTransition || anyChildDirty ||
                 styleChanged || inTransition;
 </code></pre>
 <ul>
-<li><code>pendingTransition</code> is set by imperative animation tracks (they write
+<li><code>internal_.pendingTransition</code> is set by imperative animation tracks (they write
   to <code>inlineBase</code> via <code>getInlineBase()</code>), and by every other setter
   that touches the style.</li>
 <li><code>inTransition</code> is true while a CSS state transition is in progress.</li>
-<li>CSS <strong>keyframe</strong> animations do not affect <code>subtreeDirty_</code> by
+<li>CSS <strong>keyframe</strong> animations do not affect <code>internal_.subtreeDirty</code> by
   themselves.</li>
 </ul>
 <p>A node with only a CSS keyframe animation (no transition, no pending
-transition) doesn't set <code>subtreeDirty_</code> from the animation. Its
+transition) doesn't set <code>internal_.subtreeDirty</code> from the animation. Its
 subtree can be cached. The keyframe animation still renders, because
 the overlay is applied at draw time on a local <code>renderStyle</code> copy of
 <code>currentStyle</code>.</p>
 <p>An <strong>imperative</strong> animation, by contrast, writes into <code>inlineBase</code> and
-therefore sets <code>pendingTransition</code> every frame. This is what makes the
+therefore sets <code>internal_.pendingTransition</code> every frame. This is what makes the
 value visible: on the same frame, <code>resolvePendingTransition</code> re-resolves
 the target style, sees the active imperative animation, and snaps
 <code>currentStyle</code> to the new target (see
@@ -3405,13 +3405,13 @@ transition timer would reset on every frame and <code>currentStyle</code> would
 never advance.</p>
 <h3 id="61-onanimationsfinished">6.1 <code>onAnimationsFinished</code></h3>
 <pre><code class="language-cpp">bool anyLocal = anim_.hasActiveLocal();
-if (hadLocalAnimationsLast_ &amp;&amp; !anyLocal &amp;&amp; onAnimationsFinished)
+if (internal_.hadLocalAnimationsLast &amp;&amp; !anyLocal &amp;&amp; onAnimationsFinished)
     onAnimationsFinished();
-hadLocalAnimationsLast_ = anyLocal;
+internal_.hadLocalAnimationsLast = anyLocal ? 1 : 0;
 </code></pre>
-<p><code>hadLocalAnimationsLast_</code> is a per-node bool. It's <code>true</code> if the node
+<p><code>internal_.hadLocalAnimationsLast</code> is a per-node bool. It's <code>true</code> if the node
 had any active local animation last frame, and <code>false</code> otherwise. The
-callback fires on the falling edge: <code>hadLocalAnimationsLast_ == true</code>
+callback fires on the falling edge: <code>internal_.hadLocalAnimationsLast == 1</code>
 and <code>anyLocal == false</code>.</p>
 <p>The check is <strong>local</strong>, not recursive — child animations don't count.
 This means a container whose children are still animating won't fire
@@ -3424,7 +3424,7 @@ Let's trace a node with a <code>:hover { animation: pulse 1s infinite; }</code>
 rule:</p>
 <h3 id="71-frame-n-pointer-enters">7.1 Frame N: pointer enters</h3>
 <ol>
-<li><code>updateFlags</code> sets <code>isHovered = true</code>.</li>
+<li><code>updateFlags</code> sets <code>state.hovered = 1</code>.</li>
 <li><code>computeNextState</code> returns <code>Hover</code>, state changed.</li>
 <li><code>beginStateTransition</code> resolves the new target style. This style
    includes <code>animations = [{name: "pulse", duration: 1, ...}]</code>.</li>
@@ -3444,7 +3444,7 @@ rule:</p>
 (if finite) or continues forever (if infinite).</p>
 <h3 id="73-frame-m1-pointer-leaves">7.3 Frame M+1: pointer leaves</h3>
 <ol>
-<li><code>updateFlags</code> sets <code>isHovered = false</code>.</li>
+<li><code>updateFlags</code> sets <code>state.hovered = 0</code>.</li>
 <li>State changes back to <code>Idle</code>.</li>
 <li><code>beginStateTransition</code> resolves the non-hover target style. This
    style does <strong>not</strong> have <code>animations = [{name: "pulse", ...}]</code>.</li>
@@ -3617,7 +3617,7 @@ number of properties is the cost per frame, not the number of nodes.</p>
 <h3 id="102-imperative-animations">10.2 Imperative animations</h3>
 <p>Medium. Each playing animation runs a <code>for</code> loop over its tracks and
 calls each track's setter. The setter typically writes to
-<code>getInlineBase()</code>, which sets <code>pendingTransition = true</code>, which forces
+<code>getInlineBase()</code>, which sets <code>internal_.pendingTransition = 1</code>, which forces
 a style re-resolve on the same frame. So an imperative animation costs:</p>
 <ul>
 <li>The tick loop itself (<code>apply</code> per track).</li>
@@ -3713,7 +3713,7 @@ setter.</p>
 <pre><code class="language-cpp">l-&gt;getInlineBase().opacity = v;
 </code></pre>
 <p><code>getInlineBase()</code> returns a mutable reference and sets
-<code>pendingTransition = true</code>. Even reading it (without writing) sets the
+<code>internal_.pendingTransition = 1</code>. Even reading it (without writing) sets the
 flag. So if your track setter reads the base to compute something, then
 writes back, you pay for two re-resolves. Use <code>getStyle()</code> for reading,
 <code>getInlineBase()</code> only for writing.</p>

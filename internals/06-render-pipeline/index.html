@@ -2927,7 +2927,7 @@ a cumulative opacity down to children.</p>
 <h2 id="2-drawparentopacity">2. <code>draw(parentOpacity)</code></h2>
 <p>The entry point for each node. Let's trace it in order.</p>
 <h3 id="21-portal-registration">2.1 Portal registration</h3>
-<pre><code class="language-cpp">if (isPortal_) {
+<pre><code class="language-cpp">if (config.portal) {
     UIContext::get().framePortals.push_back(weak_from_this());
     return;
 }
@@ -3027,7 +3027,7 @@ content into the layer and the scrollbar directly, on top.</p>
    can register <strong>new</strong> portals (a portal's child might be a portal),
    and iterating while the vector is being modified would be UB.</li>
 <li>For each alive portal (weak_ptr locks), temporarily clear the
-   <code>isPortal_</code> flag, draw it normally, then restore the flag.</li>
+   <code>config.portal</code> flag, draw it normally, then restore the flag.</li>
 <li>Portals are drawn at full opacity (<code>1.0f</code>). The portal's own
    <code>opacity</code> is applied inside its <code>draw</code> via <code>renderStyle.opacity</code>
    (times 1.0).</li>
@@ -3552,7 +3552,7 @@ the root.</p>
 <h3 id="53-auto-removal-during-draw">5.3 Auto-removal during draw</h3>
 <p>If a child's <code>draw</code> calls <code>removeFromParent</code> (e.g. via a callback that
 fires during draw — unusual but possible), the child is still in
-<code>children</code> at this point. The <code>wantsRemoval</code> flag is set, but the
+<code>children</code> at this point. The <code>internal_.wantsRemoval</code> flag is set, but the
 child is drawn one more time. It'll be culled at the end of the next
 <code>update</code>.</p>
 <p>In practice, callbacks don't fire during <code>draw</code> — they fire during

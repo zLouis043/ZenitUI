@@ -3909,13 +3909,13 @@ auto w = MyWidget::create(42);   // calls onBuild
 <hr />
 <h2 id="3-style-classes-id-tag">3. Style — classes, id, tag</h2>
 <h3 id="void-addclassconst-stdstring-classname"><code>void addClass(const std::string&amp; className)</code></h3>
-<p>Adds a CSS class. Sets <code>pendingTransition = true</code>. No-op if the class
+<p>Adds a CSS class. Sets <code>internal_.pendingTransition = 1</code>. No-op if the class
 is already present, so calling it twice does not create duplicates.</p>
 <pre><code class="language-cpp">node-&gt;addClass(&quot;btn-primary&quot;);
 node-&gt;addClass(&quot;btn-primary&quot;);   // ignored
 </code></pre>
 <h3 id="void-removeclassconst-stdstring-classname"><code>void removeClass(const std::string&amp; className)</code></h3>
-<p>Removes every occurrence of the class. Sets <code>pendingTransition = true</code>
+<p>Removes every occurrence of the class. Sets <code>internal_.pendingTransition = 1</code>
 if something was actually removed.</p>
 <pre><code class="language-cpp">node-&gt;removeClass(&quot;btn-primary&quot;);
 node-&gt;removeClass(&quot;missing&quot;);     // no-op
@@ -3987,7 +3987,7 @@ stretches or constrains the node.</p>
 <hr />
 <h2 id="5-tree">5. Tree</h2>
 <h3 id="void-addchildstdshared_ptrlayout-child"><code>void addChild(std::shared_ptr&lt;Layout&gt; child)</code></h3>
-<p>Adds a child. Sets the child's parent pointer and <code>pendingTransition</code>.</p>
+<p>Adds a child. Sets the child's parent pointer and <code>internal_.pendingTransition</code>.</p>
 <p><strong>Warning:</strong> if <code>weak_from_this()</code> is expired (i.e. the node isn't
 managed by <code>shared_ptr</code>), the call logs a warning and returns without
 adding. Use <code>X::create()</code> instead of <code>std::make_shared&lt;X&gt;()</code>.</p>
@@ -4076,7 +4076,7 @@ rules apply.</p>
 <pre><code class="language-cpp">bool isHoveredState()   const;   // pointer over the node's rect
 bool isPressedState()   const;   // pointer down, node is press target
 bool isFocusedState()   const;   // UIContext::focusedNode == this
-bool isDisabledState()  const;   // !isEnabled
+bool isDisabledState()  const;   // !config.enabled
 bool isCheckedState()   const;   // same as getChecked()
 </code></pre>
 <h3 id="void-setupdatewhendisabledbool-v-bool-getupdatewhendisabled-const"><code>void setUpdateWhenDisabled(bool v)</code> / <code>bool getUpdateWhenDisabled() const</code></h3>
@@ -4084,7 +4084,7 @@ bool isCheckedState()   const;   // same as getChecked()
 Default: <code>false</code>.</p>
 <h3 id="void-setfocusablebool-f-bool-isfocusable-const"><code>void setFocusable(bool f)</code> / <code>bool isFocusable() const</code></h3>
 <p>Whether the node can be focused. <code>isFocusable()</code> returns
-<code>isFocusable_ &amp;&amp; isEnabled</code>.</p>
+<code>config.focusable != 0 &amp;&amp; config.enabled != 0</code>.</p>
 <h3 id="void-setfocusscopebool-s-bool-isfocusscope-const"><code>void setFocusScope(bool s)</code> / <code>bool isFocusScope() const</code></h3>
 <p>Whether the node is a focus scope (a boundary for Tab navigation).</p>
 <h3 id="void-setkeyboardactivatesbool-v-bool-getkeyboardactivates-const"><code>void setKeyboardActivates(bool v)</code> / <code>bool getKeyboardActivates() const</code></h3>
@@ -4096,7 +4096,7 @@ after firing on this node.</p>
 <h2 id="7-style-access">7. Style access</h2>
 <h3 id="style-getinlinebase"><code>Style&amp; getInlineBase()</code></h3>
 <p>Returns a mutable reference to the node's inline base style. Any
-modification triggers <code>pendingTransition = true</code>.</p>
+modification triggers <code>internal_.pendingTransition = 1</code>.</p>
 <p><strong>Note:</strong> the call itself sets the flag, even if you don't modify the
 style.</p>
 <pre><code class="language-cpp">node-&gt;getInlineBase().background = Colors::Blue;
@@ -4113,7 +4113,7 @@ override.</p>
 Does <strong>not</strong> include CSS animation values (which are overlaid only at
 draw time).</p>
 <h3 id="void-begintransition"><code>void beginTransition()</code></h3>
-<p>Sets <code>pendingTransition = true</code>, resets the transition timer, and
+<p>Sets <code>internal_.pendingTransition = 1</code>, resets the transition timer, and
 snapshots the current style as the transition start.</p>
 <hr />
 <h2 id="8-animations">8. Animations</h2>
@@ -4305,7 +4305,7 @@ Called between <code>BeginDrawing</code> and <code>EndDrawing</code>.</p>
 <p>Called after <code>arrange</code> sets the final rect. Do <strong>not</strong> modify
 <code>measuredSize</code>.</p>
 <h3 id="virtual-void-onupdatefloat-dt"><code>virtual void onUpdate(float dt)</code></h3>
-<p>Per-frame logic. Skipped if <code>!isEnabled &amp;&amp; !updateWhenDisabled_</code>.</p>
+<p>Per-frame logic. Skipped if <code>config.enabled == 0 &amp;&amp; config.updateWhenDisabled == 0</code>.</p>
 <h3 id="virtual-void-onenabledchangedbool-nowenabled"><code>virtual void onEnabledChanged(bool nowEnabled)</code></h3>
 <p>Called when <code>setEnabled</code> changes the state.</p>
 <h3 id="virtual-void-ondescendantfocusedlayout-descendant"><code>virtual void onDescendantFocused(Layout* descendant)</code></h3>

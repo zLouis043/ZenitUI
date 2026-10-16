@@ -2346,8 +2346,7 @@ node owns:</p>
 <li>Its type (<code>Stack</code> / <code>Vertical</code> / <code>Horizontal</code>).</li>
 <li>Its <code>rect</code> (computed during <code>arrange</code>).</li>
 <li>Its <code>measuredSize</code> (computed during <code>measure</code>).</li>
-<li>Its flags (<code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>, <code>isEnabled</code>,
-  <code>isChecked_</code>, <code>isPortal_</code>, <code>passThrough_</code>, ...).</li>
+<li>Its flag groups: <code>state</code>(<code>hovered</code>,<code>pressed</code>,<code>focused</code>,<code>checked</code>),<code>config</code>(<code>interactive</code>,<code>enabled</code>,<code>blocksRaycast</code>,<code>portal</code>,<code>passThrough</code>, ...),<code>internal_</code> (framework bookkeeping).</li>
 <li>Its children (<code>std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt;</code>).</li>
 <li>Its four subsystems (<code>style_</code>, <code>anim_</code>, <code>input_</code>, <code>scroll_</code>).</li>
 <li>Its callbacks (<code>onClick</code>, <code>onHoverEnter</code>, ...).</li>
@@ -2520,16 +2519,16 @@ framework. In order:</p>
 <li><code>scroll_.resetIfOverflowChanged</code> — reset scroll if <code>overflow</code>
    changed.</li>
 <li>Viewport generation check — if the viewport changed, force a
-   <code>pendingTransition</code>.</li>
+   <code>internal_.pendingTransition</code>.</li>
 <li><code>anim_.tickImperative(*this, dt)</code> — tick imperative animations.
    Returns whether they block input.</li>
 <li>Compute <code>blockSubtree</code> and <code>selfBlocked</code>.</li>
 <li><code>input_.updateFlags(*this, selfBlocked, scrolling)</code> — update
-   <code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>. Skipped if <code>scrolling</code> is
+   <code>state.hovered</code>, <code>state.pressed</code>, <code>state.focused</code>. Skipped if <code>scrolling</code> is
    true (hover freeze).</li>
 <li>Compute the new <code>UIState</code> (<code>Idle</code> / <code>Hover</code> / <code>Pressed</code> / <code>Disabled</code>).</li>
 <li>If the state changed, <code>style_.beginStateTransition(...)</code>. Else if
-   <code>pendingTransition</code>, <code>style_.resolvePendingTransition(...)</code>.</li>
+   <code>internal_.pendingTransition</code>, <code>style_.resolvePendingTransition(...)</code>.</li>
 <li><code>style_.tick(*this, dt)</code> — tick the CSS transition.</li>
 <li><code>anim_.tickCss(*this, dt)</code> — tick CSS keyframe animations.</li>
 <li><code>style_.propagateInheritance(*this)</code> — notify children if inherited
@@ -2540,9 +2539,9 @@ framework. In order:</p>
 <li><code>input_.handleKeyInput(*this)</code> — Enter/Space activation.</li>
 <li><code>input_.fireCallbacks(*this, prev, next, changed)</code> — hover, press,
     release, click, right-click.</li>
-<li><code>cullRemovedChildren()</code> — remove children with <code>wantsRemoval</code>.</li>
-<li><code>recomputeDirty(...)</code> — update <code>subtreeDirty_</code>.</li>
-<li><code>onUpdate(dt)</code> if <code>isEnabled || updateWhenDisabled_</code>.</li>
+<li><code>cullRemovedChildren()</code> — remove children with <code>internal_.wantsRemoval</code>.</li>
+<li><code>recomputeDirty(...)</code> — update <code>internal_.subtreeDirty</code>.</li>
+<li><code>onUpdate(dt)</code> if <code>config.enabled || config.updateWhenDisabled</code>.</li>
 </ol>
 <p>The order matters. Read it carefully before changing anything.</p>
 <h3 id="33-renderframe">3.3 <code>renderFrame()</code></h3>
@@ -2555,7 +2554,7 @@ framework. In order:</p>
 </code></pre>
 <p><code>draw(opacity)</code> on the root recursively draws the tree. Each node:</p>
 <ol>
-<li>If <code>isPortal_</code>, register itself in <code>framePortals</code> and return.</li>
+<li>If <code>config.portal</code>, register itself in <code>framePortals</code> and return.</li>
 <li>Frustum cull: if the node's <code>rect</code> is far outside the current clip,
    skip.</li>
 <li>Compute <code>renderStyle = currentStyle + CSS animation overlay</code>.</li>
@@ -2599,7 +2598,7 @@ pop transform
 <li>Is not blocked by an ancestor.</li>
 <li>Is enabled.</li>
 <li>Contains the point in its <code>rect</code>.</li>
-<li>Is <code>isInteractive</code> or <code>blocksRaycast</code>.</li>
+<li>Is <code>config.interactive</code> or <code>config.blocksRaycast</code>.</li>
 </ul>
 <p>Order:</p>
 <ol>
@@ -2623,7 +2622,7 @@ Layout::updateTree → hitTest → topmostConsumer
   ↓
 Layout::update → InputController::updateFlags
   ↓
-Layout.isHovered / isPressed / isFocused
+Layout.state.hovered / state.pressed / state.focused
   ↓
 InputController::computeNextState → UIState
   ↓
@@ -2650,7 +2649,7 @@ ScrollController::tickInput (wheel, drag, inertia)
 draw → ScrollController::drawScrollbar
 </code></pre>
 <h3 id="43-animation-style-render">4.3 Animation → style → render</h3>
-<pre><code>AnimationPlayer::tickImperative → writes to getInlineBase() → pendingTransition
+<pre><code>AnimationPlayer::tickImperative → writes to getInlineBase() → internal_.pendingTransition
   ↓
 AnimationPlayer::tickCss → updates css[] active animations
   ↓
@@ -2694,7 +2693,7 @@ handle is invalid and <code>drawTarget</code> is called without a filter (fallba
 <li>Children are owned by their parent's <code>children</code> vector
   (<code>shared_ptr&lt;Layout&gt;</code>).</li>
 <li>A child holds a <code>weak_ptr&lt;Layout&gt;</code> to its parent.</li>
-<li><code>removeFromParent</code> sets <code>wantsRemoval = true</code>. The parent erases the
+<li><code>removeFromParent</code> sets <code>internal_.wantsRemoval = 1</code>. The parent erases the
   child during the next <code>cullRemovedChildren</code> pass.</li>
 </ul>
 <p>There are no cycles by default. The <code>weak_ptr</code> to parent prevents the
@@ -2789,7 +2788,7 @@ friend struct InputController;
 friend struct ScrollController;
 </code></pre>
 <p>This is how the subsystems access private members of <code>Layout</code> (flags,
-<code>style_</code>, <code>anim_</code>, <code>scroll_</code>, <code>pendingTransition</code>, <code>subtreeDirty_</code>) and
+<code>style_</code>, <code>anim_</code>, <code>scroll_</code>, <code>internal_.pendingTransition</code>, <code>internal_.subtreeDirty</code>) and
 how they mutate state that's conceptually private but part of the
 node's lifecycle.</p>
 <p>The alternative — making every field public — would blur the API. The

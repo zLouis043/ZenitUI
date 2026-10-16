@@ -2753,7 +2753,7 @@ every frame — but the warnings nudge you to be explicit.</p>
 </code></pre>
 <p>Resets everything. Any node that has already resolved its style with
 the old theme keeps its cached style until the next re-resolve (which
-happens when the node's <code>pendingTransition</code> is set — e.g. by a state
+happens when the node's <code>internal_.pendingTransition</code> is set — e.g. by a state
 change or by <code>beginTransition()</code>).</p>
 <p>In tests, use <code>Env::reset()</code> which calls <code>Theme::clear()</code> and resets
 the <code>UIContext</code>.</p>
@@ -2848,7 +2848,7 @@ scale is 2.0 (logical width would be 960).</p>
 <pre><code class="language-css">Button:hover { background: red; }
 Button:pressed { background: blue; }
 </code></pre>
-<p>When a button is pressed, both rules match (since <code>isHovered</code> is
+<p>When a button is pressed, both rules match (since <code>state.hovered</code> is
 usually true during a press). Specificity is equal: <code>(0, 1, 1)</code> for
 both. The order decides — the later rule wins. So if <code>:pressed</code> is
 declared after <code>:hover</code>, <code>blue</code> wins during the press.</p>
@@ -2878,7 +2878,7 @@ vector itself is not sorted by specificity.</p>
 specificity order. If you're debugging specificity, look at the
 <code>spec=</code> line for each rule.</p>
 <p><strong>Adding rules after the first frame doesn't re-resolve existing nodes.</strong></p>
-<p>A node's style is resolved on demand (when <code>pendingTransition</code> is true,
+<p>A node's style is resolved on demand (when <code>internal_.pendingTransition</code> is 1,
 or on state change). Adding a new rule to <code>Theme</code> doesn't
 retroactively affect nodes. To force a re-resolve, call
 <code>beginTransition()</code> on the node, or trigger a state change.</p>

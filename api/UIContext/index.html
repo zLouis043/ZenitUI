@@ -2847,7 +2847,7 @@ void consumeRightClick() { rightClickConsumed = true; }
   handles a wheel event. Prevents nested scroll containers from both
   scrolling.</li>
 <li><strong><code>clickConsumed</code></strong> — set when a node's <code>onClick</code> (or <code>onPress</code>) fires
-  without <code>passThrough</code>. Prevents ancestors from also firing <code>onClick</code>.</li>
+  without <code>config.passThrough</code>. Prevents ancestors from also firing <code>onClick</code>.</li>
 <li><strong><code>rightClickConsumed</code></strong> — same, for <code>onRightClick</code>.</li>
 </ul>
 <p>The <code>consumeClick</code> / <code>consumeRightClick</code> methods are the public API to
@@ -2864,9 +2864,9 @@ bool hasFocus(const Layout* n) const;
 <h3 id="requestfocusn"><code>requestFocus(n)</code></h3>
 <p>Sets <code>focusedNode = n</code> if <code>n</code> is focusable. If <code>n</code> is null or not
 focusable, clears focus (<code>focusedNode.reset()</code>).</p>
-<p>Focusable means <code>isFocusable_ &amp;&amp; isEnabled</code>. A disabled node can't be
+<p>Focusable means <code>config.focusable != 0 &amp;&amp; config.enabled != 0</code>. A disabled node can't be
 focused.</p>
-<p>The node's <code>isFocused</code> flag isn't updated here — it's updated on the
+<p>The node's <code>state.focused</code> flag isn't updated here — it's updated on the
 next <code>update</code> in <code>updateFlags</code>.</p>
 <h3 id="releasefocus"><code>releaseFocus()</code></h3>
 <p>Clears the focused node.</p>
@@ -3066,7 +3066,7 @@ if (handleSomething()) {
 }
 </code></pre>
 <p>Rarely needed — the framework consumes automatically when a node fires
-<code>onClick</code> without <code>passThrough</code>.</p>
+<code>onClick</code> without <code>config.passThrough</code>.</p>
 <h3 id="reading-dt-in-a-widget">Reading <code>dt</code> in a widget</h3>
 <pre><code class="language-cpp">void onUpdate(float dt) override {
     // dt is passed to onUpdate; also available via
@@ -3234,13 +3234,13 @@ need two independent UIs, use two processes or a different framework.</p>
 <p><strong>Setting <code>focusedNode</code> directly bypasses the focusable check.</strong></p>
 <p><code>requestFocus</code> checks <code>isFocusable()</code>. If you assign
 <code>ctx.focusedNode = someNode</code> directly, no check is done. The node's
-<code>isFocused</code> flag will be set on the next <code>updateFlags</code>, even if the
+<code>state.focused</code> flag will be set on the next <code>updateFlags</code>, even if the
 node isn't focusable. Use <code>requestFocus</code> for safety.</p>
 <p><strong><code>releaseFocus</code> doesn't notify the node.</strong></p>
-<p>The previously focused node's <code>isFocused</code> flag is cleared on the next
+<p>The previously focused node's <code>state.focused</code> flag is cleared on the next
 <code>updateFlags</code> (because <code>hasFocus</code> returns false). No callback fires on
 focus release. If you need to react, override <code>onUpdate</code> and check
-<code>isFocused</code>.</p>
+<code>state.focused</code>.</p>
 <p><strong><code>UIContext::get()</code> is created on first call.</strong></p>
 <p>The first call to <code>get()</code> constructs the singleton. If you call it
 before setting the backend pointers, the pointers are null. If you call

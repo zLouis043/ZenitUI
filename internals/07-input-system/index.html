@@ -2765,7 +2765,7 @@ Layout* releaseTarget{nullptr};     // fixed at pointer-up
 </code></pre>
 <p>They're raw pointers, not <code>shared_ptr</code>. Lifetime is managed by the tree
 — a <code>Layout</code> that's in the tree is alive; one that's been removed has
-<code>wantsRemoval</code> set and will be culled. A dangling raw pointer to a
+<code>internal_.wantsRemoval</code> set and will be culled. A dangling raw pointer to a
 culled node is possible in theory but never happens in practice, because
 <code>cullRemovedChildren</code> runs at the end of <code>update</code>, after all uses of
 these pointers.</p>
@@ -2797,7 +2797,7 @@ bool hasFocus(const Layout* n) const {
 }
 </code></pre>
 <p><code>requestFocus</code> silently refuses non-focusable nodes. <code>isFocusable()</code>
-returns <code>isFocusable_ &amp;&amp; isEnabled</code> — so a disabled node can't be
+returns <code>config.focusable != 0 &amp;&amp; config.enabled != 0</code> — so a disabled node can't be
 focused.</p>
 <hr />
 <h2 id="2-inputcontroller-the-stateless-translator">2. <code>InputController</code> — the stateless translator</h2>
@@ -2812,39 +2812,39 @@ state lives in <code>Layout</code> and <code>UIContext</code>.</p>
     if (scrolling) {
         // Freeze hover during scroll
         bool focusNow = ctx.hasFocus(&amp;node);
-        if (focusNow != node.isFocused) {
-            node.isFocused = focusNow;
-            node.pendingTransition = true;
+        if (focusNow != (node.state.focused != 0)) {
+            node.state.focused = focusNow ? 1 : 0;
+            node.internal_.pendingTransition = 1;
         }
         return;
     }
 
-    node.isHovered = false;
+    node.state.hovered = 0;
     if (!selfBlocked &amp;&amp; node.rect.width &gt; 0 &amp;&amp; node.rect.height &gt; 0)
-        node.isHovered = node.rect.contains(pointer.pos);
+        node.state.hovered = node.rect.contains(pointer.pos) ? 1 : 0;
 
-    node.isPressed = false;
+    node.state.pressed = 0;
     if (pointer.down &amp;&amp; ctx.pressTarget) {
         Layout* n = ctx.pressTarget;
         while (n) {
-            if (n == &amp;node) { node.isPressed = true; break; }
+            if (n == &amp;node) { node.state.pressed = 1; break; }
             if (!n-&gt;getPassThrough()) break;
             n = n-&gt;getParent().get();
         }
     }
 
     bool focusNow = ctx.hasFocus(&amp;node);
-    if (focusNow != node.isFocused) {
-        node.isFocused = focusNow;
-        node.pendingTransition = true;
+    if (focusNow != (node.state.focused != 0)) {
+        node.state.focused = focusNow ? 1 : 0;
+        node.internal_.pendingTransition = 1;
     }
 }
 </code></pre>
 <p>Three flags are updated:</p>
-<p><strong><code>isHovered</code></strong> — true if the pointer is inside the node's <code>rect</code>, the
+<p><strong><code>state.hovered</code></strong> — true if the pointer is inside the node's <code>rect</code>, the
 node isn't self-blocked, and it has non-zero size. Note this is a
 <strong>geometric</strong> check against the node's own rect, not the hit-test
-result. So a node that's covered by a sibling still gets <code>isHovered =
+result. So a node that's covered by a sibling still gets <code>state.hovered =
 true</code> if the pointer is over its rect. This is a known simplification:
 <code>.zstyle</code> <code>:hover</code> matches based on the node's own rect, not on
 whether it's the topmost node.</p>
@@ -2853,27 +2853,27 @@ expectations (hovering over a parent still hovers the child if the
 pointer is within both rects). The alternative — using
 <code>topmostConsumer</code> — would only hover the single topmost node, which
 makes <code>:hover</code> on containers impossible.</p>
-<p><strong><code>isPressed</code></strong> — true if the pointer is down <strong>and</strong> the current press
-target is this node or an ancestor reachable through <code>passThrough</code>
+<p><strong><code>state.pressed</code></strong> — true if the pointer is down <strong>and</strong> the current press
+target is this node or an ancestor reachable through <code>config.passThrough</code>
 chains. The loop walks up from <code>pressTarget</code> until it finds <code>node</code> or
-hits a non-<code>passThrough</code> boundary. This is what makes
-<code>passThrough: true</code> work for press/hold states.</p>
+hits a non-<code>config.passThrough</code> boundary. This is what makes
+<code>config.passThrough = 1</code> work for press/hold states.</p>
 <p>Note it walks <strong>up</strong> from <code>pressTarget</code>, not down from <code>node</code>. This is
 intentional: the press target is fixed at pointer-down, so a node
 further up the tree can still be considered "pressed" if the press
-target is one of its descendants that passThrough.</p>
-<p><strong><code>isFocused</code></strong> — true if <code>UIContext::focusedNode</code> points to this
-node. When this changes, <code>pendingTransition = true</code> triggers a style
+target is one of its descendants that has config.passThrough = 1.</p>
+<p><strong><code>state.focused</code></strong> — true if <code>UIContext::focusedNode</code> points to this
+node. When this changes, <code>internal_.pendingTransition = 1</code> triggers a style
 re-resolve so <code>:focus</code> rules apply.</p>
 <p>The <code>scrolling</code> parameter is the "hover freeze": during a scroll, only
-<code>isFocused</code> is updated, not <code>isHovered</code> or <code>isPressed</code>. This prevents
+<code>state.focused</code> is updated, not <code>state.hovered</code> or <code>state.pressed</code>. This prevents
 <code>onHoverEnter</code>/<code>onHoverExit</code> from firing on every row that passes
 under a stationary cursor.</p>
 <h3 id="22-computenextstatenode">2.2 <code>computeNextState(node)</code></h3>
 <pre><code class="language-cpp">UIState InputController::computeNextState(const Layout&amp; node) const {
-    if (!node.isEnabled) return UIState::Disabled;
-    if (node.isPressed)  return UIState::Pressed;
-    if (node.isHovered)  return UIState::Hover;
+    if (!node.config.enabled) return UIState::Disabled;
+    if (node.state.pressed) return UIState::Pressed;
+    if (node.state.hovered) return UIState::Hover;
     return UIState::Idle;
 }
 </code></pre>
@@ -2888,7 +2888,7 @@ under a stationary cursor.</p>
 when a state change happened.</p>
 <h3 id="23-handlekeyinputnode">2.3 <code>handleKeyInput(node)</code></h3>
 <pre><code class="language-cpp">void InputController::handleKeyInput(Layout&amp; node) {
-    if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+    if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
         return;
 
     auto&amp; ev = UIContext::get().inputEvents;
@@ -2900,14 +2900,14 @@ when a state change happened.</p>
 }
 </code></pre>
 <p>Fires <code>onClick</code> on <code>Enter</code> or <code>Space</code> for focused nodes that have
-<code>keyboardActivates_</code> set. Uses <code>ev.keys</code> (rising edge), so it fires
+<code>config.keyboardActivates</code> set. Uses <code>ev.keys</code> (rising edge), so it fires
 once per key press.</p>
 <p>Only <code>Enter</code> and <code>Space</code> are handled. Other keys are the widget's
 responsibility (e.g. <code>TextInput</code> handles <code>Backspace</code>, <code>Delete</code>, arrow
 keys in its own <code>onUpdate</code>).</p>
 <p>Note the <code>onClick</code> callback is invoked directly, <strong>without</strong> the
 consumption mechanism used by pointer clicks. So a <code>Button</code> with
-<code>keyboardActivates</code> that's focused fires <code>onClick</code> on <code>Enter</code> and the
+<code>config.keyboardActivates</code> that's focused fires <code>onClick</code> on <code>Enter</code> and the
 event is not propagated further. This is correct for keyboard, since
 there's no hierarchy of focused nodes.</p>
 <h3 id="24-firecallbacksnode-prev-next-statechanged">2.4 <code>fireCallbacks(node, prev, next, stateChanged)</code></h3>
@@ -2935,7 +2935,7 @@ click, and right-click.</p>
                             node.isAncestorOf(ctx.pressTarget);
         if (inPressPath) {
             if (node.onPress) node.onPress();
-            if (!node.passThrough_) ctx.consumeClick();
+            if (!node.config.passThrough) ctx.consumeClick();
         }
     }
 
@@ -2951,16 +2951,16 @@ click, and right-click.</p>
             if (node.onRelease) node.onRelease();
             if (node.onClick &amp;&amp; !ctx.clickConsumed) {
                 node.onClick();
-                if (!node.passThrough_) ctx.consumeClick();
+                if (!node.config.passThrough) ctx.consumeClick();
             }
         }
     }
 
     // ---- Right-click ----
-    if (pointer.rightPressed &amp;&amp; node.isHovered &amp;&amp; node.onRightClick) {
+    if (pointer.rightPressed &amp;&amp; node.state.hovered &amp;&amp; node.onRightClick) {
         if (!ctx.rightClickConsumed) {
             node.onRightClick();
-            if (!node.passThrough_) ctx.consumeRightClick();
+            if (!node.config.passThrough) ctx.consumeRightClick();
         }
     }
 }
@@ -3000,23 +3000,23 @@ else if (prevState == UIState::Hover &amp;&amp; nextState != UIState::Hover &amp
 </code></pre>
 <p>Yes, this would fire <code>onHoverExit</code> when transitioning from Hover to
 Pressed. That's likely a bug or at least unexpected behavior. The user
-documentation says <code>onHoverExit</code> fires when <code>isHovered</code> transitions
+documentation says <code>onHoverExit</code> fires when <code>state.hovered</code> transitions
 from true to false, but the state machine transitions through <code>Pressed</code>
-without <code>isHovered</code> changing.</p>
+without <code>state.hovered</code> changing.</p>
 <p>Actually, re-reading: the state machine runs <code>beginStateTransition</code>
-before <code>fireCallbacks</code>. So <code>isHovered</code> is still true when the state
+before <code>fireCallbacks</code>. So <code>state.hovered</code> is still true when the state
 changes to <code>Pressed</code>. But the callback fires based on the state
 comparison.</p>
 <p>Let me trace: pointer enters a node.</p>
 <ul>
 <li>
-<p>Frame 1: <code>isHovered = true</code>, <code>isPressed = false</code>. <code>nextState = Hover</code>.
+<p>Frame 1: <code>state.hovered = 1</code>, <code>state.pressed = 0</code>. <code>nextState = Hover</code>.
   <code>prevState = Idle</code>. State changed. <code>onHoverEnter</code> fires. ✅</p>
 </li>
 <li>
 <p>Frame 2: pointer presses.</p>
 </li>
-<li><code>isHovered = true</code>, <code>isPressed = true</code>. <code>nextState = Pressed</code>.
+<li><code>state.hovered = 1</code>, <code>state.pressed = 1</code>. <code>nextState = Pressed</code>.
   <code>prevState = Hover</code>. State changed.</li>
 <li>First condition: <code>next == Hover</code>? No (it's <code>Pressed</code>).</li>
 <li>Second condition: <code>prev == Hover &amp;&amp; next != Hover</code>? Yes.</li>
@@ -3037,13 +3037,13 @@ includes this node. The path check:</p>
 of the press. A node fires <code>onPress</code> if it <strong>is</strong> the press target, or
 if the press target is a descendant of it. The <code>isAncestorOf</code> check
 walks up the parent chain.</p>
-<p>The consumption: if the node doesn't have <code>passThrough</code>, it sets
+<p>The consumption: if the node doesn't have <code>config.passThrough</code>, it sets
 <code>clickConsumed = true</code>. Subsequent nodes in the tree walk (which
 proceeds bottom-up within a subtree, since children are updated before
 their parents) see <code>clickConsumed</code> and skip their own <code>onPress</code>.</p>
 <p>Order matters: <strong>children update before parents</strong>, so a child's
 <code>onPress</code> fires before its parent's. If the child consumes the event,
-the parent doesn't fire. If the child is <code>passThrough</code>, the parent
+the parent doesn't fire. If the child is <code>config.passThrough</code>, the parent
 also fires.</p>
 <p><strong>Release + Click</strong>: similar logic, but requires both press and release
 to include the node. The click is validated only if:</p>
@@ -3064,7 +3064,7 @@ click.</p>
     if (node.onRelease) node.onRelease();
     if (node.onClick &amp;&amp; !ctx.clickConsumed) {
         node.onClick();
-        if (!node.passThrough_) ctx.consumeClick();
+        if (!node.config.passThrough) ctx.consumeClick();
     }
 }
 </code></pre>
@@ -3075,10 +3075,10 @@ intentional: <code>onRelease</code> is "the pointer released over this subtree",
 <p><strong>Right-click</strong> fires on <code>pointer.rightPressed</code> (rising edge) if the
 node is currently hovered and has <code>onRightClick</code>. Unlike left-click,
 there's no press/release validation — right-click fires immediately on
-press. And it uses <code>isHovered</code> (geometric check), not the hit-test
+press. And it uses <code>state.hovered</code> (geometric check), not the hit-test
 result.</p>
 <p>The consumption: <code>rightClickConsumed</code> is set if the node doesn't
-passThrough. The walk order is the same (children before parents), so
+config.passThrough. The walk order is the same (children before parents), so
 the deepest hovered node fires first.</p>
 <h3 id="25-order-of-the-four-phases">2.5 Order of the four phases</h3>
 <p><code>fireCallbacks</code> runs the four phases in this order: hover, press,
@@ -3133,7 +3133,7 @@ release. It's cleared at the end of <code>updateTree</code> (see §3.6).</p>
 </code></pre>
 <p>Clicking a focusable node focuses it. Clicking anywhere else releases
 focus. This is the only place a click changes focus.</p>
-<p><code>isFocusable()</code> returns <code>isFocusable_ &amp;&amp; isEnabled</code>, so a disabled
+<p><code>isFocusable()</code> returns <code>config.focusable != 0 &amp;&amp; config.enabled != 0</code>, so a disabled
 node can't be focused by clicking.</p>
 <h3 id="34-tab-navigation">3.4 Tab navigation</h3>
 <pre><code class="language-cpp">for (int k : ctx.inputEvents.keys) {
@@ -3246,13 +3246,13 @@ void releaseFocus() { focusedNode.reset(); }
 </code></pre>
 <p><code>requestFocus(null)</code> is equivalent to <code>releaseFocus()</code>. Both silently
 succeed regardless of the current state.</p>
-<p>The node's <code>isFocused</code> flag isn't updated here — it's updated in
+<p>The node's <code>state.focused</code> flag isn't updated here — it's updated in
 <code>updateFlags</code> on the next <code>update</code>. So there's a one-frame delay
 between <code>requestFocus</code> and <code>:focus</code> styling applying.</p>
 <p>Actually, <code>requestFocus</code> is called during <code>updateTree</code>, before <code>update</code>.
 So within the same frame:
 1. <code>requestFocus</code> sets <code>focusedNode</code> to the new node.
-2. <code>update</code> runs, and <code>updateFlags</code> sets <code>isFocused</code> on the new node
+2. <code>update</code> runs, and <code>updateFlags</code> sets <code>state.focused</code> on the new node
    (and clears it on the old one).
 3. <code>computeNextState</code> sees the new flag.
 4. <code>beginStateTransition</code> resolves the <code>:focus</code> style.
@@ -3262,9 +3262,9 @@ and styled in the same frame.</p>
 <h3 id="43-focus-and-setenabledfalse">4.3 Focus and <code>setEnabled(false)</code></h3>
 <p><code>setEnabled(false)</code> on a node that's currently focused clears focus:</p>
 <pre><code class="language-cpp">void setEnabled(bool e) {
-    if (isEnabled == e) return;
-    isEnabled = e;
-    pendingTransition = true;
+    if ((config.enabled != 0) == e) return;
+    config.enabled = e ? 1 : 0;
+    internal_.pendingTransition = 1;
 
     if (!e) {
         auto&amp; ctx = UIContext::get();
@@ -3401,10 +3401,10 @@ consumes the click, its ancestors skip <code>onClick</code> (but still fire
    <code>onRelease</code> fires).</li>
 <li>... up to the root, all skipped for <code>onClick</code>.</li>
 </ol>
-<p>For a <code>passThrough</code> chain:</p>
+<p>For a <code>config.passThrough = 1</code> chain:</p>
 <ol>
-<li>Deepest node fires <code>onClick</code>. Doesn't consume (<code>passThrough</code>).</li>
-<li>Parent fires <code>onClick</code>. Doesn't consume (if it's passThrough).</li>
+<li>Deepest node fires <code>onClick</code>. Doesn't consume (<code>config.passThrough</code>).</li>
+<li>Parent fires <code>onClick</code>. Doesn't consume (if it's <code>config.passThrough</code>).</li>
 <li>... all the way up.</li>
 </ol>
 <h3 id="53-consumption">5.3 Consumption</h3>
@@ -3412,11 +3412,11 @@ consumes the click, its ancestors skip <code>onClick</code> (but still fire
 void consumeClick() { clickConsumed = true; }
 </code></pre>
 <p><code>clickConsumed</code> is cleared at the start of each frame. It's set by
-<code>fireCallbacks</code> when a node fires <code>onClick</code> <strong>and</strong> isn't <code>passThrough</code>.</p>
+<code>fireCallbacks</code> when a node fires <code>onClick</code> <strong>and</strong> isn't <code>config.passThrough</code>.</p>
 <p>The check is done <strong>before</strong> calling <code>onClick</code>:</p>
 <pre><code class="language-cpp">if (node.onClick &amp;&amp; !ctx.clickConsumed) {
     node.onClick();
-    if (!node.passThrough_) ctx.consumeClick();
+    if (!node.config.passThrough) ctx.consumeClick();
 }
 </code></pre>
 <p>So a node fires <code>onClick</code> only if no previous node (in the bottom-up
@@ -3432,10 +3432,10 @@ can consume. Then on <code>pointer.released</code> (usually a different frame),
 in frame N and a release in frame N+1 both use the fresh
 <code>clickConsumed</code> flag of their respective frames.</p>
 <h3 id="54-right-click">5.4 Right-click</h3>
-<pre><code class="language-cpp">if (pointer.rightPressed &amp;&amp; node.isHovered &amp;&amp; node.onRightClick) {
+<pre><code class="language-cpp">if (pointer.rightPressed &amp;&amp; node.state.hovered &amp;&amp; node.onRightClick) {
     if (!ctx.rightClickConsumed) {
         node.onRightClick();
-        if (!node.passThrough_) ctx.consumeRightClick();
+        if (!node.config.passThrough) ctx.consumeRightClick();
     }
 }
 </code></pre>
@@ -3445,8 +3445,8 @@ press/release validation. The hovered node gets the callback
 immediately.</p>
 <p>The walk order is the same (bottom-up), and consumption applies. So
 the deepest hovered node with <code>onRightClick</code> fires first, and
-ancestors are skipped unless the node is <code>passThrough</code>.</p>
-<p>Since <code>isHovered</code> is geometric (pointer inside the node's rect), and
+ancestors are skipped unless the node is <code>config.passThrough = 1</code>.</p>
+<p>Since <code>state.hovered</code> is geometric (pointer inside the node's rect), and
 children are updated before parents, the deepest node whose rect
 contains the pointer fires first. Usually correct.</p>
 <hr />
@@ -3494,7 +3494,7 @@ dropped automatically on mouse-up.</p>
 <p>Standard drag pattern:</p>
 <pre><code class="language-cpp">void onUpdate(float) override {
     // Start capture on press
-    if (isPressed &amp;&amp; !hasPointerCapture())
+    if (state.pressed &amp;&amp; !hasPointerCapture())
         capturePointer();
 
     // While captured, do the drag
@@ -3505,7 +3505,7 @@ dropped automatically on mouse-up.</p>
     // No explicit release: capture is dropped on pointer-up
 }
 </code></pre>
-<p>The <code>isPressed &amp;&amp; !hasPointerCapture()</code> check starts a new capture only
+<p>The <code>state.pressed &amp;&amp; !hasPointerCapture()</code> check starts a new capture only
 on the first frame of the press. Subsequent frames have
 <code>hasPointerCapture()</code> true, so the first branch is skipped.</p>
 <p>If the widget wants to end the drag early (e.g. on <code>Escape</code>), it calls
@@ -3602,7 +3602,7 @@ extend <code>IPlatform</code> and <code>InputEvents</code>.</p>
 <li><code>updateTree</code> sets <code>topmostConsumer</code>, <code>pressTarget</code>, <code>releaseTarget</code>.</li>
 <li><code>update</code> recurses into children.</li>
 <li>Each node's <code>update</code> calls <code>updateFlags</code>, which reads the current
-   state and sets <code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>.</li>
+   state and sets <code>state.hovered</code>, <code>state.pressed</code>, <code>state.focused</code>.</li>
 <li><code>computeNextState</code> derives the UI state from the flags.</li>
 <li><code>beginStateTransition</code> (if state changed) or
    <code>resolvePendingTransition</code> (if a property changed) re-resolves the
@@ -3622,8 +3622,8 @@ its parent's, and if the child consumes, the parent doesn't fire
 <p>Focus changes happen in <code>updateTree</code>, <strong>before</strong> <code>update</code>. So when the
 recursion runs, the new focus is already set, and each node's
 <code>updateFlags</code> picks up the change.</p>
-<p>The <code>isFocused</code> flag is set in <code>updateFlags</code> (step 3), and
-<code>pendingTransition = true</code> is set if the flag changed. So the style
+<p>The <code>state.focused</code> flag is set in <code>updateFlags</code> (step 3), and
+<code>internal_.pendingTransition = 1</code> is set if the flag changed. So the style
 re-resolve happens in the same frame.</p>
 <h3 id="84-when-capture-changes">8.4 When capture changes</h3>
 <p>Capture changes happen in user code (widget's <code>onUpdate</code>) or
@@ -3633,7 +3633,7 @@ the <strong>next</strong> frame's <code>updateTree</code> (since <code>updateTre
 set <code>topmostConsumer</code> for this frame).</p>
 <p>In practice, the drag pattern works because:</p>
 <ul>
-<li>Frame N: press, <code>isPressed</code> becomes true, widget captures.</li>
+<li>Frame N: press, <code>state.pressed</code> becomes 1, widget captures.</li>
 <li>Frame N+1: <code>updateTree</code> sees capture, uses captured node as
   <code>topmostConsumer</code>, delivers events.</li>
 </ul>
@@ -3694,7 +3694,7 @@ already received the press event.</p>
 <hr />
 <h2 id="10-pitfalls">10. Pitfalls</h2>
 <p><strong>The hover state is geometric, not hit-test based.</strong>
-<code>isHovered</code> is set if the pointer is inside the node's <code>rect</code>, even if
+<code>state.hovered</code> is set if the pointer is inside the node's <code>rect</code>, even if
 another node is drawn on top. So a button under a semi-transparent
 overlay is "hovered" when the pointer is over it, and <code>:hover</code> applies.
 This can be surprising if you expect <code>:hover</code> to match the topmost
@@ -3720,17 +3720,17 @@ transition to <code>Disabled</code> happens on the next <code>update</code>, and
 Wait, but only if the node was hovered. If the node was focused but
 not hovered, no hover callback fires.</p>
 <p>OK so this pitfall isn't accurate. Let me remove it.</p>
-<p><strong><code>isPressed</code> walks up from <code>pressTarget</code> via <code>passThrough</code>.</strong>
-If a child is <code>passThrough</code> and the parent isn't, the parent is
+<p><strong><code>state.pressed</code> walks up from <code>pressTarget</code> via <code>config.passThrough</code>.</strong>
+If a child is <code>config.passThrough = 1</code> and the parent isn't, the parent is
 considered "pressed" when the child is pressed. This means <code>:pressed</code>
 styling applies to the parent. If you don't want that, don't use
-<code>passThrough</code> on interactive children.</p>
+<code>config.passThrough</code> on interactive children.</p>
 <p><strong>Pointer capture is not transitive.</strong>
 Capturing a node's parent doesn't affect the node. Capture is a single
 <code>weak_ptr</code> — the captured node is the routing target.</p>
 <p><strong><code>collectFocusables</code> doesn't skip disabled subtrees.</strong>
 It collects nodes with <code>isFocusable()</code>, which is
-<code>isFocusable_ &amp;&amp; isEnabled</code>. But the disabled flag is checked at the
+<code>config.focusable != 0 &amp;&amp; config.enabled != 0</code>. But the disabled flag is checked at the
 node level, not at the subtree level. So a disabled container doesn't
 prevent its enabled children from being collected — they'd be focusable
 if the container itself isn't blocking.</p>
@@ -3745,7 +3745,7 @@ if the container itself isn't blocking.</p>
 disabled container's enabled children <strong>are</strong> collected. This is
 probably not what you want — a disabled subtree should not be
 focusable.</p>
-<p>There's no check for <code>isEnabled</code> on the parent. So this is a bug or at
+<p>There's no check for <code>config.enabled</code> on the parent. So this is a bug or at
 least a limitation. If you disable a modal, its buttons are still
 Tab-reachable.</p>
 <p><strong><code>isFocusable()</code> on the scope itself.</strong>
@@ -3760,16 +3760,16 @@ node is still alive (via the tree), or the events go to whatever
 <p><strong><code>requestFocus</code> during <code>update</code> (from a callback).</strong>
 If a callback calls <code>requestFocus</code>, the new focus takes effect on the
 next frame's <code>updateFlags</code>. Within the same frame, the current
-<code>isFocused</code> flags are already set, so the style doesn't change until
+<code>state.focused</code> flags are already set, so the style doesn't change until
 the next frame. Usually fine, but if you need immediate visual
 feedback, you'd need to force a re-resolve.</p>
-<p><strong>The <code>passThrough</code> check for <code>isPressed</code> walks up, not down.</strong>
+<p><strong>The <code>config.passThrough</code> check for <code>state.pressed</code> walks up, not down.</strong>
 The loop starts at <code>pressTarget</code> and walks up. If <code>pressTarget</code> is a
 deeply nested node, its ancestors are checked. But the node's own
-descendants aren't. So if you press on a parent (with a <code>passThrough</code>
+descendants aren't. So if you press on a parent (with a <code>config.passThrough</code>
 child), the child is not "pressed" — only the parent is. This is
 correct: pressing a container shouldn't press all its children.</p>
-<p><strong><code>onRightClick</code> uses <code>isHovered</code>, not <code>topmostConsumer</code>.</strong>
+<p><strong><code>onRightClick</code> uses <code>state.hovered</code>, not <code>topmostConsumer</code>.</strong>
 A right-click on an overlapping area fires the callback on the deepest
 node whose rect contains the pointer and has <code>onRightClick</code>. This can
 differ from <code>topmostConsumer</code> if a higher-z node doesn't have
@@ -3784,31 +3784,31 @@ focus to go to the "next" node.</p>
 Both keys fire the same callback. If you need to distinguish, override
 <code>onUpdate</code> and read <code>ev.keys</code> directly.</p>
 <p><strong>Focus is only set from clicks on <code>topmostConsumer</code>.</strong>
-A click that's captured by a <code>blocksRaycast</code> non-interactive node
+A click that's captured by a <code>config.blocksRaycast</code> non-interactive node
 doesn't focus anything. The focus is released (since <code>topmostConsumer</code>
 isn't focusable). This can be surprising — clicking a <code>Panel</code> (which
 blocks raycast) releases focus from whatever was focused.</p>
 <p><strong><code>setKeyboardActivates(true)</code> requires <code>setFocusable(true)</code>.</strong>
 Without focus, <code>handleKeyInput</code> returns early. A node that sets
-<code>keyboardActivates</code> but not <code>focusable</code> will never fire <code>onClick</code> from
+<code>config.keyboardActivates</code> but not <code>config.focusable</code> will never fire <code>onClick</code> from
 the keyboard.</p>
-<p><strong>Focus state doesn't affect <code>isInteractive</code>.</strong>
+<p><strong>Focus state doesn't affect <code>config.interactive</code>.</strong>
 A focused but non-interactive node can still be focused (via
-<code>requestFocus</code>). The <code>isInteractive</code> flag only affects hit-testing and
+<code>requestFocus</code>). The <code>config.interactive</code> flag only affects hit-testing and
 <code>onClick</code>/<code>onPress</code> firing. A non-interactive focused node can still
 have <code>:focus</code> styling and can still be reached by Tab (if
-<code>isFocusable</code> is true).</p>
+<code>config.focusable</code> is true).</p>
 <p><strong>Hover during pointer capture.</strong>
 When a node has pointer capture, <code>topmostConsumer</code> is the captured
 node, so <code>hoverTarget</code> is also the captured node. Every frame, the
-captured node's <code>isHovered</code> is set based on... wait, no.
+captured node's <code>state.hovered</code> is set based on... wait, no.
 <code>updateFlags</code> uses <code>node.rect.contains(pointer.pos)</code> regardless of
-capture. So the captured node's <code>isHovered</code> is geometric — it may be
+capture. So the captured node's <code>state.hovered</code> is geometric — it may be
 false if the pointer has moved off the node.</p>
 <p>But <code>topmostConsumer</code> is the captured node, so events are routed there.
-The <code>isHovered</code> flag doesn't affect routing, only styling and
+The <code>state.hovered</code> flag doesn't affect routing, only styling and
 <code>onHoverEnter</code>/<code>Exit</code> callbacks. So during a drag that leaves the
-node, the node fires <code>onHoverExit</code> (because <code>isHovered</code> becomes false)
+node, the node fires <code>onHoverExit</code> (because <code>state.hovered</code> becomes false)
 but still receives <code>onPress</code>/<code>onRelease</code>/<code>onClick</code> (because of capture).</p>
 <p>This is the standard behavior — a slider's knob stops being "hovered"
 when the cursor drags away, but the drag continues.</p>

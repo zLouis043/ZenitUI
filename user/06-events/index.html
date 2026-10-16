@@ -2458,7 +2458,7 @@
 <h1 id="events">Events</h1>
 <p>ZenitUI has a small but precise input model. There are no DOM-like
 events propagating through a virtual tree — instead, each <code>Layout</code> has a
-set of <strong>flags</strong> (<code>isHovered</code>, <code>isPressed</code>, <code>isFocused</code>) and a set of
+set of <strong>flags</strong> (<code>state.hovered</code>, <code>state.pressed</code>, <code>state.focused</code>) and a set of
 <strong>callbacks</strong> (<code>onClick</code>, <code>onPress</code>, <code>onHoverEnter</code>, …) that the runtime
 fires when those flags change or when a click is validated.</p>
 <p>The flags are also what <code>.zstyle</code> state pseudo-classes read, so styling
@@ -2477,15 +2477,15 @@ frame from its flags:</p>
 <tbody>
 <tr>
 <td><code>Disabled</code></td>
-<td><code>!isEnabled</code></td>
+<td><code>!!config.enabled</code></td>
 </tr>
 <tr>
 <td><code>Pressed</code></td>
-<td><code>isPressed</code></td>
+<td><code>state.pressed</code></td>
 </tr>
 <tr>
 <td><code>Hover</code></td>
-<td><code>isHovered</code></td>
+<td><code>state.hovered</code></td>
 </tr>
 <tr>
 <td><code>Idle</code></td>
@@ -2499,13 +2499,13 @@ and <code>:pressed</code> rules can animate in), and the corresponding callbacks
 are fired.</p>
 <p>Flags are updated every frame <strong>before</strong> the state is computed:</p>
 <ul>
-<li><code>isHovered</code> — true if the pointer is inside the node's <code>rect</code> and the
+<li><code>state.hovered</code> — true if the pointer is inside the node's <code>rect</code> and the
   node isn't blocked by an ancestor.</li>
-<li><code>isPressed</code> — true if the pointer is down and the "press target" is
+<li><code>state.pressed</code> — true if the pointer is down and the "press target" is
   this node or a descendant of it.</li>
-<li><code>isFocused</code> — true if <code>UIContext::focusedNode</code> points to this node.</li>
+<li><code>state.focused</code> — true if <code>UIContext::focusedNode</code> points to this node.</li>
 </ul>
-<p>While a scroll is in progress, <code>isHovered</code> is <strong>frozen</strong> — the runtime
+<p>While a scroll is in progress, <code>state.hovered</code> is <strong>frozen</strong> — the runtime
 skips the recomputation so that scrolling a list doesn't fire
 <code>onHoverEnter</code>/<code>onHoverExit</code> on every row the cursor passes over.</p>
 <hr />
@@ -2534,11 +2534,11 @@ is also <code>void()</code>:</p>
 </tr>
 <tr>
 <td><code>onHoverEnter</code></td>
-<td><code>isHovered</code> transitions from <code>false</code> to <code>true</code>.</td>
+<td><code>state.hovered</code> transitions from <code>0</code> to <code>1</code>.</td>
 </tr>
 <tr>
 <td><code>onHoverExit</code></td>
-<td><code>isHovered</code> transitions from <code>true</code> to <code>false</code>.</td>
+<td><code>state.hovered</code> transitions from <code>1</code> to <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>onRightClick</code></td>
@@ -2640,13 +2640,13 @@ button.</p>
 <p>Also no click. The release target won't match, and the click is dropped.</p>
 <hr />
 <h2 id="4-hover">4. Hover</h2>
-<p><code>isHovered</code> is recomputed every frame in <code>InputController::updateFlags</code>:</p>
-<pre><code class="language-cpp">node.isHovered = false;
+<p><code>state.hovered</code> is recomputed every frame in <code>InputController::updateFlags</code>:</p>
+<pre><code class="language-cpp">node.state.hovered = 0;
 if (!selfBlocked &amp;&amp; node.rect.width &gt; 0 &amp;&amp; node.rect.height &gt; 0)
-    node.isHovered = node.rect.contains(pointer.pos);
+    node.state.hovered = node.rect.contains(pointer.pos) ? 1 : 0;
 </code></pre>
 <p>where <code>selfBlocked</code> is true if the node is disabled, non-interactive
-with <code>blocksRaycast</code>, or has an ancestor that is blocked.</p>
+with <code>config.blocksRaycast = 1</code>, or has an ancestor that is blocked.</p>
 <p><code>onHoverEnter</code> / <code>onHoverExit</code> fire on the transition, in
 <code>fireCallbacks</code>:</p>
 <pre><code class="language-cpp">if (nextState == UIState::Hover &amp;&amp; prevState != UIState::Hover)
@@ -2724,10 +2724,10 @@ input-&gt;setFocusable(true);   // TextInput does this in its constructor
         ctx.releaseFocus();
 }
 </code></pre>
-<p><code>requestFocus</code> also updates <code>isFocused</code> on every node in the tree
+<p><code>requestFocus</code> also updates <code>state.focused</code> on every node in the tree
 through the per-node <code>updateFlags</code> call.</p>
 <h3 id="62-focus-and-focus-styling">6.2 Focus and <code>:focus</code> styling</h3>
-<p><code>:focus</code> in <code>.zstyle</code> matches when <code>isFocused</code> is true:</p>
+<p><code>:focus</code> in <code>.zstyle</code> matches when <code>state.focused</code> is 1:</p>
 <pre><code class="language-css">TextInput:focus { border-color: #FDF900; }
 Button:focus    { border-color: #FDF900; border-width: 2px; }
 </code></pre>
@@ -2892,7 +2892,7 @@ btn-&gt;setFocusable(true);
 btn-&gt;setKeyboardActivates(true);
 </code></pre>
 <p>The runtime handles this in <code>InputController::handleKeyInput</code>:</p>
-<pre><code class="language-cpp">if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+<pre><code class="language-cpp">if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
     return;
 
 for (int k : ev.keys) {
@@ -2904,20 +2904,20 @@ for (int k : ev.keys) {
 <p>The keys come from <code>InputEvents::keys</code>, which is populated only for
 <strong>rising edge</strong> key presses (not for held keys). So <code>Enter</code> fires the
 callback once per press, not per frame.</p>
-<p><code>Button</code> sets <code>keyboardActivates = true</code> by default. <code>Toggle</code> and
+<p><code>Button</code> sets <code>config.keyboardActivates = 1</code> by default. <code>Toggle</code> and
 <code>Checkbox</code> do too, so <code>Enter</code>/<code>Space</code> toggles them.</p>
 <h3 id="91-interaction-with-textinput">9.1 Interaction with <code>TextInput</code></h3>
-<p><code>TextInput</code> does <strong>not</strong> set <code>keyboardActivates</code> because it wants to
+<p><code>TextInput</code> does <strong>not</strong> set <code>config.keyboardActivates</code> because it wants to
 handle <code>Enter</code> itself:</p>
 <pre><code class="language-cpp">case Key::Enter:
     if (onSubmit) onSubmit(text);
     UIContext::get().releaseFocus();
     return;
 </code></pre>
-<p>If <code>keyboardActivates</code> were true, <code>Enter</code> would fire <code>onClick</code> (which
+<p>If <code>config.keyboardActivates</code> were set, <code>Enter</code> would fire <code>onClick</code> (which
 for <code>TextInput</code> just requests focus) — not what you want.</p>
 <h3 id="92-key-repeat">9.2 Key repeat</h3>
-<p><code>keyboardActivates</code> uses only the rising edge (<code>ev.keys</code>), so it doesn't
+<p><code>config.keyboardActivates</code> uses only the rising edge (<code>ev.keys</code>), so it doesn't
 auto-repeat. If you need repeat behavior (like a slider or text cursor),
 handle <code>ev.held</code> in your <code>onUpdate</code> — see <a href="../03-widgets/">Slider</a> and
 <a href="../03-widgets/">TextInput</a> for examples.</p>
@@ -2943,7 +2943,7 @@ bool hasPointerCapture() const {
 <ul>
 <li><code>topmostConsumer</code> is set to that node every frame, regardless of the
   pointer position.</li>
-<li>The node's <code>isHovered</code> and <code>isPressed</code> flags are updated as if the
+<li>The node's <code>state.hovered</code> and <code>state.pressed</code> flags are updated as if the
   pointer were on top of it.</li>
 <li>All <code>onPress</code> / <code>onRelease</code> / <code>onClick</code> events are routed to it.</li>
 </ul>
@@ -2957,7 +2957,7 @@ down:</p>
 anyway, if you want to end the drag early (e.g. on <code>Escape</code>).</p>
 <h3 id="103-example-slider-drag">10.3 Example: Slider drag</h3>
 <pre><code class="language-cpp">void Slider::onUpdate(float) override {
-    if (isPressed &amp;&amp; !hasPointerCapture())
+    if (state.pressed &amp;&amp; !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture() &amp;&amp; rect.width &gt; 0) {
@@ -2979,7 +2979,7 @@ becomes false.</p>
 <hr />
 <h2 id="11-wheel-events">11. Wheel events</h2>
 <p>Wheel events are delivered to the node under the cursor, if it's a
-scroll container and <code>isInteractive</code>:</p>
+scroll container and <code>config.interactive</code>:</p>
 <pre><code class="language-cpp">if (pointer.wheelY != 0.0f) {
     if (ctx.modifiers.shift &amp;&amp; canScrollX) {
         state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
@@ -3014,27 +3014,27 @@ the inertia model.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>isHovered</code></td>
+<td><code>state.hovered</code></td>
 <td><code>:hover</code></td>
 <td>Pointer inside the node.</td>
 </tr>
 <tr>
-<td><code>isPressed</code></td>
+<td><code>state.pressed</code></td>
 <td><code>:pressed</code></td>
 <td>Pointer down on the node.</td>
 </tr>
 <tr>
-<td><code>isFocused</code></td>
+<td><code>state.focused</code></td>
 <td><code>:focus</code></td>
 <td>Node is the focused one.</td>
 </tr>
 <tr>
 <td><code>isDisabled</code></td>
 <td><code>:disabled</code></td>
-<td><code>!isEnabled</code>.</td>
+<td><code>!config.enabled == 0</code>.</td>
 </tr>
 <tr>
-<td><code>isChecked</code></td>
+<td><code>state.checked</code></td>
 <td><code>:checked</code></td>
 <td><code>setChecked(true)</code>.</td>
 </tr>
@@ -3185,7 +3185,7 @@ env.click(root, {500, 500});   // click on empty space
 </code></pre>
 <p>If you want to keep focus during a click elsewhere, you'd need to
 override the focus logic — but there's no built-in for that.</p>
-<p><strong><code>passThrough</code> on a focusable node doesn't route focus to the parent.</strong></p>
+<p><strong><code>config.passThrough</code> on a focusable node doesn't route focus to the parent.</strong></p>
 <p><code>setPassThrough(true)</code> only affects <strong>click</strong> propagation. It doesn't
 change which node gets focus. The innermost focusable node always
 becomes focused if it's hit.</p>
