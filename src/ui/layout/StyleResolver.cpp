@@ -198,13 +198,13 @@ namespace ZenitUI
 		transitionTimer = 0.0f;
 		transitionStartStyle = currentStyle;
 		targetStyle = resolveFor(node);
-		node.pendingTransition = false; // <-- AGGIUNTO
+		node.internal_.pendingTransition = 0;
 	}
 
 	void StyleResolver::resolvePendingTransition(Layout &node)
 	{
 		ComputedStyle newTarget = resolveFor(node);
-		node.pendingTransition = false;
+		node.internal_.pendingTransition = 0;
 
 		if (newTarget != targetStyle)
 		{

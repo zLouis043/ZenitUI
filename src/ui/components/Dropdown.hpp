@@ -25,7 +25,7 @@ namespace ZenitUI::UI
             refreshButtonText();
             if (onChange)
                 onChange(selected, options[selected]);
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         bool getOpen() const { return isOpen; }
@@ -59,7 +59,7 @@ namespace ZenitUI::UI
             // Forza re-arrange del Dropdown (e quindi riposizionamento del
             // listContainer) ad ogni frame finché è aperto.
             if (isOpen)
-                pendingTransition = true;
+                internal_.pendingTransition = 1;
 
             if (!isOpen)
                 return;
@@ -78,7 +78,7 @@ namespace ZenitUI::UI
             setStyleTag("Dropdown");
             setInteractive(true);
             setFocusable(true);
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
 
             getInlineBase().position = Position::Relative;
             getInlineBase().zIndex = ZIndex(10);
@@ -232,7 +232,7 @@ namespace ZenitUI::UI
             listContainer->setEnabled(isOpen);
             listContainer->setInteractive(isOpen);
             listContainer->getInlineBase().opacity = isOpen ? 1.0f : 0.0f;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         void refreshButtonText()

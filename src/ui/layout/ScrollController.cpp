@@ -38,7 +38,7 @@ namespace ZenitUI
 
     bool ScrollController::needsFullArrange(const Layout &node, bool positionChanged) const
     {
-        return !arrangeInitialized || node.subtreeDirty_ || positionChanged;
+        return !arrangeInitialized || node.internal_.subtreeDirty || positionChanged;
     }
 
     Rect ScrollController::computeArrangeSpace(const Layout &node, Rect space) const
@@ -182,7 +182,7 @@ namespace ZenitUI
         }
 
         // --- Wheel ---
-        if (!ctx.wheelConsumedThisFrame && node.isInteractive &&
+        if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
             !node.hasPointerCapture() && rect.contains(pointer.pos))
         {
             if (pointer.wheelY != 0.0f)

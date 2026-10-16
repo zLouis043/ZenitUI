@@ -19,7 +19,7 @@ namespace ZenitUI::UI
         {
             text = std::move(new_text);
             text_dirty = true;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         const std::string &getText() const { return text; }
@@ -28,14 +28,14 @@ namespace ZenitUI::UI
         {
             defaultFont = f;
             text_dirty = true;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
 
         void setWrap(bool w)
         {
             wrap_ = w;
             text_dirty = true;
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
         }
         bool getWrap() const { return wrap_; }
 

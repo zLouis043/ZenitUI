@@ -40,7 +40,7 @@ namespace ZenitUI
 
 	void Layout::draw(float parentOpacity)
 	{
-		if (isPortal_)
+		if (config.portal)
 		{
 			UIContext::get().framePortals.push_back(weak_from_this());
 			return;

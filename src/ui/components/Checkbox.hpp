@@ -44,7 +44,7 @@ protected:
         Style markStyle = partStyle("mark");
 
         Color box = isChecked ? Colors::Green : style.background;
-        if (!isEnabled)
+        if (!config.enabled)
             box = Color{70, 70, 75, 255};
         if (boxStyle.background.is_set)
             box = boxStyle.background.value;
@@ -59,7 +59,7 @@ protected:
         if (isChecked)
         {
             Color mark = Colors::White;
-            if (!isEnabled)
+            if (!config.enabled)
                 mark = Color{150, 150, 155, 255};
             if (markStyle.color.is_set)
                 mark = markStyle.color.value;

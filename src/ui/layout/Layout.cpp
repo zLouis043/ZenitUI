@@ -12,7 +12,7 @@ namespace ZenitUI
 
 	void Layout::update(float dt, bool ancestorBlocked, bool ancestorScrolling)
 	{
-		bool wasPending = pendingTransition;
+		bool wasPending = internal_.pendingTransition;
 		ComputedStyle styleBefore = style_.currentStyle;
 
 		initStyleIfNeeded();
@@ -23,12 +23,12 @@ namespace ZenitUI
 		if (gen != lastViewportGen_)
 		{
 			lastViewportGen_ = gen;
-			pendingTransition = true;
+			internal_.pendingTransition = 1;
 		}
 
 		bool localAnimBlocks = anim_.tickImperative(*this, dt);
 		bool blockSubtree = ancestorBlocked || localAnimBlocks;
-		bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
+		bool selfBlocked = blockSubtree || !config.enabled || (!config.interactive && config.blocksRaycast);
 
 		const bool scrolling = ancestorScrolling || scroll_.scrolling;
 		input_.updateFlags(*this, selfBlocked, scrolling);
@@ -42,7 +42,7 @@ namespace ZenitUI
 			style_.beginStateTransition(*this, nextState);
 			anim_.syncCss(*this);
 		}
-		else if (pendingTransition)
+		else if (internal_.pendingTransition)
 		{
 			style_.resolvePendingTransition(*this);
 			anim_.syncCss(*this);
@@ -56,9 +56,9 @@ namespace ZenitUI
 
 		{
 			bool anyLocal = anim_.hasActiveLocal();
-			if (hadLocalAnimationsLast_ && !anyLocal && onAnimationsFinished)
+			if (internal_.hadLocalAnimationsLast && !anyLocal && onAnimationsFinished)
 				onAnimationsFinished();
-			hadLocalAnimationsLast_ = anyLocal;
+			internal_.hadLocalAnimationsLast = anyLocal;
 		}
 
 		{
@@ -73,17 +73,17 @@ namespace ZenitUI
 		cullRemovedChildren();
 		recomputeDirty(wasPending, styleBefore);
 
-		if (isEnabled || updateWhenDisabled_)
+		if (config.enabled || config.updateWhenDisabled)
 			onUpdate(dt);
 	}
 
 	void Layout::initStyleIfNeeded()
 	{
-		if (!styleInitialized)
+		if (!internal_.styleInitialized)
 		{
-			styleInitialized = true;
+			internal_.styleInitialized = 1;
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
-			pendingTransition = false;
+			internal_.pendingTransition = 0;
 			anim_.syncCss(*this);
 		}
 	}
@@ -91,7 +91,7 @@ namespace ZenitUI
 	{
 		for (auto it = children.begin(); it != children.end();)
 		{
-			if ((*it)->wantsRemoval)
+			if ((*it)->internal_.wantsRemoval)
 			{
 				(*it)->parent.reset();
 				it = children.erase(it);
@@ -106,7 +106,7 @@ namespace ZenitUI
 		bool anyChildDirty = false;
 		for (auto &c : children)
 		{
-			if (c->subtreeDirty_)
+			if (c->internal_.subtreeDirty)
 			{
 				anyChildDirty = true;
 				break;
@@ -116,7 +116,7 @@ namespace ZenitUI
 		bool styleChanged = (style_.currentStyle != styleBefore);
 		bool inTransition = (style_.transitionTimer < 1.0f);
 
-		subtreeDirty_ = wasPending || pendingTransition || anyChildDirty || styleChanged || inTransition;
+		internal_.subtreeDirty = wasPending || internal_.pendingTransition || anyChildDirty || styleChanged || inTransition;
 	}
 
 	std::vector<const ThemeRule *> Layout::getMatchingRules() const
