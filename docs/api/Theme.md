@@ -493,7 +493,7 @@ Theme::get().clear();
 
 Resets everything. Any node that has already resolved its style with
 the old theme keeps its cached style until the next re-resolve (which
-happens when the node's `pendingTransition` is set — e.g. by a state
+happens when the node's `internal_.pendingTransition` is set — e.g. by a state
 change or by `beginTransition()`).
 
 In tests, use `Env::reset()` which calls `Theme::clear()` and resets
@@ -636,7 +636,7 @@ Button:hover { background: red; }
 Button:pressed { background: blue; }
 ```
 
-When a button is pressed, both rules match (since `isHovered` is
+When a button is pressed, both rules match (since `state.hovered` is
 usually true during a press). Specificity is equal: `(0, 1, 1)` for
 both. The order decides — the later rule wins. So if `:pressed` is
 declared after `:hover`, `blue` wins during the press.
@@ -680,7 +680,7 @@ specificity order. If you're debugging specificity, look at the
 
 **Adding rules after the first frame doesn't re-resolve existing nodes.**
 
-A node's style is resolved on demand (when `pendingTransition` is true,
+A node's style is resolved on demand (when `internal_.pendingTransition` is 1,
 or on state change). Adding a new rule to `Theme` doesn't
 retroactively affect nodes. To force a re-resolve, call
 `beginTransition()` on the node, or trigger a state change.

@@ -60,7 +60,7 @@ critical bugs, test coverage on every widget. See [ROADMAP](ROADMAP.md).
 **Bubble (input)**
 The propagation of a click, press, or right-click event from the
 innermost hit node up through its ancestors. Controlled by
-`passThrough`.
+`config.passThrough`.
 
 ---
 
@@ -113,9 +113,9 @@ re-measuring. Set by state changes, style changes, pending transitions,
 and inherited-property propagation.
 
 **Disabled**
-A node state (`!isEnabled`) that:
+A node state (`config.enabled == 0`) that:
 - Does not receive hit-test.
-- Does not receive `onUpdate` (unless `updateWhenDisabled`).
+- Does not receive `onUpdate` (unless `config.updateWhenDisabled`).
 - Is not focusable.
 - Matches `:disabled` selectors.
 
@@ -144,10 +144,10 @@ subtree is rendered into a render target first). Registered with
 `FilterRegistry`.
 
 **Flag (state)**
-A boolean on `Layout` that describes runtime state: `isHovered`,
-`isPressed`, `isFocused`, `isEnabled`, `isChecked_`, `isInteractive`,
-`isPortal_`, `passThrough_`, etc. Flags drive `:hover`, `:checked`,
-and other state selectors.
+A bit in one of the three bitfield structs on `Layout`:
+- `state` (runtime state — `hovered`, `pressed`, `focused`, `checked`
+- `config` (static config — `interactive`, `enabled`, `blocksRaycast`, `portal`, `passThrough`)
+- `internal_` (framework bookkeeping). Flags drive `:hover`, `:checked`, and other state selectors.
 
 **Focus**
 The routing of keyboard events to a single node. Set by click, Tab,

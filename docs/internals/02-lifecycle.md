@@ -122,7 +122,7 @@ is incremented. Each `Layout` caches the last seen generation in
 uint32_t gen = UIContext::get().viewportGeneration;
 if (gen != lastViewportGen_) {
     lastViewportGen_ = gen;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 ```
 
@@ -279,7 +279,7 @@ logic.
 ### 4.1 Snapshot
 
 ```cpp
-bool wasPending = pendingTransition;
+bool wasPending = internal_.pendingTransition;
 ComputedStyle styleBefore = style_.currentStyle;
 ```
 
@@ -297,11 +297,11 @@ style:
 
 ```cpp
 void initStyleIfNeeded() {
-    if (!styleInitialized) {
-        styleInitialized = true;
+    if (!internal_.styleInitialized) {
+        internal_.styleInitialized = 1;
         style_.currentStyle = style_.targetStyle =
             style_.transitionStartStyle = style_.resolveFor(*this);
-        pendingTransition = false;
+        internal_.pendingTransition = 0;
         anim_.syncCss(*this);
     }
 }
@@ -326,7 +326,7 @@ reset the scroll state (offset, velocity, drag start). This prevents
 uint32_t gen = UIContext::get().viewportGeneration;
 if (gen != lastViewportGen_) {
     lastViewportGen_ = gen;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 ```
 
@@ -338,7 +338,7 @@ queries react.
 ```cpp
 bool localAnimBlocks = anim_.tickImperative(*this, dt);
 bool blockSubtree = ancestorBlocked || localAnimBlocks;
-bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
+bool selfBlocked = blockSubtree || !config.enabled || (!config.interactive && config.blocksRaycast);
 ```
 
 `tickImperative` walks the `imperative` map, advances `elapsed` for each
@@ -359,11 +359,11 @@ input_.updateFlags(*this, selfBlocked, scrolling);
 
 `updateFlags` (in `Input.cpp`):
 
-- If `scrolling` is true: only update `isFocused`; skip hover and press
+- If `scrolling` is true: only update `state.focused`; skip hover and press
   (the "hover freeze").
-- Otherwise: update `isHovered` (pointer inside `rect`, if not blocked),
-  `isPressed` (pointer down and press target is this node or a
-  descendant, walking up through `passThrough`), and `isFocused`.
+- Otherwise: update `state.hovered` (pointer inside `rect`, if not blocked),
+  `state.pressed` (pointer down and press target is this node or a
+  descendant, walking up through `config.passThrough`), and `state.focused`.
 
 ### 4.7 State machine
 
@@ -375,9 +375,9 @@ bool stateChanged = (style_.currentState != nextState);
 
 `computeNextState` returns:
 
-- `Disabled` if `!isEnabled`.
-- `Pressed` if `isPressed`.
-- `Hover` if `isHovered`.
+- `Disabled` if `!config.enabled`.
+- `Pressed` if `state.pressed`.
+- `Hover` if `state.hovered`.
 - `Idle` otherwise.
 
 The priority is: Disabled > Pressed > Hover > Idle. A disabled node
@@ -389,7 +389,7 @@ never reports Pressed, even if the pointer is over it.
 if (stateChanged) {
     style_.beginStateTransition(*this, nextState);
     anim_.syncCss(*this);
-} else if (pendingTransition) {
+} else if (internal_.pendingTransition) {
     style_.resolvePendingTransition(*this);
     anim_.syncCss(*this);
 }
@@ -427,9 +427,9 @@ style_.propagateInheritance(*this);
 ```cpp
 {
     bool anyLocal = anim_.hasActiveLocal();
-    if (hadLocalAnimationsLast_ && !anyLocal && onAnimationsFinished)
+    if (internal_.hadLocalAnimationsLast && !anyLocal && onAnimationsFinished)
         onAnimationsFinished();
-    hadLocalAnimationsLast_ = anyLocal;
+    internal_.hadLocalAnimationsLast = anyLocal ? 1 : 0;
 }
 ```
 
@@ -464,7 +464,7 @@ input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 - `tickInput` handles scroll: wheel events, scrollbar drag, inertia.
   It calls `state.tickInertia(ctx.dt)` at the end.
 - `handleKeyInput` fires `onClick` via `Enter` / `Space` if the node
-  is focused and `keyboardActivates_` is true.
+  is focused and `config.keyboardActivates` is true.
 - `fireCallbacks` fires the input callbacks in the right order:
   - `onHoverEnter` / `onHoverExit` on state change.
   - `onPress` on `pointer.pressed` (if the press path includes this node).
@@ -485,7 +485,7 @@ of click events.
 cullRemovedChildren();
 ```
 
-Erases children whose `wantsRemoval` flag is set (`removeFromParent()`
+Erases children whose `internal_.wantsRemoval` flag is set (`removeFromParent()`
 was called). This is the only place the `children` vector is modified
 due to removal.
 
@@ -499,22 +499,22 @@ Determines whether this node's subtree needs a re-measure. A node is
 dirty if:
 
 - It was pending at the start of the frame (`wasPending`).
-- It's pending now (`pendingTransition`).
+- It's pending now (`internal_.pendingTransition`).
 - Any child's subtree is dirty.
 - Its style changed (`style_.currentStyle != styleBefore`).
 - It's in the middle of a transition (`transitionTimer < 1.0`).
 
-`subtreeDirty_` is the cached flag used by `measure` to skip work.
+`internal_.subtreeDirty` is the cached flag used by `measure` to skip work.
 
 ### 4.15 `onUpdate(dt)`
 
 ```cpp
-if (isEnabled || updateWhenDisabled_)
+if (config.enabled || config.updateWhenDisabled)
     onUpdate(dt);
 ```
 
 The per-widget update. Skipped if the node is disabled and
-`updateWhenDisabled_` is false.
+`config.updateWhenDisabled` is 0.
 
 This is where custom widgets handle their own per-frame logic (drag,
 input processing, local state updates).
@@ -528,7 +528,7 @@ Recursive, but with an early-out for clean subtrees.
 ### 5.1 Cache check
 
 ```cpp
-if (!subtreeDirty_ && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
+if (!internal_.subtreeDirty && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
     return measuredSize;
 lastMeasureW_ = parent_w;
 lastMeasureH_ = parent_h;
@@ -540,15 +540,15 @@ cached `measuredSize`. Otherwise proceed.
 ### 5.2 Style resolution
 
 ```cpp
-if (!styleInitialized) {
-    styleInitialized = true;
+if (!internal_.styleInitialized) {
+    internal_.styleInitialized = 1;
     style_.currentStyle = style_.targetStyle =
         style_.transitionStartStyle = style_.resolveFor(*this);
-    pendingTransition = false;
+    internal_.pendingTransition = 0;
 }
 
-ComputedStyle calcStyle = pendingTransition ? style_.resolveFor(*this)
-                                            : style_.currentStyle;
+ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this)
+                                                      : style_.currentStyle;
 ```
 
 Uses `currentStyle` for measurement unless there's a pending transition,
@@ -804,7 +804,7 @@ at `in.x + L + ml`.
 ### 6.8 Portals
 
 ```cpp
-if (c->isPortal()) {
+if (c->config.portal) {
     c->arrange({inner.x, inner.y, c->measuredSize.x, c->measuredSize.y});
     continue;
 }
@@ -823,7 +823,7 @@ Recursive, top-down. Draws the subtree.
 ### 7.1 Portal registration
 
 ```cpp
-if (isPortal_) {
+if (config.portal) {
     UIContext::get().framePortals.push_back(weak_from_this());
     return;
 }
@@ -938,7 +938,7 @@ frame), but worth knowing.
 
 **Style changes take effect next frame.**
 If `onClick` sets `getInlineBase().background = ...`, the change is
-`pendingTransition = true` for the current node. The current frame's
+`internal_.pendingTransition = 1` for the current node. The current frame's
 `draw` uses the old style; the next frame's `update` resolves the new
 style, and the next frame's `draw` shows it. If you want the change
 immediate, you'd need to call `style_.resolvePendingTransition(*this)`
@@ -952,7 +952,7 @@ uses `activePortals`, which is the *previous* frame's `framePortals`.
 So the portal becomes clickable next frame.
 
 **`removeFromParent` is deferred.**
-`removeFromParent()` sets `wantsRemoval = true`. The actual removal
+`removeFromParent()` sets `internal_.wantsRemoval = 1`. The actual removal
 from `children` happens in `cullRemovedChildren`, at the end of the
 same node's update. Until then, the node is still in the tree and
 participates in measure/arrange/draw.
@@ -973,10 +973,10 @@ Children are updated first, then the node's own callbacks fire. So a
 "bubble up" order.
 
 **`measure` may re-resolve style.**
-If a node has `pendingTransition`, `measure` calls
+If a node has `internal_.pendingTransition`, `measure` calls
 `style_.resolveFor(*this)` again to get the target size. This is in
 addition to the `update` call that already resolved it. The cost is
-acceptable because `pendingTransition` is a one-frame flag, but it means
+acceptable because `internal_.pendingTransition` is a one-frame flag, but it means
 `resolveFor` can run twice on a single frame for a node.
 
 **Animation overlays are not visible to `getStyle()`.**
@@ -998,7 +998,7 @@ update(dt)
 ├── scroll.resetIfOverflowChanged
 ├── viewportGeneration check
 ├── tickImperative → blockSubtree
-├── input.updateFlags → isHovered, isPressed, isFocused
+├── input.updateFlags → state.hovered, state.pressed, state.focused
 ├── computeNextState
 ├── beginStateTransition OR resolvePendingTransition
 ├── style.tick (transition)
@@ -1011,12 +1011,12 @@ update(dt)
 ├── input.fireCallbacks → onHoverEnter/Exit, onPress, onRelease, onClick, onRightClick
 ├── cullRemovedChildren
 ├── recomputeDirty
-└── onUpdate(dt) [if enabled or updateWhenDisabled]
+└── onUpdate(dt) [if config.enabled or config.updateWhenDisabled]
 
 measure(parentW, parentH)
 ├── early-out if clean and parent size unchanged
 ├── initStyleIfNeeded (safety)
-├── calcStyle = pendingTransition ? resolveFor : currentStyle
+├── calcStyle = internal_.pendingTransition ? resolveFor : currentStyle
 ├── compute innerW, innerH (with scroll main-axis unbounded)
 ├── computeIntrinsicSize → contentSize
 ├── for each child: child.measure(innerW, innerH)

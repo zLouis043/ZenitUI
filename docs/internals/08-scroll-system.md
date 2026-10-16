@@ -456,7 +456,7 @@ Non-scroll containers just call `arrangeInto(space)`.
 
 ```cpp
 bool ScrollController::needsFullArrange(const Layout& node, bool positionChanged) const {
-    return !arrangeInitialized || node.subtreeDirty_ || positionChanged;
+    eturn !arrangeInitialized || node.internal_.subtreeDirty || positionChanged;
 }
 ```
 
@@ -779,7 +779,7 @@ keeps the drag stable.
 ### 6.5 Wheel
 
 ```cpp
-if (!ctx.wheelConsumedThisFrame && node.isInteractive &&
+if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
     !node.hasPointerCapture() && rect.contains(pointer.pos))
 {
     if (pointer.wheelY != 0.0f) {
@@ -798,7 +798,7 @@ if (!ctx.wheelConsumedThisFrame && node.isInteractive &&
 Conditions:
 
 - `!wheelConsumedThisFrame` — no node has consumed the wheel this frame.
-- `node.isInteractive` — the node is interactive (default true for most).
+- `node.config.interactive` — the node is interactive (default true for most).
 - `!hasPointerCapture` — not currently in a capture (avoid double-handling).
 - `rect.contains(pointer.pos)` — the pointer is over the container.
 
@@ -951,15 +951,15 @@ ancestor is scrolling". It propagates down through the tree.
 ```cpp
 if (scrolling) {
     bool focusNow = ctx.hasFocus(&node);
-    if (focusNow != node.isFocused) {
-        node.isFocused = focusNow;
-        node.pendingTransition = true;
+    if (focusNow != (node.state.focused != 0)) {
+        node.state.focused = focusNow ? 1 : 0;
+        node.internal_.pendingTransition = 1;
     }
     return;
 }
 ```
 
-During scroll, only `isFocused` is updated. `isHovered` and `isPressed`
+During scroll, only `state.focused` is updated. `state.hovered` and `state.pressed`
 are not touched — they keep their previous values.
 
 ### 8.2 Why
@@ -1122,7 +1122,7 @@ public:
 It sets:
 
 - `interactive: true` — so the wheel can be received.
-- `blocksRaycast: true` — so clicks don't pass through to nodes behind.
+- `config.blocksRaycast = 1` — so clicks don't pass through to nodes behind.
 - `styleTag: "ScrollView"` — for `.zstyle` targeting.
 - `overflow-x` and `overflow-y` to `Scroll` **in inline defaults**.
 
@@ -1239,8 +1239,8 @@ extension could expose them via `.zstyle` (`::scrollbar-track` /
 
 **The hover freeze is not per-axis.**
 If either axis is scrolling, both are frozen. A node that's scrolling
-vertically but not horizontally still has both `isHovered` and
-`isPressed` frozen. In practice, scrolling is usually mono-axis, so
+vertically but not horizontally still has both `state.hovered` and
+`state.pressed` frozen. In practice, scrolling is usually mono-axis, so
 this doesn't matter.
 
 **Absolute children scroll with the content.**
@@ -1318,8 +1318,8 @@ offset), the next `applyOffsetDelta` would double-count. The arrange
 code handles this by resetting `appliedOffset = {0, 0}` after a full
 arrange.
 
-**Scroll input requires `isInteractive`.**
-The wheel check has `node.isInteractive &&`. A non-interactive scroll
+**Scroll input requires `config.interactive`.**
+The wheel check has `node.config.interactive  &&`. A non-interactive scroll
 container (e.g. one with `setInteractive(false)`) won't respond to the
 wheel. If you want a non-interactive container that scrolls, you'd
 need to either make it interactive (and accept the click interception)

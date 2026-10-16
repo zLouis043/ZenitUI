@@ -510,7 +510,7 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
         for (auto& track : s.anim->tracks)
             track->apply(t, &node);
 
-        node.pendingTransition = true;
+        node.internal_.pendingTransition = 1;
 
         if (justFinished) {
             auto cb = s.anim->onFinished;
@@ -537,7 +537,7 @@ Step by step for each animation:
    completion doesn't fire `onFinished`).
 7. Compute `t = elapsed / duration`.
 8. Apply each track with `t`.
-9. Set `node.pendingTransition = true`, so the style system re-resolves.
+9. Set `node.internal_.pendingTransition = 1`, so the style system re-resolves.
 10. If `justFinished`, copy the callback and call it.
 
 The callback is copied **before** being invoked, because the callback
@@ -798,25 +798,25 @@ is a pending state transition). The relevant logic is in
 ```cpp
 bool inTransition = (style_.transitionTimer < 1.0f);
 
-subtreeDirty_ = wasPending || pendingTransition || anyChildDirty ||
+internal_.subtreeDirty = wasPending || internal_.pendingTransition || anyChildDirty ||
                 styleChanged || inTransition;
 ```
 
-- `pendingTransition` is set by imperative animation tracks (they write
+- `internal_.pendingTransition` is set by imperative animation tracks (they write
   to `inlineBase` via `getInlineBase()`), and by every other setter
   that touches the style.
 - `inTransition` is true while a CSS state transition is in progress.
-- CSS **keyframe** animations do not affect `subtreeDirty_` by
+- CSS **keyframe** animations do not affect `internal_.subtreeDirty` by
   themselves.
 
 A node with only a CSS keyframe animation (no transition, no pending
-transition) doesn't set `subtreeDirty_` from the animation. Its
+transition) doesn't set `internal_.subtreeDirty` from the animation. Its
 subtree can be cached. The keyframe animation still renders, because
 the overlay is applied at draw time on a local `renderStyle` copy of
 `currentStyle`.
 
 An **imperative** animation, by contrast, writes into `inlineBase` and
-therefore sets `pendingTransition` every frame. This is what makes the
+therefore sets `internal_.pendingTransition` every frame. This is what makes the
 value visible: on the same frame, `resolvePendingTransition` re-resolves
 the target style, sees the active imperative animation, and snaps
 `currentStyle` to the new target (see
@@ -828,14 +828,14 @@ never advance.
 
 ```cpp
 bool anyLocal = anim_.hasActiveLocal();
-if (hadLocalAnimationsLast_ && !anyLocal && onAnimationsFinished)
+if (internal_.hadLocalAnimationsLast && !anyLocal && onAnimationsFinished)
     onAnimationsFinished();
-hadLocalAnimationsLast_ = anyLocal;
+internal_.hadLocalAnimationsLast = anyLocal ? 1 : 0;
 ```
 
-`hadLocalAnimationsLast_` is a per-node bool. It's `true` if the node
+`internal_.hadLocalAnimationsLast` is a per-node bool. It's `true` if the node
 had any active local animation last frame, and `false` otherwise. The
-callback fires on the falling edge: `hadLocalAnimationsLast_ == true`
+callback fires on the falling edge: `internal_.hadLocalAnimationsLast == 1`
 and `anyLocal == false`.
 
 The check is **local**, not recursive — child animations don't count.
@@ -853,7 +853,7 @@ rule:
 
 ### 7.1 Frame N: pointer enters
 
-1. `updateFlags` sets `isHovered = true`.
+1. `updateFlags` sets `state.hovered = 1`.
 2. `computeNextState` returns `Hover`, state changed.
 3. `beginStateTransition` resolves the new target style. This style
    includes `animations = [{name: "pulse", duration: 1, ...}]`.
@@ -875,7 +875,7 @@ Same as above, but `elapsed` advances. The animation runs to completion
 
 ### 7.3 Frame M+1: pointer leaves
 
-1. `updateFlags` sets `isHovered = false`.
+1. `updateFlags` sets `state.hovered = 0`.
 2. State changes back to `Idle`.
 3. `beginStateTransition` resolves the non-hover target style. This
    style does **not** have `animations = [{name: "pulse", ...}]`.
@@ -1099,7 +1099,7 @@ number of properties is the cost per frame, not the number of nodes.
 
 Medium. Each playing animation runs a `for` loop over its tracks and
 calls each track's setter. The setter typically writes to
-`getInlineBase()`, which sets `pendingTransition = true`, which forces
+`getInlineBase()`, which sets `internal_.pendingTransition = 1`, which forces
 a style re-resolve on the same frame. So an imperative animation costs:
 
 - The tick loop itself (`apply` per track).
@@ -1215,7 +1215,7 @@ setter.
 l->getInlineBase().opacity = v;
 ```
 `getInlineBase()` returns a mutable reference and sets
-`pendingTransition = true`. Even reading it (without writing) sets the
+`internal_.pendingTransition = 1`. Even reading it (without writing) sets the
 flag. So if your track setter reads the base to compute something, then
 writes back, you pay for two re-resolves. Use `getStyle()` for reading,
 `getInlineBase()` only for writing.

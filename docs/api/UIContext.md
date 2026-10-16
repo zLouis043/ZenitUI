@@ -292,7 +292,7 @@ void consumeRightClick() { rightClickConsumed = true; }
   handles a wheel event. Prevents nested scroll containers from both
   scrolling.
 - **`clickConsumed`** — set when a node's `onClick` (or `onPress`) fires
-  without `passThrough`. Prevents ancestors from also firing `onClick`.
+  without `config.passThrough`. Prevents ancestors from also firing `onClick`.
 - **`rightClickConsumed`** — same, for `onRightClick`.
 
 The `consumeClick` / `consumeRightClick` methods are the public API to
@@ -316,10 +316,10 @@ bool hasFocus(const Layout* n) const;
 Sets `focusedNode = n` if `n` is focusable. If `n` is null or not
 focusable, clears focus (`focusedNode.reset()`).
 
-Focusable means `isFocusable_ && isEnabled`. A disabled node can't be
+Focusable means `config.focusable != 0 && config.enabled != 0`. A disabled node can't be
 focused.
 
-The node's `isFocused` flag isn't updated here — it's updated on the
+The node's `state.focused` flag isn't updated here — it's updated on the
 next `update` in `updateFlags`.
 
 ### `releaseFocus()`
@@ -613,7 +613,7 @@ if (handleSomething()) {
 ```
 
 Rarely needed — the framework consumes automatically when a node fires
-`onClick` without `passThrough`.
+`onClick` without `config.passThrough`.
 
 ### Reading `dt` in a widget
 
@@ -848,15 +848,15 @@ need two independent UIs, use two processes or a different framework.
 
 `requestFocus` checks `isFocusable()`. If you assign
 `ctx.focusedNode = someNode` directly, no check is done. The node's
-`isFocused` flag will be set on the next `updateFlags`, even if the
+`state.focused` flag will be set on the next `updateFlags`, even if the
 node isn't focusable. Use `requestFocus` for safety.
 
 **`releaseFocus` doesn't notify the node.**
 
-The previously focused node's `isFocused` flag is cleared on the next
+The previously focused node's `state.focused` flag is cleared on the next
 `updateFlags` (because `hasFocus` returns false). No callback fires on
 focus release. If you need to react, override `onUpdate` and check
-`isFocused`.
+`state.focused`.
 
 **`UIContext::get()` is created on first call.**
 

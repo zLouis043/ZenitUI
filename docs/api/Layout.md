@@ -100,7 +100,7 @@ class Popup : public TLayout<Popup, Panel> { /* ... */ };
 
 ### `void addClass(const std::string& className)`
 
-Adds a CSS class. Sets `pendingTransition = true`. No-op if the class
+Adds a CSS class. Sets `internal_.pendingTransition = 1`. No-op if the class
 is already present, so calling it twice does not create duplicates.
 
 ```cpp
@@ -110,7 +110,7 @@ node->addClass("btn-primary");   // ignored
 
 ### `void removeClass(const std::string& className)`
 
-Removes every occurrence of the class. Sets `pendingTransition = true`
+Removes every occurrence of the class. Sets `internal_.pendingTransition = 1`
 if something was actually removed.
 
 ```cpp
@@ -231,7 +231,7 @@ stretches or constrains the node.
 
 ### `void addChild(std::shared_ptr<Layout> child)`
 
-Adds a child. Sets the child's parent pointer and `pendingTransition`.
+Adds a child. Sets the child's parent pointer and `internal_.pendingTransition`.
 
 **Warning:** if `weak_from_this()` is expired (i.e. the node isn't
 managed by `shared_ptr`), the call logs a warning and returns without
@@ -366,7 +366,7 @@ True if checked.
 bool isHoveredState()   const;   // pointer over the node's rect
 bool isPressedState()   const;   // pointer down, node is press target
 bool isFocusedState()   const;   // UIContext::focusedNode == this
-bool isDisabledState()  const;   // !isEnabled
+bool isDisabledState()  const;   // !config.enabled
 bool isCheckedState()   const;   // same as getChecked()
 ```
 
@@ -378,7 +378,7 @@ Default: `false`.
 ### `void setFocusable(bool f)` / `bool isFocusable() const`
 
 Whether the node can be focused. `isFocusable()` returns
-`isFocusable_ && isEnabled`.
+`config.focusable != 0 && config.enabled != 0`.
 
 ### `void setFocusScope(bool s)` / `bool isFocusScope() const`
 
@@ -400,7 +400,7 @@ after firing on this node.
 ### `Style& getInlineBase()`
 
 Returns a mutable reference to the node's inline base style. Any
-modification triggers `pendingTransition = true`.
+modification triggers `internal_.pendingTransition = 1`.
 
 **Note:** the call itself sets the flag, even if you don't modify the
 style.
@@ -428,7 +428,7 @@ draw time).
 
 ### `void beginTransition()`
 
-Sets `pendingTransition = true`, resets the transition timer, and
+Sets `internal_.pendingTransition = 1`, resets the transition timer, and
 snapshots the current style as the transition start.
 
 ---
@@ -687,7 +687,7 @@ Called after `arrange` sets the final rect. Do **not** modify
 
 ### `virtual void onUpdate(float dt)`
 
-Per-frame logic. Skipped if `!isEnabled && !updateWhenDisabled_`.
+Per-frame logic. Skipped if `config.enabled == 0 && config.updateWhenDisabled == 0`.
 
 ### `virtual void onEnabledChanged(bool nowEnabled)`
 

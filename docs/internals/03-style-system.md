@@ -400,9 +400,9 @@ Three places:
 1. **`initStyleIfNeeded`** — on the first frame, to initialize
    `currentStyle = targetStyle = transitionStartStyle`.
 2. **`beginStateTransition`** — when the state machine changes state.
-3. **`resolvePendingTransition`** — when `pendingTransition` was set
+3. **`resolvePendingTransition`** — when `internal_.pendingTransition` was set
    (some property was changed via `getInlineBase()` or similar).
-4. **`measure`** — if `pendingTransition` is still set, to get the
+4. **`measure`** — if `internal_.pendingTransition` is still set, to get the
    target size.
 
 The result is cached in `targetStyle`. `currentStyle` only changes when
@@ -421,7 +421,7 @@ void StyleResolver::beginStateTransition(Layout& node, UIState newState) {
     transitionTimer = 0.0f;
     transitionStartStyle = currentStyle;
     targetStyle = resolveFor(node);
-    node.pendingTransition = false;
+    node.internal_.pendingTransition = 0;
 }
 ```
 
@@ -434,7 +434,7 @@ state change is now in progress; `tick` will interpolate from
 ```cpp
 void StyleResolver::resolvePendingTransition(Layout& node) {
     ComputedStyle newTarget = resolveFor(node);
-    node.pendingTransition = false;
+    node.internal_.pendingTransition = 0;
 
     if (newTarget != targetStyle) {
         if (node.anim_.hasActiveImperative()) {
@@ -563,19 +563,19 @@ returns `b` as soon as `t > 0`, which is the first tick after the
 transition starts. So a snap happens on the first frame of the
 transition. This is intentional — better than a late switch.
 
-### 4.5 Transition and `pendingTransition`
+### 4.5 Transition and `internal_.pendingTransition`
 
-The `pendingTransition` flag is set by:
+The `internal_.pendingTransition` flag is set by:
 
 - `getInlineBase()` (returns a mutable reference, so the caller will
   probably modify it).
 - `setInlineBase(style)`.
 - `addClass`, `setId`, `setSize`, `setEnabled`, `setChecked`,
   `setPortal`, `addChild`, `beginTransition`, `markInheritanceDirty`.
-- `Text::setText`, `TextInput::setText`, `Slider` (via `pendingTransition`
+- `Text::setText`, `TextInput::setText`, `Slider` (via `internal_.pendingTransition`
   directly).
 
-When `pendingTransition` is true at the start of `update`, the resolver
+When `internal_.pendingTransition` is 1 at the start of `update`, the resolver
 re-resolves the target style. If it differs from the current target,
 the transition restarts.
 
@@ -635,14 +635,14 @@ via `markInheritanceDirty`:
 
 ```cpp
 void markInheritanceDirty() {
-    pendingTransition = true;
-    subtreeDirty_ = true;
+    internal_.pendingTransition = 1;
+    internal_.subtreeDirty = 1;
     for (auto& c : children)
         c->markInheritanceDirty();
 }
 ```
 
-The child's `pendingTransition` flag is set, so its own `update` will
+The child's `internal_.pendingTransition` flag is set, so its own `update` will
 re-resolve on the next frame (or the same frame, if it hasn't been
 processed yet).
 
@@ -670,7 +670,7 @@ selectors, so they need the same propagation mechanism.
 Custom properties also inherit (they're merged in `ComputedStyle::from`
 via `parent->customProps`). But the propagation mechanism doesn't
 explicitly track them — the change is detected indirectly because any
-style change sets `pendingTransition` on the node, which re-resolves
+style change sets `internal_.pendingTransition` on the node, which re-resolves
 its style and, if the custom props changed, produces a different
 `ComputedStyle`, which then triggers propagation on the next frame.
 
@@ -836,9 +836,9 @@ concrete values anyway.
 
 ---
 
-## 8. The `pendingTransition` flag
+## 8. The `internal_.pendingTransition` flag
 
-`pendingTransition` is a per-node flag that means "something about my
+`internal_.pendingTransition` is a per-node flag that means "something about my
 style changed, re-resolve on the next update". It's set by every setter
 that could affect the resolved style:
 
@@ -869,20 +869,20 @@ anim->addTrack<float>(0.0f, 1.0f,
 ```
 
 Every frame that the animation ticks, the setter calls
-`getInlineBase()`, which sets `pendingTransition = true`. This is
+`getInlineBase()`, which sets `internal_.pendingTransition = 1`. This is
 intentional: the animation changes the inline style, so the node needs
 to re-resolve. The overhead is small (one re-resolve per frame per
 animated node).
 
 `tickImperative` runs **before** the style check in `update`, so within
-the same frame the `pendingTransition` set by the animation is picked
-up by the `else if (pendingTransition)` branch:
+the same frame the `internal_.pendingTransition` set by the animation is picked
+up by the `else if (internal_.pendingTransition)` branch:
 
 ```cpp
 if (stateChanged) {
     style_.beginStateTransition(*this, nextState);
     anim_.syncCss(*this);
-} else if (pendingTransition) {
+} else if (internal_.pendingTransition) {
     style_.resolvePendingTransition(*this);
     anim_.syncCss(*this);
 }
@@ -892,7 +892,7 @@ if (stateChanged) {
 active and snaps `currentStyle` to the new target instead of starting
 a transition (see §4.2). The result is that the animated value is
 visible in the **same** frame it was written: the animation's setter
-runs, `pendingTransition` is set, the target is re-resolved, and
+runs, `internal_.pendingTransition` is set, the target is re-resolved, and
 `currentStyle` is updated to match. `renderStyle` at draw time then
 contains the interpolated value, since it's a copy of `currentStyle`
 with the CSS keyframe overlay applied on top.
@@ -905,11 +905,11 @@ Without an imperative animation running:
 Frame N, update:
 ├── tickImperative: no playing animation → nothing happens
 ├── ...
-├── pendingTransition might be set by a setter called earlier in update
-├── resolvePendingTransition runs, if pendingTransition is true
+├── internal_.pendingTransition might be set by a setter called earlier in update
+├── resolvePendingTransition runs, if internal_.pendingTransition is 1
 │   ├── target differs → start a transition (timer = 0)
 │   ├── target same → refresh target, snap if transition done
-│   └── clears pendingTransition
+│   └── clears internal_.pendingTransition
 ├── style.tick advances the transition (if any)
 └── draw uses currentStyle + css overlay
 ```
@@ -918,17 +918,17 @@ With an imperative animation running:
 
 ```
 Frame N, update:
-├── tickImperative: writes to inlineBase → sets pendingTransition
+├── tickImperative: writes to inlineBase → sets internal_.pendingTransition
 ├── ...
 ├── resolvePendingTransition runs
 │   ├── sees hasActiveImperative() == true
 │   ├── sets currentStyle = newTarget (snap, no transition)
-│   └── clears pendingTransition
+│   └── clears internal_.pendingTransition
 ├── style.tick: transitionTimer already 1.0 → no-op
 └── draw uses currentStyle (already at the animated value)
 ```
 
-The animation continuously sets `pendingTransition` and the resolver
+The animation continuously sets `internal_.pendingTransition` and the resolver
 continuously clears it, snapping `currentStyle` to the animated value
 on each frame. Once the animation finishes (`hasActiveImperative()`
 becomes false), the next style change goes through the normal
@@ -967,7 +967,7 @@ The matching and sorting code is feature-agnostic, so no changes there.
 
 ### 9.3 Adding a new state
 
-1. Add the flag to `Layout` (like `isFocused`).
+1. Add the flag to `NodeState` (like `focused`).
 2. Update `InputController::updateFlags` to set it.
 3. Add `requireX` to `SimpleSelector` and `nodeMatchesSimple`.
 4. Update the parser to recognize the pseudo-class.
@@ -979,10 +979,10 @@ The matching and sorting code is feature-agnostic, so no changes there.
 
 ## 10. Pitfalls
 
-**Styles are re-resolved on every `pendingTransition`.**
+**Styles are re-resolved on every `internal_.pendingTransition`.**
 The resolver does the full cascade (matching all rules, sorting,
 overlaying, resolving `var()`) on every `update` where the node's
-`pendingTransition` is true. For a typical node, this is once at
+`internal_.pendingTransition` is 1. For a typical node, this is once at
 initialization and then only when the state changes or a property is
 set. For an animated node, it's once per frame. `Theme::rules` is a
 linear list — a stylesheet with thousands of rules will make resolution
@@ -1031,7 +1031,7 @@ the CSS rule has lower specificity).
 **`propagateInheritance` doesn't compare all properties.**
 Only the inherited ones plus the state flags. Custom properties and
 `transitions` / `animations` are not compared. A change to a custom
-property on a parent will propagate via the normal `pendingTransition`
+property on a parent will propagate via the normal `internal_.pendingTransition`
 mechanism (the parent's style changes, and `ComputedStyle::from` for
 the child reads the parent's `customProps`), but not via
 `propagateInheritance`. In practice, this is fine because the child
