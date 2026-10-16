@@ -834,7 +834,7 @@ currently set up.
 ### 5.3 "My click doesn't fire"
 
 1. Is the node `interactive`? `setInteractive(true)`.
-2. Does it `blocksRaycast`? Check the parent chain.
+2. Does it `config.blocksRaycast = 1`? Check the parent chain.
 3. Is there a node on top that's consuming? Use
    `UIContext::get().topmostConsumer` after a frame.
 4. Is the press and release on the same node? A drag-out-drag-in
@@ -857,7 +857,7 @@ currently set up.
 1. Is the `animation` / `transition` property parsed? Check
    `dumpStyle` output.
 2. Is the keyframe name defined? Check `dumpTheme`.
-3. Is the state correct? `:hover` needs `isHovered`, `:checked`
+3. Is the state correct? `:hover` needs `state.hovered = 1`, `:checked`
    needs `setChecked(true)`.
 4. Is the animation ticked? `tickCss` runs every frame in `update`.
 5. For imperative: is `addAnimation` + `playAnimation` called? Is

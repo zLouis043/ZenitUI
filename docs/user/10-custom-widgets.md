@@ -312,13 +312,13 @@ has run. Use it for:
 
 ```cpp
 void onUpdate(float) override {
-    if (isFocused) {
+    if (state.focused) {
         auto& ev = UIContext::get().inputEvents;
         constexpr float STEP = 0.05f;
         // ... read keys, update value ...
     }
 
-    if (isPressed && !hasPointerCapture())
+    if (state.pressed && !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture() && rect.width > 0.0f) {
@@ -346,11 +346,11 @@ void onUpdate(float dt) override {
 ```
 
 **When is `onUpdate` called?** The base `Layout::update` only calls it
-if `isEnabled || updateWhenDisabled_`. If your widget needs to update
+if `config.enabled || config.updateWhenDisabled`. If your widget needs to update
 while disabled, call `setUpdateWhenDisabled(true)`.
 
 **When is `onUpdate` NOT called?** During a `blocksInput` animation, or
-if the node is disabled and `updateWhenDisabled_` is false.
+if the node is disabled and `config.updateWhenDisabled` is 0.
 
 ### 3.6 `onLayout()`
 
@@ -426,7 +426,7 @@ Useful for containers that want to highlight when any child is focused:
 ```cpp
 void onDescendantFocused(Layout*) override {
     getInlineBase().borderColor = Colors::Yellow;
-    pendingTransition = true;
+    internal_.pendingTransition = 1;
 }
 ```
 
@@ -541,7 +541,7 @@ Button(std::function<void()> cb) {
 ### 5.2 Toggle-style state
 
 For widgets that have a binary state (checked / unchecked), use the
-built-in `isChecked_` flag and `setChecked`:
+built-in `state.checked` flag and `setChecked`:
 
 ```cpp
 class MyToggle : public TLayout<MyToggle> {
@@ -565,7 +565,7 @@ public:
 };
 ```
 
-`setChecked` updates the flag and sets `pendingTransition`, which
+`setChecked` updates the flag and sets `internal_.pendingTransition`, which
 re-resolves the style on the next update. So a `.zstyle` rule like
 `MyToggle:checked { background: green; }` will apply automatically.
 
@@ -653,7 +653,7 @@ For drag-style interactions, use the pointer capture API:
 
 ```cpp
 void onUpdate(float) override {
-    if (isPressed && !hasPointerCapture())
+    if (state.pressed && !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture()) {
@@ -853,7 +853,7 @@ public:
         int old = rating_;
         rating_ = std::clamp(r, 0, maxStars_);
         if (rating_ != old) {
-            pendingTransition = true;
+            internal_.pendingTransition = 1;
             if (onRatingChanged) onRatingChanged(rating_);
         }
     }
@@ -1067,7 +1067,7 @@ wastes cycles and can trigger the part's transition in the wrong frame.
 **Focus and Tab.**
 
 If your widget handles keyboard input but isn't focusable, it will
-never receive `Enter`/`Space` via `keyboardActivates`. Set
+never receive `Enter`/`Space` via `config.keyboardActivates`. Set
 `setFocusable(true)` and, if you want Enter/Space to fire `onClick`,
 `setKeyboardActivates(true)`.
 

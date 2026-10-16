@@ -563,7 +563,7 @@ Key implications:
 
 - **Imperative animations run before the state machine.** This means an
   animation that changes `opacity` will affect the current frame's
-  rendered output, but the node's `isEnabled` / `isHovered` flags are
+  rendered output, but the node's `config.enabled` / `state.hovered` flags are
   computed with the animation's effect already applied.
 - **CSS transitions run after the state machine.** A `:hover` state
   change resolves the new target style and starts a transition, which
@@ -579,7 +579,7 @@ node and its subtree are marked as "blocked" for the current frame:
 
 ```cpp
 bool blockSubtree = ancestorBlocked || localAnimBlocks;
-bool selfBlocked = blockSubtree || !isEnabled || (!isInteractive && blocksRaycast);
+bool selfBlocked = blockSubtree || !config.enabled || (!config.interactive && config.blocksRaycast);
 ```
 
 Blocked nodes don't update their hover/pressed flags, and their
@@ -603,7 +603,7 @@ node->onAnimationsFinished = []{ std::printf("all done\n"); };
 
 "Active" means: imperative animations in play, CSS node animations,
 or `::part` animations. It's tracked with a per-node
-`hadLocalAnimationsLast_` flag.
+`internal_.hadLocalAnimationsLast` flag.
 
 This is useful for cleanup:
 
@@ -874,7 +874,7 @@ happen **around** the render target operation, not inside it. See
 - **Imperative animations** tick every frame while `playing`. Each
   track calls its setter once per frame. Tracks are cheap, but the
   setter writes to `getInlineBase()`, which triggers a
-  `pendingTransition` flag — that then forces the node's style to be
+  `internal_.pendingTransition` flag — that then forces the node's style to be
   re-resolved. While an imperative animation is running, the resolver
   skips the CSS transition and snaps `currentStyle` to the target, so
   the animated value is visible on the same frame. The cost is one
@@ -885,7 +885,7 @@ happen **around** the render target operation, not inside it. See
   which is once per frame during `renderContent`. They're essentially
   free unless you have hundreds of parts animating.
 - **The "dirty" system**: a node in an active transition or animation
-  keeps `subtreeDirty_ = true`, which prevents measure caching. Once
+  keeps `internal_.subtreeDirty = 1`, which prevents measure caching. Once
   all animations stop, the subtree can be cached again.
 
 For 60fps budgets, the rule of thumb is: transitions and part

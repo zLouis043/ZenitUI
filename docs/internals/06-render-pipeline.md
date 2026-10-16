@@ -58,7 +58,7 @@ The entry point for each node. Let's trace it in order.
 ### 2.1 Portal registration
 
 ```cpp
-if (isPortal_) {
+if (config.portal) {
     UIContext::get().framePortals.push_back(weak_from_this());
     return;
 }
@@ -183,7 +183,7 @@ Only the root runs this, and only after the normal tree is done. Steps:
    can register **new** portals (a portal's child might be a portal),
    and iterating while the vector is being modified would be UB.
 2. For each alive portal (weak_ptr locks), temporarily clear the
-   `isPortal_` flag, draw it normally, then restore the flag.
+   `config.portal` flag, draw it normally, then restore the flag.
 3. Portals are drawn at full opacity (`1.0f`). The portal's own
    `opacity` is applied inside its `draw` via `renderStyle.opacity`
    (times 1.0).
@@ -816,7 +816,7 @@ the root.
 
 If a child's `draw` calls `removeFromParent` (e.g. via a callback that
 fires during draw — unusual but possible), the child is still in
-`children` at this point. The `wantsRemoval` flag is set, but the
+`children` at this point. The `internal_.wantsRemoval` flag is set, but the
 child is drawn one more time. It'll be culled at the end of the next
 `update`.
 

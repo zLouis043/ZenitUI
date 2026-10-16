@@ -92,7 +92,7 @@ Layout* releaseTarget{nullptr};     // fixed at pointer-up
 
 They're raw pointers, not `shared_ptr`. Lifetime is managed by the tree
 — a `Layout` that's in the tree is alive; one that's been removed has
-`wantsRemoval` set and will be culled. A dangling raw pointer to a
+`internal_.wantsRemoval` set and will be culled. A dangling raw pointer to a
 culled node is possible in theory but never happens in practice, because
 `cullRemovedChildren` runs at the end of `update`, after all uses of
 these pointers.
@@ -136,7 +136,7 @@ bool hasFocus(const Layout* n) const {
 ```
 
 `requestFocus` silently refuses non-focusable nodes. `isFocusable()`
-returns `isFocusable_ && isEnabled` — so a disabled node can't be
+returns `config.focusable != 0 && config.enabled != 0` — so a disabled node can't be
 focused.
 
 ---
@@ -158,41 +158,41 @@ void InputController::updateFlags(Layout& node, bool selfBlocked, bool scrolling
     if (scrolling) {
         // Freeze hover during scroll
         bool focusNow = ctx.hasFocus(&node);
-        if (focusNow != node.isFocused) {
-            node.isFocused = focusNow;
-            node.pendingTransition = true;
+        if (focusNow != (node.state.focused != 0)) {
+            node.state.focused = focusNow ? 1 : 0;
+            node.internal_.pendingTransition = 1;
         }
         return;
     }
 
-    node.isHovered = false;
+    node.state.hovered = 0;
     if (!selfBlocked && node.rect.width > 0 && node.rect.height > 0)
-        node.isHovered = node.rect.contains(pointer.pos);
+        node.state.hovered = node.rect.contains(pointer.pos) ? 1 : 0;
 
-    node.isPressed = false;
+    node.state.pressed = 0;
     if (pointer.down && ctx.pressTarget) {
         Layout* n = ctx.pressTarget;
         while (n) {
-            if (n == &node) { node.isPressed = true; break; }
+            if (n == &node) { node.state.pressed = 1; break; }
             if (!n->getPassThrough()) break;
             n = n->getParent().get();
         }
     }
 
     bool focusNow = ctx.hasFocus(&node);
-    if (focusNow != node.isFocused) {
-        node.isFocused = focusNow;
-        node.pendingTransition = true;
+    if (focusNow != (node.state.focused != 0)) {
+        node.state.focused = focusNow ? 1 : 0;
+        node.internal_.pendingTransition = 1;
     }
 }
 ```
 
 Three flags are updated:
 
-**`isHovered`** — true if the pointer is inside the node's `rect`, the
+**`state.hovered`** — true if the pointer is inside the node's `rect`, the
 node isn't self-blocked, and it has non-zero size. Note this is a
 **geometric** check against the node's own rect, not the hit-test
-result. So a node that's covered by a sibling still gets `isHovered =
+result. So a node that's covered by a sibling still gets `state.hovered =
 true` if the pointer is over its rect. This is a known simplification:
 `.zstyle` `:hover` matches based on the node's own rect, not on
 whether it's the topmost node.
@@ -203,23 +203,23 @@ pointer is within both rects). The alternative — using
 `topmostConsumer` — would only hover the single topmost node, which
 makes `:hover` on containers impossible.
 
-**`isPressed`** — true if the pointer is down **and** the current press
-target is this node or an ancestor reachable through `passThrough`
+**`state.pressed`** — true if the pointer is down **and** the current press
+target is this node or an ancestor reachable through `config.passThrough`
 chains. The loop walks up from `pressTarget` until it finds `node` or
-hits a non-`passThrough` boundary. This is what makes
-`passThrough: true` work for press/hold states.
+hits a non-`config.passThrough` boundary. This is what makes
+`config.passThrough = 1` work for press/hold states.
 
 Note it walks **up** from `pressTarget`, not down from `node`. This is
 intentional: the press target is fixed at pointer-down, so a node
 further up the tree can still be considered "pressed" if the press
-target is one of its descendants that passThrough.
+target is one of its descendants that has config.passThrough = 1.
 
-**`isFocused`** — true if `UIContext::focusedNode` points to this
-node. When this changes, `pendingTransition = true` triggers a style
+**`state.focused`** — true if `UIContext::focusedNode` points to this
+node. When this changes, `internal_.pendingTransition = 1` triggers a style
 re-resolve so `:focus` rules apply.
 
 The `scrolling` parameter is the "hover freeze": during a scroll, only
-`isFocused` is updated, not `isHovered` or `isPressed`. This prevents
+`state.focused` is updated, not `state.hovered` or `state.pressed`. This prevents
 `onHoverEnter`/`onHoverExit` from firing on every row that passes
 under a stationary cursor.
 
@@ -227,9 +227,9 @@ under a stationary cursor.
 
 ```cpp
 UIState InputController::computeNextState(const Layout& node) const {
-    if (!node.isEnabled) return UIState::Disabled;
-    if (node.isPressed)  return UIState::Pressed;
-    if (node.isHovered)  return UIState::Hover;
+    if (!node.config.enabled) return UIState::Disabled;
+    if (node.state.pressed) return UIState::Pressed;
+    if (node.state.hovered) return UIState::Hover;
     return UIState::Idle;
 }
 ```
@@ -248,7 +248,7 @@ when a state change happened.
 
 ```cpp
 void InputController::handleKeyInput(Layout& node) {
-    if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+    if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
         return;
 
     auto& ev = UIContext::get().inputEvents;
@@ -261,7 +261,7 @@ void InputController::handleKeyInput(Layout& node) {
 ```
 
 Fires `onClick` on `Enter` or `Space` for focused nodes that have
-`keyboardActivates_` set. Uses `ev.keys` (rising edge), so it fires
+`config.keyboardActivates` set. Uses `ev.keys` (rising edge), so it fires
 once per key press.
 
 Only `Enter` and `Space` are handled. Other keys are the widget's
@@ -270,7 +270,7 @@ keys in its own `onUpdate`).
 
 Note the `onClick` callback is invoked directly, **without** the
 consumption mechanism used by pointer clicks. So a `Button` with
-`keyboardActivates` that's focused fires `onClick` on `Enter` and the
+`config.keyboardActivates` that's focused fires `onClick` on `Enter` and the
 event is not propagated further. This is correct for keyboard, since
 there's no hierarchy of focused nodes.
 
@@ -302,7 +302,7 @@ void InputController::fireCallbacks(Layout& node, UIState prevState,
                             node.isAncestorOf(ctx.pressTarget);
         if (inPressPath) {
             if (node.onPress) node.onPress();
-            if (!node.passThrough_) ctx.consumeClick();
+            if (!node.config.passThrough) ctx.consumeClick();
         }
     }
 
@@ -318,16 +318,16 @@ void InputController::fireCallbacks(Layout& node, UIState prevState,
             if (node.onRelease) node.onRelease();
             if (node.onClick && !ctx.clickConsumed) {
                 node.onClick();
-                if (!node.passThrough_) ctx.consumeClick();
+                if (!node.config.passThrough) ctx.consumeClick();
             }
         }
     }
 
     // ---- Right-click ----
-    if (pointer.rightPressed && node.isHovered && node.onRightClick) {
+    if (pointer.rightPressed && node.state.hovered && node.onRightClick) {
         if (!ctx.rightClickConsumed) {
             node.onRightClick();
-            if (!node.passThrough_) ctx.consumeRightClick();
+            if (!node.config.passThrough) ctx.consumeRightClick();
         }
     }
 }
@@ -378,22 +378,22 @@ else if (prevState == UIState::Hover && nextState != UIState::Hover && node.onHo
 
 Yes, this would fire `onHoverExit` when transitioning from Hover to
 Pressed. That's likely a bug or at least unexpected behavior. The user
-documentation says `onHoverExit` fires when `isHovered` transitions
+documentation says `onHoverExit` fires when `state.hovered` transitions
 from true to false, but the state machine transitions through `Pressed`
-without `isHovered` changing.
+without `state.hovered` changing.
 
 Actually, re-reading: the state machine runs `beginStateTransition`
-before `fireCallbacks`. So `isHovered` is still true when the state
+before `fireCallbacks`. So `state.hovered` is still true when the state
 changes to `Pressed`. But the callback fires based on the state
 comparison.
 
 Let me trace: pointer enters a node.
 
-- Frame 1: `isHovered = true`, `isPressed = false`. `nextState = Hover`.
+- Frame 1: `state.hovered = 1`, `state.pressed = 0`. `nextState = Hover`.
   `prevState = Idle`. State changed. `onHoverEnter` fires. ✅
 
 - Frame 2: pointer presses.
-- `isHovered = true`, `isPressed = true`. `nextState = Pressed`.
+- `state.hovered = 1`, `state.pressed = 1`. `nextState = Pressed`.
   `prevState = Hover`. State changed.
   - First condition: `next == Hover`? No (it's `Pressed`).
   - Second condition: `prev == Hover && next != Hover`? Yes.
@@ -419,14 +419,14 @@ of the press. A node fires `onPress` if it **is** the press target, or
 if the press target is a descendant of it. The `isAncestorOf` check
 walks up the parent chain.
 
-The consumption: if the node doesn't have `passThrough`, it sets
+The consumption: if the node doesn't have `config.passThrough`, it sets
 `clickConsumed = true`. Subsequent nodes in the tree walk (which
 proceeds bottom-up within a subtree, since children are updated before
 their parents) see `clickConsumed` and skip their own `onPress`.
 
 Order matters: **children update before parents**, so a child's
 `onPress` fires before its parent's. If the child consumes the event,
-the parent doesn't fire. If the child is `passThrough`, the parent
+the parent doesn't fire. If the child is `config.passThrough`, the parent
 also fires.
 
 **Release + Click**: similar logic, but requires both press and release
@@ -452,7 +452,7 @@ if (validClick) {
     if (node.onRelease) node.onRelease();
     if (node.onClick && !ctx.clickConsumed) {
         node.onClick();
-        if (!node.passThrough_) ctx.consumeClick();
+        if (!node.config.passThrough) ctx.consumeClick();
     }
 }
 ```
@@ -465,11 +465,11 @@ intentional: `onRelease` is "the pointer released over this subtree",
 **Right-click** fires on `pointer.rightPressed` (rising edge) if the
 node is currently hovered and has `onRightClick`. Unlike left-click,
 there's no press/release validation — right-click fires immediately on
-press. And it uses `isHovered` (geometric check), not the hit-test
+press. And it uses `state.hovered` (geometric check), not the hit-test
 result.
 
 The consumption: `rightClickConsumed` is set if the node doesn't
-passThrough. The walk order is the same (children before parents), so
+config.passThrough. The walk order is the same (children before parents), so
 the deepest hovered node fires first.
 
 ### 2.5 Order of the four phases
@@ -542,7 +542,7 @@ if (ctx.pointer.pressed) {
 Clicking a focusable node focuses it. Clicking anywhere else releases
 focus. This is the only place a click changes focus.
 
-`isFocusable()` returns `isFocusable_ && isEnabled`, so a disabled
+`isFocusable()` returns `config.focusable != 0 && config.enabled != 0`, so a disabled
 node can't be focused by clicking.
 
 ### 3.4 Tab navigation
@@ -676,14 +676,14 @@ void releaseFocus() { focusedNode.reset(); }
 `requestFocus(null)` is equivalent to `releaseFocus()`. Both silently
 succeed regardless of the current state.
 
-The node's `isFocused` flag isn't updated here — it's updated in
+The node's `state.focused` flag isn't updated here — it's updated in
 `updateFlags` on the next `update`. So there's a one-frame delay
 between `requestFocus` and `:focus` styling applying.
 
 Actually, `requestFocus` is called during `updateTree`, before `update`.
 So within the same frame:
 1. `requestFocus` sets `focusedNode` to the new node.
-2. `update` runs, and `updateFlags` sets `isFocused` on the new node
+2. `update` runs, and `updateFlags` sets `state.focused` on the new node
    (and clears it on the old one).
 3. `computeNextState` sees the new flag.
 4. `beginStateTransition` resolves the `:focus` style.
@@ -698,9 +698,9 @@ and styled in the same frame.
 
 ```cpp
 void setEnabled(bool e) {
-    if (isEnabled == e) return;
-    isEnabled = e;
-    pendingTransition = true;
+    if ((config.enabled != 0) == e) return;
+    config.enabled = e ? 1 : 0;
+    internal_.pendingTransition = 1;
 
     if (!e) {
         auto& ctx = UIContext::get();
@@ -869,10 +869,10 @@ So for a click on a deeply nested button, the order is:
    `onRelease` fires).
 3. ... up to the root, all skipped for `onClick`.
 
-For a `passThrough` chain:
+For a `config.passThrough = 1` chain:
 
-1. Deepest node fires `onClick`. Doesn't consume (`passThrough`).
-2. Parent fires `onClick`. Doesn't consume (if it's passThrough).
+1. Deepest node fires `onClick`. Doesn't consume (`config.passThrough`).
+2. Parent fires `onClick`. Doesn't consume (if it's `config.passThrough`).
 3. ... all the way up.
 
 ### 5.3 Consumption
@@ -883,14 +883,14 @@ void consumeClick() { clickConsumed = true; }
 ```
 
 `clickConsumed` is cleared at the start of each frame. It's set by
-`fireCallbacks` when a node fires `onClick` **and** isn't `passThrough`.
+`fireCallbacks` when a node fires `onClick` **and** isn't `config.passThrough`.
 
 The check is done **before** calling `onClick`:
 
 ```cpp
 if (node.onClick && !ctx.clickConsumed) {
     node.onClick();
-    if (!node.passThrough_) ctx.consumeClick();
+    if (!node.config.passThrough) ctx.consumeClick();
 }
 ```
 
@@ -913,10 +913,10 @@ in frame N and a release in frame N+1 both use the fresh
 ### 5.4 Right-click
 
 ```cpp
-if (pointer.rightPressed && node.isHovered && node.onRightClick) {
+if (pointer.rightPressed && node.state.hovered && node.onRightClick) {
     if (!ctx.rightClickConsumed) {
         node.onRightClick();
-        if (!node.passThrough_) ctx.consumeRightClick();
+        if (!node.config.passThrough) ctx.consumeRightClick();
     }
 }
 ```
@@ -928,9 +928,9 @@ immediately.
 
 The walk order is the same (bottom-up), and consumption applies. So
 the deepest hovered node with `onRightClick` fires first, and
-ancestors are skipped unless the node is `passThrough`.
+ancestors are skipped unless the node is `config.passThrough = 1`.
 
-Since `isHovered` is geometric (pointer inside the node's rect), and
+Since `state.hovered` is geometric (pointer inside the node's rect), and
 children are updated before parents, the deepest node whose rect
 contains the pointer fires first. Usually correct.
 
@@ -995,7 +995,7 @@ Standard drag pattern:
 ```cpp
 void onUpdate(float) override {
     // Start capture on press
-    if (isPressed && !hasPointerCapture())
+    if (state.pressed && !hasPointerCapture())
         capturePointer();
 
     // While captured, do the drag
@@ -1007,7 +1007,7 @@ void onUpdate(float) override {
 }
 ```
 
-The `isPressed && !hasPointerCapture()` check starts a new capture only
+The `state.pressed && !hasPointerCapture()` check starts a new capture only
 on the first frame of the press. Subsequent frames have
 `hasPointerCapture()` true, so the first branch is skipped.
 
@@ -1134,7 +1134,7 @@ extend `IPlatform` and `InputEvents`.
 1. `updateTree` sets `topmostConsumer`, `pressTarget`, `releaseTarget`.
 2. `update` recurses into children.
 3. Each node's `update` calls `updateFlags`, which reads the current
-   state and sets `isHovered`, `isPressed`, `isFocused`.
+   state and sets `state.hovered`, `state.pressed`, `state.focused`.
 4. `computeNextState` derives the UI state from the flags.
 5. `beginStateTransition` (if state changed) or
    `resolvePendingTransition` (if a property changed) re-resolves the
@@ -1160,8 +1160,8 @@ Focus changes happen in `updateTree`, **before** `update`. So when the
 recursion runs, the new focus is already set, and each node's
 `updateFlags` picks up the change.
 
-The `isFocused` flag is set in `updateFlags` (step 3), and
-`pendingTransition = true` is set if the flag changed. So the style
+The `state.focused` flag is set in `updateFlags` (step 3), and
+`internal_.pendingTransition = 1` is set if the flag changed. So the style
 re-resolve happens in the same frame.
 
 ### 8.4 When capture changes
@@ -1174,7 +1174,7 @@ set `topmostConsumer` for this frame).
 
 In practice, the drag pattern works because:
 
-- Frame N: press, `isPressed` becomes true, widget captures.
+- Frame N: press, `state.pressed` becomes 1, widget captures.
 - Frame N+1: `updateTree` sees capture, uses captured node as
   `topmostConsumer`, delivers events.
 
@@ -1244,7 +1244,7 @@ This is not currently implemented but is a small extension.
 ## 10. Pitfalls
 
 **The hover state is geometric, not hit-test based.**
-`isHovered` is set if the pointer is inside the node's `rect`, even if
+`state.hovered` is set if the pointer is inside the node's `rect`, even if
 another node is drawn on top. So a button under a semi-transparent
 overlay is "hovered" when the pointer is over it, and `:hover` applies.
 This can be surprising if you expect `:hover` to match the topmost
@@ -1275,11 +1275,11 @@ not hovered, no hover callback fires.
 
 OK so this pitfall isn't accurate. Let me remove it.
 
-**`isPressed` walks up from `pressTarget` via `passThrough`.**
-If a child is `passThrough` and the parent isn't, the parent is
+**`state.pressed` walks up from `pressTarget` via `config.passThrough`.**
+If a child is `config.passThrough = 1` and the parent isn't, the parent is
 considered "pressed" when the child is pressed. This means `:pressed`
 styling applies to the parent. If you don't want that, don't use
-`passThrough` on interactive children.
+`config.passThrough` on interactive children.
 
 **Pointer capture is not transitive.**
 Capturing a node's parent doesn't affect the node. Capture is a single
@@ -1287,7 +1287,7 @@ Capturing a node's parent doesn't affect the node. Capture is a single
 
 **`collectFocusables` doesn't skip disabled subtrees.**
 It collects nodes with `isFocusable()`, which is
-`isFocusable_ && isEnabled`. But the disabled flag is checked at the
+`config.focusable != 0 && config.enabled != 0`. But the disabled flag is checked at the
 node level, not at the subtree level. So a disabled container doesn't
 prevent its enabled children from being collected — they'd be focusable
 if the container itself isn't blocking.
@@ -1307,7 +1307,7 @@ disabled container's enabled children **are** collected. This is
 probably not what you want — a disabled subtree should not be
 focusable.
 
-There's no check for `isEnabled` on the parent. So this is a bug or at
+There's no check for `config.enabled` on the parent. So this is a bug or at
 least a limitation. If you disable a modal, its buttons are still
 Tab-reachable.
 
@@ -1325,18 +1325,18 @@ node is still alive (via the tree), or the events go to whatever
 **`requestFocus` during `update` (from a callback).**
 If a callback calls `requestFocus`, the new focus takes effect on the
 next frame's `updateFlags`. Within the same frame, the current
-`isFocused` flags are already set, so the style doesn't change until
+`state.focused` flags are already set, so the style doesn't change until
 the next frame. Usually fine, but if you need immediate visual
 feedback, you'd need to force a re-resolve.
 
-**The `passThrough` check for `isPressed` walks up, not down.**
+**The `config.passThrough` check for `state.pressed` walks up, not down.**
 The loop starts at `pressTarget` and walks up. If `pressTarget` is a
 deeply nested node, its ancestors are checked. But the node's own
-descendants aren't. So if you press on a parent (with a `passThrough`
+descendants aren't. So if you press on a parent (with a `config.passThrough`
 child), the child is not "pressed" — only the parent is. This is
 correct: pressing a container shouldn't press all its children.
 
-**`onRightClick` uses `isHovered`, not `topmostConsumer`.**
+**`onRightClick` uses `state.hovered`, not `topmostConsumer`.**
 A right-click on an overlapping area fires the callback on the deepest
 node whose rect contains the pointer and has `onRightClick`. This can
 differ from `topmostConsumer` if a higher-z node doesn't have
@@ -1354,35 +1354,35 @@ Both keys fire the same callback. If you need to distinguish, override
 `onUpdate` and read `ev.keys` directly.
 
 **Focus is only set from clicks on `topmostConsumer`.**
-A click that's captured by a `blocksRaycast` non-interactive node
+A click that's captured by a `config.blocksRaycast` non-interactive node
 doesn't focus anything. The focus is released (since `topmostConsumer`
 isn't focusable). This can be surprising — clicking a `Panel` (which
 blocks raycast) releases focus from whatever was focused.
 
 **`setKeyboardActivates(true)` requires `setFocusable(true)`.**
 Without focus, `handleKeyInput` returns early. A node that sets
-`keyboardActivates` but not `focusable` will never fire `onClick` from
+`config.keyboardActivates` but not `config.focusable` will never fire `onClick` from
 the keyboard.
 
-**Focus state doesn't affect `isInteractive`.**
+**Focus state doesn't affect `config.interactive`.**
 A focused but non-interactive node can still be focused (via
-`requestFocus`). The `isInteractive` flag only affects hit-testing and
+`requestFocus`). The `config.interactive` flag only affects hit-testing and
 `onClick`/`onPress` firing. A non-interactive focused node can still
 have `:focus` styling and can still be reached by Tab (if
-`isFocusable` is true).
+`config.focusable` is true).
 
 **Hover during pointer capture.**
 When a node has pointer capture, `topmostConsumer` is the captured
 node, so `hoverTarget` is also the captured node. Every frame, the
-captured node's `isHovered` is set based on... wait, no.
+captured node's `state.hovered` is set based on... wait, no.
 `updateFlags` uses `node.rect.contains(pointer.pos)` regardless of
-capture. So the captured node's `isHovered` is geometric — it may be
+capture. So the captured node's `state.hovered` is geometric — it may be
 false if the pointer has moved off the node.
 
 But `topmostConsumer` is the captured node, so events are routed there.
-The `isHovered` flag doesn't affect routing, only styling and
+The `state.hovered` flag doesn't affect routing, only styling and
 `onHoverEnter`/`Exit` callbacks. So during a drag that leaves the
-node, the node fires `onHoverExit` (because `isHovered` becomes false)
+node, the node fires `onHoverExit` (because `state.hovered` becomes false)
 but still receives `onPress`/`onRelease`/`onClick` (because of capture).
 
 This is the standard behavior — a slider's knob stops being "hovered"

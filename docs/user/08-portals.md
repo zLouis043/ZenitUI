@@ -57,7 +57,7 @@ When a portal node is drawn, instead of painting itself, it pushes a
 
 ```cpp
 void Layout::draw(float parentOpacity) {
-    if (isPortal_) {
+    if (config.portal) {
         UIContext::get().framePortals.push_back(weak_from_this());
         return;
     }
@@ -352,7 +352,7 @@ A portal is still a child of its logical parent. This means:
 
 - It's kept alive by the parent's `children` vector.
 - It's removed when the parent is removed (`removeFromParent` cascades
-  via `wantsRemoval`).
+  via `internal_.wantsRemoval`).
 - It's drawn in the parent's `draw()` pass — but only registered, not
   painted. The painting happens at the root.
 

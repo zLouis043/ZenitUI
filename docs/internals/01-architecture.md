@@ -83,8 +83,7 @@ node owns:
 - Its type (`Stack` / `Vertical` / `Horizontal`).
 - Its `rect` (computed during `arrange`).
 - Its `measuredSize` (computed during `measure`).
-- Its flags (`isHovered`, `isPressed`, `isFocused`, `isEnabled`,
-  `isChecked_`, `isPortal_`, `passThrough_`, ...).
+- Its flag groups: `state`(`hovered`,`pressed`,`focused`,`checked`),`config`(`interactive`,`enabled`,`blocksRaycast`,`portal`,`passThrough`, ...),`internal_` (framework bookkeeping).
 - Its children (`std::vector<std::shared_ptr<Layout>>`).
 - Its four subsystems (`style_`, `anim_`, `input_`, `scroll_`).
 - Its callbacks (`onClick`, `onHoverEnter`, ...).
@@ -257,16 +256,16 @@ framework. In order:
 2. `scroll_.resetIfOverflowChanged` — reset scroll if `overflow`
    changed.
 3. Viewport generation check — if the viewport changed, force a
-   `pendingTransition`.
+   `internal_.pendingTransition`.
 4. `anim_.tickImperative(*this, dt)` — tick imperative animations.
    Returns whether they block input.
 5. Compute `blockSubtree` and `selfBlocked`.
 6. `input_.updateFlags(*this, selfBlocked, scrolling)` — update
-   `isHovered`, `isPressed`, `isFocused`. Skipped if `scrolling` is
+   `state.hovered`, `state.pressed`, `state.focused`. Skipped if `scrolling` is
    true (hover freeze).
 7. Compute the new `UIState` (`Idle` / `Hover` / `Pressed` / `Disabled`).
 8. If the state changed, `style_.beginStateTransition(...)`. Else if
-   `pendingTransition`, `style_.resolvePendingTransition(...)`.
+   `internal_.pendingTransition`, `style_.resolvePendingTransition(...)`.
 9. `style_.tick(*this, dt)` — tick the CSS transition.
 10. `anim_.tickCss(*this, dt)` — tick CSS keyframe animations.
 11. `style_.propagateInheritance(*this)` — notify children if inherited
@@ -277,9 +276,9 @@ framework. In order:
 15. `input_.handleKeyInput(*this)` — Enter/Space activation.
 16. `input_.fireCallbacks(*this, prev, next, changed)` — hover, press,
     release, click, right-click.
-17. `cullRemovedChildren()` — remove children with `wantsRemoval`.
-18. `recomputeDirty(...)` — update `subtreeDirty_`.
-19. `onUpdate(dt)` if `isEnabled || updateWhenDisabled_`.
+17. `cullRemovedChildren()` — remove children with `internal_.wantsRemoval`.
+18. `recomputeDirty(...)` — update `internal_.subtreeDirty`.
+19. `onUpdate(dt)` if `config.enabled || config.updateWhenDisabled`.
 
 The order matters. Read it carefully before changing anything.
 
@@ -296,7 +295,7 @@ void Layout::renderFrame() {
 
 `draw(opacity)` on the root recursively draws the tree. Each node:
 
-1. If `isPortal_`, register itself in `framePortals` and return.
+1. If `config.portal`, register itself in `framePortals` and return.
 2. Frustum cull: if the node's `rect` is far outside the current clip,
    skip.
 3. Compute `renderStyle = currentStyle + CSS animation overlay`.
@@ -344,7 +343,7 @@ Recursive, top-down, z-ordered. Returns the topmost node that:
 - Is not blocked by an ancestor.
 - Is enabled.
 - Contains the point in its `rect`.
-- Is `isInteractive` or `blocksRaycast`.
+- Is `config.interactive` or `config.blocksRaycast`.
 
 Order:
 
@@ -374,7 +373,7 @@ Layout::updateTree → hitTest → topmostConsumer
   ↓
 Layout::update → InputController::updateFlags
   ↓
-Layout.isHovered / isPressed / isFocused
+Layout.state.hovered / state.pressed / state.focused
   ↓
 InputController::computeNextState → UIState
   ↓
@@ -407,7 +406,7 @@ draw → ScrollController::drawScrollbar
 ### 4.3 Animation → style → render
 
 ```
-AnimationPlayer::tickImperative → writes to getInlineBase() → pendingTransition
+AnimationPlayer::tickImperative → writes to getInlineBase() → internal_.pendingTransition
   ↓
 AnimationPlayer::tickCss → updates css[] active animations
   ↓
@@ -463,7 +462,7 @@ handle is invalid and `drawTarget` is called without a filter (fallback).
 - Children are owned by their parent's `children` vector
   (`shared_ptr<Layout>`).
 - A child holds a `weak_ptr<Layout>` to its parent.
-- `removeFromParent` sets `wantsRemoval = true`. The parent erases the
+- `removeFromParent` sets `internal_.wantsRemoval = 1`. The parent erases the
   child during the next `cullRemovedChildren` pass.
 
 There are no cycles by default. The `weak_ptr` to parent prevents the
@@ -554,7 +553,7 @@ friend struct ScrollController;
 ```
 
 This is how the subsystems access private members of `Layout` (flags,
-`style_`, `anim_`, `scroll_`, `pendingTransition`, `subtreeDirty_`) and
+`style_`, `anim_`, `scroll_`, `internal_.pendingTransition`, `internal_.subtreeDirty`) and
 how they mutate state that's conceptually private but part of the
 node's lifecycle.
 

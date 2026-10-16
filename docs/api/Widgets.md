@@ -99,7 +99,7 @@ std::shared_ptr<Text> Label(std::string t);
 
 | Method | Effect |
 |--------|--------|
-| `setText(std::string)` | Replace content. Sets `text_dirty` and `pendingTransition`. |
+| `setText(std::string)` | Replace content. Sets `text_dirty` and `internal_.pendingTransition`. |
 | `getText()` | Returns the current content as `const std::string&`. |
 | `setFont(FontHandle)` | Override the resolved font. |
 | `setWrap(bool)` | Enable / disable word wrapping. |
@@ -250,7 +250,7 @@ public:
 ### Structure
 
 The knob is a `Layout(Stack)` with `interactive: false`,
-`blocksRaycast: false`, and class `toggle-knob`. Its position must be
+`config.blocksRaycast = 0`, and class `toggle-knob`. Its position must be
 set entirely from `.zstyle`.
 
 ### ZMarkup

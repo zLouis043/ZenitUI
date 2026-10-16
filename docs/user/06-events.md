@@ -2,7 +2,7 @@
 
 ZenitUI has a small but precise input model. There are no DOM-like
 events propagating through a virtual tree — instead, each `Layout` has a
-set of **flags** (`isHovered`, `isPressed`, `isFocused`) and a set of
+set of **flags** (`state.hovered`, `state.pressed`, `state.focused`) and a set of
 **callbacks** (`onClick`, `onPress`, `onHoverEnter`, …) that the runtime
 fires when those flags change or when a click is validated.
 
@@ -18,9 +18,9 @@ frame from its flags:
 
 | State | Condition |
 |-------|-----------|
-| `Disabled` | `!isEnabled` |
-| `Pressed`  | `isPressed` |
-| `Hover`    | `isHovered` |
+| `Disabled` | `!!config.enabled` |
+| `Pressed`  | `state.pressed` |
+| `Hover`    | `state.hovered` |
 | `Idle`     | none of the above |
 
 The runtime calls `InputController::computeNextState` in this priority
@@ -30,13 +30,13 @@ are fired.
 
 Flags are updated every frame **before** the state is computed:
 
-- `isHovered` — true if the pointer is inside the node's `rect` and the
+- `state.hovered` — true if the pointer is inside the node's `rect` and the
   node isn't blocked by an ancestor.
-- `isPressed` — true if the pointer is down and the "press target" is
+- `state.pressed` — true if the pointer is down and the "press target" is
   this node or a descendant of it.
-- `isFocused` — true if `UIContext::focusedNode` points to this node.
+- `state.focused` — true if `UIContext::focusedNode` points to this node.
 
-While a scroll is in progress, `isHovered` is **frozen** — the runtime
+While a scroll is in progress, `state.hovered` is **frozen** — the runtime
 skips the recomputation so that scrolling a list doesn't fire
 `onHoverEnter`/`onHoverExit` on every row the cursor passes over.
 
@@ -52,8 +52,8 @@ is also `void()`:
 | `onPress` | Pointer down inside the node (or its subtree). |
 | `onRelease` | Pointer up while the press target was inside the node. |
 | `onClick` | Press + release **on the same node**, and no descendant consumed the click first. |
-| `onHoverEnter` | `isHovered` transitions from `false` to `true`. |
-| `onHoverExit` | `isHovered` transitions from `true` to `false`. |
+| `onHoverEnter` | `state.hovered` transitions from `0` to `1`. |
+| `onHoverExit` | `state.hovered` transitions from `1` to `0`. |
 | `onRightClick` | Right-button up inside the node (and not consumed). |
 
 Set them directly on the node:
@@ -190,16 +190,16 @@ Also no click. The release target won't match, and the click is dropped.
 
 ## 4. Hover
 
-`isHovered` is recomputed every frame in `InputController::updateFlags`:
+`state.hovered` is recomputed every frame in `InputController::updateFlags`:
 
 ```cpp
-node.isHovered = false;
+node.state.hovered = 0;
 if (!selfBlocked && node.rect.width > 0 && node.rect.height > 0)
-    node.isHovered = node.rect.contains(pointer.pos);
+    node.state.hovered = node.rect.contains(pointer.pos) ? 1 : 0;
 ```
 
 where `selfBlocked` is true if the node is disabled, non-interactive
-with `blocksRaycast`, or has an ancestor that is blocked.
+with `config.blocksRaycast = 1`, or has an ancestor that is blocked.
 
 `onHoverEnter` / `onHoverExit` fire on the transition, in
 `fireCallbacks`:
@@ -311,12 +311,12 @@ if (ctx.pointer.pressed)
 }
 ```
 
-`requestFocus` also updates `isFocused` on every node in the tree
+`requestFocus` also updates `state.focused` on every node in the tree
 through the per-node `updateFlags` call.
 
 ### 6.2 Focus and `:focus` styling
 
-`:focus` in `.zstyle` matches when `isFocused` is true:
+`:focus` in `.zstyle` matches when `state.focused` is 1:
 
 ```css
 TextInput:focus { border-color: #FDF900; }
@@ -543,7 +543,7 @@ btn->setKeyboardActivates(true);
 The runtime handles this in `InputController::handleKeyInput`:
 
 ```cpp
-if (!node.isFocused || !node.isEnabled || !node.keyboardActivates_)
+if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
     return;
 
 for (int k : ev.keys) {
@@ -557,12 +557,12 @@ The keys come from `InputEvents::keys`, which is populated only for
 **rising edge** key presses (not for held keys). So `Enter` fires the
 callback once per press, not per frame.
 
-`Button` sets `keyboardActivates = true` by default. `Toggle` and
+`Button` sets `config.keyboardActivates = 1` by default. `Toggle` and
 `Checkbox` do too, so `Enter`/`Space` toggles them.
 
 ### 9.1 Interaction with `TextInput`
 
-`TextInput` does **not** set `keyboardActivates` because it wants to
+`TextInput` does **not** set `config.keyboardActivates` because it wants to
 handle `Enter` itself:
 
 ```cpp
@@ -572,12 +572,12 @@ case Key::Enter:
     return;
 ```
 
-If `keyboardActivates` were true, `Enter` would fire `onClick` (which
+If `config.keyboardActivates` were set, `Enter` would fire `onClick` (which
 for `TextInput` just requests focus) — not what you want.
 
 ### 9.2 Key repeat
 
-`keyboardActivates` uses only the rising edge (`ev.keys`), so it doesn't
+`config.keyboardActivates` uses only the rising edge (`ev.keys`), so it doesn't
 auto-repeat. If you need repeat behavior (like a slider or text cursor),
 handle `ev.held` in your `onUpdate` — see [Slider](03-widgets.md) and
 [TextInput](03-widgets.md) for examples.
@@ -610,7 +610,7 @@ When a node has pointer capture:
 
 - `topmostConsumer` is set to that node every frame, regardless of the
   pointer position.
-- The node's `isHovered` and `isPressed` flags are updated as if the
+- The node's `state.hovered` and `state.pressed` flags are updated as if the
   pointer were on top of it.
 - All `onPress` / `onRelease` / `onClick` events are routed to it.
 
@@ -631,7 +631,7 @@ anyway, if you want to end the drag early (e.g. on `Escape`).
 
 ```cpp
 void Slider::onUpdate(float) override {
-    if (isPressed && !hasPointerCapture())
+    if (state.pressed && !hasPointerCapture())
         capturePointer();
 
     if (hasPointerCapture() && rect.width > 0) {
@@ -659,7 +659,7 @@ becomes false.
 ## 11. Wheel events
 
 Wheel events are delivered to the node under the cursor, if it's a
-scroll container and `isInteractive`:
+scroll container and `config.interactive`:
 
 ```cpp
 if (pointer.wheelY != 0.0f) {
@@ -692,11 +692,11 @@ Every state flag has a matching pseudo-class in `.zstyle`:
 
 | Flag | Pseudo-class | Set by |
 |------|--------------|--------|
-| `isHovered` | `:hover` | Pointer inside the node. |
-| `isPressed` | `:pressed` | Pointer down on the node. |
-| `isFocused` | `:focus` | Node is the focused one. |
-| `isDisabled` | `:disabled` | `!isEnabled`. |
-| `isChecked` | `:checked` | `setChecked(true)`. |
+| `state.hovered` | `:hover` | Pointer inside the node. |
+| `state.pressed` | `:pressed` | Pointer down on the node. |
+| `state.focused` | `:focus` | Node is the focused one. |
+| `isDisabled` | `:disabled` | `!config.enabled == 0`. |
+| `state.checked` | `:checked` | `setChecked(true)`. |
 
 ```css
 Button:hover   { background: #3296FF; }
@@ -882,7 +882,7 @@ env.click(root, {500, 500});   // click on empty space
 If you want to keep focus during a click elsewhere, you'd need to
 override the focus logic — but there's no built-in for that.
 
-**`passThrough` on a focusable node doesn't route focus to the parent.**
+**`config.passThrough` on a focusable node doesn't route focus to the parent.**
 
 `setPassThrough(true)` only affects **click** propagation. It doesn't
 change which node gets focus. The innermost focusable node always
