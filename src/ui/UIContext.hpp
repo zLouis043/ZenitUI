@@ -95,12 +95,44 @@ namespace ZenitUI
 		double time{0.0};
 		float dpiScale{1.0f};
 		EdgeInsets safeArea;
-		bool wheelConsumedThisFrame{false};
 		ModifierState modifiers;
+		bool wheelConsumedThisFrame{false};
+		// Per-button consumption. Canonical source of truth for "has
+		// this mouse button's event already been handled this frame?".
+		// Index with (size_t)MouseButton.
+		std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
+
+		// ---- Legacy flags (deprecated) ----
+		//
+		// Mirror the Left/Right entries of `buttonConsumed` for the
+		// benefit of call sites that haven't been migrated to the
+		// array-based API yet. Every write goes to both; every read
+		// considers both. Removed once the migration completes.
 		bool clickConsumed{false};
-		void consumeClick() { clickConsumed = true; }
 		bool rightClickConsumed{false};
-		void consumeRightClick() { rightClickConsumed = true; }
+
+		// ---- New API ----
+		void consumeClick(MouseButton b)
+		{
+			buttonConsumed[(size_t)b] = true;
+			if (b == MouseButton::Left)  clickConsumed      = true;
+			if (b == MouseButton::Right) rightClickConsumed = true;
+		}
+		bool wasConsumed(MouseButton b) const
+		{
+			if (buttonConsumed[(size_t)b]) return true;
+			if (b == MouseButton::Left  && clickConsumed)      return true;
+			if (b == MouseButton::Right && rightClickConsumed) return true;
+			return false;
+		}
+
+		// ---- Legacy API (deprecated) ----
+		//
+		// These keep working as before. They write through to the
+		// canonical array so that new readers (`wasConsumed`) see a
+		// consistent view.
+		void consumeClick()      { consumeClick(MouseButton::Left); }
+		void consumeRightClick() { consumeClick(MouseButton::Right); }
 
 		InputEvents inputEvents;
 		std::weak_ptr<Layout> focusedNode;
@@ -143,6 +175,7 @@ namespace ZenitUI
 			wheelConsumedThisFrame = false;
 			clickConsumed = false;
 			rightClickConsumed = false;
+			buttonConsumed.fill(false);
 			topmostConsumer = nullptr;
 			hoverTarget = nullptr;	 // <-- nuovo
 			releaseTarget = nullptr; // <-- nuovo

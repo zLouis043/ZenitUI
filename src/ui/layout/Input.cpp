@@ -68,11 +68,12 @@ namespace ZenitUI
 		return UIState::Idle;
 	}
 
-	void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
+		void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
 	{
 		auto &ctx = UIContext::get();
 		auto &pointer = ctx.pointer;
 
+		// ---- Hover transitions ----
 		if (stateChanged)
 		{
 			bool wasHovered = (prevState == UIState::Hover || prevState == UIState::Pressed);
@@ -84,44 +85,61 @@ namespace ZenitUI
 				node.onHoverExit();
 		}
 
-		if (pointer.pressed && !ctx.clickConsumed)
+		// ---- Left button: press / release / click ----
+		//
+		// The blocks below are per-button. Once the unified
+		// onButtonClick(MouseButton) API lands (5.15d), these will be
+		// wrapped in a loop over every button in the MouseButton enum.
+		// For now they're spelled out for Left and Right only, which
+		// matches the current public API (onClick / onPress / onRelease
+		// for Left, onRightClick for Right).
 		{
-			bool inPressPath = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
-			if (inPressPath)
-			{
-				if (node.onPress)
-					node.onPress();
-				if (!node.config.passThrough)
-					ctx.consumeClick();
-			}
-		}
+			const auto &btn = pointer[MouseButton::Left];
 
-		if (pointer.released)
-		{
-			bool pressedHere = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
-			bool releasedHere = (ctx.releaseTarget == &node) || node.isAncestorOf(ctx.releaseTarget);
-			bool validClick = pressedHere && releasedHere;
-
-			if (validClick)
+			if (btn.pressed && !ctx.wasConsumed(MouseButton::Left))
 			{
-				if (node.onRelease)
-					node.onRelease();
-				if (node.onClick && !ctx.clickConsumed)
+				bool inPressPath = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
+				if (inPressPath)
 				{
-					node.onClick();
+					if (node.onPress)
+						node.onPress();
 					if (!node.config.passThrough)
-						ctx.consumeClick();
+						ctx.consumeClick(MouseButton::Left);
+				}
+			}
+
+			if (btn.released)
+			{
+				bool pressedHere  = (ctx.pressTarget == &node)   || node.isAncestorOf(ctx.pressTarget);
+				bool releasedHere = (ctx.releaseTarget == &node) || node.isAncestorOf(ctx.releaseTarget);
+				bool validClick   = pressedHere && releasedHere;
+
+				if (validClick)
+				{
+					if (node.onRelease)
+						node.onRelease();
+					if (node.onClick && !ctx.wasConsumed(MouseButton::Left))
+					{
+						node.onClick();
+						if (!node.config.passThrough)
+							ctx.consumeClick(MouseButton::Left);
+					}
 				}
 			}
 		}
 
-		if (pointer.rightPressed && node.state.hovered && node.onRightClick)
+		// ---- Right button: right-click ----
 		{
-			if (!ctx.rightClickConsumed)
+			const auto &btn = pointer[MouseButton::Right];
+
+			if (btn.pressed && node.state.hovered && node.onRightClick)
 			{
-				node.onRightClick();
-				if (!node.config.passThrough)
-					ctx.consumeRightClick();
+				if (!ctx.wasConsumed(MouseButton::Right))
+				{
+					node.onRightClick();
+					if (!node.config.passThrough)
+						ctx.consumeClick(MouseButton::Right);
+				}
 			}
 		}
 	}

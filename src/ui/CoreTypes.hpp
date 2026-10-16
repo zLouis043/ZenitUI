@@ -114,16 +114,56 @@ namespace ZenitUI
 		float scale{1.0f};
 	};
 
+	// Mouse buttons. The enum is the canonical index into
+	// PointerState::buttons. Add new values before Count to extend
+	// the framework to more buttons; every call site that uses the
+	// array will automatically get the new slot.
+	enum class MouseButton : uint8_t
+	{
+		Left,
+		Right,
+		Middle,
+		Count
+	};
+
+	// State of a single mouse button for the current frame.
+	//   down     — currently held
+	//   pressed  — rising edge this frame
+	//   released — falling edge this frame
+	struct ButtonState
+	{
+		bool down{false};
+		bool pressed{false};
+		bool released{false};
+	};
+
 	struct PointerState
 	{
 		Vec2 pos;
+		float wheelY{0.0f};
+
+		// Canonical per-button state. Index with (size_t)MouseButton.
+		std::array<ButtonState, (size_t)MouseButton::Count> buttons{};
+
+		// ---- Legacy fields (deprecated) ----
+		//
+		// These mirror the entries in `buttons` for the left and right
+		// buttons. They exist only to keep existing call sites compiling
+		// during the migration to the array-based API. New code should
+		// use `buttons[(size_t)MouseButton::X]` directly, or one of the
+		// accessor helpers below.
+		//
+		// Once every call site is migrated, these fields are removed.
 		bool down{false};
 		bool pressed{false};
 		bool released{false};
 		bool rightDown{false};
 		bool rightPressed{false};
 		bool rightReleased{false};
-		float wheelY{0.0f};
+
+		// Convenience accessors.
+		ButtonState &operator[](MouseButton b) { return buttons[(size_t)b]; }
+		const ButtonState &operator[](MouseButton b) const { return buttons[(size_t)b]; }
 	};
 
 	// Modifier keys currently held. Reported once per frame by the
@@ -134,8 +174,8 @@ namespace ZenitUI
 	struct ModifierState
 	{
 		bool shift{false};
-		bool ctrl {false};
-		bool alt  {false};
+		bool ctrl{false};
+		bool alt{false};
 		bool super{false};
 	};
 
