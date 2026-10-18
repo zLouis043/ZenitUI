@@ -1722,6 +1722,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="12. Callbacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-onbutton-exists-alongside-onclick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why onButton* exists alongside onClick
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3509,6 +3526,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="12. Callbacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-onbutton-exists-alongside-onclick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why onButton* exists alongside onClick
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4259,10 +4293,53 @@ fallback.</p>
 <td><code>onAnimationsFinished</code></td>
 <td>All local animations stop.</td>
 </tr>
+<tr>
+<td><code>onButtonPress</code></td>
+<td><code>void(MouseButton)</code>. Fires on press for Left and Middle. Same click model as <code>onPress</code> but parameterized by button.</td>
+</tr>
+<tr>
+<td><code>onButtonRelease</code></td>
+<td><code>void(MouseButton)</code>. Fires on release for Left and Middle, when the click is valid.</td>
+</tr>
+<tr>
+<td><code>onButtonClick</code></td>
+<td><code>void(MouseButton)</code>. Fires on a complete click (press + release on the same target) for Left and Middle.</td>
+</tr>
 </tbody>
 </table>
 <p>All are <code>void()</code>. See <a href="../../user/06-events/">Events</a> for the exact
 firing conditions.</p>
+<h3 id="why-onbutton-exists-alongside-onclick">Why <code>onButton*</code> exists alongside <code>onClick</code></h3>
+<p><code>onClick</code> / <code>onPress</code> / <code>onRelease</code> are the historical Left-only API.
+<code>onRightClick</code> is the historical Right-only API, with a different
+semantic: it fires on <strong>press</strong> if the node is hovered, without
+validating a full click pair. Right-click is a one-shot event, so the
+press-on-hover model is intentional.</p>
+<p><code>onButtonPress</code> / <code>onButtonRelease</code> / <code>onButtonClick</code> cover the same
+click model as <code>onClick</code> but take a <code>MouseButton</code> parameter. They
+currently fire for:</p>
+<ul>
+<li><strong>Left</strong> — in addition to <code>onPress</code> / <code>onRelease</code> / <code>onClick</code>. Both
+  the legacy and the unified callback can be set at once; if they are,
+  both fire.</li>
+<li><strong>Middle</strong> — the only way to react to a middle click on a node.</li>
+</ul>
+<p>Right does <strong>not</strong> fire <code>onButton*</code>. Its semantic is different, and
+unifying it would lose the "one-shot on press" behavior that
+<code>onRightClick</code> provides. If a future design wants to unify right-click
+under the same model, that's a separate decision.</p>
+<pre><code class="language-cpp">// Left click (both fire):
+node-&gt;onClick       = []{ /* legacy */ };
+node-&gt;onButtonClick = [](MouseButton b){ /* b == Left */ };
+
+// Middle click (only the unified fires):
+node-&gt;onButtonClick = [](MouseButton b){
+    if (b == MouseButton::Middle) { /* ... */ }
+};
+
+// Right click (only the legacy fires):
+node-&gt;onRightClick  = []{ /* ... */ };
+</code></pre>
 <hr />
 <h2 id="13-runtime-lifecycle">13. Runtime — lifecycle</h2>
 <p>These are called by the runtime, not by user code. They're virtual so

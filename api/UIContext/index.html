@@ -2644,9 +2644,8 @@ that isn't per-node:</p>
   events.</li>
 <li><strong>Targets</strong> — the hit-test / press / release targets for the frame.</li>
 <li><strong>Portals</strong> — two lists (active from last frame, pending for this
-  frame).</li>
-<li><strong>Per-frame flags</strong> — <code>clickConsumed</code>, <code>rightClickConsumed</code>,
-  <code>wheelConsumedThisFrame</code>.</li>
+  frame).
+ <strong>Per-frame flags</strong> — <code>buttonConsumed</code>, <code>wheelConsumedThisFrame</code>.</li>
 </ul>
 <p>It's a singleton because the framework assumes a single UI tree on a
 single window. For multi-window, you'd need a significant refactor.</p>
@@ -2786,13 +2785,25 @@ EdgeInsets   safeArea;
 <p>The current pointer state. See <code>CoreTypes.hpp</code>:</p>
 <pre><code class="language-cpp">struct PointerState {
     Vec2  pos;
-    bool  down, pressed, released;
-    bool  rightDown, rightPressed, rightReleased;
     float wheelY;
+
+    // Per-button state. Index with (size_t)MouseButton, or use the
+    // operator[] overload.
+    std::array&lt;ButtonState, (size_t)MouseButton::Count&gt; buttons;
+
+    ButtonState&amp;       operator[](MouseButton b);
+    const ButtonState&amp; operator[](MouseButton b) const;
+};
+
+struct ButtonState {
+    bool down;      // currently held
+    bool pressed;   // rising edge this frame
+    bool released;  // falling edge this frame
 };
 </code></pre>
-<p><code>pressed</code> / <code>released</code> (and their right-click counterparts) are
-one-frame edges. <code>down</code> is level.</p>
+<p>For each button in <code>buttons</code>, <code>pressed</code> / <code>released</code> are one-frame
+edges and <code>down</code> is level. Access via <code>pointer[MouseButton::Left]</code>,
+<code>pointer[MouseButton::Right]</code>, <code>pointer[MouseButton::Middle]</code>.</p>
 <h3 id="inputevents"><code>inputEvents</code></h3>
 <p>The keyboard events for the frame:</p>
 <pre><code class="language-cpp">struct InputEvents {
@@ -2836,24 +2847,44 @@ Available for user code.</p>
 <h2 id="6-per-frame-flags">6. Per-frame flags</h2>
 <p>Cleared at the start of each frame:</p>
 <pre><code class="language-cpp">bool wheelConsumedThisFrame{false};
-bool clickConsumed{false};
-bool rightClickConsumed{false};
+std::array&lt;bool, (size_t)MouseButton::Count&gt; buttonConsumed{};
 
-void consumeClick() { clickConsumed = true; }
-void consumeRightClick() { rightClickConsumed = true; }
+void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
+bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 </code></pre>
 <ul>
-<li><strong><code>wheelConsumedThisFrame</code></strong> — set by the first scroll container that
+<li>
+<p><code>wheelConsumedThisFrame</code> — set by the first scroll container that
   handles a wheel event. Prevents nested scroll containers from both
-  scrolling.</li>
-<li><strong><code>clickConsumed</code></strong> — set when a node's <code>onClick</code> (or <code>onPress</code>) fires
-  without <code>config.passThrough</code>. Prevents ancestors from also firing <code>onClick</code>.</li>
-<li><strong><code>rightClickConsumed</code></strong> — same, for <code>onRightClick</code>.</li>
+  scrolling.</p>
+</li>
+<li>
+<p><code>buttonConsumed</code> — per-button consumption. Marked when a node
+  handles a button's event and the node doesn't have
+  <code>config.passThrough</code>. Ancestors skip their own handling of the same
+  button.</p>
+</li>
 </ul>
-<p>The <code>consumeClick</code> / <code>consumeRightClick</code> methods are the public API to
-set the flags. User code rarely needs them (the framework sets them
-automatically).</p>
-<hr />
+<p>The public API is:</p>
+<ul>
+<li>
+<p><code>consumeClick(MouseButton)</code> — set the "consumed" flag for one
+  button. Rarely called by user code; the framework calls it from
+  <code>InputController::fireCallbacks</code> when a node fires its click
+  callback and isn't <code>passThrough</code>.</p>
+</li>
+<li>
+<p><code>wasConsumed(MouseButton)</code> — query whether a button's event has
+  already been handled this frame. Also rarely called by user code; the
+  framework uses it internally to decide whether to keep propagating a
+  click up the tree.</p>
+</li>
+</ul>
+<p>There's no global "any button consumed" flag. If you need one, iterate:</p>
+<pre><code class="language-cpp">bool anyConsumed = false;
+for (size_t i = 0; i &lt; (size_t)MouseButton::Count; ++i)
+    if (ctx.buttonConsumed[i]) { anyConsumed = true; break; }
+</code></pre>
 <h2 id="7-focus">7. Focus</h2>
 <pre><code class="language-cpp">std::weak_ptr&lt;Layout&gt; focusedNode;
 
@@ -2982,9 +3013,8 @@ without creating its own RNG.</p>
 <p>The per-frame entry point. Called from <code>Layout::runFrame</code>. Handles:</p>
 <ol>
 <li>Update <code>dt</code>, advance <code>time</code>.</li>
-<li>Clear per-frame flags (<code>wheelConsumedThisFrame</code>, <code>clickConsumed</code>,
-   <code>rightClickConsumed</code>, <code>topmostConsumer</code>, <code>hoverTarget</code>,
-   <code>releaseTarget</code>).</li>
+<li>Clear per-frame flags (<code>wheelConsumedThisFrame</code>, <code>buttonConsumed</code>,
+   <code>topmostConsumer</code>, <code>hoverTarget</code>, <code>releaseTarget</code>).</li>
 <li>Rotate portal buffers (<code>activePortals ← framePortals</code>).</li>
 <li>Poll the platform:</li>
 <li><code>viewportSize</code>, <code>safeArea</code> → update <code>Metrics::viewport</code>, check
@@ -3062,7 +3092,7 @@ if (ctx.topmostConsumer == myNode.get()) {
 <h3 id="manual-input-consumption">Manual input consumption</h3>
 <pre><code class="language-cpp">auto&amp; ctx = UIContext::get();
 if (handleSomething()) {
-    ctx.consumeClick();
+    ctx.consumeClick(MouseButton::Left);
 }
 </code></pre>
 <p>Rarely needed — the framework consumes automatically when a node fires
@@ -3172,10 +3202,11 @@ yourself:</p>
 <pre><code class="language-cpp">UIContext::get().rng.seed(std::random_device{}());
 </code></pre>
 <p><strong><code>consumeClick</code> without <code>onClick</code>.</strong></p>
-<p>If you manually call <code>consumeClick()</code> in a callback that isn't the
-<code>onClick</code> handler, the current frame's <code>clickConsumed</code> is set, and any
-subsequent <code>onClick</code> (in the same frame) is skipped. This is the
-intended behavior — but be careful about where you call it.</p>
+<p>If you manually call <code>ctx.consumeClick(MouseButton::Left)</code> in a
+callback that isn't the <code>onClick</code> handler, the current frame's
+<code>buttonConsumed[Left]</code> is set, and any subsequent <code>onClick</code> (in the
+same frame) is skipped. This is the intended behavior — but be careful
+about where you call it.</p>
 <p><strong><code>time</code> is a <code>double</code>, <code>dt</code> is a <code>float</code>.</strong></p>
 <p><code>time += delta_time</code> where <code>delta_time</code> is a <code>float</code>. The cumulative
 <code>time</code> is <code>double</code> to preserve precision over long sessions. <code>dt</code> is

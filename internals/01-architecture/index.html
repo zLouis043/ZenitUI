@@ -2463,7 +2463,7 @@ EndDrawing();
 <li>Updates <code>Metrics::viewport</code>, <code>safeArea</code>, <code>pointer</code>, <code>inputEvents</code>,
   <code>modifiers</code>, <code>dpiScale</code>.</li>
 <li>Increments <code>viewportGeneration</code> if the viewport or safe area changed.</li>
-<li>Clears per-frame flags: <code>clickConsumed</code>, <code>rightClickConsumed</code>,
+<li>Clears per-frame flags: <code>buttonConsumed</code> (all entries),
   <code>wheelConsumedThisFrame</code>, <code>topmostConsumer</code>, <code>hoverTarget</code>,
   <code>releaseTarget</code>.</li>
 <li>Swaps <code>activePortals ← framePortals</code> (portals from last frame become

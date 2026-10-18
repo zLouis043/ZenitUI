@@ -3319,7 +3319,7 @@ other (if it's <code>Scroll</code> or <code>Auto</code>).</p>
 <p>The scrollbar drag, wheel, and track click all check these flags.</p>
 <h3 id="63-drag-start-and-track-click">6.3 Drag start and track click</h3>
 <pre><code class="language-cpp">if (!node.hasPointerCapture()) {
-    if (pointer.pressed &amp;&amp; ctx.topmostConsumer == &amp;node) {
+    if (pointer[MouseButton::Left].pressed &amp;&amp; ctx.topmostConsumer == &amp;node) {
         bool handled = false;
 
         // Try vertical thumb
@@ -3384,7 +3384,7 @@ subsequent frames (see §6.4), the delta is applied.</p>
 both are, the click on the track is ignored (to avoid ambiguity about
 which axis to jump on). In practice, both scrollable is rare.</p>
 <h3 id="64-drag-update">6.4 Drag update</h3>
-<pre><code class="language-cpp">else if (pointer.down) {
+<pre><code class="language-cpp">else if (pointer[MouseButton::Left].down) {
     if (canScrollY) {
         float dy = pointer.pos.y - state.dragStartMouseY;
         float ratio = (rect.height &gt; 0.0f)

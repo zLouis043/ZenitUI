@@ -2510,43 +2510,81 @@ skips the recomputation so that scrolling a list doesn't fire
 <code>onHoverEnter</code>/<code>onHoverExit</code> on every row the cursor passes over.</p>
 <hr />
 <h2 id="2-callbacks">2. Callbacks</h2>
-<p>All callbacks are <code>std::function&lt;void()&gt;</code> except <code>onRightClick</code>, which
-is also <code>void()</code>:</p>
+<p>The framework exposes two families of callbacks:</p>
+<ul>
+<li><strong>Legacy <code>on*</code></strong> — <code>void()</code> signatures. Fire for Left (and Right,
+  for <code>onRightClick</code>). This is the historical API.</li>
+<li><strong>Unified <code>onButton*</code></strong> — <code>void(MouseButton)</code>. Fire for Left and
+  Middle, and tell you <em>which</em> button triggered the event. Right is
+  <strong>not</strong> covered — its semantic (fire on press, no click validation)
+  is different, and it stays on the legacy <code>onRightClick</code>.</li>
+</ul>
 <table>
 <thead>
 <tr>
 <th>Callback</th>
+<th>Signature</th>
 <th>Fires when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>onPress</code></td>
-<td>Pointer down inside the node (or its subtree).</td>
+<td><code>void()</code></td>
+<td>Left press on the node (or its subtree).</td>
 </tr>
 <tr>
 <td><code>onRelease</code></td>
-<td>Pointer up while the press target was inside the node.</td>
+<td><code>void()</code></td>
+<td>Left release on the node (or its subtree), while the press was also inside.</td>
 </tr>
 <tr>
 <td><code>onClick</code></td>
-<td>Press + release <strong>on the same node</strong>, and no descendant consumed the click first.</td>
+<td><code>void()</code></td>
+<td>Left press + release on the same node, and no descendant consumed the click.</td>
 </tr>
 <tr>
 <td><code>onHoverEnter</code></td>
+<td><code>void()</code></td>
 <td><code>state.hovered</code> transitions from <code>0</code> to <code>1</code>.</td>
 </tr>
 <tr>
 <td><code>onHoverExit</code></td>
+<td><code>void()</code></td>
 <td><code>state.hovered</code> transitions from <code>1</code> to <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>onRightClick</code></td>
-<td>Right-button up inside the node (and not consumed).</td>
+<td><code>void()</code></td>
+<td>Right button <strong>press</strong> while hovered. Not a full click — see §4.</td>
+</tr>
+<tr>
+<td><code>onButtonPress</code></td>
+<td><code>void(MouseButton)</code></td>
+<td>Left or Middle press on the node (or its subtree).</td>
+</tr>
+<tr>
+<td><code>onButtonRelease</code></td>
+<td><code>void(MouseButton)</code></td>
+<td>Left or Middle release, valid click pair.</td>
+</tr>
+<tr>
+<td><code>onButtonClick</code></td>
+<td><code>void(MouseButton)</code></td>
+<td>Left or Middle full click (press + release on the same node).</td>
 </tr>
 </tbody>
 </table>
-<p>Set them directly on the node:</p>
+<p>The legacy and unified families are independent. A node can set both,
+in which case both fire on the same event. Use the unified family when
+you need Middle, or when you want to write a single callback that
+handles both Left and Middle:</p>
+<pre><code class="language-cpp">btn-&gt;onButtonClick = [](MouseButton b) {
+    if (b == MouseButton::Left)   std::printf(&quot;left\n&quot;);
+    if (b == MouseButton::Middle) std::printf(&quot;middle\n&quot;);
+};
+</code></pre>
+<p>Set callbacks directly on the node:</p>
 <pre><code class="language-cpp">auto b = Btn(&quot;OK&quot;, []{ /* this is onClick */ });
 
 b-&gt;onPress   = []{ std::printf(&quot;down\n&quot;); };
@@ -2554,6 +2592,10 @@ b-&gt;onRelease = []{ std::printf(&quot;up\n&quot;); };
 b-&gt;onHoverEnter = []{ std::printf(&quot;enter\n&quot;); };
 b-&gt;onHoverExit  = []{ std::printf(&quot;leave\n&quot;); };
 b-&gt;onRightClick = []{ std::printf(&quot;right\n&quot;); };
+
+b-&gt;onButtonPress   = [](MouseButton mb){ /* Left or Middle */ };
+b-&gt;onButtonRelease = [](MouseButton mb){ /* Left or Middle */ };
+b-&gt;onButtonClick   = [](MouseButton mb){ /* Left or Middle */ };
 </code></pre>
 <p>Or through the <code>UINode</code> handle after building from ZMarkup:</p>
 <pre><code class="language-cpp">ui.onClick(&quot;ok&quot;, []{ /* ... */ })
@@ -2573,12 +2615,17 @@ over the same target.</p>
   onPress  ────────►   onRelease
               └──► onClick
 </code></pre>
-<p>The runtime uses three pointers to track this:</p>
+<p>The runtime uses three pointers plus a per-button consumption array to
+track this:</p>
 <ul>
-<li><code>pressTarget</code> — set at pointer-down to the current <code>topmostConsumer</code>.</li>
-<li><code>releaseTarget</code> — set at pointer-up to the current <code>topmostConsumer</code>.</li>
-<li><code>clickConsumed</code> — a per-frame flag set by the first node whose
-  <code>onClick</code> fires and that isn't a <code>passThrough</code> node.</li>
+<li><code>pressTarget</code> — set at press-down (any button) to the current
+  <code>topmostConsumer</code>.</li>
+<li><code>releaseTarget</code> — set at release-up (any button) to the current
+  <code>topmostConsumer</code>.</li>
+<li><code>buttonConsumed[MouseButton::Left]</code> — a per-frame, per-button flag
+  set by the first node whose <code>onClick</code> (or <code>onButtonClick(Left)</code>)
+  fires and that isn't a <code>passThrough</code> node. Middle uses its own slot,
+  Right its own.</li>
 </ul>
 <p>A click is valid if the same node (or an ancestor/descendant pair within
 the same subtree) was the press target <strong>and</strong> the release target.</p>
@@ -2594,10 +2641,13 @@ from the innermost node outward:</p>
 <ol>
 <li>The deepest hit node has its <code>onClick</code> called first.</li>
 <li>If it's a normal node (not <code>passThrough</code>), it consumes the click —
-   <strong>ancestors don't see it</strong>.</li>
-<li>If it's a <code>passThrough</code> node, <code>clickConsumed</code> is not set, and the
-   ancestor's <code>onClick</code> also fires.</li>
+   <strong>ancestors don't see it</strong> — by setting
+   <code>buttonConsumed[MouseButton::Left] = true</code>.</li>
+<li>If it's a <code>passThrough</code> node, <code>buttonConsumed[Left]</code> is not set, and
+   the ancestor's <code>onClick</code> also fires.</li>
 </ol>
+<p>The same rule applies to <code>onButtonClick(Middle)</code> — it has its own
+<code>buttonConsumed[Middle]</code> slot, independent of Left.</p>
 <pre><code class="language-cpp">auto parentBox = VStack();
 parentBox-&gt;setInteractive(true);
 parentBox-&gt;onClick = []{ std::printf(&quot;parent\n&quot;); };
@@ -2648,13 +2698,23 @@ if (!selfBlocked &amp;&amp; node.rect.width &gt; 0 &amp;&amp; node.rect.height &
 <p>where <code>selfBlocked</code> is true if the node is disabled, non-interactive
 with <code>config.blocksRaycast = 1</code>, or has an ancestor that is blocked.</p>
 <p><code>onHoverEnter</code> / <code>onHoverExit</code> fire on the transition, in
-<code>fireCallbacks</code>:</p>
-<pre><code class="language-cpp">if (nextState == UIState::Hover &amp;&amp; prevState != UIState::Hover)
-    node.onHoverEnter();
+<code>fireCallbacks</code>. Note that <code>Hover</code> and <code>Pressed</code> are both considered
+"hovered" for this purpose: pressing a node is a continuation of
+hovering it, not an exit.</p>
+<pre><code class="language-cpp">bool wasHovered = (prevState == UIState::Hover ||
+                   prevState == UIState::Pressed);
+bool isHovered  = (nextState  == UIState::Hover ||
+                   nextState  == UIState::Pressed);
 
-if (prevState == UIState::Hover &amp;&amp; nextState != UIState::Hover)
+if (isHovered &amp;&amp; !wasHovered &amp;&amp; node.onHoverEnter)
+    node.onHoverEnter();
+else if (!isHovered &amp;&amp; wasHovered &amp;&amp; node.onHoverExit)
     node.onHoverExit();
 </code></pre>
+<p>Without the <code>Pressed</code> check, a press would fire <code>onHoverExit</code> (because
+the state changes from <code>Hover</code> to <code>Pressed</code>) even though the pointer
+is still inside the node. That was a bug in earlier versions; the
+current code treats the two states as a single "hovered" region.</p>
 <h3 id="41-hover-freeze-during-scroll">4.1 Hover freeze during scroll</h3>
 <p>While a scroll is in progress (either an active drag or inertia), the
 <code>updateFlags</code> function is called with <code>scrolling = true</code> and skips the
@@ -2684,10 +2744,13 @@ implementing hover-driven behavior without touching the input code:</p>
 <p>See <a href="../08-portals/">Portals</a> §"Tooltip" for details.</p>
 <hr />
 <h2 id="5-right-click">5. Right-click</h2>
-<p>Right-click fires <code>onRightClick</code> if the pointer is hovering the node at
-the moment of release. It uses the same consumption mechanism as a
-normal click (<code>rightClickConsumed</code>), but there's no bubbling cascade —
-only the topmost hovered node fires it.</p>
+<p>Right-click fires <code>onRightClick</code> on the <strong>press</strong> edge, if the pointer
+is hovering the node at that moment. There's no press+release
+validation, and no bubbling cascade — only the topmost hovered node
+fires it.</p>
+<p>The consumption flag is per-button, like for Left and Middle: a
+right-click can be consumed with <code>consumeClick(MouseButton::Right)</code>
+and checked with <code>wasConsumed(MouseButton::Right)</code>.</p>
 <pre><code class="language-cpp">auto box = VStack();
 box-&gt;onRightClick = [box]{
     // open a context menu
@@ -2700,9 +2763,12 @@ box-&gt;onRightClick = [box, menu]{
     menu-&gt;openAt(UIContext::get().pointer.pos);
 };
 </code></pre>
-<p>Note: unlike <code>onClick</code>, <code>onRightClick</code> fires on the hovered node
-directly, without needing a press. It's a single-step event.</p>
-<hr />
+<p>Note: <code>onRightClick</code> fires on press, not on release. If you need the
+full press+release model (e.g. to validate that the user released on
+the same node), Right is not covered by the unified <code>onButton*</code>
+callbacks — you'd add a dedicated callback. See
+<a href="../../internals/07-input-system/">Input System</a> §2.4 for the design
+rationale.</p>
 <h2 id="6-focus">6. Focus</h2>
 <p>A node can be focusable with <code>setFocusable(true)</code>. Only focusable nodes
 receive focus.</p>
@@ -2712,20 +2778,29 @@ input-&gt;setFocusable(true);   // TextInput does this in its constructor
 <h3 id="61-how-focus-is-granted">6.1 How focus is granted</h3>
 <p>Focus is granted in <code>Layout::updateTree</code>:</p>
 <ol>
-<li><strong>On pointer down</strong> — if <code>topmostConsumer</code> is focusable, it becomes
+<li><strong>On Left press</strong> — if <code>topmostConsumer</code> is focusable, it becomes
    the focused node. Otherwise, focus is released.</li>
 <li><strong>On Tab</strong> — see §7.</li>
 </ol>
-<pre><code class="language-cpp">if (ctx.pointer.pressed)
+<pre><code class="language-cpp">if (ctx.pointer[MouseButton::Left].pressed)
 {
-    if (ctx.topmostConsumer &amp;&amp; ctx.topmostConsumer-&gt;isFocusable())
+    if (ctx.topmostConsumer &amp;&amp; ctx.topmostConsumer-&gt;isFocusable()) {
         ctx.requestFocus(ctx.topmostConsumer-&gt;shared_from_this());
-    else
+        notifyFocusAncestors(ctx.focusedNode.lock().get());
+    }
+    else {
         ctx.releaseFocus();
+    }
 }
 </code></pre>
+<p>Only <strong>Left</strong> moves focus. Middle and Right don't — a right-click to
+open a context menu doesn't steal focus from the input the user was
+typing in.</p>
 <p><code>requestFocus</code> also updates <code>state.focused</code> on every node in the tree
-through the per-node <code>updateFlags</code> call.</p>
+through the per-node <code>updateFlags</code> call, in the same frame.</p>
+<p><code>notifyFocusAncestors</code> walks up from the newly focused node and fires
+<code>onDescendantFocused</code> on every ancestor. This is the same call the Tab
+navigation path uses, so click-focus and Tab-focus are symmetric.</p>
 <h3 id="62-focus-and-focus-styling">6.2 Focus and <code>:focus</code> styling</h3>
 <p><code>:focus</code> in <code>.zstyle</code> matches when <code>state.focused</code> is 1:</p>
 <pre><code class="language-css">TextInput:focus { border-color: #FDF900; }
@@ -2948,13 +3023,19 @@ bool hasPointerCapture() const {
 <li>All <code>onPress</code> / <code>onRelease</code> / <code>onClick</code> events are routed to it.</li>
 </ul>
 <h3 id="102-automatic-release">10.2 Automatic release</h3>
-<p>Capture is released automatically when the mouse button is no longer
-down:</p>
-<pre><code class="language-cpp">if (!ctx.pointer.down &amp;&amp; !ctx.pointerCapture.expired())
+<p>Capture is released automatically when <strong>all</strong> mouse buttons are up:</p>
+<pre><code class="language-cpp">bool anyDown = false;
+for (size_t i = 0; i &lt; (size_t)MouseButton::Count; ++i)
+    if (ctx.pointer.buttons[i].down) { anyDown = true; break; }
+
+if (!anyDown &amp;&amp; !ctx.pointerCapture.expired())
     ctx.pointerCapture.reset();
 </code></pre>
 <p>So you don't strictly need to call <code>releasePointer()</code> — but you should
 anyway, if you want to end the drag early (e.g. on <code>Escape</code>).</p>
+<p>Note: the check is <code>anyDown</code>, not "is the captured button up". A
+slider drag captured on Left press stays captured while Middle is
+also held; it's released only when every button is up.</p>
 <h3 id="103-example-slider-drag">10.3 Example: Slider drag</h3>
 <pre><code class="language-cpp">void Slider::onUpdate(float) override {
     if (state.pressed &amp;&amp; !hasPointerCapture())
@@ -2972,8 +3053,8 @@ anyway, if you want to end the drag early (e.g. on <code>Escape</code>).</p>
 </code></pre>
 <p>Press starts the capture. While captured, the slider reads
 <code>pointer.pos.x</code> directly and maps it to <code>[0, 1]</code>. Release happens
-automatically because the runtime clears capture when <code>pointer.down</code>
-becomes false.</p>
+automatically because the runtime clears capture when every button is
+up (<code>anyDown == false</code>, see §10.2).</p>
 <h3 id="104-disabling-releases-capture">10.4 Disabling releases capture</h3>
 <p><code>setEnabled(false)</code> also clears capture if this node holds it — see §6.4.</p>
 <hr />
@@ -3136,22 +3217,28 @@ root-&gt;addChild(ui.root());
 <li><code>UIContext::beginFrame(dt)</code> — polls <code>IPlatform</code>, updates
    <code>pointer</code>, <code>inputEvents</code>, <code>modifiers</code>, and <strong>clears</strong>:
    <code>topmostConsumer</code>, <code>hoverTarget</code>, <code>releaseTarget</code>,
-   <code>clickConsumed</code>, <code>rightClickConsumed</code>, <code>wheelConsumedThisFrame</code>.</li>
+   <code>buttonConsumed</code> (all entries), <code>wheelConsumedThisFrame</code>.</li>
 <li><code>Layout::updateTree(dt)</code> — hit-tests the pointer, updates
-   <code>topmostConsumer</code>, sets <code>pressTarget</code> / <code>releaseTarget</code>, processes
-   <code>Tab</code>, calls <code>requestFocus</code> / <code>releaseFocus</code>.</li>
+   <code>topmostConsumer</code>, sets <code>pressTarget</code> / <code>releaseTarget</code> (on <strong>any</strong>
+   button edge), processes <code>Tab</code>, calls <code>requestFocus</code> /
+   <code>releaseFocus</code>.</li>
 <li><code>Layout::update(dt)</code> — for each node: update flags, compute state,
    fire state-change callbacks and per-frame callbacks
-   (<code>onPress</code>, <code>onRelease</code>, <code>onClick</code>, <code>onRightClick</code>), run <code>onUpdate</code>.</li>
-<li>At the end of <code>updateTree</code>, if the pointer was released:
+   (<code>onPress</code> / <code>onButtonPress</code>, <code>onRelease</code> / <code>onButtonRelease</code>,
+   <code>onClick</code> / <code>onButtonClick</code>, <code>onRightClick</code>), run <code>onUpdate</code>.</li>
+<li>At the end of <code>updateTree</code>, if <strong>any</strong> button was released:
    <code>pressTarget = nullptr</code>.</li>
-<li>If the pointer is up and capture is set: capture is released.</li>
+<li>If <strong>all</strong> buttons are up and capture is set: capture is released.</li>
 <li><code>measure</code> / <code>arrange</code> / <code>draw</code>.</li>
 </ol>
 <p>The important consequence: <strong>callbacks are fired during <code>update</code>, not
 during <code>beginFrame</code></strong>. If your <code>onClick</code> reads <code>UIContext::get().pointer</code>,
 it will see the values from the <em>current</em> frame, not the frame where the
 press started.</p>
+<p>Also note that <code>buttonConsumed</code> is per-button. A callback that consumes
+Left leaves <code>buttonConsumed[Middle]</code> and <code>buttonConsumed[Right]</code>
+untouched — a Middle press in the same frame can still reach another
+node.</p>
 <hr />
 <h2 id="15-pitfalls">15. Pitfalls</h2>
 <p><strong>Non-interactive nodes don't receive events.</strong></p>
@@ -3176,14 +3263,17 @@ env.frame(root);
 <p>If you need "press starts an action, release anywhere ends it", use
 <code>onPress</code> + pointer capture, or check <code>hasPointerCapture()</code> in
 <code>onUpdate</code>.</p>
-<p><strong>Focus is released on pointer down outside a focusable node.</strong></p>
+<p><strong>Focus is released on Left press outside a focusable node.</strong></p>
 <pre><code class="language-cpp">// Focused TextInput
 input-&gt;setText(&quot;hello&quot;);
 
 env.click(root, {500, 500});   // click on empty space
 // input loses focus, cursor stops blinking, :focus rules stop applying
 </code></pre>
-<p>If you want to keep focus during a click elsewhere, you'd need to
+<p>Only Left moves focus. A right-click on empty space (to open a context
+menu) or a Middle click doesn't release focus — this is intentional,
+so opening a menu doesn't interrupt typing.</p>
+<p>If you want to keep focus even on Left click elsewhere, you'd need to
 override the focus logic — but there's no built-in for that.</p>
 <p><strong><code>config.passThrough</code> on a focusable node doesn't route focus to the parent.</strong></p>
 <p><code>setPassThrough(true)</code> only affects <strong>click</strong> propagation. It doesn't
@@ -3198,10 +3288,11 @@ or inertia, and hover updates are skipped.</p>
 Only <code>Vertical</code> and <code>Horizontal</code> scroll containers accept wheel input.
 If you have a <code>Stack</code> with <code>overflow: scroll</code>, the wheel won't scroll
 it — you need to set the layout type to <code>Vertical</code> or <code>Horizontal</code>.</p>
-<p><strong><code>onRightClick</code> requires hover at the moment of release.</strong></p>
-<p>Unlike <code>onClick</code>, there's no press-then-release matching. If you press
-the right button, drag away, then release, the node under the cursor
-at release time gets the callback (if the pointer is over one).</p>
+<p><strong><code>onRightClick</code> fires on press, not on release.</strong></p>
+<p>Unlike <code>onClick</code>, there's no press-then-release matching. The callback
+fires the moment the right button is pressed, if the pointer is over
+the node. If you press on a node and then drag away and release, the
+callback already fired on the press frame — the release is ignored.</p>
 <p><strong>Tab doesn't cycle through non-focusable nodes.</strong></p>
 <p>Only <code>setFocusable(true)</code> nodes are visited. If you want a container to
 participate in Tab navigation (e.g. to skip over disabled children),
@@ -3218,6 +3309,29 @@ keys), read <code>UIContext::get()</code>:</p>
 </code></pre>
 <p>This is by design — most widgets don't need the details, and dropping
 the event object keeps the callback signature simple.</p>
+<p><strong><code>onButton*</code> don't fire for Right.</strong></p>
+<p>Right is deliberately excluded from the unified callback family. Its
+semantic ("fire on press, one-shot") is different from Left/Middle
+("fire on valid press+release"). If you need a unified callback that
+covers all three, read <code>pointer[MouseButton::Right].pressed</code> in
+<code>onUpdate</code>, or add a dedicated callback on <code>Layout</code>.</p>
+<p><strong>Setting both legacy and unified callbacks fires both.</strong></p>
+<pre><code class="language-cpp">btn-&gt;onClick       = []{ /* legacy */ };
+btn-&gt;onButtonClick = [](MouseButton){ /* unified */ };
+</code></pre>
+<p>A Left click fires both. This is by design — the user asked for both
+by setting both. If you only want one, don't set the other.</p>
+<p><strong><code>buttonConsumed</code> is per-button, not global.</strong></p>
+<p>Consuming a Middle click doesn't suppress a Left click that's still
+pending in the same frame, and vice versa. This matters if you have
+code that reacts to both buttons on overlapping nodes — the
+consumption is independent per button.</p>
+<p><strong>The Middle click model requires press and release on the same
+target.</strong></p>
+<p>Just like Left, <code>onButtonClick(Middle)</code> fires only if <code>pressTarget</code>
+and <code>releaseTarget</code> both include the node. A quick middle-press on a
+node and release on empty space doesn't fire the click — only
+<code>onButtonPress</code>.</p>
 
 
 

@@ -2069,6 +2069,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#515-unified-per-button-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.15 Unified per-button input
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2279,7 +2290,7 @@ pending, and what's blocking.</p>
 <p>It's derived from a full code + documentation review. The <strong>blocking</strong>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
-<p>Last updated: review pass after the initial documentation.</p>
+<p>Last updated: after the per-button input refactor (§5.15).</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -3369,6 +3380,101 @@ priority order.</p>
 <li>[x] Update <code>api/Widgets.md</code> CanvasLayout section</li>
 <li>[x] Update <code>api/Layout.md</code> §14 with the new hook</li>
 </ul>
+<h3 id="515-unified-per-button-input">5.15 Unified per-button input</h3>
+<p><strong>Done.</strong> The input system used to have per-button hardcoded fields on
+<code>PointerState</code> (<code>down</code>, <code>pressed</code>, <code>released</code>, <code>rightDown</code>,
+<code>rightPressed</code>, <code>rightReleased</code>), separate consumption flags on
+<code>UIContext</code> (<code>clickConsumed</code>, <code>rightClickConsumed</code>), and a separate
+dispatch path for Left (with <code>onClick</code>/<code>onPress</code>/<code>onRelease</code>) and
+Right (with <code>onRightClick</code>). Middle was not supported at all.
+Extending to a new button required touching 5+ files with no
+safety net.</p>
+<p>The refactor replaces all of that with a single <code>MouseButton</code> enum
+as the canonical index:</p>
+<ul>
+<li><code>PointerState</code> exposes <code>std::array&lt;ButtonState, (size_t)MouseButton::Count&gt; buttons</code>
+  with an <code>operator[]</code>. Each <code>ButtonState</code> carries <code>down</code> /
+  <code>pressed</code> / <code>released</code>.</li>
+<li><code>UIContext</code> exposes
+  <code>std::array&lt;bool, (size_t)MouseButton::Count&gt; buttonConsumed</code>
+  with <code>consumeClick(MouseButton)</code> / <code>wasConsumed(MouseButton)</code>
+  helpers.</li>
+<li><code>InputController::fireCallbacks</code> unifies Left and Middle through a
+  <code>fireClickButton(MouseButton, isLeftLegacy)</code> lambda. Right stays on
+  its own block because its semantic (one-shot on press) is different.</li>
+<li><code>Layout</code> gains <code>onButtonPress</code>, <code>onButtonRelease</code>, <code>onButtonClick</code>,
+  each <code>std::function&lt;void(MouseButton)&gt;</code>. They fire for Left and
+  Middle. The legacy <code>onClick</code> / <code>onPress</code> / <code>onRelease</code> still fire
+  for Left, so existing code is unaffected.</li>
+</ul>
+<p><strong>Design decisions:</strong></p>
+<ul>
+<li><strong>Right is deliberately not unified.</strong> Its historical semantic is
+  "fire on press, one-shot" (context menus). Unifying it under the
+  press+release click model would lose that behavior. If a future
+  design wants the unified model for Right, it's a new decision, not
+  a regression of this refactor.</li>
+<li><strong>Left fires both legacy and unified.</strong> If a user sets both
+  <code>onClick</code> and <code>onButtonClick</code>, both fire. This is the "both were
+  explicitly requested" case, not a bug.</li>
+<li><strong>Middle fires only unified.</strong> There is no legacy Middle callback,
+  so <code>onButtonClick(MouseButton::Middle)</code> is the only way to react
+  to it.</li>
+</ul>
+<p><strong>Backward compatibility.</strong> User code that uses only <code>onClick</code>,
+<code>onPress</code>, <code>onRelease</code>, <code>onRightClick</code>, <code>pointer.pos</code>, <code>wheelY</code>,
+<code>modifiers</code>, and <code>inputEvents</code> continues to work unchanged. The
+breaking changes are limited to:</p>
+<ul>
+<li><code>pointer.pressed</code> / <code>pointer.down</code> / <code>pointer.released</code> →
+  <code>pointer[MouseButton::X].pressed</code> / <code>.down</code> / <code>.released</code></li>
+<li><code>pointer.rightPressed</code> / <code>rightDown</code> / <code>rightReleased</code> → same
+  pattern with <code>MouseButton::Right</code></li>
+<li><code>ctx.clickConsumed</code> / <code>ctx.rightClickConsumed</code> →
+  <code>ctx.wasConsumed(MouseButton::X)</code></li>
+<li><code>ctx.consumeClick()</code> / <code>ctx.consumeRightClick()</code> →
+  <code>ctx.consumeClick(MouseButton::X)</code></li>
+</ul>
+<p><strong>Extending to a new button is now a 2-step change:</strong> add an enum
+value before <code>MouseButton::Count</code>, then populate it in the backend's
+<code>IPlatform::pointer()</code>. The framework propagates it automatically
+(array sizes, <code>anyPressed</code>/<code>anyReleased</code>/<code>anyDown</code> loops, per-button
+consumption flags). See <code>internals/07-input-system.md</code> §9.2.</p>
+<p><strong>Cleanup during the refactor:</strong></p>
+<ul>
+<li><code>examples/09_custom_widget/Rating.hpp</code> had <strong>two</strong> bugs:
+  <code>pointer.pressed</code> (introduced by the refactor) and
+  <code>pendingTransition = true</code> (pre-existing — the field moved to
+  <code>internal_.pendingTransition</code> at an earlier flag refactor and the
+  example was never updated). Both fixed.</li>
+<li><code>examples/00_demo/SettingsScreen.hpp</code> had <code>pointer.pressed</code> in
+  <code>onUpdate</code>. Fixed.</li>
+</ul>
+<p><strong>Known limitation introduced:</strong> <code>pressTarget</code> is a single pointer,
+not per-button. A press on Middle overwrites <code>pressTarget</code> from a
+still-held Left. Multi-button simultaneous interactions aren't
+supported. In practice, mouse users don't hold two buttons at once,
+and the limitation is documented in
+<code>internals/07-input-system.md</code> §10.</p>
+<ul>
+<li>[x] Add <code>MouseButton</code> enum (<code>Left</code>, <code>Right</code>, <code>Middle</code>, <code>Count</code>) in <code>CoreTypes.hpp</code></li>
+<li>[x] Rewrite <code>PointerState</code> with <code>std::array&lt;ButtonState, N&gt;</code> + <code>operator[]</code></li>
+<li>[x] Add <code>buttonConsumed</code> array + <code>consumeClick</code> / <code>wasConsumed</code> to <code>UIContext</code></li>
+<li>[x] Rewrite <code>InputController::fireCallbacks</code> with <code>fireClickButton</code> lambda</li>
+<li>[x] Add <code>onButtonPress</code> / <code>onButtonRelease</code> / <code>onButtonClick</code> to <code>Layout</code></li>
+<li>[x] Rewrite <code>Layout::updateTree</code> with <code>anyPressed</code> / <code>anyReleased</code> / <code>anyDown</code></li>
+<li>[x] Update <code>RaylibPlatform::pointer()</code> to populate all three buttons</li>
+<li>[x] Verify <code>tests/test_interaction.cpp</code> covers the new callbacks (5 tests: Middle press, Middle click, Left fires both legacy+unified, Right doesn't fire unified, Middle on empty area)</li>
+<li>[x] Verify <code>tests/Mocks.hpp</code> has <code>pressMiddle</code> / <code>releaseMiddle</code> / <code>holdMiddle</code> helpers</li>
+<li>[x] Update <code>docs/internals/07-input-system.md</code> (§1.1, §1.2, §2.1, §2.4, §2.5, §3.2, §3.3, §3.6, §5.3, §5.4, §7.3, §9.2, §10)</li>
+<li>[x] Update <code>docs/internals/02-lifecycle.md</code> (§3.2, §3.3, §3.6)</li>
+<li>[x] Update <code>docs/user/06-events.md</code> (§2, §3, §3.1, §4, §5, §6.1, §10.2, §14, §15)</li>
+<li>[x] Update <code>docs/user/10-custom-widgets.md</code> (§5.4, §8.1)</li>
+<li>[x] Verify <code>docs/api/Layout.md</code> already documents <code>onButton*</code> correctly (no change needed)</li>
+<li>[x] Verify <code>docs/api/UIContext.md</code> already documents <code>buttonConsumed</code> array correctly (no change needed)</li>
+<li>[x] Fix <code>examples/09_custom_widget/Rating.hpp</code> (2 bugs)</li>
+<li>[x] Fix <code>examples/00_demo/SettingsScreen.hpp</code> (1 bug)</li>
+</ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>
@@ -3514,6 +3620,11 @@ require a bigger design decision.</p>
 <td><code>Dropdown</code> doesn't close on <code>Escape</code></td>
 <td><code>Dropdown.hpp</code></td>
 <td>Only closes on outside click.</td>
+</tr>
+<tr>
+<td><code>pressTarget</code> shared across mouse buttons</td>
+<td><code>Layout.cpp</code>, <code>Input.cpp</code></td>
+<td>A press on Middle overwrites <code>pressTarget</code> from a still-held Left. Multi-button simultaneous drags not supported.</td>
 </tr>
 </tbody>
 </table>

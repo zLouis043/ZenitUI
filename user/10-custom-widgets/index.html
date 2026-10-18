@@ -2648,7 +2648,7 @@ the pointer is.</p>
 <pre><code class="language-cpp">void onUpdate(float) override {
     auto&amp; ctx = UIContext::get();
 
-    if (!ctx.pointer.pressed) return;
+    if (!ctx.pointer[MouseButton::Left].pressed) return;
     if (ctx.topmostConsumer != this) return;
 
     // The click is ours. Compute what sub-region it hit.
@@ -2658,6 +2658,15 @@ the pointer is.</p>
     selectIndex(index);
 }
 </code></pre>
+<p>The per-button access is <code>pointer[MouseButton::Left].pressed</code>, not
+<code>pointer.pressed</code> — the latter doesn't exist anymore after the
+per-button refactor. Use <code>MouseButton::Left</code> for primary interaction,
+<code>Middle</code> / <code>Right</code> for secondary actions. See
+<a href="../06-events/">Events §2</a> for the full list of callbacks (including
+<code>onButtonPress</code>/<code>onButtonClick</code>, which cover Left and Middle without
+needing <code>topmostConsumer</code> in <code>onUpdate</code> — useful when the widget has
+no sub-regions and the "which button" distinction is the only thing
+you need).</p>
 <p><code>topmostConsumer</code> is set by <code>hitTest</code> before <code>update</code> runs, so it's
 already up to date when <code>onUpdate</code> is called. It reflects z-order,
 portals and blocking rules — every check the framework performs
@@ -2879,9 +2888,12 @@ protected:
     }
 
     void onUpdate(float) override {
-        // Check for click on a star
-        if (!UIContext::get().pointer.pressed) return;
-        if (!rect.contains(UIContext::get().pointer.pos)) return;
+        auto&amp; ctx = UIContext::get();
+
+         // Check for click on a star
+        if (!ctx.pointer[MouseButton::Left].pressed) return;
+        if (ctx.topmostConsumer != this) return;
+        if (rect.width &lt;= 0.0f) return;
 
         float fs = style_.currentStyle.fontSize.resolveV(
             Metrics::viewport.x, Metrics::viewport.y);
@@ -2890,7 +2902,7 @@ protected:
         float totalW = starSize * maxStars_ + gap * (maxStars_ - 1);
         float startX = rect.x + (rect.width - totalW) * 0.5f;
 
-        float localX = UIContext::get().pointer.pos.x - startX;
+        float localX = ctx.pointer.pos.x - startX;
         int index = (int)(localX / (starSize + gap));
         index = std::clamp(index, 0, maxStars_ - 1);
 

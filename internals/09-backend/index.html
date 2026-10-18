@@ -2790,25 +2790,43 @@ twice in the same <code>beginFrame</code> should return the same value.</p>
 <h3 id="22-pointer">2.2 <code>pointer()</code></h3>
 <p>Returns the current pointer state:</p>
 <pre><code class="language-cpp">struct PointerState {
-    Vec2 pos;                // logical coordinates
-    bool down;               // button currently held
-    bool pressed;            // rising edge this frame
-    bool released;           // falling edge this frame
-    bool rightDown;
-    bool rightPressed;
-    bool rightReleased;
-    float wheelY;            // wheel delta this frame
+    Vec2  pos;                  // logical coordinates
+    float wheelY{0.0f};         // wheel delta this frame
+
+    std::array&lt;ButtonState, (size_t)MouseButton::Count&gt; buttons{};
+
+    ButtonState&amp;       operator[](MouseButton b);
+    const ButtonState&amp; operator[](MouseButton b) const;
+};
+
+struct ButtonState {
+    bool down{false};           // button currently held
+    bool pressed{false};        // rising edge this frame
+    bool released{false};       // falling edge this frame
 };
 </code></pre>
+<p>The <code>MouseButton</code> enum (<code>Left</code>, <code>Right</code>, <code>Middle</code>, <code>Count</code>) is the
+canonical index into <code>buttons</code>. Each <code>ButtonState</code> carries the
+per-button <code>down</code> / <code>pressed</code> / <code>released</code> edges.</p>
 <p>The <code>pos</code> should be in the same logical coordinate space as
 <code>viewportSize</code>. If the platform reports physical pixels, divide by
 <code>dpiScale()</code> before returning.</p>
-<p>The <code>pressed</code> / <code>released</code> flags are <strong>edge events</strong> — they should be
-true only on the frame the transition happens. The framework reads them
-once per frame and relies on this one-frame semantics.</p>
+<p>The <code>pressed</code> / <code>released</code> flags are <strong>per-button edge events</strong> — they
+should be true only on the frame the transition happens, independently
+for each button. The framework reads them once per frame and relies on
+this one-frame semantics. A backend that only fills <code>Left</code>, or that
+reuses the same edge flag for multiple buttons in one frame, will
+produce incorrect click detection.</p>
 <p><code>wheelY</code> is the wheel delta for this frame. A positive value
 conventionally means "scroll up" (or "away from user"), matching the
 Raylib convention. The scroll system negates it internally.</p>
+<p>The array is sized by <code>MouseButton::Count</code>, so a backend that targets
+a platform with more buttons (e.g. five-button mice with Back/Forward)
+only needs to add the corresponding enum values in <code>CoreTypes.hpp</code>
+before <code>Count</code> and populate the new slots. No changes to <code>IRenderer</code>,
+<code>InputController</code>, or <code>fireCallbacks</code> are required — the framework
+iterates <code>MouseButton::Count</code> internally. See
+<a href="../07-input-system/">Input System §9.2</a> for the two-step procedure.</p>
 <h3 id="23-time">2.3 <code>time()</code></h3>
 <p>Returns a monotonically increasing time in seconds, as a <code>double</code>.</p>
 <p>This is used by:</p>

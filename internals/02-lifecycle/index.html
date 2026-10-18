@@ -2844,8 +2844,7 @@ two phases run at different rates if needed.</p>
 
     // Clear per-frame flags
     wheelConsumedThisFrame = false;
-    clickConsumed = false;
-    rightClickConsumed = false;
+    buttonConsumed.fill(false);
     topmostConsumer = nullptr;
     hoverTarget = nullptr;
     releaseTarget = nullptr;
@@ -2925,27 +2924,55 @@ if (!captured || !captured-&gt;getEnabled()) {
 hit-testing resumes.</p>
 <h3 id="32-setting-hover-press-release-targets">3.2 Setting hover / press / release targets</h3>
 <pre><code class="language-cpp">ctx.hoverTarget = ctx.topmostConsumer;
-if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
-if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
+
+bool anyPressed  = false;
+bool anyReleased = false;
+bool anyDown     = false;
+for (size_t i = 0; i &lt; (size_t)MouseButton::Count; ++i)
+{
+    const auto&amp; b = ctx.pointer.buttons[i];
+    if (b.pressed)  anyPressed  = true;
+    if (b.released) anyReleased = true;
+    if (b.down)     anyDown     = true;
+}
+
+if (anyPressed)  ctx.pressTarget   = ctx.hoverTarget;
+if (anyReleased) ctx.releaseTarget = ctx.hoverTarget;
 </code></pre>
 <ul>
 <li><code>hoverTarget</code> — updated every frame.</li>
-<li><code>pressTarget</code> — set only on the frame of a press.</li>
-<li><code>releaseTarget</code> — set only on the frame of a release.</li>
+<li><code>pressTarget</code> — set on the frame of a press <strong>on any mouse button</strong>.
+  It persists across frames until a release happens.</li>
+<li><code>releaseTarget</code> — set on the frame of a release <strong>on any mouse
+  button</strong>.</li>
+<li><code>anyDown</code> — aggregate "at least one button is held". Used in §3.6.</li>
 </ul>
-<p>These are used later by <code>InputController::updateFlags</code> and
+<p><code>pressTarget</code>/<code>releaseTarget</code> are single pointers, not per-button.
+The per-button distinction is applied later, in <code>fireCallbacks</code>, where
+each button's edge is checked against the same targets (so pressing
+Left then releasing Right produces two independent edges that both
+reference the shared pointers). See
+<a href="../07-input-system/">Input System §5</a> for the click validation logic.</p>
+<p>These targets are used later by <code>InputController::updateFlags</code> and
 <code>fireCallbacks</code>.</p>
 <h3 id="33-focus-from-click">3.3 Focus from click</h3>
-<pre><code class="language-cpp">if (ctx.pointer.pressed) {
+<pre><code class="language-cpp">if (ctx.pointer[MouseButton::Left].pressed) {
     if (ctx.topmostConsumer &amp;&amp; ctx.topmostConsumer-&gt;isFocusable()) {
         ctx.requestFocus(ctx.topmostConsumer-&gt;shared_from_this());
+        notifyFocusAncestors(ctx.focusedNode.lock().get());
     } else {
         ctx.releaseFocus();
     }
 }
 </code></pre>
-<p>Clicking on a focusable node focuses it. Clicking anywhere else releases
-focus. This is the only place focus changes from a click.</p>
+<p>Clicking with Left on a focusable node focuses it. Clicking with Left
+anywhere else releases focus. This is the only place focus changes
+from a mouse click — Middle and Right don't move focus.</p>
+<p><code>notifyFocusAncestors</code> walks up from the newly focused node and fires
+<code>onDescendantFocused</code> on every ancestor. This is the same call the Tab
+navigation path uses (see §3.4), which makes click-focus and Tab-focus
+symmetric: a container that overrides <code>onDescendantFocused</code> sees the
+event regardless of how focus arrived.</p>
 <h3 id="34-tab-navigation">3.4 Tab navigation</h3>
 <pre><code class="language-cpp">for (int k : ctx.inputEvents.keys) {
     if (k != Key::Tab) continue;
@@ -3000,21 +3027,30 @@ the switch). Multiple Tab keys in the same frame are collapsed into one.</p>
 <p>Calls the per-node <code>update</code> (see §4) with <code>ancestorBlocked = false</code> and
 <code>scrolling = false</code>. The arguments propagate down to children.</p>
 <h3 id="36-post-update-cleanup">3.6 Post-update cleanup</h3>
-<pre><code class="language-cpp">if (ctx.pointer.released)   ctx.pressTarget = nullptr;
-if (!ctx.pointer.down &amp;&amp; !ctx.pointerCapture.expired())
+<pre><code class="language-cpp">if (anyReleased)
+    ctx.pressTarget = nullptr;
+if (!anyDown &amp;&amp; !ctx.pointerCapture.expired())
     ctx.pointerCapture.reset();
 </code></pre>
 <ul>
-<li><code>pressTarget</code> is cleared after the frame where the release happened.
-  This is what makes <code>pressTarget != releaseTarget</code> checks in the next
-  frame evaluate correctly.</li>
-<li>Pointer capture is released automatically when the button is up. A
-  widget can hold capture across frames while the button is down, and
-  it's dropped as soon as the button is released.</li>
+<li>After the frame where a release happens, <code>pressTarget</code> is cleared.
+  This is what makes <code>pressTarget == nullptr</code> on the frame <strong>after</strong>
+  a release — the click validation is done, so no button is
+  "pressing" anything anymore.</li>
+<li>If <strong>all</strong> buttons are up and capture is still set, clear it. This
+  is the automatic release: a widget doesn't need to call
+  <code>releasePointer()</code> explicitly; capture is dropped when the last
+  button is released.</li>
 </ul>
-<p>Note the ordering: <code>pressTarget</code> is cleared <strong>after</strong> <code>update</code> runs,
-so during <code>update</code> both <code>pressTarget</code> and <code>releaseTarget</code> are available
-for click validation.</p>
+<p><code>anyReleased</code> / <code>anyDown</code> are the aggregate flags computed in §3.2.
+Note that <code>pressTarget</code> is cleared on <strong>any</strong> release, not just Left:
+a multi-button sequence like "press Left, press Right, release Right,
+release Left" leaves <code>pressTarget</code> valid until the second release,
+because <code>anyReleased</code> is only true on the frames where some button
+transitions from down to up.</p>
+<p><strong>Ordering matters:</strong> <code>pressTarget</code> is cleared <strong>after</strong> <code>update</code>
+runs, so during <code>update</code> both <code>pressTarget</code> and <code>releaseTarget</code> are
+available for click validation.</p>
 <hr />
 <h2 id="4-per-node-updatedt-ancestorblocked-ancestorscrolling">4. Per-node <code>update(dt, ancestorBlocked, ancestorScrolling)</code></h2>
 <p>Called for every node, depth-first. This is the bulk of the framework's
@@ -3161,13 +3197,17 @@ input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 <li><code>handleKeyInput</code> fires <code>onClick</code> via <code>Enter</code> / <code>Space</code> if the node
   is focused and <code>config.keyboardActivates</code> is true.</li>
 <li><code>fireCallbacks</code> fires the input callbacks in the right order:</li>
-<li><code>onHoverEnter</code> / <code>onHoverExit</code> on state change.</li>
-<li><code>onPress</code> on <code>pointer.pressed</code> (if the press path includes this node).</li>
-<li><code>onRelease</code> on <code>pointer.released</code> (if the release path includes
-    this node).</li>
-<li><code>onClick</code> on a valid click (press target and release target both
-    include this node, and not consumed).</li>
-<li><code>onRightClick</code> on <code>pointer.rightPressed</code> if the node is hovered.</li>
+<li><code>onHoverEnter</code> / <code>onHoverExit</code> on state change (treating
+    <code>Hover</code> and <code>Pressed</code> as a single "hovered" region).</li>
+<li>For each button in {Left, Middle}: <code>onPress</code> (and
+    <code>onButtonPress(button)</code>) on <code>pointer[button].pressed</code> if the press
+    path includes this node.</li>
+<li>For each button in {Left, Middle}: <code>onRelease</code> (and
+    <code>onButtonRelease(button)</code>) and <code>onClick</code> (and
+    <code>onButtonClick(button)</code>) on <code>pointer[button].released</code> if the
+    release path includes this node and the click is valid.</li>
+<li><code>onRightClick</code> on <code>pointer[MouseButton::Right].pressed</code> if the
+    node is hovered. Right does not fire <code>onButton*</code>.</li>
 </ul>
 <p>Note: callbacks are fired <strong>after</strong> children have been updated. So the
 order of callback invocation across the tree is bottom-up within a
