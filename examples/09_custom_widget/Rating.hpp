@@ -48,7 +48,7 @@ public:
         if (clamped == value_)
             return;
         value_ = clamped;
-        pendingTransition = true;
+        internal_.pendingTransition = 1;
         if (onValueChanged)
             onValueChanged(value_);
     }
@@ -121,12 +121,12 @@ protected:
             }
         }
 
-        // Mouse: click picks the star under the pointer.
+                // Mouse: click picks the star under the pointer.
         // Using topmostConsumer (set by hitTest) instead of a geometric
         // rect.contains check ensures only the node that actually
         // received the click reacts, even if some other node's rect
         // overlaps the same point.
-        if (!ctx.pointer.pressed) return;
+        if (!ctx.pointer[MouseButton::Left].pressed) return;
         if (ctx.topmostConsumer != this) return;
         if (rect.width <= 0.0f) return;
 

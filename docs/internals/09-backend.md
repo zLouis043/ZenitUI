@@ -88,28 +88,48 @@ Returns the current pointer state:
 
 ```cpp
 struct PointerState {
-    Vec2 pos;                // logical coordinates
-    bool down;               // button currently held
-    bool pressed;            // rising edge this frame
-    bool released;           // falling edge this frame
-    bool rightDown;
-    bool rightPressed;
-    bool rightReleased;
-    float wheelY;            // wheel delta this frame
+    Vec2  pos;                  // logical coordinates
+    float wheelY{0.0f};         // wheel delta this frame
+
+    std::array<ButtonState, (size_t)MouseButton::Count> buttons{};
+
+    ButtonState&       operator[](MouseButton b);
+    const ButtonState& operator[](MouseButton b) const;
+};
+
+struct ButtonState {
+    bool down{false};           // button currently held
+    bool pressed{false};        // rising edge this frame
+    bool released{false};       // falling edge this frame
 };
 ```
+
+The `MouseButton` enum (`Left`, `Right`, `Middle`, `Count`) is the
+canonical index into `buttons`. Each `ButtonState` carries the
+per-button `down` / `pressed` / `released` edges.
 
 The `pos` should be in the same logical coordinate space as
 `viewportSize`. If the platform reports physical pixels, divide by
 `dpiScale()` before returning.
 
-The `pressed` / `released` flags are **edge events** — they should be
-true only on the frame the transition happens. The framework reads them
-once per frame and relies on this one-frame semantics.
+The `pressed` / `released` flags are **per-button edge events** — they
+should be true only on the frame the transition happens, independently
+for each button. The framework reads them once per frame and relies on
+this one-frame semantics. A backend that only fills `Left`, or that
+reuses the same edge flag for multiple buttons in one frame, will
+produce incorrect click detection.
 
 `wheelY` is the wheel delta for this frame. A positive value
 conventionally means "scroll up" (or "away from user"), matching the
 Raylib convention. The scroll system negates it internally.
+
+The array is sized by `MouseButton::Count`, so a backend that targets
+a platform with more buttons (e.g. five-button mice with Back/Forward)
+only needs to add the corresponding enum values in `CoreTypes.hpp`
+before `Count` and populate the new slots. No changes to `IRenderer`,
+`InputController`, or `fireCallbacks` are required — the framework
+iterates `MouseButton::Count` internally. See
+[Input System §9.2](07-input-system.md) for the two-step procedure.
 
 ### 2.3 `time()`
 

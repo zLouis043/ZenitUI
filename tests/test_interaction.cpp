@@ -626,3 +626,138 @@ TEST(Interaction_modal, show_and_hide_callbacks)
     CHECK(showCount == 2);
     CHECK(hideCount == 2);
 }
+
+// ============================================================
+//  Unified button callbacks (5.15d)
+// ============================================================
+
+TEST(Interaction_buttonCallbacks, middle_press_fires_onButtonPress)
+{
+    Env env;
+    int calls = 0;
+    MouseButton lastBtn = MouseButton::Left;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onButtonPress = [&](MouseButton b) { calls++; lastBtn = b; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    env.platform.pressMiddle({50, 25});
+    env.frame(root);
+
+    CHECK(calls == 1);
+    CHECK(lastBtn == MouseButton::Middle);
+}
+
+TEST(Interaction_buttonCallbacks, middle_click_fires_onButtonClick)
+{
+    Env env;
+    int calls = 0;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onButtonClick = [&](MouseButton) { calls++; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    env.platform.pressMiddle({50, 25});
+    env.frame(root);
+    env.platform.releaseMiddle({50, 25});
+    env.frame(root);
+
+    CHECK(calls == 1);
+}
+
+TEST(Interaction_buttonCallbacks, left_click_fires_both_legacy_and_unified)
+{
+    Env env;
+    int legacyCalls = 0;
+    int unifiedCalls = 0;
+    MouseButton lastBtn = MouseButton::Right;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onClick = [&]() { legacyCalls++; };
+    btn->onButtonClick = [&](MouseButton b) { unifiedCalls++; lastBtn = b; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    env.click(root, {50, 25});
+
+    CHECK(legacyCalls == 1);
+    CHECK(unifiedCalls == 1);
+    CHECK(lastBtn == MouseButton::Left);
+}
+
+TEST(Interaction_buttonCallbacks, right_click_does_not_fire_onButtonClick)
+{
+    Env env;
+    int legacyRightCalls = 0;
+    int unifiedCalls = 0;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onRightClick = [&]() { legacyRightCalls++; };
+    btn->onButtonClick = [&](MouseButton) { unifiedCalls++; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    env.platform.pressRight({50, 25});
+    env.frame(root);
+    env.platform.releaseRight({50, 25});
+    env.frame(root);
+
+    CHECK(legacyRightCalls == 1);
+    CHECK(unifiedCalls == 0);   // Right stays on the legacy semantic
+}
+
+TEST(Interaction_buttonCallbacks, middle_click_on_empty_area_does_not_fire)
+{
+    Env env;
+    int calls = 0;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onButtonClick = [&](MouseButton) { calls++; };
+    root->addChild(btn);
+
+    env.frame(root);
+
+    // Middle-click far from the button.
+    env.platform.pressMiddle({500, 500});
+    env.frame(root);
+    env.platform.releaseMiddle({500, 500});
+    env.frame(root);
+
+    CHECK(calls == 0);
+}

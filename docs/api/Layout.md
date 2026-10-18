@@ -612,9 +612,48 @@ Public `std::function<void()>` fields:
 | `onHoverExit` | Pointer leaves the node. |
 | `onRightClick` | Right-click on the node. |
 | `onAnimationsFinished` | All local animations stop. |
+| `onButtonPress` | `void(MouseButton)`. Fires on press for Left and Middle. Same click model as `onPress` but parameterized by button. |
+| `onButtonRelease` | `void(MouseButton)`. Fires on release for Left and Middle, when the click is valid. |
+| `onButtonClick` | `void(MouseButton)`. Fires on a complete click (press + release on the same target) for Left and Middle. |
 
 All are `void()`. See [Events](../user/06-events.md) for the exact
 firing conditions.
+
+### Why `onButton*` exists alongside `onClick`
+
+`onClick` / `onPress` / `onRelease` are the historical Left-only API.
+`onRightClick` is the historical Right-only API, with a different
+semantic: it fires on **press** if the node is hovered, without
+validating a full click pair. Right-click is a one-shot event, so the
+press-on-hover model is intentional.
+
+`onButtonPress` / `onButtonRelease` / `onButtonClick` cover the same
+click model as `onClick` but take a `MouseButton` parameter. They
+currently fire for:
+
+- **Left** — in addition to `onPress` / `onRelease` / `onClick`. Both
+  the legacy and the unified callback can be set at once; if they are,
+  both fire.
+- **Middle** — the only way to react to a middle click on a node.
+
+Right does **not** fire `onButton*`. Its semantic is different, and
+unifying it would lose the "one-shot on press" behavior that
+`onRightClick` provides. If a future design wants to unify right-click
+under the same model, that's a separate decision.
+
+```cpp
+// Left click (both fire):
+node->onClick       = []{ /* legacy */ };
+node->onButtonClick = [](MouseButton b){ /* b == Left */ };
+
+// Middle click (only the unified fires):
+node->onButtonClick = [](MouseButton b){
+    if (b == MouseButton::Middle) { /* ... */ }
+};
+
+// Right click (only the legacy fires):
+node->onRightClick  = []{ /* ... */ };
+```
 
 ---
 

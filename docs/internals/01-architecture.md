@@ -193,7 +193,7 @@ Polls the platform:
 - Updates `Metrics::viewport`, `safeArea`, `pointer`, `inputEvents`,
   `modifiers`, `dpiScale`.
 - Increments `viewportGeneration` if the viewport or safe area changed.
-- Clears per-frame flags: `clickConsumed`, `rightClickConsumed`,
+- Clears per-frame flags: `buttonConsumed` (all entries),
   `wheelConsumedThisFrame`, `topmostConsumer`, `hoverTarget`,
   `releaseTarget`.
 - Swaps `activePortals ← framePortals` (portals from last frame become

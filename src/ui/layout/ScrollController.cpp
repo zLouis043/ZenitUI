@@ -114,7 +114,7 @@ namespace ZenitUI
         // --- Inizio drag o click sul track ---
         if (!node.hasPointerCapture())
         {
-            if (pointer.pressed && ctx.topmostConsumer == &node)
+            if (pointer[MouseButton::Left].pressed && ctx.topmostConsumer == &node)
             {
                 bool handled = false;
 
@@ -163,7 +163,7 @@ namespace ZenitUI
                 }
             }
         }
-        else if (pointer.down)
+        else if (pointer[MouseButton::Left].down)
         {
             if (canScrollY)
             {

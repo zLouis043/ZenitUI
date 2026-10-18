@@ -42,15 +42,28 @@ EdgeInsets safeArea;
 ```cpp
 struct PointerState {
     Vec2 pos;                   // logical coordinates
+    float wheelY{0.0f};         // wheel delta this frame
+
+    // Per-button state. Index with (size_t)MouseButton, or via the
+    // operator[] overload. Extending MouseButton::Count extends this
+    // automatically.
+    std::array<ButtonState, (size_t)MouseButton::Count> buttons{};
+
+    ButtonState&       operator[](MouseButton b);
+    const ButtonState& operator[](MouseButton b) const;
+};
+
+struct ButtonState {
     bool down{false};           // button currently held
     bool pressed{false};        // rising edge this frame
     bool released{false};       // falling edge this frame
-    bool rightDown{false};
-    bool rightPressed{false};
-    bool rightReleased{false};
-    float wheelY{0.0f};         // wheel delta this frame
 };
 ```
+
+The `MouseButton` enum (`Left`, `Right`, `Middle`, `Count`) is the
+canonical index into the array. Adding a new button means adding a
+value before `Count` — the framework picks it up everywhere that
+iterates the array (see §9.2).
 
 `InputEvents`:
 
@@ -72,9 +85,21 @@ These are cleared at the start of each frame:
 
 ```cpp
 bool wheelConsumedThisFrame{false};
-bool clickConsumed{false};
-bool rightClickConsumed{false};
+std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
+
+void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
+bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 ```
+
+`wheelConsumedThisFrame` is a single flag (wheel events don't have a
+per-axis consumer concept that needs separating).
+
+`buttonConsumed` is per-button: pressing Middle while a Left press is
+in flight doesn't interfere, and a node can consume `Right` without
+suppressing the pending `Left` click. The two helpers `consumeClick` /
+`wasConsumed` are the only public API and are used by
+`InputController::fireCallbacks` and by user code that wants to mark
+an event as handled manually.
 
 They're set by the first consumer that handles an event, and checked by
 later nodes to avoid double-handling. See §5.3.
@@ -170,7 +195,7 @@ void InputController::updateFlags(Layout& node, bool selfBlocked, bool scrolling
         node.state.hovered = node.rect.contains(pointer.pos) ? 1 : 0;
 
     node.state.pressed = 0;
-    if (pointer.down && ctx.pressTarget) {
+    if (pointer[MouseButton::Left].down && ctx.pressTarget) {
         Layout* n = ctx.pressTarget;
         while (n) {
             if (n == &node) { node.state.pressed = 1; break; }
@@ -287,47 +312,93 @@ void InputController::fireCallbacks(Layout& node, UIState prevState,
     auto& pointer = ctx.pointer;
 
     // ---- Hover transitions ----
+    // Hover and Pressed are both "hovered" for the purpose of the
+    // enter/exit callbacks: pressing a node is a continuation of
+    // hovering it, not an exit.
     if (stateChanged) {
-        if (nextState == UIState::Hover && prevState != UIState::Hover
-            && node.onHoverEnter)
+        bool wasHovered = (prevState == UIState::Hover ||
+                           prevState == UIState::Pressed);
+        bool isHovered  = (nextState == UIState::Hover ||
+                           nextState == UIState::Pressed);
+
+        if (isHovered && !wasHovered && node.onHoverEnter)
             node.onHoverEnter();
-        else if (prevState == UIState::Hover && nextState != UIState::Hover
-                 && node.onHoverExit)
+        else if (!isHovered && wasHovered && node.onHoverExit)
             node.onHoverExit();
     }
 
-    // ---- Press ----
-    if (pointer.pressed && !ctx.clickConsumed) {
-        bool inPressPath = (ctx.pressTarget == &node) ||
-                            node.isAncestorOf(ctx.pressTarget);
-        if (inPressPath) {
-            if (node.onPress) node.onPress();
-            if (!node.config.passThrough) ctx.consumeClick();
-        }
-    }
+    // ---- Click-based buttons: Left and Middle ----
+    // Both follow the standard press+release click model. The legacy
+    // onPress / onRelease / onClick callbacks fire only for Left (the
+    // historical API); the unified onButton* fire for both.
+    auto fireClickButton = [&](MouseButton button, bool isLeftLegacy)
+    {
+        const auto& btn = pointer[button];
 
-    // ---- Release + Click ----
-    if (pointer.released) {
-        bool pressedHere = (ctx.pressTarget == &node) ||
-                            node.isAncestorOf(ctx.pressTarget);
-        bool releasedHere = (ctx.releaseTarget == &node) ||
-                             node.isAncestorOf(ctx.releaseTarget);
-        bool validClick = pressedHere && releasedHere;
-
-        if (validClick) {
-            if (node.onRelease) node.onRelease();
-            if (node.onClick && !ctx.clickConsumed) {
-                node.onClick();
-                if (!node.config.passThrough) ctx.consumeClick();
+        // --- Press ---
+        if (btn.pressed && !ctx.wasConsumed(button))
+        {
+            bool inPressPath = (ctx.pressTarget == &node) ||
+                               node.isAncestorOf(ctx.pressTarget);
+            if (inPressPath)
+            {
+                if (isLeftLegacy && node.onPress)
+                    node.onPress();
+                if (node.onButtonPress)
+                    node.onButtonPress(button);
+                if (!node.config.passThrough)
+                    ctx.consumeClick(button);
             }
         }
-    }
 
-    // ---- Right-click ----
-    if (pointer.rightPressed && node.state.hovered && node.onRightClick) {
-        if (!ctx.rightClickConsumed) {
-            node.onRightClick();
-            if (!node.config.passThrough) ctx.consumeRightClick();
+        // --- Release + Click ---
+        if (btn.released)
+        {
+            bool pressedHere  = (ctx.pressTarget == &node)   ||
+                                node.isAncestorOf(ctx.pressTarget);
+            bool releasedHere = (ctx.releaseTarget == &node) ||
+                                node.isAncestorOf(ctx.releaseTarget);
+            bool validClick   = pressedHere && releasedHere;
+
+            if (validClick)
+            {
+                if (isLeftLegacy && node.onRelease)
+                    node.onRelease();
+                if (node.onButtonRelease)
+                    node.onButtonRelease(button);
+
+                if (!ctx.wasConsumed(button))
+                {
+                    if (isLeftLegacy && node.onClick)
+                        node.onClick();
+                    if (node.onButtonClick)
+                        node.onButtonClick(button);
+                    if (!node.config.passThrough)
+                        ctx.consumeClick(button);
+                }
+            }
+        }
+    };
+
+    fireClickButton(MouseButton::Left,   /*isLeftLegacy=*/true);
+    fireClickButton(MouseButton::Middle, /*isLeftLegacy=*/false);
+
+    // ---- Right button: onRightClick ----
+    // Different semantic: fires on press while hovered, without
+    // requiring a valid press+release pair. Right is a one-shot event
+    // (typically used for context menus). onButton* don't fire for
+    // Right.
+    {
+        const auto& btn = pointer[MouseButton::Right];
+
+        if (btn.pressed && node.state.hovered && node.onRightClick)
+        {
+            if (!ctx.wasConsumed(MouseButton::Right))
+            {
+                node.onRightClick();
+                if (!node.config.passThrough)
+                    ctx.consumeClick(MouseButton::Right);
+            }
         }
     }
 }
@@ -336,150 +407,68 @@ void InputController::fireCallbacks(Layout& node, UIState prevState,
 Let's break down each phase.
 
 **Hover transitions** fire only on `stateChanged`, and only when the
-transition crosses the `Hover` state. So `Idle → Pressed` (directly,
-without hover) doesn't fire `onHoverEnter` — but that can't happen
-because `Pressed` implies `Hover` in the flag computation (pressing a
-node means the pointer is over it). In practice, `onHoverEnter` fires
-when the node becomes hovered from a non-hovered state.
+transition crosses the "hovered set" (`Hover ∪ Pressed`). So
+`Idle → Pressed` (which can't happen because `Pressed` implies
+`Hover`) and `Hover → Pressed` (pressing a button) don't fire
+`onHoverEnter`/`onHoverExit`. Only a transition that enters or leaves
+both states does.
 
-`Hover → Pressed` doesn't fire `onHoverEnter` again (it was already
-hovered). `Pressed → Hover` doesn't fire `onHoverExit` either (it's
-still hovered). Only `Hover ↔ {Idle, Disabled}` transitions fire the
-enter/exit callbacks.
-
-Wait, let me re-check the logic:
-
-```cpp
-if (nextState == UIState::Hover && prevState != UIState::Hover && onHoverEnter)
-    onHoverEnter();
-else if (prevState == UIState::Hover && nextState != UIState::Hover && onHoverExit)
-    onHoverExit();
-```
-
-So:
-
-- `Idle → Hover`: `onHoverEnter`.
-- `Hover → Idle`: `onHoverExit`.
-- `Hover → Pressed`: no callback (prev is Hover, next is Pressed; the
-  first condition is `next != Hover` so false; the second is
-  `prev == Hover && next != Hover` — true! so `onHoverExit` fires).
-
-Wait, that's a problem. `Hover → Pressed` has `prev == Hover` and
-`next != Hover`, so `onHoverExit` would fire. Is that the intent?
-
-Hmm, looking at the source more carefully:
-
-```cpp
-if (nextState == UIState::Hover && prevState != UIState::Hover && node.onHoverEnter)
-    node.onHoverEnter();
-else if (prevState == UIState::Hover && nextState != UIState::Hover && node.onHoverExit)
-    node.onHoverExit();
-```
-
-Yes, this would fire `onHoverExit` when transitioning from Hover to
-Pressed. That's likely a bug or at least unexpected behavior. The user
-documentation says `onHoverExit` fires when `state.hovered` transitions
-from true to false, but the state machine transitions through `Pressed`
-without `state.hovered` changing.
-
-Actually, re-reading: the state machine runs `beginStateTransition`
-before `fireCallbacks`. So `state.hovered` is still true when the state
-changes to `Pressed`. But the callback fires based on the state
-comparison.
-
-Let me trace: pointer enters a node.
-
-- Frame 1: `state.hovered = 1`, `state.pressed = 0`. `nextState = Hover`.
-  `prevState = Idle`. State changed. `onHoverEnter` fires. ✅
-
-- Frame 2: pointer presses.
-- `state.hovered = 1`, `state.pressed = 1`. `nextState = Pressed`.
-  `prevState = Hover`. State changed.
-  - First condition: `next == Hover`? No (it's `Pressed`).
-  - Second condition: `prev == Hover && next != Hover`? Yes.
-  - `onHoverExit` fires. ⚠️
-
-The two conditions treat `Hover` and `Pressed` as the same logical
-state for the purpose of hover callbacks: a pressed node is also
-hovered. So the transition `Hover → Pressed` does **not** fire
-`onHoverExit`. Only a transition that leaves both states (to `Idle` or
-`Disabled`) fires it. This matches what users expect from a UI
-toolkit: pressing a button is a continuation of hovering it, not an
-exit.
-
-**Press** fires on `pointer.pressed` (rising edge) if the press path
-includes this node. The path check:
+**Press** fires on the per-button rising edge (`pointer[button].pressed`)
+if the press path includes this node. The path check:
 
 ```cpp
 bool inPressPath = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
 ```
 
-`pressTarget` is set in `updateTree` to `topmostConsumer` at the frame
-of the press. A node fires `onPress` if it **is** the press target, or
-if the press target is a descendant of it. The `isAncestorOf` check
-walks up the parent chain.
+`pressTarget` is set in `updateTree` to `topmostConsumer` on the frame
+of any press. A node fires `onPress` if it **is** the press target, or
+if the press target is a descendant. The `isAncestorOf` check walks up
+the parent chain.
+
+For each button that uses the click model (Left, Middle), the same
+logic runs. `isLeftLegacy` controls whether the historical
+`onPress`/`onRelease`/`onClick` callbacks fire — they only fire for
+Left. The unified `onButtonPress`/`onButtonRelease`/`onButtonClick`
+fire for both.
 
 The consumption: if the node doesn't have `config.passThrough`, it sets
-`clickConsumed = true`. Subsequent nodes in the tree walk (which
-proceeds bottom-up within a subtree, since children are updated before
-their parents) see `clickConsumed` and skip their own `onPress`.
-
-Order matters: **children update before parents**, so a child's
-`onPress` fires before its parent's. If the child consumes the event,
-the parent doesn't fire. If the child is `config.passThrough`, the parent
-also fires.
+`buttonConsumed[(size_t)button] = true`. Subsequent nodes in the tree
+walk (which proceeds bottom-up within a subtree) see the flag and skip
+their own handling of *that button*. The Left and Middle flags are
+independent, so a node that consumes Left doesn't suppress Middle.
 
 **Release + Click**: similar logic, but requires both press and release
 to include the node. The click is validated only if:
 
 - `pressedHere`: the press target is this node or a descendant.
 - `releasedHere`: the release target is this node or a descendant.
-- Both true.
 
-Then `onRelease` fires unconditionally (if the click is valid), and
-`onClick` fires if not consumed.
+Both must be true. Then `onRelease` (and `onButtonRelease`) fires
+unconditionally when the click is valid, and `onClick`/`onButtonClick`
+fire only if not consumed.
 
-A subtle point: `onRelease` fires on any valid click, but `onClick` is
-gated on `clickConsumed`. If a descendant already fired `onClick` and
-consumed, the ancestor still gets `onRelease` but not `onClick`. This
-matches the "bubbling" model where release is more fundamental than
-click.
-
-Actually, looking again:
-
-```cpp
-if (validClick) {
-    if (node.onRelease) node.onRelease();
-    if (node.onClick && !ctx.clickConsumed) {
-        node.onClick();
-        if (!node.config.passThrough) ctx.consumeClick();
-    }
-}
-```
-
-`onRelease` fires without checking `clickConsumed`. So an ancestor can
-receive `onRelease` even after a descendant consumed the click. This is
-intentional: `onRelease` is "the pointer released over this subtree",
-`onClick` is "the click was handled here".
-
-**Right-click** fires on `pointer.rightPressed` (rising edge) if the
-node is currently hovered and has `onRightClick`. Unlike left-click,
+**Right-click** fires on `pointer[MouseButton::Right].pressed` if the
+node is currently hovered and has `onRightClick`. Unlike Left/Middle,
 there's no press/release validation — right-click fires immediately on
 press. And it uses `state.hovered` (geometric check), not the hit-test
 result.
 
-The consumption: `rightClickConsumed` is set if the node doesn't
-config.passThrough. The walk order is the same (children before parents), so
-the deepest hovered node fires first.
+The consumption uses the same per-button flag: `wasConsumed(Right)` /
+`consumeClick(Right)`. `onButton*` callbacks do **not** fire for Right:
+its semantic is deliberately different.
 
-### 2.5 Order of the four phases
+### 2.5 Order of the phases
 
-`fireCallbacks` runs the four phases in this order: hover, press,
-release+click, right-click. On a frame where multiple events happen
-(rare, but possible with simultaneous presses), the order is fixed.
-In practice, only one event fires per frame because the pointer state
-transitions are one per frame (`pressed` and `released` can't both be
-true).
+`fireCallbacks` runs the phases in this order:
+
+1. Hover transitions.
+2. `fireClickButton(Left,  isLeftLegacy=true)`  — press, then release+click.
+3. `fireClickButton(Middle, isLeftLegacy=false)` — press, then release+click.
+4. Right-click.
+
+In practice, only one event fires per frame because the per-button
+edges are one-frame. On the rare frame where two buttons change state
+together (e.g. release Left and press Right), the order above is fixed.
 
 ---
 
@@ -516,9 +505,32 @@ returns null and we fall through to normal hit-test.
 
 ```cpp
 ctx.hoverTarget = ctx.topmostConsumer;
-if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
-if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
+
+// Any button edge updates the targets. A press on ANY button makes
+// pressTarget point to whatever was hit; a release on ANY button
+// makes releaseTarget point to whatever was hit.
+bool anyPressed  = false;
+bool anyReleased = false;
+bool anyDown     = false;
+for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
+{
+    const auto& b = ctx.pointer.buttons[i];
+    if (b.pressed)  anyPressed  = true;
+    if (b.released) anyReleased = true;
+    if (b.down)     anyDown     = true;
+}
+
+if (anyPressed)  ctx.pressTarget   = ctx.hoverTarget;
+if (anyReleased) ctx.releaseTarget = ctx.hoverTarget;
 ```
+
+`pressTarget` and `releaseTarget` are single pointers, not per-button.
+The per-button validation happens later, in `fireCallbacks`, where each
+button's `pressed`/`released` edge is checked against the same targets.
+This means `fireCallbacks` uses `pressedHere`/`releasedHere` as "the
+press/release happened on this subtree", without caring which button
+triggered the target update. `anyDown` is used in §3.6 to release
+pointer capture automatically.
 
 - `hoverTarget` is set every frame.
 - `pressTarget` is only updated on the frame of a press.
@@ -530,14 +542,20 @@ release. It's cleared at the end of `updateTree` (see §3.6).
 ### 3.3 Focus from click
 
 ```cpp
-if (ctx.pointer.pressed) {
+if (ctx.pointer[MouseButton::Left].pressed) {
     if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable()) {
         ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+        notifyFocusAncestors(ctx.focusedNode.lock().get());
     } else {
         ctx.releaseFocus();
     }
 }
 ```
+
+Focus changes only on Left press. Middle and Right don't move focus.
+`notifyFocusAncestors` fires the `onDescendantFocused` hook on every
+ancestor of the newly focused node — same as in the Tab path. This
+makes click-focus and Tab-focus symmetric (see §4.6 in the user guide).
 
 Clicking a focusable node focuses it. Clicking anywhere else releases
 focus. This is the only place a click changes focus.
@@ -622,11 +640,18 @@ sequence.
 ### 3.6 Post-update cleanup
 
 ```cpp
-if (ctx.pointer.released)
+if (anyReleased)
     ctx.pressTarget = nullptr;
-if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+if (!anyDown && !ctx.pointerCapture.expired())
     ctx.pointerCapture.reset();
 ```
+
+`anyReleased` and `anyDown` are the aggregate flags computed in §3.2.
+`pressTarget` is cleared on any release (not just Left), so a
+multi-button sequence like "press Left, press Right, release Right,
+release Left" leaves `pressTarget` valid for the second release.
+Capture is only released when **all** buttons are up — a node holding
+capture during a drag isn't released by a Middle press elsewhere.
 
 - After the frame where a release happens, `pressTarget` is cleared.
   This is what makes `pressTarget == nullptr` on the frame **after**
@@ -878,19 +903,26 @@ For a `config.passThrough = 1` chain:
 ### 5.3 Consumption
 
 ```cpp
-bool clickConsumed{false};
-void consumeClick() { clickConsumed = true; }
+std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
+void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
+bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 ```
 
-`clickConsumed` is cleared at the start of each frame. It's set by
-`fireCallbacks` when a node fires `onClick` **and** isn't `config.passThrough`.
+`buttonConsumed` is cleared at the start of each frame. The flag is
+per-button: consuming Left doesn't affect Middle or Right. It's set by
+`fireCallbacks` when a node fires the corresponding click callback
+**and** isn't `config.passThrough`.
 
 The check is done **before** calling `onClick`:
 
 ```cpp
-if (node.onClick && !ctx.clickConsumed) {
-    node.onClick();
-    if (!node.config.passThrough) ctx.consumeClick();
+if (!ctx.wasConsumed(button)) {
+    if (isLeftLegacy && node.onClick)
+        node.onClick();
+    if (node.onButtonClick)
+        node.onButtonClick(button);
+    if (!node.config.passThrough)
+        ctx.consumeClick(button);
 }
 ```
 
@@ -898,25 +930,33 @@ So a node fires `onClick` only if no previous node (in the bottom-up
 order) has consumed. And after firing, if the node isn't passThrough,
 it consumes.
 
-The same logic for `onPress` (using `clickConsumed` — same flag) and
-`onRightClick` (using `rightClickConsumed`).
+The same logic applies to `onPress` — it uses the same
+`buttonConsumed[button]` flag as `onClick`, per button.
 
-There's a subtle interaction: `onPress` fires on `pointer.pressed` and
-can consume. Then on `pointer.released` (usually a different frame),
-`clickConsumed` is false again (cleared at `beginFrame`), and the
-`onClick` fires independently.
+There's a subtle interaction: `onPress` fires on
+`pointer[button].pressed` and can consume, setting
+`buttonConsumed[button]`. On `pointer[button].released` (usually a
+different frame), the same `buttonConsumed[button]` slot has been
+cleared by `beginFrame`, so `onClick` fires independently. The
+Left and Middle flags are separate; consuming Left has no effect on
+the Middle flag.
 
-So the "click consumed" state is per-frame, not persistent. A press
-in frame N and a release in frame N+1 both use the fresh
-`clickConsumed` flag of their respective frames.
+So the "click consumed" state is per-frame **and per-button**, not
+persistent. A press in frame N and a release in frame N+1 both use the
+fresh flag of their respective frames, and a press on Middle doesn't
+touch the Left flag.
 
 ### 5.4 Right-click
 
 ```cpp
-if (pointer.rightPressed && node.state.hovered && node.onRightClick) {
-    if (!ctx.rightClickConsumed) {
+if (pointer[MouseButton::Right].pressed &&
+    node.state.hovered &&
+    node.onRightClick)
+{
+    if (!ctx.wasConsumed(MouseButton::Right)) {
         node.onRightClick();
-        if (!node.config.passThrough) ctx.consumeRightClick();
+        if (!node.config.passThrough)
+            ctx.consumeClick(MouseButton::Right);
     }
 }
 ```
@@ -977,7 +1017,11 @@ rect still delivers events to it.
 ### 6.3 Automatic release
 
 ```cpp
-if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+bool anyDown = false;
+for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
+    if (ctx.pointer.buttons[i].down) { anyDown = true; break; }
+
+if (!anyDown && !ctx.pointerCapture.expired())
     ctx.pointerCapture.reset();
 ```
 
@@ -1107,21 +1151,34 @@ mapped to `Key::*` codes, and `A` isn't among them.
 
 ### 7.3 Modifier keys
 
-Only `Shift` is tracked:
-
 ```cpp
-ModifierState modifiers;
+struct ModifierState {
+    bool shift{false};
+    bool ctrl{false};
+    bool alt{false};
+    bool super{false};
+};
 ```
 
-Updated from `platform->modifiers()` each `beginFrame`. The struct
-carries `shift`, `ctrl`, `alt`, `super` as bool members. Used by:
+Updated from `platform->modifiers()` each `beginFrame`. All four
+modifiers are populated by the platform. The framework itself only
+reads `shift`, for three purposes:
 
 - Tab navigation (reverse direction).
 - Scroll (horizontal wheel).
 - `Slider` (fine step).
 
-Other modifiers (Ctrl, Alt, Meta) are not tracked. If you need them,
-extend `IPlatform` and `InputEvents`.
+`ctrl`, `alt`, and `super` are exposed for user code that wants them:
+read `UIContext::get().modifiers.ctrl` in a callback or `onUpdate`:
+
+```cpp
+if (UIContext::get().modifiers.ctrl && IsKeyPressed(KEY_S))
+    save();
+```
+
+Adding a new modifier means adding a bool to `ModifierState` and
+populating it in each backend's `IPlatform::modifiers()`. The framework
+doesn't need changes.
 
 ---
 
@@ -1203,16 +1260,58 @@ already received the press event.
 
 ### 9.2 Adding a new pointer button
 
-1. Add fields to `PointerState` (`middleDown`, `middlePressed`,
-   `middleReleased`).
-2. Populate them in the platform's `pointer()` method.
-3. Add handling in `updateTree` (track `middlePressTarget`,
-   `middleReleaseTarget`) if you want click semantics.
-4. Add a callback field to `Layout` (`onMiddleClick`).
-5. Fire it in `fireCallbacks`.
+Thanks to the per-button refactor, extending the framework to a new
+mouse button is now a two-step change:
 
-The existing `rightDown` / `rightPressed` / `rightReleased` and
-`onRightClick` are the template.
+1. **Add a value to the `MouseButton` enum** in `CoreTypes.hpp`,
+   before `Count`:
+
+   ```cpp
+   enum class MouseButton : uint8_t {
+       Left,
+       Right,
+       Middle,
+       Back,        // new
+       Forward,     // new
+       Count
+   };
+   ```
+
+2. **Populate it in the backend's `PointerState`** inside
+   `IPlatform::pointer()`. In `RaylibPlatform`:
+
+   ```cpp
+   auto& back = s[MouseButton::Back];
+   back.down     = IsMouseButtonDown(MOUSE_BUTTON_BACK);
+   back.pressed  = IsMouseButtonPressed(MOUSE_BUTTON_BACK);
+   back.released = IsMouseButtonReleased(MOUSE_BUTTON_BACK);
+   ```
+
+That's it. The framework propagates the new button automatically:
+
+- `PointerState::buttons` grows because it's a `std::array` sized by
+  `MouseButton::Count`.
+- `UIContext::buttonConsumed` grows for the same reason.
+- `updateTree`'s `anyPressed`/`anyReleased`/`anyDown` loop picks it up
+  because it iterates `MouseButton::Count`.
+- `fireClickButton` can be called for the new button with a one-line
+  addition:
+
+  ```cpp
+  fireClickButton(MouseButton::Back,    /*isLeftLegacy=*/false);
+  fireClickButton(MouseButton::Forward, /*isLeftLegacy=*/false);
+  ```
+
+If you want `onButtonPress` / `onButtonRelease` / `onButtonClick` to
+fire for the new button, that's the only code change needed on top of
+the enum value. If you want a legacy dedicated callback (like
+`onRightClick`), add a `std::function<void()>` field on `Layout` and
+a small block in `fireCallbacks`.
+
+The old per-field approach (separate `down`/`pressed`/`released` for
+each button on `PointerState`, separate `middlePressTarget` on
+`UIContext`, separate callback field on `Layout`) is gone. Everything
+is driven by the enum now.
 
 ### 9.3 Adding a new modifier
 
@@ -1387,3 +1486,37 @@ but still receives `onPress`/`onRelease`/`onClick` (because of capture).
 
 This is the standard behavior — a slider's knob stops being "hovered"
 when the cursor drags away, but the drag continues.
+
+**`onRightClick` fires on press, not on click.**
+Unlike `onClick` / `onButtonClick`, which wait for a matching
+release, `onRightClick` fires on the press edge. This is intentional —
+right-click is a one-shot event (open a menu). If you need the full
+press+release semantic for Right, add a separate callback and wire it
+through `fireClickButton(MouseButton::Right, false)`.
+
+**`onButton*` don't cover Right.**
+`onButtonPress` / `onButtonRelease` / `onButtonClick` fire for Left and
+Middle only. Right is deliberately excluded because its semantic (fire
+on press, no click validation) is different. If you want a unified
+callback that covers all three, read `pointer[MouseButton::Right].pressed`
+directly in `onUpdate`, or add a wrapper.
+
+**`buttonConsumed` is per-button, not global.**
+Two nodes can both fire `onButtonClick(MouseButton::Left)` in the same
+frame if they're in different subtrees — but only if neither consumed
+the event. In practice this doesn't happen because `pressTarget` is a
+single node and only ancestors of that node can match `pressedHere`.
+The per-button flag matters when you mix buttons: consuming Right has
+no effect on the Left click.
+
+**Middle press and drag still routes to `pressTarget`.**
+`pressTarget` is updated on the press edge of ANY button. So pressing
+Middle on a button sets `pressTarget` to it. If you then press Left
+on a different node in the same frame... you can't, because press
+edges are one-frame and the platform reports one press per frame per
+button. But across frames: Middle press on A (sets `pressTarget = A`,
+stays until release), then Left press on B (overwrites `pressTarget =
+B`). The Middle click on A is lost. This is a known limitation of
+having a single `pressTarget` — multi-button simultaneous interactions
+aren't supported. In practice, mouse users don't press two buttons at
+once.

@@ -47,15 +47,6 @@ namespace ZenitUI
 		mid.released = IsMouseButtonReleased(MOUSE_BUTTON_MIDDLE);
 #endif
 
-		// Legacy mirror. Kept until every call site is migrated to the
-		// array-based API. Removed once the migration is complete.
-		s.down = left.down;
-		s.pressed = left.pressed;
-		s.released = left.released;
-		s.rightDown = right.down;
-		s.rightPressed = right.pressed;
-		s.rightReleased = right.released;
-
 		return s;
 	}
 	double RaylibPlatform::time() { return GetTime(); }

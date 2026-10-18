@@ -64,7 +64,7 @@ namespace ZenitUI::UI
             if (!isOpen)
                 return;
             auto &ctx = UIContext::get();
-            if (!ctx.pointer.pressed)
+            if (!ctx.pointer[MouseButton::Left].pressed)
                 return;
             if (!rect.contains(ctx.pointer.pos) &&
                 !listContainer->getRect().contains(ctx.pointer.pos))

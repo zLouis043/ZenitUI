@@ -615,7 +615,7 @@ the pointer is.
 void onUpdate(float) override {
     auto& ctx = UIContext::get();
 
-    if (!ctx.pointer.pressed) return;
+    if (!ctx.pointer[MouseButton::Left].pressed) return;
     if (ctx.topmostConsumer != this) return;
 
     // The click is ours. Compute what sub-region it hit.
@@ -625,6 +625,16 @@ void onUpdate(float) override {
     selectIndex(index);
 }
 ```
+
+The per-button access is `pointer[MouseButton::Left].pressed`, not
+`pointer.pressed` — the latter doesn't exist anymore after the
+per-button refactor. Use `MouseButton::Left` for primary interaction,
+`Middle` / `Right` for secondary actions. See
+[Events §2](06-events.md) for the full list of callbacks (including
+`onButtonPress`/`onButtonClick`, which cover Left and Middle without
+needing `topmostConsumer` in `onUpdate` — useful when the widget has
+no sub-regions and the "which button" distinction is the only thing
+you need).
 
 `topmostConsumer` is set by `hitTest` before `update` runs, so it's
 already up to date when `onUpdate` is called. It reflects z-order,
@@ -895,9 +905,12 @@ protected:
     }
 
     void onUpdate(float) override {
-        // Check for click on a star
-        if (!UIContext::get().pointer.pressed) return;
-        if (!rect.contains(UIContext::get().pointer.pos)) return;
+        auto& ctx = UIContext::get();
+
+         // Check for click on a star
+        if (!ctx.pointer[MouseButton::Left].pressed) return;
+        if (ctx.topmostConsumer != this) return;
+        if (rect.width <= 0.0f) return;
 
         float fs = style_.currentStyle.fontSize.resolveV(
             Metrics::viewport.x, Metrics::viewport.y);
@@ -906,7 +919,7 @@ protected:
         float totalW = starSize * maxStars_ + gap * (maxStars_ - 1);
         float startX = rect.x + (rect.width - totalW) * 0.5f;
 
-        float localX = UIContext::get().pointer.pos.x - startX;
+        float localX = ctx.pointer.pos.x - startX;
         int index = (int)(localX / (starSize + gap));
         index = std::clamp(index, 0, maxStars_ - 1);
 

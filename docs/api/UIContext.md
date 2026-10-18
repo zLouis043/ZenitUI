@@ -26,8 +26,7 @@ that isn't per-node:
 - **Targets** — the hit-test / press / release targets for the frame.
 - **Portals** — two lists (active from last frame, pending for this
   frame).
-- **Per-frame flags** — `clickConsumed`, `rightClickConsumed`,
-  `wheelConsumedThisFrame`.
+ **Per-frame flags** — `buttonConsumed`, `wheelConsumedThisFrame`.
 
 It's a singleton because the framework assumes a single UI tree on a
 single window. For multi-window, you'd need a significant refactor.
@@ -213,14 +212,26 @@ The current pointer state. See `CoreTypes.hpp`:
 ```cpp
 struct PointerState {
     Vec2  pos;
-    bool  down, pressed, released;
-    bool  rightDown, rightPressed, rightReleased;
     float wheelY;
+
+    // Per-button state. Index with (size_t)MouseButton, or use the
+    // operator[] overload.
+    std::array<ButtonState, (size_t)MouseButton::Count> buttons;
+
+    ButtonState&       operator[](MouseButton b);
+    const ButtonState& operator[](MouseButton b) const;
+};
+
+struct ButtonState {
+    bool down;      // currently held
+    bool pressed;   // rising edge this frame
+    bool released;  // falling edge this frame
 };
 ```
 
-`pressed` / `released` (and their right-click counterparts) are
-one-frame edges. `down` is level.
+For each button in `buttons`, `pressed` / `released` are one-frame
+edges and `down` is level. Access via `pointer[MouseButton::Left]`,
+`pointer[MouseButton::Right]`, `pointer[MouseButton::Middle]`.
 
 ### `inputEvents`
 
@@ -281,25 +292,40 @@ Cleared at the start of each frame:
 
 ```cpp
 bool wheelConsumedThisFrame{false};
-bool clickConsumed{false};
-bool rightClickConsumed{false};
+std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
 
-void consumeClick() { clickConsumed = true; }
-void consumeRightClick() { rightClickConsumed = true; }
+void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
+bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 ```
 
-- **`wheelConsumedThisFrame`** — set by the first scroll container that
+- `wheelConsumedThisFrame` — set by the first scroll container that
   handles a wheel event. Prevents nested scroll containers from both
   scrolling.
-- **`clickConsumed`** — set when a node's `onClick` (or `onPress`) fires
-  without `config.passThrough`. Prevents ancestors from also firing `onClick`.
-- **`rightClickConsumed`** — same, for `onRightClick`.
 
-The `consumeClick` / `consumeRightClick` methods are the public API to
-set the flags. User code rarely needs them (the framework sets them
-automatically).
+- `buttonConsumed` — per-button consumption. Marked when a node
+  handles a button's event and the node doesn't have
+  `config.passThrough`. Ancestors skip their own handling of the same
+  button.
 
----
+The public API is:
+
+- `consumeClick(MouseButton)` — set the "consumed" flag for one
+  button. Rarely called by user code; the framework calls it from
+  `InputController::fireCallbacks` when a node fires its click
+  callback and isn't `passThrough`.
+
+- `wasConsumed(MouseButton)` — query whether a button's event has
+  already been handled this frame. Also rarely called by user code; the
+  framework uses it internally to decide whether to keep propagating a
+  click up the tree.
+
+There's no global "any button consumed" flag. If you need one, iterate:
+
+```cpp
+bool anyConsumed = false;
+for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
+    if (ctx.buttonConsumed[i]) { anyConsumed = true; break; }
+```
 
 ## 7. Focus
 
@@ -494,9 +520,8 @@ void beginFrame(float delta_time);
 The per-frame entry point. Called from `Layout::runFrame`. Handles:
 
 1. Update `dt`, advance `time`.
-2. Clear per-frame flags (`wheelConsumedThisFrame`, `clickConsumed`,
-   `rightClickConsumed`, `topmostConsumer`, `hoverTarget`,
-   `releaseTarget`).
+2. Clear per-frame flags (`wheelConsumedThisFrame`, `buttonConsumed`,
+   `topmostConsumer`, `hoverTarget`, `releaseTarget`).
 3. Rotate portal buffers (`activePortals ← framePortals`).
 4. Poll the platform:
    - `viewportSize`, `safeArea` → update `Metrics::viewport`, check
@@ -608,7 +633,7 @@ if (ctx.topmostConsumer == myNode.get()) {
 ```cpp
 auto& ctx = UIContext::get();
 if (handleSomething()) {
-    ctx.consumeClick();
+    ctx.consumeClick(MouseButton::Left);
 }
 ```
 
@@ -758,10 +783,11 @@ UIContext::get().rng.seed(std::random_device{}());
 
 **`consumeClick` without `onClick`.**
 
-If you manually call `consumeClick()` in a callback that isn't the
-`onClick` handler, the current frame's `clickConsumed` is set, and any
-subsequent `onClick` (in the same frame) is skipped. This is the
-intended behavior — but be careful about where you call it.
+If you manually call `ctx.consumeClick(MouseButton::Left)` in a
+callback that isn't the `onClick` handler, the current frame's
+`buttonConsumed[Left]` is set, and any subsequent `onClick` (in the
+same frame) is skipped. This is the intended behavior — but be careful
+about where you call it.
 
 **`time` is a `double`, `dt` is a `float`.**
 

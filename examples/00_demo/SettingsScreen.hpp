@@ -81,11 +81,11 @@ protected:
         addChild(panel);
     }
 
-    void onUpdate(float) override
+        void onUpdate(float) override
     {
         // Click sull'overlay ma fuori dal panel → chiudi.
         auto &ctx = UIContext::get();
-        if (ctx.pointer.pressed && ctx.topmostConsumer == this)
+        if (ctx.pointer[ZenitUI::MouseButton::Left].pressed && ctx.topmostConsumer == this)
         {
             close();
             return;
