@@ -308,3 +308,54 @@ TEST(Layout_hasId, empty_input_always_false)
 
     CHECK(!node->hasId(""));
 }
+
+// ============================================================
+//  ref — Proposal 1
+// ============================================================
+
+TEST(Layout_ref, setRef_updates_field)
+{
+    freshTheme();
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    CHECK(node->ref.empty());
+    node->setRef("delete");
+    CHECK(node->ref == "delete");
+}
+
+TEST(Layout_ref, id_and_ref_are_independent)
+{
+    freshTheme();
+    auto node = std::make_shared<Layout>(LayoutType::Stack);
+    node->setId("unique");
+    node->setRef("delete");
+    CHECK(node->nodeId == "unique");
+    CHECK(node->ref == "delete");
+    // Setting one must not touch the other.
+    node->setId("other");
+    CHECK(node->ref == "delete");
+    node->setRef("other_ref");
+    CHECK(node->nodeId == "other");
+}
+
+TEST(Layout_ref, withRef_returns_fluent_shared_ptr)
+{
+    freshTheme();
+    auto btn = UI::Button::create(nullptr);
+    CHECK(btn->ref.empty());
+
+    // withRef must return the same shared_ptr (typed as Button), not
+    // a fresh one. The fluent chain relies on this identity.
+    auto result = btn->withRef("save");
+    CHECK(result.get() == btn.get());
+    CHECK(btn->ref == "save");
+}
+
+TEST(Layout_ref, withRef_is_chainable)
+{
+    freshTheme();
+    auto btn = UI::Button::create(nullptr);
+    auto chained = btn->withRef("save")->cls("btn-primary");
+    CHECK(btn->ref == "save");
+    CHECK(btn->hasClass("btn-primary"));
+    CHECK(chained.get() == btn.get());
+}

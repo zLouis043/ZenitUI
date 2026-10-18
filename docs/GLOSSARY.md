@@ -183,7 +183,8 @@ flags.
 
 **Id**
 A string identifier on a `Layout` node (`#name` in ZMarkup). Matched
-by `#name` selectors. Used by `UINode::find` for lookups.
+by `#name` selectors with specificity `(1, 0, 0)`. Used by
+`UINode::find` for lookups. See also **Ref**.
 
 **Inherited property**
 One of `font`, `fontSize`, `color`, `letterSpacing`, `textAlign`. All
@@ -330,6 +331,15 @@ Every property is defined by the `BUBBLE_STYLE_PROPS` macro.
 **Rect**
 A `{x, y, width, height}` struct. Every node has a `rect`, set during
 `arrange`.
+
+**Ref**
+A string identifier on a `Layout` node (`@name` in ZMarkup) used for
+**logic lookup only**. Stored on `Layout::ref`, retrieved via
+`UINode::ref<T>` (first match) or `UINode::refAll<T>` (all matches).
+Does **not** participate in CSS matching — there is no `@` selector in
+`.zstyle`. Multiple nodes can share the same ref, which is the point:
+a list of N items shares one style (class) and one ref (logic handle).
+See also **Id**.
 
 **Render target**
 An offscreen framebuffer (`TargetHandle`). Used for filters (`layer`)

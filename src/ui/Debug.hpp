@@ -396,6 +396,8 @@ namespace ZenitUI::Debug
         os << "  tag      : " << node.getStyleTag() << "\n";
         if (!node.nodeId.empty())
             os << "  id       : #" << node.nodeId << "\n";
+        if (!node.ref.empty())
+            os << "  ref      : @" << node.ref << "\n";
         if (!node.getStyleClasses().empty())
         {
             os << "  classes  :";
@@ -430,6 +432,8 @@ namespace ZenitUI::Debug
         os << indent << "- ";
         if (!node.nodeId.empty())
             os << "#" << node.nodeId << " ";
+        if (!node.ref.empty())
+            os << "@" << node.ref << " ";
         os << node.getStyleTag();
         for (const auto &c : node.getStyleClasses())
             os << "." << c;

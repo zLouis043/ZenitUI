@@ -57,6 +57,7 @@ struct Element {
     std::string tag;
     std::vector<std::string> classes;
     std::string id;
+    std::string ref;   // populated from @name, logic-only
     std::string text;
     std::vector<std::pair<std::string, std::string>> attrs;
     std::vector<Element> children;
@@ -74,7 +75,8 @@ struct Element {
 |-------|-------------|
 | `tag` | The tag name (`"Button"`, `"Text"`, ...). |
 | `classes` | Classes parsed from `.name` modifiers. |
-| `id` | Id parsed from `#name`. Empty if none. |
+| `id` | Style id parsed from `#name`. Empty if none. Participates in CSS specificity. |
+| `ref` | Logic ref parsed from `@name`. Empty if none. Does **not** participate in CSS. Multiple nodes can share the same ref. |
 | `text` | The quoted string after the attributes. |
 | `attrs` | Key-value pairs. Flags become `(key, "true")`. |
 | `children` | Nested elements from the `{ ... }` block. |
@@ -177,17 +179,31 @@ el.attr("width");  // "100px"
 ```cpp
 struct BuildContext {
     std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
+    std::unordered_map<std::string,
+                       std::vector<std::shared_ptr<Layout>>> byRef;
 };
 ```
 
-A map from id → node, populated by `Registry::create` as it builds the
-tree. Used by `UINode::find` for lookups.
+`byId` maps a style id (`#id`) to a node. Populated by
+`Registry::create` as it builds the tree. Used by `UINode::find` for
+lookups. There is at most one entry per id — later nodes overwrite
+earlier ones (last wins).
 
-**Note:** ids are **not required to be unique**. The map stores the
-last node registered for a given id. If two elements have the same id,
-`find` returns the second one (the last to be built).
+`byRef` maps a logic ref (`@ref`) to a **vector** of nodes. Populated
+by `Registry::create` when `Element::ref` is non-empty. Preserves
+insertion order per key. Used by `UINode::ref` (returns the first)
+and `UINode::refAll` (returns all).
 
-In practice, use unique ids.
+**Note on ids:** ids are **not required to be unique**. The `byId`
+map stores the **last** node registered for a given id. If two
+elements have the same id, `find` returns the second one (the last to
+be built).
+
+**Note on refs:** refs are explicitly designed to be shared. Multiple
+nodes with the same `@ref` are the normal case for a list of items.
+`refAll` returns them all; `ref` returns the first and warns (once)
+that multiple matched. See `docs/user/04-zmarkup.md` §2.4 for the
+design rationale.
 
 ---
 
@@ -234,10 +250,13 @@ Builds a node from an `Element`:
 3. Apply the `passthrough` attribute if present:
    `node->setPassThrough(el.attrBool("passthrough"))`.
 4. Add each class from `el.classes`.
-5. If `el.id` is non-empty, set it and register in `ctx.byId`.
-6. Apply each attribute as an inline style via
+5. If `el.id` is non-empty, set it and register in `ctx.byId`
+   (last wins on conflict).
+6. If `el.ref` is non-empty, set it via `node->setRef(el.ref)` and
+   append to `ctx.byRef[el.ref]`.
+7. Apply each attribute as an inline style via
    `applyStyleAttr(node->getInlineBase(), k, v)`.
-7. Recursively create and add each child.
+8. Recursively create and add each child.
 
 **Attributes reserved by the factory:** the factory is expected to read
 its own special attributes (`value`, `checked`, `options`, `wrap`)
@@ -324,10 +343,17 @@ public:
 
     std::shared_ptr<Layout>        root() const;
     std::shared_ptr<BuildContext>  context() const;
-    std::shared_ptr<Layout>        find(const std::string& id) const;
 
+    // Lookup by #id
+    std::shared_ptr<Layout> find(const std::string& id) const;
     template <typename T = Layout>
     std::shared_ptr<T> find(const std::string& id) const;
+
+    // Lookup by @ref
+    template <typename T = Layout>
+    std::shared_ptr<T> ref(const std::string& name) const;
+    template <typename T = Layout>
+    std::vector<std::shared_ptr<T>> refAll(const std::string& name) const;
 
     UINode& onClick(const std::string& id, std::function<void()> cb);
     UINode& onPress(const std::string& id, std::function<void()> cb);
@@ -350,19 +376,64 @@ parent->addChild(r);
 
 ### `find(id)` / `find<T>(id)`
 
-Finds a node by id.
+Finds a node by `#id`.
 
 ```cpp
 auto node = ui.find("save");                 // shared_ptr<Layout>
 auto slider = ui.find<Slider>("volume");     // shared_ptr<Slider>
 ```
 
-Returns `nullptr` if the id isn't found.
+Returns `nullptr` if the id isn't found. A warning is logged (once per
+`UINode` handle, not per frame) so a typo'd id surfaces in the log
+instead of a silent failure:
+
+```
+[WARN ] [ZMarkup]: UINode::find('save_btn'): no node with this id
+```
 
 The typed version uses `std::static_pointer_cast`. If the actual type
 doesn't match `T`, using the returned pointer is undefined behavior.
 Use the typed `on*` helpers when possible (they do the cast safely and
 no-op if the id doesn't exist or the type doesn't match).
+
+### `ref(name)` / `ref<T>(name)`
+
+Finds the **first** node with the given `@ref`.
+
+```cpp
+auto first_delete = ui.ref<Button>("delete");
+```
+
+Returns `nullptr` if no node matches, with a warning. If **more than
+one** node matches, returns the first (in insertion order) and logs a
+warning suggesting `refAll`:
+
+```
+[WARN ] [ZMarkup]: UINode::ref('delete'): 3 nodes match, returning the first. Use refAll for the full list.
+```
+
+Use `ref` when you expect a unique match (a specific element that
+happens to be looked up by ref rather than id). For lists, use
+`refAll`.
+
+### `refAll(name)` / `refAll<T>(name)`
+
+Returns **all** nodes with the given `@ref`, in the order they were
+built.
+
+```cpp
+for (auto& btn : ui.refAll<Button>("delete")) {
+    btn->onClick = []{ /* ... */ };
+}
+```
+
+Returns an empty vector if no node matches. This is a legitimate
+outcome (an empty list), so the log level is `Debug`, not `Warning`.
+
+The `ref` and `find` families are **independent**: a node can have
+`#save` (findable by `find`) and `@main_save` (findable by `ref`)
+simultaneously. They map to different fields on `Layout` and do not
+interfere.
 
 ### `context()`
 
@@ -742,6 +813,34 @@ pass it to `build`, or use the C++ API directly.
 
 ZMarkup is a static description. Use C++ loops to generate a string
 before calling `build`, or build the tree directly with the C++ API.
+
+**`@ref` is not a CSS hook.**
+
+The parser accepts `Button@delete "X"` and stores `"delete"` in
+`Element::ref`, but `.zstyle` has no `@` selector and no
+`[ref="delete"]` attribute selector. Styling a node by its ref is
+**not supported and not planned**. Use a class (`.btn-danger`) for
+styling, `@ref` only for `UINode::ref`/`refAll` lookups.
+
+**`find` vs `ref`: two different lookups.**
+
+- `find` reads `#id`. Only one node per id (last wins on duplicate).
+- `ref` / `refAll` read `@ref`. Multiple nodes can share a ref.
+- A node can have both, or one, or neither.
+- The `on*` helpers (`ui.onClick("save", cb)`) only take ids. To bind
+  by ref, look up the nodes and set the callback manually.
+
+Mixing the two — e.g. `ui.ref<T>("save")` when the node only has
+`#save` — is the most common mistake. It returns `nullptr`, logs a
+warning, and the callback silently never fires.
+
+**Warnings from `find` / `ref` are deduplicated per handle.**
+
+If `ui.find("typo")` is called in a loop, the warning is emitted once
+per `UINode` handle, not once per call. This is intentional: a
+diagnostic should not spam the log. If you fix the typo mid-frame,
+the warning won't re-fire in the same session — restart the process
+or create a new `UINode` to see the warning again.
 
 ---
 

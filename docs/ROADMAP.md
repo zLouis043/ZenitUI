@@ -1324,6 +1324,87 @@ and the limitation is documented in
 - [x] Fix `examples/09_custom_widget/Rating.hpp` (2 bugs)
 - [x] Fix `examples/00_demo/SettingsScreen.hpp` (1 bug)
 
+### 5.16 `ref`: separation of style identity and logic lookup
+
+**Done.**
+
+Today `Layout::nodeId` (set by `#id` in ZMarkup) is the only way to
+look up a node from C++. This conflates two distinct concepts:
+
+1. **Style identity** — `#id` participates in CSS specificity as an
+   id selector `(1, 0, 0)`, beating any class. It's meant for unique
+   elements.
+2. **Logic identity** — the string C++ uses to look up the node.
+
+For a list of 100 delete buttons, each button needs a unique logic
+handle but **not** a unique style id — they all want the same style.
+The old pattern forced users to set `#delete_1`, `#delete_2`, ... on
+each one, polluting the cascade and the `byId` map.
+
+The fix introduces a separate **`ref`**:
+
+- `Layout::ref` — public `std::string` field, populated from `@name`
+  in ZMarkup.
+- `Layout::setRef(const std::string&)` — setter.
+- `Layout::withRef(const std::string&)` — fluent, on `TLayout`.
+- `Element::ref` — populated by the ZMarkup parser from `@name`.
+- `BuildContext::byRef` — `unordered_map<string, vector<shared_ptr<Layout>>>`,
+  populated by `Registry::create`.
+- `UINode::ref<T>(name)` — returns the first match, warns if not
+  found or ambiguous.
+- `UINode::refAll<T>(name)` — returns all matches, `{}` + debug log
+  if not found.
+
+`find` (by `#id`) is unchanged in behavior, except that it now logs a
+warning (once per `UINode` handle, not per frame) when the id is not
+found. Silent `nullptr` returns are gone for the common typo case.
+
+**Design decisions:**
+
+- **`ref` and `id` are orthogonal.** A node can have both
+  (`Button#save@main_save`), only one, or neither. They map to
+  different fields (`nodeId` and `ref`) and different maps (`byId`
+  and `byRef`).
+- **`@ref` is not a CSS hook.** `.zstyle` has no `@` selector, no
+  `[ref="..."]` attribute selector. Styling a node by ref is not
+  supported and not planned. Use classes for styling, refs for
+  lookup.
+- **`withRef` over `ref()`.** The fluent method would shadow the
+  inherited public `ref` field if it were named `ref()`. `withRef`
+  matches the `with(child)` pattern and is unambiguous.
+- **Per-handle warning dedup.** `find`/`ref` warnings are deduplicated
+  via a per-`UINode` `unordered_set<string>`, so a typo'd id in a
+  loop doesn't spam the log. `refAll` on an empty list is `Debug`,
+  not `Warning`, because empty lists are legitimate.
+- **`@ref` in `on*` helpers deferred.** `ui.onClick("@delete", cb)`
+  would attach the callback to every node with the ref. Useful but
+  not required — deferred to a follow-up, since `@` in an id is
+  currently undefined behavior, so the addition would be
+  backwards-compatible.
+
+**Backward compatibility.** `#id`, `find`, `byId`, and every CSS
+selector involving `#id` are unchanged. The only behavior change is
+the new warning on `find` misses. Code that ignored the `nullptr`
+return and kept going still works — the warning is informational.
+
+**Known limitation.** `ref` mutation after `Registry::create` does
+not update `byRef`. A future `UINode::setRef` method would fix this;
+not in the current scope.
+
+- [x] Add `Layout::ref` public field
+- [x] Add `Layout::setRef` / `TLayout::withRef`
+- [x] Add `Element::ref` + parser `@name`
+- [x] Add `BuildContext::byRef` + `Registry::create` population
+- [x] Add `UINode::ref<T>` / `refAll<T>` + warning dedup
+- [x] Add warning on `UINode::find<T>` miss
+- [x] Update `Debug::dumpTree` / `dumpStyle` to show `@ref`
+- [x] Add tests (14 new in `test_zmarkup_build.cpp`, 4 in `test_layout.cpp`)
+- [x] Update `docs/user/04-zmarkup.md` (§2.3/§2.4 split, §3 table, §4.5, §10 pitfalls)
+- [x] Update `docs/api/ZMarkup.md` (§2, §4, §5, §6, §10)
+- [x] Update `docs/api/Layout.md` (§3, §12)
+- [x] Update `docs/CHEATSHEET.md` (Id vs Ref table)
+- [x] Update `docs/GLOSSARY.md` (Ref entry)
+
 ---
 
 ## Phase 6 — Internationalization

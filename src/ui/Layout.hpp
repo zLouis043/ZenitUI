@@ -161,9 +161,15 @@ namespace ZenitUI
 			styleClasses.clear();
 			internal_.pendingTransition = 1;
 		}
+
 		void setId(const std::string &node_id)
 		{
 			nodeId = node_id;
+		}
+
+		void setRef(const std::string &r)
+		{
+			ref = r;
 		}
 
 		void setStyleTag(const std::string &t) { styleTag = t; }
@@ -533,7 +539,7 @@ namespace ZenitUI
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
-				// ---- Callbacks (Left button, legacy names) ----
+		// ---- Callbacks (Left button, legacy names) ----
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
 
 		// ---- Callbacks (Right button, legacy semantic) ----
@@ -560,7 +566,15 @@ namespace ZenitUI
 
 		std::function<void()> onAnimationsFinished;
 		std::vector<std::shared_ptr<Layout>> children;
+
+		// Style id: matches #id in ZMarkup, participates in CSS
+		// specificity as an id selector.
 		std::string nodeId;
+
+		// Logic ref: matches @ref in ZMarkup, does NOT participate in
+		// CSS. Used by UINode::ref / UINode::refAll for C++ lookup.
+		// Can be shared by multiple nodes.
+		std::string ref;
 
 		void setBackgroundTexture(TextureHandle tex, NineSlice np = {0, 0, 0, 0})
 		{
@@ -833,6 +847,11 @@ namespace ZenitUI
 		std::shared_ptr<Derived> id(const std::string &node_id)
 		{
 			this->setId(node_id);
+			return self();
+		}
+		std::shared_ptr<Derived> withRef(const std::string &r)
+		{
+			this->setRef(r);
 			return self();
 		}
 		std::shared_ptr<Derived> size(Value w, Value h)

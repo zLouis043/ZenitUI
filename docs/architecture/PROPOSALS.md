@@ -14,6 +14,12 @@ is moved to the roadmap as a §5.x item with the `[x]` checklist
 filled in, and this document is updated to point at the shipped
 implementation.
 
+**Shipped:**
+
+- ✅ **Proposal 1 — `ref`**: shipped as roadmap §5.16. See
+  `docs/user/04-zmarkup.md` §2.4 and `docs/api/ZMarkup.md` §6 for
+  the user-facing API. The "Open questions" section below is kept
+  for historical context.
 ---
 
 ## Index
@@ -779,3 +785,41 @@ Post-1.0:
 | `docs/ROADMAP.md` | +§5.16 | +§5.17 |
 
 Zero deletions in either proposal. Both are purely additive.
+
+---
+
+## Shipped proposals
+
+### Proposal 1 — `ref`
+
+**Shipped:** roadmap §5.16.
+
+**Changes from the proposal:**
+
+- Fluent method is `withRef` (not `ref_`, as originally drafted).
+  The proposal itself was updated to `withRef` before implementation;
+  no code changes derived from the old name.
+- `@ref` in `on*` helpers (`ui.onClick("@delete", cb)`) is **not**
+  shipped. It stays as a follow-up in §1.11 (Open questions, point 4).
+  The `@` prefix in an id string is currently undefined behavior, so
+  adding it later is backwards-compatible.
+
+**What landed:**
+
+- `Layout::ref`, `Layout::setRef`, `TLayout::withRef`.
+- `Element::ref` + parser `@name` in ZMarkup.
+- `BuildContext::byRef` + population in `Registry::create`.
+- `UINode::ref<T>`, `UINode::refAll<T>`, with per-handle warning dedup.
+- Warning on `UINode::find<T>` miss.
+- `Debug::dumpTree` / `dumpStyle` show `@ref`.
+- 18 new tests (14 in `test_zmarkup_build.cpp`, 4 in `test_layout.cpp`).
+- 7 files of documentation updated.
+
+**Known limitation carried forward:** `ref` mutation at runtime does
+not update `byRef`. A future `UINode::setRef` would fix it; not in
+scope.
+
+### Proposal 2 — `Bindable<T>`
+
+**Status:** 🟡 proposed — not yet shipped. This is the next planned
+implementation (§5.17 in the roadmap).
