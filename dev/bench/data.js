@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792320534317,
+  "lastUpdate": 1792339635006,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -3244,6 +3244,150 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.large1000",
             "value": 224.686,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "b274f7d5ee6a518ca5fe8f725eef25cacf2255e9",
+          "message": "Added ref logic adding and completing the 5.16 from the ROADMAP.md, come from the PROPOSALS.md. Updated docs and tests",
+          "timestamp": "2026-10-18T18:06:15+02:00",
+          "tree_id": "ffa8ae6becf9856038d3c54f4e82c3bfede695ec",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/b274f7d5ee6a518ca5fe8f725eef25cacf2255e9"
+        },
+        "date": 1792339634267,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 345.47,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.90695,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.0124509,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0519404,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0436315,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.795947,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.943285,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.907517,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.367043,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 1.04208,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 37.681,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 54.1773,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 15.8769,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 7.63279,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 35.5279,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00934844,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 45.5618,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 336.236,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 48.2368,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 113.118,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 94.739,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 50.6325,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 125.768,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 491.851,
             "unit": "us"
           }
         ]
