@@ -279,6 +279,28 @@ Tag.class1.class2#id attr1="value" attr2=value flag "text content" {
 `Panel`, `Toggle`, `Checkbox`, `Slider`, `ProgressBar`, `TextInput`,
 `ScrollView`, `Dropdown`.
 
+### Id vs Ref
+
+| Prefix | Name | Where | Cardinality | CSS? |
+|--------|------|-------|-------------|------|
+| `#name` | Style id | `.zstyle` selectors, `UINode::find` | 0 or 1 (last wins) | yes, specificity `(1,0,0)` |
+| `@name` | Logic ref | `UINode::ref` / `refAll` only | 0..N | no |
+
+```
+Button#save "Save"                    // findable by id
+Button.btn-danger@delete "X"          // findable by ref
+Button#save@main_save "Save"          // both
+```
+
+```cpp
+auto b    = ui.find<Button>("save");           // by #id
+auto one  = ui.ref<Button>("delete");          // by @ref, first match
+auto all  = ui.refAll<Button>("delete");       // by @ref, all matches
+```
+
+Rule of thumb: `#id` for unique styled elements, `@ref` for anything
+that repeats (lists, grids).
+
 ### Reserved attributes
 
 | Attribute | Effect |

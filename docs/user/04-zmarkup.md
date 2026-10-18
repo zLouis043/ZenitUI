@@ -108,19 +108,90 @@ Button#submit.btn-primary "OK"
 The classes are added via `Layout::cls()` and are visible to `.zstyle`
 selectors and to `getStyleClasses()` at runtime.
 
-### 2.3 Id
+### 2.3 Id (style identity)
 
-A `#name` sets the node id. It is used:
+A `#name` sets the node **id**. It is used:
 
-- by `UINode::find<T>(id)` to look up the node,
-- by `#name` selectors in `.zstyle`,
+- by `#name` selectors in `.zstyle` — with id specificity `(1, 0, 0)`,
+  beating any class selector;
+- by `UINode::find<T>(id)` to look up the node from C++;
 - by `onClick(id, ...)` and friends on the `UINode` handle.
 
-There is no requirement that ids are unique, but `find` returns the
-**first** match in the order nodes were created, so use unique ids if
-you plan to query them.
+Because `#id` participates in CSS specificity, it's meant for **unique**
+elements you want to style specifically. It's the wrong tool for list
+items: 100 delete buttons each with `#delete_1`, `#delete_2`, ... would
+pollute the cascade and the `byId` map. For that case, use `@ref` — see
+§2.4.
 
-### 2.4 Attributes
+There is no requirement that ids are unique. If two nodes share the
+same `#id`, `find` returns the **last** one registered, and a warning
+is logged (once per handle). Avoid duplicate ids unless you know what
+you're doing.
+
+### 2.4 Ref (logic identity)
+
+A `@name` sets the node **ref**. It is used:
+
+- by `UINode::ref<T>(name)` and `UINode::refAll<T>(name)` to look up
+  the node from C++;
+- **not** by `.zstyle` — `@ref` has no CSS specificity, no selectors.
+
+The point of `@ref` is to **decouple logic lookup from style identity**.
+A list of N delete buttons needs N unique logic handles but only one
+shared style. With `@ref`:
+
+```
+VStack#list {
+    Button.btn-danger@delete "X"
+    Button.btn-danger@delete "X"
+    Button.btn-danger@delete "X"
+}
+```
+
+All three buttons share the `btn-danger` class (one style rule) and the
+`delete` ref (one C++ lookup). From C++:
+
+```cpp
+// Look up by ref — returns the first match, warns if multiple.
+auto first = ui.ref<Button>("delete");
+
+// Look up all matches — returns every node with the given ref.
+auto all = ui.refAll<Button>("delete");
+for (auto& btn : all) {
+    btn->onClick = [&]{ remove_item(btn); };
+}
+```
+
+### 2.4.1 Semantics
+
+| Method | Source | Cardinality | Empty result | Multiple results |
+|--------|--------|-------------|--------------|------------------|
+| `find<T>(id)` | `#id` | 0 or 1 | `nullptr` + warning | last wins |
+| `ref<T>(name)` | `@ref` | 0..N | `nullptr` + warning | first + warning |
+| `refAll<T>(name)` | `@ref` | 0..N | `{}` (debug log) | all |
+
+`ref` and `find` are **two different concepts**, not aliases. A node
+can have `#save@main_save` and both `find("save")` and
+`ref("main_save")` return the same node. Or only `@delete` — the node
+has no id, and can't be found by `find`.
+
+Warnings are deduplicated per `UINode` handle: a typo'd id doesn't
+spam the log every frame.
+
+### 2.4.2 When to use which
+
+- **`#id`** — unique elements you need to style specifically, and
+  whose identity is stable: a save button, a title, a header.
+- **`@ref`** — repeated elements generated from a list, or any node
+  whose C++ handle is more natural than its style handle. The
+  canonical case is a list of items: all share the style, each needs
+  a handle.
+- **Both** — rarely useful, but allowed. A save button that is also
+  looked up in a loop would have `#save@save`.
+- **Neither** — most nodes have no id and no ref. They're pure layout
+  containers or static content.
+
+### 2.5 Attributes
 
 `key=value` pairs, separated by whitespace. Values can be:
 
@@ -151,7 +222,7 @@ in [ZStyle](05-zstyle.md) §"Inline attributes".
 Button "OK" width="120px" height="40px" background="#0079F1" radius="8px"
 ```
 
-### 2.5 Text content
+### 2.6 Text content
 
 A quoted string after the attributes is the widget's text. It is passed
 to the tag's factory, which decides what to do with it:
@@ -166,7 +237,7 @@ Text "Hello"
 Button "Click me"
 ```
 
-### 2.6 Children
+### 2.7 Children
 
 A `{ ... }` block contains child elements, each on its own line (or
 separated by whitespace). Nesting is unlimited.
@@ -216,7 +287,7 @@ children, and configure its look through `.zstyle` instead.
 
 For the full contract, see Layout::contentTarget() in the [Layout API](../api/Layout.md)
 
-### 2.7 Comments
+### 2.8 Comments
 
 `//` starts a line comment. Everything from `//` to the end of the line
 is ignored.
@@ -263,15 +334,32 @@ parent->addChild(root);
 |--------|-------------|
 | `root()` | The root `Layout` of the built tree. |
 | `context()` | The `BuildContext` used to build the tree. Escape hatch for looking up nodes by id outside of `find()`. See §6. |
-| `find(id)` | Find a node by id, returns `shared_ptr<Layout>`. |
+| `find(id)` | Find a node by `#id`, returns `shared_ptr<Layout>`. Warns (once) if the id isn't found. |
 | `find<T>(id)` | Typed lookup — `ui.find<Slider>("vol")`. |
-| `onClick(id, cb)` | Bind `onClick`. |
+| `ref(name)` | Find a node by `@ref`, returns `shared_ptr<Layout>`. Warns if not found or if multiple match (returns the first). |
+| `ref<T>(name)` | Typed lookup for `@ref` — `ui.ref<Button>("delete")`. |
+| `refAll(name)` | Find all nodes by `@ref`, returns `vector<shared_ptr<Layout>>`. Empty vector + debug log if not found. |
+| `refAll<T>(name)` | Typed `refAll` — `ui.refAll<Button>("delete")`. |
+| `onClick(id, cb)` | Bind `onClick` (by `#id`). |
 | `onPress(id, cb)` | Bind `onPress`. |
 | `onRelease(id, cb)` | Bind `onRelease`. |
 | `onHoverEnter(id, cb)` | Bind `onHoverEnter`. |
 | `onHoverExit(id, cb)` | Bind `onHoverExit`. |
 | `onValueChanged(id, cb)` | Bind `Slider::onValueChanged`. |
 | `onToggle(id, cb)` | Bind `Toggle::onToggle` or `Checkbox::onToggle`. |
+
+**`find` vs `ref` in the callbacks.** The `on*` helpers currently take
+an id, not a ref: `ui.onClick("save", cb)` binds to the node with
+`#save`. Binding to a ref is done explicitly:
+
+```cpp
+auto btn = ui.ref<Button>("delete");
+if (btn) btn->onClick = []{ /* ... */ };
+```
+
+A future extension may add `ui.onClick("@delete", cb)` where the
+leading `@` signals "look up by ref". This is deferred — see
+`docs/architecture/PROPOSALS.md` §1.11.
 
 All the `on*` methods return `UINode&` for chaining:
 
@@ -414,6 +502,41 @@ ui.onClick("start", [pb]{
     // kick off your download...
 });
 ```
+
+### 4.5 List of repeated actions with `@ref`
+
+The canonical use case for `@ref`: a list of items, each with a delete
+button, all sharing one style but each needing its own C++ handle.
+
+```
+VStack#list {
+    HStack.item { Label "Apple";  Button.btn-danger@delete "X" }
+    HStack.item { Label "Banana"; Button.btn-danger@delete "X" }
+    HStack.item { Label "Cherry"; Button.btn-danger@delete "X" }
+}
+```
+
+```cpp
+// Wire all delete buttons at once.
+for (auto& btn : ui.refAll<Button>("delete")) {
+    btn->onClick = [&]{
+        // The callback runs for whichever button fired it; use the
+        // button's parent (the HStack.item) to identify the row.
+        if (auto row = btn->getParent())
+            row->removeFromParent();
+    };
+}
+```
+
+Compare with the id-based approach: without `@ref`, each button needs
+its own `#delete_apple`, `#delete_banana`, `#delete_cherry`, plus three
+separate `onClick` bindings. The ref-based approach scales to any
+number of rows.
+
+**Why not use `#id` here.** Ids carry CSS specificity `(1, 0, 0)`. If
+each delete button has `#delete_apple`, no class rule can override
+`Button { background: ... }` for that button. With `@ref`, the button
+keeps its class-based styling and gains a C++ handle at zero CSS cost.
 
 ---
 
@@ -695,3 +818,36 @@ factory splits on commas, so `options="A,B,C"` creates three options.
 
 Not supported. If you need options containing commas or quotes, build
 the `Dropdown` in C++ and add it as a child.
+
+**`@ref` doesn't match anything in `.zstyle`.**
+
+```
+Button@delete "X"
+```
+
+is **not** styleable by `@delete { ... }` or `[ref="delete"]`. There
+is no CSS hook for `@ref`. Use a class (`.btn-danger`) for styling,
+`@ref` only for C++ lookup.
+
+**`ref` and `find` return `nullptr` on a miss, and log a warning.**
+
+Both `ui.find<Layout>("typo")` and `ui.ref<Layout>("typo")` return
+`nullptr` if no node matches. A warning is logged (once per handle,
+not per frame), so if the UI is still behaving as if nothing happened,
+check the log — the id or ref is likely wrong. The `refAll` variant
+returns an empty vector and logs at `Debug` level, since "no items in
+the list" is legitimate.
+
+**`ref` on a single node vs `refAll` on a group.**
+
+```cpp
+// If "delete" matches 3 nodes, this returns the first and logs a warning.
+auto btn = ui.ref<Button>("delete");
+
+// This returns all 3, no warning.
+auto all = ui.refAll<Button>("delete");
+```
+
+Use `ref` when you expect a unique match (a specific element), and
+`refAll` when you're iterating (a list of items). Mixing them is a
+common source of "the wrong button got the callback".

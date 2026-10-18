@@ -15,6 +15,7 @@
 #include <fstream>
 #include <optional>
 #include <sstream>
+#include <unordered_set>
 
 namespace ZenitUI::ZMarkup
 {
@@ -27,6 +28,7 @@ namespace ZenitUI::ZMarkup
         std::string tag;
         std::vector<std::string> classes;
         std::string id;
+        std::string ref;   // populated from @name, logic-only, not CSS
         std::string text;
         std::vector<std::pair<std::string, std::string>> attrs;
         std::vector<Element> children;
@@ -180,15 +182,29 @@ namespace ZenitUI::ZMarkup
             Element e;
             e.tag = readIdent();
 
-            // Modifiers: .class, #id (concatenabili, nell'ordine che vuoi)
-            while (peek() == '.' || peek() == '#')
+            // Modifiers: .class, #id, @ref (concatenabili, in qualsiasi ordine)
+            while (peek() == '.' || peek() == '#' || peek() == '@')
             {
                 char m = get();
                 std::string name = readIdent();
                 if (m == '.')
+                {
                     e.classes.push_back(std::move(name));
-                else
+                }
+                else if (m == '#')
+                {
                     e.id = std::move(name);
+                }
+                else // '@'
+                {
+                    if (!e.ref.empty())
+                    {
+                        logWarn("ZMarkup", "", 0, 0,
+                            "duplicate @ref '" + name +
+                            "' on the same tag, keeping the last one");
+                    }
+                    e.ref = std::move(name);
+                }
             }
 
             // Attributes
@@ -247,11 +263,21 @@ namespace ZenitUI::ZMarkup
     }
 
     // =========================================================================
-    //  BuildContext — tiene traccia di nodi per id (per gli hook)
+    //  BuildContext — tiene traccia di nodi per id e ref (per gli hook)
     // =========================================================================
     struct BuildContext
     {
+        // Style id → node. At most one entry per id; later nodes overwrite
+        // earlier ones (last wins). Matches the CSS specificity model
+        // where #id is expected to be unique.
         std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
+
+        // Logic ref → nodes. Multiple nodes can share the same ref,
+        // which is the whole point of @ref vs #id. Preserves
+        // insertion order per key (required for refAll to be
+        // deterministic).
+        std::unordered_map<std::string,
+                           std::vector<std::shared_ptr<Layout>>> byRef;
     };
 
     // =========================================================================
@@ -283,6 +309,11 @@ namespace ZenitUI::ZMarkup
             {
                 node->id(el.id);
                 ctx.byId[el.id] = node;
+            }
+            if (!el.ref.empty())
+            {
+                node->setRef(el.ref);
+                ctx.byRef[el.ref].push_back(node);
             }
 
             for (auto &[k, v] : el.attrs)
@@ -399,10 +430,18 @@ namespace ZenitUI::ZMarkup
         // widget after its onBuild has run).
         std::shared_ptr<BuildContext> context() const { return ctx_; }
 
+        // ----- Lookup by #id (style identity) -----
+
         std::shared_ptr<Layout> find(const std::string &id) const
         {
             auto it = ctx_->byId.find(id);
-            return it != ctx_->byId.end() ? it->second : nullptr;
+            if (it == ctx_->byId.end())
+            {
+                warnOnce("find:" + id,
+                         "UINode::find('" + id + "'): no node with this id");
+                return nullptr;
+            }
+            return it->second;
         }
 
         template <typename T = Layout>
@@ -410,6 +449,46 @@ namespace ZenitUI::ZMarkup
         {
             auto n = find(id);
             return n ? std::static_pointer_cast<T>(n) : nullptr;
+        }
+
+        // ----- Lookup by @ref (logic identity) -----
+
+        template <typename T = Layout>
+        std::shared_ptr<T> ref(const std::string &name) const
+        {
+            auto it = ctx_->byRef.find(name);
+            if (it == ctx_->byRef.end() || it->second.empty())
+            {
+                warnOnce("ref:" + name,
+                         "UINode::ref('" + name + "'): no node with this ref");
+                return nullptr;
+            }
+            if (it->second.size() > 1)
+            {
+                warnOnce("ref-ambig:" + name,
+                         "UINode::ref('" + name + "'): " +
+                         std::to_string(it->second.size()) +
+                         " nodes match, returning the first. "
+                         "Use refAll for the full list.");
+            }
+            return std::static_pointer_cast<T>(it->second.front());
+        }
+
+        template <typename T = Layout>
+        std::vector<std::shared_ptr<T>> refAll(const std::string &name) const
+        {
+            auto it = ctx_->byRef.find(name);
+            if (it == ctx_->byRef.end() || it->second.empty())
+            {
+                logDebug("ZMarkup", "", 0, 0,
+                         "UINode::refAll('" + name + "'): empty");
+                return {};
+            }
+            std::vector<std::shared_ptr<T>> out;
+            out.reserve(it->second.size());
+            for (const auto &n : it->second)
+                out.push_back(std::static_pointer_cast<T>(n));
+            return out;
         }
 
         UINode &onClick(const std::string &id, std::function<void()> cb)
@@ -456,8 +535,19 @@ namespace ZenitUI::ZMarkup
         }
 
     private:
+        // Per-handle dedup of warnings, so a typo'd id or ref doesn't
+        // spam the log on every frame. Keyed on a prefix + the id/ref
+        // name. The `mutable` is required because the lookup methods
+        // are `const`.
+        void warnOnce(const std::string &key, const std::string &msg) const
+        {
+            if (warnedKeys_.insert(key).second)
+                logWarn("ZMarkup", "", 0, 0, msg);
+        }
+
         std::shared_ptr<Layout> root_;
         std::shared_ptr<BuildContext> ctx_;
+        mutable std::unordered_set<std::string> warnedKeys_;
     };
 
     // =========================================================================

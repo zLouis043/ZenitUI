@@ -459,3 +459,143 @@ TEST(ZMarkupBuild, modal_with_nested_layout)
     CHECK(yes->getParent() == row);
     CHECK(no->getParent()  == row);
 }
+
+// ============================================================
+//  @ref (logic identity) — Proposal 1
+// ============================================================
+
+TEST(ZMarkupBuild, ref_only_tag)
+{
+    auto el = ZMarkup::parse(R"(Button@foo "X")");
+    CHECK(el.tag == "Button");
+    CHECK(el.ref == "foo");
+    CHECK(el.text == "X");
+    CHECK(el.id.empty());
+    CHECK(el.classes.empty());
+}
+
+TEST(ZMarkupBuild, ref_with_class)
+{
+    auto el = ZMarkup::parse(R"(Button.btn-danger@delete "X")");
+    CHECK(el.tag == "Button");
+    CHECK(el.ref == "delete");
+    CHECK((int)el.classes.size() == 1);
+    CHECK(el.classes[0] == "btn-danger");
+    CHECK(el.id.empty());
+}
+
+TEST(ZMarkupBuild, ref_with_id)
+{
+    auto el = ZMarkup::parse(R"(Button#save@main_save "X")");
+    CHECK(el.tag == "Button");
+    CHECK(el.id == "save");
+    CHECK(el.ref == "main_save");
+}
+
+TEST(ZMarkupBuild, id_and_ref_coexist_independently)
+{
+    auto el = ZMarkup::parse(R"(Button#unique@action "OK")");
+    CHECK(el.id == "unique");
+    CHECK(el.ref == "action");
+    // They are not the same field, and neither overwrites the other.
+    CHECK(!(el.id == el.ref));
+}
+
+TEST(ZMarkupBuild, ref_populated_on_layout_node)
+{
+    auto ui = ZMarkup::build(R"(Button@save "OK")");
+    CHECK(ui.root() != nullptr);
+    CHECK(ui.root()->ref == "save");
+    CHECK(ui.root()->nodeId.empty());
+}
+
+TEST(ZMarkupBuild, byRef_contains_single_node)
+{
+    auto ui = ZMarkup::build(R"(Button@foo "X")");
+    auto ctx = ui.context();
+    CHECK(ctx != nullptr);
+    CHECK(ctx->byRef.count("foo") == 1);
+    CHECK(ctx->byRef.at("foo").size() == 1);
+    CHECK(ctx->byRef.at("foo")[0] == ui.root());
+}
+
+TEST(ZMarkupBuild, byRef_contains_multiple_nodes_same_ref)
+{
+    auto ui = ZMarkup::build(R"(
+        VStack {
+            Button@delete "A"
+            Button@delete "B"
+            Button@delete "C"
+        }
+    )");
+    auto ctx = ui.context();
+    CHECK(ctx->byRef.count("delete") == 1);
+    CHECK(ctx->byRef.at("delete").size() == 3);
+}
+
+TEST(ZMarkupBuild, ref_returns_first_when_multiple)
+{
+    auto ui = ZMarkup::build(R"(
+        VStack {
+            Button@foo#first "A"
+            Button@foo#second "B"
+        }
+    )");
+    auto first  = ui.ref<Layout>("foo");
+    auto second = ui.find<Layout>("first");
+    CHECK(first != nullptr);
+    CHECK(second != nullptr);
+    CHECK(first == second);   // first occurrence in byRef order
+}
+
+TEST(ZMarkupBuild, refAll_returns_all)
+{
+    auto ui = ZMarkup::build(R"(
+        VStack {
+            Button@foo "A"
+            Button@foo "B"
+            Button@foo "C"
+        }
+    )");
+    auto all = ui.refAll<Layout>("foo");
+    CHECK((int)all.size() == 3);
+    for (auto& n : all)
+        CHECK(n != nullptr);
+}
+
+TEST(ZMarkupBuild, ref_returns_nullptr_when_missing)
+{
+    auto ui = ZMarkup::build(R"(Button@foo "X")");
+    CHECK(ui.ref<Layout>("nonexistent") == nullptr);
+}
+
+TEST(ZMarkupBuild, refAll_returns_empty_when_missing)
+{
+    auto ui = ZMarkup::build(R"(Button@foo "X")");
+    auto all = ui.refAll<Layout>("nonexistent");
+    CHECK(all.empty());
+}
+
+TEST(ZMarkupBuild, find_still_works_for_id)
+{
+    // Regression: #id and UINode::find are unchanged by the ref work.
+    auto ui = ZMarkup::build(R"(Button#save "OK")");
+    CHECK(ui.find<Layout>("save") != nullptr);
+    CHECK(ui.find<Layout>("save") == ui.root());
+}
+
+TEST(ZMarkupBuild, find_returns_nullptr_for_missing_id)
+{
+    // Regression: same as before, but now also logs a warning (which
+    // is not visible here, but the return value contract is intact).
+    auto ui = ZMarkup::build(R"(Button#save "OK")");
+    CHECK(ui.find<Layout>("nonexistent") == nullptr);
+}
+
+TEST(ZMarkupBuild, ref_typesafe_lookup)
+{
+    auto ui = ZMarkup::build(R"(Button@btn "OK")");
+    auto as_button = ui.ref<UI::Button>("btn");
+    CHECK(as_button != nullptr);
+    CHECK(as_button->getStyleTag() == "Button");
+}

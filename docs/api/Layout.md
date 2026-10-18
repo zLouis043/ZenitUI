@@ -174,6 +174,32 @@ logic that doesn't want to read the public `nodeId` field directly.
 if (node->hasId("save-button")) {
     // ...
 }
+```
+
+### `void setRef(const std::string& r)`
+
+Sets the node's **ref** — a logic handle that is **independent** of
+`nodeId`. Refs do **not** participate in CSS matching (`.zstyle` has
+no `@` or `[ref="..."]` selectors), so setting a ref has zero impact
+on the cascade. Used by `UINode::ref`/`refAll` in ZMarkup.
+
+```cpp
+node->setRef("delete");
+node->setRef("");   // clear
+```
+
+Multiple nodes can share the same ref — this is the whole point. A
+list of 100 delete buttons all set `setRef("delete")` and are
+retrieved with `ui.refAll<Button>("delete")`.
+
+### `std::shared_ptr<Derived> withRef(const std::string& r)` (CRTP only)
+
+Fluent wrapper for `setRef`, matching the `with(child)` helper style.
+Returns `self()` typed as `shared_ptr<Derived>`.
+
+```cpp
+auto btn = Button::create(cb)->withRef("delete")->cls("btn-danger");
+```
 
 ### `void setStyleTag(const std::string& t)`
 
@@ -626,6 +652,23 @@ firing conditions.
 semantic: it fires on **press** if the node is hovered, without
 validating a full click pair. Right-click is a one-shot event, so the
 press-on-hover model is intentional.
+
+### Callbacks and `ref`
+
+Callback fields (`onClick`, `onPress`, `onButtonPress`, …) are set
+**directly on a node**, not by ref:
+
+```cpp
+auto all = ui.refAll<Button>("delete");
+for (auto& btn : all) {
+    btn->onClick = []{ /* ... */ };
+}
+```
+
+The `UINode::onClick("id", cb)` **helper** (different from the field
+`Layout::onClick`) only takes an id, not a ref. A future extension may
+accept a leading `@` in the helper's string argument to signal "look
+up by ref". Deferred for now.
 
 `onButtonPress` / `onButtonRelease` / `onButtonClick` cover the same
 click model as `onClick` but take a `MouseButton` parameter. They
