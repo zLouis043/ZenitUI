@@ -9,7 +9,7 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: review pass after the initial documentation.
+Last updated: after the per-button input refactor (§5.15).
 
 ---
 
@@ -1226,6 +1226,104 @@ priority order.
 - [x] Update `api/Widgets.md` CanvasLayout section
 - [x] Update `api/Layout.md` §14 with the new hook
 
+### 5.15 Unified per-button input
+
+**Done.** The input system used to have per-button hardcoded fields on
+`PointerState` (`down`, `pressed`, `released`, `rightDown`,
+`rightPressed`, `rightReleased`), separate consumption flags on
+`UIContext` (`clickConsumed`, `rightClickConsumed`), and a separate
+dispatch path for Left (with `onClick`/`onPress`/`onRelease`) and
+Right (with `onRightClick`). Middle was not supported at all.
+Extending to a new button required touching 5+ files with no
+safety net.
+
+The refactor replaces all of that with a single `MouseButton` enum
+as the canonical index:
+
+- `PointerState` exposes `std::array<ButtonState, (size_t)MouseButton::Count> buttons`
+  with an `operator[]`. Each `ButtonState` carries `down` /
+  `pressed` / `released`.
+- `UIContext` exposes
+  `std::array<bool, (size_t)MouseButton::Count> buttonConsumed`
+  with `consumeClick(MouseButton)` / `wasConsumed(MouseButton)`
+  helpers.
+- `InputController::fireCallbacks` unifies Left and Middle through a
+  `fireClickButton(MouseButton, isLeftLegacy)` lambda. Right stays on
+  its own block because its semantic (one-shot on press) is different.
+- `Layout` gains `onButtonPress`, `onButtonRelease`, `onButtonClick`,
+  each `std::function<void(MouseButton)>`. They fire for Left and
+  Middle. The legacy `onClick` / `onPress` / `onRelease` still fire
+  for Left, so existing code is unaffected.
+
+**Design decisions:**
+
+- **Right is deliberately not unified.** Its historical semantic is
+  "fire on press, one-shot" (context menus). Unifying it under the
+  press+release click model would lose that behavior. If a future
+  design wants the unified model for Right, it's a new decision, not
+  a regression of this refactor.
+- **Left fires both legacy and unified.** If a user sets both
+  `onClick` and `onButtonClick`, both fire. This is the "both were
+  explicitly requested" case, not a bug.
+- **Middle fires only unified.** There is no legacy Middle callback,
+  so `onButtonClick(MouseButton::Middle)` is the only way to react
+  to it.
+
+**Backward compatibility.** User code that uses only `onClick`,
+`onPress`, `onRelease`, `onRightClick`, `pointer.pos`, `wheelY`,
+`modifiers`, and `inputEvents` continues to work unchanged. The
+breaking changes are limited to:
+
+- `pointer.pressed` / `pointer.down` / `pointer.released` →
+  `pointer[MouseButton::X].pressed` / `.down` / `.released`
+- `pointer.rightPressed` / `rightDown` / `rightReleased` → same
+  pattern with `MouseButton::Right`
+- `ctx.clickConsumed` / `ctx.rightClickConsumed` →
+  `ctx.wasConsumed(MouseButton::X)`
+- `ctx.consumeClick()` / `ctx.consumeRightClick()` →
+  `ctx.consumeClick(MouseButton::X)`
+
+**Extending to a new button is now a 2-step change:** add an enum
+value before `MouseButton::Count`, then populate it in the backend's
+`IPlatform::pointer()`. The framework propagates it automatically
+(array sizes, `anyPressed`/`anyReleased`/`anyDown` loops, per-button
+consumption flags). See `internals/07-input-system.md` §9.2.
+
+**Cleanup during the refactor:**
+
+- `examples/09_custom_widget/Rating.hpp` had **two** bugs:
+  `pointer.pressed` (introduced by the refactor) and
+  `pendingTransition = true` (pre-existing — the field moved to
+  `internal_.pendingTransition` at an earlier flag refactor and the
+  example was never updated). Both fixed.
+- `examples/00_demo/SettingsScreen.hpp` had `pointer.pressed` in
+  `onUpdate`. Fixed.
+
+**Known limitation introduced:** `pressTarget` is a single pointer,
+not per-button. A press on Middle overwrites `pressTarget` from a
+still-held Left. Multi-button simultaneous interactions aren't
+supported. In practice, mouse users don't hold two buttons at once,
+and the limitation is documented in
+`internals/07-input-system.md` §10.
+
+- [x] Add `MouseButton` enum (`Left`, `Right`, `Middle`, `Count`) in `CoreTypes.hpp`
+- [x] Rewrite `PointerState` with `std::array<ButtonState, N>` + `operator[]`
+- [x] Add `buttonConsumed` array + `consumeClick` / `wasConsumed` to `UIContext`
+- [x] Rewrite `InputController::fireCallbacks` with `fireClickButton` lambda
+- [x] Add `onButtonPress` / `onButtonRelease` / `onButtonClick` to `Layout`
+- [x] Rewrite `Layout::updateTree` with `anyPressed` / `anyReleased` / `anyDown`
+- [x] Update `RaylibPlatform::pointer()` to populate all three buttons
+- [x] Verify `tests/test_interaction.cpp` covers the new callbacks (5 tests: Middle press, Middle click, Left fires both legacy+unified, Right doesn't fire unified, Middle on empty area)
+- [x] Verify `tests/Mocks.hpp` has `pressMiddle` / `releaseMiddle` / `holdMiddle` helpers
+- [x] Update `docs/internals/07-input-system.md` (§1.1, §1.2, §2.1, §2.4, §2.5, §3.2, §3.3, §3.6, §5.3, §5.4, §7.3, §9.2, §10)
+- [x] Update `docs/internals/02-lifecycle.md` (§3.2, §3.3, §3.6)
+- [x] Update `docs/user/06-events.md` (§2, §3, §3.1, §4, §5, §6.1, §10.2, §14, §15)
+- [x] Update `docs/user/10-custom-widgets.md` (§5.4, §8.1)
+- [x] Verify `docs/api/Layout.md` already documents `onButton*` correctly (no change needed)
+- [x] Verify `docs/api/UIContext.md` already documents `buttonConsumed` array correctly (no change needed)
+- [x] Fix `examples/09_custom_widget/Rating.hpp` (2 bugs)
+- [x] Fix `examples/00_demo/SettingsScreen.hpp` (1 bug)
+
 ---
 
 ## Phase 6 — Internationalization
@@ -1338,6 +1436,7 @@ require a bigger design decision.
 | `renderFrame` doesn't clear the framebuffer | `Layout.cpp` | User is responsible. |
 | `Popup` `closeOnEscape` doesn't reach the popup if focus is elsewhere | `Popup.hpp` | Known limitation. |
 | `Dropdown` doesn't close on `Escape` | `Dropdown.hpp` | Only closes on outside click. |
+| `pressTarget` shared across mouse buttons | `Layout.cpp`, `Input.cpp` | A press on Middle overwrites `pressTarget` from a still-held Left. Multi-button simultaneous drags not supported. |
 
 ---
 

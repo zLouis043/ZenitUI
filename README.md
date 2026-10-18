@@ -4,12 +4,12 @@
 > a Flexbox-inspired layout engine, and a declarative DSL (**ZMarkup** +
 > **ZStyle**) for building interfaces without writing boilerplate.
 
-**Status:** 🧪 *alpha* — the API is still evolving. Expect breaking
-changes.
+**Status:** 🗓️ *beta* — the core API is frozen. See
+[docs/ROADMAP.md](docs/ROADMAP.md) for what's still planned.
 
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-alpha-orange.svg)](#status)
+[![Status](https://img.shields.io/badge/status-beta-blue.svg)](#status)
 
 ---
 
@@ -282,8 +282,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Status and roadmap
 
-ZenitUI is in **alpha**. The core architecture is stable, but the API
-is still evolving — breaking changes are expected between releases.
+ZenitUI is in **beta**. The core API is frozen: widgets, styling,
+layout, animations, events, and the backend interfaces described in
+the user guide and API reference are stable. Breaking changes are
+still possible for work that lands in Phases 4–8 of the roadmap
+(performance, feature completion, tooling), but the surface described
+in Phases 1–3 will not change.
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) for the detailed plan from
 alpha to beta to 1.0, including known issues and planned features.
