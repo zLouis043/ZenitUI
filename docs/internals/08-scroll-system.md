@@ -667,7 +667,7 @@ The scrollbar drag, wheel, and track click all check these flags.
 
 ```cpp
 if (!node.hasPointerCapture()) {
-    if (pointer.pressed && ctx.topmostConsumer == &node) {
+    if (pointer[MouseButton::Left].pressed && ctx.topmostConsumer == &node) {
         bool handled = false;
 
         // Try vertical thumb
@@ -737,7 +737,7 @@ which axis to jump on). In practice, both scrollable is rare.
 ### 6.4 Drag update
 
 ```cpp
-else if (pointer.down) {
+else if (pointer[MouseButton::Left].down) {
     if (canScrollY) {
         float dy = pointer.pos.y - state.dragStartMouseY;
         float ratio = (rect.height > 0.0f)

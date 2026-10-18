@@ -533,7 +533,31 @@ namespace ZenitUI
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
-		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick, onRightClick;
+				// ---- Callbacks (Left button, legacy names) ----
+		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
+
+		// ---- Callbacks (Right button, legacy semantic) ----
+		//
+		// Fires on right-button press when the node is hovered. Not a
+		// full click (press + release on the same target): the right
+		// button is meant for one-shot events like context menus, and
+		// the historical semantic is "press-on-hover".
+		std::function<void()> onRightClick;
+
+		// ---- Callbacks (unified, Left + Middle) ----
+		//
+		// Same click model as onPress/onRelease/onClick (press and
+		// release on the same target), but parameterized by MouseButton
+		// so that Middle is covered without a new pair of callback
+		// fields. Currently fires for Left and Middle. Right is NOT
+		// covered here — its semantic is different (see onRightClick
+		// above). Adding a new button to the MouseButton enum extends
+		// onButton* automatically, as long as the button follows the
+		// press+release model.
+		std::function<void(MouseButton)> onButtonPress;
+		std::function<void(MouseButton)> onButtonRelease;
+		std::function<void(MouseButton)> onButtonClick;
+
 		std::function<void()> onAnimationsFinished;
 		std::vector<std::shared_ptr<Layout>> children;
 		std::string nodeId;

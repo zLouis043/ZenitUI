@@ -33,7 +33,7 @@ namespace ZenitUI
 			node.state.hovered = node.rect.contains(pointer.pos);
 
 		node.state.pressed = 0;
-		if (pointer.down && ctx.pressTarget)
+		if (pointer[MouseButton::Left].down && ctx.pressTarget)
 		{
 			Layout *n = ctx.pressTarget;
 			while (n)
@@ -85,50 +85,87 @@ namespace ZenitUI
 				node.onHoverExit();
 		}
 
-		// ---- Left button: press / release / click ----
+				// ---- Click-based buttons: Left and Middle ----
 		//
-		// The blocks below are per-button. Once the unified
-		// onButtonClick(MouseButton) API lands (5.15d), these will be
-		// wrapped in a loop over every button in the MouseButton enum.
-		// For now they're spelled out for Left and Right only, which
-		// matches the current public API (onClick / onPress / onRelease
-		// for Left, onRightClick for Right).
+		// These follow the standard click model: press, then release on
+		// the same target. The legacy onPress/onRelease/onClick callbacks
+		// fire only for Left (they're the historical API). The unified
+		// onButtonPress/onButtonRelease/onButtonClick fire for every
+		// button that uses this model, currently Left and Middle.
+		//
+		// Both legacy and unified callbacks can be set at the same time.
+		// If they are, both fire — the user gets two callbacks for the
+		// same event, which is what they asked for by setting both.
+		auto fireClickButton = [&](MouseButton button, bool isLeftLegacy)
 		{
-			const auto &btn = pointer[MouseButton::Left];
+			const auto &btn = pointer[button];
 
-			if (btn.pressed && !ctx.wasConsumed(MouseButton::Left))
+			// --- Press ---
+			if (btn.pressed && !ctx.wasConsumed(button))
 			{
-				bool inPressPath = (ctx.pressTarget == &node) || node.isAncestorOf(ctx.pressTarget);
+				bool inPressPath = (ctx.pressTarget == &node) ||
+								   node.isAncestorOf(ctx.pressTarget);
 				if (inPressPath)
 				{
-					if (node.onPress)
+					if (isLeftLegacy && node.onPress)
 						node.onPress();
+					if (node.onButtonPress)
+						node.onButtonPress(button);
 					if (!node.config.passThrough)
-						ctx.consumeClick(MouseButton::Left);
+						ctx.consumeClick(button);
 				}
 			}
 
+			// --- Release + Click ---
 			if (btn.released)
 			{
-				bool pressedHere  = (ctx.pressTarget == &node)   || node.isAncestorOf(ctx.pressTarget);
-				bool releasedHere = (ctx.releaseTarget == &node) || node.isAncestorOf(ctx.releaseTarget);
+				bool pressedHere  = (ctx.pressTarget == &node)   ||
+									node.isAncestorOf(ctx.pressTarget);
+				bool releasedHere = (ctx.releaseTarget == &node) ||
+									node.isAncestorOf(ctx.releaseTarget);
 				bool validClick   = pressedHere && releasedHere;
 
 				if (validClick)
 				{
-					if (node.onRelease)
+					// onRelease fires unconditionally when the click is
+					// valid (matches the legacy behavior: release is a
+					// lower-level event than click).
+					if (isLeftLegacy && node.onRelease)
 						node.onRelease();
-					if (node.onClick && !ctx.wasConsumed(MouseButton::Left))
+					if (node.onButtonRelease)
+						node.onButtonRelease(button);
+
+					// onClick / onButtonClick are gated by consumption:
+					// if a descendant already consumed the event, they
+					// don't fire here.
+					if (!ctx.wasConsumed(button))
 					{
-						node.onClick();
+						if (isLeftLegacy && node.onClick)
+							node.onClick();
+						if (node.onButtonClick)
+							node.onButtonClick(button);
 						if (!node.config.passThrough)
-							ctx.consumeClick(MouseButton::Left);
+							ctx.consumeClick(button);
 					}
 				}
 			}
-		}
+		};
 
-		// ---- Right button: right-click ----
+		fireClickButton(MouseButton::Left,   /*isLeftLegacy=*/true);
+		fireClickButton(MouseButton::Middle, /*isLeftLegacy=*/false);
+
+		// ---- Right button: onRightClick ----
+		//
+		// Semantic is intentionally different from Left/Middle: fires
+		// on press if the node is hovered, without validating a full
+		// click pair. This matches the historical "right-click" model
+		// (one-shot, typically for context menus).
+		//
+		// onButton* callbacks do NOT fire for Right. If a future design
+		// wants to unify right-click under the same model, that's a
+		// separate decision — Right's "one-shot on press" semantic has
+		// legitimate uses that would be lost by adopting the click-pair
+		// model.
 		{
 			const auto &btn = pointer[MouseButton::Right];
 

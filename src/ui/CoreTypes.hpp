@@ -142,26 +142,10 @@ namespace ZenitUI
 		Vec2 pos;
 		float wheelY{0.0f};
 
-		// Canonical per-button state. Index with (size_t)MouseButton.
+		// Per-button state. Index with (size_t)MouseButton or via
+		// operator[]. Extending MouseButton extends this automatically.
 		std::array<ButtonState, (size_t)MouseButton::Count> buttons{};
 
-		// ---- Legacy fields (deprecated) ----
-		//
-		// These mirror the entries in `buttons` for the left and right
-		// buttons. They exist only to keep existing call sites compiling
-		// during the migration to the array-based API. New code should
-		// use `buttons[(size_t)MouseButton::X]` directly, or one of the
-		// accessor helpers below.
-		//
-		// Once every call site is migrated, these fields are removed.
-		bool down{false};
-		bool pressed{false};
-		bool released{false};
-		bool rightDown{false};
-		bool rightPressed{false};
-		bool rightReleased{false};
-
-		// Convenience accessors.
 		ButtonState &operator[](MouseButton b) { return buttons[(size_t)b]; }
 		const ButtonState &operator[](MouseButton b) const { return buttons[(size_t)b]; }
 	};

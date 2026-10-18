@@ -169,12 +169,33 @@ namespace ZenitUI
 		}
 
 		ctx.hoverTarget = ctx.topmostConsumer;
-		if (ctx.pointer.pressed)
+
+		// pressTarget / releaseTarget are set if ANY mouse button fired
+		// its edge this frame. The per-button callbacks (onButtonPress,
+		// onButtonRelease, onButtonClick) need this to fire for Left and
+		// Middle: the per-button callbacks (onButtonPress, onButtonRelease,
+		// onButtonClick) need this to fire for Left and Middle. The
+		// legacy `pointer.pressed` field used to cover only Left.
+		bool anyPressed = false;
+		bool anyReleased = false;
+		bool anyDown = false;
+		for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
+		{
+			const auto &b = ctx.pointer.buttons[i];
+			if (b.pressed)
+				anyPressed = true;
+			if (b.released)
+				anyReleased = true;
+			if (b.down)
+				anyDown = true;
+		}
+
+		if (anyPressed)
 			ctx.pressTarget = ctx.hoverTarget;
-		if (ctx.pointer.released)
+		if (anyReleased)
 			ctx.releaseTarget = ctx.hoverTarget;
 
-		if (ctx.pointer.pressed)
+		if (ctx.pointer[MouseButton::Left].pressed)
 		{
 			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
 			{
@@ -239,9 +260,9 @@ namespace ZenitUI
 
 		update(dt, false);
 
-		if (ctx.pointer.released)
+		if (anyReleased)
 			ctx.pressTarget = nullptr;
-		if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+		if (!anyDown && !ctx.pointerCapture.expired())
 			ctx.pointerCapture.reset();
 	}
 

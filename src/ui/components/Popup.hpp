@@ -118,13 +118,13 @@ namespace ZenitUI::UI
             rect = {x, y, size.x, size.y};
             arrangeInto(rect);
 
-            if (closeOnClickOutside && ctx.pointer.pressed)
+            if (closeOnClickOutside && ctx.pointer[MouseButton::Left].pressed)
             {
                 if (!rect.contains(ctx.pointer.pos))
                     close();
             }
 
-            if (closeOnClickOutside && ctx.pointer.rightPressed)
+            if (closeOnClickOutside && ctx.pointer[MouseButton::Right].pressed)
             {
                 if (!rect.contains(ctx.pointer.pos))
                     close();

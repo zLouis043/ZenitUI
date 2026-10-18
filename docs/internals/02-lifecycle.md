@@ -65,8 +65,7 @@ void UIContext::beginFrame(float delta_time) {
 
     // Clear per-frame flags
     wheelConsumedThisFrame = false;
-    clickConsumed = false;
-    rightClickConsumed = false;
+    buttonConsumed.fill(false);
     topmostConsumer = nullptr;
     hoverTarget = nullptr;
     releaseTarget = nullptr;
@@ -163,31 +162,61 @@ hit-testing resumes.
 
 ```cpp
 ctx.hoverTarget = ctx.topmostConsumer;
-if (ctx.pointer.pressed)  ctx.pressTarget   = ctx.hoverTarget;
-if (ctx.pointer.released) ctx.releaseTarget = ctx.hoverTarget;
+
+bool anyPressed  = false;
+bool anyReleased = false;
+bool anyDown     = false;
+for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
+{
+    const auto& b = ctx.pointer.buttons[i];
+    if (b.pressed)  anyPressed  = true;
+    if (b.released) anyReleased = true;
+    if (b.down)     anyDown     = true;
+}
+
+if (anyPressed)  ctx.pressTarget   = ctx.hoverTarget;
+if (anyReleased) ctx.releaseTarget = ctx.hoverTarget;
 ```
 
 - `hoverTarget` — updated every frame.
-- `pressTarget` — set only on the frame of a press.
-- `releaseTarget` — set only on the frame of a release.
+- `pressTarget` — set on the frame of a press **on any mouse button**.
+  It persists across frames until a release happens.
+- `releaseTarget` — set on the frame of a release **on any mouse
+  button**.
+- `anyDown` — aggregate "at least one button is held". Used in §3.6.
 
-These are used later by `InputController::updateFlags` and
+`pressTarget`/`releaseTarget` are single pointers, not per-button.
+The per-button distinction is applied later, in `fireCallbacks`, where
+each button's edge is checked against the same targets (so pressing
+Left then releasing Right produces two independent edges that both
+reference the shared pointers). See
+[Input System §5](07-input-system.md) for the click validation logic.
+
+These targets are used later by `InputController::updateFlags` and
 `fireCallbacks`.
 
 ### 3.3 Focus from click
 
 ```cpp
-if (ctx.pointer.pressed) {
+if (ctx.pointer[MouseButton::Left].pressed) {
     if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable()) {
         ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
+        notifyFocusAncestors(ctx.focusedNode.lock().get());
     } else {
         ctx.releaseFocus();
     }
 }
 ```
 
-Clicking on a focusable node focuses it. Clicking anywhere else releases
-focus. This is the only place focus changes from a click.
+Clicking with Left on a focusable node focuses it. Clicking with Left
+anywhere else releases focus. This is the only place focus changes
+from a mouse click — Middle and Right don't move focus.
+
+`notifyFocusAncestors` walks up from the newly focused node and fires
+`onDescendantFocused` on every ancestor. This is the same call the Tab
+navigation path uses (see §3.4), which makes click-focus and Tab-focus
+symmetric: a container that overrides `onDescendantFocused` sees the
+event regardless of how focus arrived.
 
 ### 3.4 Tab navigation
 
@@ -253,21 +282,31 @@ Calls the per-node `update` (see §4) with `ancestorBlocked = false` and
 ### 3.6 Post-update cleanup
 
 ```cpp
-if (ctx.pointer.released)   ctx.pressTarget = nullptr;
-if (!ctx.pointer.down && !ctx.pointerCapture.expired())
+if (anyReleased)
+    ctx.pressTarget = nullptr;
+if (!anyDown && !ctx.pointerCapture.expired())
     ctx.pointerCapture.reset();
 ```
 
-- `pressTarget` is cleared after the frame where the release happened.
-  This is what makes `pressTarget != releaseTarget` checks in the next
-  frame evaluate correctly.
-- Pointer capture is released automatically when the button is up. A
-  widget can hold capture across frames while the button is down, and
-  it's dropped as soon as the button is released.
+- After the frame where a release happens, `pressTarget` is cleared.
+  This is what makes `pressTarget == nullptr` on the frame **after**
+  a release — the click validation is done, so no button is
+  "pressing" anything anymore.
+- If **all** buttons are up and capture is still set, clear it. This
+  is the automatic release: a widget doesn't need to call
+  `releasePointer()` explicitly; capture is dropped when the last
+  button is released.
 
-Note the ordering: `pressTarget` is cleared **after** `update` runs,
-so during `update` both `pressTarget` and `releaseTarget` are available
-for click validation.
+`anyReleased` / `anyDown` are the aggregate flags computed in §3.2.
+Note that `pressTarget` is cleared on **any** release, not just Left:
+a multi-button sequence like "press Left, press Right, release Right,
+release Left" leaves `pressTarget` valid until the second release,
+because `anyReleased` is only true on the frames where some button
+transitions from down to up.
+
+**Ordering matters:** `pressTarget` is cleared **after** `update`
+runs, so during `update` both `pressTarget` and `releaseTarget` are
+available for click validation.
 
 ---
 
@@ -466,13 +505,17 @@ input_.fireCallbacks(*this, prevState, nextState, stateChanged);
 - `handleKeyInput` fires `onClick` via `Enter` / `Space` if the node
   is focused and `config.keyboardActivates` is true.
 - `fireCallbacks` fires the input callbacks in the right order:
-  - `onHoverEnter` / `onHoverExit` on state change.
-  - `onPress` on `pointer.pressed` (if the press path includes this node).
-  - `onRelease` on `pointer.released` (if the release path includes
-    this node).
-  - `onClick` on a valid click (press target and release target both
-    include this node, and not consumed).
-  - `onRightClick` on `pointer.rightPressed` if the node is hovered.
+  - `onHoverEnter` / `onHoverExit` on state change (treating
+    `Hover` and `Pressed` as a single "hovered" region).
+  - For each button in {Left, Middle}: `onPress` (and
+    `onButtonPress(button)`) on `pointer[button].pressed` if the press
+    path includes this node.
+  - For each button in {Left, Middle}: `onRelease` (and
+    `onButtonRelease(button)`) and `onClick` (and
+    `onButtonClick(button)`) on `pointer[button].released` if the
+    release path includes this node and the click is valid.
+  - `onRightClick` on `pointer[MouseButton::Right].pressed` if the
+    node is hovered. Right does not fire `onButton*`.
 
 Note: callbacks are fired **after** children have been updated. So the
 order of callback invocation across the tree is bottom-up within a

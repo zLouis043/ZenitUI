@@ -102,37 +102,11 @@ namespace ZenitUI
 		// Index with (size_t)MouseButton.
 		std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
 
-		// ---- Legacy flags (deprecated) ----
-		//
-		// Mirror the Left/Right entries of `buttonConsumed` for the
-		// benefit of call sites that haven't been migrated to the
-		// array-based API yet. Every write goes to both; every read
-		// considers both. Removed once the migration completes.
-		bool clickConsumed{false};
-		bool rightClickConsumed{false};
-
-		// ---- New API ----
-		void consumeClick(MouseButton b)
-		{
-			buttonConsumed[(size_t)b] = true;
-			if (b == MouseButton::Left)  clickConsumed      = true;
-			if (b == MouseButton::Right) rightClickConsumed = true;
-		}
-		bool wasConsumed(MouseButton b) const
-		{
-			if (buttonConsumed[(size_t)b]) return true;
-			if (b == MouseButton::Left  && clickConsumed)      return true;
-			if (b == MouseButton::Right && rightClickConsumed) return true;
-			return false;
-		}
-
-		// ---- Legacy API (deprecated) ----
-		//
-		// These keep working as before. They write through to the
-		// canonical array so that new readers (`wasConsumed`) see a
-		// consistent view.
-		void consumeClick()      { consumeClick(MouseButton::Left); }
-		void consumeRightClick() { consumeClick(MouseButton::Right); }
+		// Per-button consumption. Marked when a node handles a
+		// button's event and the node isn't passThrough, so ancestors
+		// skip their own handling.
+		void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
+		bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 
 		InputEvents inputEvents;
 		std::weak_ptr<Layout> focusedNode;
@@ -173,8 +147,6 @@ namespace ZenitUI
 			dt = delta_time;
 			time += delta_time;
 			wheelConsumedThisFrame = false;
-			clickConsumed = false;
-			rightClickConsumed = false;
 			buttonConsumed.fill(false);
 			topmostConsumer = nullptr;
 			hoverTarget = nullptr;	 // <-- nuovo
