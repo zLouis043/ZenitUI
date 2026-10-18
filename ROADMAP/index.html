@@ -2202,6 +2202,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#76-ci-build-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 — CI: build examples
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3541,6 +3552,42 @@ requires:</p>
 <li>[ ] Autocomplete for property names, tag names, class names</li>
 <li>[ ] Go-to-definition for keyframes, custom properties</li>
 <li>[ ] Diagnostics for unknown properties, typo'd names</li>
+</ul>
+<h3 id="76-ci-build-examples">7.6 — CI: build examples</h3>
+<p><strong>Severity:</strong> medium — catches API drift in user-facing code that the
+test suite doesn't exercise.</p>
+<p><strong>Location:</strong> <code>.github/workflows/ci.yml</code>.</p>
+<p><strong>Problem:</strong> the examples live in <code>examples/</code> and were not compiled by
+CI. They exercise the public API in ways the tests don't:
+<code>RaylibBackend.cpp</code> (the tests use mocks, so the real backend was
+never compiled by CI), <code>Dropdown</code> / <code>Popup</code> / <code>Tooltip</code> / <code>Modal</code> /
+<code>CanvasLayout</code>, the fluent API (<code>cls</code> / <code>id</code> / <code>size</code> / <code>with</code>), and
+the ZMarkup → <code>UINode</code> → callback integration. A breaking change in
+any of these passes CI silently — exactly what happened with the
+per-button input refactor (§5.15), where two examples were left with
+<code>pointer.pressed</code> and <code>pointer.transition</code> and nobody noticed until
+a manual <code>make examples</code> was run.</p>
+<p><strong>Fix:</strong> add a <code>build-examples</code> job to <code>ci.yml</code>. It compiles every
+example (<code>make -j4 examples</code>) without running them. It runs on
+<strong>one</strong> row — <code>windows-latest</code> + MSYS2 MinGW — not the full test
+matrix, because the errors it catches are API-drift errors which are
+platform-independent.</p>
+<ul>
+<li>[x] Add <code>build-examples</code> job to <code>ci.yml</code> (windows-latest + MSYS2)</li>
+<li>[x] Verify it catches the <code>pointer.pressed</code> regression (revert one
+      example locally, push, confirm CI fails)</li>
+</ul>
+<p><strong>Long-term (separate item):</strong> the <code>examples/Makefile</code> currently
+hardcodes Windows link flags (<code>-lraylibdll -lopengl32 -lgdi32 -lwinmm</code>),
+which is why the CI job runs on Windows. Making the Makefile
+cross-platform (or replacing it with CMake, as already planned for
+Phase 7) would let the job run on <code>ubuntu-latest</code> — faster, cheaper,
+and more representative of the CI environment used for benchmarks.</p>
+<ul>
+<li>[ ] Make <code>examples/Makefile</code> cross-platform (OS detection)</li>
+<li>[ ] Move <code>build-examples</code> to <code>ubuntu-latest</code></li>
+<li>[ ] Precompile <code>RaylibBackend.cpp</code> into an object file (currently
+      recompiled once per example)</li>
 </ul>
 <hr />
 <h2 id="phase-8-beyond-10">Phase 8 — Beyond 1.0</h2>
