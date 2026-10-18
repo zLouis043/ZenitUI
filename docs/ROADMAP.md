@@ -1399,6 +1399,46 @@ A runtime inspector (like React DevTools):
 - [ ] Go-to-definition for keyframes, custom properties
 - [ ] Diagnostics for unknown properties, typo'd names
 
+### 7.6 — CI: build examples
+
+**Severity:** medium — catches API drift in user-facing code that the
+test suite doesn't exercise.
+
+**Location:** `.github/workflows/ci.yml`.
+
+**Problem:** the examples live in `examples/` and were not compiled by
+CI. They exercise the public API in ways the tests don't:
+`RaylibBackend.cpp` (the tests use mocks, so the real backend was
+never compiled by CI), `Dropdown` / `Popup` / `Tooltip` / `Modal` /
+`CanvasLayout`, the fluent API (`cls` / `id` / `size` / `with`), and
+the ZMarkup → `UINode` → callback integration. A breaking change in
+any of these passes CI silently — exactly what happened with the
+per-button input refactor (§5.15), where two examples were left with
+`pointer.pressed` and `pointer.transition` and nobody noticed until
+a manual `make examples` was run.
+
+**Fix:** add a `build-examples` job to `ci.yml`. It compiles every
+example (`make -j4 examples`) without running them. It runs on
+**one** row — `windows-latest` + MSYS2 MinGW — not the full test
+matrix, because the errors it catches are API-drift errors which are
+platform-independent.
+
+- [x] Add `build-examples` job to `ci.yml` (windows-latest + MSYS2)
+- [x] Verify it catches the `pointer.pressed` regression (revert one
+      example locally, push, confirm CI fails)
+
+**Long-term (separate item):** the `examples/Makefile` currently
+hardcodes Windows link flags (`-lraylibdll -lopengl32 -lgdi32 -lwinmm`),
+which is why the CI job runs on Windows. Making the Makefile
+cross-platform (or replacing it with CMake, as already planned for
+Phase 7) would let the job run on `ubuntu-latest` — faster, cheaper,
+and more representative of the CI environment used for benchmarks.
+
+- [ ] Make `examples/Makefile` cross-platform (OS detection)
+- [ ] Move `build-examples` to `ubuntu-latest`
+- [ ] Precompile `RaylibBackend.cpp` into an object file (currently
+      recompiled once per example)
+
 ---
 
 ## Phase 8 — Beyond 1.0
