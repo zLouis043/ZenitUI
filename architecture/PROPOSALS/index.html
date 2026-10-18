@@ -1765,6 +1765,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#shipped-proposals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipped proposals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shipped proposals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proposal-1-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 1 — ref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proposal-2-bindablet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 2 — Bindable&lt;T&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1797,6 +1836,13 @@ file tracks <em>how</em> the planned features will be shaped.</p>
 is moved to the roadmap as a §5.x item with the <code>[x]</code> checklist
 filled in, and this document is updated to point at the shipped
 implementation.</p>
+<p><strong>Shipped:</strong></p>
+<ul>
+<li>✅ <strong>Proposal 1 — <code>ref</code></strong>: shipped as roadmap §5.16. See
+  <code>docs/user/04-zmarkup.md</code> §2.4 and <code>docs/api/ZMarkup.md</code> §6 for
+  the user-facing API. The "Open questions" section below is kept
+  for historical context.</li>
+</ul>
 <hr />
 <h2 id="index">Index</h2>
 <ul>
@@ -2663,6 +2709,37 @@ re-discussing them.</p>
 </tbody>
 </table>
 <p>Zero deletions in either proposal. Both are purely additive.</p>
+<hr />
+<h2 id="shipped-proposals">Shipped proposals</h2>
+<h3 id="proposal-1-ref">Proposal 1 — <code>ref</code></h3>
+<p><strong>Shipped:</strong> roadmap §5.16.</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li>Fluent method is <code>withRef</code> (not <code>ref_</code>, as originally drafted).
+  The proposal itself was updated to <code>withRef</code> before implementation;
+  no code changes derived from the old name.</li>
+<li><code>@ref</code> in <code>on*</code> helpers (<code>ui.onClick("@delete", cb)</code>) is <strong>not</strong>
+  shipped. It stays as a follow-up in §1.11 (Open questions, point 4).
+  The <code>@</code> prefix in an id string is currently undefined behavior, so
+  adding it later is backwards-compatible.</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>Layout::ref</code>, <code>Layout::setRef</code>, <code>TLayout::withRef</code>.</li>
+<li><code>Element::ref</code> + parser <code>@name</code> in ZMarkup.</li>
+<li><code>BuildContext::byRef</code> + population in <code>Registry::create</code>.</li>
+<li><code>UINode::ref&lt;T&gt;</code>, <code>UINode::refAll&lt;T&gt;</code>, with per-handle warning dedup.</li>
+<li>Warning on <code>UINode::find&lt;T&gt;</code> miss.</li>
+<li><code>Debug::dumpTree</code> / <code>dumpStyle</code> show <code>@ref</code>.</li>
+<li>18 new tests (14 in <code>test_zmarkup_build.cpp</code>, 4 in <code>test_layout.cpp</code>).</li>
+<li>7 files of documentation updated.</li>
+</ul>
+<p><strong>Known limitation carried forward:</strong> <code>ref</code> mutation at runtime does
+not update <code>byRef</code>. A future <code>UINode::setRef</code> would fix it; not in
+scope.</p>
+<h3 id="proposal-2-bindablet">Proposal 2 — <code>Bindable&lt;T&gt;</code></h3>
+<p><strong>Status:</strong> 🟡 proposed — not yet shipped. This is the next planned
+implementation (§5.17 in the roadmap).</p>
 
 
 

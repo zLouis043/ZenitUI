@@ -1269,6 +1269,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#refname-reftname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ref(name) / ref&lt;T&gt;(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refallname-refalltname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        refAll(name) / refAll&lt;T&gt;(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2170,6 +2192,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#refname-reftname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ref(name) / ref&lt;T&gt;(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refallname-refalltname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        refAll(name) / refAll&lt;T&gt;(name)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2444,6 +2488,7 @@ ZMarkup::UINode ui(root, ctx);
     std::string tag;
     std::vector&lt;std::string&gt; classes;
     std::string id;
+    std::string ref;   // populated from @name, logic-only
     std::string text;
     std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; attrs;
     std::vector&lt;Element&gt; children;
@@ -2473,7 +2518,11 @@ ZMarkup::UINode ui(root, ctx);
 </tr>
 <tr>
 <td><code>id</code></td>
-<td>Id parsed from <code>#name</code>. Empty if none.</td>
+<td>Style id parsed from <code>#name</code>. Empty if none. Participates in CSS specificity.</td>
+</tr>
+<tr>
+<td><code>ref</code></td>
+<td>Logic ref parsed from <code>@name</code>. Empty if none. Does <strong>not</strong> participate in CSS. Multiple nodes can share the same ref.</td>
 </tr>
 <tr>
 <td><code>text</code></td>
@@ -2552,14 +2601,27 @@ el.attr(&quot;width&quot;);  // &quot;100px&quot;
 <h2 id="4-buildcontext">4. <code>BuildContext</code></h2>
 <pre><code class="language-cpp">struct BuildContext {
     std::unordered_map&lt;std::string, std::shared_ptr&lt;Layout&gt;&gt; byId;
+    std::unordered_map&lt;std::string,
+                       std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt;&gt; byRef;
 };
 </code></pre>
-<p>A map from id → node, populated by <code>Registry::create</code> as it builds the
-tree. Used by <code>UINode::find</code> for lookups.</p>
-<p><strong>Note:</strong> ids are <strong>not required to be unique</strong>. The map stores the
-last node registered for a given id. If two elements have the same id,
-<code>find</code> returns the second one (the last to be built).</p>
-<p>In practice, use unique ids.</p>
+<p><code>byId</code> maps a style id (<code>#id</code>) to a node. Populated by
+<code>Registry::create</code> as it builds the tree. Used by <code>UINode::find</code> for
+lookups. There is at most one entry per id — later nodes overwrite
+earlier ones (last wins).</p>
+<p><code>byRef</code> maps a logic ref (<code>@ref</code>) to a <strong>vector</strong> of nodes. Populated
+by <code>Registry::create</code> when <code>Element::ref</code> is non-empty. Preserves
+insertion order per key. Used by <code>UINode::ref</code> (returns the first)
+and <code>UINode::refAll</code> (returns all).</p>
+<p><strong>Note on ids:</strong> ids are <strong>not required to be unique</strong>. The <code>byId</code>
+map stores the <strong>last</strong> node registered for a given id. If two
+elements have the same id, <code>find</code> returns the second one (the last to
+be built).</p>
+<p><strong>Note on refs:</strong> refs are explicitly designed to be shared. Multiple
+nodes with the same <code>@ref</code> are the normal case for a list of items.
+<code>refAll</code> returns them all; <code>ref</code> returns the first and warns (once)
+that multiple matched. See <code>docs/user/04-zmarkup.md</code> §2.4 for the
+design rationale.</p>
 <hr />
 <h2 id="5-registry">5. <code>Registry</code></h2>
 <pre><code class="language-cpp">class Registry {
@@ -2595,7 +2657,10 @@ old factory is overwritten.</p>
 <li>Apply the <code>passthrough</code> attribute if present:
    <code>node-&gt;setPassThrough(el.attrBool("passthrough"))</code>.</li>
 <li>Add each class from <code>el.classes</code>.</li>
-<li>If <code>el.id</code> is non-empty, set it and register in <code>ctx.byId</code>.</li>
+<li>If <code>el.id</code> is non-empty, set it and register in <code>ctx.byId</code>
+   (last wins on conflict).</li>
+<li>If <code>el.ref</code> is non-empty, set it via <code>node-&gt;setRef(el.ref)</code> and
+   append to <code>ctx.byRef[el.ref]</code>.</li>
 <li>Apply each attribute as an inline style via
    <code>applyStyleAttr(node-&gt;getInlineBase(), k, v)</code>.</li>
 <li>Recursively create and add each child.</li>
@@ -2727,10 +2792,17 @@ public:
 
     std::shared_ptr&lt;Layout&gt;        root() const;
     std::shared_ptr&lt;BuildContext&gt;  context() const;
-    std::shared_ptr&lt;Layout&gt;        find(const std::string&amp; id) const;
 
+    // Lookup by #id
+    std::shared_ptr&lt;Layout&gt; find(const std::string&amp; id) const;
     template &lt;typename T = Layout&gt;
     std::shared_ptr&lt;T&gt; find(const std::string&amp; id) const;
+
+    // Lookup by @ref
+    template &lt;typename T = Layout&gt;
+    std::shared_ptr&lt;T&gt; ref(const std::string&amp; name) const;
+    template &lt;typename T = Layout&gt;
+    std::vector&lt;std::shared_ptr&lt;T&gt;&gt; refAll(const std::string&amp; name) const;
 
     UINode&amp; onClick(const std::string&amp; id, std::function&lt;void()&gt; cb);
     UINode&amp; onPress(const std::string&amp; id, std::function&lt;void()&gt; cb);
@@ -2747,15 +2819,44 @@ public:
 parent-&gt;addChild(r);
 </code></pre>
 <h3 id="findid-findtid"><code>find(id)</code> / <code>find&lt;T&gt;(id)</code></h3>
-<p>Finds a node by id.</p>
+<p>Finds a node by <code>#id</code>.</p>
 <pre><code class="language-cpp">auto node = ui.find(&quot;save&quot;);                 // shared_ptr&lt;Layout&gt;
 auto slider = ui.find&lt;Slider&gt;(&quot;volume&quot;);     // shared_ptr&lt;Slider&gt;
 </code></pre>
-<p>Returns <code>nullptr</code> if the id isn't found.</p>
+<p>Returns <code>nullptr</code> if the id isn't found. A warning is logged (once per
+<code>UINode</code> handle, not per frame) so a typo'd id surfaces in the log
+instead of a silent failure:</p>
+<pre><code>[WARN ] [ZMarkup]: UINode::find('save_btn'): no node with this id
+</code></pre>
 <p>The typed version uses <code>std::static_pointer_cast</code>. If the actual type
 doesn't match <code>T</code>, using the returned pointer is undefined behavior.
 Use the typed <code>on*</code> helpers when possible (they do the cast safely and
 no-op if the id doesn't exist or the type doesn't match).</p>
+<h3 id="refname-reftname"><code>ref(name)</code> / <code>ref&lt;T&gt;(name)</code></h3>
+<p>Finds the <strong>first</strong> node with the given <code>@ref</code>.</p>
+<pre><code class="language-cpp">auto first_delete = ui.ref&lt;Button&gt;(&quot;delete&quot;);
+</code></pre>
+<p>Returns <code>nullptr</code> if no node matches, with a warning. If <strong>more than
+one</strong> node matches, returns the first (in insertion order) and logs a
+warning suggesting <code>refAll</code>:</p>
+<pre><code>[WARN ] [ZMarkup]: UINode::ref('delete'): 3 nodes match, returning the first. Use refAll for the full list.
+</code></pre>
+<p>Use <code>ref</code> when you expect a unique match (a specific element that
+happens to be looked up by ref rather than id). For lists, use
+<code>refAll</code>.</p>
+<h3 id="refallname-refalltname"><code>refAll(name)</code> / <code>refAll&lt;T&gt;(name)</code></h3>
+<p>Returns <strong>all</strong> nodes with the given <code>@ref</code>, in the order they were
+built.</p>
+<pre><code class="language-cpp">for (auto&amp; btn : ui.refAll&lt;Button&gt;(&quot;delete&quot;)) {
+    btn-&gt;onClick = []{ /* ... */ };
+}
+</code></pre>
+<p>Returns an empty vector if no node matches. This is a legitimate
+outcome (an empty list), so the log level is <code>Debug</code>, not <code>Warning</code>.</p>
+<p>The <code>ref</code> and <code>find</code> families are <strong>independent</strong>: a node can have
+<code>#save</code> (findable by <code>find</code>) and <code>@main_save</code> (findable by <code>ref</code>)
+simultaneously. They map to different fields on <code>Layout</code> and do not
+interfere.</p>
 <h3 id="context"><code>context()</code></h3>
 <p>Returns the <code>BuildContext</code> used to build the tree. The context holds
 the id → node map (byId).</p>
@@ -3012,6 +3113,29 @@ pass it to <code>build</code>, or use the C++ API directly.</p>
 <p><strong>No support for conditionals or loops.</strong></p>
 <p>ZMarkup is a static description. Use C++ loops to generate a string
 before calling <code>build</code>, or build the tree directly with the C++ API.</p>
+<p><strong><code>@ref</code> is not a CSS hook.</strong></p>
+<p>The parser accepts <code>Button@delete "X"</code> and stores <code>"delete"</code> in
+<code>Element::ref</code>, but <code>.zstyle</code> has no <code>@</code> selector and no
+<code>[ref="delete"]</code> attribute selector. Styling a node by its ref is
+<strong>not supported and not planned</strong>. Use a class (<code>.btn-danger</code>) for
+styling, <code>@ref</code> only for <code>UINode::ref</code>/<code>refAll</code> lookups.</p>
+<p><strong><code>find</code> vs <code>ref</code>: two different lookups.</strong></p>
+<ul>
+<li><code>find</code> reads <code>#id</code>. Only one node per id (last wins on duplicate).</li>
+<li><code>ref</code> / <code>refAll</code> read <code>@ref</code>. Multiple nodes can share a ref.</li>
+<li>A node can have both, or one, or neither.</li>
+<li>The <code>on*</code> helpers (<code>ui.onClick("save", cb)</code>) only take ids. To bind
+  by ref, look up the nodes and set the callback manually.</li>
+</ul>
+<p>Mixing the two — e.g. <code>ui.ref&lt;T&gt;("save")</code> when the node only has
+<code>#save</code> — is the most common mistake. It returns <code>nullptr</code>, logs a
+warning, and the callback silently never fires.</p>
+<p><strong>Warnings from <code>find</code> / <code>ref</code> are deduplicated per handle.</strong></p>
+<p>If <code>ui.find("typo")</code> is called in a loop, the warning is emitted once
+per <code>UINode</code> handle, not once per call. This is intentional: a
+diagnostic should not spam the log. If you fix the typo mid-frame,
+the warning won't re-fire in the same session — restart the process
+or create a new <code>UINode</code> to see the warning again.</p>
 <hr />
 <h2 id="11-see-also">11. See also</h2>
 <ul>

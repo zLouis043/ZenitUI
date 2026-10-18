@@ -2083,7 +2083,8 @@ flags.</p>
 <h2 id="i">I</h2>
 <p><strong>Id</strong>
 A string identifier on a <code>Layout</code> node (<code>#name</code> in ZMarkup). Matched
-by <code>#name</code> selectors. Used by <code>UINode::find</code> for lookups.</p>
+by <code>#name</code> selectors with specificity <code>(1, 0, 0)</code>. Used by
+<code>UINode::find</code> for lookups. See also <strong>Ref</strong>.</p>
 <p><strong>Inherited property</strong>
 One of <code>font</code>, <code>fontSize</code>, <code>color</code>, <code>letterSpacing</code>, <code>textAlign</code>. All
 other properties are not inherited.</p>
@@ -2188,6 +2189,14 @@ Every property is defined by the <code>BUBBLE_STYLE_PROPS</code> macro.</p>
 <p><strong>Rect</strong>
 A <code>{x, y, width, height}</code> struct. Every node has a <code>rect</code>, set during
 <code>arrange</code>.</p>
+<p><strong>Ref</strong>
+A string identifier on a <code>Layout</code> node (<code>@name</code> in ZMarkup) used for
+<strong>logic lookup only</strong>. Stored on <code>Layout::ref</code>, retrieved via
+<code>UINode::ref&lt;T&gt;</code> (first match) or <code>UINode::refAll&lt;T&gt;</code> (all matches).
+Does <strong>not</strong> participate in CSS matching — there is no <code>@</code> selector in
+<code>.zstyle</code>. Multiple nodes can share the same ref, which is the point:
+a list of N items shares one style (class) and one ref (logic handle).
+See also <strong>Id</strong>.</p>
 <p><strong>Render target</strong>
 An offscreen framebuffer (<code>TargetHandle</code>). Used for filters (<code>layer</code>)
 and by <code>CanvasLayout</code>. The Raylib backend doesn't support nested

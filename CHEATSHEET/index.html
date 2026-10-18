@@ -1596,6 +1596,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#id-vs-ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Id vs Ref
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#reserved-attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2538,6 +2549,44 @@ all work.</p>
 <p><code>Stack</code>, <code>VStack</code>, <code>HStack</code>, <code>Spacer</code>, <code>Text</code>, <code>Label</code>, <code>Button</code>,
 <code>Panel</code>, <code>Toggle</code>, <code>Checkbox</code>, <code>Slider</code>, <code>ProgressBar</code>, <code>TextInput</code>,
 <code>ScrollView</code>, <code>Dropdown</code>.</p>
+<h3 id="id-vs-ref">Id vs Ref</h3>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Name</th>
+<th>Where</th>
+<th>Cardinality</th>
+<th>CSS?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#name</code></td>
+<td>Style id</td>
+<td><code>.zstyle</code> selectors, <code>UINode::find</code></td>
+<td>0 or 1 (last wins)</td>
+<td>yes, specificity <code>(1,0,0)</code></td>
+</tr>
+<tr>
+<td><code>@name</code></td>
+<td>Logic ref</td>
+<td><code>UINode::ref</code> / <code>refAll</code> only</td>
+<td>0..N</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<pre><code>Button#save &quot;Save&quot;                    // findable by id
+Button.btn-danger@delete &quot;X&quot;          // findable by ref
+Button#save@main_save &quot;Save&quot;          // both
+</code></pre>
+<pre><code class="language-cpp">auto b    = ui.find&lt;Button&gt;(&quot;save&quot;);           // by #id
+auto one  = ui.ref&lt;Button&gt;(&quot;delete&quot;);          // by @ref, first match
+auto all  = ui.refAll&lt;Button&gt;(&quot;delete&quot;);       // by @ref, all matches
+</code></pre>
+<p>Rule of thumb: <code>#id</code> for unique styled elements, <code>@ref</code> for anything
+that repeats (lists, grids).</p>
 <h3 id="reserved-attributes">Reserved attributes</h3>
 <table>
 <thead>

@@ -2080,6 +2080,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#516-ref-separation-of-style-identity-and-logic-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.16 ref: separation of style identity and logic lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3485,6 +3496,82 @@ and the limitation is documented in
 <li>[x] Verify <code>docs/api/UIContext.md</code> already documents <code>buttonConsumed</code> array correctly (no change needed)</li>
 <li>[x] Fix <code>examples/09_custom_widget/Rating.hpp</code> (2 bugs)</li>
 <li>[x] Fix <code>examples/00_demo/SettingsScreen.hpp</code> (1 bug)</li>
+</ul>
+<h3 id="516-ref-separation-of-style-identity-and-logic-lookup">5.16 <code>ref</code>: separation of style identity and logic lookup</h3>
+<p><strong>Done.</strong></p>
+<p>Today <code>Layout::nodeId</code> (set by <code>#id</code> in ZMarkup) is the only way to
+look up a node from C++. This conflates two distinct concepts:</p>
+<ol>
+<li><strong>Style identity</strong> — <code>#id</code> participates in CSS specificity as an
+   id selector <code>(1, 0, 0)</code>, beating any class. It's meant for unique
+   elements.</li>
+<li><strong>Logic identity</strong> — the string C++ uses to look up the node.</li>
+</ol>
+<p>For a list of 100 delete buttons, each button needs a unique logic
+handle but <strong>not</strong> a unique style id — they all want the same style.
+The old pattern forced users to set <code>#delete_1</code>, <code>#delete_2</code>, ... on
+each one, polluting the cascade and the <code>byId</code> map.</p>
+<p>The fix introduces a separate <strong><code>ref</code></strong>:</p>
+<ul>
+<li><code>Layout::ref</code> — public <code>std::string</code> field, populated from <code>@name</code>
+  in ZMarkup.</li>
+<li><code>Layout::setRef(const std::string&amp;)</code> — setter.</li>
+<li><code>Layout::withRef(const std::string&amp;)</code> — fluent, on <code>TLayout</code>.</li>
+<li><code>Element::ref</code> — populated by the ZMarkup parser from <code>@name</code>.</li>
+<li><code>BuildContext::byRef</code> — <code>unordered_map&lt;string, vector&lt;shared_ptr&lt;Layout&gt;&gt;&gt;</code>,
+  populated by <code>Registry::create</code>.</li>
+<li><code>UINode::ref&lt;T&gt;(name)</code> — returns the first match, warns if not
+  found or ambiguous.</li>
+<li><code>UINode::refAll&lt;T&gt;(name)</code> — returns all matches, <code>{}</code> + debug log
+  if not found.</li>
+</ul>
+<p><code>find</code> (by <code>#id</code>) is unchanged in behavior, except that it now logs a
+warning (once per <code>UINode</code> handle, not per frame) when the id is not
+found. Silent <code>nullptr</code> returns are gone for the common typo case.</p>
+<p><strong>Design decisions:</strong></p>
+<ul>
+<li><strong><code>ref</code> and <code>id</code> are orthogonal.</strong> A node can have both
+  (<code>Button#save@main_save</code>), only one, or neither. They map to
+  different fields (<code>nodeId</code> and <code>ref</code>) and different maps (<code>byId</code>
+  and <code>byRef</code>).</li>
+<li><strong><code>@ref</code> is not a CSS hook.</strong> <code>.zstyle</code> has no <code>@</code> selector, no
+  <code>[ref="..."]</code> attribute selector. Styling a node by ref is not
+  supported and not planned. Use classes for styling, refs for
+  lookup.</li>
+<li><strong><code>withRef</code> over <code>ref()</code>.</strong> The fluent method would shadow the
+  inherited public <code>ref</code> field if it were named <code>ref()</code>. <code>withRef</code>
+  matches the <code>with(child)</code> pattern and is unambiguous.</li>
+<li><strong>Per-handle warning dedup.</strong> <code>find</code>/<code>ref</code> warnings are deduplicated
+  via a per-<code>UINode</code> <code>unordered_set&lt;string&gt;</code>, so a typo'd id in a
+  loop doesn't spam the log. <code>refAll</code> on an empty list is <code>Debug</code>,
+  not <code>Warning</code>, because empty lists are legitimate.</li>
+<li><strong><code>@ref</code> in <code>on*</code> helpers deferred.</strong> <code>ui.onClick("@delete", cb)</code>
+  would attach the callback to every node with the ref. Useful but
+  not required — deferred to a follow-up, since <code>@</code> in an id is
+  currently undefined behavior, so the addition would be
+  backwards-compatible.</li>
+</ul>
+<p><strong>Backward compatibility.</strong> <code>#id</code>, <code>find</code>, <code>byId</code>, and every CSS
+selector involving <code>#id</code> are unchanged. The only behavior change is
+the new warning on <code>find</code> misses. Code that ignored the <code>nullptr</code>
+return and kept going still works — the warning is informational.</p>
+<p><strong>Known limitation.</strong> <code>ref</code> mutation after <code>Registry::create</code> does
+not update <code>byRef</code>. A future <code>UINode::setRef</code> method would fix this;
+not in the current scope.</p>
+<ul>
+<li>[x] Add <code>Layout::ref</code> public field</li>
+<li>[x] Add <code>Layout::setRef</code> / <code>TLayout::withRef</code></li>
+<li>[x] Add <code>Element::ref</code> + parser <code>@name</code></li>
+<li>[x] Add <code>BuildContext::byRef</code> + <code>Registry::create</code> population</li>
+<li>[x] Add <code>UINode::ref&lt;T&gt;</code> / <code>refAll&lt;T&gt;</code> + warning dedup</li>
+<li>[x] Add warning on <code>UINode::find&lt;T&gt;</code> miss</li>
+<li>[x] Update <code>Debug::dumpTree</code> / <code>dumpStyle</code> to show <code>@ref</code></li>
+<li>[x] Add tests (14 new in <code>test_zmarkup_build.cpp</code>, 4 in <code>test_layout.cpp</code>)</li>
+<li>[x] Update <code>docs/user/04-zmarkup.md</code> (§2.3/§2.4 split, §3 table, §4.5, §10 pitfalls)</li>
+<li>[x] Update <code>docs/api/ZMarkup.md</code> (§2, §4, §5, §6, §10)</li>
+<li>[x] Update <code>docs/api/Layout.md</code> (§3, §12)</li>
+<li>[x] Update <code>docs/CHEATSHEET.md</code> (Id vs Ref table)</li>
+<li>[x] Update <code>docs/GLOSSARY.md</code> (Ref entry)</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
