@@ -3871,6 +3871,18 @@ A right-click on an overlapping area fires the callback on the deepest
 node whose rect contains the pointer and has <code>onRightClick</code>. This can
 differ from <code>topmostConsumer</code> if a higher-z node doesn't have
 <code>onRightClick</code>. In that case, the lower node fires.</p>
+<p><strong>Context pointers are cleared in <code>~Layout</code>.</strong>
+<code>UIContext::pressTarget</code>, <code>releaseTarget</code>, <code>topmostConsumer</code>, and
+<code>hoverTarget</code> are raw <code>Layout*</code>. When a node is destroyed mid-frame
+(the common case is <code>onClick</code> calling <code>removeFromParent()</code> on its own
+item, and the item being culled at the end of <code>update</code>), <code>~Layout</code>
+resets any of those four pointers that equal <code>this</code>. This is what
+makes the ancestor's <code>isAncestorOf(pressTarget)</code> check safe after the
+descendant is gone.</p>
+<p>Before this fix, the pattern "delete button removes its own row"
+crashed with a use-after-free on the frame of the release, because
+<code>pressTarget</code> still pointed at the removed button while the row's
+ancestors were still running their <code>fireCallbacks</code>.</p>
 <p><strong>Tab traversal is not stable across removals.</strong>
 If the focused node is removed from the tree (via
 <code>removeFromParent</code>), <code>focusedNode</code> becomes invalid (weak_ptr expires).

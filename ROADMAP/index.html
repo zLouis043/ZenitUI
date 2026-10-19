@@ -1511,6 +1511,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#110-presstarget-dangling-after-cullremovedchildren" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 pressTarget dangling after cullRemovedChildren
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2553,6 +2564,31 @@ than the mock.</p>
 <li>[x] Add the offset transform</li>
 <li>[x] Add a regression test (needs framebuffer readback)</li>
 <li>[x] Update <code>user/10-custom-widgets.md</code> if the canvas is mentioned</li>
+</ul>
+<h3 id="110-presstarget-dangling-after-cullremovedchildren">1.10 <code>pressTarget</code> dangling after <code>cullRemovedChildren</code></h3>
+<p><strong>Severity:</strong> high — crashes on the common pattern "onClick removes
+its own item from a list".</p>
+<p><strong>Location:</strong> <code>src/ui/Layout.hpp</code>, <code>Layout::~Layout()</code>.</p>
+<p><strong>Problem:</strong> during <code>updateTree</code>, <code>UIContext::pressTarget</code> (and
+<code>releaseTarget</code>, <code>topmostConsumer</code>, <code>hoverTarget</code>) are set at the
+start of the frame and reset only at the end of <code>updateTree</code>. During
+the recursive <code>update</code>, a node can be removed from the tree (via
+<code>cullRemovedChildren</code>, after <code>removeFromParent()</code>), which frees it.
+If the freed node was in one of those four pointers, any later
+ancestor's <code>fireCallbacks</code> — which calls
+<code>node.isAncestorOf(ctx.pressTarget)</code> — dereferences a dangling
+pointer.</p>
+<p>The pattern triggers whenever <code>onClick</code> calls <code>removeFromParent()</code>
+on the clicked node (or on one of its ancestors), and a higher
+ancestor of the removed node still runs <code>fireCallbacks</code> in the same
+frame.</p>
+<p><strong>Fix:</strong> in <code>~Layout()</code>, reset any of the four context pointers
+that equal <code>this</code>. A destroyed node leaves the context in a
+consistent state, so the ancestor's check becomes a no-op.</p>
+<ul>
+<li>[x] Clear <code>pressTarget</code> / <code>releaseTarget</code> / <code>topmostConsumer</code> / <code>hoverTarget</code> in <code>~Layout</code> if they equal <code>this</code></li>
+<li>[x] Add regression test in <code>test_interaction.cpp</code></li>
+<li>[x] Update <code>internals/07-input-system.md</code> §10 (new pitfall: "the context pointers are cleared in <code>~Layout</code>")</li>
 </ul>
 <hr />
 <h2 id="phase-2-missing-core-api">Phase 2 — Missing core API</h2>
