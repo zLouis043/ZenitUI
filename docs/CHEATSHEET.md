@@ -110,8 +110,6 @@ Overflow values: `visible`, `hidden`, `scroll`, `auto`.
 
 ---
 
----
-
 ## 5. Data binding
 
 A small observable value for wiring model ↔ widgets without callback
@@ -124,10 +122,10 @@ Bindable<float> volume{0.5f};
 slider->onValueChanged = [&volume](float v) { volume.set(v); };
 
 // Widgets that display the model
-volume.bindTo(progress, &ProgressBar::setValue);
-volume.onChanged = [label](const float& v) {
+auto sub1 = volume.bindTo(progress, &ProgressBar::setValue);
+auto sub2 = volume.onChanged([label](const float& v) {
     label->setText(std::to_string((int)(v * 100)) + "%");
-};
+});
 ```
 
 | Call | Effect |
