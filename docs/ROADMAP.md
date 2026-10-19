@@ -353,6 +353,36 @@ consistent state, so the ancestor's check becomes a no-op.
 - [x] Add regression test in `test_interaction.cpp`
 - [x] Update `internals/07-input-system.md` §10 (new pitfall: "the context pointers are cleared in `~Layout`")
 
+### 1.11 Container doesn't shrink after a child is removed
+
+**Severity:** medium — visible stale layout in scroll containers whose
+content shrinks.
+
+**Location:** `src/ui/Layout.hpp`, `Layout::cullRemovedChildren` and
+`Layout::recomputeDirty`; `NodeInternal` bitfield.
+
+**Problem:** when a child is removed (`removeFromParent` followed by
+`cullRemovedChildren`), no dirty flag is set on the parent. So
+`recomputeDirty` sees an unchanged subtree and `measure` short-circuits
+on the next frame. The parent's `contentSize` and any scroll
+container's `maxScroll` stay at their pre-removal values. Visible as
+"the scrollbar won't disappear until the last child is removed" —
+the container stays at its maximum height and keeps a scrollbar even
+after the content shrinks well below it.
+
+**Fix:** added a per-node `internal_.hadRemovedChildren` bit. Set by
+`cullRemovedChildren` when at least one child is actually erased.
+Consumed (OR'd and cleared) by `recomputeDirty`, which forces
+`subtreeDirty = 1` on the frame of the removal. The flag propagates
+upward through the normal `anyChildDirty` check.
+
+- [x] Add `hadRemovedChildren` to `NodeInternal`
+- [x] Set the flag in `cullRemovedChildren` when a child is erased
+- [x] OR the flag into `recomputeDirty` and clear it
+- [x] Add regression test in `test_interaction.cpp`
+- [ ] Update `internals/05-layout-engine.md` §7 (dirty tracking) to
+      mention the "removed children" bit
+
 ---
 
 ## Phase 2 — Missing core API
@@ -1509,7 +1539,7 @@ applies, but UI use is fine.
 - [x] Update `docs/GLOSSARY.md` ("Bindable" entry)
 - [x] Update `docs/README.md` and root `README.md` (link the new docs)
 - [x] Update `docs/architecture/PROPOSALS.md` (mark Proposal 2 shipped)
-- [ ] Add `examples/12_bindable` — model → 3 widgets, `bindTo` lifetime safety demonstrated live (follow-up commit)
+- [x] Add `examples/12_bindable` — model → 3 widgets, `bindTo` lifetime safety demonstrated live (follow-up commit)
 
 ---
 
