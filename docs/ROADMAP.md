@@ -1436,6 +1436,81 @@ not in the current scope.
 - [x] Update `docs/CHEATSHEET.md` (Id vs Ref table)
 - [x] Update `docs/GLOSSARY.md` (Ref entry)
 
+### 5.17 `Bindable<T>`: lightweight data binding
+
+**Done.**
+
+Wiring a model value to one or more widgets required a `std::function`
+callback on each widget and manual capture of every widget that
+displayed the value. For a settings screen with a volume slider
+driving a progress bar and a percentage label, the boilerplate added
+up fast, and a `shared_ptr` capture in the callback created a
+reference cycle that kept widgets alive after the screen was closed.
+
+`Bindable<T>` is a header-only observable value:
+
+- Holds a `T` and notifies subscribers when the value changes.
+- `set(v)` short-circuits when `v == current` — no notification, no
+  assignment.
+- `onChanged(cb, fireImmediately)` returns a `Subscription`.
+- `bindTo(widget, &W::method, fireImmediately)` binds a widget method
+  with lifetime safety (uses `weak_ptr` internally).
+- `Subscription` is a move-only RAII token. Destroying it
+  unsubscribes. It's safe for a `Subscription` to outlive its
+  `Bindable` (via a shared `ControlBlock` whose `alive_` flag is
+  cleared by `~Bindable`).
+
+**Design decisions:**
+
+- **`Subscription` instead of just `bindTo`.** `bindTo` handles the
+  lifetime correctly, but the caller has to remember to use it. Making
+  `onChanged` the only way to subscribe — and having it return a
+  `Subscription` — prevents the "dangling capture" bug by design.
+- **`bindTo` deduces `Arg` from the method pointer type.** ZenitUI
+  widget setters take their argument either by value
+  (`ProgressBar::setValue(float)`) or by const-ref
+  (`Text::setText(std::string)`). C++ doesn't convert a method pointer
+  `void(W::*)(float)` to `void(W::*)(const float&)`. Deducing `Arg`
+  separately lets both forms work at the call site without a wrapper
+  lambda.
+- **`std::vector<Entry>` for subscribers, not `std::unordered_map`.**
+  Preserves registration order (the standard guarantees it for
+  vector, not for unordered_map) and the snapshot cost is
+  proportional to N, which is small (1–5 in practice).
+- **`Bindable` is non-copyable and non-movable.** A movable
+  `Bindable` would have to rewire its subscriptions on every move, or
+  share the `ControlBlock` — the first is expensive, the second is
+  confusing. `unique_ptr<Bindable>` covers the rare "needs to move"
+  case.
+- **`ControlBlock` for lifetime safety.** A `Subscription` holds a
+  `shared_ptr<ControlBlock>`; `~Bindable` sets `alive_ = false`. This
+  makes "`Subscription` outlives `Bindable`" a no-op instead of a
+  use-after-free. Cost: 16 bytes per subscription.
+- **Single-thread only.** `Bindable<T>` is not thread-safe. The
+  framework is single-thread; producers on background threads must
+  post to the main thread before `set()`.
+
+**Backward compatibility.** `Bindable<T>` is opt-in. No existing code
+uses it. No existing code breaks. The `on*` callbacks on widgets
+(`onValueChanged`, `onToggle`, …) are untouched — `Bindable` sits on
+top of them, it doesn't replace them.
+
+**Known limitation.** `T` must have `operator==`. This is used by
+`set()` to detect real changes; a `T` without equality comparison
+won't compile. For `float`, the usual floating-point equality caveat
+applies, but UI use is fine.
+
+- [x] Add `src/ui/Bindable.hpp` (header-only)
+- [x] Add `#include "Bindable.hpp"` to `src/ui/UI.hpp`
+- [x] Add `tests/test_bindable.cpp` (24 tests: construct, set, subscription RAII, recursion, bindTo, lifetime, type constraints)
+- [x] Add `docs/user/11-bindable.md` (motivation, patterns, lifetime, pitfalls)
+- [x] Add `docs/api/Bindable.md` (full method reference)
+- [x] Update `docs/CHEATSHEET.md` (new "Data binding" section)
+- [x] Update `docs/GLOSSARY.md` ("Bindable" entry)
+- [x] Update `docs/README.md` and root `README.md` (link the new docs)
+- [x] Update `docs/architecture/PROPOSALS.md` (mark Proposal 2 shipped)
+- [ ] Add `examples/12_bindable` — model → 3 widgets, `bindTo` lifetime safety demonstrated live (follow-up commit)
+
 ---
 
 ## Phase 6 — Internationalization

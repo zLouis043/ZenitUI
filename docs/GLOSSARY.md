@@ -57,6 +57,14 @@ See **inline base**.
 The next milestone after **alpha**. API frozen for the core, no known
 critical bugs, test coverage on every widget. See [ROADMAP](ROADMAP.md).
 
+**Bindable**
+A header-only observable value type (`Bindable<T>`) that holds a value
+and notifies subscribers when it changes. Used to wire a model value
+to multiple widgets without manual callback glue. Subscriptions are
+RAII tokens (`Subscription`) that are safe to outlive the `Bindable`.
+Not a widget, not a `Layout`, not involved in the frame loop. See
+[Data binding](user/11-bindable.md) and [API](api/Bindable.md).
+
 **Bubble (input)**
 The propagation of a click, press, or right-click event from the
 innermost hit node up through its ancestors. Controlled by

@@ -110,7 +110,45 @@ Overflow values: `visible`, `hidden`, `scroll`, `auto`.
 
 ---
 
-## 5. Visual properties
+---
+
+## 5. Data binding
+
+A small observable value for wiring model ↔ widgets without callback
+glue. Not a widget, not a `Layout`.
+
+```cpp
+Bindable<float> volume{0.5f};
+
+// Widget that edits the model
+slider->onValueChanged = [&volume](float v) { volume.set(v); };
+
+// Widgets that display the model
+volume.bindTo(progress, &ProgressBar::setValue);
+volume.onChanged = [label](const float& v) {
+    label->setText(std::to_string((int)(v * 100)) + "%");
+};
+```
+
+| Call | Effect |
+|------|--------|
+| `b.get()` | Current value |
+| `b.set(v)` | Sets, notifies if `v != current` |
+| `b.onChanged(cb, fireImmediately=false)` → `Subscription` | Subscribe |
+| `b.bindTo(widget, &W::method, fireImmediately=false)` → `Subscription` | Subscribe to a widget method (weak_ptr) |
+
+`Subscription` is RAII, move-only, and safe to outlive its `Bindable`.
+
+~~~cpp
+auto sub = volume.onChanged(cb);   // scope-bound
+// sub destroyed → unsubscribed
+~~~
+
+Full guide: [Bindable](user/11-bindable.md).
+
+---
+
+## 6. Visual propertiesì
 
 | C++ field | `.zstyle` | Type |
 |-----------|-----------|------|
@@ -145,7 +183,7 @@ Hex: `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`.
 
 ---
 
-## 6. Selectors (`.zstyle`)
+## 7. Selectors (`.zstyle`)
 
 | Syntax | Matches |
 |--------|---------|
@@ -172,7 +210,7 @@ everything.
 
 ---
 
-## 7. Easing functions
+## 8. Easing functions
 
 | Name | Behavior |
 |------|----------|
@@ -194,7 +232,7 @@ all work.
 
 ---
 
-## 8. Transitions and animations (`.zstyle`)
+## 9. Transitions and animations (`.zstyle`)
 
 ```css
 /* Transition */
@@ -225,7 +263,7 @@ Requires the shorthand first.
 
 ---
 
-## 9. Widgets — factories and callbacks
+## 10. Widgets — factories and callbacks
 
 | Widget | Factory | Callback |
 |--------|---------|----------|
@@ -264,7 +302,7 @@ Requires the shorthand first.
 
 ---
 
-## 10. ZMarkup syntax
+## 11. ZMarkup syntax
 
 ```
 Tag.class1.class2#id attr1="value" attr2=value flag "text content" {
@@ -339,7 +377,7 @@ auto slider = ui.find<Slider>("volume");      // typed
 
 ---
 
-## 11. Loading stylesheets
+## 12. Loading stylesheets
 
 ```cpp
 ZMarkup::loadStyleFile("assets/game.zstyle");
@@ -364,7 +402,7 @@ Custom properties in `:root`:
 
 ---
 
-## 12. Filters and effects
+## 13. Filters and effects
 
 ### Built-in filters
 
@@ -398,7 +436,7 @@ FilterRegistry::get().add(FilterDef{
 
 ---
 
-## 13. Common patterns
+## 14. Common patterns
 
 ### Full-viewport root
 
@@ -487,7 +525,7 @@ btn->setKeyboardActivates(true);   // Enter / Space fire onClick
 
 ---
 
-## 14. Debug
+## 15. Debug
 
 Define `ZENITUI_DEBUG` before including `UI.hpp`:
 
@@ -515,7 +553,7 @@ Logger::set(&myLogger);
 
 ---
 
-## 15. Common pitfalls (quick list)
+## 16. Common pitfalls (quick list)
 
 - Inline styles beat `:hover` — put visual properties in classes.
 - `%` resolves against the parent, along the axis of the property.
@@ -536,4 +574,5 @@ Logger::set(&myLogger);
 - [Layout](user/02-layout.md) — units, flex, alignment.
 - [ZStyle](user/05-zstyle.md) — the full stylesheet language.
 - [Widgets](user/03-widgets.md) — every widget with examples.
+- [Data binding](user/11-bindable.md) — `Bindable<T>` for model ↔ UI.
 - [API reference](api/Layout.md) — full method signatures.

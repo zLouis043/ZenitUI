@@ -134,6 +134,7 @@ See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
 - [Portals](user/08-portals.md) — Popup, Tooltip, Dropdown, Modal
 - [Effects](user/09-effects.md) — filters, shaders, `FilterRegistry`
 - [Custom Widgets](user/10-custom-widgets.md) — build your own component
+- [Data Binding](user/11-bindable.md) — `Bindable<T>` for model ↔ UI
 
 ### For contributors (extending the core)
 
@@ -160,6 +161,7 @@ See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
 - [`ZStyle`](api/ZStyle.md)
 - [`FilterRegistry`](api/FilterRegistry.md)
 - [`UIContext`](api/UIContext.md)
+- [`Bindable`](api/Bindable.md)
 
 ---
 
