@@ -1842,6 +1842,9 @@ implementation.</p>
   <code>docs/user/04-zmarkup.md</code> §2.4 and <code>docs/api/ZMarkup.md</code> §6 for
   the user-facing API. The "Open questions" section below is kept
   for historical context.</li>
+<li>✅ <strong>Proposal 2 — <code>Bindable&lt;T&gt;</code></strong>: shipped as roadmap §5.17. See
+  <code>docs/user/11-bindable.md</code> and <code>docs/api/Bindable.md</code> for the
+  user-facing API.</li>
 </ul>
 <hr />
 <h2 id="index">Index</h2>
@@ -2738,8 +2741,51 @@ re-discussing them.</p>
 not update <code>byRef</code>. A future <code>UINode::setRef</code> would fix it; not in
 scope.</p>
 <h3 id="proposal-2-bindablet">Proposal 2 — <code>Bindable&lt;T&gt;</code></h3>
-<p><strong>Status:</strong> 🟡 proposed — not yet shipped. This is the next planned
-implementation (§5.17 in the roadmap).</p>
+<p><strong>Shipped:</strong> roadmap §5.17.</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li><code>std::unordered_map&lt;uint64_t, std::function&lt;...&gt;&gt;</code> was replaced by
+  <code>std::vector&lt;Entry&gt;</code> for subscriber storage. Reason: <code>std::vector</code>
+  preserves insertion order (the standard guarantees it), while
+  <code>std::unordered_map</code> doesn't. Notification order is part of the
+  contract (§2.5), so the vector is the correct choice. It's also more
+  cache-friendly for the small N typical of UI subscribers.</li>
+<li><code>bindTo</code> gained a <strong>second overload</strong> for <code>shared_ptr&lt;W&gt;</code>. The
+  proposal only listed the <code>weak_ptr</code> version, but the common case at
+  the call site is <code>bindTo(progress, &amp;ProgressBar::setValue)</code> where
+  <code>progress</code> is a <code>shared_ptr</code>. The overload wraps the <code>weak_ptr</code>
+  version, so both are equivalent.</li>
+<li><code>onChanged</code> and <code>bindTo</code> gained a <code>fireImmediately</code> parameter
+  (default <code>false</code>). The proposal treated this as an open question;
+  the implementation settled on "yes, include it" because it's a
+  common enough pattern (new widget reflects current value at
+  subscribe time) that the alternative would have forced every
+  caller to duplicate it.</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>src/ui/Bindable.hpp</code> — <code>Bindable&lt;T&gt;</code>, <code>Subscription</code>,
+  <code>ControlBlock</code>, <code>bindTo</code> (both overloads).</li>
+<li><code>src/ui/UI.hpp</code> — include added.</li>
+<li><code>tests/test_bindable.cpp</code> — 24 tests covering construction, set
+  short-circuit, notification order, RAII unsubscribe, recursion,
+  unsubscribe-in-own-callback, <code>bindTo</code> for <code>float</code> / <code>std::string</code> /
+  <code>bool</code>, <code>bindTo</code> with <code>fireImmediately</code>, expired <code>weak_ptr</code>,
+  <code>Subscription</code> outliving <code>Bindable</code>, <code>Bindable</code> destroyed then
+  <code>Subscription</code> destroyed, type constraints.</li>
+<li><code>docs/user/11-bindable.md</code> — motivation, patterns, lifetime,
+  pitfalls.</li>
+<li><code>docs/api/Bindable.md</code> — full reference.</li>
+<li><code>docs/CHEATSHEET.md</code>, <code>docs/GLOSSARY.md</code>, <code>docs/ROADMAP.md</code>,
+  <code>docs/README.md</code>, <code>README.md</code> — all updated.</li>
+</ul>
+<p><strong>Known limitation carried forward:</strong> <code>T</code> must have <code>operator==</code>.
+This is a deliberate constraint, not a defect — <code>set()</code> needs to
+detect "same value" for the short-circuit. <code>float</code> works with the
+usual caveat.</p>
+<p><strong>Follow-up (not in this proposal):</strong> <code>examples/12_bindable</code> as a
+live demonstration of the API, tracked as an unchecked item in
+roadmap §5.17. Will land as a separate commit.</p>
 
 
 

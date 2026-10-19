@@ -1989,6 +1989,13 @@ See <strong>inline base</strong>.</p>
 <p><strong>Beta</strong>
 The next milestone after <strong>alpha</strong>. API frozen for the core, no known
 critical bugs, test coverage on every widget. See <a href="../ROADMAP/">ROADMAP</a>.</p>
+<p><strong>Bindable</strong>
+A header-only observable value type (<code>Bindable&lt;T&gt;</code>) that holds a value
+and notifies subscribers when it changes. Used to wire a model value
+to multiple widgets without manual callback glue. Subscriptions are
+RAII tokens (<code>Subscription</code>) that are safe to outlive the <code>Bindable</code>.
+Not a widget, not a <code>Layout</code>, not involved in the frame loop. See
+<a href="../user/11-bindable/">Data binding</a> and <a href="../api/Bindable/">API</a>.</p>
 <p><strong>Bubble (input)</strong>
 The propagation of a click, press, or right-click event from the
 innermost hit node up through its ancestors. Controlled by

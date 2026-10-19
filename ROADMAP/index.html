@@ -2102,6 +2102,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#517-bindablet-lightweight-data-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.17 Bindable&lt;T&gt;: lightweight data binding
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3608,6 +3619,77 @@ not in the current scope.</p>
 <li>[x] Update <code>docs/api/Layout.md</code> (§3, §12)</li>
 <li>[x] Update <code>docs/CHEATSHEET.md</code> (Id vs Ref table)</li>
 <li>[x] Update <code>docs/GLOSSARY.md</code> (Ref entry)</li>
+</ul>
+<h3 id="517-bindablet-lightweight-data-binding">5.17 <code>Bindable&lt;T&gt;</code>: lightweight data binding</h3>
+<p><strong>Done.</strong></p>
+<p>Wiring a model value to one or more widgets required a <code>std::function</code>
+callback on each widget and manual capture of every widget that
+displayed the value. For a settings screen with a volume slider
+driving a progress bar and a percentage label, the boilerplate added
+up fast, and a <code>shared_ptr</code> capture in the callback created a
+reference cycle that kept widgets alive after the screen was closed.</p>
+<p><code>Bindable&lt;T&gt;</code> is a header-only observable value:</p>
+<ul>
+<li>Holds a <code>T</code> and notifies subscribers when the value changes.</li>
+<li><code>set(v)</code> short-circuits when <code>v == current</code> — no notification, no
+  assignment.</li>
+<li><code>onChanged(cb, fireImmediately)</code> returns a <code>Subscription</code>.</li>
+<li><code>bindTo(widget, &amp;W::method, fireImmediately)</code> binds a widget method
+  with lifetime safety (uses <code>weak_ptr</code> internally).</li>
+<li><code>Subscription</code> is a move-only RAII token. Destroying it
+  unsubscribes. It's safe for a <code>Subscription</code> to outlive its
+  <code>Bindable</code> (via a shared <code>ControlBlock</code> whose <code>alive_</code> flag is
+  cleared by <code>~Bindable</code>).</li>
+</ul>
+<p><strong>Design decisions:</strong></p>
+<ul>
+<li><strong><code>Subscription</code> instead of just <code>bindTo</code>.</strong> <code>bindTo</code> handles the
+  lifetime correctly, but the caller has to remember to use it. Making
+  <code>onChanged</code> the only way to subscribe — and having it return a
+  <code>Subscription</code> — prevents the "dangling capture" bug by design.</li>
+<li><strong><code>bindTo</code> deduces <code>Arg</code> from the method pointer type.</strong> ZenitUI
+  widget setters take their argument either by value
+  (<code>ProgressBar::setValue(float)</code>) or by const-ref
+  (<code>Text::setText(std::string)</code>). C++ doesn't convert a method pointer
+  <code>void(W::*)(float)</code> to <code>void(W::*)(const float&amp;)</code>. Deducing <code>Arg</code>
+  separately lets both forms work at the call site without a wrapper
+  lambda.</li>
+<li><strong><code>std::vector&lt;Entry&gt;</code> for subscribers, not <code>std::unordered_map</code>.</strong>
+  Preserves registration order (the standard guarantees it for
+  vector, not for unordered_map) and the snapshot cost is
+  proportional to N, which is small (1–5 in practice).</li>
+<li><strong><code>Bindable</code> is non-copyable and non-movable.</strong> A movable
+  <code>Bindable</code> would have to rewire its subscriptions on every move, or
+  share the <code>ControlBlock</code> — the first is expensive, the second is
+  confusing. <code>unique_ptr&lt;Bindable&gt;</code> covers the rare "needs to move"
+  case.</li>
+<li><strong><code>ControlBlock</code> for lifetime safety.</strong> A <code>Subscription</code> holds a
+  <code>shared_ptr&lt;ControlBlock&gt;</code>; <code>~Bindable</code> sets <code>alive_ = false</code>. This
+  makes "<code>Subscription</code> outlives <code>Bindable</code>" a no-op instead of a
+  use-after-free. Cost: 16 bytes per subscription.</li>
+<li><strong>Single-thread only.</strong> <code>Bindable&lt;T&gt;</code> is not thread-safe. The
+  framework is single-thread; producers on background threads must
+  post to the main thread before <code>set()</code>.</li>
+</ul>
+<p><strong>Backward compatibility.</strong> <code>Bindable&lt;T&gt;</code> is opt-in. No existing code
+uses it. No existing code breaks. The <code>on*</code> callbacks on widgets
+(<code>onValueChanged</code>, <code>onToggle</code>, …) are untouched — <code>Bindable</code> sits on
+top of them, it doesn't replace them.</p>
+<p><strong>Known limitation.</strong> <code>T</code> must have <code>operator==</code>. This is used by
+<code>set()</code> to detect real changes; a <code>T</code> without equality comparison
+won't compile. For <code>float</code>, the usual floating-point equality caveat
+applies, but UI use is fine.</p>
+<ul>
+<li>[x] Add <code>src/ui/Bindable.hpp</code> (header-only)</li>
+<li>[x] Add <code>#include "Bindable.hpp"</code> to <code>src/ui/UI.hpp</code></li>
+<li>[x] Add <code>tests/test_bindable.cpp</code> (24 tests: construct, set, subscription RAII, recursion, bindTo, lifetime, type constraints)</li>
+<li>[x] Add <code>docs/user/11-bindable.md</code> (motivation, patterns, lifetime, pitfalls)</li>
+<li>[x] Add <code>docs/api/Bindable.md</code> (full method reference)</li>
+<li>[x] Update <code>docs/CHEATSHEET.md</code> (new "Data binding" section)</li>
+<li>[x] Update <code>docs/GLOSSARY.md</code> ("Bindable" entry)</li>
+<li>[x] Update <code>docs/README.md</code> and root <code>README.md</code> (link the new docs)</li>
+<li>[x] Update <code>docs/architecture/PROPOSALS.md</code> (mark Proposal 2 shipped)</li>
+<li>[ ] Add <code>examples/12_bindable</code> — model → 3 widgets, <code>bindTo</code> lifetime safety demonstrated live (follow-up commit)</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
