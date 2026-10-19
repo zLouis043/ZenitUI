@@ -9,6 +9,7 @@
 #include "Style.hpp"
 #include "Theme.hpp"
 #include "AnimPrimitives.hpp"
+#include "Bindable.hpp"
 #include "UIComponents.hpp"
 #include "UIContext.hpp"
 #include "Unit.hpp"
