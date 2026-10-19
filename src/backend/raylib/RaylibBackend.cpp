@@ -41,11 +41,9 @@ namespace ZenitUI
 		right.pressed = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 		right.released = IsMouseButtonReleased(MOUSE_BUTTON_RIGHT);
 
-#if defined(MOUSE_BUTTON_MIDDLE)
 		mid.down = IsMouseButtonDown(MOUSE_BUTTON_MIDDLE);
 		mid.pressed = IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE);
 		mid.released = IsMouseButtonReleased(MOUSE_BUTTON_MIDDLE);
-#endif
 
 		return s;
 	}

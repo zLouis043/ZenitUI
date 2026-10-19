@@ -1441,6 +1441,20 @@ node whose rect contains the pointer and has `onRightClick`. This can
 differ from `topmostConsumer` if a higher-z node doesn't have
 `onRightClick`. In that case, the lower node fires.
 
+**Context pointers are cleared in `~Layout`.**
+`UIContext::pressTarget`, `releaseTarget`, `topmostConsumer`, and
+`hoverTarget` are raw `Layout*`. When a node is destroyed mid-frame
+(the common case is `onClick` calling `removeFromParent()` on its own
+item, and the item being culled at the end of `update`), `~Layout`
+resets any of those four pointers that equal `this`. This is what
+makes the ancestor's `isAncestorOf(pressTarget)` check safe after the
+descendant is gone.
+
+Before this fix, the pattern "delete button removes its own row"
+crashed with a use-after-free on the frame of the release, because
+`pressTarget` still pointed at the removed button while the row's
+ancestors were still running their `fireCallbacks`.
+
 **Tab traversal is not stable across removals.**
 If the focused node is removed from the tree (via
 `removeFromParent`), `focusedNode` becomes invalid (weak_ptr expires).

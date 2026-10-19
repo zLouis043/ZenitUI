@@ -322,6 +322,37 @@ than the mock.
 - [x] Add the offset transform
 - [x] Add a regression test (needs framebuffer readback)
 - [x] Update `user/10-custom-widgets.md` if the canvas is mentioned
+
+### 1.10 `pressTarget` dangling after `cullRemovedChildren`
+
+**Severity:** high — crashes on the common pattern "onClick removes
+its own item from a list".
+
+**Location:** `src/ui/Layout.hpp`, `Layout::~Layout()`.
+
+**Problem:** during `updateTree`, `UIContext::pressTarget` (and
+`releaseTarget`, `topmostConsumer`, `hoverTarget`) are set at the
+start of the frame and reset only at the end of `updateTree`. During
+the recursive `update`, a node can be removed from the tree (via
+`cullRemovedChildren`, after `removeFromParent()`), which frees it.
+If the freed node was in one of those four pointers, any later
+ancestor's `fireCallbacks` — which calls
+`node.isAncestorOf(ctx.pressTarget)` — dereferences a dangling
+pointer.
+
+The pattern triggers whenever `onClick` calls `removeFromParent()`
+on the clicked node (or on one of its ancestors), and a higher
+ancestor of the removed node still runs `fireCallbacks` in the same
+frame.
+
+**Fix:** in `~Layout()`, reset any of the four context pointers
+that equal `this`. A destroyed node leaves the context in a
+consistent state, so the ancestor's check becomes a no-op.
+
+- [x] Clear `pressTarget` / `releaseTarget` / `topmostConsumer` / `hoverTarget` in `~Layout` if they equal `this`
+- [x] Add regression test in `test_interaction.cpp`
+- [x] Update `internals/07-input-system.md` §10 (new pitfall: "the context pointers are cleared in `~Layout`")
+
 ---
 
 ## Phase 2 — Missing core API

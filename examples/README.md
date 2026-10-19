@@ -96,4 +96,7 @@ small and the assets reusable.
 | `06_zmarkup` | Declarative UI: `ZMarkup::build`, `UINode`, callback binding |
 | `07_effects` | `filter:` (blur, drop-shadow, sepia custom) and `effect:` (single shader) |
 | `08_portals` | Tooltip, Popup, ContextMenu, Modal |
-| `09_custom_widget` | Writing a widget from scratch: `TLayout`, `::part`, `onUpdate` 
+| `09_custom_widget` | Writing a widget from scratch: `TLayout`, `::part`, `onUpdate` |
+| `10_canvas` | `CanvasLayout`: render a subtree into an offscreen target, apply a shader |
+| `11_ref_list` | `@ref` and `refAll`: wire every item of a dynamic list from one loop |
+
