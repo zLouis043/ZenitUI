@@ -269,10 +269,10 @@ Bindable<float> volume{0.5f};
 slider->onValueChanged = [&volume](float v) { volume.set(v); };
 
 // Widgets that display the model
-volume.onChanged = [progress](const float& v) { progress->setValue(v); };
-volume.onChanged = [label](const float& v) {
+auto sub1 = volume.onChanged([progress](const float& v) { progress->setValue(v); });
+auto sub2 = volume.onChanged([label](const float& v) {
     label->setText(std::to_string((int)(v * 100)) + "%");
-};
+});
 ~~~
 
 No flags, no "am I echoing my own update?" checks. `Bindable::set`
@@ -286,12 +286,12 @@ wrapper lambda:
 
 ~~~cpp
 // Instead of this:
-volume.onChanged = [progress](const float& v) {
+auto sub = volume.onChanged([progress](const float& v) {
     progress->setValue(v);
-};
+});
 
 // Write this:
-volume.bindTo(progress, &ProgressBar::setValue);
+auto sub = volume.bindTo(progress, &ProgressBar::setValue);
 ~~~
 
 `bindTo` also handles lifetime: if `progress` is destroyed, the
@@ -330,9 +330,9 @@ is called on the `Bindable`. `sub.active()` returns `false`.
 
 ~~~cpp
 // ⚠️ DANGEROUS: captures progress by shared_ptr
-volume.onChanged = [progress](const float& v) {
+auto sub = volume.onChanged([progress](const float& v) {
     progress->setValue(v);
-};
+});
 // progress is now kept alive by the subscription, even
 // after the UI removes it.
 ~~~
@@ -342,9 +342,9 @@ The correct pattern is to let `bindTo` handle it, or capture a
 
 ~~~cpp
 std::weak_ptr<ProgressBar> weakProgress = progress;
-volume.onChanged = [weakProgress](const float& v) {
+auto sub = volume.onChanged([weakProgress](const float& v) {
     if (auto p = weakProgress.lock()) p->setValue(v);
-};
+});
 ~~~
 
 But `bindTo` is cleaner. Prefer it.
@@ -376,13 +376,13 @@ With `Bindable`:
 Bindable<float> volume{0.5f};
 slider->onValueChanged = [&volume](float v) { volume.set(v); };
 
-volume.bindTo(progress, &ProgressBar::setValue);
-volume.onChanged = [label](const float& v) {
+auto sub1 = volume.bindTo(progress, &ProgressBar::setValue);
+auto sub2 = volume.onChanged([label](const float& v) {
     label->setText(std::to_string((int)(v * 100)) + "%");
-};
-volume.onChanged = [&audioSystem](const float& v) {
+});
+auto sub3 = volume.onChanged([&audioSystem](const float& v) {
     audioSystem.setMasterVolume(v);
-};
+});
 ~~~
 
 Each subscription is independent. Adding a fourth widget is one line.
