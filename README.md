@@ -79,6 +79,7 @@ fully compatible with the same styling system.
 | **Widgets** | Text, Button, Panel, Toggle, Checkbox, Slider, ProgressBar, TextInput, ScrollView, Dropdown, Modal, Tooltip, Popup, Canvas, ImageContainer |
 | **Backend** | Pluggable. Reference implementation ships for **Raylib**. The core only depends on `IRenderer` / `IPlatform` / `IAssetProvider`. |
 | **Debugging** | Optional `Debug::dumpStyle` / `dumpTree` / `dumpTheme` / `dumpParts`, structured `Logger` with source locations |
+| **Data binding** | `Bindable<T>` — observable values with RAII subscriptions, lifetime-safe, zero dependencies |
 | **Testing** | Headless `MockRenderer` + `MockPlatform` allow full interaction tests without opening a window |
 
 ---
@@ -182,6 +183,7 @@ The full documentation lives in [`docs/`](docs/):
 - [Portals](docs/user/08-portals.md) — Popup, Tooltip, Dropdown, Modal
 - [Effects](docs/user/09-effects.md) — filters, shaders, `FilterRegistry`
 - [Custom Widgets](docs/user/10-custom-widgets.md) — build your own component
+- [Data Binding](docs/user/11-bindable.md) — `Bindable<T>` for model ↔ UI
 
 ### Internals (for contributors)
 
@@ -198,15 +200,16 @@ The full documentation lives in [`docs/`](docs/):
 
 ### API reference
 
-[`Layout`](docs/api/Layout.md) ·
-[`Widgets`](docs/api/Widgets.md) ·
-[`Unit`](docs/api/Unit.md) ·
-[`Style`](docs/api/Style.md) ·
-[`Theme`](docs/api/Theme.md) ·
-[`ZMarkup`](docs/api/ZMarkup.md) ·
-[`ZStyle`](docs/api/ZStyle.md) ·
-[`FilterRegistry`](docs/api/FilterRegistry.md) ·
-[`UIContext`](docs/api/UIContext.md)
+- [`Layout`](docs/api/Layout.md) ·
+- [`Widgets`](docs/api/Widgets.md) ·
+- [`Unit`](docs/api/Unit.md) ·
+- [`Style`](docs/api/Style.md) ·
+- [`Theme`](docs/api/Theme.md) ·
+- [`ZMarkup`](docs/api/ZMarkup.md) ·
+- [`ZStyle`](docs/api/ZStyle.md) ·
+- [`FilterRegistry`](docs/api/FilterRegistry.md) ·
+- [`UIContext`](docs/api/UIContext.md) ·
+- [`Bindable`](docs/api/Bindable.md)
 
 ---
 

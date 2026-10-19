@@ -20,6 +20,10 @@ implementation.
   `docs/user/04-zmarkup.md` §2.4 and `docs/api/ZMarkup.md` §6 for
   the user-facing API. The "Open questions" section below is kept
   for historical context.
+- ✅ **Proposal 2 — `Bindable<T>`**: shipped as roadmap §5.17. See
+  `docs/user/11-bindable.md` and `docs/api/Bindable.md` for the
+  user-facing API.
+
 ---
 
 ## Index
@@ -821,5 +825,50 @@ scope.
 
 ### Proposal 2 — `Bindable<T>`
 
-**Status:** 🟡 proposed — not yet shipped. This is the next planned
-implementation (§5.17 in the roadmap).
+**Shipped:** roadmap §5.17.
+
+**Changes from the proposal:**
+
+- `std::unordered_map<uint64_t, std::function<...>>` was replaced by
+  `std::vector<Entry>` for subscriber storage. Reason: `std::vector`
+  preserves insertion order (the standard guarantees it), while
+  `std::unordered_map` doesn't. Notification order is part of the
+  contract (§2.5), so the vector is the correct choice. It's also more
+  cache-friendly for the small N typical of UI subscribers.
+- `bindTo` gained a **second overload** for `shared_ptr<W>`. The
+  proposal only listed the `weak_ptr` version, but the common case at
+  the call site is `bindTo(progress, &ProgressBar::setValue)` where
+  `progress` is a `shared_ptr`. The overload wraps the `weak_ptr`
+  version, so both are equivalent.
+- `onChanged` and `bindTo` gained a `fireImmediately` parameter
+  (default `false`). The proposal treated this as an open question;
+  the implementation settled on "yes, include it" because it's a
+  common enough pattern (new widget reflects current value at
+  subscribe time) that the alternative would have forced every
+  caller to duplicate it.
+
+**What landed:**
+
+- `src/ui/Bindable.hpp` — `Bindable<T>`, `Subscription`,
+  `ControlBlock`, `bindTo` (both overloads).
+- `src/ui/UI.hpp` — include added.
+- `tests/test_bindable.cpp` — 24 tests covering construction, set
+  short-circuit, notification order, RAII unsubscribe, recursion,
+  unsubscribe-in-own-callback, `bindTo` for `float` / `std::string` /
+  `bool`, `bindTo` with `fireImmediately`, expired `weak_ptr`,
+  `Subscription` outliving `Bindable`, `Bindable` destroyed then
+  `Subscription` destroyed, type constraints.
+- `docs/user/11-bindable.md` — motivation, patterns, lifetime,
+  pitfalls.
+- `docs/api/Bindable.md` — full reference.
+- `docs/CHEATSHEET.md`, `docs/GLOSSARY.md`, `docs/ROADMAP.md`,
+  `docs/README.md`, `README.md` — all updated.
+
+**Known limitation carried forward:** `T` must have `operator==`.
+This is a deliberate constraint, not a defect — `set()` needs to
+detect "same value" for the short-circuit. `float` works with the
+usual caveat.
+
+**Follow-up (not in this proposal):** `examples/12_bindable` as a
+live demonstration of the API, tracked as an unchecked item in
+roadmap §5.17. Will land as a separate commit.
