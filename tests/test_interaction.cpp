@@ -773,28 +773,43 @@ TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
     row->size(Px(200), Px(40));
     root->addChild(row);
 
-    auto btn = std::make_shared<Layout>(LayoutType::Stack);
-    btn->size(Px(40), Px(40));
-    btn->setInteractive(true);
-    btn->setBlocksRaycast(true);
-    btn->onClick = [row]{ row->removeFromParent(); };
-    row->addChild(btn);
+    std::weak_ptr<Layout> weakRow = row;
 
-    // Other siblings, so the tree keeps updating after row is gone.
+    {
+        // btn is owned only by row->children. The callback captures
+        // a weak_ptr to row (the same pattern as the 11_ref_list
+        // example), so no shared_ptr cycle is created.
+        auto btn = std::make_shared<Layout>(LayoutType::Stack);
+        btn->size(Px(40), Px(40));
+        btn->setInteractive(true);
+        btn->setBlocksRaycast(true);
+        btn->onClick = [weakRow]{
+            if (auto r = weakRow.lock()) r->removeFromParent();
+        };
+        row->addChild(btn);
+    }
+
     auto sibling = std::make_shared<Layout>(LayoutType::Stack);
     sibling->size(Px(200), Px(40));
     root->addChild(sibling);
 
     env.frame(root);
 
-    // Click on btn: press, then release. During the release frame,
-    // row is marked for removal and culled before the ancestor
-    // (root) fires its own callbacks. Without the fix in ~Layout,
-    // root->fireCallbacks would crash in isAncestorOf(pressTarget).
-    env.click(root, {20, 20});
-    env.frame(root);   // one extra frame to make sure root survives
+    // Drop the local shared_ptr<row> so it's held only by
+    // root->children. When row is culled during the click, it's
+    // destroyed, which destroys btn, which triggers the fix in
+    // ~Layout that clears the context pointers.
+    row.reset();
 
-    CHECK(root->children.size() == 1);   // only sibling left
+    // Press + release. In the release frame, btn fires onClick →
+    // row->removeFromParent() → row is culled by root → ~Layout(row)
+    // destroys btn → ~Layout(btn) clears ctx.pressTarget.
+    // Without the fix, the ancestor's isAncestorOf(pressTarget)
+    // would dereference freed memory.
+    env.click(root, {20, 20});
+    env.frame(root);
+
+    CHECK(root->children.size() == 1);
     CHECK(root->children[0] == sibling);
-    CHECK(btn->hasParent() == false);
+    CHECK(weakRow.expired());
 }
