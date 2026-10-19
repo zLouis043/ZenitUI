@@ -88,9 +88,27 @@ namespace ZenitUI
 			internal_.subtreeDirty = 1;
 			internal_.pendingTransition = 1;
 		}
+
 		virtual ~Layout()
 		{
-			if (auto *r = UIContext::get().renderer)
+			// Clear any dangling pointer in the context. During a
+			// recursive update, a node can be destroyed (via
+			// cullRemovedChildren) while a later ancestor still needs
+			// to consult pressTarget / releaseTarget / topmostConsumer
+			// / hoverTarget. If the destroyed node was one of those,
+			// the pointers would dangle. Resetting here makes the
+			// ancestor's check a no-op instead of a crash.
+			auto &ctx = UIContext::get();
+			if (ctx.pressTarget == this)
+				ctx.pressTarget = nullptr;
+			if (ctx.releaseTarget == this)
+				ctx.releaseTarget = nullptr;
+			if (ctx.topmostConsumer == this)
+				ctx.topmostConsumer = nullptr;
+			if (ctx.hoverTarget == this)
+				ctx.hoverTarget = nullptr;
+
+			if (auto *r = ctx.renderer)
 			{
 				if (layerTarget_.valid())
 					r->destroyTarget(layerTarget_);

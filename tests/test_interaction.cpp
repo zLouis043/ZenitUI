@@ -761,3 +761,40 @@ TEST(Interaction_buttonCallbacks, middle_click_on_empty_area_does_not_fire)
 
     CHECK(calls == 0);
 }
+
+TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
+{
+    Env env;
+
+    auto root = std::make_shared<Layout>(LayoutType::Vertical);
+    root->size(Percent(100), Percent(100));
+
+    auto row = std::make_shared<Layout>(LayoutType::Horizontal);
+    row->size(Px(200), Px(40));
+    root->addChild(row);
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(40), Px(40));
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->onClick = [row]{ row->removeFromParent(); };
+    row->addChild(btn);
+
+    // Other siblings, so the tree keeps updating after row is gone.
+    auto sibling = std::make_shared<Layout>(LayoutType::Stack);
+    sibling->size(Px(200), Px(40));
+    root->addChild(sibling);
+
+    env.frame(root);
+
+    // Click on btn: press, then release. During the release frame,
+    // row is marked for removal and culled before the ancestor
+    // (root) fires its own callbacks. Without the fix in ~Layout,
+    // root->fireCallbacks would crash in isAncestorOf(pressTarget).
+    env.click(root, {20, 20});
+    env.frame(root);   // one extra frame to make sure root survives
+
+    CHECK(root->children.size() == 1);   // only sibling left
+    CHECK(root->children[0] == sibling);
+    CHECK(btn->hasParent() == false);
+}
