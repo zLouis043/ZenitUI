@@ -813,3 +813,58 @@ TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
     CHECK(root->children[0] == sibling);
     CHECK(weakRow.expired());
 }
+
+TEST(Interaction_scroll, container_shrinks_after_child_removal)
+{
+    Env env;
+    Theme::get().clear();
+    ZMarkup::loadStyleString(R"(
+        .scroller {
+            overflow-y: auto;
+            max-height: 100px;
+            width: 200px;
+        }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Vertical);
+    root->size(Percent(100), Percent(100));
+
+    auto scroller = std::make_shared<Layout>(LayoutType::Vertical);
+    scroller->cls("scroller");
+    root->addChild(scroller);
+
+    // Add 10 rows of 20px each = 200px of content, clamped to 100.
+    std::vector<std::shared_ptr<Layout>> rows;
+    for (int i = 0; i < 10; ++i)
+    {
+        auto r = std::make_shared<Layout>(LayoutType::Stack);
+        r->size(Px(200), Px(20));
+        scroller->addChild(r);
+        rows.push_back(r);
+    }
+
+    env.frame(root);
+    env.frame(root);
+
+    // Content overflows: maxScroll > 0, container is at max-height.
+    CHECK(scroller->getMaxScrollY() > 0.0f);
+    CHECK_NEAR(scroller->getRect().height, 100.0f, 1.0f);
+
+    // Remove 9 of the 10 rows: content is now 20px, below max-height.
+    for (int i = 0; i < 9; ++i)
+        rows[i]->removeFromParent();
+
+    env.frame(root);
+    env.frame(root);   // second frame lets measure settle
+
+    // Container should have shrunk: no scroll, natural height.
+    CHECK_NEAR(scroller->getMaxScrollY(), 0.0f, 0.5f);
+    CHECK_NEAR(scroller->getRect().height, 20.0f, 2.0f);
+
+    // Remove the last one: container collapses to zero.
+    rows[9]->removeFromParent();
+    env.frame(root);
+    env.frame(root);
+
+    CHECK_NEAR(scroller->getRect().height, 0.0f, 1.0f);
+}

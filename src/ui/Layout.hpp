@@ -73,6 +73,7 @@ namespace ZenitUI
 		uint32_t hadLocalAnimationsLast : 1;
 		uint32_t wantsRemoval : 1;
 		uint32_t pressedInChain : 1;
+		uint32_t hadRemovedChildren : 1;
 	};
 
 	class Layout : public std::enable_shared_from_this<Layout>

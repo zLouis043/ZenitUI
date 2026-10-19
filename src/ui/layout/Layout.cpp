@@ -89,16 +89,25 @@ namespace ZenitUI
 	}
 	void Layout::cullRemovedChildren()
 	{
+		bool removed = false;
 		for (auto it = children.begin(); it != children.end();)
 		{
 			if ((*it)->internal_.wantsRemoval)
 			{
 				(*it)->parent.reset();
 				it = children.erase(it);
+				removed = true;
 			}
 			else
 				++it;
 		}
+		// Removing a child changes the content size and max-scroll.
+		// Without this flag, recomputeDirty would see an unchanged
+		// subtree and measure would short-circuit — leaving a
+		// scroll container with the wrong size and a stale
+		// scrollbar after content shrinks.
+		if (removed)
+			internal_.hadRemovedChildren = 1;
 	}
 
 	void Layout::recomputeDirty(bool wasPending, const ComputedStyle &styleBefore)
@@ -116,7 +125,10 @@ namespace ZenitUI
 		bool styleChanged = (style_.currentStyle != styleBefore);
 		bool inTransition = (style_.transitionTimer < 1.0f);
 
-		internal_.subtreeDirty = wasPending || internal_.pendingTransition || anyChildDirty || styleChanged || inTransition;
+		internal_.subtreeDirty = wasPending || internal_.pendingTransition ||
+		                 anyChildDirty || styleChanged || inTransition ||
+		                 internal_.hadRemovedChildren;
+		internal_.hadRemovedChildren = 0;
 	}
 
 	std::vector<const ThemeRule *> Layout::getMatchingRules() const
