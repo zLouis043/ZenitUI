@@ -687,12 +687,15 @@ manually for click-to-position.
 
 ### Interaction
 
-- Click → focuses the node.
-- Typing → inserts characters at the cursor. Only printable ASCII
-  (`0x20`–`0x7E`) is accepted by default.
-- `Backspace` / `Delete` — delete around the cursor, with key repeat.
+- Click → focuses the node and places the cursor.
+- Click and drag → selects text.
+- Typing → inserts characters at the cursor, or replaces the selection. Only printable ASCII (`0x20`–`0x7E`) is accepted by default.
+- `Backspace` / `Delete` — delete around the cursor, or delete the selection, with key repeat.
 - `Left` / `Right` — move the cursor, with key repeat.
+- `Shift + Left` / `Right` — expand the text selection.
 - `Home` / `End` — jump to start / end.
+- `Ctrl + A` — select all text.
+- `Ctrl + C` / `Ctrl + X` / `Ctrl + V` — copy, cut, and paste integration with the OS clipboard.
 - `Enter` — fires `onSubmit`, then releases focus.
 - `Escape` — releases focus without submitting.
 

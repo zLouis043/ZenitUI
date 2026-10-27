@@ -22,6 +22,8 @@ namespace ZenitUI
 		InputEvents pollInputEvents() override;
 		float dpiScale() override;
 		EdgeInsets safeArea() override;
+		void setClipboardText(const std::string& text) override;
+        std::string getClipboardText() override;
 	};
 
 	class RaylibRenderer : public IRenderer
@@ -79,13 +81,29 @@ namespace ZenitUI
 		void setDpiScale(float scale) override;
 
 	private:
-		std::vector<Rect> clipStack;
-		std::vector<Transform2D> transformStack;
+
+		void applyScissor(const Rect &clip);
+
+		struct TargetState
+		{
+			bool clipActive;
+			Rect currentClip;
+			std::vector<Rect> clipStack;
+			std::vector<Transform2D> transformStack;
+			int targetW{0};
+			int targetH{0};
+		};
+		std::vector<TargetState> targetStates_;
+
+        std::vector<Rect> clipStack;
+        std::vector<Transform2D> transformStack;
 		std::vector<EffectHandle> effectStack_;
 		bool clipActive{false};
 		Rect currentClip{0, 0, 0, 0};
 		float dpiScale_{1.0f};
 		bool insideTarget_{false};
+		int currentTargetW_{0};
+		int currentTargetH_{0};
 	};
 
 	// RaylibBackend.hpp

@@ -217,9 +217,11 @@ namespace ZenitUI
 		const bool identity =
 			tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
-		if (!identity)
-			renderer->pushTransform(tr);
+		//if (!identity)
+		//	renderer->pushTransform(tr);
+		//renderer->pushTransform(offsetTr);
 		renderer->pushTransform(offsetTr);
+    	if (!identity) renderer->pushTransform(tr);
 
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->pushEffect(customEffect);

@@ -78,6 +78,10 @@ namespace ZenitUI
 			{KEY_END, Key::End},
 			{KEY_TAB, Key::Tab},
 			{KEY_SPACE, Key::Space},
+			{KEY_A, Key::A},
+			{KEY_C, Key::C},
+			{KEY_V, Key::V},
+			{KEY_X, Key::X},
 		};
 
 		// Caratteri (rising edge)
@@ -124,6 +128,17 @@ namespace ZenitUI
 		// dalla API nativa (Android: DisplayCutout + WindowInsets;
 		// iOS: safeAreaInsets della UIWindow). Per ora zero.
 		return {};
+	}
+
+	void RaylibPlatform::setClipboardText(const std::string &text)
+	{
+		SetClipboardText(text.c_str());
+	}
+
+	std::string RaylibPlatform::getClipboardText()
+	{
+		const char *t = GetClipboardText();
+		return t ? std::string(t) : "";
 	}
 
 	struct RaylibResources
@@ -311,11 +326,37 @@ namespace ZenitUI
 			transformStack.pop_back(); // NUOVO
 	}
 
+	void RaylibRenderer::applyScissor(const Rect &clip)
+	{
+		float scale = insideTarget_ ? 1.0f : dpiScale_;
+		int x = (int)std::floor(clip.x * scale);
+		int y = (int)std::floor(clip.y * scale);
+		int w = (int)std::ceil(clip.width * scale);
+		int h = (int)std::ceil(clip.height * scale);
+
+		if (!insideTarget_)
+		{
+			if (w <= 0 || h <= 0)
+				BeginScissorMode(0, 0, 0, 0);
+			else
+				BeginScissorMode(x, y, w, h);
+			return;
+		}
+
+		// Dentro una RenderTexture2D, BeginScissorMode di Raylib sbaglierebbe
+		// usando GetScreenHeight(). Usiamo rlgl direttamente con l'altezza del target.
+		rlDrawRenderBatchActive();
+		rlEnableScissorTest();
+		if (w <= 0 || h <= 0)
+		{
+			rlScissor(0, 0, 0, 0);
+			return;
+		}
+		rlScissor(x, currentTargetH_ - (y + h), w, h);
+	}
+
 	void RaylibRenderer::pushClip(Rect r)
 	{
-		if (insideTarget_)
-			return;
-
 		Rect screenRect = transformClipToScreen(r);
 
 		if (clipActive)
@@ -325,29 +366,19 @@ namespace ZenitUI
 		}
 		else
 		{
-			clipStack.push_back({0.0f, 0.0f, (float)GetScreenWidth() / dpiScale_, (float)GetScreenHeight() / dpiScale_});
-			currentClip = screenRect;
+			Rect bounds = insideTarget_
+							  ? Rect{0.0f, 0.0f, (float)currentTargetW_, (float)currentTargetH_}
+							  : Rect{0.0f, 0.0f, (float)GetScreenWidth() / dpiScale_, (float)GetScreenHeight() / dpiScale_};
+			clipStack.push_back(bounds);
+			currentClip = intersectRect(bounds, screenRect);
 			clipActive = true;
 		}
 
-		// Scissor opera in pixel fisici, currentClip è in logical.
-		int x = (int)std::floor(currentClip.x * dpiScale_);
-		int y = (int)std::floor(currentClip.y * dpiScale_);
-		int w = (int)std::ceil(currentClip.width * dpiScale_);
-		int h = (int)std::ceil(currentClip.height * dpiScale_);
-		if (w <= 0 || h <= 0)
-		{
-			BeginScissorMode(0, 0, 0, 0);
-			return;
-		}
-		BeginScissorMode(x, y, w, h);
+		applyScissor(currentClip);
 	}
 
 	void RaylibRenderer::popClip()
 	{
-		if (insideTarget_)
-			return;
-
 		if (clipStack.empty())
 			return;
 		currentClip = clipStack.back();
@@ -360,50 +391,76 @@ namespace ZenitUI
 			return;
 		}
 
-		int x = (int)std::floor(currentClip.x * dpiScale_);
-		int y = (int)std::floor(currentClip.y * dpiScale_);
-		int w = (int)std::ceil(currentClip.width * dpiScale_);
-		int h = (int)std::ceil(currentClip.height * dpiScale_);
-		BeginScissorMode(x, y, w, h);
+		applyScissor(currentClip);
 	}
 
 	void RaylibRenderer::pushTarget(TargetHandle t)
 	{
 		if (!res.targets.count(t.id))
 			return;
+
 		if (clipActive)
 			EndScissorMode();
 
-		rlPushMatrix();
-		rlLoadIdentity();
+		targetStates_.push_back({clipActive, currentClip, clipStack, transformStack, currentTargetW_, currentTargetH_});
 
+		clipActive = false;
+		clipStack.clear();
+		currentClip = {0.0f, 0.0f, (float)t.width, (float)t.height};
+		transformStack.clear();
+		currentTargetW_ = t.width;
+		currentTargetH_ = t.height;
 		insideTarget_ = true;
+
 		BeginTextureMode(res.targets[t.id]);
 		ClearBackground(::BLANK);
 	}
 
 	void RaylibRenderer::popTarget()
 	{
-		EndTextureMode();
-		insideTarget_ = false;
+		if (clipActive)
+			EndScissorMode();
 
-		// Ripristina la matrix precedente (include già la scala DPI globale).
-		// NIENTE rlScalef manuale dopo: sarebbe ridondante.
-		rlPopMatrix();
+		EndTextureMode();
+
+		if (!targetStates_.empty())
+		{
+			auto s = targetStates_.back();
+			targetStates_.pop_back();
+			clipActive = s.clipActive;
+			currentClip = s.currentClip;
+			clipStack = s.clipStack;
+			transformStack = s.transformStack;
+			currentTargetW_ = s.targetW;
+			currentTargetH_ = s.targetH;
+		}
+		else
+		{
+			clipActive = false;
+			clipStack.clear();
+			currentClip = {0.0f, 0.0f, (float)GetScreenWidth() / dpiScale_, (float)GetScreenHeight() / dpiScale_};
+			transformStack.clear();
+			currentTargetW_ = 0;
+			currentTargetH_ = 0;
+		}
+
+		insideTarget_ = !targetStates_.empty();
 
 		if (clipActive)
-		{
-			int x = (int)std::floor(currentClip.x * dpiScale_);
-			int y = (int)std::floor(currentClip.y * dpiScale_);
-			int w = (int)std::ceil(currentClip.width * dpiScale_);
-			int h = (int)std::ceil(currentClip.height * dpiScale_);
-			if (w > 0 && h > 0)
-				BeginScissorMode(x, y, w, h);
-		}
+			applyScissor(currentClip);
 	}
 
 	Rect RaylibRenderer::getClipRect() const
 	{
+		// Layout::draw() usa getClipRect() per il frustum culling in coordinate schermo.
+		// Se siamo dentro un target, restituiamo il clip dello schermo salvato alla radice.
+		if (insideTarget_ && !targetStates_.empty())
+		{
+			const auto &root = targetStates_.front();
+			return root.clipActive
+					   ? root.currentClip
+					   : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+		}
 		return clipActive ? currentClip : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
 	}
 

@@ -73,6 +73,8 @@ namespace ZenitUI
 		virtual InputEvents pollInputEvents() = 0;
 		virtual float dpiScale() = 0;
 		virtual EdgeInsets safeArea() = 0;
+		virtual void setClipboardText(const std::string& text) = 0;
+        virtual std::string getClipboardText() = 0;
 	};
 
 	class IAssetProvider

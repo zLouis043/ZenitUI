@@ -502,3 +502,101 @@ TEST(Widget_textinput, type_after_scroll_keeps_cursor_at_end)
     CHECK(s.ti->getText() == std::string(30, 'x') + "y");
     CHECK(s.ti->getCursorPos() == 31);
 }
+
+// ============================================================
+//  Selection and Clipboard
+// ============================================================
+
+TEST(Widget_textinput, type_with_selection_replaces_it) {
+    Env env;
+    auto s = makeFocusedInput(env, "hello world");
+    
+    s.ti->setCursorPos(11);
+    env.platform.mods.shift = true;
+    for (int i = 0; i < 5; ++i) {
+        env.platform.holdKey(Key::Left); // Usa holdKey per la navigazione
+        env.frame(s.root);
+        env.frame(s.root);
+    }
+    env.platform.mods.shift = false;
+    
+    env.platform.typeChar('X');
+    env.frame(s.root);
+    
+    CHECK(s.ti->getText() == "hello X");
+    CHECK(s.ti->getCursorPos() == 7);
+}
+
+TEST(Widget_textinput, backspace_with_selection_deletes_it) {
+    Env env;
+    auto s = makeFocusedInput(env, "hello world");
+    
+    s.ti->setCursorPos(8);
+    env.platform.mods.shift = true;
+    for (int i = 0; i < 5; ++i) {
+        env.platform.holdKey(Key::Left);
+        env.frame(s.root);
+        env.frame(s.root);
+    }
+    env.platform.mods.shift = false;
+    
+    env.platform.holdKey(Key::Backspace); // Usa holdKey
+    env.frame(s.root);
+    
+    CHECK(s.ti->getText() == "helrld");
+    CHECK(s.ti->getCursorPos() == 3);
+}
+
+TEST(Widget_textinput, ctrl_c_copies_selection) {
+    Env env;
+    auto s = makeFocusedInput(env, "ZenitUI is great");
+    
+    s.ti->setCursorPos(7);
+    env.platform.mods.shift = true;
+    for (int i = 0; i < 7; ++i) {
+        env.platform.holdKey(Key::Left);
+        env.frame(s.root);
+        env.frame(s.root);
+    }
+    
+    env.platform.mods.shift = false;
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::C); // Ctrl+C legge ev.keys, pressKey va bene
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(env.platform.getClipboardText() == "ZenitUI");
+}
+
+TEST(Widget_textinput, ctrl_v_pastes_from_clipboard) {
+    Env env;
+    auto s = makeFocusedInput(env, "Hello ");
+    
+    env.platform.setClipboardText("world!");
+    s.ti->setCursorPos(6);
+    
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::V);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(s.ti->getText() == "Hello world!");
+    CHECK(s.ti->getCursorPos() == 12);
+}
+
+TEST(Widget_textinput, ctrl_a_selects_all) {
+    Env env;
+    auto s = makeFocusedInput(env, "ZenitUI");
+    
+    s.ti->setCursorPos(2);
+    
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::A);
+    env.frame(s.root);
+    
+    env.platform.pressKey(Key::C);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(env.platform.getClipboardText() == "ZenitUI");
+}

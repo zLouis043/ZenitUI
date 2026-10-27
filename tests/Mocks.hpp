@@ -197,6 +197,8 @@ namespace ZenitUI::Test
         PointerState nextPointer;
         InputEvents nextEvents;
 
+        std::string clipboardData = "";
+
         Vec2 viewportSize() override { return viewport; }
         double time() override { return currentTime; }
         ModifierState modifiers() override { return mods; }
@@ -331,6 +333,13 @@ namespace ZenitUI::Test
 
         EdgeInsets safe{};
         EdgeInsets safeArea() override { return safe; }
+
+        void setClipboardText(const std::string& text) override {
+            clipboardData = text;
+        }
+        std::string getClipboardText() override {
+            return clipboardData;
+        }
     };
 
     // ============================================================
