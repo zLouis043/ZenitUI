@@ -79,9 +79,10 @@ namespace ZenitUI::UI
                 pos.y += availH - totalTextH;
 
             auto r = UIContext::get().renderer;
-            const bool doClip = !r->inTarget();
-            if (doClip)
-                r->pushClip(rect);
+            //const bool doClip = !r->inTarget();
+            //if (doClip)
+            //    r->pushClip(rect);
+            r->pushClip(rect);
             float curY = pos.y;
             for (auto &ln : lines)
             {
@@ -93,8 +94,8 @@ namespace ZenitUI::UI
                 r->drawText(f, ln.text, {x, curY}, fs, sp, style.color.withAlpha(op));
                 curY += ln.size.y;
             }
-            if (doClip)
-                r->popClip();
+            //if (doClip)
+            r->popClip();
         }
 
         void onLayout() override
