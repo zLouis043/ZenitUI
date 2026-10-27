@@ -4545,12 +4545,15 @@ by measuring the prefix string, so it accounts for kerning and
 manually for click-to-position.</p>
 <h3 id="interaction_1">Interaction</h3>
 <ul>
-<li>Click → focuses the node.</li>
-<li>Typing → inserts characters at the cursor. Only printable ASCII
-  (<code>0x20</code>–<code>0x7E</code>) is accepted by default.</li>
-<li><code>Backspace</code> / <code>Delete</code> — delete around the cursor, with key repeat.</li>
+<li>Click → focuses the node and places the cursor.</li>
+<li>Click and drag → selects text.</li>
+<li>Typing → inserts characters at the cursor, or replaces the selection. Only printable ASCII (<code>0x20</code>–<code>0x7E</code>) is accepted by default.</li>
+<li><code>Backspace</code> / <code>Delete</code> — delete around the cursor, or delete the selection, with key repeat.</li>
 <li><code>Left</code> / <code>Right</code> — move the cursor, with key repeat.</li>
+<li><code>Shift + Left</code> / <code>Right</code> — expand the text selection.</li>
 <li><code>Home</code> / <code>End</code> — jump to start / end.</li>
+<li><code>Ctrl + A</code> — select all text.</li>
+<li><code>Ctrl + C</code> / <code>Ctrl + X</code> / <code>Ctrl + V</code> — copy, cut, and paste integration with the OS clipboard.</li>
 <li><code>Enter</code> — fires <code>onSubmit</code>, then releases focus.</li>
 <li><code>Escape</code> — releases focus without submitting.</li>
 </ul>
