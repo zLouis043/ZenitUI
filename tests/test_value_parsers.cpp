@@ -233,3 +233,54 @@ TEST(ValueParsers_colorToken, rgb_wrong_arg_count)
     CHECK(!parseColorToken("rgb(255, 128, 0, 0.5)").has_value());
     CHECK(!parseColorToken("rgba(255, 128, 0)").has_value());
 }
+
+TEST(ValueParsers_valueToken, func_min) {
+    auto v = parseValueToken("min(30px, 20px)");
+    CHECK(v.has_value());
+    CHECK_NEAR(v->resolveH(0, 0), 20.0f, 1e-4);
+}
+
+TEST(ValueParsers_valueToken, func_max) {
+    auto v = parseValueToken("max(10px, 20px)");
+    CHECK(v.has_value());
+    CHECK_NEAR(v->resolveH(0, 0), 20.0f, 1e-4);
+}
+
+TEST(ValueParsers_valueToken, func_clamp) {
+    auto v1 = parseValueToken("clamp(10px, 15px, 20px)");
+    auto v2 = parseValueToken("clamp(10px, 5px, 20px)");
+    auto v3 = parseValueToken("clamp(10px, 25px, 20px)");
+    
+    CHECK(v1.has_value() && v2.has_value() && v3.has_value());
+    CHECK_NEAR(v1->resolveH(0, 0), 15.0f, 1e-4);
+    CHECK_NEAR(v2->resolveH(0, 0), 10.0f, 1e-4);
+    CHECK_NEAR(v3->resolveH(0, 0), 20.0f, 1e-4);
+}
+
+TEST(ValueParsers_valueToken, func_mixed_units_max) {
+    auto v = parseValueToken("max(50%, 150px)");
+    CHECK(v.has_value());
+    CHECK_NEAR(v->resolveH(200, 100), 150.0f, 1e-4);
+}
+
+TEST(ValueParsers_valueToken, func_mod_and_rounding) {
+    auto vMod = parseValueToken("mod(17px, 5px)");
+    CHECK(vMod.has_value());
+    CHECK_NEAR(vMod->resolveH(0, 0), 2.0f, 1e-4);
+
+    auto vRound = parseValueToken("round(15.6px)");
+    CHECK(vRound.has_value());
+    CHECK_NEAR(vRound->resolveH(0, 0), 16.0f, 1e-4);
+    
+    auto vFloor = parseValueToken("floor(15.6px)");
+    CHECK_NEAR(vFloor->resolveH(0, 0), 15.0f, 1e-4);
+    
+    auto vCeil = parseValueToken("ceil(15.2px)");
+    CHECK_NEAR(vCeil->resolveH(0, 0), 16.0f, 1e-4);
+}
+
+TEST(ValueParsers_valueToken, func_nested_ast) {
+    auto v = parseValueToken("calc(min(10px, 20px) + max(5px, 15px))");
+    CHECK(v.has_value());
+    CHECK_NEAR(v->resolveH(0, 0), 25.0f, 1e-4);
+}

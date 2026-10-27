@@ -50,10 +50,11 @@ while (!WindowShouldClose()) {
 | Number | `Num(2)` | `2` | used in `calc()` |
 
 `calc()`: `+`, `-`, `*`, `/`, `()` with mixed units.
+Advanced math: `min(a,b)`, `max(a,b)`, `clamp(min,val,max)`, `round()`, `floor()`, `ceil()`, `mod(a,b)`.
 
 ```css
 width: calc(100% - 20px);
-left:  calc((100% - 40px) / 2);
+left:  clamp(10px, 5vw, 50px);
 ```
 
 ---
