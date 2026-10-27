@@ -15,7 +15,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1522,6 +1522,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#111-container-doesnt-shrink-after-a-child-is-removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 Container doesn't shrink after a child is removed
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2601,6 +2612,32 @@ consistent state, so the ancestor's check becomes a no-op.</p>
 <li>[x] Add regression test in <code>test_interaction.cpp</code></li>
 <li>[x] Update <code>internals/07-input-system.md</code> §10 (new pitfall: "the context pointers are cleared in <code>~Layout</code>")</li>
 </ul>
+<h3 id="111-container-doesnt-shrink-after-a-child-is-removed">1.11 Container doesn't shrink after a child is removed</h3>
+<p><strong>Severity:</strong> medium — visible stale layout in scroll containers whose
+content shrinks.</p>
+<p><strong>Location:</strong> <code>src/ui/Layout.hpp</code>, <code>Layout::cullRemovedChildren</code> and
+<code>Layout::recomputeDirty</code>; <code>NodeInternal</code> bitfield.</p>
+<p><strong>Problem:</strong> when a child is removed (<code>removeFromParent</code> followed by
+<code>cullRemovedChildren</code>), no dirty flag is set on the parent. So
+<code>recomputeDirty</code> sees an unchanged subtree and <code>measure</code> short-circuits
+on the next frame. The parent's <code>contentSize</code> and any scroll
+container's <code>maxScroll</code> stay at their pre-removal values. Visible as
+"the scrollbar won't disappear until the last child is removed" —
+the container stays at its maximum height and keeps a scrollbar even
+after the content shrinks well below it.</p>
+<p><strong>Fix:</strong> added a per-node <code>internal_.hadRemovedChildren</code> bit. Set by
+<code>cullRemovedChildren</code> when at least one child is actually erased.
+Consumed (OR'd and cleared) by <code>recomputeDirty</code>, which forces
+<code>subtreeDirty = 1</code> on the frame of the removal. The flag propagates
+upward through the normal <code>anyChildDirty</code> check.</p>
+<ul>
+<li>[x] Add <code>hadRemovedChildren</code> to <code>NodeInternal</code></li>
+<li>[x] Set the flag in <code>cullRemovedChildren</code> when a child is erased</li>
+<li>[x] OR the flag into <code>recomputeDirty</code> and clear it</li>
+<li>[x] Add regression test in <code>test_interaction.cpp</code></li>
+<li>[ ] Update <code>internals/05-layout-engine.md</code> §7 (dirty tracking) to
+      mention the "removed children" bit</li>
+</ul>
 <hr />
 <h2 id="phase-2-missing-core-api">Phase 2 — Missing core API</h2>
 <p>Small, high-impact additions that unblock common use cases. No new
@@ -3095,9 +3132,9 @@ framework code.</p>
 </ul>
 <h3 id="53-calc-extensions">5.3 <code>calc()</code> extensions</h3>
 <ul>
-<li>[ ] <code>min(a, b)</code> / <code>max(a, b)</code> / <code>clamp(min, val, max)</code></li>
-<li>[ ] <code>round()</code>, <code>floor()</code>, <code>ceil()</code></li>
-<li>[ ] <code>mod()</code></li>
+<li>[x] <code>min(a, b)</code> / <code>max(a, b)</code> / <code>clamp(min, val, max)</code></li>
+<li>[x] <code>round()</code>, <code>floor()</code>, <code>ceil()</code></li>
+<li>[x] <code>mod()</code></li>
 </ul>
 <h3 id="54-filter-and-effect-chaining">5.4 Filter and effect chaining</h3>
 <p>Two separate limitations:</p>
@@ -3689,7 +3726,7 @@ applies, but UI use is fine.</p>
 <li>[x] Update <code>docs/GLOSSARY.md</code> ("Bindable" entry)</li>
 <li>[x] Update <code>docs/README.md</code> and root <code>README.md</code> (link the new docs)</li>
 <li>[x] Update <code>docs/architecture/PROPOSALS.md</code> (mark Proposal 2 shipped)</li>
-<li>[ ] Add <code>examples/12_bindable</code> — model → 3 widgets, <code>bindTo</code> lifetime safety demonstrated live (follow-up commit)</li>
+<li>[x] Add <code>examples/12_bindable</code> — model → 3 widgets, <code>bindTo</code> lifetime safety demonstrated live (follow-up commit)</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
@@ -3977,10 +4014,10 @@ require a bigger design decision.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

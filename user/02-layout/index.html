@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -27,10 +27,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -587,10 +587,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#calc" class="md-nav__link">
+  <a href="#calc-and-math-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        calc()
+        calc() and Math Functions
       
     </span>
   </a>
@@ -1993,10 +1993,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#calc" class="md-nav__link">
+  <a href="#calc-and-math-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        calc()
+        calc() and Math Functions
       
     </span>
   </a>
@@ -2572,14 +2572,14 @@ width regardless of which property you're setting:</p>
     left: calc(100pw - 80ph);   /* right-aligned knob */
 }
 </code></pre>
-<h3 id="calc"><code>calc()</code></h3>
-<p><code>calc()</code> supports <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, parentheses, and mixed units:</p>
+<h3 id="calc-and-math-functions"><code>calc()</code> and Math Functions</h3>
+<p>ZenitUI supports <code>calc()</code> for mixed-unit math (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, and parentheses), as well as advanced mathematical functions for responsive design: <code>min()</code>, <code>max()</code>, <code>clamp()</code>, <code>round()</code>, <code>floor()</code>, <code>ceil()</code>, and <code>mod()</code>.</p>
 <pre><code class="language-css">width: calc(100% - 20px);
 height: calc(50vh + 2 * 12px);
-left: calc((100% - 40px) / 2);
+left: max(10vw, 50px);
+font-size: clamp(12px, 2vw, 24px); /* Scales with viewport, bounded by 12px and 24px */
 </code></pre>
-<p>The parser builds a <code>Value</code> with multiple terms; resolution happens lazily
-against the parent's dimensions when the node is measured.</p>
+<p>The parser builds an Abstract Syntax Tree (AST) internally; resolution happens lazily against the parent's dimensions when the node is measured.</p>
 <pre><code class="language-cpp">auto v = parseValueToken(&quot;calc(100% - 20px)&quot;).value();
 // v.terms = [ {100, Percent}, {-20, Pixel} ]
 </code></pre>
@@ -3258,10 +3258,10 @@ container a bounded height (<code>%</code>, <code>vh</code>, or a parent with bo
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

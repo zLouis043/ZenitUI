@@ -15,7 +15,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1824,10 +1824,10 @@ Bindable&lt;float&gt; volume{0.5f};
 slider-&gt;onValueChanged = [&amp;volume](float v) { volume.set(v); };
 
 // Widgets that display the model
-volume.onChanged = [progress](const float&amp; v) { progress-&gt;setValue(v); };
-volume.onChanged = [label](const float&amp; v) {
+auto sub1 = volume.onChanged([progress](const float&amp; v) { progress-&gt;setValue(v); });
+auto sub2 = volume.onChanged([label](const float&amp; v) {
     label-&gt;setText(std::to_string((int)(v * 100)) + &quot;%&quot;);
-};
+});
 </code></pre>
 <p>No flags, no "am I echoing my own update?" checks. <code>Bindable::set</code>
 short-circuits when <code>v == current</code>, so a slider that fires <code>onValueChanged</code>
@@ -1836,12 +1836,12 @@ back with the same value is a no-op.</p>
 <p>When the "reaction" is a single widget method, <code>bindTo</code> removes the
 wrapper lambda:</p>
 <pre><code class="language-cpp">// Instead of this:
-volume.onChanged = [progress](const float&amp; v) {
+auto sub = volume.onChanged([progress](const float&amp; v) {
     progress-&gt;setValue(v);
-};
+});
 
 // Write this:
-volume.bindTo(progress, &amp;ProgressBar::setValue);
+auto sub = volume.bindTo(progress, &amp;ProgressBar::setValue);
 </code></pre>
 <p><code>bindTo</code> also handles lifetime: if <code>progress</code> is destroyed, the
 subscription becomes a no-op (no dangling pointer, no crash).</p>
@@ -1866,18 +1866,18 @@ is called on the <code>Bindable</code>. <code>sub.active()</code> returns <code>
 <p><code>bindTo</code> already handles this via <code>weak_ptr</code>. But if you use
 <code>onChanged</code> directly with a raw capture:</p>
 <pre><code class="language-cpp">// ⚠️ DANGEROUS: captures progress by shared_ptr
-volume.onChanged = [progress](const float&amp; v) {
+auto sub = volume.onChanged([progress](const float&amp; v) {
     progress-&gt;setValue(v);
-};
+});
 // progress is now kept alive by the subscription, even
 // after the UI removes it.
 </code></pre>
 <p>The correct pattern is to let <code>bindTo</code> handle it, or capture a
 <code>weak_ptr</code> manually:</p>
 <pre><code class="language-cpp">std::weak_ptr&lt;ProgressBar&gt; weakProgress = progress;
-volume.onChanged = [weakProgress](const float&amp; v) {
+auto sub = volume.onChanged([weakProgress](const float&amp; v) {
     if (auto p = weakProgress.lock()) p-&gt;setValue(v);
-};
+});
 </code></pre>
 <p>But <code>bindTo</code> is cleaner. Prefer it.</p>
 <hr />
@@ -1899,13 +1899,13 @@ point of failure for the entire UI.</p>
 <pre><code class="language-cpp">Bindable&lt;float&gt; volume{0.5f};
 slider-&gt;onValueChanged = [&amp;volume](float v) { volume.set(v); };
 
-volume.bindTo(progress, &amp;ProgressBar::setValue);
-volume.onChanged = [label](const float&amp; v) {
+auto sub1 = volume.bindTo(progress, &amp;ProgressBar::setValue);
+auto sub2 = volume.onChanged([label](const float&amp; v) {
     label-&gt;setText(std::to_string((int)(v * 100)) + &quot;%&quot;);
-};
-volume.onChanged = [&amp;audioSystem](const float&amp; v) {
+});
+auto sub3 = volume.onChanged([&amp;audioSystem](const float&amp; v) {
     audioSystem.setMasterVolume(v);
-};
+});
 </code></pre>
 <p>Each subscription is independent. Adding a fourth widget is one line.
 Removing any widget is safe — its <code>Subscription</code> (if you kept it)
@@ -2012,10 +2012,10 @@ so the vector reallocates fine. Just don't try to copy them.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
