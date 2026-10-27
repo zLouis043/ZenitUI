@@ -72,18 +72,18 @@ Toggle:checked .toggle-knob {
 }
 ```
 
-### `calc()`
+### `calc()` and Math Functions
 
-`calc()` supports `+`, `-`, `*`, `/`, parentheses, and mixed units:
+ZenitUI supports `calc()` for mixed-unit math (`+`, `-`, `*`, `/`, and parentheses), as well as advanced mathematical functions for responsive design: `min()`, `max()`, `clamp()`, `round()`, `floor()`, `ceil()`, and `mod()`.
 
 ```css
 width: calc(100% - 20px);
 height: calc(50vh + 2 * 12px);
-left: calc((100% - 40px) / 2);
+left: max(10vw, 50px);
+font-size: clamp(12px, 2vw, 24px); /* Scales with viewport, bounded by 12px and 24px */
 ```
 
-The parser builds a `Value` with multiple terms; resolution happens lazily
-against the parent's dimensions when the node is measured.
+The parser builds an Abstract Syntax Tree (AST) internally; resolution happens lazily against the parent's dimensions when the node is measured.
 
 ```cpp
 auto v = parseValueToken("calc(100% - 20px)").value();

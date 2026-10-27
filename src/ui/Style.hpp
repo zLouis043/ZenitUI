@@ -381,6 +381,11 @@ namespace ZenitUI
 		if (a.isAuto() || b.isAuto())
 			return t > 0.0f ? b : a;
 
+		if (a.op != ValueOp::None || b.op != ValueOp::None)
+		{
+			return a + (b - a).mulWith(Value::number(t));
+		}
+
 		// Raccogli i coefficienti per unità in due array (una entry per unità).
 		float ca[7] = {0}, cb[7] = {0};
 		for (const auto &term : a.terms)

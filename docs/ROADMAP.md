@@ -898,9 +898,9 @@ Not blocking for beta, but needed for 1.0.
 
 ### 5.3 `calc()` extensions
 
-- [ ] `min(a, b)` / `max(a, b)` / `clamp(min, val, max)`
-- [ ] `round()`, `floor()`, `ceil()`
-- [ ] `mod()`
+- [x] `min(a, b)` / `max(a, b)` / `clamp(min, val, max)`
+- [x] `round()`, `floor()`, `ceil()`
+- [x] `mod()`
 
 ### 5.4 Filter and effect chaining
 

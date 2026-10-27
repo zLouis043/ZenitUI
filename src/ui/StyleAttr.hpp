@@ -21,7 +21,7 @@ namespace ZenitUI {
 namespace detail {
 
 struct CalcToken {
-    enum class Kind { Number, Ident, Percent, Plus, Minus, Star, Slash, LParen, RParen, End };
+    enum class Kind { Number, Ident, Percent, Plus, Minus, Star, Slash, LParen, RParen, Comma, End };
     Kind kind{ Kind::End };
     float num{ 0.0f };
     std::string ident;
@@ -40,6 +40,7 @@ inline std::vector<CalcToken> tokenizeCalc(std::string_view s) {
         if (c == '(') { out.push_back({CalcToken::Kind::LParen}); ++i; continue; }
         if (c == ')') { out.push_back({CalcToken::Kind::RParen}); ++i; continue; }
         if (c == '%') { out.push_back({CalcToken::Kind::Percent});++i; continue; }
+        if (c == ',') { out.push_back({CalcToken::Kind::Comma}); ++i; continue; }
 
         if (std::isdigit((unsigned char)c) || c == '.') {
             size_t start = i;
@@ -118,6 +119,39 @@ private:
             advance();
             return v;
         }
+        if (peek().kind == CalcToken::Kind::Ident) {
+            std::string func = peek().ident;
+            advance();
+            if (peek().kind == CalcToken::Kind::LParen) {
+                advance();
+                std::vector<Value> fargs;
+                if (peek().kind != CalcToken::Kind::RParen) {
+                    fargs.push_back(parseExpr());
+                    while (!errored && peek().kind == CalcToken::Kind::Comma) {
+                        advance();
+                        fargs.push_back(parseExpr());
+                    }
+                }
+                if (peek().kind != CalcToken::Kind::RParen) { error(); return Value::px(0.0f); }
+                advance();
+
+                Value r;
+                r.args = std::make_shared<std::vector<Value>>(std::move(fargs));
+                if (func == "calc") {
+                    if (r.args->size() == 1) return r.args->at(0);
+                    else { error(); return Value::px(0.0f); }
+                } else if (func == "min") r.op = ValueOp::Min;
+                else if (func == "max") r.op = ValueOp::Max;
+                else if (func == "clamp") r.op = ValueOp::Clamp;
+                else if (func == "round") r.op = ValueOp::Round;
+                else if (func == "floor") r.op = ValueOp::Floor;
+                else if (func == "ceil") r.op = ValueOp::Ceil;
+                else if (func == "mod") r.op = ValueOp::Mod;
+                else { error(); return Value::px(0.0f); }
+                return r;
+            }
+            error(); return Value::px(0.0f);
+        }
         if (peek().kind == CalcToken::Kind::Number) {
             float num = peek().num;
             advance();
@@ -148,14 +182,15 @@ inline std::optional<Value> parseValueToken(std::string_view s) {
     if (s.empty()) return std::nullopt;
     if (s == "auto") return Value::autoSize();
 
-    if (s.size() >= 6 && s.substr(0, 5) == "calc(" && s.back() == ')') {
-        std::string inner(s.substr(5, s.size() - 6));
-        auto toks = detail::tokenizeCalc(inner);
+    if (s.starts_with("calc(") || s.starts_with("min(") || s.starts_with("max(") || 
+        s.starts_with("clamp(") || s.starts_with("round(") || s.starts_with("floor(") || 
+        s.starts_with("ceil(") || s.starts_with("mod(")) {
+        
+        auto toks = detail::tokenizeCalc(s);
         detail::CalcParser p(toks);
         Value out;
         if (!p.parse(out)) {
-            logWarn("StyleParser", "", 0, 0,
-                    "calc: espressione non valida '" + std::string(s) + "'");
+            logWarn("StyleParser", "", 0, 0, "espressione math non valida '" + std::string(s) + "'");
             return std::nullopt;
         }
         return out;
