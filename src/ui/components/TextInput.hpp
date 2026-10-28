@@ -236,36 +236,62 @@ namespace ZenitUI::UI
                 switch (key)
                 {
                 case Key::Backspace:
-                    if (deleteSelection()) {
+                    if (deleteSelection())
+                    {
                         actionChanged = true;
-                    } else if (cursorPos > 0) {
+                    }
+                    else if (cursorPos > 0)
+                    {
                         text.erase(text.begin() + cursorPos - 1);
                         cursorPos--;
                         actionChanged = true;
                     }
                     break;
                 case Key::Delete:
-                    if (deleteSelection()) {
+                    if (deleteSelection())
+                    {
                         actionChanged = true;
-                    } else if (cursorPos < (int)text.size()) {
+                    }
+                    else if (cursorPos < (int)text.size())
+                    {
                         text.erase(text.begin() + cursorPos);
                         actionChanged = true;
                     }
                     break;
                 case Key::Left:
-                    if (ctx.modifiers.shift) { if (selectionStart == -1) selectionStart = cursorPos; }
-                    else selectionStart = -1;
-                    if (cursorPos > 0) { cursorPos--; internal_.pendingTransition = 1; }
+                    if (ctx.modifiers.shift)
+                    {
+                        if (selectionStart == -1)
+                            selectionStart = cursorPos;
+                    }
+                    else
+                        selectionStart = -1;
+                    if (cursorPos > 0)
+                    {
+                        cursorPos--;
+                        internal_.pendingTransition = 1;
+                    }
                     break;
                 case Key::Right:
-                    if (ctx.modifiers.shift) { if (selectionStart == -1) selectionStart = cursorPos; }
-                    else selectionStart = -1;
-                    if (cursorPos < (int)text.size()) { cursorPos++; internal_.pendingTransition = 1; }
+                    if (ctx.modifiers.shift)
+                    {
+                        if (selectionStart == -1)
+                            selectionStart = cursorPos;
+                    }
+                    else
+                        selectionStart = -1;
+                    if (cursorPos < (int)text.size())
+                    {
+                        cursorPos++;
+                        internal_.pendingTransition = 1;
+                    }
                     break;
                 }
-                if (actionChanged) {
+                if (actionChanged)
+                {
                     changed = true;
-                    if (key == Key::Backspace || key == Key::Delete) saveHistory();
+                    if (key == Key::Backspace || key == Key::Delete)
+                        saveHistory();
                 }
                 cursorBlink = 0.0f;
             };
@@ -404,7 +430,9 @@ namespace ZenitUI::UI
                 float preW = r->measureText(f, pre, fs, sp).x;
                 float selW = r->measureText(f, sel, fs, sp).x;
 
-                Color selColor = Color{50, 130, 220, 128};
+                Style selStyle = partStyle("selection");
+                Color selColor = selStyle.background.is_set ? selStyle.background.value : Color{50, 130, 220, 128};
+
                 r->fillRect({pos.x + preW, pos.y, selW, fs * 1.2f}, selColor.withAlpha(op));
             }
 

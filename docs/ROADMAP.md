@@ -1682,7 +1682,6 @@ require a bigger design decision.
 
 | Issue | Location | Notes |
 |-------|----------|-------|
-| `collectFocusables` doesn't skip disabled subtrees | `Layout.cpp` | Tab reaches disabled containers' children. |
 | `Text` is `char`-based, not Unicode | `Text.hpp` | Text input and rendering are ASCII-only. |
 | Font fallback chain missing | `IAssetProvider` | Missing glyphs use the default font. |
 | `var()` in `transition:` / `animation:` shorthand | `StyleParser.hpp` | `unresolvedProps` doesn't apply to those. |
@@ -1691,7 +1690,6 @@ require a bigger design decision.
 | `Style` macro-driven is verbose | `Style.hpp` | Adding a property touches ~1 line but generates cryptic errors. |
 | `renderFrame` doesn't clear the framebuffer | `Layout.cpp` | User is responsible. |
 | `Popup` `closeOnEscape` doesn't reach the popup if focus is elsewhere | `Popup.hpp` | Known limitation. |
-| `Dropdown` doesn't close on `Escape` | `Dropdown.hpp` | Only closes on outside click. |
 | `pressTarget` shared across mouse buttons | `Layout.cpp`, `Input.cpp` | A press on Middle overwrites `pressTarget` from a still-held Left. Multi-button simultaneous drags not supported. |
 
 ---

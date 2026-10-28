@@ -868,3 +868,32 @@ TEST(Interaction_scroll, container_shrinks_after_child_removal)
 
     CHECK_NEAR(scroller->getRect().height, 0.0f, 1.0f);
 }
+
+// ============================================================
+//  Tooltip Clamping
+// ============================================================
+TEST(Interaction_tooltip, clamps_to_viewport_and_flips_below) {
+    Env env;
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    
+    // Anchor posizionato esattamente sul soffitto dello schermo (y = 0)
+    auto anchor = std::make_shared<Layout>(LayoutType::Stack);
+    anchor->size(Px(100), Px(50));
+    anchor->getInlineBase().position = Position::Absolute;
+    anchor->getInlineBase().top = Px(0);
+    anchor->getInlineBase().left = Px(0);
+    anchor->setInteractive(true);
+    root->addChild(anchor);
+    
+    auto tip = UI::Tooltip::attach(anchor, "Test tip", 0.0f);
+    
+    env.frame(root);
+    env.platform.moveMouse({50, 25}); // Hover
+    env.frame(root);
+    env.frame(root); // Mostra il tooltip
+    
+    // Visto che l'anchor è a Y=0, il tooltip non può essere disegnato sopra.
+    // La logica di clamping deve ribaltarlo SOTTO l'anchor (y = 50 + 6 = 56).
+    CHECK(tip->getRect().y >= 56.0f);
+}

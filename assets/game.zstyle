@@ -74,6 +74,10 @@ ProgressBar {
   radius: 6px;
 }
 
+TextInput::selection {
+    background: #FF000080;
+}
+
 ScrollView {
   overflow: scroll;
   background: #1A1A20FF;
@@ -153,6 +157,22 @@ TextInput:hover::cursor {
 
 .dropdown-trigger .btn-text {
   font-size: 2.4vh;         /* ~14.4px — comodo dentro 30px con padding */
+}
+
+.dropdown-item {
+    background: #282832;
+    color: #FFFFFF;
+    transition: background 0.1s linear, color 0.1s linear;
+}
+
+.dropdown-item:hover {
+    background: #3C3C46;
+}
+
+/* Ecco l'highlight dell'elemento selezionato! */
+.dropdown-item:checked {
+    background: #3C3C46;
+    color: #FFFF00;
 }
 
 /* ============================================================

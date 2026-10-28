@@ -228,3 +228,30 @@ TEST(FocusScope_default, no_scope_uses_root)
     env.frame(root);
     CHECK(UIContext::get().hasFocus(a.get()));   // wrap
 }
+
+// ---- disabled subtrees -----------------------------------------------
+TEST(FocusScope_disabled, collect_skips_disabled_containers) {
+    Env env;
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    
+    auto container = std::make_shared<Layout>(LayoutType::Stack);
+    container->setEnabled(false); // Disabilitato!
+    auto btn1 = makeFocusable("btn1");
+    container->addChild(btn1);
+    
+    auto btn2 = makeFocusable("btn2");
+    
+    root->addChild(container);
+    root->addChild(btn2);
+    
+    env.frame(root);
+    
+    // Premiamo Tab. Dato che container è disabilitato, btn1 deve essere ignorato
+    // e il focus deve andare direttamente a btn2.
+    env.platform.pressKey(Key::Tab);
+    env.frame(root);
+    
+    CHECK(!UIContext::get().hasFocus(btn1.get()));
+    CHECK(UIContext::get().hasFocus(btn2.get()));
+}
