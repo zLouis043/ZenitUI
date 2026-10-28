@@ -82,6 +82,8 @@ namespace ZenitUI
 			{KEY_C, Key::C},
 			{KEY_V, Key::V},
 			{KEY_X, Key::X},
+			{KEY_Y, Key::Y},
+			{KEY_Z, Key::Z},
 		};
 
 		// Caratteri (rising edge)

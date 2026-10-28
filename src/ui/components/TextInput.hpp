@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.hpp"
 #include "Layout.hpp"
+#include <deque>
 
 namespace ZenitUI::UI
 {
@@ -13,6 +14,7 @@ namespace ZenitUI::UI
             setFocusable(true);
             setStyleTag("TextInput");
             cursorPos = (int)text.size();
+            saveHistory();
 
             style_.inlineBase.background = Color{30, 30, 36, 255};
             style_.inlineBase.color = Colors::White;
@@ -27,9 +29,10 @@ namespace ZenitUI::UI
         {
             text = std::move(t);
             cursorPos = std::min(cursorPos, (int)text.size());
-            selectionStart = -1; // Reset selezione quando si cambia il testo da codice
+            selectionStart = -1;
             text_dirty = true;
             internal_.pendingTransition = 1;
+            saveHistory();
         }
         const std::string &getText() const { return text; }
         void clear() { setText(""); }
@@ -38,7 +41,7 @@ namespace ZenitUI::UI
         void setCursorPos(int pos)
         {
             cursorPos = std::clamp(pos, 0, (int)text.size());
-            selectionStart = -1; // Reset selezione programmatico
+            selectionStart = -1;
             internal_.pendingTransition = 1;
         }
 
@@ -58,9 +61,7 @@ namespace ZenitUI::UI
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             float charW = 0.0f;
             if (auto r = UIContext::get().renderer)
-            {
                 charW = r->measureText(f, "M", fs, 0.0f).x;
-            }
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
             return {std::max(120.0f, charW * 12.0f), fs * 1.6f};
@@ -86,20 +87,47 @@ namespace ZenitUI::UI
 
             auto &ctx = UIContext::get();
             auto &ev = ctx.inputEvents;
+            bool changed = false;
 
-            // Gestione Selezione Mouse & Focus (Inizio click o drag)
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
+            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
+            float availW = std::max(0.0f, rect.width - pl - pr - 4.0f);
+
+            // --- Multi-click e Drag ---
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
                 UIContext::get().requestFocus(shared_from_this());
+
+                double now = ctx.platform->time();
+                if (now - lastClickTime < 0.4)
+                {
+                    clickCount++;
+                }
+                else
+                {
+                    clickCount = 1;
+                }
+                lastClickTime = now;
+
                 cursorPos = cursorIndexFromX(ctx.pointer.pos.x - rect.x);
                 selectionStart = cursorPos;
+
+                if (clickCount == 2)
+                {
+                    selectWordAtCursor();
+                }
+                else if (clickCount >= 3)
+                {
+                    selectionStart = 0;
+                    cursorPos = (int)text.size();
+                }
+
                 cursorBlink = 0.0f;
                 internal_.pendingTransition = 1;
             }
 
-            // Trascinamento Mouse (Espande la selezione)
-            if (hasPointerCapture())
+            if (hasPointerCapture() && clickCount == 1)
             {
                 int newPos = cursorIndexFromX(ctx.pointer.pos.x - rect.x);
                 if (newPos != cursorPos)
@@ -113,13 +141,10 @@ namespace ZenitUI::UI
             if (!hasFocusCache)
             {
                 repeatStates.clear();
-                selectionStart = -1; // Deseleziona alla perdita di focus
+                selectionStart = -1;
                 return;
             }
 
-            bool changed = false;
-
-            // Helper per cancellare il testo evidenziato
             auto deleteSelection = [&]()
             {
                 if (selectionStart != -1 && selectionStart != cursorPos)
@@ -136,105 +161,111 @@ namespace ZenitUI::UI
                 return false;
             };
 
-            // Gestione Appunti e Scorciatoie (Ctrl/Cmd)
+            // --- Tasti e Modifiers ---
             if (ctx.modifiers.ctrl || ctx.modifiers.super)
             {
                 for (int k : ev.keys)
                 {
                     if (k == Key::A)
-                    { // Seleziona Tutto
+                    {
                         selectionStart = 0;
                         cursorPos = (int)text.size();
                         internal_.pendingTransition = 1;
                     }
                     else if (k == Key::C || k == Key::X)
-                    { // Copia / Taglia
+                    {
                         if (selectionStart != -1 && selectionStart != cursorPos)
                         {
                             int s1 = std::min(selectionStart, cursorPos);
                             int s2 = std::max(selectionStart, cursorPos);
                             ctx.platform->setClipboardText(text.substr(s1, s2 - s1));
                             if (k == Key::X)
-                                deleteSelection(); // Se "Taglia", cancella il testo
+                            {
+                                deleteSelection();
+                                saveHistory();
+                            }
                         }
                     }
                     else if (k == Key::V)
-                    {                      // Incolla
-                        deleteSelection(); // Sovrascrive la selezione se presente
+                    {
+                        deleteSelection();
                         std::string clip = ctx.platform->getClipboardText();
                         for (char c : clip)
                         {
                             if (c >= 32 && c <= 126)
-                            { // Solo caratteri stampabili ASCII
+                            {
                                 text.insert(text.begin() + cursorPos, c);
                                 cursorPos++;
                                 changed = true;
                             }
                         }
+                        if (changed)
+                            saveHistory();
+                    }
+                    else if (k == Key::Z)
+                    {
+                        if (ctx.modifiers.shift)
+                            redo();
+                        else
+                            undo();
+                    }
+                    else if (k == Key::Y)
+                    {
+                        redo();
                     }
                 }
             }
             else
             {
-                // Digitazione normale
                 for (int c : ev.chars)
                 {
                     if (c < 32 || c > 126)
                         continue;
-                    deleteSelection(); // Se si digita con una selezione attiva, questa viene sovrascritta
+                    deleteSelection();
                     text.insert(text.begin() + cursorPos, (char)c);
                     cursorPos++;
                     changed = true;
                 }
+                if (ev.chars.size() > 0)
+                    saveHistory();
             }
 
             auto doAction = [&](int key)
             {
+                bool actionChanged = false;
                 switch (key)
                 {
                 case Key::Backspace:
-                    if (!deleteSelection() && cursorPos > 0)
-                    {
+                    if (deleteSelection()) {
+                        actionChanged = true;
+                    } else if (cursorPos > 0) {
                         text.erase(text.begin() + cursorPos - 1);
                         cursorPos--;
-                        changed = true;
+                        actionChanged = true;
                     }
                     break;
                 case Key::Delete:
-                    if (!deleteSelection() && cursorPos < (int)text.size())
-                    {
+                    if (deleteSelection()) {
+                        actionChanged = true;
+                    } else if (cursorPos < (int)text.size()) {
                         text.erase(text.begin() + cursorPos);
-                        changed = true;
+                        actionChanged = true;
                     }
                     break;
                 case Key::Left:
-                    if (ctx.modifiers.shift)
-                    {
-                        if (selectionStart == -1)
-                            selectionStart = cursorPos;
-                    }
-                    else
-                        selectionStart = -1;
-                    if (cursorPos > 0)
-                    {
-                        cursorPos--;
-                        internal_.pendingTransition = 1;
-                    }
+                    if (ctx.modifiers.shift) { if (selectionStart == -1) selectionStart = cursorPos; }
+                    else selectionStart = -1;
+                    if (cursorPos > 0) { cursorPos--; internal_.pendingTransition = 1; }
                     break;
                 case Key::Right:
-                    if (ctx.modifiers.shift)
-                    {
-                        if (selectionStart == -1)
-                            selectionStart = cursorPos;
-                    }
-                    else
-                        selectionStart = -1;
-                    if (cursorPos < (int)text.size())
-                    {
-                        cursorPos++;
-                        internal_.pendingTransition = 1;
-                    }
+                    if (ctx.modifiers.shift) { if (selectionStart == -1) selectionStart = cursorPos; }
+                    else selectionStart = -1;
+                    if (cursorPos < (int)text.size()) { cursorPos++; internal_.pendingTransition = 1; }
                     break;
+                }
+                if (actionChanged) {
+                    changed = true;
+                    if (key == Key::Backspace || key == Key::Delete) saveHistory();
                 }
                 cursorBlink = 0.0f;
             };
@@ -254,10 +285,7 @@ namespace ZenitUI::UI
                 if (it == repeatStates.end())
                 {
                     doAction(key);
-                    RepeatState st;
-                    st.holdTime = 0.0f;
-                    st.nextFireTime = REPEAT_DELAY;
-                    repeatStates[key] = st;
+                    repeatStates[key] = {0.0f, REPEAT_DELAY};
                 }
                 else
                 {
@@ -324,7 +352,7 @@ namespace ZenitUI::UI
                 internal_.pendingTransition = 1;
             }
 
-            // Scrolling orizzontale automatico se il cursore va fuori campo
+            // --- Scroll orizzontale automatico ---
             {
                 auto r = UIContext::get().renderer;
                 if (!r)
@@ -332,9 +360,6 @@ namespace ZenitUI::UI
                 FontHandle f = resolveFont(style_.currentStyle, defaultFont);
                 float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
                 float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-                float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
-                float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
-                float availW = std::max(0.0f, rect.width - pl - pr - 4.0f);
 
                 std::string prefix = text.substr(0, cursorPos);
                 Vec2 prefixSize = r->measureText(f, prefix, fs, sp);
@@ -360,21 +385,16 @@ namespace ZenitUI::UI
             float pt = style.padding.top.resolveV(rect.width, rect.height);
             float pb = style.padding.bottom.resolveV(rect.width, rect.height);
 
-            // Calcola l'area interna per il clip (escludendo padding e bordi visivi)
             Rect innerRect = {
                 rect.x + pl,
                 rect.y + pt,
                 std::max(0.0f, rect.width - pl - pr),
                 std::max(0.0f, rect.height - pt - pb)};
 
-            // const bool doClip = !r->inTarget();
-            // if (doClip)
-            //     r->pushClip(innerRect); // Usa innerRect invece di rect
             r->pushClip(innerRect);
 
             Vec2 pos = {rect.x + pl - scrollX, rect.y + (rect.height - fs) * 0.5f - fs * 0.1f};
 
-            // Disegna highlight della selezione PRIMA del testo
             if (hasFocusCache && selectionStart != -1 && selectionStart != cursorPos)
             {
                 int s1 = std::min(selectionStart, cursorPos);
@@ -384,15 +404,13 @@ namespace ZenitUI::UI
                 float preW = r->measureText(f, pre, fs, sp).x;
                 float selW = r->measureText(f, sel, fs, sp).x;
 
-                Color selColor = Color{50, 130, 220, 128}; // Azzurro traslucido
+                Color selColor = Color{50, 130, 220, 128};
                 r->fillRect({pos.x + preW, pos.y, selW, fs * 1.2f}, selColor.withAlpha(op));
             }
 
-            // Disegna testo
             Color textColor = config.enabled ? style.color : Color{120, 120, 125, 255};
             r->drawText(f, text, pos, fs, sp, textColor.withAlpha(op));
 
-            // Disegna cursore
             if (hasFocusCache && config.enabled && cursorBlink < 0.5f && (selectionStart == -1 || selectionStart == cursorPos))
             {
                 Style cursorStyle = partStyle("cursor");
@@ -402,7 +420,6 @@ namespace ZenitUI::UI
                 r->fillRect({cx, pos.y, cursorW, fs}, cursorColor.withAlpha(op));
             }
 
-            //if (doClip)
             r->popClip();
         }
 
@@ -434,6 +451,67 @@ namespace ZenitUI::UI
             return best;
         }
 
+        // ---- UNDO / REDO SYSTEM ----
+        struct HistoryState
+        {
+            std::string text;
+            int cursorPos;
+        };
+        std::deque<HistoryState> undoStack;
+        std::deque<HistoryState> redoStack;
+
+        void saveHistory()
+        {
+            if (!undoStack.empty() && undoStack.back().text == text)
+                return;
+            undoStack.push_back({text, cursorPos});
+            if (undoStack.size() > 50)
+                undoStack.pop_front();
+            redoStack.clear();
+        }
+
+        void undo()
+        {
+            if (undoStack.size() > 1)
+            {
+                redoStack.push_back(undoStack.back());
+                undoStack.pop_back();
+                text = undoStack.back().text;
+                cursorPos = undoStack.back().cursorPos;
+                selectionStart = -1;
+                internal_.pendingTransition = 1;
+            }
+        }
+
+        void redo()
+        {
+            if (!redoStack.empty())
+            {
+                undoStack.push_back(redoStack.back());
+                text = redoStack.back().text;
+                cursorPos = redoStack.back().cursorPos;
+                redoStack.pop_back();
+                selectionStart = -1;
+                internal_.pendingTransition = 1;
+            }
+        }
+
+        void selectWordAtCursor()
+        {
+            if (text.empty())
+                return;
+            int s = cursorPos, e = cursorPos;
+            while (s > 0 && std::isalnum(text[s - 1]) && text[s - 1] != ' ')
+                s--;
+            while (e < (int)text.size() && std::isalnum(text[e]) && text[e] != ' ')
+                e++;
+            if (s != e)
+            {
+                selectionStart = s;
+                cursorPos = e;
+            }
+        }
+
         std::string text;
         int cursorPos{0};
         int selectionStart{-1};
@@ -443,6 +521,9 @@ namespace ZenitUI::UI
         float scrollX{0.0f};
         FontHandle defaultFont{0};
 
+        int clickCount{0};
+        double lastClickTime{0.0};
+
         struct RepeatState
         {
             float holdTime{0.0f};
@@ -450,4 +531,4 @@ namespace ZenitUI::UI
         };
         std::unordered_map<int, RepeatState> repeatStates;
     };
-} // namespace ZenitUI::UI
+}

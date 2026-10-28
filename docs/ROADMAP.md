@@ -882,15 +882,15 @@ Not blocking for beta, but needed for 1.0.
 
 ### 5.1 Text input (advanced)
 
-✅ **Done.** `TextInput` now supports selection, text replacement, and integration with the system clipboard via `IPlatform`. Mouse clipping restricts overflow.
+✅ **Done.** `TextInput` now supports selection, text replacement, and integration with the system clipboard via `IPlatform`. Mouse clipping restricts overflow. The Undo/Redo history stack and double/triple click selection have been implemented.
 
 - [x] Selection (shift+arrow, shift+home/end, mouse drag)
 - [x] Cut / copy / paste (`Ctrl+C`, `Ctrl+V`, `Ctrl+X`)
 - [x] Select all (`Ctrl+A`)
 - [x] Click-to-deselect / replace selection on type
-- [ ] Undo / redo (`Ctrl+Z`, `Ctrl+Y`) (Deferred)
-- [ ] Double-click to select word (Deferred)
-- [ ] Triple-click to select all (Deferred)
+- [x] Undo / redo (`Ctrl+Z`, `Ctrl+Y`) 
+- [x] Double-click to select word 
+- [x] Triple-click to select all
 
 ### 5.2 Font handling
 

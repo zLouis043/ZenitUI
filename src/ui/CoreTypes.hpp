@@ -186,6 +186,9 @@ namespace ZenitUI
         constexpr int C = 67;
         constexpr int V = 86;
         constexpr int X = 88;
+
+		constexpr int Y = 89;
+        constexpr int Z = 90;
 	}
 
 	struct InputEvents
