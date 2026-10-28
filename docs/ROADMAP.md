@@ -979,15 +979,12 @@ because it covers the per-primitive use case cleanly.
 
 ### 5.5 Nested render targets
 
-Currently the Raylib backend doesn't support nested targets, so a
-filtered node inside a filtered node falls back to inline. To lift
-this:
+✅ **Done.** `RaylibRenderer` now maintains a stack of active render targets and OpenGL matrices, allowing filtered nodes to be nested inside other filtered nodes seamlessly.
 
-- [ ] Implement a target stack in the backend
-- [ ] Update `isLayer` in `Layout::draw` to check
-      `supports(Feature::NestedTargets)`
-- [ ] Verify in tests
-- [ ] Update documentation
+- [x] Implement a target stack in the backend
+- [x] Update `isLayer` in `Layout::draw` to check `supports(Feature::NestedTargets)`
+- [x] Verify in tests
+- [x] Update documentation
 
 ### 5.6 Rotation in `drawLayer`
 

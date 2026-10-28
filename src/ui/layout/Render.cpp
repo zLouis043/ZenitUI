@@ -21,7 +21,7 @@ namespace ZenitUI
 			!renderStyle.filters.empty() &&
 			renderer->supports(Feature::Effects) &&
 			rect.width > 0.0f && rect.height > 0.0f &&
-			!renderer->inTarget(); // Raylib non ha texture mode annidate
+			(!renderer->inTarget() || renderer->supports(Feature::NestedTargets));
 
 		if (isLayer)
 			drawLayer(renderStyle, globalOp);
@@ -203,6 +203,14 @@ namespace ZenitUI
 			if (!layerScratch_.valid())
 				return;
 		}
+		if (!layerSeparable_.valid() || layerSeparable_.width != tw || layerSeparable_.height != th)
+		{
+			if (layerSeparable_.valid())
+				renderer->destroyTarget(layerSeparable_);
+			layerSeparable_ = renderer->createTarget(tw, th);
+			if (!layerSeparable_.valid())
+				return;
+		}
 
 		// Disegna il subtree nel layerTarget_.
 		// - region.x/y sono in screen; il translate -region li porta in (0,0) del target.
@@ -243,20 +251,6 @@ namespace ZenitUI
 		renderer->popTarget();
 
 		registerBuiltinFilters();
-
-		// Allocate the third target for Separable intermediates. It's only
-		// used by Separable filters, but allocating it unconditionally keeps
-		// the code simpler and the memory cost is bounded by the region size
-		// (same as the other two targets).
-		if (!layerSeparable_.valid() ||
-			layerSeparable_.width != tw || layerSeparable_.height != th)
-		{
-			if (layerSeparable_.valid())
-				renderer->destroyTarget(layerSeparable_);
-			layerSeparable_ = renderer->createTarget(tw, th);
-			if (!layerSeparable_.valid())
-				return;
-		}
 
 		FilterContext ctx;
 		ctx.renderer = renderer;
