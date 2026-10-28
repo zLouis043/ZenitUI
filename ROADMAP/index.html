@@ -3859,11 +3859,6 @@ require a bigger design decision.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>collectFocusables</code> doesn't skip disabled subtrees</td>
-<td><code>Layout.cpp</code></td>
-<td>Tab reaches disabled containers' children.</td>
-</tr>
-<tr>
 <td><code>Text</code> is <code>char</code>-based, not Unicode</td>
 <td><code>Text.hpp</code></td>
 <td>Text input and rendering are ASCII-only.</td>
@@ -3902,11 +3897,6 @@ require a bigger design decision.</p>
 <td><code>Popup</code> <code>closeOnEscape</code> doesn't reach the popup if focus is elsewhere</td>
 <td><code>Popup.hpp</code></td>
 <td>Known limitation.</td>
-</tr>
-<tr>
-<td><code>Dropdown</code> doesn't close on <code>Escape</code></td>
-<td><code>Dropdown.hpp</code></td>
-<td>Only closes on outside click.</td>
 </tr>
 <tr>
 <td><code>pressTarget</code> shared across mouse buttons</td>

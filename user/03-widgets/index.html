@@ -1368,6 +1368,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#interaction_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#internal-structure_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1406,45 +1417,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#14-canvas-render-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        14. Canvas (render target)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="14. Canvas (render target)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#c_11" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C++
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#15-modal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1457,7 +1429,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#c_12" class="md-nav__link">
+  <a href="#c_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         C++
@@ -1673,7 +1645,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#c_13" class="md-nav__link">
+  <a href="#c_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         C++
@@ -3410,6 +3382,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#interaction_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#internal-structure_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3448,45 +3431,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#14-canvas-render-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        14. Canvas (render target)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="14. Canvas (render target)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#c_11" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C++
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#15-modal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3499,7 +3443,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#c_12" class="md-nav__link">
+  <a href="#c_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         C++
@@ -3715,7 +3659,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#c_13" class="md-nav__link">
+  <a href="#c_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         C++
@@ -4582,6 +4526,11 @@ TextInput:hover::cursor {
     color: #FDF900;
     border-width: 10px;
 }
+
+TextInput::selection { 
+    background: #3282DC80; /* Blue, 50% opacity */ 
+}
+
 </code></pre>
 <p><code>::cursor</code> is the blinking caret. Its <code>border-width</code> becomes the caret
 thickness; its <code>color</code> becomes the caret color. Blink period is 1s
@@ -4709,6 +4658,11 @@ dd-&gt;onChange = [](int idx, const std::string&amp; name){
 </tr>
 </tbody>
 </table>
+<h3 id="interaction_2">Interaction</h3>
+<ul>
+<li><strong>Click</strong>: opens the list or selects an option.</li>
+<li><strong>Keyboard</strong>: When the Dropdown is focused, <code>Enter</code> or <code>Space</code> toggles the list. <code>Up</code> / <code>Down</code> arrows navigate and automatically scroll the items into view. <code>Escape</code> closes the list.</li>
+</ul>
 <h3 id="internal-structure_1">Internal structure</h3>
 <p><code>Dropdown::onBuild()</code> creates:</p>
 <ol>
@@ -4755,36 +4709,52 @@ parent-&gt;addChild(wrapper);
 <p>This is the recommended pattern when placing a dropdown inside an
 <code>HStack</code> or any other container that would otherwise let the trigger
 stretch to the full row width.</p>
-<p>Individual options inherit whatever styling you apply to <code>Label</code> inside
-the list. The list itself (<code>ScrollView</code>) can be targeted via
+<p>This is the recommended pattern when placing a dropdown inside an
+<code>HStack</code> or any other container that would otherwise let the trigger
+stretch to the full row width.</p>
+<p>The list itself (<code>ScrollView</code>) can be targeted via
 <code>Dropdown ScrollView { ... }</code>.</p>
-<h3 id="notes_2">Notes</h3>
-<ul>
-<li>The list is a portal, so it is <strong>not</strong> clipped by ancestor
-  <code>overflow: hidden</code>. This is the entire reason portals exist.</li>
-<li><code>setOpen(false)</code> when the dropdown is disabled — the implementation
-  closes it automatically in <code>onEnabledChanged</code>.</li>
-<li>The trigger's <code>height</code>, <code>background</code>, <code>radius</code>, <code>border-*</code>,
-  <code>items-h</code>, and <code>items-v</code> are all overridable via <code>.zstyle</code>. Only
-  <code>width: 100%</code> is fixed.</li>
-<li>If the trigger's text is invisible, check the trigger's padding
-  against its height. If <code>padding-top + padding-bottom</code> is larger than
-  the trigger's content box, the text gets clipped to zero height.</li>
-</ul>
-<hr />
-<h2 id="14-canvas-render-target">14. Canvas (render target)</h2>
-<p>A <code>CanvasLayout</code> renders its subtree into an offscreen render target,
+<p>Individual options are assigned the <code>.dropdown-item</code> class automatically. You can style them in <code>.zstyle</code>, and the Dropdown sets the <code>:checked</code> state on the active item:</p>
+<pre><code class="language-css">.dropdown-item {
+    background: #232328;
+    color: #FFFFFF;
+    transition: background 0.1s linear, color 0.1s linear;
+}
+.dropdown-item:hover { background: #3296FF60; }
+.dropdown-item:checked { background: #3296FF80; color: #FDF900; }
+
+### Notes
+
+- The list is a portal, so it is **not** clipped by ancestor
+  `overflow: hidden`. This is the entire reason portals exist.
+- `setOpen(false)` when the dropdown is disabled — the implementation
+  closes it automatically in `onEnabledChanged`.
+- The trigger's `height`, `background`, `radius`, `border-*`,
+  `items-h`, and `items-v` are all overridable via `.zstyle`. Only
+  `width: 100%` is fixed.
+- If the trigger's text is invisible, check the trigger's padding
+  against its height. If `padding-top + padding-bottom` is larger than
+  the trigger's content box, the text gets clipped to zero height.
+
+---
+
+## 14. Canvas (render target)
+
+A `CanvasLayout` renders its subtree into an offscreen render target,
 then draws that target as a texture. Useful for effects that need to be
-applied to a subtree as a whole, or for caching complex subtrees.</p>
-<h3 id="c_11">C++</h3>
-<pre><code class="language-cpp">auto canvas = std::make_shared&lt;CanvasLayout&gt;();
+applied to a subtree as a whole, or for caching complex subtrees.
+
+### C++
+
+```cpp
+auto canvas = std::make_shared&lt;CanvasLayout&gt;();
 canvas-&gt;size(Px(400), Px(300));
 canvas-&gt;addChild(someHeavySubtree);
 
 // Optional: apply a shader to the whole canvas
 canvas-&gt;setShader(assets.getEffect(&quot;hueShift&quot;));
 </code></pre>
-<h3 id="notes_3">Notes</h3>
+<h3 id="notes_2">Notes</h3>
 <ul>
 <li>The render target is <strong>recreated</strong> whenever the node's <code>rect</code> size
   changes.</li>
@@ -4799,7 +4769,7 @@ yourself via <code>ZMarkup::Registry::reg("Canvas", ...)</code>.</p>
 <h2 id="15-modal">15. Modal</h2>
 <p>A full-screen overlay with a centered content panel and an intro
 animation.</p>
-<h3 id="c_12">C++</h3>
+<h3 id="c_11">C++</h3>
 <pre><code class="language-cpp">auto modal = Modal::create();
 
 // modal-&gt;children[0] is the content VStack with class &quot;modal-content&quot;.
@@ -4930,6 +4900,7 @@ tip-&gt;hide();   // hides immediately
 <h3 id="positioning">Positioning</h3>
 <p>The tooltip is centered above its anchor, offset by <code>6px</code> vertically. If
 the anchor has not been measured yet, the tooltip is not positioned.</p>
+<p>If the tooltip would overflow the top edge of the viewport, it automatically flips to position itself below the anchor. It also clamps horizontally to always stay on screen.</p>
 <h3 id="styling_10">Styling</h3>
 <pre><code class="language-css">Tooltip {
     background: #000000E6;
@@ -5064,7 +5035,7 @@ animated by a state transition; the content can have its own animations.</p>
 <h2 id="18-vstack-hstack">18. VStack / HStack</h2>
 <p>Thin helpers that create a <code>Layout</code> of the right type and set the style
 tag. They're not classes.</p>
-<h3 id="c_13">C++</h3>
+<h3 id="c_12">C++</h3>
 <pre><code class="language-cpp">auto col = VStack({ Label(&quot;a&quot;), Label(&quot;b&quot;), Label(&quot;c&quot;) });
 auto row = HStack({ Btn(&quot;A&quot;), Btn(&quot;B&quot;) });
 
