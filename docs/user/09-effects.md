@@ -34,12 +34,10 @@ A node goes through the "layer" render path if **all** of these are true:
 - Its `ComputedStyle::filters` is non-empty.
 - The active renderer reports `supports(Feature::Effects) == true`.
 - Its `rect` has non-zero width and height.
-- It's **not** already inside a render target
-  (`renderer->inTarget() == false`).
+- It's **not** already inside a render target, OR the backend supports nested targets
+  (`!renderer->inTarget() || renderer->supports(Feature::NestedTargets)`).
 
-The last condition is important: the Raylib backend can't nest render
-targets, so a filtered node inside another layer falls back to inline
-rendering (no filter). See §7 for the implications.
+The reference Raylib backend supports nested render targets seamlessly, allowing filtered nodes to be safely nested inside other filtered layers.
 
 When the conditions are met, `Layout::drawLayer` runs:
 
@@ -688,25 +686,9 @@ pass an explicit `vsPath`.
 
 ## 7. Limitations and known issues
 
-### 7.1 No nested render targets
+### 7.1 Nested render targets
 
-The Raylib backend can't push a target while already inside one. The
-check in `drawLayer`:
-
-```cpp
-const bool isLayer =
-    !renderStyle.filters.empty() &&
-    renderer->supports(Feature::Effects) &&
-    rect.width > 0.0f && rect.height > 0.0f &&
-    !renderer->inTarget();  // <-- this
-```
-
-If a filtered node is inside another filtered node, the inner one falls
-back to `drawInline` — no filter applied. The subtree renders normally
-without the effect.
-
-Workaround: don't nest filters. If you need composition, use a `Custom`
-filter on the outer node that does the whole pipeline.
+Nested render targets are fully supported as long as the active backend implements `Feature::NestedTargets` (which the default Raylib backend does). A filtered node inside another filtered node will render correctly, maintaining its own isolated filter chain and compositing cleanly into the parent target.
 
 ### 7.2 Rotation ignored
 

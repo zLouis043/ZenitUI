@@ -73,7 +73,9 @@ namespace ZenitUI::Test
         std::vector<Transform2D> transformHistory;
 
         int pushTargetCount{0};
+        int activeTargetDepth{0};
         bool supportsEffects{false};
+        bool supportsNestedTargets{false};
         int pushEffectCount{0};
         EffectHandle lastPushedEffect{};
 
@@ -142,8 +144,16 @@ namespace ZenitUI::Test
             return TargetHandle{nextId++, w, h};
         }
         void destroyTarget(TargetHandle) override {}
-        void pushTarget(TargetHandle) override { pushTargetCount++; }
-        void popTarget() override {}
+        void pushTarget(TargetHandle) override
+        {
+            pushTargetCount++;
+            activeTargetDepth++;
+        }
+        void popTarget() override
+        {
+            if (activeTargetDepth > 0)
+                activeTargetDepth--;
+        }
         void drawTarget(TargetHandle, Rect, Color) override {}
 
         // Effetti shader
@@ -167,7 +177,7 @@ namespace ZenitUI::Test
         {
             capturedColor.push_back({name, value});
         }
-        bool inTarget() const override { return false; }
+        bool inTarget() const override { return activeTargetDepth > 0; }
         void clearTarget(TargetHandle, Color) override {}
 
         // Ciclo di frame (se hai aggiunto beginFrame/endFrame/setDpiScale a IRenderer)
@@ -179,6 +189,8 @@ namespace ZenitUI::Test
         {
             if (f == Feature::Effects)
                 return supportsEffects;
+            if (f == Feature::NestedTargets)
+                return supportsNestedTargets;
             return false;
         }
     };
@@ -429,9 +441,11 @@ namespace ZenitUI::Test
             renderer.pushClipCount = 0;
             renderer.popClipCount = 0;
             renderer.pushTargetCount = 0;
+            renderer.activeTargetDepth = 0;
             renderer.pushEffectCount = 0;
             renderer.lastPushedEffect = {};
             renderer.supportsEffects = false;
+            renderer.supportsNestedTargets = false;
             renderer.clipStack.clear();
             renderer.capturedFloat.clear();
             renderer.capturedVec2.clear();

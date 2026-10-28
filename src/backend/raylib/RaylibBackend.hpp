@@ -22,8 +22,8 @@ namespace ZenitUI
 		InputEvents pollInputEvents() override;
 		float dpiScale() override;
 		EdgeInsets safeArea() override;
-		void setClipboardText(const std::string& text) override;
-        std::string getClipboardText() override;
+		void setClipboardText(const std::string &text) override;
+		std::string getClipboardText() override;
 	};
 
 	class RaylibRenderer : public IRenderer
@@ -60,7 +60,10 @@ namespace ZenitUI
 		void popTarget() override;
 		void drawTarget(TargetHandle t, Rect dst, Color tint) override;
 
-		bool supports(Feature f) const override { return f == Feature::Effects; }
+		bool supports(Feature f) const override
+		{
+			return f == Feature::Effects || f == Feature::NestedTargets;
+		}
 
 		TextureHandle registerTexture(const ::Texture2D &t);
 		FontHandle registerFont(const ::Font &f);
@@ -81,11 +84,11 @@ namespace ZenitUI
 		void setDpiScale(float scale) override;
 
 	private:
-
 		void applyScissor(const Rect &clip);
 
 		struct TargetState
 		{
+			TargetHandle target{};
 			bool clipActive;
 			Rect currentClip;
 			std::vector<Rect> clipStack;
@@ -95,18 +98,18 @@ namespace ZenitUI
 		};
 		std::vector<TargetState> targetStates_;
 
-        std::vector<Rect> clipStack;
-        std::vector<Transform2D> transformStack;
+		std::vector<Rect> clipStack;
+		std::vector<Transform2D> transformStack;
 		std::vector<EffectHandle> effectStack_;
 		bool clipActive{false};
 		Rect currentClip{0, 0, 0, 0};
 		float dpiScale_{1.0f};
 		bool insideTarget_{false};
+		TargetHandle currentTarget_{};
 		int currentTargetW_{0};
 		int currentTargetH_{0};
 	};
 
-	// RaylibBackend.hpp
 	class RaylibAssetProvider : public IAssetProvider
 	{
 	public:

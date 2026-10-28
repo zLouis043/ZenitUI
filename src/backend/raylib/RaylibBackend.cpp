@@ -402,12 +402,24 @@ namespace ZenitUI
 		if (clipActive)
 			EndScissorMode();
 
-		targetStates_.push_back({clipActive, currentClip, clipStack, transformStack, currentTargetW_, currentTargetH_});
+		rlDrawRenderBatchActive();
+
+		// Svuotiamo le nostre trasformazioni dallo stack OpenGL prima che Raylib chiuda l'FBO!
+		for (size_t i = 0; i < transformStack.size(); ++i)
+			rlPopMatrix();
+
+		if (insideTarget_)
+			EndTextureMode();
+
+		targetStates_.push_back({currentTarget_, clipActive, currentClip, clipStack, transformStack, currentTargetW_, currentTargetH_});
 
 		clipActive = false;
 		clipStack.clear();
 		currentClip = {0.0f, 0.0f, (float)t.width, (float)t.height};
-		transformStack.clear();
+
+		transformStack.clear(); // Resettiamo per il nuovo target!
+
+		currentTarget_ = t;
 		currentTargetW_ = t.width;
 		currentTargetH_ = t.height;
 		insideTarget_ = true;
@@ -421,21 +433,29 @@ namespace ZenitUI
 		if (clipActive)
 			EndScissorMode();
 
-		EndTextureMode();
+		rlDrawRenderBatchActive();
+
+		// Svuotiamo eventuali trasformazioni rimaste appese in questo target
+		for (size_t i = 0; i < transformStack.size(); ++i)
+			rlPopMatrix();
+
+		EndTextureMode(); // Ora Raylib chiude l'FBO in totale sicurezza
 
 		if (!targetStates_.empty())
 		{
 			auto s = targetStates_.back();
 			targetStates_.pop_back();
+			currentTarget_ = s.target;
 			clipActive = s.clipActive;
 			currentClip = s.currentClip;
 			clipStack = s.clipStack;
-			transformStack = s.transformStack;
+			transformStack = s.transformStack; // Ripristiniamo la memoria delle trasformazioni!
 			currentTargetW_ = s.targetW;
 			currentTargetH_ = s.targetH;
 		}
 		else
 		{
+			currentTarget_ = {};
 			clipActive = false;
 			clipStack.clear();
 			currentClip = {0.0f, 0.0f, (float)GetScreenWidth() / dpiScale_, (float)GetScreenHeight() / dpiScale_};
@@ -444,10 +464,57 @@ namespace ZenitUI
 			currentTargetH_ = 0;
 		}
 
-		insideTarget_ = !targetStates_.empty();
+		insideTarget_ = currentTarget_.valid();
+
+		if (insideTarget_ && res.targets.count(currentTarget_.id))
+		{
+			BeginTextureMode(res.targets[currentTarget_.id]);
+		}
+
+		// RIAZZERIAMO le trasformazioni per il target (o schermo) ripristinato
+		for (const auto &tr : transformStack)
+		{
+			rlPushMatrix();
+			rlTranslatef(tr.pivot.x + tr.translate.x, tr.pivot.y + tr.translate.y, 0);
+			rlRotatef(tr.rotationDeg, 0, 0, 1);
+			rlScalef(tr.scale, tr.scale, 1);
+			rlTranslatef(-tr.pivot.x, -tr.pivot.y, 0);
+		}
 
 		if (clipActive)
 			applyScissor(currentClip);
+	}
+
+	TargetHandle RaylibRenderer::createTarget(int w, int h)
+	{
+		if (insideTarget_)
+		{
+			rlDrawRenderBatchActive();
+			for (size_t i = 0; i < transformStack.size(); ++i)
+				rlPopMatrix();
+			EndTextureMode();
+		}
+
+		uint32_t id = res.nextId++;
+		res.targets[id] = LoadRenderTexture(w, h);
+
+		if (insideTarget_ && res.targets.count(currentTarget_.id))
+		{
+			BeginTextureMode(res.targets[currentTarget_.id]);
+
+			for (const auto &tr : transformStack)
+			{
+				rlPushMatrix();
+				rlTranslatef(tr.pivot.x + tr.translate.x, tr.pivot.y + tr.translate.y, 0);
+				rlRotatef(tr.rotationDeg, 0, 0, 1);
+				rlScalef(tr.scale, tr.scale, 1);
+				rlTranslatef(-tr.pivot.x, -tr.pivot.y, 0);
+			}
+
+			if (clipActive)
+				applyScissor(currentClip);
+		}
+		return {id, w, h};
 	}
 
 	Rect RaylibRenderer::getClipRect() const
@@ -464,12 +531,6 @@ namespace ZenitUI
 		return clipActive ? currentClip : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
 	}
 
-	TargetHandle RaylibRenderer::createTarget(int w, int h)
-	{
-		uint32_t id = res.nextId++;
-		res.targets[id] = LoadRenderTexture(w, h);
-		return {id, w, h};
-	}
 	void RaylibRenderer::destroyTarget(TargetHandle t)
 	{
 		if (res.targets.count(t.id))

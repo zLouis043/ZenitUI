@@ -158,3 +158,66 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     CHECK(w30 >= 136);
     CHECK(h30 >= 136);
 }
+
+TEST(Filter_nested, falls_back_to_inline_when_nested_targets_unsupported)
+{
+    Env env;
+    env.renderer.supportsEffects = true;
+    env.renderer.supportsNestedTargets = false;
+    env.assets.registerEffect("fx");
+
+    FilterRegistry::get().add(FilterDef{
+        .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
+
+    auto outer = std::make_shared<Layout>(LayoutType::Stack);
+    outer->size(Px(200), Px(200));
+    outer->getInlineBase().filters = std::vector<FilterRef>{{"fx", {}}};
+
+    auto inner = std::make_shared<Layout>(LayoutType::Stack);
+    inner->size(Px(100), Px(100));
+    inner->getInlineBase().filters = std::vector<FilterRef>{{"fx", {}}};
+
+    outer->addChild(inner);
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(outer);
+
+    env.frame(root);
+
+    // Solo outer usa il layer target (1 pushTarget). Inner ripiega su inline.
+    CHECK(env.renderer.pushTargetCount == 1);
+    CHECK(env.renderer.activeTargetDepth == 0);
+}
+
+TEST(Filter_nested, renders_nested_layer_when_supported)
+{
+    Env env;
+    env.renderer.supportsEffects = true;
+    env.renderer.supportsNestedTargets = true;
+    env.assets.registerEffect("fx");
+
+    FilterRegistry::get().add(FilterDef{
+        .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
+
+    auto outer = std::make_shared<Layout>(LayoutType::Stack);
+    outer->size(Px(200), Px(200));
+    outer->getInlineBase().filters = std::vector<FilterRef>{{"fx", {}}};
+
+    auto inner = std::make_shared<Layout>(LayoutType::Stack);
+    inner->size(Px(100), Px(100));
+    inner->getInlineBase().filters = std::vector<FilterRef>{{"fx", {}}};
+
+    outer->addChild(inner);
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(outer);
+
+    env.frame(root);
+
+    // Sia outer che inner usano il proprio layer target (2 pushTarget totali)
+    // e lo stack torna a profondità 0 a fine frame.
+    CHECK(env.renderer.pushTargetCount == 2);
+    CHECK(env.renderer.activeTargetDepth == 0);
+}
