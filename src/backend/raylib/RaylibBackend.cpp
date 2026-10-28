@@ -74,6 +74,8 @@ namespace ZenitUI
 			{KEY_ESCAPE, Key::Escape},
 			{KEY_LEFT, Key::Left},
 			{KEY_RIGHT, Key::Right},
+			{KEY_UP, Key::Up},
+			{KEY_DOWN, Key::Down},
 			{KEY_HOME, Key::Home},
 			{KEY_END, Key::End},
 			{KEY_TAB, Key::Tab},

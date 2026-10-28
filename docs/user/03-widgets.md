@@ -727,6 +727,11 @@ TextInput:hover::cursor {
     color: #FDF900;
     border-width: 10px;
 }
+
+TextInput::selection { 
+    background: #3282DC80; /* Blue, 50% opacity */ 
+}
+
 ```
 
 `::cursor` is the blinking caret. Its `border-width` becomes the caret
@@ -839,6 +844,11 @@ ui.find<Dropdown>("diff")->onChange = [](int i, const std::string& n){ /* ... */
 | `getOpen()` / `setOpen(bool)` | Control the open state. |
 | `onChange` | `std::function<void(int, const std::string&)>`. |
 
+### Interaction
+
+- **Click**: opens the list or selects an option.
+- **Keyboard**: When the Dropdown is focused, `Enter` or `Space` toggles the list. `Up` / `Down` arrows navigate and automatically scroll the items into view. `Escape` closes the list.
+
 ### Internal structure
 
 `Dropdown::onBuild()` creates:
@@ -895,9 +905,23 @@ This is the recommended pattern when placing a dropdown inside an
 `HStack` or any other container that would otherwise let the trigger
 stretch to the full row width.
 
-Individual options inherit whatever styling you apply to `Label` inside
-the list. The list itself (`ScrollView`) can be targeted via
+This is the recommended pattern when placing a dropdown inside an
+`HStack` or any other container that would otherwise let the trigger
+stretch to the full row width.
+
+The list itself (`ScrollView`) can be targeted via
 `Dropdown ScrollView { ... }`.
+
+Individual options are assigned the `.dropdown-item` class automatically. You can style them in `.zstyle`, and the Dropdown sets the `:checked` state on the active item:
+
+```css
+.dropdown-item {
+    background: #232328;
+    color: #FFFFFF;
+    transition: background 0.1s linear, color 0.1s linear;
+}
+.dropdown-item:hover { background: #3296FF60; }
+.dropdown-item:checked { background: #3296FF80; color: #FDF900; }
 
 ### Notes
 
@@ -1075,6 +1099,8 @@ tip->hide();   // hides immediately
 
 The tooltip is centered above its anchor, offset by `6px` vertically. If
 the anchor has not been measured yet, the tooltip is not positioned.
+
+If the tooltip would overflow the top edge of the viewport, it automatically flips to position itself below the anchor. It also clamps horizontally to always stay on screen.
 
 ### Styling
 

@@ -299,3 +299,42 @@ TEST(Dropdown_callbacks, onOpenChanged_fires_on_disable_close)
     CHECK(calls == 1);
     CHECK(lastValue == false);
 }
+
+// ---- keyboard navigation ---------------------------------------------
+TEST(Dropdown_keyboard, navigation_and_escape) {
+    Env env;
+    auto s = makeDropdown(env, {"A", "B", "C"}, 0);
+    
+    // Assegna il focus al dropdown
+    UIContext::get().requestFocus(s.dd);
+    env.frame(s.root);
+    
+    // Freccia Giù -> Apre la tendina
+    env.platform.pressKey(Key::Down);
+    env.frame(s.root);
+    CHECK(s.dd->getOpen());
+    
+    // Freccia Giù -> Seleziona "B" (1)
+    env.platform.pressKey(Key::Down);
+    env.frame(s.root);
+    CHECK(s.dd->getSelected() == 1);
+    
+    // Escape -> Chiude la tendina
+    env.platform.pressKey(Key::Escape);
+    env.frame(s.root);
+    CHECK(!s.dd->getOpen());
+    CHECK(s.dd->getSelected() == 1);
+}
+
+TEST(Dropdown_styling, items_use_checked_state) {
+    Env env;
+    auto s = makeDropdown(env, {"A", "B", "C"}, 1); // Seleziona "B"
+    s.dd->setOpen(true);
+    env.frame(s.root);
+    env.frame(s.root);
+    
+    auto listContainer = s.dd->children[1];
+    CHECK(!listContainer->children[0]->isCheckedState());
+    CHECK(listContainer->children[1]->isCheckedState()); // L'elemento "B" deve avere il flag checked
+    CHECK(!listContainer->children[2]->isCheckedState());
+}

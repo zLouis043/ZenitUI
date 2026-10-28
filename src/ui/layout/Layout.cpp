@@ -147,6 +147,8 @@ namespace ZenitUI
 
 	static void collectFocusables(Layout *node, std::vector<Layout *> &out)
 	{
+		if (!node->getEnabled())
+			return;
 		if (node->isFocusable())
 			out.push_back(node);
 		for (auto &c : node->children)

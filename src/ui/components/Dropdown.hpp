@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Common.hpp"
 #include "Layout.hpp"
 #include "Button.hpp"
@@ -8,7 +7,6 @@
 
 namespace ZenitUI::UI
 {
-
     class Dropdown : public TLayout<Dropdown>
     {
     public:
@@ -17,18 +15,21 @@ namespace ZenitUI::UI
               options(std::move(options)), selected(selected) {}
 
         int getSelected() const { return selected; }
+
         void setSelected(int idx)
         {
             if (idx < 0 || idx >= (int)options.size())
                 return;
             selected = idx;
             refreshButtonText();
+            updateListStyles();
             if (onChange)
                 onChange(selected, options[selected]);
             internal_.pendingTransition = 1;
         }
 
         bool getOpen() const { return isOpen; }
+
         void setOpen(bool o)
         {
             if (isOpen == o)
@@ -56,20 +57,71 @@ namespace ZenitUI::UI
 
         void onUpdate(float) override
         {
-            // Forza re-arrange del Dropdown (e quindi riposizionamento del
-            // listContainer) ad ogni frame finché è aperto.
             if (isOpen)
                 internal_.pendingTransition = 1;
 
+            auto &ctx = UIContext::get();
+
+            // --- GESTIONE TASTIERA ---
+            if (ctx.hasFocus(this))
+            {
+                for (int k : ctx.inputEvents.keys)
+                {
+                    if (k == Key::Escape)
+                    {
+                        if (isOpen)
+                            setOpen(false); // Escape chiude il menù
+                    }
+                    else if (k == Key::Down)
+                    {
+                        if (!isOpen)
+                        {
+                            setOpen(true);
+                        }
+                        else
+                        {
+                            int next = std::min(selected + 1, (int)options.size() - 1);
+                            if (next != selected)
+                            {
+                                setSelected(next);
+                                if (listContainer && next < (int)listContainer->children.size())
+                                    listContainer->children[next]->scrollIntoView();
+                            }
+                        }
+                    }
+                    else if (k == Key::Up)
+                    {
+                        if (isOpen)
+                        {
+                            int prev = std::max(selected - 1, 0);
+                            if (prev != selected)
+                            {
+                                setSelected(prev);
+                                if (listContainer && prev < (int)listContainer->children.size())
+                                    listContainer->children[prev]->scrollIntoView();
+                            }
+                        }
+                    }
+                    else if (k == Key::Enter || k == Key::Space)
+                    {
+                        setOpen(!isOpen); // Toggle apertura
+                        if (isOpen && listContainer && selected < (int)listContainer->children.size())
+                            listContainer->children[selected]->scrollIntoView();
+                    }
+                }
+            }
+
             if (!isOpen)
                 return;
-            auto &ctx = UIContext::get();
-            if (!ctx.pointer[MouseButton::Left].pressed)
-                return;
-            if (!rect.contains(ctx.pointer.pos) &&
-                !listContainer->getRect().contains(ctx.pointer.pos))
+
+            // --- Click fuori per chiudere ---
+            if (ctx.pointer[MouseButton::Left].pressed || ctx.pointer[MouseButton::Right].pressed)
             {
-                setOpen(false);
+                if (!rect.contains(ctx.pointer.pos) &&
+                    !listContainer->getRect().contains(ctx.pointer.pos))
+                {
+                    setOpen(false);
+                }
             }
         }
 
@@ -77,20 +129,20 @@ namespace ZenitUI::UI
         {
             setStyleTag("Dropdown");
             setInteractive(true);
-            setFocusable(true);
+            setFocusable(true); // Il Dropdown stesso riceve il focus
             internal_.pendingTransition = 1;
-
             getInlineBase().position = Position::Relative;
             getInlineBase().zIndex = ZIndex(10);
 
+            // Il bottone interno propaga il focus al Dropdown
             button = Btn("", [this]()
-                         { toggleOpen(); });
+                         { 
+                UIContext::get().requestFocus(shared_from_this());
+                toggleOpen(); });
             button->cls("dropdown-trigger");
+            button->setFocusable(false); // Disabilita tab stop sul bottone figlio
 
-            // --- inlineBase: proprietà strutturali, non override-abili ---
             button->getInlineBase().width = Percent(100);
-
-            // --- inlineDefaults: cosmetici, CSS può sovrascriverli ---
             button->getInlineDefaults().height = VH(3.0f);
             button->getInlineDefaults().background = Color{40, 40, 45, 255};
             button->getInlineDefaults().radius = Px(6.0f);
@@ -101,12 +153,9 @@ namespace ZenitUI::UI
             addChild(button);
 
             listContainer = std::make_shared<ScrollView>();
-
-            // --- inlineBase: posizionamento, strutturale ---
             listContainer->getInlineBase().position = Position::Absolute;
             listContainer->setPortal(true);
 
-            // --- inlineDefaults: cosmetici ---
             listContainer->getInlineDefaults().width = VW(15.0f);
             int visibleRows = std::min((int)options.size(), 6);
             listContainer->getInlineDefaults().height = VH(2.0f + visibleRows * 4.0f);
@@ -121,14 +170,15 @@ namespace ZenitUI::UI
             {
                 int idx = (int)i;
                 auto item = Label(options[i]);
+                item->cls("dropdown-item");
                 item->getInlineBase().padding = Spacing(VH(1.0f), VW(1.0f));
                 item->getInlineBase().itemsV = Align::Center;
-                item->getInlineBase().background = Color{40, 40, 50, 255};
-                item->getInlineBase().color = Colors::White;
                 item->setInteractive(true);
-                item->setFocusable(true);
+                item->setFocusable(false); // Niente tab stop per le voci
+
                 item->onClick = [this, idx]()
                 {
+                    UIContext::get().requestFocus(shared_from_this());
                     setSelected(idx);
                     setOpen(false);
                 };
@@ -138,6 +188,7 @@ namespace ZenitUI::UI
             isOpen = false;
             applyOpenState();
             refreshButtonText();
+            updateListStyles();
         }
 
         void arrange(Rect space) override
@@ -146,10 +197,8 @@ namespace ZenitUI::UI
             if (!button || !listContainer)
                 return;
 
-            // btnRect è in coord "base" (appena posizionato da arrangeInto).
             Rect btnRect = button->getRect();
 
-            // Trova il primo antenato scrollabile/clippante.
             Layout *clipAncestor = nullptr;
             Layout *p = getParent().get();
             while (p)
@@ -164,7 +213,6 @@ namespace ZenitUI::UI
                 p = p->getParent().get();
             }
 
-            // clip è in SCREEN coords (il container dello scroll non si muove).
             Rect clip;
             float scrollX = 0.0f;
             float scrollY = 0.0f;
@@ -179,10 +227,6 @@ namespace ZenitUI::UI
                 clip = {0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
             }
 
-            // Il button (figlio non-portal del Dropdown) verrà traslato da
-            // applyOffsetDelta. Per portarlo in screen coords sottraiamo lo
-            // scroll dell'antenato. Il listContainer invece è un portal e NON
-            // verrà traslato: lo posizioniamo direttamente in screen coords.
             const float btnScreenX = btnRect.x - scrollX;
             const float btnScreenY = btnRect.y - scrollY;
 
@@ -194,16 +238,14 @@ namespace ZenitUI::UI
 
             if (listH <= spaceBelow)
             {
-                // Sta sotto: default.
+                // Sta sotto
             }
             else if (listH <= spaceAbove)
             {
-                // Flip: più spazio sopra.
                 desiredY = btnScreenY - listH - 4.0f;
             }
             else
             {
-                // Non sta da nessuna parte: prendi la metà più grande e riduci.
                 if (spaceBelow >= spaceAbove)
                 {
                     listH = std::max(20.0f, spaceBelow);
@@ -245,6 +287,17 @@ namespace ZenitUI::UI
             if (t)
                 t->setText(options[selected]);
         }
-    };
 
+        void updateListStyles()
+        {
+            if (!listContainer)
+                return;
+            for (size_t i = 0; i < listContainer->children.size(); ++i)
+            {
+                auto &item = listContainer->children[i];
+                // Affidiamo tutto allo stato CSS!
+                item->setChecked((int)i == selected);
+            }
+        }
+    };
 } // namespace ZenitUI::UI
