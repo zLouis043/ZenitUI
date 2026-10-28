@@ -3202,15 +3202,12 @@ shaders. Not worth it for a rare use case.</p>
 single-pass <code>Custom</code> filter, but the current split is preserved
 because it covers the per-primitive use case cleanly.</p>
 <h3 id="55-nested-render-targets">5.5 Nested render targets</h3>
-<p>Currently the Raylib backend doesn't support nested targets, so a
-filtered node inside a filtered node falls back to inline. To lift
-this:</p>
+<p>✅ <strong>Done.</strong> <code>RaylibRenderer</code> now maintains a stack of active render targets and OpenGL matrices, allowing filtered nodes to be nested inside other filtered nodes seamlessly.</p>
 <ul>
-<li>[ ] Implement a target stack in the backend</li>
-<li>[ ] Update <code>isLayer</code> in <code>Layout::draw</code> to check
-      <code>supports(Feature::NestedTargets)</code></li>
-<li>[ ] Verify in tests</li>
-<li>[ ] Update documentation</li>
+<li>[x] Implement a target stack in the backend</li>
+<li>[x] Update <code>isLayer</code> in <code>Layout::draw</code> to check <code>supports(Feature::NestedTargets)</code></li>
+<li>[x] Verify in tests</li>
+<li>[x] Update documentation</li>
 </ul>
 <h3 id="56-rotation-in-drawlayer">5.6 Rotation in <code>drawLayer</code></h3>
 <p>The transformed bounding box used for the filter region now accounts

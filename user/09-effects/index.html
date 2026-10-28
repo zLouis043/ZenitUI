@@ -1127,10 +1127,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#71-no-nested-render-targets" class="md-nav__link">
+  <a href="#71-nested-render-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.1 No nested render targets
+        7.1 Nested render targets
       
     </span>
   </a>
@@ -2370,10 +2370,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#71-no-nested-render-targets" class="md-nav__link">
+  <a href="#71-nested-render-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.1 No nested render targets
+        7.1 Nested render targets
       
     </span>
   </a>
@@ -2551,12 +2551,10 @@ as a styling property.</p>
 <li>Its <code>ComputedStyle::filters</code> is non-empty.</li>
 <li>The active renderer reports <code>supports(Feature::Effects) == true</code>.</li>
 <li>Its <code>rect</code> has non-zero width and height.</li>
-<li>It's <strong>not</strong> already inside a render target
-  (<code>renderer-&gt;inTarget() == false</code>).</li>
+<li>It's <strong>not</strong> already inside a render target, OR the backend supports nested targets
+  (<code>!renderer-&gt;inTarget() || renderer-&gt;supports(Feature::NestedTargets)</code>).</li>
 </ul>
-<p>The last condition is important: the Raylib backend can't nest render
-targets, so a filtered node inside another layer falls back to inline
-rendering (no filter). See §7 for the implications.</p>
+<p>The reference Raylib backend supports nested render targets seamlessly, allowing filtered nodes to be safely nested inside other filtered layers.</p>
 <p>When the conditions are met, <code>Layout::drawLayer</code> runs:</p>
 <ol>
 <li>Computes the transformed bounding box of the node
@@ -3146,20 +3144,8 @@ Raylib's <code>LoadShader</code>. The vertex shader is Raylib's default unless y
 pass an explicit <code>vsPath</code>.</p>
 <hr />
 <h2 id="7-limitations-and-known-issues">7. Limitations and known issues</h2>
-<h3 id="71-no-nested-render-targets">7.1 No nested render targets</h3>
-<p>The Raylib backend can't push a target while already inside one. The
-check in <code>drawLayer</code>:</p>
-<pre><code class="language-cpp">const bool isLayer =
-    !renderStyle.filters.empty() &amp;&amp;
-    renderer-&gt;supports(Feature::Effects) &amp;&amp;
-    rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f &amp;&amp;
-    !renderer-&gt;inTarget();  // &lt;-- this
-</code></pre>
-<p>If a filtered node is inside another filtered node, the inner one falls
-back to <code>drawInline</code> — no filter applied. The subtree renders normally
-without the effect.</p>
-<p>Workaround: don't nest filters. If you need composition, use a <code>Custom</code>
-filter on the outer node that does the whole pipeline.</p>
+<h3 id="71-nested-render-targets">7.1 Nested render targets</h3>
+<p>Nested render targets are fully supported as long as the active backend implements <code>Feature::NestedTargets</code> (which the default Raylib backend does). A filtered node inside another filtered node will render correctly, maintaining its own isolated filter chain and compositing cleanly into the parent target.</p>
 <h3 id="72-rotation-ignored">7.2 Rotation ignored</h3>
 <p><code>drawLayer</code> computes the transformed bounding box from <code>scale</code> and
 <code>translate</code>, but not <code>rotation</code>. A rotated node with a filter will have
