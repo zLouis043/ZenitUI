@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793188161851,
+  "lastUpdate": 1793190407803,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -5116,6 +5116,150 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.large1000",
             "value": 552.689,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "53359e679ec218e8e12c0834d99980b9c4d28eb3",
+          "message": "Fixed drowdown navigation, text selection and disabled focus. Added separated styling options for selection box in the Textinput and for dropdown items.",
+          "timestamp": "2026-10-28T13:25:31+01:00",
+          "tree_id": "eabfb900550b0da4f95a2a50d5261b15240dc25e",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/53359e679ec218e8e12c0834d99980b9c4d28eb3"
+        },
+        "date": 1793190406992,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 390.467,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 6.27948,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.0129263,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0598219,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0463681,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.991597,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 1.21185,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 1.09777,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.501376,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 1.03133,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 52.3349,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 59.9866,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 15.9553,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 13.0636,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 37.9745,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00941415,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 50.8252,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 385.051,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 55.3598,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 141.276,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 106.25,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 58.3664,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 144.265,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 542.225,
             "unit": "us"
           }
         ]
