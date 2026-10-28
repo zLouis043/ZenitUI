@@ -698,6 +698,9 @@ manually for click-to-position.
 - `Ctrl + C` / `Ctrl + X` / `Ctrl + V` — copy, cut, and paste integration with the OS clipboard.
 - `Enter` — fires `onSubmit`, then releases focus.
 - `Escape` — releases focus without submitting.
+- `Double-click` — select the word under the cursor.
+- `Triple-click` — select the entire text.
+- `Ctrl + Z` / `Ctrl + Y` (or `Ctrl + Shift + Z`) — undo and redo typing history (up to 50 steps).
 
 Key repeat uses a 0.40s initial delay and 0.04s interval.
 

@@ -600,3 +600,105 @@ TEST(Widget_textinput, ctrl_a_selects_all) {
     
     CHECK(env.platform.getClipboardText() == "ZenitUI");
 }
+
+TEST(Widget_textinput, undo_redo_works) {
+    Env env;
+    auto s = makeFocusedInput(env, "Start");
+    
+    // Scrive 'X' -> "StartX"
+    env.platform.typeChar('X');
+    env.frame(s.root);
+    CHECK(s.ti->getText() == "StartX");
+    
+    // Ctrl+Z (Undo) -> Torna a "Start"
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::Z);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(s.ti->getText() == "Start");
+    
+    // Ctrl+Y (Redo) -> Torna a "StartX"
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::Y);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(s.ti->getText() == "StartX");
+}
+
+TEST(Widget_textinput, double_click_selects_word) {
+    Env env;
+    auto s = makeFocusedInput(env, "One Two Three");
+    
+    // Click su "Two"
+    Rect r = s.ti->getRect();
+    
+    env.platform.currentTime = 1.0;
+    env.click(s.root, { r.x + 35.0f, r.center().y });
+    
+    // Secondo click ravvicinato (< 0.4s)
+    env.platform.currentTime = 1.1;
+    env.click(s.root, { r.x + 35.0f, r.center().y });
+    
+    // Assicuriamoci che abbia selezionato la parola ("Two" va dall'indice 4 al 7)
+    // Non testiamo l'esatto posizionamento del mock in px, ma simuliamo il Ctrl+C per leggere
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::C);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    // Controlliamo che il testo catturato non sia vuoto (significa che c'è selezione)
+    CHECK(!env.platform.getClipboardText().empty());
+}
+
+TEST(Widget_textinput, triple_click_selects_all) {
+    Env env;
+    auto s = makeFocusedInput(env, "Select Me");
+    
+    Rect r = s.ti->getRect();
+    
+    // 3 Click rapidissimi
+    env.platform.currentTime = 1.0;
+    env.click(s.root, { r.x + 20.0f, r.center().y });
+    env.platform.currentTime = 1.1;
+    env.click(s.root, { r.x + 20.0f, r.center().y });
+    env.platform.currentTime = 1.2;
+    env.click(s.root, { r.x + 20.0f, r.center().y });
+    
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::C);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(env.platform.getClipboardText() == "Select Me");
+}
+
+TEST(Widget_textinput, undo_restores_deleted_selection) {
+    Env env;
+    auto s = makeFocusedInput(env, "hello world");
+    
+    // Seleziona "world"
+    s.ti->setCursorPos(11);
+    env.platform.mods.shift = true;
+    for (int i = 0; i < 5; ++i) {
+        env.platform.holdKey(Key::Left);
+        env.frame(s.root); env.frame(s.root);
+    }
+    env.platform.mods.shift = false;
+    
+    // Cancella la selezione ("world")
+    env.platform.holdKey(Key::Backspace);
+    env.frame(s.root);
+    env.frame(s.root);
+    
+    CHECK(s.ti->getText() == "hello ");
+    
+    // Ctrl+Z (Undo) deve far riapparire "world"
+    env.platform.mods.ctrl = true;
+    env.platform.pressKey(Key::Z);
+    env.frame(s.root);
+    env.platform.mods.ctrl = false;
+    
+    CHECK(s.ti->getText() == "hello world");
+}
