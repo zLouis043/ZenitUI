@@ -2191,6 +2191,8 @@ Popup, Tooltip.</p>
 <p><strong>Property</strong>
 An entry in <code>Style</code> / <code>ComputedStyle</code> (e.g. <code>width</code>, <code>background</code>).
 Every property is defined by the <code>BUBBLE_STYLE_PROPS</code> macro.</p>
+<p><strong>Prefab</strong>
+A reusable ZMarkup component registered via <code>ZMarkup::registerPrefab</code>. It parses a ZMarkup string into an AST once. When instantiated in a markup string, the AST is cloned, its root attributes are merged with the instance's attributes, and any provided children are injected into its <strong>Slot</strong>.</p>
 <hr />
 <h2 id="r">R</h2>
 <p><strong>Rect</strong>
@@ -2220,6 +2222,8 @@ can exceed its size, and can be scrolled via wheel, drag, or
 <p><strong>Selector (<code>.zstyle</code>)</strong>
 The left-hand side of a rule. A chain of compound selectors joined by
 descendant relationships. May include states and a <code>::part</code>.</p>
+<p><strong>Slot</strong>
+A special ZMarkup tag (<code>&lt;Slot&gt;</code>) used exclusively inside a <strong>Prefab</strong> definition. It acts as an injection point for children passed when the Prefab is instantiated. If left empty during instantiation, it can render fallback children defined inside the Prefab.</p>
 <p><strong>Specificity</strong>
 The triple <code>(ids, classes, tags)</code> used to rank rules of equal origin.
 Compared lexicographically.</p>

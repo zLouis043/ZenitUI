@@ -1650,6 +1650,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#prefabs-and-slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefabs and Slots
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2694,6 +2705,20 @@ root-&gt;addChild(ui.root());
 <h3 id="manual-lookup">Manual lookup</h3>
 <pre><code class="language-cpp">auto node   = ui.find(&quot;ok&quot;);                  // shared_ptr&lt;Layout&gt;
 auto slider = ui.find&lt;Slider&gt;(&quot;volume&quot;);      // typed
+</code></pre>
+<h3 id="prefabs-and-slots">Prefabs and Slots</h3>
+<p>Define a reusable component in C++ (parsed only once):</p>
+<pre><code class="language-cpp">ZMarkup::registerPrefab(&quot;Card&quot;, R&quot;(
+    VStack.card-base {
+        Text &quot;{title:Default}&quot;
+        Slot
+    }
+)&quot;);
+</code></pre>
+<p>Instantiate it in ZMarkup. Root attributes are merged, children are injected into the <code>&lt;Slot&gt;</code>:</p>
+<pre><code class="language-zmarkup">Card.highlighted#myCard --title=&quot;Custom Title&quot; width=&quot;100%&quot; {
+    Button &quot;Injected Action&quot;
+}
 </code></pre>
 <hr />
 <h2 id="12-loading-stylesheets">12. Loading stylesheets</h2>

@@ -935,6 +935,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-prefabs-and-slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prefabs and Slots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Prefabs and Slots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-registering-a-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Registering a Prefab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-instantiating-a-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Instantiating a Prefab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-root-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Root Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#10-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2145,6 +2195,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-prefabs-and-slots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prefabs and Slots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Prefabs and Slots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-registering-a-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Registering a Prefab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-instantiating-a-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Instantiating a Prefab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-root-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Root Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#10-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2953,6 +3053,36 @@ properties in <code>.zstyle</code>.</p>
   returned by the factory, and the registry skips the element silently
   (including its children).</li>
 </ul>
+<h2 id="6-prefabs-and-slots">6. Prefabs and Slots</h2>
+<p>For complex, repeatable UI containers (like a custom card, a list item, or a settings row), you can define a <code>Prefab</code>. A Prefab is a ZMarkup AST parsed once and registered under a custom tag name.</p>
+<p>When you instantiate a Prefab, you can pass custom styling attributes which are automatically merged into the Prefab's root node. You can also inject child nodes into a designated <code>&lt;Slot&gt;</code> within the Prefab.</p>
+<h3 id="61-registering-a-prefab">6.1 Registering a Prefab</h3>
+<p>Register a prefab in C++ before calling <code>ZMarkup::build</code>. The <code>&lt;Slot&gt;</code> tag marks where children will be injected:</p>
+<pre><code class="language-cpp">ZenitUI::ZMarkup::registerPrefab(&quot;SettingsRow&quot;, R&quot;(
+    HStack width=&quot;100%&quot; justify=&quot;space-between&quot; items-v=&quot;center&quot; background=&quot;#2A2A32&quot; padding=&quot;10px&quot; radius=&quot;6px&quot; {
+        Slot {
+            // Default children if none are provided
+            Text &quot;Empty Row&quot;
+        }
+    }
+)&quot;);
+</code></pre>
+<h3 id="62-instantiating-a-prefab">6.2 Instantiating a Prefab</h3>
+<p>Use the registered tag name in your main markup. The children you provide will replace the <code>&lt;Slot&gt;</code>.</p>
+<pre><code class="language-zmarkup">VStack {
+    // Injecting two elements. Because the prefab is an HStack with space-between,
+    // the Text goes to the left and the Toggle to the right.
+    SettingsRow {
+        Text color=&quot;#A0A0A0&quot; &quot;Fullscreen&quot;
+        Toggle#fs_toggle checked=true
+    }
+}
+</code></pre>
+<h3 id="63-root-merging">6.3 Root Merging</h3>
+<p>Attributes applied to the prefab instance tag (<code>.class</code>, <code>#id</code>, <code>@ref</code>, inline styles) are merged into the prefab's root node.</p>
+<pre><code class="language-zmarkup">SettingsRow.highlighted-row#row1@main_row width=&quot;50%&quot; { ... }
+</code></pre>
+<p>Here, <code>.highlighted-row</code>, <code>#row1</code>, <code>@main_row</code>, and <code>width="50%"</code> are applied directly to the root <code>HStack</code> defined in the <code>SettingsRow</code> prefab.</p>
 <hr />
 <h2 id="10-pitfalls">10. Pitfalls</h2>
 <p><strong>Forgetting <code>.create()</code>.</strong></p>

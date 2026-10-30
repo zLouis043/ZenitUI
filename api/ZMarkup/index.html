@@ -1219,6 +1219,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#registerprefab-registerprefabfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        registerPrefab / registerPrefabFile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#extending-with-custom-tags" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2142,6 +2153,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#registerprefab-registerprefabfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        registerPrefab / registerPrefabFile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#extending-with-custom-tags" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2631,7 +2653,8 @@ public:
     void reg(const std::string&amp; tag, Factory f);
 
     std::shared_ptr&lt;Layout&gt; create(const Element&amp; el, BuildContext&amp; ctx);
-
+    void registerPrefab(const std::string&amp; tagName, const std::string&amp; markupSource);
+    bool registerPrefabFile(const std::string&amp; tagName, const std::filesystem::path&amp; path);
 private:
     std::unordered_map&lt;std::string, Factory&gt; factories;
 };
@@ -2758,6 +2781,24 @@ unknown keys.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="registerprefab-registerprefabfile"><code>registerPrefab</code> / <code>registerPrefabFile</code></h3>
+<pre><code class="language-cpp">void registerPrefab(const std::string&amp; tagName, const std::string&amp; markupSource);
+bool registerPrefabFile(const std::string&amp; tagName, const std::filesystem::path&amp; path);
+</code></pre>
+<p>Parses a ZMarkup string once and registers it as a reusable component under <code>tagName</code>.</p>
+<p>When <code>tagName</code> is encountered during <code>build()</code>:</p>
+<ol>
+<li>
+<p>The cached AST (<code>Element</code>) is cloned.</p>
+</li>
+<li>
+<p>Root merging occurs: the instance's <code>.classes</code>, <code>#id</code>, <code>@ref</code>, and inline attributes are merged directly into the cloned root.</p>
+</li>
+<li>
+<p>The AST is traversed. If a <code>&lt;Slot&gt;</code> tag is encountered, the children provided to the instance are injected in its place as flat siblings. If no children were provided, the <code>&lt;Slot&gt;</code>'s default children are used.</p>
+</li>
+</ol>
+<p>This allows the creation of high-performance, complex composite widgets entirely in ZMarkup, completely eliminating C++ boilerplate for repetitive UI structures.</p>
 <h3 id="extending-with-custom-tags">Extending with custom tags</h3>
 <pre><code class="language-cpp">ZMarkup::Registry reg;
 ZMarkup::registerBuiltins(reg);   // start with defaults

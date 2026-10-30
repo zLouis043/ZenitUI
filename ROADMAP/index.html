@@ -2124,6 +2124,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#518-uiprefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.18 UIPrefab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#519-slot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.19 &lt;Slot&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3726,6 +3748,10 @@ applies, but UI use is fine.</p>
 <li>[x] Update <code>docs/architecture/PROPOSALS.md</code> (mark Proposal 2 shipped)</li>
 <li>[x] Add <code>examples/12_bindable</code> — model → 3 widgets, <code>bindTo</code> lifetime safety demonstrated live (follow-up commit)</li>
 </ul>
+<h3 id="518-uiprefab">5.18 UIPrefab</h3>
+<p>✅ <strong>Done.</strong> <code>ZMarkup::registerPrefab</code> parses a ZMarkup string once. Instantiation clones the AST, merges root attributes (<code>.class</code>, <code>#id</code>, <code>@ref</code>, inline styles), and provides blazing fast reusable components.</p>
+<h3 id="519-slot">5.19 <code>&lt;Slot&gt;</code></h3>
+<p>✅ <strong>Done.</strong> The <code>Slot</code> tag inside a Prefab acts as an injection point for children passed during instantiation. Supports default fallback content.</p>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>
