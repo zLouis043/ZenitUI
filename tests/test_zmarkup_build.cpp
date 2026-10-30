@@ -599,3 +599,82 @@ TEST(ZMarkupBuild, ref_typesafe_lookup)
     CHECK(as_button != nullptr);
     CHECK(as_button->getStyleTag() == "Button");
 }
+
+// ============================================================
+//  Prefabs & Slots
+// ============================================================
+
+TEST(ZMarkupBuild, prefab_instantiation_merges_root_attributes) {
+    Env env;
+    ZenitUI::ZMarkup::registerPrefab("MyBox", R"(
+        VStack.box-base {
+            Text "Inside Box"
+        }
+    )");
+
+    auto ui = ZenitUI::ZMarkup::build(R"(
+        MyBox.extra-class#box1@boxRef width="100px"
+    )");
+
+    auto root = ui.root();
+    CHECK(root != nullptr);
+    CHECK(root->hasClass("box-base"));    // Ereditato dal prefab
+    CHECK(root->hasClass("extra-class")); // Passato dall'istanza
+    CHECK(root->nodeId == "box1");        // <--- FIX: nodeId invece di getId()
+    
+    // Controlla che il nodo sia registrabile dal contesto tramite il ref
+    auto byRef = ui.ref("boxRef");
+    CHECK(byRef == root);
+}
+
+TEST(ZMarkupBuild, prefab_slot_injects_children) {
+    Env env;
+    ZenitUI::ZMarkup::registerPrefab("Card", R"(
+        VStack.card {
+            Text "Title"
+            Slot
+            Button "Footer"
+        }
+    )");
+
+    auto ui = ZenitUI::ZMarkup::build(R"(
+        Card#my-card {
+            Text "Injected Child 1"
+            Text "Injected Child 2"
+        }
+    )");
+
+    auto card = ui.find("my-card");
+    CHECK(card != nullptr);
+    
+    // 1 (Title) + 2 (Injected) + 1 (Footer) = 4 figli
+    CHECK(card->children.size() == 4);
+    
+    // Verifica l'ordine corretto
+    auto text2 = std::dynamic_pointer_cast<ZenitUI::UI::Text>(card->children[2]);
+    CHECK(text2 != nullptr);
+    CHECK(text2->getText() == "Injected Child 2");
+}
+
+TEST(ZMarkupBuild, prefab_slot_uses_defaults_if_no_children_passed) {
+    Env env;
+    ZenitUI::ZMarkup::registerPrefab("FallbackCard", R"(
+        VStack {
+            Slot {
+                Text "Default Content"
+            }
+        }
+    )");
+
+    auto ui = ZenitUI::ZMarkup::build(R"(
+        FallbackCard#empty-card
+    )");
+
+    auto card = ui.find("empty-card");
+    CHECK(card != nullptr);
+    CHECK(card->children.size() == 1);
+
+    auto text = std::dynamic_pointer_cast<ZenitUI::UI::Text>(card->children[0]);
+    CHECK(text != nullptr);
+    CHECK(text->getText() == "Default Content");
+}

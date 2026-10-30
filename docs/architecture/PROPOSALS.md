@@ -23,6 +23,7 @@ implementation.
 - ✅ **Proposal 2 — `Bindable<T>`**: shipped as roadmap §5.17. See
   `docs/user/11-bindable.md` and `docs/api/Bindable.md` for the
   user-facing API.
+- ✅ **Proposal 3 — UIPrefab and Slot**: shipped as roadmap §5.18 and §5.19.
 
 ---
 
@@ -30,6 +31,7 @@ implementation.
 
 - [Proposal 1 — `ref`: separation of style identity and logic lookup](#proposal-1--ref-separation-of-style-identity-and-logic-lookup)
 - [Proposal 2 — `Bindable<T>`: lightweight data binding](#proposal-2--bindablet-lightweight-data-binding)
+- [Proposal 3 — UIPrefab and Slot](#proposal-3--uiprefab-and-slot)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -722,6 +724,102 @@ Total: ~16 new tests.
 
 ---
 
+## Proposal 3 — UIPrefab and Slot
+
+**Priority:** high — unblocks `VirtualList` and reusable UI components.
+**Complexity:** medium (~1-2 days).
+**Depends on:** `ref` (shipped in §5.16).
+**Status:** 🟡 proposed.
+
+### 3.1 Problem
+
+Currently, to reuse a UI component like a `Card` or a `SettingsRow`, you either have to:
+1. Copy and paste the ZMarkup definition everywhere.
+2. Write a custom C++ widget that inherits from `Layout` and builds its children imperatively in `onBuild()`.
+
+This defeats the purpose of having a declarative ZMarkup language. We need a way to define a composite widget once in ZMarkup (a "Prefab") and instantiate it multiple times, injecting custom children into specific areas (Slots).
+
+### 3.2 Solution
+
+Introduce **`UIPrefab`** and **`Slot`**:
+- **`UIPrefab`**: A parsed ZMarkup AST (`Element`) stored in the `Registry` under a custom tag name (e.g., `SettingsRow`).
+- **`Slot`**: A special ZMarkup tag (`Slot`) used inside a prefab's definition. When the prefab is instantiated, any children passed to it are injected into the `<Slot>`.
+
+Because we recently shipped `@ref` (Proposal 1), the C++ code can easily query the instantiated prefab for specific internal nodes to update text, values, or attach callbacks, completely removing the need for complex template strings in the markup.
+
+### 3.3 ZMarkup API (Usage)
+
+**1. Defining the Prefab (e.g., `assets/card.zmarkup`):**
+```zmarkup
+VStack.card-container {
+    Text.card-title@title "Default Title"
+    Slot  // Children injected here
+}
+
+```
+
+**2. Instantiating the Prefab (in `main.zmarkup`):**
+
+```zmarkup
+HStack {
+    Card@card1 {
+        Text "This goes into the slot!"
+        Button "Action"
+    }
+    Card.special-card@card2 {
+        Text "Another card content"
+    }
+}
+
+```
+
+### 3.4 C++ API
+
+New methods on `ZMarkup::Registry`:
+
+```cpp
+void registerPrefab(const std::string& tagName, const std::string& markupSource);
+bool registerPrefabFile(const std::string& tagName, const std::string& filepath);
+
+```
+
+Internally, `registerPrefab` parses the markup into an `Element` AST and registers a custom factory for `tagName`. When the factory is invoked, it:
+
+1. Clones the prefab's `Element` AST.
+2. Merges the instance's classes, id, and ref into the root of the cloned AST.
+3. Passes the instance's children down the build context.
+4. When the builder encounters a `Slot` tag, it iterates and builds the passed children instead of the `Slot`.
+
+### 3.5 Semantics and Edge Cases
+
+* **Root merging**: The attributes of the instance (e.g., `.my-class`, `#id`, `@ref`) are applied to the *root* node of the prefab. E.g., `<Card.extra-padding>` adds `.extra-padding` to the prefab's root `VStack`.
+* **Multiple Slots**: For MVP (Minimum Viable Product), a single anonymous `Slot` tag is supported. If a prefab has no `Slot`, any children passed to it at instantiation are ignored (with a debug warning).
+* **Default Slot Content**: If `Slot { Text "Empty" }` has children in the prefab definition, they are rendered *only* if the instantiating tag provides no children.
+* **Performance**: The prefab markup is parsed *once* at registration. Instantiation just traverses and builds from the in-memory AST (`Element`), which is extremely fast and allocates no extra strings.
+
+### 3.6 File-by-file changes
+
+| File | Change |
+| --- | --- |
+| `src/ui/ZMarkup.hpp` | Add `Registry::registerPrefab` and `registerPrefabFile`. Add `Slot` to built-in tags. |
+| `src/ui/ZMarkup.cpp` | Implement AST cloning/merging logic. Update `BuildContext` to forward children to `Slot`. |
+| `tests/test_zmarkup_build.cpp` | Add tests for prefab registration, root attribute merging, and slot injection. |
+| `docs/user/04-zmarkup.md` | New section §6 "Prefabs and Slots". |
+| `docs/api/ZMarkup.md` | Document `registerPrefab`. |
+| `docs/ROADMAP.md` | Track §5.18 and §5.19. |
+
+Estimated: ~100-150 lines of additions.
+
+### 3.7 Tests
+
+* Register a prefab and instantiate it.
+* Instantiate a prefab passing a child -> child appears inside the `Slot`.
+* Instantiate a prefab without children -> `Slot` default children are rendered.
+* Prefab instance with `.class`, `#id`, `@ref` -> applied to the prefab root.
+* Instantiating a prefab that has no `Slot` but passing children -> warning logged, children ignored.
+
+---
+
 ## Out of scope (future rounds)
 
 The following were discussed in the same review but are **not** part
@@ -872,3 +970,24 @@ usual caveat.
 **Follow-up (not in this proposal):** `examples/12_bindable` as a
 live demonstration of the API, tracked as an unchecked item in
 roadmap §5.17. Will land as a separate commit.
+
+### Proposal 3 — UIPrefab and Slot
+
+**Shipped:** roadmap §5.18 and §5.19.
+
+**Changes from the proposal:**
+
+- **No `SlotWrapper` in the final tree.** The original design (and MVP implementation) wrapped injected children in a dummy `Stack` node. This broke Flexbox layouts (e.g., `justify="space-between"`) because the container saw only one child (the wrapper). The shipped implementation completely removes the wrapper: `Registry::create_impl` now returns a `std::vector<std::shared_ptr<Layout>>`, allowing the `<Slot>` tag to seamlessly unwrap and inject its children directly into the parent's flow as flat siblings.
+- **Strict CSS syntax for inline properties.** During testing, we enforced that properties passed to a prefab instance (like `justify="space-between"`) must strictly follow the kebab-case CSS specification, ensuring exactly 1:1 parity between `.zstyle` rules and ZMarkup inline attributes.
+
+**What landed:**
+
+- `ZMarkup::registerPrefab` and `ZMarkup::registerPrefabFile` added to `Registry` (and exposed globally).
+- `<Slot>` tag fully supported natively by the parser and builder.
+- AST caching: Prefabs parse their ZMarkup string only once.
+- Zero-allocation instantiation: Building a prefab clones the cached AST (`Element`), merging root attributes (`.class`, `#id`, `@ref`, and inline styles) at zero parser cost.
+- Support for default fallback children inside `<Slot> { ... }`.
+- Robust anti-loop guards (`isPrefabRoot` flags) to prevent circular dependency crashes when building the tree.
+- 3 new unit tests in `test_zmarkup_build.cpp` verifying root merging, slot injection, and default fallbacks.
+- New example `13_prefabs` demonstrating a dynamic Settings UI built entirely with reusable components.
+- Comprehensive updates to `user/04-zmarkup.md` (§6), `CHEATSHEET.md`, `GLOSSARY.md`, and `ROADMAP.md`.

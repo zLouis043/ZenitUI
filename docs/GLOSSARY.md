@@ -332,6 +332,9 @@ Popup, Tooltip.
 An entry in `Style` / `ComputedStyle` (e.g. `width`, `background`).
 Every property is defined by the `BUBBLE_STYLE_PROPS` macro.
 
+**Prefab**
+A reusable ZMarkup component registered via `ZMarkup::registerPrefab`. It parses a ZMarkup string into an AST once. When instantiated in a markup string, the AST is cloned, its root attributes are merged with the instance's attributes, and any provided children are injected into its **Slot**.
+
 ---
 
 ## R
@@ -370,6 +373,9 @@ can exceed its size, and can be scrolled via wheel, drag, or
 **Selector (`.zstyle`)**
 The left-hand side of a rule. A chain of compound selectors joined by
 descendant relationships. May include states and a `::part`.
+
+**Slot**
+A special ZMarkup tag (`<Slot>`) used exclusively inside a **Prefab** definition. It acts as an injection point for children passed when the Prefab is instantiated. If left empty during instantiation, it can render fallback children defined inside the Prefab.
 
 **Specificity**
 The triple `(ids, classes, tags)` used to rank rules of equal origin.

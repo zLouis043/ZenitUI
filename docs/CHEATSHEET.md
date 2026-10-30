@@ -374,6 +374,25 @@ auto node   = ui.find("ok");                  // shared_ptr<Layout>
 auto slider = ui.find<Slider>("volume");      // typed
 ```
 
+### Prefabs and Slots
+Define a reusable component in C++ (parsed only once):
+```cpp
+ZMarkup::registerPrefab("Card", R"(
+    VStack.card-base {
+        Text "{title:Default}"
+        Slot
+    }
+)");
+```
+
+Instantiate it in ZMarkup. Root attributes are merged, children are injected into the `<Slot>`:
+
+```zmarkup
+Card.highlighted#myCard --title="Custom Title" width="100%" {
+    Button "Injected Action"
+}
+```
+
 ---
 
 ## 12. Loading stylesheets
