@@ -100,4 +100,4 @@ small and the assets reusable.
 | `10_canvas` | `CanvasLayout`: render a subtree into an offscreen target, apply a shader |
 | `11_ref_list` | `@ref` and `refAll`: wire every item of a dynamic list from one loop |
 | `12_bindable` | `Bindable<T>`: one model drives many widgets, lifetime-safe subscriptions |
-
+| `13_prefabs` | `ZMarkup::registerPrefab`: register once a prefab with a Slot and reuse it in the app |

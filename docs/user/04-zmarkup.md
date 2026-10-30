@@ -765,6 +765,52 @@ See [ZStyle](05-zstyle.md) for the full language reference.
   returned by the factory, and the registry skips the element silently
   (including its children).
 
+## 6. Prefabs and Slots
+
+For complex, repeatable UI containers (like a custom card, a list item, or a settings row), you can define a `Prefab`. A Prefab is a ZMarkup AST parsed once and registered under a custom tag name.
+
+When you instantiate a Prefab, you can pass custom styling attributes which are automatically merged into the Prefab's root node. You can also inject child nodes into a designated `<Slot>` within the Prefab.
+
+### 6.1 Registering a Prefab
+
+Register a prefab in C++ before calling `ZMarkup::build`. The `<Slot>` tag marks where children will be injected:
+
+```cpp
+ZenitUI::ZMarkup::registerPrefab("SettingsRow", R"(
+    HStack width="100%" justify="space-between" items-v="center" background="#2A2A32" padding="10px" radius="6px" {
+        Slot {
+            // Default children if none are provided
+            Text "Empty Row"
+        }
+    }
+)");
+```
+
+### 6.2 Instantiating a Prefab
+
+Use the registered tag name in your main markup. The children you provide will replace the `<Slot>`.
+
+```zmarkup
+VStack {
+    // Injecting two elements. Because the prefab is an HStack with space-between,
+    // the Text goes to the left and the Toggle to the right.
+    SettingsRow {
+        Text color="#A0A0A0" "Fullscreen"
+        Toggle#fs_toggle checked=true
+    }
+}
+```
+
+### 6.3 Root Merging
+
+Attributes applied to the prefab instance tag (`.class`, `#id`, `@ref`, inline styles) are merged into the prefab's root node.
+
+```zmarkup
+SettingsRow.highlighted-row#row1@main_row width="50%" { ... }
+```
+
+Here, `.highlighted-row`, `#row1`, `@main_row`, and `width="50%"` are applied directly to the root `HStack` defined in the `SettingsRow` prefab.
+
 ---
 
 ## 10. Pitfalls

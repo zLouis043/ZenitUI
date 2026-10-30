@@ -217,7 +217,8 @@ public:
     void reg(const std::string& tag, Factory f);
 
     std::shared_ptr<Layout> create(const Element& el, BuildContext& ctx);
-
+    void registerPrefab(const std::string& tagName, const std::string& markupSource);
+    bool registerPrefabFile(const std::string& tagName, const std::filesystem::path& path);
 private:
     std::unordered_map<std::string, Factory> factories;
 };
@@ -299,6 +300,25 @@ The built-in tags:
 | `Canvas` | `CanvasLayout::create()` |
 | `Modal` | `Modal::create()` |
 | `Popup` | `Popup::create()` |
+
+### `registerPrefab` / `registerPrefabFile`
+
+```cpp
+void registerPrefab(const std::string& tagName, const std::string& markupSource);
+bool registerPrefabFile(const std::string& tagName, const std::filesystem::path& path);
+```
+
+Parses a ZMarkup string once and registers it as a reusable component under `tagName`.
+
+When `tagName` is encountered during `build()`:
+
+1. The cached AST (`Element`) is cloned.
+
+2. Root merging occurs: the instance's `.classes`, `#id`, `@ref`, and inline attributes are merged directly into the cloned root.
+
+3. The AST is traversed. If a `<Slot>` tag is encountered, the children provided to the instance are injected in its place as flat siblings. If no children were provided, the `<Slot>`'s default children are used.
+
+This allows the creation of high-performance, complex composite widgets entirely in ZMarkup, completely eliminating C++ boilerplate for repetitive UI structures.
 
 ### Extending with custom tags
 

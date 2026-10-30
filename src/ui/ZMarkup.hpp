@@ -16,6 +16,7 @@
 #include <optional>
 #include <sstream>
 #include <unordered_set>
+#include <unordered_map>
 
 namespace ZenitUI::ZMarkup
 {
@@ -28,7 +29,7 @@ namespace ZenitUI::ZMarkup
         std::string tag;
         std::vector<std::string> classes;
         std::string id;
-        std::string ref;   // populated from @name, logic-only, not CSS
+        std::string ref;
         std::string text;
         std::vector<std::pair<std::string, std::string>> attrs;
         std::vector<Element> children;
@@ -182,7 +183,13 @@ namespace ZenitUI::ZMarkup
             Element e;
             e.tag = readIdent();
 
-            // Modifiers: .class, #id, @ref (concatenabili, in qualsiasi ordine)
+            if (e.tag.empty())
+            {
+                if (!eof())
+                    ++p;
+                return e;
+            }
+
             while (peek() == '.' || peek() == '#' || peek() == '@')
             {
                 char m = get();
@@ -200,14 +207,13 @@ namespace ZenitUI::ZMarkup
                     if (!e.ref.empty())
                     {
                         logWarn("ZMarkup", "", 0, 0,
-                            "duplicate @ref '" + name +
-                            "' on the same tag, keeping the last one");
+                                "duplicate @ref '" + name +
+                                    "' on the same tag, keeping the last one");
                     }
                     e.ref = std::move(name);
                 }
             }
 
-            // Attributes
             while (true)
             {
                 skipInlineWs();
@@ -228,16 +234,14 @@ namespace ZenitUI::ZMarkup
                 }
                 else
                 {
-                    e.attrs.emplace_back(std::move(key), "true"); // flag
+                    e.attrs.emplace_back(std::move(key), "true");
                 }
             }
 
-            // Testo (opzionale)
             skipInlineWs();
             if (peek() == '"')
                 e.text = readQuoted();
 
-            // Blocco figli (opzionale)
             skipInlineWs();
             if (peek() == '{')
             {
@@ -263,25 +267,18 @@ namespace ZenitUI::ZMarkup
     }
 
     // =========================================================================
-    //  BuildContext — tiene traccia di nodi per id e ref (per gli hook)
+    //  BuildContext
     // =========================================================================
     struct BuildContext
     {
-        // Style id → node. At most one entry per id; later nodes overwrite
-        // earlier ones (last wins). Matches the CSS specificity model
-        // where #id is expected to be unique.
         std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
+        std::unordered_map<std::string, std::vector<std::shared_ptr<Layout>>> byRef;
 
-        // Logic ref → nodes. Multiple nodes can share the same ref,
-        // which is the whole point of @ref vs #id. Preserves
-        // insertion order per key (required for refAll to be
-        // deterministic).
-        std::unordered_map<std::string,
-                           std::vector<std::shared_ptr<Layout>>> byRef;
+        const std::vector<Element> *currentSlotChildren{nullptr};
     };
 
     // =========================================================================
-    //  Registry — mappa tag → factory
+    //  Registry
     // =========================================================================
     class Registry
     {
@@ -290,15 +287,94 @@ namespace ZenitUI::ZMarkup
 
         void reg(const std::string &tag, Factory f) { factories[tag] = std::move(f); }
 
-        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx)
+        void registerPrefab(const std::string &tagName, const std::string &markupSource)
         {
+            Element root = parse(markupSource);
+            prefabs[tagName] = std::move(root);
+        }
+
+        bool registerPrefabFile(const std::string &tagName, const std::filesystem::path &path)
+        {
+            std::ifstream f(path, std::ios::binary);
+            if (!f)
+            {
+                logError("ZMarkup", path.string(), 0, 0, "Impossible aprire il file per il prefab");
+                return false;
+            }
+            std::stringstream ss;
+            ss << f.rdbuf();
+            registerPrefab(tagName, ss.str());
+            return true;
+        }
+
+        // Il nuovo create_impl ritorna un VETTORE di nodi. Questo risolve il problema dello Slot.
+        std::vector<std::shared_ptr<Layout>> create_impl(const Element &el, BuildContext &ctx, bool isPrefabRoot = false)
+        {
+            std::vector<std::shared_ptr<Layout>> result;
+
+            // 1. È uno Slot? (Ritorna i figli direttamente al padre chiamante!)
+            if (el.tag == "Slot")
+            {
+                const std::vector<Element> *childrenToBuild = nullptr;
+                if (ctx.currentSlotChildren && !ctx.currentSlotChildren->empty())
+                {
+                    childrenToBuild = ctx.currentSlotChildren;
+                }
+                else if (!el.children.empty())
+                {
+                    childrenToBuild = &el.children;
+                }
+
+                if (childrenToBuild)
+                {
+                    auto previousSlot = ctx.currentSlotChildren;
+                    ctx.currentSlotChildren = nullptr;
+
+                    for (const auto &child : *childrenToBuild)
+                    {
+                        auto childNodes = create_impl(child, ctx);
+                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                    }
+                    ctx.currentSlotChildren = previousSlot;
+                }
+                return result;
+            }
+
+            // 2. È un Prefab?
+            if (!isPrefabRoot)
+            {
+                auto prefabIt = prefabs.find(el.tag);
+                if (prefabIt != prefabs.end())
+                {
+                    Element instanceTree = prefabIt->second;
+
+                    for (const auto &c : el.classes)
+                        instanceTree.classes.push_back(c);
+                    if (!el.id.empty())
+                        instanceTree.id = el.id;
+                    if (!el.ref.empty())
+                        instanceTree.ref = el.ref;
+                    for (const auto &attr : el.attrs)
+                        instanceTree.attrs.push_back(attr);
+
+                    auto previousSlot = ctx.currentSlotChildren;
+                    ctx.currentSlotChildren = &el.children;
+
+                    auto nodes = create_impl(instanceTree, ctx, true);
+
+                    ctx.currentSlotChildren = previousSlot;
+                    return nodes; // Propaga la radice istanziata
+                }
+            }
+
+            // 3. Nodo normale
             auto it = factories.find(el.tag);
             if (it == factories.end())
-                return nullptr;
+                return {};
 
             auto node = it->second(el);
             if (!node)
-                return nullptr;
+                return {};
 
             if (el.has("passthrough"))
                 node->setPassThrough(el.attrBool("passthrough"));
@@ -319,24 +395,38 @@ namespace ZenitUI::ZMarkup
             for (auto &[k, v] : el.attrs)
                 applyStyleAttr(node->getInlineBase(), k, v);
 
-            // Attach children to the widget's content slot, not to the
-            // widget itself. For most widgets contentTarget() returns
-            // `this`, so this is equivalent to addChild() directly. For
-            // composite widgets like Modal, it routes children into the
-            // internal content wrapper, so they participate in the
-            // wrapper's animation and layout.
             Layout *target = node->contentTarget();
+
+            auto previousSlot = ctx.currentSlotChildren;
+            if (!isPrefabRoot)
+            {
+                ctx.currentSlotChildren = nullptr;
+            }
+
             for (auto &child : el.children)
             {
-                auto c = create(child, ctx);
-                if (c)
+                auto childNodes = create_impl(child, ctx);
+                for (auto &c : childNodes)
+                {
                     target->addChild(c);
+                }
             }
-            return node;
+
+            ctx.currentSlotChildren = previousSlot;
+
+            result.push_back(node);
+            return result;
+        }
+
+        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx)
+        {
+            auto res = create_impl(el, ctx);
+            return res.empty() ? nullptr : res.front();
         }
 
     private:
         std::unordered_map<std::string, Factory> factories;
+        std::unordered_map<std::string, Element> prefabs;
     };
 
     // =========================================================================
@@ -413,7 +503,22 @@ namespace ZenitUI::ZMarkup
     }
 
     // =========================================================================
-    //  UINode — handle di ritorno: permette find + hook tipizzati
+    //  Accesso Globale
+    // =========================================================================
+    inline Registry &getGlobalRegistry()
+    {
+        static Registry registry;
+        static bool initialized = false;
+        if (!initialized)
+        {
+            registerBuiltins(registry);
+            initialized = true;
+        }
+        return registry;
+    }
+
+    // =========================================================================
+    //  UINode
     // =========================================================================
     class UINode
     {
@@ -422,15 +527,7 @@ namespace ZenitUI::ZMarkup
             : root_(std::move(root)), ctx_(std::move(ctx)) {}
 
         std::shared_ptr<Layout> root() const { return root_; }
-
-        // Returns the BuildContext used to construct this tree. Useful when
-        // you need to look up nodes by id outside of find(), or when you
-        // want to extend the tree at runtime with additional elements built
-        // through the same registry (e.g. injecting content into a composite
-        // widget after its onBuild has run).
         std::shared_ptr<BuildContext> context() const { return ctx_; }
-
-        // ----- Lookup by #id (style identity) -----
 
         std::shared_ptr<Layout> find(const std::string &id) const
         {
@@ -451,8 +548,6 @@ namespace ZenitUI::ZMarkup
             return n ? std::static_pointer_cast<T>(n) : nullptr;
         }
 
-        // ----- Lookup by @ref (logic identity) -----
-
         template <typename T = Layout>
         std::shared_ptr<T> ref(const std::string &name) const
         {
@@ -467,9 +562,9 @@ namespace ZenitUI::ZMarkup
             {
                 warnOnce("ref-ambig:" + name,
                          "UINode::ref('" + name + "'): " +
-                         std::to_string(it->second.size()) +
-                         " nodes match, returning the first. "
-                         "Use refAll for the full list.");
+                             std::to_string(it->second.size()) +
+                             " nodes match, returning the first. "
+                             "Use refAll for the full list.");
             }
             return std::static_pointer_cast<T>(it->second.front());
         }
@@ -535,10 +630,6 @@ namespace ZenitUI::ZMarkup
         }
 
     private:
-        // Per-handle dedup of warnings, so a typo'd id or ref doesn't
-        // spam the log on every frame. Keyed on a prefix + the id/ref
-        // name. The `mutable` is required because the lookup methods
-        // are `const`.
         void warnOnce(const std::string &key, const std::string &msg) const
         {
             if (warnedKeys_.insert(key).second)
@@ -553,33 +644,31 @@ namespace ZenitUI::ZMarkup
     // =========================================================================
     //  Entry point
     // =========================================================================
+
+    inline void registerPrefab(const std::string &tagName, const std::string &markupSource)
+    {
+        getGlobalRegistry().registerPrefab(tagName, markupSource);
+    }
+
+    inline bool registerPrefabFile(const std::string &tagName, const std::filesystem::path &path)
+    {
+        return getGlobalRegistry().registerPrefabFile(tagName, path);
+    }
+
     inline UINode build(std::string_view source)
     {
-        static Registry registry;
-        static bool initialized = false;
-        if (!initialized)
-        {
-            registerBuiltins(registry);
-            initialized = true;
-        }
-
         auto ctx = std::make_shared<BuildContext>();
         auto el = parse(source);
-        auto root = registry.create(el, *ctx);
+        auto root = getGlobalRegistry().create(el, *ctx);
         return UINode(root, ctx);
     }
 
-    // Reads a ZMarkup source from a file and builds it. Returns a UINode
-    // with a null root if the file can't be opened. Errors are logged.
-    //
-    // Symmetric to ZMarkup::loadStyleFile for .zstyle sources.
     inline UINode loadMarkupFile(const std::filesystem::path &path)
     {
         std::ifstream f(path, std::ios::binary);
         if (!f)
         {
-            logError("ZMarkup", path.string(), 0, 0,
-                     "impossibile aprire il file");
+            logError("ZMarkup", path.string(), 0, 0, "impossibile aprire il file");
             return UINode(nullptr, std::make_shared<BuildContext>());
         }
         std::stringstream ss;
