@@ -8,7 +8,11 @@ add_executable(ZenitBenchmarks
     ${ZENITUI_BENCH_HEADERS}
 )
 
-target_link_libraries(ZenitBenchmarks PRIVATE ZenitUI::ZenitUI)
+target_link_libraries(ZenitBenchmarks
+    PRIVATE
+        ZenitUI::ZenitUI
+        ZenitUI::MockBackend
+)
 target_compile_features(ZenitBenchmarks PUBLIC cxx_std_20)
 
 target_include_directories(ZenitBenchmarks PRIVATE
