@@ -1,4 +1,3 @@
-# Le sottocartelle con main.cpp sono esempi
 file(GLOB EXAMPLE_MAINS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*/main.cpp"
 )
@@ -14,7 +13,6 @@ foreach(MAIN_SRC IN LISTS EXAMPLE_MAINS)
         PRIVATE ZenitUI::ZenitUI ZenitUI::RaylibBackend
     )
 
-    # Output in examples/bin/<nome>/main[.exe], come il Makefile
     set_target_properties(${EXAMPLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin/${EXAMPLE_NAME}"
         OUTPUT_NAME "main"
