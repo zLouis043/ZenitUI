@@ -7,65 +7,137 @@ on:
     branches: [ "main", "master" ]
 
 jobs:
-  test:
-    name: ${{ matrix.os }} - ${{ matrix.cxx }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # Linux con GCC
-          - os: ubuntu-latest
-            cxx: g++
-          # Linux con Clang
-          - os: ubuntu-latest
-            cxx: clang++
-          # macOS con Apple Clang
-          - os: macos-latest
-            cxx: clang++
-          # Windows con MinGW GCC
-          - os: windows-latest
-            cxx: g++
+    test:
+      name: ${{ matrix.os }} - ${{ matrix.cxx }}
+      runs-on: ${{ matrix.os }}
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - os: ubuntu-latest
+              cxx: g++
+            - os: ubuntu-latest
+              cxx: clang++
+            - os: macos-latest
+              cxx: clang++
+            - os: windows-latest
+              cxx: g++
+              compiler_setup: msys2
+            - os: windows-latest
+              cxx: cl.exe
+              compiler_setup: msvc
 
-    steps:
-    - name: Checkout del codice
-      uses: actions/checkout@v4
-
-    - name: Setup MSYS2 (Solo per Windows)
-      if: runner.os == 'Windows'
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        # Installa make e il compilatore GCC per Windows
-        install: make mingw-w64-x86_64-gcc
-
-    - name: Compilazione ed Esecuzione Test (Linux / macOS)
-      if: runner.os != 'Windows'
-      # Il Makefile leggerà la variabile CXX passata in riga di comando
-      run: make -j4 test CXX=${{ matrix.cxx }}
-
-    - name: Compilazione ed Esecuzione Test (Windows)
-      if: runner.os == 'Windows'
-      # Forza l'uso della shell bash di MSYS2 invece del CMD di Windows
-      shell: msys2 {0}
-      run: make -j4 test CXX=${{ matrix.cxx }}
-
-  build-examples:
-    name: Build examples (Windows / MinGW)
-    runs-on: windows-latest
-
-    steps:
+      steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup MSYS2
+      # --- Setup MSYS2 (MinGW) ---------------------------------------------
+      - name: Setup MSYS2 (Windows / MinGW)
+        if: matrix.compiler_setup == 'msys2'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
-          install: make mingw-w64-x86_64-gcc
+          install: >-
+            make git mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
 
-      - name: Build examples
+      # --- Setup MSVC -------------------------------------------------------
+      - name: Setup MSVC environment (Windows / MSVC)
+        if: matrix.compiler_setup == 'msvc'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Ninja (Windows / MSVC)
+        if: matrix.compiler_setup == 'msvc'
+        shell: cmd
+        run: choco install ninja -y --no-progress
+
+      # --- Build & test -----------------------------------------------------
+      - name: Build and run tests (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: make -j4 test CXX=${{ matrix.cxx }}
+
+      - name: Build and run tests (Windows / MinGW)
+        if: matrix.compiler_setup == 'msys2'
         shell: msys2 {0}
-        run: make -j4 examples
+        run: make -j4 test CXX=${{ matrix.cxx }}
+
+      - name: Build and run tests (Windows / MSVC)
+        if: matrix.compiler_setup == 'msvc'
+        shell: cmd
+        run: |
+          cmake -S . -B build -G Ninja ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DZENITUI_BUILD_TESTS=ON
+          cmake --build build --parallel
+          ctest --test-dir build --output-on-failure
+
+    build-examples:
+      name: Examples (${{ matrix.os }} - ${{ matrix.cxx }})
+      runs-on: ${{ matrix.os }}
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - os: ubuntu-latest
+              cxx: g++
+            - os: ubuntu-latest
+              cxx: clang++
+            - os: macos-latest
+              cxx: clang++
+            - os: windows-latest
+              cxx: g++
+              compiler_setup: msys2
+            - os: windows-latest
+              cxx: cl.exe
+              compiler_setup: msvc
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Cache Raylib FetchContent
+          uses: actions/cache@v4
+          with:
+            path: build/_deps/raylib-src
+            key: raylib-${{ runner.os }}-${{ hashFiles('backends/raylib/CMakeLists.txt') }}
+
+        - name: Setup MSYS2 (Windows / MinGW)
+          if: matrix.compiler_setup == 'msys2'
+          uses: msys2/setup-msys2@v2
+          with:
+            msystem: MINGW64
+            update: true
+            install: >-
+              make git mingw-w64-x86_64-gcc
+              mingw-w64-x86_64-cmake
+              mingw-w64-x86_64-ninja
+
+        - name: Setup MSVC environment (Windows / MSVC)
+          if: matrix.compiler_setup == 'msvc'
+          uses: ilammy/msvc-dev-cmd@v1
+
+        - name: Install Ninja (Windows / MSVC)
+          if: matrix.compiler_setup == 'msvc'
+          shell: cmd
+          run: choco install ninja -y --no-progress
+
+        - name: Build examples (Linux / macOS)
+          if: runner.os != 'Windows'
+          run: make -j4 examples CXX=${{ matrix.cxx }}
+
+        - name: Build examples (Windows / MinGW)
+          if: matrix.compiler_setup == 'msys2'
+          shell: msys2 {0}
+          run: make -j4 examples CXX=${{ matrix.cxx }}
+
+        - name: Build examples (Windows / MSVC)
+          if: matrix.compiler_setup == 'msvc'
+          shell: cmd
+          run: |
+            cmake -S . -B build -G Ninja ^
+              -DCMAKE_BUILD_TYPE=Release ^
+              -DZENITUI_BUILD_EXAMPLES=ON ^
+              -DZENITUI_BUILD_TESTS=OFF
+            cmake --build build --parallel

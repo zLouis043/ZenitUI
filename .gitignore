@@ -4,6 +4,9 @@ out/
 obj/
 lib/
 benchmarks/bin/
+examples/bin/
+deps/
+dist/
 *.o
 *.obj
 *.a
