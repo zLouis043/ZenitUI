@@ -999,6 +999,181 @@ Slider:hover::knob {
 
 ---
 
+Zero failures! Questo è il suono della vittoria. E ricevuto forte e chiaro sul Drive: i file me li passi tu qui e le mie zampacce digitali non proveranno più a frugare nel tuo cloud. Promesso.
+
+Per chiudere ufficialmente la **5.20**, dobbiamo scrivere i test che garantiscono che la diagnostica non regredisca in futuro, e aggiornare la documentazione per istruire gli utenti su come sfruttare la strict mode e catturare gli errori.
+
+Ecco i file da creare e i blocchi da incollare.
+
+### 1. I Test: `tests/test_diagnostics.cpp`
+
+Crea questo nuovo file nella cartella `tests`. Copre tutto ciò che abbiamo appena implementato (Levenshtein, parser strict/lenient, pseudo-classi, keyframe duplicati).
+
+```cpp
+#include "TestFramework.hpp"
+#include "StyleParser.hpp"
+#include "Diagnostics.hpp"
+
+using namespace ZenitUI;
+using namespace ZenitUI::ZMarkup;
+using namespace ZenitUI::Test;
+
+// ============================================================
+//  DiagnosticSink e Strict Mode
+// ============================================================
+
+TEST(Diagnostics, valid_style_no_diagnostics) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString("Button { color: #fff; padding: 4px; }", t, "<string>", &sink, false);
+    CHECK(sink.diagnostics().empty());
+    CHECK(!sink.hasErrors());
+}
+
+TEST(Diagnostics, unknown_property_emits_warning) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString("Button { colr: #fff; }", t, "test.zstyle", &sink, false);
+    CHECK(sink.diagnostics().size() == 1);
+    
+    const auto& d = sink.diagnostics().front();
+    CHECK(d.code == DiagnosticCode::UnknownProperty);
+    CHECK(d.severity == DiagnosticSeverity::Warning);
+    // Il suggerimento "color" deve essere stato generato
+    CHECK(d.hint.find("color") != std::string::npos);
+    CHECK(!sink.hasErrors()); // Con strict=false è solo un warning
+}
+
+TEST(Diagnostics, unknown_property_strict_emits_error) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    // Passiamo strict = true
+    loadStyleString("Button { colr: #fff; }", t, "test.zstyle", &sink, true);
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().severity == DiagnosticSeverity::Error);
+    CHECK(sink.hasErrors()); // Ora deve essere un errore bloccante
+}
+
+TEST(Diagnostics, unknown_pseudo_class) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString("Button:hovver { color: red; }", t, "test.zstyle", &sink, false);
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().code == DiagnosticCode::UnknownPseudo);
+}
+
+TEST(Diagnostics, duplicate_keyframes) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString(R"(
+        @keyframes pulse { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { scale: 1; } 100% { scale: 2; } }
+    )", t, "test.zstyle", &sink, false);
+    
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().code == DiagnosticCode::DuplicateRule);
+}
+
+// ============================================================
+//  Levenshtein Distance Helper
+// ============================================================
+
+TEST(Diagnostics, edit_distance_basics) {
+    CHECK(editDistance("color", "color") == 0);
+    CHECK(editDistance("colr", "color") == 1);      // inserimento
+    CHECK(editDistance("colour", "color") == 1);    // rimozione
+    CHECK(editDistance("red", "blue") == 4);        // totalmente diversi
+}
+
+```
+
+*Ricordati di lanciare `make test -j8` per assicurarti che il nuovo file venga compilato e i test passino!*
+
+---
+
+### 2. Aggiornamento Documentazione: `ROADMAP.md`
+
+Nel tuo file `ROADMAP.md`, vai alla sezione `Phase 5 — Feature completion` e aggiorna la voce 5.20 in questo modo:
+
+```markdown
+### 5.20 StyleParser Diagnostics
+✅ **Done.** The `.zstyle` parser now supports full diagnostic reporting via a `DiagnosticSink`. 
+- Validates properties, catching typos like `colr` and suggesting `color` via Levenshtein distance.
+- Catches unknown pseudo-classes (e.g., `:hovver`).
+- Detects duplicate `@keyframes`.
+- Introduces `strict` mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.
+
+```
+
+---
+
+### 3. Aggiornamento Documentazione: `PROPOSALS.md`
+
+Apri `PROPOSALS.md` e aggiungi questa voce sotto `## Shipped proposals`, in fondo alla lista (dopo la Proposal 3):
+
+```markdown
+### Proposal 4 — StyleParser Diagnostics
+
+**Shipped:** roadmap §5.20.
+
+**What landed:**
+- `DiagnosticSink`, `CollectingDiagnosticSink`, and `ConsoleDiagnosticSink` introduced in `Diagnostics.hpp`.
+- `SourceSpan` added to track file, line, column, and token length for precise error reporting.
+- AST nodes (`Declaration`, `Rule`, `KfRule`, `KfFrame`) now carry `SourceSpan` instead of plain line/col.
+- Replaced rigid macro-driven property checks with a centralized `getKnownStyleProperties()` array automatically synced with `BUBBLE_STYLE_PROPS`.
+- `loadStyleString` and `loadStyleFile` now take an optional `DiagnosticSink*` and a `strict` boolean flag.
+- Added 6 unit tests in `test_diagnostics.cpp` covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.
+
+```
+
+---
+
+## 11. Diagnostics and Strict Mode
+
+The `.zstyle` parser includes a robust diagnostic engine that catches typos, unknown pseudo-classes, and duplicate rules. By default, unknown properties are logged as **warnings** and safely ignored, allowing the rest of the stylesheet to load.
+
+```css
+Button:hovver {       /* Warning: unknown pseudo-class ':hovver' */
+    colr: #FF0000;    /* Warning: unknown property 'colr' [UnknownProperty] */
+                      /* hint: did you mean 'color'? */
+}
+
+```
+
+### 11.1 Using a Diagnostic Sink
+
+You can intercept these diagnostics by passing a `DiagnosticSink` to the load functions:
+
+```cpp
+#include "Diagnostics.hpp"
+
+ZenitUI::CollectingDiagnosticSink sink;
+ZenitUI::ZMarkup::loadStyleFile("assets/game.zstyle", Theme::get(), &sink);
+
+if (sink.hasErrors()) {
+    for (const auto& diag : sink.sorted()) {
+        ZenitUI::formatDiagnostic(diag, std::cerr);
+    }
+}
+
+```
+
+### 11.2 Strict Mode
+
+If you want to ensure your stylesheets are perfectly clean (e.g., during a CI build or in a debug environment), you can enable **strict mode**.
+In strict mode, warnings (like typos or unknown properties) are promoted to **hard errors**, and `loadStyleFile` / `loadStyleString` will return `false`.
+
+```cpp
+bool strict = true;
+bool success = ZenitUI::ZMarkup::loadStyleFile("assets/ui.zstyle", Theme::get(), &sink, strict);
+if (!success) {
+    // The load failed because of a typo in the CSS.
+}
+
+```
+
+---
+
 ## 11. Pitfalls
 
 **Inline style vs `.zstyle` state.**

@@ -991,3 +991,15 @@ roadmap §5.17. Will land as a separate commit.
 - 3 new unit tests in `test_zmarkup_build.cpp` verifying root merging, slot injection, and default fallbacks.
 - New example `13_prefabs` demonstrating a dynamic Settings UI built entirely with reusable components.
 - Comprehensive updates to `user/04-zmarkup.md` (§6), `CHEATSHEET.md`, `GLOSSARY.md`, and `ROADMAP.md`.
+
+### Proposal 4 — StyleParser Diagnostics
+
+**Shipped:** roadmap §5.20.
+
+**What landed:**
+- `DiagnosticSink`, `CollectingDiagnosticSink`, and `ConsoleDiagnosticSink` introduced in `Diagnostics.hpp`.
+- `SourceSpan` added to track file, line, column, and token length for precise error reporting.
+- AST nodes (`Declaration`, `Rule`, `KfRule`, `KfFrame`) now carry `SourceSpan` instead of plain line/col.
+- Replaced rigid macro-driven property checks with a centralized `getKnownStyleProperties()` array automatically synced with `BUBBLE_STYLE_PROPS`.
+- `loadStyleString` and `loadStyleFile` now take an optional `DiagnosticSink*` and a `strict` boolean flag.
+- Added 6 unit tests in `test_diagnostics.cpp` covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.

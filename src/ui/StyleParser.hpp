@@ -4,6 +4,7 @@
 #include "ZMarkup.hpp"
 #include "Logger.hpp"
 #include "StyleAttr.hpp"
+#include "Diagnostics.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -140,25 +141,14 @@ namespace ZenitUI::ZMarkup
     }
 
     // =========================================================================
-    //  Posizione sorgente (per logging)
-    // =========================================================================
-    struct ParseLoc
-    {
-        std::string file;
-        int line{0};
-        int col{0};
-    };
-
-    // =========================================================================
     //  Applica una singola dichiarazione (gestisce transition/animation longhand)
     // =========================================================================
-    inline void applyStyleDeclaration(Style &st, const std::string &keyRaw, const std::string &valRaw, const ParseLoc &loc)
+    inline void applyStyleDeclaration(Style &st, const std::string &keyRaw, const std::string &valRaw, const SourceSpan &loc, DiagnosticSink *sink = nullptr, bool strict = false)
     {
         std::string k = trim(keyRaw);
         std::string v = trim(valRaw);
 
         // ---------- CUSTOM PROPERTY ----------
-        // Una prop che inizia con -- è una custom property: la salviamo raw.
         if (k.rfind("--", 0) == 0)
         {
             st.customProps[k] = v;
@@ -166,8 +156,6 @@ namespace ZenitUI::ZMarkup
         }
 
         // ---------- VALORI CON var() ----------
-        // Non risolviamo ora: il valore dipende dal cascade finale.
-        // Le salviamo raw e le risolviamo in StyleResolver::resolveFor.
         if (v.find("var(") != std::string::npos)
         {
             st.unresolvedProps[k] = v;
@@ -215,8 +203,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.transitions.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'transition-delay' usato senza un blocco 'transition:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'transition-delay' used without a preceding 'transition:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'transition-delay' usato senza un blocco 'transition:' precedente. Ignorato.");
+                }
                 return;
             }
             float d = 0.0f;
@@ -236,8 +231,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.transitions.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'transition-duration' usato senza un blocco 'transition:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'transition-duration' used without a preceding 'transition:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'transition-duration' usato senza un blocco 'transition:' precedente. Ignorato.");
+                }
                 return;
             }
             float d = 0.0f;
@@ -257,8 +259,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.transitions.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'transition-timing-function' usato senza un blocco 'transition:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'transition-timing-function' used without a preceding 'transition:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'transition-timing-function' usato senza un blocco 'transition:' precedente. Ignorato.");
+                }
                 return;
             }
             TransitionFunction tf;
@@ -345,8 +354,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-delay' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-delay' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-delay' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             float d = 0.0f;
@@ -366,8 +382,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-duration' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-duration' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-duration' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             float d = 0.0f;
@@ -387,8 +410,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-timing-function' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-timing-function' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-timing-function' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             TransitionFunction tf;
@@ -401,8 +431,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-iteration-count' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-iteration-count' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-iteration-count' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             int n = 1;
@@ -427,8 +464,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-direction' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-direction' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-direction' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             bool alt = (v == "alternate");
@@ -440,8 +484,15 @@ namespace ZenitUI::ZMarkup
         {
             if (!st.animations.is_set)
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "'animation-fill-mode' usato senza un blocco 'animation:' precedente. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::UnexpectedToken, DiagnosticSeverity::Warning, loc, "'animation-fill-mode' used without a preceding 'animation:' block. Ignored."));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "'animation-fill-mode' usato senza un blocco 'animation:' precedente. Ignorato.");
+                }
                 return;
             }
             bool fwd = (v == "forwards" || v == "both");
@@ -584,8 +635,15 @@ namespace ZenitUI::ZMarkup
             }
             else
             {
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "valore overflow non riconosciuto: '" + v + "'. Ignorato.");
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow value not recognized: '" + v + "'"));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "valore overflow non riconosciuto: '" + v + "'. Ignorato.");
+                }
             }
             return;
         }
@@ -595,8 +653,17 @@ namespace ZenitUI::ZMarkup
             if (parseOverflowValue(v, o))
                 st.overflowX = o;
             else
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "valore overflow-x non riconosciuto: '" + v + "'. Ignorato.");
+            {
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-x value not recognized: '" + v + "'"));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "valore overflow-x non riconosciuto: '" + v + "'. Ignorato.");
+                }
+            }
             return;
         }
         if (k == "overflow-y")
@@ -605,19 +672,56 @@ namespace ZenitUI::ZMarkup
             if (parseOverflowValue(v, o))
                 st.overflowY = o;
             else
-                logWarn("StyleParser", loc.file, loc.line, loc.col,
-                        "valore overflow-y non riconosciuto: '" + v + "'. Ignorato.");
+            {
+                if (sink)
+                {
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-y value not recognized: '" + v + "'"));
+                }
+                else
+                {
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
+                            "valore overflow-y non riconosciuto: '" + v + "'. Ignorato.");
+                }
+            }
             return;
         }
 
         // ---------- Proprietà base (bubbled) ----------
         if (!applyStyleAttr(st, k, v))
         {
-            logWarn("StyleParser", loc.file, loc.line, loc.col,
-                    "unknown property '" + k + "'. Ignored.");
+            if (sink)
+            {
+                DiagnosticSeverity sev = strict ? DiagnosticSeverity::Error : DiagnosticSeverity::Warning;
+                auto d = makeDiagnostic(
+                    DiagnosticCode::UnknownProperty,
+                    sev,
+                    loc,
+                    "unknown property '" + k + "'",
+                    [&]
+                    {
+                        auto sugg = suggestSimilar(k, getKnownStyleProperties());
+                        if (sugg.empty())
+                            return std::string{};
+                        if (sugg.size() == 1)
+                            return "did you mean '" + sugg[0] + "'?";
+                        std::string s = "did you mean one of: ";
+                        for (std::size_t i = 0; i < sugg.size(); ++i)
+                        {
+                            if (i)
+                                s += ", ";
+                            s += "'" + sugg[i] + "'";
+                        }
+                        return s + "?";
+                    }());
+                sink->report(std::move(d));
+            }
+            else
+            {
+                logWarn("StyleParser", loc.file, loc.line, loc.column,
+                        "unknown property '" + k + "'. Ignored.");
+            }
         }
     }
-
     // =========================================================================
     //  AST
     // =========================================================================
@@ -626,8 +730,7 @@ namespace ZenitUI::ZMarkup
     {
         std::string prop;
         std::string value;
-        int line{0};
-        int col{0};
+        SourceSpan loc{};
     };
 
     struct StyleSheet
@@ -637,8 +740,7 @@ namespace ZenitUI::ZMarkup
             std::vector<SimpleSelector> chain; // es. [Tag Toggle {checked}, Class knob]
             std::string part;                  // vuoto se non è ::part
             std::vector<Declaration> decls;
-            int line{0};
-            int col{0};
+            SourceSpan loc{};
             std::optional<MediaQuery> media;
         };
         std::vector<Rule> rules;
@@ -647,15 +749,13 @@ namespace ZenitUI::ZMarkup
         {
             std::string ts;
             std::vector<Declaration> decls;
-            int line{0};
-            int col{0};
+            SourceSpan loc{};
         };
         struct KfRule
         {
             std::string name;
             std::vector<KfFrame> frames;
-            int line{0};
-            int col{0};
+            SourceSpan loc{};
         };
         std::vector<KfRule> keyframes;
 
@@ -671,6 +771,11 @@ namespace ZenitUI::ZMarkup
     public:
         StyleParser(std::string_view src, std::string fileName)
             : src(stripComments(src)), fileName(std::move(fileName)) {}
+
+        StyleParser(std::string_view src, std::string fileName, DiagnosticSink &sink)
+            : src(stripComments(src)), fileName(std::move(fileName)), sink_(&sink) {}
+
+        void setStrict(bool s) noexcept { strict_ = s; }
 
         StyleSheet parse()
         {
@@ -695,12 +800,24 @@ namespace ZenitUI::ZMarkup
     private:
         std::string src;
         std::string fileName;
+        DiagnosticSink *sink_ = nullptr;
+        bool strict_ = false;
+
         size_t p{0};
         int line{1};
         int col{1};
         StyleSheet sheet;
 
-        ParseLoc loc() const { return {fileName, line, col}; }
+        SourceSpan spanFrom(int l, int c, std::uint32_t length = 0) const
+        {
+            return SourceSpan{fileName, static_cast<std::uint32_t>(l),
+                              static_cast<std::uint32_t>(c), length};
+        }
+
+        DiagnosticSeverity propSeverity() const noexcept
+        {
+            return strict_ ? DiagnosticSeverity::Error : DiagnosticSeverity::Warning;
+        }
 
         bool atEnd() const { return p >= src.size(); }
         char peek() const { return atEnd() ? '\0' : src[p]; }
@@ -808,8 +925,7 @@ namespace ZenitUI::ZMarkup
                 Declaration d;
                 d.prop = p;
                 d.value = v;
-                d.line = declLine;
-                d.col = declCol;
+                d.loc = spanFrom(declLine, declCol, static_cast<std::uint32_t>(prop.size()));
                 sheet.rootDecls.push_back(std::move(d));
             }
             match('}');
@@ -825,8 +941,7 @@ namespace ZenitUI::ZMarkup
 
             StyleSheet::KfRule kf;
             kf.name = kfName;
-            kf.line = kfLine;
-            kf.col = kfCol;
+            kf.loc = spanFrom(kfLine, kfCol);
 
             while (!atEnd() && peek() != '}')
             {
@@ -845,8 +960,7 @@ namespace ZenitUI::ZMarkup
 
                 StyleSheet::KfFrame frame;
                 frame.ts = ts;
-                frame.line = frameLine;
-                frame.col = frameCol;
+                frame.loc = spanFrom(frameLine, frameCol);
 
                 while (!atEnd() && peek() != '}')
                 {
@@ -872,8 +986,7 @@ namespace ZenitUI::ZMarkup
                     Declaration d;
                     d.prop = trim(prop);
                     d.value = trim(val);
-                    d.line = declLine;
-                    d.col = declCol;
+                    d.loc = spanFrom(declLine, declCol, static_cast<std::uint32_t>(prop.size()));
                     frame.decls.push_back(std::move(d));
                 }
                 match('}');
@@ -1057,8 +1170,7 @@ namespace ZenitUI::ZMarkup
                 Declaration d;
                 d.prop = trim(prop);
                 d.value = trim(val);
-                d.line = declLine;
-                d.col = declCol;
+                d.loc = spanFrom(declLine, declCol, static_cast<std::uint32_t>(prop.size()));
                 decls.push_back(std::move(d));
             }
             match('}');
@@ -1087,8 +1199,7 @@ namespace ZenitUI::ZMarkup
                     continue;
 
                 StyleSheet::Rule rule;
-                rule.line = ruleLine;
-                rule.col = ruleCol;
+                rule.loc = spanFrom(ruleLine, ruleCol);
                 if (media)
                     rule.media = *media;
 
@@ -1204,7 +1315,20 @@ namespace ZenitUI::ZMarkup
                             ss.requireDisabled = true;
                         else if (one == "checked")
                             ss.requireChecked = true;
-                        // stati sconosciuti: ignorati silenziosamente
+                        else if (!one.empty())
+                        {
+                            if (sink_)
+                            {
+                                sink_->report(makeDiagnostic(
+                                    DiagnosticCode::UnknownPseudo, propSeverity(),
+                                    spanFrom(ruleLine, ruleCol, static_cast<std::uint32_t>(one.size())),
+                                    "unknown pseudo-class ':" + one + "'"));
+                            }
+                            else
+                            {
+                                logWarn("StyleParser", fileName, ruleLine, ruleCol, "unknown pseudo-class ':" + one + "'. Ignored.");
+                            }
+                        }
 
                         if (next == std::string::npos)
                             break;
@@ -1223,7 +1347,7 @@ namespace ZenitUI::ZMarkup
     // =========================================================================
     //  Auto-fill dei keyframe non uniformi + warning
     // =========================================================================
-    inline void normalizeKeyframes(KeyframeAnimation &anim, const ParseLoc &loc)
+    inline void normalizeKeyframes(KeyframeAnimation &anim, const SourceSpan &loc)
     {
         if (anim.keyframes.size() < 2)
             return;
@@ -1251,7 +1375,7 @@ namespace ZenitUI::ZMarkup
                     if (!filled && i + 1 < anim.keyframes.size())
                         filled = copyStyleProp(anim.keyframes[i].delta, anim.keyframes[i + 1].delta, prop);
 
-                    logWarn("StyleParser", loc.file, loc.line, loc.col,
+                    logWarn("StyleParser", loc.file, loc.line, loc.column,
                             "@keyframes " + anim.name + ": keyframe t=" + std::to_string(anim.keyframes[i].t) +
                                 " non dichiara '" + prop + "'. Auto-fill dal keyframe " +
                                 (i > 0 ? "precedente" : "successivo") + ".");
@@ -1263,13 +1387,12 @@ namespace ZenitUI::ZMarkup
     // =========================================================================
     //  Applica lo sheet al Theme
     // =========================================================================
-    inline void applyStyleSheet(const StyleSheet &sheet, const std::string &fileName, Theme &theme)
+    inline void applyStyleSheet(const StyleSheet &sheet, Theme &theme, DiagnosticSink *sink = nullptr, bool strict = false)
     {
         // :root → Style base
         for (auto &d : sheet.rootDecls)
         {
-            ParseLoc loc{fileName, d.line, d.col};
-            applyStyleDeclaration(theme.root, d.prop, d.value, loc);
+            applyStyleDeclaration(theme.root, d.prop, d.value, d.loc, sink, strict);
         }
 
         // Regole normali → ThemeRule
@@ -1282,16 +1405,26 @@ namespace ZenitUI::ZMarkup
 
             for (auto &d : r.decls)
             {
-                ParseLoc loc{fileName, d.line, d.col};
-                applyStyleDeclaration(tr.style, d.prop, d.value, loc);
+                applyStyleDeclaration(tr.style, d.prop, d.value, d.loc, sink, strict);
             }
 
             theme.addRule(std::move(tr));
         }
 
-        // Keyframes (invariato)
+        // Keyframes (invariato tranne check duplicati)
+        std::set<std::string> seenKf;
         for (auto &kf : sheet.keyframes)
         {
+            if (seenKf.count(kf.name))
+            {
+                if (sink)
+                {
+                    DiagnosticSeverity sev = strict ? DiagnosticSeverity::Error : DiagnosticSeverity::Warning;
+                    sink->report(makeDiagnostic(DiagnosticCode::DuplicateRule, sev, kf.loc, "duplicate @keyframes '" + kf.name + "'"));
+                }
+            }
+            seenKf.insert(kf.name);
+
             KeyframeAnimation anim;
             anim.name = kf.name;
             for (auto &frame : kf.frames)
@@ -1308,17 +1441,14 @@ namespace ZenitUI::ZMarkup
                 k.t = t;
                 for (auto &d : frame.decls)
                 {
-                    ParseLoc loc{fileName, d.line, d.col};
-                    applyStyleDeclaration(k.delta, d.prop, d.value, loc);
+                    applyStyleDeclaration(k.delta, d.prop, d.value, d.loc, sink, strict);
                 }
                 anim.keyframes.push_back(std::move(k));
             }
-            std::sort(anim.keyframes.begin(), anim.keyframes.end(),
-                      [](const Keyframe &a, const Keyframe &b)
+            std::sort(anim.keyframes.begin(), anim.keyframes.end(), [](const Keyframe &a, const Keyframe &b)
                       { return a.t < b.t; });
 
-            ParseLoc kfLoc{fileName, kf.line, kf.col};
-            normalizeKeyframes(anim, kfLoc);
+            normalizeKeyframes(anim, kf.loc);
             theme.addKeyframes(anim);
         }
     }
@@ -1326,14 +1456,18 @@ namespace ZenitUI::ZMarkup
     // =========================================================================
     //  Entry point
     // =========================================================================
-    inline bool loadStyleString(std::string_view src, Theme &theme = Theme::get(), const std::string &fileName = "<string>")
+    inline bool loadStyleString(std::string_view src, Theme &theme = Theme::get(), const std::string &fileName = "<string>", DiagnosticSink *sink = nullptr, bool strict = false)
     {
-        StyleParser parser(src, fileName);
-        applyStyleSheet(parser.parse(), fileName, theme);
-        return true;
+        NullDiagnosticSink nullSink;
+        DiagnosticSink &actualSink = sink ? *sink : nullSink;
+
+        StyleParser parser(src, fileName, actualSink);
+        parser.setStrict(strict);
+        applyStyleSheet(parser.parse(), theme, &actualSink, strict);
+        return !actualSink.hasErrors();
     }
 
-    inline bool loadStyleFile(const std::filesystem::path &path, Theme &theme = Theme::get())
+    inline bool loadStyleFile(const std::filesystem::path &path, Theme &theme = Theme::get(), DiagnosticSink *sink = nullptr, bool strict = false)
     {
         std::ifstream f(path, std::ios::binary);
         if (!f)
@@ -1343,7 +1477,7 @@ namespace ZenitUI::ZMarkup
         }
         std::stringstream ss;
         ss << f.rdbuf();
-        return loadStyleString(ss.str(), theme, path.string());
+        return loadStyleString(ss.str(), theme, path.string(), sink, strict);
     }
 
 } // namespace ZenitUI::ZMarkup

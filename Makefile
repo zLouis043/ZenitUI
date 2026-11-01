@@ -18,7 +18,7 @@ else
   EXE :=
 endif
 
-FRAMEWORK_SRCS := $(wildcard src/ui/layout/*.cpp)
+FRAMEWORK_SRCS := $(wildcard src/ui/layout/*.cpp) $(wildcard src/ui/internal/*.cpp)
 TEST_SRCS      := $(wildcard tests/*.cpp)
 
 FRAMEWORK_OBJS := $(FRAMEWORK_SRCS:%.cpp=$(OBJ_DIR)/%.o)
@@ -41,6 +41,10 @@ $(TESTS_BIN): $(TEST_OBJS) $(LIB_BIN) | $(BIN_DIR)
 	$(CXX) $(TEST_OBJS) -L$(LIB_DIR) -lzenit -o $@
 
 $(OBJ_DIR)/src/ui/layout/%.o: src/ui/layout/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/src/ui/internal/%.o: src/ui/internal/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
 
