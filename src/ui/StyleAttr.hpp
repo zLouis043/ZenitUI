@@ -186,7 +186,7 @@ inline std::optional<Value> parseValueToken(std::string_view s) {
         detail::CalcParser p(toks);
         Value out;
         if (!p.parse(out)) {
-            logWarn("StyleParser", "", 0, 0, "espressione math non valida '" + std::string(s) + "'");
+            logWarn("StyleParser", "", 0, 0, "invalid math expression '" + std::string(s) + "'");
             return std::nullopt;
         }
         return out;

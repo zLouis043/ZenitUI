@@ -206,7 +206,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'transition-delay' usato senza un blocco 'transition:' precedente. Ignorato.");
+                            "'transition-delay' used without a 'transition:' block previously. Ignored.");
                 }
                 return;
             }
@@ -234,7 +234,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'transition-duration' usato senza un blocco 'transition:' precedente. Ignorato.");
+                            "'transition-duration' used without a 'transition:' block previously. Ignored.");
                 }
                 return;
             }
@@ -262,7 +262,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'transition-timing-function' usato senza un blocco 'transition:' precedente. Ignorato.");
+                            "'transition-timing-function'used without a 'transition:' block previously. Ignored.");
                 }
                 return;
             }
@@ -356,7 +356,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-delay' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-delay' used without a 'animation:' previously. Ignored.");
                 }
                 return;
             }
@@ -384,7 +384,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-duration' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-duration' used without a 'animation:' block previously. Ignored.");
                 }
                 return;
             }
@@ -412,7 +412,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-timing-function' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-timing-function' used without a 'animation:' block previously. Ignored.");
                 }
                 return;
             }
@@ -433,7 +433,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-iteration-count' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-iteration-count' used without a 'animation:' block previously. Ignored.");
                 }
                 return;
             }
@@ -466,7 +466,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-direction' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-direction' used without a 'animation:' block previously. Ignored.");
                 }
                 return;
             }
@@ -486,7 +486,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "'animation-fill-mode' usato senza un blocco 'animation:' precedente. Ignorato.");
+                            "'animation-fill-mode' used without a 'animation:' block previously. Ignored.");
                 }
                 return;
             }
@@ -633,7 +633,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "valore overflow non riconosciuto: '" + v + "'. Ignorato.");
+                            "overflow value not recognized: '" + v + "'. Ignored.");
                 }
             }
             return;
@@ -652,7 +652,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "valore overflow-x non riconosciuto: '" + v + "'. Ignorato.");
+                            "overflow-x value not recognized: '" + v + "'. Ignored.");
                 }
             }
             return;
@@ -671,7 +671,7 @@ namespace ZenitUI::ZMarkup
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "valore overflow-y non riconosciuto: '" + v + "'. Ignorato.");
+                            "overflow-y value not recognized: '" + v + "'. Ignored.");
                 }
             }
             return;
@@ -1323,8 +1323,8 @@ namespace ZenitUI::ZMarkup
 
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
                             "@keyframes " + anim.name + ": keyframe t=" + std::to_string(anim.keyframes[i].t) +
-                                " non dichiara '" + prop + "'. Auto-fill dal keyframe " +
-                                (i > 0 ? "precedente" : "successivo") + ".");
+                                " do not declare '" + prop + "'. Auto-fill from keyframe " +
+                                (i > 0 ? "prior" : "next") + ".");
                 }
             }
         }

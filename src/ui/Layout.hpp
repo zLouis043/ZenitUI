@@ -186,8 +186,8 @@ namespace ZenitUI
 			if (weak_from_this().expired())
 			{
 				logWarn("Layout", "", 0, 0,
-						"addChild chiamato su un nodo non gestito da shared_ptr. "
-						"Usa X::create() e metti questa logica in onBuild().");
+						"addChild called on a node not handled with shared_ptr."
+						"Use X::create() and put this logic in onBuild().");
 				return;
 			}
 
