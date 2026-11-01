@@ -481,6 +481,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#as-a-subdirectory-source-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1730,6 +1741,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#as-a-subdirectory-source-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2009,6 +2031,31 @@ folder in the repo — the build is self-contained.</p>
 <h2 id="integration-with-cmake">Integration with CMake</h2>
 <p>The target is always <code>ZenitUI::ZenitUI</code>, whether you consume the library
 from source or from an install — your <code>CMakeLists.txt</code> doesn't change.</p>
+<h3 id="backends">Backends</h3>
+<p>The core is backend-agnostic; backends are opt-in. Currently available:</p>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>CMake target</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>raylib</code></td>
+<td><code>ZenitUI::RaylibBackend</code></td>
+<td>Reference implementation</td>
+</tr>
+<tr>
+<td><code>mock</code></td>
+<td><code>ZenitUI::MockBackend</code></td>
+<td>Headless testing (no GPU, no window)</td>
+</tr>
+</tbody>
+</table>
+<p>Enable them with <code>-DZENITUI_BACKENDS="raylib;mock"</code> (comma-separated).
+Tests automatically pull in <code>mock</code>; examples default to <code>raylib</code>.</p>
 <h3 id="as-a-subdirectory-source-tree">As a subdirectory (source tree)</h3>
 <pre><code class="language-cmake">add_subdirectory(third_party/ZenitUI)
 target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
