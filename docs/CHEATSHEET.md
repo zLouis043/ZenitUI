@@ -550,7 +550,7 @@ Define `ZENITUI_DEBUG` before including `UI.hpp`:
 
 ```cpp
 #define ZENITUI_DEBUG
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 Debug::dumpStyle(*node, std::cout);
 Debug::dumpTree(*root, std::cout);

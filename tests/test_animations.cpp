@@ -2,7 +2,7 @@
 #include "Layout.hpp"
 #include "Theme.hpp"
 #include "StyleParser.hpp"
-#include "UIComponents.hpp"
+#include "ZenitUIComponents.hpp"
 #include "Mocks.hpp"
 using namespace ZenitUI::Test;
 

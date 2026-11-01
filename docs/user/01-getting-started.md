@@ -33,7 +33,7 @@ the backend, hand it to `UIContext`, and drive the frame loop yourself.
 ```cpp
 #include <raylib.h>
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 using namespace ZenitUI;
 
@@ -237,7 +237,7 @@ logic at a different rate from rendering if you ever need to.
 ```cpp
 #include <raylib.h>
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 #include <cstdio>
 
 using namespace ZenitUI;

@@ -30,7 +30,7 @@
 #include <raylib.h>
 
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 #include <cstdio>
 #include <memory>

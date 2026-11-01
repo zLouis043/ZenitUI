@@ -15,7 +15,7 @@
 #include <raylib.h>
 
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 #include "Rating.hpp"
 
 #include <cstdio>

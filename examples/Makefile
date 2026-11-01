@@ -3,14 +3,14 @@ CXXFLAGS := -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
 
 ROOT := ..
 
-CPPFLAGS := -I$(ROOT)/src -I$(ROOT)/src/ui -I$(ROOT)/src/backend/raylib
+CPPFLAGS := -I$(ROOT)/include -I$(ROOT)/include/components -I$(ROOT)/backends/raylib
 CPPFLAGS += -I$(ROOT)/deps/raylib/include
 
 LDFLAGS  := -L$(ROOT)/deps/raylib/lib
 LIBS     := -lraylibdll -lopengl32 -lgdi32 -lwinmm
 
 LIBZENIT    := $(ROOT)/lib/libzenit.a
-BACKEND_SRC := $(ROOT)/src/backend/raylib/RaylibBackend.cpp
+BACKEND_SRC := $(ROOT)/backends/raylib/RaylibBackend.cpp
 RAYLIB_DLL  := $(ROOT)/deps/raylib/lib/raylib.dll
 
 ifeq ($(OS),Windows_NT)

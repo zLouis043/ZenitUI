@@ -5,7 +5,7 @@
 #include <raylib.h>
 
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 #include "SettingsScreen.hpp"
 #include "DemoWindow.hpp"

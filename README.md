@@ -89,7 +89,7 @@ fully compatible with the same styling system.
 ```cpp
 #include <raylib.h>
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 using namespace ZenitUI;
 
@@ -210,70 +210,6 @@ The full documentation lives in [`docs/`](docs/):
 - [`FilterRegistry`](docs/api/FilterRegistry.md) ·
 - [`UIContext`](docs/api/UIContext.md) ·
 - [`Bindable`](docs/api/Bindable.md)
-
----
-
-## Repository layout
-
-```
-src/
-  pch.hpp                     Precompiled header (Raylib app only)
-  main.cpp                    Demo entry point
-  ui/
-    Layout.hpp                Core node type
-    Style.hpp                 Style / ComputedStyle
-    Theme.hpp                 Rules, keyframes, specificity
-    StyleResolver.hpp         Cascade + transitions
-    StyleParser.hpp           .zstyle parser
-    StyleAttr.hpp             Attribute value parsers
-    AnimationPlayer.hpp       Imperative + CSS animation
-    AnimPrimitives.hpp        Keyframe types, evaluators
-    Easing.hpp                TransitionFunction
-    InputController.hpp       Input FSM
-    ScrollController.hpp      Scroll orchestration
-    ScrollState.hpp           Scroll state (POD)
-    FilterRegistry.hpp        Filter registration
-    UIContext.hpp             The three backend interfaces + context
-    Media.hpp                 Media queries
-    CoreTypes.hpp             Vec2, Rect, Color, ...
-    Common.hpp                Standard includes
-    Logger.hpp                Structured logging
-    Debug.hpp                 Debug dumps
-    UI.hpp                    Aggregator header
-    UIComponents.hpp          Widget aggregator
-    UIEnums.hpp               LayoutType, UIState
-    Unit.hpp                  Value / Unit
-    ZMarkup.hpp               DSL parser + builder
-    components/               Widgets (header-only)
-      Text.hpp  Button.hpp  Panel.hpp  ImageContainer.hpp
-      Toggle.hpp  Checkbox.hpp  Slider.hpp  ProgressBar.hpp
-      TextInput.hpp  ScrollView.hpp  Dropdown.hpp
-      Canvas.hpp  Modal.hpp  Tooltip.hpp  Popup.hpp
-      Layouts.hpp
-    layout/                   Core implementation
-      Layout.cpp
-      Measure.cpp
-      Render.cpp
-      StyleResolver.cpp
-      AnimationPlayer.cpp
-      Input.cpp
-      ScrollController.cpp
-      FilterRegistry.cpp
-  backend/
-    RaylibBackend.hpp
-    RaylibBackend.cpp
-deps/
-  raylib/                     Vendored Raylib (include/, lib/)
-tests/
-  TestFramework.hpp
-  Mocks.hpp
-  test_main.cpp
-  test_*.cpp
-docs/
-  README.md  CHEATSHEET.md  GLOSSARY.md  ROADMAP.md
-  user/      internals/     api/
-assets/                       .zstyle files, fonts, textures, shaders
-```
 
 ---
 

@@ -85,7 +85,7 @@ fully compatible with the same styling system.
 ```cpp
 #include <raylib.h>
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 using namespace ZenitUI;
 
@@ -166,34 +166,26 @@ See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
 
 ---
 
-## Repository layout (overview)
-
-```
-include/
-  Common.hpp            CoreTypes.hpp       Unit.hpp
-  Layout.hpp            Style.hpp           Theme.hpp
-  StyleResolver.hpp     StyleParser.hpp     StyleAttr.hpp
-  AnimationPlayer.hpp   AnimPrimitives.hpp  Easing.hpp
-  InputController.hpp   ScrollController.hpp ScrollState.hpp
-  FilterRegistry.hpp    UIContext.hpp       Media.hpp
-  UI.hpp                UIComponents.hpp    UIEnums.hpp
-  Logger.hpp            Debug.hpp
-  ZMarkup.hpp
-  components/           Button, Toggle, Slider, Checkbox, TextInput,
-                        ProgressBar, Dropdown, ScrollView, Modal,
-                        Tooltip, Popup, Canvas, Text, ImageContainer
-src/
-  Layout.cpp            Measure.cpp         Render.cpp
-  StyleResolver.cpp     AnimationPlayer.cpp Input.cpp
-  ScrollController.cpp  FilterRegistry.cpp
-backends/
-  raylib/               RaylibBackend.{hpp,cpp}
-tests/
-  Mocks.hpp             test_*.cpp
-```
-
----
-
 ## License
 
-*To be defined.*
+MIT License
+
+Copyright (c) 2026 zLouis043
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

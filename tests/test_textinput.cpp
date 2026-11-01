@@ -1,6 +1,6 @@
 #include "TestFramework.hpp"
 #include "Mocks.hpp"
-#include "UIComponents.hpp"
+#include "ZenitUIComponents.hpp"
 
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
