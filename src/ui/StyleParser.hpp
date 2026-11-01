@@ -163,6 +163,12 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
+        // ---------- WRAP ----------
+        if (k == "wrap") {
+            st.wrap = (v == "true" || v == "1" || v == "wrap");
+            return;
+        }
+
         // ---------- TRANSITION ----------
         if (k == "transition")
         {

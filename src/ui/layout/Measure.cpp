@@ -64,58 +64,103 @@ namespace ZenitUI
 		float gapX = calcStyle.gap.resolveH(innerW, innerH);
 		float gapY = calcStyle.gap.resolveV(innerW, innerH);
 
-		float totalMainSize = 0.0f;
-		float maxCrossSize = 0.0f;
-		int visibleChildren = 0;
-
-		// --- Misura tutti i figli ---
-		for (auto &c : children)
+		// ================== LOGICA WRAP (HStack) ==================
+		if (type == LayoutType::Horizontal && calcStyle.wrap)
 		{
-			Vec2 cs = c->measure(innerW, innerH);
-			if (c->getStyle().position == Position::Absolute || c->isPortal())
-				continue;
+			float curX = 0, curY = 0, maxW = 0, maxLineH = 0;
+			int visibleInLine = 0;
+			for (auto &c : children)
+			{
+				Vec2 cs = c->measure(innerW, innerH);
+				if (c->getStyle().position == Position::Absolute || c->isPortal())
+					continue;
+				const auto &cst = c->getStyle();
+				float ml = cst.margin.left.resolveH(innerW, innerH);
+				float mr = cst.margin.right.resolveH(innerW, innerH);
+				float mt = cst.margin.top.resolveV(innerW, innerH);
+				float mb = cst.margin.bottom.resolveV(innerW, innerH);
+				float childW = cs.x + ml + mr;
+				float childH = cs.y + mt + mb;
 
-			const auto &cst = c->getStyle();
-			float ml = cst.margin.left.resolveH(innerW, innerH);
-			float mr = cst.margin.right.resolveH(innerW, innerH);
-			float mt = cst.margin.top.resolveV(innerW, innerH);
-			float mb = cst.margin.bottom.resolveV(innerW, innerH);
+				// Stima dello spazio: se non è il primo, consideriamo il gap
+				float spaceNeeded = childW + (visibleInLine > 0 ? gapX : 0.0f);
 
-			float childTotalW = cs.x + ml + mr;
-			float childTotalH = cs.y + mt + mb;
+				// Va a capo?
+				if (visibleInLine > 0 && curX + spaceNeeded > innerW && innerW > 0.0f)
+				{
+					maxW = std::max(maxW, curX); // Salva la larghezza della riga corrente
+					curY += maxLineH + gapY;	 // Scendi giù
+					curX = 0;					 // Reset ascissa
+					maxLineH = 0;				 // Reset altezza riga
+					visibleInLine = 0;			 // Reset conteggio
+					spaceNeeded = childW;		 // Ricalcola space needed senza gap iniziale
+				}
+
+				if (visibleInLine > 0)
+					curX += gapX;
+				curX += childW;
+				maxLineH = std::max(maxLineH, childH);
+				visibleInLine++;
+			}
+			maxW = std::max(maxW, curX);
+
+			// contentSize per il wrap flow: la max larghezza tra le righe e l'altezza totale
+			contentSize.x = maxW;
+			contentSize.y = curY + maxLineH;
+		}
+		else
+		{
+			float totalMainSize = 0.0f;
+			float maxCrossSize = 0.0f;
+			int visibleChildren = 0;
+
+			for (auto &c : children)
+			{
+				Vec2 cs = c->measure(innerW, innerH);
+				if (c->getStyle().position == Position::Absolute || c->isPortal())
+					continue;
+
+				const auto &cst = c->getStyle();
+				float ml = cst.margin.left.resolveH(innerW, innerH);
+				float mr = cst.margin.right.resolveH(innerW, innerH);
+				float mt = cst.margin.top.resolveV(innerW, innerH);
+				float mb = cst.margin.bottom.resolveV(innerW, innerH);
+
+				float childTotalW = cs.x + ml + mr;
+				float childTotalH = cs.y + mt + mb;
+
+				if (type == LayoutType::Horizontal)
+				{
+					totalMainSize += childTotalW;
+					maxCrossSize = std::max(maxCrossSize, childTotalH);
+				}
+				else if (type == LayoutType::Vertical)
+				{
+					totalMainSize += childTotalH;
+					maxCrossSize = std::max(maxCrossSize, childTotalW);
+				}
+				else if (type == LayoutType::Stack)
+				{
+					contentSize.x = std::max(contentSize.x, childTotalW);
+					contentSize.y = std::max(contentSize.y, childTotalH);
+				}
+				visibleChildren++;
+			}
 
 			if (type == LayoutType::Horizontal)
 			{
-				totalMainSize += childTotalW;
-				maxCrossSize = std::max(maxCrossSize, childTotalH);
+				if (visibleChildren > 1)
+					totalMainSize += gapX * (visibleChildren - 1);
+				contentSize.x = std::max(contentSize.x, totalMainSize);
+				contentSize.y = std::max(contentSize.y, maxCrossSize);
 			}
 			else if (type == LayoutType::Vertical)
 			{
-				totalMainSize += childTotalH;
-				maxCrossSize = std::max(maxCrossSize, childTotalW);
+				if (visibleChildren > 1)
+					totalMainSize += gapY * (visibleChildren - 1);
+				contentSize.x = std::max(contentSize.x, maxCrossSize);
+				contentSize.y = std::max(contentSize.y, totalMainSize);
 			}
-			else if (type == LayoutType::Stack)
-			{
-				contentSize.x = std::max(contentSize.x, childTotalW);
-				contentSize.y = std::max(contentSize.y, childTotalH);
-			}
-			visibleChildren++;
-		}
-
-		// --- Aggiungi i gap ---
-		if (type == LayoutType::Horizontal)
-		{
-			if (visibleChildren > 1)
-				totalMainSize += gapX * (visibleChildren - 1);
-			contentSize.x = std::max(contentSize.x, totalMainSize);
-			contentSize.y = std::max(contentSize.y, maxCrossSize);
-		}
-		else if (type == LayoutType::Vertical)
-		{
-			if (visibleChildren > 1)
-				totalMainSize += gapY * (visibleChildren - 1);
-			contentSize.x = std::max(contentSize.x, maxCrossSize);
-			contentSize.y = std::max(contentSize.y, totalMainSize);
 		}
 
 		// Salviamo l'ingombro reale non tagliato per gestire i limiti dello ScrollView
@@ -194,7 +239,12 @@ namespace ZenitUI
 		if (type == LayoutType::Vertical)
 			arrangeVerticalFlow(inner, gapY);
 		else if (type == LayoutType::Horizontal)
-			arrangeHorizontalFlow(inner, gapX);
+		{
+			if (style_.currentStyle.wrap)
+				arrangeWrapFlow(inner, gapX, gapY);
+			else
+				arrangeHorizontalFlow(inner, gapX);
+		}
 		else if (type == LayoutType::Stack)
 			arrangeStackFlow(inner);
 	}
@@ -593,7 +643,7 @@ namespace ZenitUI
 		return nullptr;
 	}
 
-		bool Layout::scrollIntoView(float margin)
+	bool Layout::scrollIntoView(float margin)
 	{
 		return scrollIntoView(getRect(), margin);
 	}
@@ -652,11 +702,123 @@ namespace ZenitUI
 
 		// Nulla da fare se il clamp ha annullato lo spostamento.
 		if (targetX == container->getScrollX() &&
-		    targetY == container->getScrollY())
+			targetY == container->getScrollY())
 			return false;
 
 		container->scrollTo(targetX, targetY);
 		return true;
 	}
 
+	void Layout::arrangeWrapFlow(const Rect &inner, float gapX, float gapY)
+	{
+		struct Line
+		{
+			std::vector<Layout *> items;
+			float width = 0.0f;
+			float height = 0.0f;
+			float totalGrow = 0.0f;
+		};
+		std::vector<Line> lines;
+		Line curLine;
+
+		// 1. Raggruppa i figli per riga
+		for (auto &c : children)
+		{
+			const auto &cst = c->getStyle();
+			if (cst.position == Position::Absolute || c->isPortal())
+				continue;
+
+			float ml = cst.margin.left.resolveH(inner.width, inner.height);
+			float mr = cst.margin.right.resolveH(inner.width, inner.height);
+			float mt = cst.margin.top.resolveV(inner.width, inner.height);
+			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
+
+			float childW = c->measuredSize.x + ml + mr;
+			float childH = c->measuredSize.y + mt + mb;
+
+			float spaceNeeded = childW + (curLine.items.empty() ? 0.0f : gapX);
+
+			// Va a capo?
+			if (!curLine.items.empty() && curLine.width + spaceNeeded > inner.width && inner.width > 0.0f)
+			{
+				lines.push_back(curLine);
+				curLine = Line();
+				spaceNeeded = childW; // Primo elemento della nuova riga, no gap
+			}
+
+			curLine.width += spaceNeeded;
+			curLine.height = std::max(curLine.height, childH);
+			curLine.totalGrow += cst.grow;
+			curLine.items.push_back(c.get());
+		}
+		if (!curLine.items.empty())
+			lines.push_back(curLine);
+
+		// 2. Dispone i nodi riga per riga
+		float curY = inner.y;
+		for (auto &line : lines)
+		{
+			float freeSpace = inner.width - line.width;
+			float startX = inner.x;
+			float extraGap = 0.0f;
+
+			// Applica justify per la riga se c'è spazio e nessuno cresce
+			if (freeSpace > 0.0f && line.totalGrow <= 0.0f && !line.items.empty())
+			{
+				switch (style_.currentStyle.justify)
+				{
+				case Justify::Center:
+					startX += freeSpace * 0.5f;
+					break;
+				case Justify::End:
+					startX += freeSpace;
+					break;
+				case Justify::SpaceBetween:
+					if (line.items.size() > 1)
+						extraGap = freeSpace / (line.items.size() - 1);
+					break;
+				default:
+					break;
+				}
+			}
+
+			float curX = startX;
+			for (auto *c : line.items)
+			{
+				const auto &cst = c->getStyle();
+				float ml = cst.margin.left.resolveH(inner.width, inner.height);
+				float mr = cst.margin.right.resolveH(inner.width, inner.height);
+				float mt = cst.margin.top.resolveV(inner.width, inner.height);
+				float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
+
+				float cw = c->measuredSize.x;
+				if (freeSpace > 0.0f && line.totalGrow > 0.0f && cst.grow > 0.0f)
+				{
+					cw += freeSpace * (cst.grow / line.totalGrow);
+				}
+				float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
+				float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
+				cw = clampSafe(cw, minW, maxW);
+
+				float ch = c->measuredSize.y;
+				float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
+				float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
+				float availH = std::max(0.0f, line.height - mt - mb);
+				ch = clampSafe(ch, minH, std::min(availH, maxH));
+
+				float cy = curY + mt;
+				Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.itemsV : cst.alignV;
+				if (aV == Align::Stretch)
+					ch = clampSafe(availH, minH, std::min(availH, maxH));
+				else if (aV == Align::Center)
+					cy += (availH - ch) * 0.5f;
+				else if (aV == Align::End)
+					cy += availH - ch;
+
+				c->arrange({curX + ml, cy, cw, ch});
+				curX += ml + cw + mr + gapX + extraGap;
+			}
+			curY += line.height + gapY;
+		}
+	}
 } // namespace ZenitUI
