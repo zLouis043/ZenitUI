@@ -123,6 +123,21 @@ jobs:
           shell: cmd
           run: choco install ninja -y --no-progress
 
+        - name: Install Linux X11 dependencies
+          if: runner.os == 'Linux'
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y \
+              libx11-dev \
+              libxrandr-dev \
+              libxinerama-dev \
+              libxcursor-dev \
+              libxi-dev \
+              libgl1-mesa-dev \
+              libglu1-mesa-dev \
+              libasound2-dev \
+              libpulse-dev
+
         - name: Build examples (Linux / macOS)
           if: runner.os != 'Windows'
           run: make -j4 examples CXX=${{ matrix.cxx }}
