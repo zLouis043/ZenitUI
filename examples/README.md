@@ -12,28 +12,40 @@ catalogue of runnable code, not a tutorial.
 
 ## Prerequisites
 
-- A C++20 compiler (`g++` or `clang++`).
-- `make`.
-- The Raylib backend in `deps/raylib/` (only needed at runtime and for
-  the demo executables).
-- `lib/libzenit.a`, the framework library (see below).
+- A C++20 compiler (`g++`, `clang++`, or MSVC).
+- CMake ≥ 3.20 and Ninja (recommended).
+- `git` (required by `FetchContent` to pull Raylib).
+- Optional: `make`, for the convenience targets documented below.
+
+Raylib is fetched and built automatically via CMake's `FetchContent`.
+There is no `deps/raylib/` folder — the build is self-contained.
 
 ---
 
 ## Building the library
 
-Every example links `lib/libzenit.a`. Build it once from the repository
-root before compiling any example:
+Every example links the framework library. Build it once from the
+repository root before compiling any example:
 
 ```bash
-make            # builds lib/libzenit.a and bin/tests
+make            # builds libzenit.a + unit tests
 make libzenit   # builds only the library
 ```
 
-The library contains the core framework (`src/ui/layout/*.cpp`). The
-Raylib backend (`src/backend/raylib/RaylibBackend.cpp`) is compiled
-directly into each example, so a custom backend can be swapped in
-without rebuilding the library.
+Or, without the `make` frontend:
+
+```bash
+cmake -S . -B build -G Ninja
+cmake --build build --target ZenitUI
+```
+
+Either way, the library ends up at `build/libzenit.a`.
+
+The library contains the core framework (`src/layout/*.cpp` and
+`src/internal/*.cpp`). The Raylib backend (`backends/raylib/`) is a
+separate static target (`ZenitUI::RaylibBackend`) linked into the
+examples by CMake. It is compiled **once**, not per-example — a custom
+backend can be swapped in without touching the library.
 
 ---
 
@@ -46,8 +58,17 @@ make examples        # compiles every example
 make run-00_demo     # compiles (if needed) and runs 00_demo
 ```
 
-Each example produces `examples/bin/<name>/main` (`.exe` on Windows).
-On Windows, `raylib.dll` is copied next to the executable automatically.
+Or with CMake directly:
+
+```bash
+cmake -S . -B build -G Ninja -DZENITUI_BUILD_EXAMPLES=ON
+cmake --build build
+./build/examples/bin/00_demo/main
+```
+
+Each example produces `build/examples/bin/<name>/main` (`.exe` on
+Windows). Raylib is linked statically, so no DLL is required at
+runtime.
 
 **Important:** examples must be run **from the repository root**,
 because their asset paths (`assets/...`) are relative to the root. The
@@ -65,11 +86,11 @@ directory will make the asset lookups fail.
 ## Adding a new example
 
 1. Create `examples/NN_name/main.cpp`.
-2. Run `make examples`.
+2. Run `make examples` (or `cmake --build build`).
 
-The Makefile discovers every subdirectory that contains a `main.cpp`
-and produces a matching target under `examples/bin/`. No Makefile edit
-is required.
+The CMake build discovers every subdirectory that contains a
+`main.cpp` and produces a matching executable under
+`build/examples/bin/`. No `CMakeLists.txt` edit is required.
 
 If the example needs more than one source file, put them all in the
 same folder — every `.cpp` in the example's directory is compiled and
