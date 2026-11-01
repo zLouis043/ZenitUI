@@ -6,11 +6,7 @@
 
 using namespace ZenitUI;
 
-// ============================================================
-//  SmallVector
-// ============================================================
 
-// ---- costruzione base --------------------------------------------------
 
 TEST(SmallVector, default_is_empty)
 {
@@ -37,7 +33,6 @@ TEST(SmallVector, from_initializer_list_overflow)
     CHECK(v[3] == 4);
 }
 
-// ---- push_back ---------------------------------------------------------
 
 TEST(SmallVector, push_back_within_inline)
 {
@@ -57,7 +52,7 @@ TEST(SmallVector, push_back_overflow_to_heap)
     SmallVector<int, 2> v;
     v.push_back(1);
     v.push_back(2);
-    v.push_back(3);   // overflow
+    v.push_back(3);
     v.push_back(4);
 
     CHECK((int)v.size() == 4);
@@ -69,8 +64,6 @@ TEST(SmallVector, push_back_overflow_to_heap)
 
 TEST(SmallVector, push_back_rvalue_moves)
 {
-    // Con std::string posso verificare che il move sia effettivo:
-    // dopo il move, la stringa sorgente è vuota.
     SmallVector<std::string, 2> v;
 
     std::string a = "hello";
@@ -78,7 +71,7 @@ TEST(SmallVector, push_back_rvalue_moves)
 
     CHECK((int)v.size() == 1);
     CHECK(v[0] == "hello");
-    CHECK(a.empty());   // il move ha svuotato la sorgente
+    CHECK(a.empty());
 }
 
 TEST(SmallVector, push_back_rvalue_overflow_moves)
@@ -91,7 +84,7 @@ TEST(SmallVector, push_back_rvalue_overflow_moves)
 
     v.push_back(std::move(a));
     v.push_back(std::move(b));
-    v.push_back(std::move(c));   // overflow, ma i primi due vengono mossi
+    v.push_back(std::move(c));
 
     CHECK((int)v.size() == 3);
     CHECK(v[0] == "one");
@@ -102,7 +95,6 @@ TEST(SmallVector, push_back_rvalue_overflow_moves)
     CHECK(c.empty());
 }
 
-// ---- copia / move ------------------------------------------------------
 
 TEST(SmallVector, copy_constructor)
 {
@@ -147,7 +139,6 @@ TEST(SmallVector, move_assignment)
     CHECK(b[1] == 2);
 }
 
-// ---- clear / reserve ---------------------------------------------------
 
 TEST(SmallVector, clear_resets_to_empty)
 {
@@ -167,9 +158,6 @@ TEST(SmallVector, clear_allows_return_to_inline)
     v.clear();
     CHECK(v.empty());
 
-    // Dopo clear, i push tornano a usare lo storage inline
-    // (non è verificabile direttamente, ma il comportamento funzionale
-    // lo è).
     v.push_back(10);
     v.push_back(20);
     CHECK((int)v.size() == 2);
@@ -180,14 +168,14 @@ TEST(SmallVector, clear_allows_return_to_inline)
 TEST(SmallVector, reserve_on_inline_is_noop)
 {
     SmallVector<int, 4> v;
-    v.reserve(2);   // < N: nessun effetto
+    v.reserve(2);
     CHECK(v.empty());
 }
 
 TEST(SmallVector, reserve_on_heap_does_not_lose_data)
 {
     SmallVector<int, 2> v{1, 2};
-    v.reserve(10);   // > N: riserva sull'heap
+    v.reserve(10);
 
     CHECK((int)v.size() == 2);
     CHECK(v[0] == 1);
@@ -199,7 +187,6 @@ TEST(SmallVector, reserve_on_heap_does_not_lose_data)
     CHECK(v[3] == 4);
 }
 
-// ---- iterazione --------------------------------------------------------
 
 TEST(SmallVector, range_based_for_inline)
 {
@@ -231,7 +218,6 @@ TEST(SmallVector, range_based_for_empty)
     CHECK(count == 0);
 }
 
-// ---- confronto ---------------------------------------------------------
 
 TEST(SmallVector, equality_same_content)
 {
@@ -266,7 +252,6 @@ TEST(SmallVector, equality_empty)
     CHECK(a == b);
 }
 
-// ---- casi limite di N --------------------------------------------------
 
 TEST(SmallVector, N_equal_one)
 {
@@ -281,7 +266,6 @@ TEST(SmallVector, N_equal_one)
 
 TEST(SmallVector, N_equal_two_typical_case)
 {
-    // Il caso reale per Value: 2 termini inline.
     SmallVector<int, 2> v;
     v.push_back(100);
     v.push_back(-20);
@@ -298,7 +282,6 @@ TEST(SmallVector, N_equal_three)
     CHECK(v[3] == 4);
 }
 
-// ---- operator= da initializer_list --------------------------------------
 
 TEST(SmallVector, assign_from_initializer_list_replaces)
 {

@@ -30,8 +30,6 @@ TEST(Easing, boundaries_all_curves) {
 }
 
 TEST(Easing, quad_out_curve_shape) {
-    // EaseOutQuad è simmetrico rispetto al centro:
-    // f(0.25) = 1 - (1-0.25)^2 = 0.4375
     CHECK_NEAR(getRatio(0.25f, TransitionFunction::EaseOutQuad), 0.4375f, 1e-4);
 }
 
@@ -42,14 +40,10 @@ TEST(Easing, in_out_quad_is_symmetric) {
 }
 
 TEST(Easing, out_back_overshoots) {
-    // EaseOutBack supera 1 nel mezzo per poi rientrare.
     float mid = getRatio(0.7f, TransitionFunction::EaseOutBack);
     CHECK(mid > 1.0f);
 }
 
-// ------------------------------------------------------------
-//  parseEasing
-// ------------------------------------------------------------
 
 TEST(Easing, parse_linear) {
     TransitionFunction fn  = TransitionFunction::Linear;

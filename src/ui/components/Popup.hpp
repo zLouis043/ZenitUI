@@ -184,7 +184,6 @@ namespace ZenitUI::UI
         }
     };
 
-    // Helper per costruire rapidamente un popup con voci di menu.
     inline std::shared_ptr<Popup> ContextMenu(std::vector<std::pair<std::string, std::function<void()>>> items)
     {
         auto popup = Popup::create();

@@ -6,9 +6,6 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
-// ============================================================
-//  Slider::setValue
-// ============================================================
 
 TEST(Widget_slider, setValue_stores_value)
 {
@@ -61,7 +58,7 @@ TEST(Widget_slider, setValue_does_not_fire_when_unchanged)
     auto s = Slider::create(0.4f);
     s->onValueChanged = [&](float){ calls++; };
 
-    s->setValue(0.4f);   // stesso valore
+    s->setValue(0.4f);
     CHECK(calls == 0);
 }
 
@@ -81,8 +78,6 @@ TEST(Widget_slider, setValue_with_notify_false_suppresses_callback)
 
 TEST(Widget_slider, setValue_after_clamp_still_notifies_once)
 {
-    // Chiamare setValue(2.0) deve clampare a 1.0 e notificare una sola
-    // volta (non una per il clamp, una per il valore finale).
     Env env;
 
     int calls = 0;

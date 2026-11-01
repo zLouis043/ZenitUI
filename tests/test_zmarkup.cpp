@@ -119,7 +119,6 @@ TEST(ZMarkup_parser, nested_children) {
 
 TEST(ZMarkup_parser, line_comment_ignored) {
     auto e = parse(R"(
-        // this is a comment
         Text "hello"
     )");
     CHECK(e.tag == "Text");

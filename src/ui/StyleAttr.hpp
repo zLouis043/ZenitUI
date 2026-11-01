@@ -13,10 +13,6 @@
 
 namespace ZenitUI {
 
-// =========================================================================
-//  Parsers CSS-style: valore, colore, spacing, align, justify.
-//  Estratti da ZMarkup per essere riusabili da StyleParser e StyleResolver.
-// =========================================================================
 
 namespace detail {
 
@@ -226,10 +222,6 @@ inline std::optional<Color> parseColorToken(std::string_view s) {
     if (s == "gray")        return Colors::Gray;
     if (s == "darkgray")    return Colors::DarkGray;
     if (s == "lightgray")   return Colors::LightGray;
-        // rgb(r, g, b) and rgba(r, g, b, a)
-    //
-    // Component values follow the CSS convention: 0-255 for r/g/b,
-    // 0.0-1.0 for the alpha channel. The values are clamped and rounded.
     if (s.size() > 4 && s[0] == 'r' && s[1] == 'g' && s[2] == 'b')
     {
         bool hasAlpha = (s[3] == 'a');
@@ -400,7 +392,6 @@ inline bool applyStyleAttr(Style& st, const std::string& key, const std::string&
     return false;
 }
 
-// Sostituzione ricorsiva di var(--x) con il valore in customProps.
 inline std::string substituteVarRefs(
     std::string v,
     const std::unordered_map<std::string, std::string>& customProps)
@@ -430,7 +421,6 @@ inline std::string substituteVarRefs(
     return v;
 }
 
-// Applica le prop "unresolved" (con var) a uno Style, tipizzandole.
 inline Style resolveUnresolvedProps(
     const std::unordered_map<std::string, std::string>& unresolved,
     const std::unordered_map<std::string, std::string>& customProps)

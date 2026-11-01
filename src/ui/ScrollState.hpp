@@ -5,10 +5,6 @@
 namespace ZenitUI
 {
 
-    // Stato e operazioni puramente meccaniche dello scroll.
-    // Non conosce Layout: riceve/restituisce solo numeri. L'orchestrazione
-    // (quando chiamare clamp, quando leggere il wheel, ecc.) vive nel
-    // proprietario (ScrollView oggi, Layout in Fase 2).
     struct ScrollState
     {
         Vec2 offset{0.0f, 0.0f};
@@ -37,7 +33,6 @@ namespace ZenitUI
             velocity = {0.0f, 0.0f};
         }
 
-        // Inerzia: applica velocity e la fa decadere. Chiama clamp() in coda.
         void tickInertia(float dt)
         {
             if (std::abs(velocity.x) > VELOCITY_MIN)

@@ -21,17 +21,12 @@ public:
         getInlineBase().itemsV = Align::Center;
     }
 
-    // Returns the current label text, or "" if the button has no Text
-    // child (e.g. created via Button::create(cb) and never given one).
     std::string text() const
     {
         auto t = labelChild();
         return t ? t->getText() : std::string{};
     }
 
-    // Replaces the label. If the button has no Text child yet, one is
-    // created with the same class `Btn()` uses ("btn-text"), so the
-    // result is indistinguishable from a button built with `Btn(...)`.
     void setText(const std::string& s)
     {
         if (auto t = labelChild())

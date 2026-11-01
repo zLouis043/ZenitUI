@@ -8,7 +8,6 @@ using namespace ZenitUI::Test;
 
 using namespace ZenitUI;
 
-// ---------- evaluateKeyframes ----------
 
 TEST(Anim_evaluateKeyframes, empty) {
     KeyframeAnimation anim;
@@ -78,7 +77,6 @@ TEST(Anim_evaluateKeyframes, prop_only_in_one_keyframe) {
     CHECK_NEAR(s.scale.value, 2.0f, 1e-4);
 }
 
-// ---------- sampleActive ----------
 
 TEST(Anim_sampleActive, before_delay) {
     ActiveCssAnimation a;
@@ -135,7 +133,6 @@ TEST(Anim_sampleActive, alternate_reverses_odd_iterations) {
     ActiveCssAnimation a;
     a.duration = 1.0f; a.iterations = 4; a.alternate = true; a.elapsed = 1.25f;
     bool fin = false;
-    // iter=1 (dispari), local=0.25 → alternate → 0.75
     CHECK_NEAR(sampleActive(a, fin), 0.75f, 1e-4);
     CHECK(!fin);
 }
@@ -159,7 +156,6 @@ TEST(Anim_callback, imperative_finished_fires) {
     node->addAnimation("fade", anim);
     node->playAnimation("fade");
 
-    // Due frame per superare 0.1s con dt=1/60 (0.0167) → serve ~6 frame.
     for (int i = 0; i < 10; ++i)
         node->update(1.0f / 60.0f, false);
 
@@ -208,25 +204,20 @@ TEST(Anim_imperative, drives_current_style_without_transition)
     env.frame(root);
     CHECK_NEAR(node->getStyle().opacity, 0.0f, 1e-3);
 
-    // Play e gira metà dell'animazione.
     node->playAnimation("fade");
     for (int i = 0; i < 6; ++i)   // ~0.1s a 60fps, metà di 0.2s
         env.frame(root);
 
-    // Senza il fix, opacity resterebbe 0.0f perché la transizione
-    // non progredisce. Con il fix, è intermedia.
     float mid = node->getStyle().opacity;
     CHECK(mid > 0.2f);
     CHECK(mid < 0.9f);
 
-    // Completa l'animazione.
     for (int i = 0; i < 20; ++i)
         env.frame(root);
 
     CHECK_NEAR(node->getStyle().opacity, 1.0f, 1e-3);
 }
 
-// ---------- sampleActiveCached ----------
 
 TEST(Anim_sampleActiveCached, returns_same_value_as_sampleActive)
 {
@@ -253,22 +244,17 @@ TEST(Anim_sampleActiveCached, reuses_cache_when_elapsed_unchanged)
     a.iterations = 1;
     a.elapsed = 0.5f;
 
-    // Prime the cache.
     bool fin1 = false;
     float t1 = sampleActiveCached(a, fin1);
     CHECK_NEAR(t1, 0.5f, 1e-4);
     CHECK_NEAR(a.cachedSampleElapsed, 0.5f, 1e-6);
 
-    // Change elapsed to a value that would give a different result,
-    // but don't touch the cache: the second call must recompute.
     a.elapsed = 0.75f;
     bool fin2 = false;
     float t2 = sampleActiveCached(a, fin2);
     CHECK_NEAR(t2, 0.75f, 1e-4);
     CHECK_NEAR(a.cachedSampleElapsed, 0.75f, 1e-6);
 
-    // Call again without changing elapsed: the cached value is
-    // returned and cachedSampleElapsed doesn't move.
     bool fin3 = false;
     float t3 = sampleActiveCached(a, fin3);
     CHECK_NEAR(t3, 0.75f, 1e-4);

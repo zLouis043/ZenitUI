@@ -28,7 +28,6 @@ namespace ZenitUI
 		s.pos = {mp.x / dS, mp.y / dS};
 		s.wheelY = GetMouseWheelMove();
 
-		// Canonical per-button state.
 		auto &left = s[MouseButton::Left];
 		auto &right = s[MouseButton::Right];
 		auto &mid = s[MouseButton::Middle];
@@ -88,12 +87,10 @@ namespace ZenitUI
 			{KEY_Z, Key::Z},
 		};
 
-		// Caratteri (rising edge)
 		int c;
 		while ((c = GetCharPressed()) > 0)
 			ev.chars.push_back(c);
 
-		// Tasti speciali appena premuti (rising edge)
 		int k;
 		while ((k = GetKeyPressed()) > 0)
 		{
@@ -105,7 +102,6 @@ namespace ZenitUI
 				}
 		}
 
-		// Tasti correntemente premuti (level)
 		for (auto &m : kMap)
 			if (IsKeyDown(m.rl))
 				ev.held.push_back(m.mapped);
@@ -115,22 +111,18 @@ namespace ZenitUI
 
 	float RaylibPlatform::dpiScale()
 	{
-		// Desktop: 1.0. Su Android/iOS con FLAG_WINDOW_HIGHDPI, Raylib espone
-		// già il framebuffer scalato; qui si ritorna 1.0 e il backend grafico
-		// (OpenGL ES) applica lo scale nativamente. Su Windows/retina, se in
-		// futuro serve, si può leggere da GetWindowScaleDPI() (Raylib 5.1+).
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
-		return 1.0f; // già gestito dal backend grafico
+		return 1.0f; 
 #else
-		return 1.0f; // desktop standard
+		return 1.0f; 
 #endif
 	}
 
 	EdgeInsets RaylibPlatform::safeArea()
 	{
-		// Desktop: nessun notch/bordo arrotondato. Mobile: qui si leggerebbe
-		// dalla API nativa (Android: DisplayCutout + WindowInsets;
-		// iOS: safeAreaInsets della UIWindow). Per ora zero.
+		
+		
+		
 		return {};
 	}
 
@@ -229,7 +221,7 @@ namespace ZenitUI
 			return;
 		effectStack_.pop_back();
 		EndShaderMode();
-		// Riattiva il precedente se ce n'è uno nello stack.
+
 		if (!effectStack_.empty())
 		{
 			const auto &prev = effectStack_.back();
@@ -262,25 +254,22 @@ namespace ZenitUI
 
 	Rect RaylibRenderer::transformClipToScreen(const Rect &local) const
 	{
-		// Se non ci sono transform attivi, il rect è già in coordinate schermo.
+		
 		if (transformStack.empty())
 			return local;
 
-		// 4 angoli
 		Vec2 corners[4] = {
 			{local.x, local.y},
 			{local.x + local.width, local.y},
 			{local.x, local.y + local.height},
 			{local.x + local.width, local.y + local.height}};
 
-		// Applica TUTTI i transform attivi, in ordine di stack (dal più esterno).
 		for (auto it = transformStack.rbegin(); it != transformStack.rend(); ++it)
 		{
 			for (auto &c : corners)
 				c = applyTransform(*it, c);
 		}
-
-		// Bounding box dei 4 angoli trasformati
+		
 		float minX = corners[0].x, maxX = corners[0].x;
 		float minY = corners[0].y, maxY = corners[0].y;
 		for (int i = 1; i < 4; ++i)
@@ -315,7 +304,7 @@ namespace ZenitUI
 
 	void RaylibRenderer::pushTransform(const Transform2D &t)
 	{
-		transformStack.push_back(t); // NUOVO
+		transformStack.push_back(t); 
 
 		rlPushMatrix();
 		rlTranslatef(t.pivot.x + t.translate.x, t.pivot.y + t.translate.y, 0);
@@ -327,7 +316,7 @@ namespace ZenitUI
 	{
 		rlPopMatrix();
 		if (!transformStack.empty())
-			transformStack.pop_back(); // NUOVO
+			transformStack.pop_back(); 
 	}
 
 	void RaylibRenderer::applyScissor(const Rect &clip)
@@ -347,8 +336,8 @@ namespace ZenitUI
 			return;
 		}
 
-		// Dentro una RenderTexture2D, BeginScissorMode di Raylib sbaglierebbe
-		// usando GetScreenHeight(). Usiamo rlgl direttamente con l'altezza del target.
+		
+		
 		rlDrawRenderBatchActive();
 		rlEnableScissorTest();
 		if (w <= 0 || h <= 0)
@@ -408,7 +397,7 @@ namespace ZenitUI
 
 		rlDrawRenderBatchActive();
 
-		// Svuotiamo le nostre trasformazioni dallo stack OpenGL prima che Raylib chiuda l'FBO!
+		
 		for (size_t i = 0; i < transformStack.size(); ++i)
 			rlPopMatrix();
 
@@ -421,7 +410,7 @@ namespace ZenitUI
 		clipStack.clear();
 		currentClip = {0.0f, 0.0f, (float)t.width, (float)t.height};
 
-		transformStack.clear(); // Resettiamo per il nuovo target!
+		transformStack.clear(); 
 
 		currentTarget_ = t;
 		currentTargetW_ = t.width;
@@ -439,11 +428,11 @@ namespace ZenitUI
 
 		rlDrawRenderBatchActive();
 
-		// Svuotiamo eventuali trasformazioni rimaste appese in questo target
+		
 		for (size_t i = 0; i < transformStack.size(); ++i)
 			rlPopMatrix();
 
-		EndTextureMode(); // Ora Raylib chiude l'FBO in totale sicurezza
+		EndTextureMode(); 
 
 		if (!targetStates_.empty())
 		{
@@ -453,7 +442,7 @@ namespace ZenitUI
 			clipActive = s.clipActive;
 			currentClip = s.currentClip;
 			clipStack = s.clipStack;
-			transformStack = s.transformStack; // Ripristiniamo la memoria delle trasformazioni!
+			transformStack = s.transformStack; 
 			currentTargetW_ = s.targetW;
 			currentTargetH_ = s.targetH;
 		}
@@ -475,7 +464,7 @@ namespace ZenitUI
 			BeginTextureMode(res.targets[currentTarget_.id]);
 		}
 
-		// RIAZZERIAMO le trasformazioni per il target (o schermo) ripristinato
+		
 		for (const auto &tr : transformStack)
 		{
 			rlPushMatrix();
@@ -523,8 +512,8 @@ namespace ZenitUI
 
 	Rect RaylibRenderer::getClipRect() const
 	{
-		// Layout::draw() usa getClipRect() per il frustum culling in coordinate schermo.
-		// Se siamo dentro un target, restituiamo il clip dello schermo salvato alla radice.
+		
+		
 		if (insideTarget_ && !targetStates_.empty())
 		{
 			const auto &root = targetStates_.front();

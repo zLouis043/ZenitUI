@@ -89,12 +89,12 @@ namespace ZenitUI
 	struct FontHandle
 	{
 		uint32_t id{0};
-	}; // id 0 = font di default del backend
+	};
 	struct EffectHandle
 	{
 		uint32_t id{0};
 		bool valid() const { return id != 0; }
-	}; // ex Shader
+	};
 	struct TargetHandle
 	{
 		uint32_t id{0};
@@ -114,10 +114,6 @@ namespace ZenitUI
 		float scale{1.0f};
 	};
 
-	// Mouse buttons. The enum is the canonical index into
-	// PointerState::buttons. Add new values before Count to extend
-	// the framework to more buttons; every call site that uses the
-	// array will automatically get the new slot.
 	enum class MouseButton : uint8_t
 	{
 		Left,
@@ -126,10 +122,6 @@ namespace ZenitUI
 		Count
 	};
 
-	// State of a single mouse button for the current frame.
-	//   down     — currently held
-	//   pressed  — rising edge this frame
-	//   released — falling edge this frame
 	struct ButtonState
 	{
 		bool down{false};
@@ -142,19 +134,12 @@ namespace ZenitUI
 		Vec2 pos;
 		float wheelY{0.0f};
 
-		// Per-button state. Index with (size_t)MouseButton or via
-		// operator[]. Extending MouseButton extends this automatically.
 		std::array<ButtonState, (size_t)MouseButton::Count> buttons{};
 
 		ButtonState &operator[](MouseButton b) { return buttons[(size_t)b]; }
 		const ButtonState &operator[](MouseButton b) const { return buttons[(size_t)b]; }
 	};
 
-	// Modifier keys currently held. Reported once per frame by the
-	// platform, alongside the pointer and keyboard events. Grouped into
-	// a struct so that adding a new modifier (e.g. "hyper") is a new
-	// field here, not a new method on IPlatform and a new bool on
-	// UIContext.
 	struct ModifierState
 	{
 		bool shift{false};
@@ -168,7 +153,6 @@ namespace ZenitUI
 		static inline Vec2 viewport{1280.0f, 720.0f};
 	};
 
-	// Codici tasto "speciali" (non caratteri). Indipendenti dal backend.
 	namespace Key
 	{
 		constexpr int Backspace = 1;
@@ -196,8 +180,8 @@ namespace ZenitUI
 
 	struct InputEvents
 	{
-		std::vector<int> chars; // codici Unicode digitati questo frame
-		std::vector<int> keys;	// codici Key::* speciali premuti questo frame
+		std::vector<int> chars;
+		std::vector<int> keys;
 		std::vector<int> held;
 	};
 

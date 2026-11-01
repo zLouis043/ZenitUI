@@ -109,13 +109,6 @@ namespace ZenitUI
 		bool operator!=(const TextureRef &o) const { return !(*this == o); }
 	};
 
-	// Un "elemento" di un selettore composto. Es. per "Toggle:checked .knob"
-	// la chain è: [ {Tag, "Toggle", requireChecked}, {Class, "knob", idle} ].
-	//
-	// Supporta i selettori composti: `Button.btn-primary`, `.card.elevated`,
-	// `Button#save`, `Button.btn-primary:hover`. In quel caso `name`/`kind`
-	// contengono il primo componente, e `extras` contiene i successivi.
-	// Tutti devono matchare lo stesso nodo.
 	struct SimpleSelector
 	{
 		enum class Kind
@@ -128,8 +121,6 @@ namespace ZenitUI
 		std::string name;
 		Kind kind{Kind::Tag};
 
-		// Componenti aggiuntivi del compound selector. Ogni coppia è
-		// (tipo, nome). Vuoto = selectore semplice (retro-compat).
 		std::vector<std::pair<Kind, std::string>> extras;
 
 		bool requireHover{false};
@@ -139,8 +130,6 @@ namespace ZenitUI
 		bool requireChecked{false};
 	};
 
-	// Un filtro CSS (post-process): "blur(4px)", "drop-shadow(2px, 2px, #000)".
-	// Il Layout lo traduce in un EffectHandle per nome; gli args restano raw.
 	struct FilterRef
 	{
 		std::string name;
@@ -167,7 +156,6 @@ namespace ZenitUI
 		return !(a == b);
 	}
 
-	// CSS box-shadow: ombra del rettangolo del box, non della silhouette.
 	struct BoxShadow
 	{
 		Value x{0.0f}, y{0.0f}, blur{0.0f};
@@ -248,7 +236,7 @@ namespace ZenitUI
 		}
 	}
 
-	struct Style; // forward
+	struct Style;
 	inline bool clearStyleProp(Style &s, std::string_view name);
 
 	struct Style
@@ -257,12 +245,9 @@ namespace ZenitUI
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 
-		// Transizioni per-property. Assente = eredita dal livello precedente.
 		Opt<std::vector<TransitionSpec>> transitions;
 		Opt<std::vector<AnimationRef>> animations;
-		// Custom properties (--name). Il valore è raw (non parsato).
 		std::unordered_map<std::string, std::string> customProps;
-		// Prop che contengono var() e non sono risolvibili a parse time.
 		std::unordered_map<std::string, std::string> unresolvedProps;
 
 		Style &overlay(const Style &o)
@@ -284,7 +269,7 @@ namespace ZenitUI
 				for (const auto &[k, v] : o.unresolvedProps)
 				{
 					unresolvedProps[k] = v;
-					clearStyleProp(*this, k); // cancella la versione tipizzata precedente
+					clearStyleProp(*this, k);
 				}
 
 			return *this;
@@ -293,7 +278,6 @@ namespace ZenitUI
 
 	inline bool clearStyleProp(Style &s, std::string_view name)
 	{
-		// Usiamo una lambda per non dover scrivere 40 if.
 		bool cleared = false;
 #define X(T, n, def)            \
 	if (!cleared && name == #n) \
@@ -375,10 +359,8 @@ namespace ZenitUI
 
 	inline Value lerpProp(const Value &a, const Value &b, float t)
 	{
-		// Auto su entrambi → resta Auto
 		if (a.isAuto() && b.isAuto())
 			return Value::autoSize();
-		// Auto su uno solo → snap (non sappiamo da quale valore partire)
 		if (a.isAuto() || b.isAuto())
 			return t > 0.0f ? b : a;
 
@@ -387,7 +369,6 @@ namespace ZenitUI
 			return a + (b - a).mulWith(Value::number(t));
 		}
 
-		// Raccogli i coefficienti per unità in due array (una entry per unità).
 		float ca[7] = {0}, cb[7] = {0};
 		for (const auto &term : a.terms)
 		{
@@ -402,8 +383,6 @@ namespace ZenitUI
 				cb[i] += term.coeff;
 		}
 
-		// Interpola termine-a-termine, includendo le unità presenti in una sola
-		// delle due (l'altra contribuisce con coefficiente 0).
 		Value r;
 		for (int i = 0; i < 7; ++i)
 		{
@@ -447,7 +426,6 @@ namespace ZenitUI
 		return t > 0.0f ? b : a;
 	}
 
-	// Lerp globale (retro-compat): t è già normalizzato in [0,1].
 	inline ComputedStyle lerpStyle(const ComputedStyle &a, const ComputedStyle &b, float t)
 	{
 		ComputedStyle r;
@@ -459,9 +437,6 @@ namespace ZenitUI
 		return r;
 	}
 
-	// Lerp per-property: realElapsed è il tempo in secondi dall'inizio della transizione.
-	// Ogni prop usa la sua duration/ease se presente in transitions; altrimenti
-	// fallback su transitionTime/ease globali di "b".
 	inline ComputedStyle lerpStyleTimed(const ComputedStyle &a, const ComputedStyle &b, float realElapsed)
 	{
 		ComputedStyle r;
@@ -490,7 +465,6 @@ namespace ZenitUI
 		return r;
 	}
 
-	// Confronto "cambia qualcosa?" fra due Style. Salta transitions/animations.
 	inline bool stylesDiffer(const Style &a, const Style &b)
 	{
 #define X(T, name, def)                                   \
@@ -501,8 +475,6 @@ namespace ZenitUI
 		BUBBLE_STYLE_PROPS(X)
 #undef X
 
-		// Animations: se cambia l'insieme (o i parametri) delle keyframe dichiarate,
-		// il part deve aggiornare il target → parte/ferma l'animazione.
 		if (a.animations.is_set != b.animations.is_set)
 			return true;
 		if (a.animations.is_set)
@@ -526,7 +498,6 @@ namespace ZenitUI
 		return false;
 	}
 
-	// Lerp element-wise di due Style, con "snap" se una prop è set solo da un lato.
 	template <typename T>
 	inline Opt<T> lerpOpt(const Opt<T> &a, const Opt<T> &b, float t)
 	{
@@ -548,8 +519,6 @@ namespace ZenitUI
 		return r;
 	}
 
-	// Applica un Style (con Opt) su un ComputedStyle esistente.
-	// Usato per l'overlay delle animazioni CSS sul render-style.
 	inline void overlayComputed(ComputedStyle &dst, const Style &src)
 	{
 #define X(T, name, def)  \
@@ -559,7 +528,6 @@ namespace ZenitUI
 #undef X
 	}
 
-	// Itera le prop "set" di uno Style (esclusi transitions/animations)
 	template <typename F>
 	inline void forEachSetStyleProp(const Style &s, F &&fn)
 	{
@@ -570,7 +538,6 @@ namespace ZenitUI
 #undef X
 	}
 
-	// Copia una prop per nome. Ritorna true se esiste (era set) nella src.
 	inline bool copyStyleProp(Style &dst, const Style &src, std::string_view name)
 	{
 #define X(T, n, def)       \
@@ -588,7 +555,6 @@ namespace ZenitUI
 		return false;
 	}
 
-	// Ritorna true se la prop è set nella Style.
 	inline bool hasStyleProp(const Style &s, std::string_view name)
 	{
 #define X(T, n, def) \

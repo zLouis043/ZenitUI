@@ -21,9 +21,6 @@
 namespace ZenitUI::ZMarkup
 {
 
-    // =========================================================================
-    //  AST
-    // =========================================================================
     struct Element
     {
         std::string tag;
@@ -71,9 +68,6 @@ namespace ZenitUI::ZMarkup
         }
     };
 
-    // =========================================================================
-    //  Parser
-    // =========================================================================
     class Parser
     {
     public:
@@ -266,9 +260,6 @@ namespace ZenitUI::ZMarkup
         return p.parseRoot();
     }
 
-    // =========================================================================
-    //  BuildContext
-    // =========================================================================
     struct BuildContext
     {
         std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
@@ -277,9 +268,6 @@ namespace ZenitUI::ZMarkup
         const std::vector<Element> *currentSlotChildren{nullptr};
     };
 
-    // =========================================================================
-    //  Registry
-    // =========================================================================
     class Registry
     {
     public:
@@ -307,12 +295,10 @@ namespace ZenitUI::ZMarkup
             return true;
         }
 
-        // Il nuovo create_impl ritorna un VETTORE di nodi. Questo risolve il problema dello Slot.
         std::vector<std::shared_ptr<Layout>> create_impl(const Element &el, BuildContext &ctx, bool isPrefabRoot = false)
         {
             std::vector<std::shared_ptr<Layout>> result;
 
-            // 1. È uno Slot? (Ritorna i figli direttamente al padre chiamante!)
             if (el.tag == "Slot")
             {
                 const std::vector<Element> *childrenToBuild = nullptr;
@@ -340,7 +326,6 @@ namespace ZenitUI::ZMarkup
                 return result;
             }
 
-            // 2. È un Prefab?
             if (!isPrefabRoot)
             {
                 auto prefabIt = prefabs.find(el.tag);
@@ -367,7 +352,6 @@ namespace ZenitUI::ZMarkup
                 }
             }
 
-            // 3. Nodo normale
             auto it = factories.find(el.tag);
             if (it == factories.end())
                 return {};
@@ -429,9 +413,6 @@ namespace ZenitUI::ZMarkup
         std::unordered_map<std::string, Element> prefabs;
     };
 
-    // =========================================================================
-    //  Componenti built-in
-    // =========================================================================
     inline void registerBuiltins(Registry &r)
     {
         using namespace ZenitUI::UI;
@@ -502,9 +483,6 @@ namespace ZenitUI::ZMarkup
               { return Popup::create(); });
     }
 
-    // =========================================================================
-    //  Accesso Globale
-    // =========================================================================
     inline Registry &getGlobalRegistry()
     {
         static Registry registry;
@@ -517,9 +495,6 @@ namespace ZenitUI::ZMarkup
         return registry;
     }
 
-    // =========================================================================
-    //  UINode
-    // =========================================================================
     class UINode
     {
     public:
@@ -641,9 +616,6 @@ namespace ZenitUI::ZMarkup
         mutable std::unordered_set<std::string> warnedKeys_;
     };
 
-    // =========================================================================
-    //  Entry point
-    // =========================================================================
 
     inline void registerPrefab(const std::string &tagName, const std::string &markupSource)
     {

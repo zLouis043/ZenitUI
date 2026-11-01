@@ -6,13 +6,7 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
-// ============================================================
-//  State transitions end-to-end — 3.5
-// ============================================================
 
-// Helper: quanto vale un float dopo N frame (60fps)?
-// Con transitionTime = 0.15s (default), servono 9 frame.
-// Usiamo 20 frame per essere sicuri.
 static void runFrames(Env& env,
                        std::shared_ptr<Layout> root,
                        int n)
@@ -21,7 +15,6 @@ static void runFrames(Env& env,
         env.frame(root);
 }
 
-// ---- :hover transition ------------------------------------------------
 
 TEST(Transitions_hover, interpolates_background_over_frames)
 {
@@ -45,7 +38,6 @@ TEST(Transitions_hover, interpolates_background_over_frames)
     root->size(Percent(100), Percent(100));
     root->addChild(btn);
 
-    // Mouse FUORI dal bottone, così il setup non triggera :hover.
     env.platform.moveMouse({500.0f, 500.0f});
 
     runFrames(env, root, 20);
@@ -54,7 +46,6 @@ TEST(Transitions_hover, interpolates_background_over_frames)
     CHECK(initial.g == 0x00);
     CHECK(initial.b == 0x00);
 
-    // Ora sposta il mouse dentro.
     env.platform.moveMouse({50.0f, 25.0f});
     env.frame(root);
 
@@ -72,9 +63,6 @@ TEST(Transitions_hover, interpolates_background_over_frames)
 
 TEST(Transitions_hover, default_transition_time_applies)
 {
-    // Anche senza `transition:` dichiarato, il framework ha un
-    // transitionTime di default (0.15s). Il cambio di stato è
-    // quindi sempre interpolato, mai istantaneo.
     Env env;
     Theme::get().clear();
     ZMarkup::loadStyleString(R"(
@@ -96,8 +84,6 @@ TEST(Transitions_hover, default_transition_time_applies)
     runFrames(env, root, 5);
     CHECK(btn->getStyle().background.r == 0x00);
 
-    // Hover: con transitionTime default 0.15s, il colore è intermedio
-    // dopo pochi frame.
     env.platform.moveMouse({50.0f, 25.0f});
     env.frame(root);
     runFrames(env, root, 3);
@@ -105,15 +91,12 @@ TEST(Transitions_hover, default_transition_time_applies)
     CHECK(btn->getStyle().background.r > 0x00);
     CHECK(btn->getStyle().background.r < 0xFF);
 
-    // Dopo abbastanza frame, arriva al target.
     runFrames(env, root, 30);
     CHECK(btn->getStyle().background.r == 0xFF);
 }
 
 TEST(Transitions_hover, snap_when_transition_time_zero)
 {
-    // Con `transition-time: 0s`, il cambio è istantaneo anche con
-    // :hover dichiarato.
     Env env;
     Theme::get().clear();
     ZMarkup::loadStyleString(R"(
@@ -141,11 +124,9 @@ TEST(Transitions_hover, snap_when_transition_time_zero)
     env.platform.moveMouse({50.0f, 25.0f});
     env.frame(root);
 
-    // Snap: nessun frame extra.
     CHECK(btn->getStyle().background.r == 0xFF);
 }
 
-// ---- :checked transition (Toggle) ------------------------------------
 
 TEST(Transitions_toggle, knob_transitions_on_checked)
 {
@@ -180,7 +161,6 @@ TEST(Transitions_toggle, knob_transitions_on_checked)
     runFrames(env, root, 20);
     CHECK_NEAR(knob->getRect().x, 10.0f, 1.0f);
 
-    // Cambia checked: il knob deve iniziare a muoversi.
     toggle->setChecked(true);
     env.frame(root);
 
@@ -189,12 +169,10 @@ TEST(Transitions_toggle, knob_transitions_on_checked)
     CHECK(midX > 10.0f);
     CHECK(midX < 60.0f);
 
-    // Dopo abbastanza frame, è arrivato.
     runFrames(env, root, 30);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
 }
 
-// ---- :focus transition -----------------------------------------------
 
 TEST(Transitions_focus, border_color_changes_on_focus)
 {
@@ -224,7 +202,6 @@ TEST(Transitions_focus, border_color_changes_on_focus)
     runFrames(env, root, 20);
     CHECK(input->getStyle().borderColor.r == 0x40);
 
-    // Dai focus.
     UIContext::get().requestFocus(input);
     env.frame(root);
     runFrames(env, root, 30);
@@ -233,7 +210,6 @@ TEST(Transitions_focus, border_color_changes_on_focus)
     CHECK(input->getStyle().borderColor.g == 0x9e);
 }
 
-// ---- :disabled transition --------------------------------------------
 
 TEST(Transitions_disabled, opacity_changes_on_disable)
 {
@@ -261,7 +237,6 @@ TEST(Transitions_disabled, opacity_changes_on_disable)
     runFrames(env, root, 20);
     CHECK_NEAR(btn->getStyle().opacity, 1.0f, 1e-3);
 
-    // Disabilita.
     btn->setEnabled(false);
     env.frame(root);
 
@@ -274,7 +249,6 @@ TEST(Transitions_disabled, opacity_changes_on_disable)
     CHECK_NEAR(btn->getStyle().opacity, 0.3f, 1e-3);
 }
 
-// ---- multiple properties with different timings ---------------------
 TEST(Transitions_multi, faster_property_settles_first)
 {
     Env env;
@@ -309,8 +283,6 @@ TEST(Transitions_multi, faster_property_settles_first)
     env.platform.moveMouse({50.0f, 25.0f});
     env.frame(root);
 
-    // Dopo ~9 frame (0.15s), scale è già completata (duration 0.1s),
-    // ma background è a metà (duration 0.5s).
     runFrames(env, root, 9);
 
     CHECK_NEAR(btn->getStyle().scale, 2.0f, 0.05f);

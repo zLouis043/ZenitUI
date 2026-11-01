@@ -5,12 +5,10 @@
 
 using namespace ZenitUI;
 
-// Helper: reset del theme tra un test e l'altro
 static void freshTheme() {
     Theme::get().clear();
 }
 
-// ---------- measure ----------
 
 TEST(Layout_measure, empty_stack_zero) {
     freshTheme();
@@ -46,8 +44,8 @@ TEST(Layout_measure, stack_from_children) {
     root->addChild(c1);
     root->addChild(c2);
     Vec2 s = root->measure(1000, 500);
-    CHECK_NEAR(s.x, 100.0f, 1e-4);   // max
-    CHECK_NEAR(s.y, 70.0f,  1e-4);   // max
+    CHECK_NEAR(s.x, 100.0f, 1e-4);
+    CHECK_NEAR(s.y, 70.0f,  1e-4);
 }
 
 TEST(Layout_measure, vertical_sums_heights) {
@@ -58,7 +56,7 @@ TEST(Layout_measure, vertical_sums_heights) {
     root->addChild(c1);
     root->addChild(c2);
     Vec2 s = root->measure(1000, 500);
-    CHECK_NEAR(s.y, 50.0f, 1e-4);   // 20 + 30
+    CHECK_NEAR(s.y, 50.0f, 1e-4);
     CHECK_NEAR(s.x, 50.0f, 1e-4);
 }
 
@@ -73,7 +71,6 @@ TEST(Layout_measure, horizontal_sums_widths) {
     CHECK_NEAR(s.x, 80.0f, 1e-4);
 }
 
-// ---------- arrange ----------
 
 TEST(Layout_arrange, root_fills_space) {
     freshTheme();
@@ -138,10 +135,9 @@ TEST(Layout_arrange, gap_separates_children) {
     root->arrange({0, 0, 200, 100});
 
     CHECK_NEAR(c1->getRect().x, 0.0f, 1e-4);
-    CHECK_NEAR(c2->getRect().x, 60.0f, 1e-4);   // 50 + 10
+    CHECK_NEAR(c2->getRect().x, 60.0f, 1e-4);
 }
 
-// ---------- hitTest ----------
 
 TEST(Layout_hitTest, point_inside_root) {
     freshTheme();
@@ -174,7 +170,6 @@ TEST(Layout_hitTest, child_wins_over_parent) {
     root->measure(1000, 1000);
     root->arrange({0, 0, 200, 200});
 
-    // Il figlio è a (0,0) 50x50 (default Stack alignment)
     CHECK(root->hitTest({25, 25}, false) == child.get());
     CHECK(root->hitTest({100, 100}, false) == root.get());
 }
@@ -198,12 +193,9 @@ TEST(Layout_dirtyTracking, measure_returns_cached_when_nothing_changed) {
     child->size(Px(50), Px(50));
     root->addChild(child);
 
-    // Primo measure calcola
     Vec2 s1 = root->measure(1000, 1000);
     CHECK_NEAR(s1.x, 200.0f, 1e-4);
 
-    // Second measure identico non ricalcola (non testabile direttamente,
-    // ma possiamo verificare che il risultato sia lo stesso)
     Vec2 s2 = root->measure(1000, 1000);
     CHECK_NEAR(s2.x, s1.x, 1e-6);
     CHECK_NEAR(s2.y, s1.y, 1e-6);
@@ -215,15 +207,8 @@ TEST(Layout_dirtyTracking, size_change_triggers_remeasure) {
     root->size(Px(200), Px(100));
     root->measure(1000, 1000);
 
-    // Cambio size
     root->size(Px(300), Px(150));
-    // Forza l'update per applicare il pendingTransition
-    // (senza update, pendingTransition è true ma subtreeDirty non è ricalcolato)
-    // ... in un vero motore serve un giro di update
 
-    // Con il nuovo sistema, dopo size() il pendingTransition è true.
-    // Al prossimo update, subtreeDirty_ diventa true.
-    // Al prossimo measure, ricalcola.
     Vec2 s = root->measure(1000, 1000);
     CHECK_NEAR(s.x, 300.0f, 1e-4);
 }
@@ -233,12 +218,9 @@ TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(100));
 
-    // Primo giro: popola la cache
     Vec2 s1 = root->measure(1000, 1000);
     CHECK_NEAR(s1.x, 200.0f, 1e-4);
 
-    // Cambio size: al prossimo measure deve ricalcolare.
-    // Il vecchio risultato era 200, ora deve essere 300.
     root->size(Px(300), Px(150));
     Vec2 s2 = root->measure(1000, 1000);
     CHECK_NEAR(s2.x, 300.0f, 1e-4);
@@ -248,8 +230,6 @@ TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
 TEST(Layout_hitTest, clipped_area_not_hit) {
     freshTheme();
 
-    // Root più grande del clipper, così il punto (300, 50) può essere
-    // dentro il root ma fuori dal clipper.
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(500), Px(200));
 
@@ -265,7 +245,6 @@ TEST(Layout_hitTest, clipped_area_not_hit) {
     clipper->addChild(inner);
     root->addChild(clipper);
 
-    // Arrange manuale.
     root->measure(1000, 1000);
     root->arrange({0, 0, 500, 200});
     clipper->measure(500, 200);
@@ -273,11 +252,8 @@ TEST(Layout_hitTest, clipped_area_not_hit) {
     inner->measure(200, 100);
     inner->arrange({0, 0, 400, 100});
 
-    // (50, 50): dentro sia clipper che inner → hit su inner.
     CHECK(root->hitTest({50, 50}, false) == inner.get());
 
-    // (300, 50): dentro inner (400 wide) ma fuori dal clipper (200 wide).
-    // Non deve colpire inner.
     CHECK(root->hitTest({300, 50}, false) != inner.get());
 }
 
@@ -309,9 +285,6 @@ TEST(Layout_hasId, empty_input_always_false)
     CHECK(!node->hasId(""));
 }
 
-// ============================================================
-//  ref — Proposal 1
-// ============================================================
 
 TEST(Layout_ref, setRef_updates_field)
 {
@@ -330,7 +303,6 @@ TEST(Layout_ref, id_and_ref_are_independent)
     node->setRef("delete");
     CHECK(node->nodeId == "unique");
     CHECK(node->ref == "delete");
-    // Setting one must not touch the other.
     node->setId("other");
     CHECK(node->ref == "delete");
     node->setRef("other_ref");
@@ -343,8 +315,6 @@ TEST(Layout_ref, withRef_returns_fluent_shared_ptr)
     auto btn = UI::Button::create(nullptr);
     CHECK(btn->ref.empty());
 
-    // withRef must return the same shared_ptr (typed as Button), not
-    // a fresh one. The fluent chain relies on this identity.
     auto result = btn->withRef("save");
     CHECK(result.get() == btn.get());
     CHECK(btn->ref == "save");

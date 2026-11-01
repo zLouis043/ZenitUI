@@ -17,9 +17,6 @@
 namespace ZenitUI::Debug
 {
 
-    // ============================================================
-    //  toString per i tipi che appaiono nelle style props
-    // ============================================================
     inline const char *unitName(Unit u)
     {
         switch (u)
@@ -240,9 +237,6 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
-    // ============================================================
-    //  Style / ComputedStyle
-    // ============================================================
     inline std::string styleToString(const Style &s)
     {
         std::ostringstream os;
@@ -329,9 +323,6 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
-    // ============================================================
-    //  Utilità per selettori
-    // ============================================================
     inline std::string selectorToString(const ThemeRule &r)
     {
         std::ostringstream os;
@@ -387,9 +378,6 @@ namespace ZenitUI::Debug
         return s.empty() ? "-" : s;
     }
 
-    // ============================================================
-    //  Dump del singolo nodo
-    // ============================================================
     inline void dumpStyle(const Layout &node, std::ostream &os = std::cerr)
     {
         os << "=== Node ===\n";
@@ -422,9 +410,6 @@ namespace ZenitUI::Debug
         }
     }
 
-    // ============================================================
-    //  Dump dell'albero
-    // ============================================================
     inline void dumpTree(const Layout &node, std::ostream &os = std::cerr,
                          int maxDepth = -1, int depth = 0)
     {
@@ -452,9 +437,6 @@ namespace ZenitUI::Debug
             dumpTree(*c, os, maxDepth, depth + 1);
     }
 
-    // ============================================================
-    //  Dump del tema
-    // ============================================================
     inline void dumpTheme(std::ostream &os = std::cerr)
     {
         auto &theme = Theme::get();
@@ -485,9 +467,6 @@ namespace ZenitUI::Debug
         os << "\n";
     }
 
-    // ============================================================
-    //  Dump delle part attive su un nodo
-    // ============================================================
     inline void dumpParts(const Layout &node, std::ostream &os = std::cerr)
     {
         static const char *candidates[] = {
@@ -517,10 +496,6 @@ namespace ZenitUI::Debug
 
 #include <iostream>
 
-// ============================================================
-//  Stub: compilano ma non fanno nulla. Le firme devono restare
-//  identiche ai call site.
-// ============================================================
 namespace ZenitUI::Debug
 {
 

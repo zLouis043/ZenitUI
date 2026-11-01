@@ -31,12 +31,6 @@ namespace ZenitUI
 		scroll_.drawScrollbar(*this, parentOpacity);
 	}
 
-	// =========================================================================
-	//  RENDER
-	//  draw() ha due path:
-	//   - inline: senza filter. Chrome+content+figli sul framebuffer.
-	//   - layer:  con filter. Subtree → render target → shader → framebuffer.
-	// =========================================================================
 
 	void Layout::draw(float parentOpacity)
 	{
@@ -61,19 +55,12 @@ namespace ZenitUI
 				return;
 		}
 
-		// Fast path: no CSS keyframe animations. No copy of the
-		// ComputedStyle is needed — draw directly with currentStyle.
-		// This covers the vast majority of nodes (state transitions
-		// use StyleResolver, not AnimationPlayer::css).
 		if (anim_.css.empty())
 		{
 			drawWithStyle(style_.currentStyle, parentOpacity);
 		}
 		else
 		{
-			// Slow path: overlay the current keyframe values onto a
-			// copy of currentStyle. The copy is the price we pay for
-			// CSS @keyframes animation.
 			ComputedStyle renderStyle = style_.currentStyle;
 			Anim::overlayCssComputed(renderStyle, anim_.css);
 			drawWithStyle(renderStyle, parentOpacity);
@@ -95,9 +82,6 @@ namespace ZenitUI
 		}
 	}
 
-	// -------------------------------------------------------------------------
-	//  INLINE: comportamento attuale (chrome + content + figli direttamente)
-	// -------------------------------------------------------------------------
 	void Layout::drawInline(const ComputedStyle &renderStyle, float globalOp)
 	{
 		auto renderer = UIContext::get().renderer;
@@ -132,21 +116,10 @@ namespace ZenitUI
 			renderer->popTransform();
 	}
 
-	// -------------------------------------------------------------------------
-	//  LAYER: subtree → render target → filtro → framebuffer
-	//  Un solo filtro per ora; multi-filter è un'estensione (ping-pong).
-	// -------------------------------------------------------------------------
 	void Layout::drawLayer(const ComputedStyle &renderStyle, float globalOp)
 	{
 		auto renderer = UIContext::get().renderer;
 
-		// Compute the axis-aligned bounding box of the node after its full
-		// transform: translate + scale + rotation, in that order, around
-		// the node's center.
-		//
-		// Rotation matters here. A 100x100 square rotated 45 degrees has
-		// an AABB of ~141x141. Ignoring rotation would clip the filtered
-		// result at the corners.
 		Transform2D currTr = currentTransform(renderStyle);
 
 		Vec2 p0 = applyTransform(currTr, {rect.x, rect.y});
@@ -161,7 +134,6 @@ namespace ZenitUI
 
 		Rect transformedRect = {minX, minY, maxX - minX, maxY - minY};
 
-		// Regione visibile = intersezione fra il bbox trasformato e il clip.
 		Rect clip = renderer->getClipRect();
 
 		Rect region;
@@ -212,9 +184,6 @@ namespace ZenitUI
 				return;
 		}
 
-		// Disegna il subtree nel layerTarget_.
-		// - region.x/y sono in screen; il translate -region li porta in (0,0) del target.
-		// - il matrix del parent è già isolato da pushTarget.
 		renderer->pushTarget(layerTarget_);
 
 		Transform2D offsetTr;
@@ -225,9 +194,6 @@ namespace ZenitUI
 		const bool identity =
 			tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
-		//if (!identity)
-		//	renderer->pushTransform(tr);
-		//renderer->pushTransform(offsetTr);
 		renderer->pushTransform(offsetTr);
     	if (!identity) renderer->pushTransform(tr);
 
@@ -269,9 +235,6 @@ namespace ZenitUI
 			return;
 		}
 
-		// Ping-pong between layerTarget_ and layerScratch_ across filters.
-		// The last filter writes to the framebuffer (region); all previous
-		// ones write to a target so the next filter can read from it.
 		const size_t numFilters = renderStyle.filters.size();
 		TargetHandle currentRead = layerTarget_;
 		TargetHandle currentWrite = layerScratch_;
@@ -290,8 +253,6 @@ namespace ZenitUI
 			}
 			else
 			{
-				// Unknown filter: draw unmodified to the same destination the
-				// filter would have written to.
 				if (isLast)
 				{
 					renderer->drawTarget(currentRead, region,
@@ -312,9 +273,6 @@ namespace ZenitUI
 		}
 	}
 
-	// -------------------------------------------------------------------------
-	//  Figli ordinati per z-index.
-	// -------------------------------------------------------------------------
 	void Layout::drawChildren(float globalOp)
 	{
 		drawNegZ_.clear();
@@ -349,9 +307,6 @@ namespace ZenitUI
 			child->draw(globalOp);
 	}
 
-	// -------------------------------------------------------------------------
-	//  Effect resolution (nome stile → EffectHandle)
-	// -------------------------------------------------------------------------
 	void Layout::resolveEffectIfNeeded(const ComputedStyle &style)
 	{
 		if (style.effect.empty())

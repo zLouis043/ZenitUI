@@ -9,33 +9,6 @@
 namespace ZenitUI
 {
 
-// A container with N elements of inline storage, and a std::vector
-// fallback used only when N is exceeded.
-//
-// Used by `Value` to avoid the heap allocation of std::vector for the
-// common case of 1-2 terms (Px(8), calc(100% - 20px)). Once the
-// container grows beyond N, it permanently switches to the vector and
-// never returns to inline storage — `clear()` resets it back.
-//
-// This is intentionally NOT a general-purpose container. Known limits:
-//
-//   - `inline_` is default-initialized eagerly. For `Value::Term`
-//     (a float and an enum) this is zero-cost; for a type with a
-//     non-trivial default constructor it would construct N dummy
-//     objects on every SmallVector instantiation. Don't reuse this
-//     class for such types without addressing it.
-//   - The initial switch to heap uses `assign`, which copies for
-//     lvalues and moves for rvalues. Move-only types are supported
-//     only in the rvalue `push_back`.
-//   - No erase / insert / reverse iterators. The API is the minimal
-//     subset of std::vector that `Value` actually uses.
-//
-// Size cost: with N=2, the class occupies ~48 bytes (16 bytes of
-// inline storage + 24 bytes of std::vector + 8 bytes size). A plain
-// std::vector would be 24 bytes. Since `ComputedStyle` has ~30
-// `Value` fields, this costs ~720 bytes per ComputedStyle. In exchange
-// it eliminates the heap allocation for every 0-2 term Value. The
-// trade-off favors contiguous memory over allocator traffic.
 template <typename T, std::size_t N>
 class SmallVector
 {
@@ -73,9 +46,6 @@ public:
         heap_.clear();
     }
 
-    // `heap_` holds *all* elements once the container has switched to
-    // the heap storage, not just the overflow. So reserve(n) reserves
-    // for n elements in the vector, not n - N.
     void reserve(std::size_t n)
     {
         if (n > N)

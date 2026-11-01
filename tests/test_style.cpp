@@ -3,9 +3,6 @@
 
 using namespace ZenitUI;
 
-// ============================================================
-//  Opt<T>
-// ============================================================
 
 TEST(Style_Opt, default_not_set) {
     Opt<float> o;
@@ -33,14 +30,11 @@ TEST(Style_Opt, reset) {
     CHECK(!o.is_set);
 }
 
-// ============================================================
-//  Style::overlay — priorità e non-distruttività
-// ============================================================
 
 TEST(Style_overlay, empty_overlay_does_nothing) {
     Style a;
     a.background = Colors::Red;
-    Style b;   // vuoto
+    Style b;
     a.overlay(b);
     CHECK(a.background.is_set);
     CHECK(a.background.value == Colors::Red);
@@ -60,16 +54,13 @@ TEST(Style_overlay, overlay_does_not_clear_unset) {
     a.background  = Colors::Red;
     a.color       = Colors::White;
     Style b;
-    b.background  = Colors::Blue;   // solo bg
+    b.background  = Colors::Blue;
     a.overlay(b);
     CHECK(a.background.value == Colors::Blue);
     CHECK(a.color.is_set);
     CHECK(a.color.value == Colors::White);
 }
 
-// ============================================================
-//  isInheritedProp
-// ============================================================
 
 TEST(Style_inherited, known_props) {
     CHECK(isInheritedProp("font"));
@@ -87,9 +78,6 @@ TEST(Style_inherited, non_inherited) {
     CHECK(!isInheritedProp("opacity"));
 }
 
-// ============================================================
-//  ComputedStyle::from — priorità locale > parent > root > default
-// ============================================================
 
 TEST(Style_from, local_wins_over_parent_and_root) {
     Style local;
@@ -106,7 +94,7 @@ TEST(Style_from, local_wins_over_parent_and_root) {
 }
 
 TEST(Style_from, parent_wins_for_inherited) {
-    Style local;   // vuoto
+    Style local;
     ComputedStyle parent;
     parent.color = Colors::Green;
 
@@ -118,22 +106,12 @@ TEST(Style_from, parent_wins_for_inherited) {
 }
 
 TEST(Style_from, root_used_when_parent_no_inherit) {
-    Style local;   // vuoto
-    ComputedStyle parent;   // color non impostato -> default White
+    Style local;
+    ComputedStyle parent;
     Style root;
     root.color = Colors::Blue;
 
     auto c = ComputedStyle::from(local, &parent, &root);
-    // il parent non ha color "marcato", quindi... in realtà ComputedStyle
-    // ha sempre un valore. from() controlla il flag is_set sul LOCALE, non
-    // sul parent. Quindi per non-inherited il root vince solo se il parent
-    // non c'è. Qui il parent c'è e "occupa" lo slot.
-    // Comportamento atteso: il root è fallback per valori non settati
-    // nel locale, MA viene comunque letto se presente. Verifichiamo che
-    // il root sia il valore finale quando il locale non lo setta.
-    // In assenza di "presenza" sul parent (che è ComputedStyle già risolto),
-    // la priorità è: locale -> parent -> root -> default.
-    // Quindi con parent presente, vince parent.
     CHECK(c.color == parent.color);
 }
 
@@ -149,25 +127,21 @@ TEST(Style_from, root_only) {
 TEST(Style_from, no_parent_no_root_uses_default) {
     Style local;
     auto c = ComputedStyle::from(local, nullptr, nullptr);
-    CHECK(c.color == Colors::White);   // default di `color`
+    CHECK(c.color == Colors::White);
     CHECK(c.background == Colors::Blank);
 }
 
 TEST(Style_from, non_inherited_ignores_parent) {
     Style local;
     ComputedStyle parent;
-    parent.background = Colors::Green;   // non-inherited
+    parent.background = Colors::Green;
 
     Style root;
 
     auto c = ComputedStyle::from(local, &parent, &root);
-    // background non è inherited → dovrebbe essere il default
     CHECK(c.background == Colors::Blank);
 }
 
-// ============================================================
-//  ComputedStyle == / !=
-// ============================================================
 
 TEST(Style_eq, two_default_are_equal) {
     ComputedStyle a, b;
@@ -181,9 +155,6 @@ TEST(Style_eq, differ_on_color) {
     CHECK(a != b);
 }
 
-// ============================================================
-//  lerpProp per tipi scalari
-// ============================================================
 
 TEST(Style_lerp, float) {
     CHECK_NEAR(lerpProp(0.0f, 10.0f, 0.5f), 5.0f, 1e-6);
@@ -207,12 +178,10 @@ TEST(Style_lerp, value_same_shape) {
 }
 
 TEST(Style_lerp, value_different_shapes_unions_units) {
-    Value a = PH(20.0f);                     // 1 termine PH
-    Value b = PW(100.0f) - PH(80.0f);        // 2 termini PW, PH
+    Value a = PH(20.0f);
+    Value b = PW(100.0f) - PH(80.0f);
     Value mid = lerpProp(a, b, 0.5f);
 
-    // Su parent 100x50: PH 20 → 10px, PH -80 → -40px + PW 100 → 100px
-    // a = 10, b = 60. mid = 35
     CHECK_NEAR(mid.resolveH(100, 50), 35.0f, 1e-4);
 }
 
@@ -221,7 +190,6 @@ TEST(Style_lerp, value_auto_snaps) {
     Value b = Px(100.0f);
     CHECK(lerpProp(a, b, 0.0f) == a);
     CHECK(lerpProp(a, b, 1.0f) == b);
-    // A metà: snap, non interpolazione
     CHECK(lerpProp(a, b, 0.5f) == b);
 }
 
@@ -241,9 +209,6 @@ TEST(Style_lerp, enum_snaps) {
     CHECK(lerpProp(Align::Start, Align::Center, 1.0f) == Align::Center);
 }
 
-// ============================================================
-//  lerpStyle — lerp globale (tutti i campi)
-// ============================================================
 
 TEST(Style_lerpStyle, color_and_opacity) {
     ComputedStyle a, b;
@@ -254,12 +219,9 @@ TEST(Style_lerpStyle, color_and_opacity) {
 
     auto c = lerpStyle(a, b, 0.5f);
     CHECK_NEAR(c.opacity, 0.5f, 1e-6);
-    CHECK(c.color.r == 127 || c.color.r == 128);   // mix
+    CHECK(c.color.r == 127 || c.color.r == 128);
 }
 
-// ============================================================
-//  lerpStyleTimed — per-property timing
-// ============================================================
 
 TEST(Style_lerpTimed, no_transitions_falls_to_global) {
     ComputedStyle a, b;
@@ -267,7 +229,6 @@ TEST(Style_lerpTimed, no_transitions_falls_to_global) {
     b.opacity = 1.0f;
     b.transitionTime = 0.5f;
     b.ease = TransitionFunction::Linear;
-    // b.transitions vuoto → fallback su transitionTime/ease globali
 
     auto mid = lerpStyleTimed(a, b, 0.25f);
     CHECK_NEAR(mid.opacity, 0.5f, 1e-4);
@@ -286,18 +247,13 @@ TEST(Style_lerpTimed, per_property_override) {
     spec.ease     = TransitionFunction::Linear;
     b.transitions.push_back(spec);
 
-    // Con duration 0.5, a metà tempo (0.25) siamo a t=0.5
     auto mid = lerpStyleTimed(a, b, 0.25f);
     CHECK_NEAR(mid.opacity, 0.5f, 1e-4);
 
-    // A tempo 0.5 (fine) siamo a 1.0
     auto done = lerpStyleTimed(a, b, 0.5f);
     CHECK_NEAR(done.opacity, 1.0f, 1e-4);
 }
 
-// ============================================================
-//  overlayComputed — applica Style su ComputedStyle esistente
-// ============================================================
 
 TEST(Style_overlayComputed, updates_only_set_fields) {
     ComputedStyle c;
@@ -307,7 +263,7 @@ TEST(Style_overlayComputed, updates_only_set_fields) {
     s.background = Colors::Blue;
 
     overlayComputed(c, s);
-    CHECK(c.color == Colors::Red);        // intatto
+    CHECK(c.color == Colors::Red);
     CHECK(c.background == Colors::Blue);
 }
 
@@ -320,9 +276,6 @@ TEST(Style_overlayComputed, empty_style_no_change) {
     CHECK(c.color == Colors::Red);
 }
 
-// ============================================================
-//  forEachSetStyleProp / copyStyleProp / hasStyleProp
-// ============================================================
 
 TEST(Style_propHelpers, forEach_visits_set_only) {
     Style s;
@@ -354,9 +307,6 @@ TEST(Style_propHelpers, copyStyleProp) {
     CHECK(!dst.background.is_set);
 }
 
-// ============================================================
-//  stylesDiffer
-// ============================================================
 
 TEST(Style_stylesDiffer, empty_equal) {
     Style a, b;
@@ -367,7 +317,7 @@ TEST(Style_stylesDiffer, differs_on_any_set) {
     Style a;
     a.color = Colors::Red;
     Style b;
-    CHECK(stylesDiffer(a, b));   // a ha color set, b no
+    CHECK(stylesDiffer(a, b));
 }
 
 TEST(Style_stylesDiffer, differs_on_value) {
@@ -388,15 +338,12 @@ TEST(Style_stylesDiffer, animations_are_compared) {
     a.animations = std::vector<AnimationRef>{ r1 };
 
     Style b;
-    AnimationRef r2; r2.name = "glow"; r2.duration = 2.0f;   // duration diverso
+    AnimationRef r2; r2.name = "glow"; r2.duration = 2.0f;
     b.animations = std::vector<AnimationRef>{ r2 };
 
     CHECK(stylesDiffer(a, b));
 }
 
-// ============================================================
-//  lerpStyleParts — snap per Opt non-set
-// ============================================================
 
 TEST(Style_lerpStyleParts, both_set_is_interpolated) {
     Style a; a.opacity = 0.0f;
@@ -408,25 +355,22 @@ TEST(Style_lerpStyleParts, both_set_is_interpolated) {
 }
 
 TEST(Style_lerpStyleParts, only_target_set_snaps_to_target) {
-    Style a;              // opacity unset
+    Style a;
     Style b; b.opacity = 1.0f;
 
     Style r = lerpStyleParts(a, b, 0.5f);
     CHECK(r.opacity.is_set);
-    CHECK_NEAR(r.opacity.value, 1.0f, 1e-6);   // snap, non 0.5
+    CHECK_NEAR(r.opacity.value, 1.0f, 1e-6);
 }
 
 TEST(Style_lerpStyleParts, only_source_set_snaps_to_target_unset) {
     Style a; a.opacity = 1.0f;
-    Style b;              // opacity unset
+    Style b;
 
     Style r = lerpStyleParts(a, b, 0.5f);
-    CHECK(!r.opacity.is_set);   // b era unset → il risultato è unset
+    CHECK(!r.opacity.is_set);
 }
 
-// ============================================================
-//  overlay di customProps / unresolvedProps
-// ============================================================
 
 TEST(Style_customProps, overlay_merges) {
     Style a;
@@ -449,8 +393,6 @@ TEST(Style_customProps, overlay_same_key_wins) {
 }
 
 TEST(Style_unresolvedProps, overlay_clears_typed) {
-    // Se l'overlay porta una var per "background", la versione typed
-    // di "background" già presente deve essere resettata.
     Style a;
     a.background = Colors::Red;
     CHECK(a.background.is_set);
@@ -463,9 +405,6 @@ TEST(Style_unresolvedProps, overlay_clears_typed) {
     CHECK(a.unresolvedProps.count("background") == 1);
 }
 
-// ============================================================
-//  Regola del computed value (overflow)
-// ============================================================
 
 TEST(Style_computedValue, visible_x_with_scroll_y_becomes_auto) {
     Style s;
@@ -514,23 +453,21 @@ TEST(Style_isInheritedProp, all_known_props)
 
 TEST(Style_isInheritedProp, same_length_non_inherited)
 {
-    // Queste hanno lunghezze che collidono con le proprietà ereditate.
-    // Devono tutte restituire false.
-    CHECK(!isInheritedProp("width"));      // 5, collide con "color"
-    CHECK(!isInheritedProp("grow"));       // 4, collide con "font"
-    CHECK(!isInheritedProp("minWidth"));   // 8, collide con "fontSize"
-    CHECK(!isInheritedProp("maxWidth"));   // 8, collide con "fontSize"
-    CHECK(!isInheritedProp("minHeight"));  // 9, collide con "textAlign"
-    CHECK(!isInheritedProp("maxHeight"));  // 9, collide con "textAlign"
-    CHECK(!isInheritedProp("position"));   // 8, collide con "fontSize"
-    CHECK(!isInheritedProp("overflow"));   // 8, collide con "fontSize"
-    CHECK(!isInheritedProp("tint"));       // 4, collide con "font"
-    CHECK(!isInheritedProp("left"));       // 4, collide con "font"
+    CHECK(!isInheritedProp("width"));
+    CHECK(!isInheritedProp("grow"));
+    CHECK(!isInheritedProp("minWidth"));
+    CHECK(!isInheritedProp("maxWidth"));
+    CHECK(!isInheritedProp("minHeight"));
+    CHECK(!isInheritedProp("maxHeight"));
+    CHECK(!isInheritedProp("position"));
+    CHECK(!isInheritedProp("overflow"));
+    CHECK(!isInheritedProp("tint"));
+    CHECK(!isInheritedProp("left"));
 }
 
 TEST(Style_isInheritedProp, empty_and_unknown)
 {
     CHECK(!isInheritedProp(""));
     CHECK(!isInheritedProp("nonexistent"));
-    CHECK(!isInheritedProp("Font"));   // case-sensitive
+    CHECK(!isInheritedProp("Font"));
 }

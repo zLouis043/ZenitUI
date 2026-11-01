@@ -60,7 +60,6 @@ namespace ZenitUI
                 terms.push_back({amount, u});
         }
 
-        // ---------- Factory ----------
         static Value autoSize() { return {}; }
         static Value number(float n)
         {
@@ -192,7 +191,6 @@ namespace ZenitUI
             }
         }
 public:
-        // ---------- Risoluzione (4 varianti) ----------
         float resolveH(float parentW, float parentH, float autoValue = 0.0f) const
         {
             if (op != ValueOp::None)
@@ -349,7 +347,6 @@ public:
             return result;
         }
 
-        // ---------- Operazioni ----------
         Value operator+(const Value &o) const
         {
             if (op != ValueOp::None || o.op != ValueOp::None)

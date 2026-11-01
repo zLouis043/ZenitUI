@@ -9,9 +9,9 @@ namespace ZenitUI {
 
 	struct LogMessage {
 		LogLevel    level{ LogLevel::Info };
-		std::string category;   // "StyleParser", "Layout", ...
-		std::string file;       // file sorgente (es. "assets/game.zstyle")
-		int         line{ 0 };  // 0 = non disponibile
+		std::string category;
+		std::string file;
+		int         line{ 0 };
 		int         column{ 0 };
 		std::string text;
 	};
@@ -46,11 +46,8 @@ namespace ZenitUI {
 
 	class Logger {
 	public:
-		// Ritorna il logger corrente. Default: ConsoleLogger su stderr.
 		static ILogger& get() { return *instance(); }
 
-		// Imposta un logger custom. Passare nullptr ripristina il default.
-		// L'utente è responsabile del lifetime del logger custom.
 		static void set(ILogger* logger) {
 			instance() = logger ? logger : defaultLogger();
 		}

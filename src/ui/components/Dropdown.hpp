@@ -62,7 +62,6 @@ namespace ZenitUI::UI
 
             auto &ctx = UIContext::get();
 
-            // --- GESTIONE TASTIERA ---
             if (ctx.hasFocus(this))
             {
                 for (int k : ctx.inputEvents.keys)
@@ -70,7 +69,7 @@ namespace ZenitUI::UI
                     if (k == Key::Escape)
                     {
                         if (isOpen)
-                            setOpen(false); // Escape chiude il menù
+                            setOpen(false);
                     }
                     else if (k == Key::Down)
                     {
@@ -104,7 +103,7 @@ namespace ZenitUI::UI
                     }
                     else if (k == Key::Enter || k == Key::Space)
                     {
-                        setOpen(!isOpen); // Toggle apertura
+                        setOpen(!isOpen);
                         if (isOpen && listContainer && selected < (int)listContainer->children.size())
                             listContainer->children[selected]->scrollIntoView();
                     }
@@ -114,7 +113,6 @@ namespace ZenitUI::UI
             if (!isOpen)
                 return;
 
-            // --- Click fuori per chiudere ---
             if (ctx.pointer[MouseButton::Left].pressed || ctx.pointer[MouseButton::Right].pressed)
             {
                 if (!rect.contains(ctx.pointer.pos) &&
@@ -129,18 +127,17 @@ namespace ZenitUI::UI
         {
             setStyleTag("Dropdown");
             setInteractive(true);
-            setFocusable(true); // Il Dropdown stesso riceve il focus
+            setFocusable(true);
             internal_.pendingTransition = 1;
             getInlineBase().position = Position::Relative;
             getInlineBase().zIndex = ZIndex(10);
 
-            // Il bottone interno propaga il focus al Dropdown
             button = Btn("", [this]()
                          { 
                 UIContext::get().requestFocus(shared_from_this());
                 toggleOpen(); });
             button->cls("dropdown-trigger");
-            button->setFocusable(false); // Disabilita tab stop sul bottone figlio
+            button->setFocusable(false);
 
             button->getInlineBase().width = Percent(100);
             button->getInlineDefaults().height = VH(3.0f);
@@ -174,7 +171,7 @@ namespace ZenitUI::UI
                 item->getInlineBase().padding = Spacing(VH(1.0f), VW(1.0f));
                 item->getInlineBase().itemsV = Align::Center;
                 item->setInteractive(true);
-                item->setFocusable(false); // Niente tab stop per le voci
+                item->setFocusable(false);
 
                 item->onClick = [this, idx]()
                 {
@@ -238,7 +235,6 @@ namespace ZenitUI::UI
 
             if (listH <= spaceBelow)
             {
-                // Sta sotto
             }
             else if (listH <= spaceAbove)
             {
@@ -295,7 +291,6 @@ namespace ZenitUI::UI
             for (size_t i = 0; i < listContainer->children.size(); ++i)
             {
                 auto &item = listContainer->children[i];
-                // Affidiamo tutto allo stato CSS!
                 item->setChecked((int)i == selected);
             }
         }

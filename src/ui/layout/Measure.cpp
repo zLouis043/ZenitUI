@@ -13,13 +13,6 @@ namespace ZenitUI
 		return {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
 	}
 
-	// =========================================================================
-	//  MISURA E ARRANGE
-	//  Fase 1: ogni nodo calcola la propria dimensione intrinseca (measure).
-	//  Fase 2: il genitore posiziona i figli nello spazio (arrange).
-	//  Fase 3: hitTest usa i rect risultanti per individuare il nodo sotto il
-	//          cursore, rispettando l'ordine z.
-	// =========================================================================
 
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
@@ -40,7 +33,6 @@ namespace ZenitUI
 		}
 		ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this) : style_.currentStyle;
 
-		// --- Spazio disponibile interno ---
 		float pl = calcStyle.padding.left.resolveH(parent_w, parent_h);
 		float pr = calcStyle.padding.right.resolveH(parent_w, parent_h);
 		float pt = calcStyle.padding.top.resolveV(parent_w, parent_h);
@@ -52,19 +44,16 @@ namespace ZenitUI
 		float innerW = std::max(0.0f, availW - pl - pr);
 		float innerH = std::max(0.0f, availH - pt - pb);
 
-		// Se abbiamo lo scroll, togliamo i limiti di misurazione sull'asse principale
 		if (type == LayoutType::Vertical && calcStyle.overflowY != Overflow::Visible)
 			innerH = 1e9f;
 		if (type == LayoutType::Horizontal && calcStyle.overflowX != Overflow::Visible)
 			innerW = 1e9f;
 
-		// --- Misurazione Intrinseca del Nodo (es. Testo) ---
 		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
 
 		float gapX = calcStyle.gap.resolveH(innerW, innerH);
 		float gapY = calcStyle.gap.resolveV(innerW, innerH);
 
-		// ================== LOGICA WRAP (HStack) ==================
 		if (type == LayoutType::Horizontal && calcStyle.wrap)
 		{
 			float curX = 0, curY = 0, maxW = 0, maxLineH = 0;
@@ -82,18 +71,16 @@ namespace ZenitUI
 				float childW = cs.x + ml + mr;
 				float childH = cs.y + mt + mb;
 
-				// Stima dello spazio: se non è il primo, consideriamo il gap
 				float spaceNeeded = childW + (visibleInLine > 0 ? gapX : 0.0f);
 
-				// Va a capo?
 				if (visibleInLine > 0 && curX + spaceNeeded > innerW && innerW > 0.0f)
 				{
-					maxW = std::max(maxW, curX); // Salva la larghezza della riga corrente
-					curY += maxLineH + gapY;	 // Scendi giù
-					curX = 0;					 // Reset ascissa
-					maxLineH = 0;				 // Reset altezza riga
-					visibleInLine = 0;			 // Reset conteggio
-					spaceNeeded = childW;		 // Ricalcola space needed senza gap iniziale
+					maxW = std::max(maxW, curX);
+					curY += maxLineH + gapY;
+					curX = 0;
+					maxLineH = 0;
+					visibleInLine = 0;
+					spaceNeeded = childW;
 				}
 
 				if (visibleInLine > 0)
@@ -104,7 +91,6 @@ namespace ZenitUI
 			}
 			maxW = std::max(maxW, curX);
 
-			// contentSize per il wrap flow: la max larghezza tra le righe e l'altezza totale
 			contentSize.x = maxW;
 			contentSize.y = curY + maxLineH;
 		}
@@ -163,10 +149,8 @@ namespace ZenitUI
 			}
 		}
 
-		// Salviamo l'ingombro reale non tagliato per gestire i limiti dello ScrollView
 		scroll_.contentSize = contentSize;
 
-		// --- Risoluzione Dimensioni Finali del Genitore ---
 		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
 		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
 
@@ -208,7 +192,6 @@ namespace ZenitUI
 
 	void Layout::translateSubtree(float dx, float dy)
 	{
-		// Sposta i figli (e i loro discendenti) senza toccare il rect di `this`.
 		for (auto &c : children)
 		{
 			if (c->isPortal())
@@ -287,7 +270,6 @@ namespace ZenitUI
 		float h = c->measuredSize.y;
 		float x, y;
 
-		// ---- orizzontale ----
 		if (hasL && hasR && cst.width.isAuto())
 		{
 			float L = cst.left.resolveH(in.width, in.height);
@@ -308,7 +290,6 @@ namespace ZenitUI
 			x = in.x + ml;
 		}
 
-		// ---- verticale ----
 		if (hasT && hasB && cst.height.isAuto())
 		{
 			float T = cst.top.resolveV(in.width, in.height);
@@ -386,7 +367,6 @@ namespace ZenitUI
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
-			// ---- main axis: height ----
 			float ch = c->measuredSize.y;
 			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
 				ch += freeSpace * (cst.grow / totalGrow);
@@ -397,7 +377,6 @@ namespace ZenitUI
 			float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 			ch = clampSafe(ch, minH, maxH);
 
-			// ---- cross axis: width ----
 			float cw = c->measuredSize.x;
 			float availW = std::max(0.0f, inner.width - ml - mr);
 			float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
@@ -472,7 +451,6 @@ namespace ZenitUI
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
-			// ---- main axis: width ----
 			float cw = c->measuredSize.x;
 			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
 				cw += freeSpace * (cst.grow / totalGrow);
@@ -483,7 +461,6 @@ namespace ZenitUI
 			float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
 			cw = clampSafe(cw, minW, maxW);
 
-			// ---- cross axis: height ----
 			float ch = c->measuredSize.y;
 			float availH = std::max(0.0f, inner.height - mt - mb);
 			float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
@@ -557,8 +534,6 @@ namespace ZenitUI
 		if (ancestorBlocked || !config.enabled)
 			return nullptr;
 
-		// Clip check: se il punto è fuori dal clip del parent, questo ramo
-		// non è visibile e non può essere colpito.
 		if (clipLocal && !clipLocal->contains(p))
 			return nullptr;
 
@@ -572,8 +547,6 @@ namespace ZenitUI
 					continue;
 				bool wasPortal = sp->isPortal();
 				sp->setPortal(false);
-				// I portal non sono clippati da nessun antenato: passiamo
-				// nullptr come clipLocal.
 				Layout *hit = sp->hitTest(p, false, nullptr);
 				sp->setPortal(wasPortal);
 				if (hit)
@@ -586,9 +559,6 @@ namespace ZenitUI
 		Transform2D tr = currentTransform(style_.currentStyle);
 		Vec2 pChildren = applyInverseTransform(tr, p);
 
-		// Clip per i figli: se questo nodo ha overflow != visible, il suo
-		// rect diventa il nuovo confine visibile. Intersechiamo col clip
-		// corrente (se presente) oppure col viewport (primo livello).
 		const bool needsClip =
 			style_.currentStyle.overflowX != Overflow::Visible ||
 			style_.currentStyle.overflowY != Overflow::Visible;
@@ -650,9 +620,6 @@ namespace ZenitUI
 
 	bool Layout::scrollIntoView(const Rect &subRect, float margin)
 	{
-		// Trova il primo antenato scrollabile. Non importa se è
-		// "scroll" o "auto": basta che abbia un overflow diverso da
-		// "visible" per avere uno ScrollController attivo.
 		Layout *container = getParent().get();
 		while (container)
 		{
@@ -663,29 +630,16 @@ namespace ZenitUI
 		if (!container)
 			return false;
 
-		// `subRect` è in coordinate schermo (già traslato dallo scroll
-		// applicato). Il rect del container è nella sua posizione
-		// attuale, non traslato. Il confronto geometrico è quindi
-		// diretto.
-		//
-		// Nota: se ci sono container scrollabili annidati, `subRect`
-		// riflette lo scroll di *tutti* gli antenati, mentre `view`
-		// no. Il calcolo è corretto per il caso comune (un solo
-		// livello di scroll tra questo nodo e il container). Gli
-		// scroll annidati richiederebbero una conversione di coordinate
-		// più attenta.
 		const Rect &view = container->rect;
 
 		float dx = 0.0f;
 		float dy = 0.0f;
 
-		// Asse orizzontale
 		if (subRect.x < view.x + margin)
 			dx = subRect.x - (view.x + margin);
 		else if (subRect.x + subRect.width > view.x + view.width - margin)
 			dx = (subRect.x + subRect.width) - (view.x + view.width - margin);
 
-		// Asse verticale
 		if (subRect.y < view.y + margin)
 			dy = subRect.y - (view.y + margin);
 		else if (subRect.y + subRect.height > view.y + view.height - margin)
@@ -700,7 +654,6 @@ namespace ZenitUI
 		targetX = std::clamp(targetX, 0.0f, container->getMaxScrollX());
 		targetY = std::clamp(targetY, 0.0f, container->getMaxScrollY());
 
-		// Nulla da fare se il clamp ha annullato lo spostamento.
 		if (targetX == container->getScrollX() &&
 			targetY == container->getScrollY())
 			return false;
@@ -721,7 +674,6 @@ namespace ZenitUI
 		std::vector<Line> lines;
 		Line curLine;
 
-		// 1. Raggruppa i figli per riga
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
@@ -738,12 +690,11 @@ namespace ZenitUI
 
 			float spaceNeeded = childW + (curLine.items.empty() ? 0.0f : gapX);
 
-			// Va a capo?
 			if (!curLine.items.empty() && curLine.width + spaceNeeded > inner.width && inner.width > 0.0f)
 			{
 				lines.push_back(curLine);
 				curLine = Line();
-				spaceNeeded = childW; // Primo elemento della nuova riga, no gap
+				spaceNeeded = childW;
 			}
 
 			curLine.width += spaceNeeded;
@@ -754,7 +705,6 @@ namespace ZenitUI
 		if (!curLine.items.empty())
 			lines.push_back(curLine);
 
-		// 2. Dispone i nodi riga per riga
 		float curY = inner.y;
 		for (auto &line : lines)
 		{
@@ -762,7 +712,6 @@ namespace ZenitUI
 			float startX = inner.x;
 			float extraGap = 0.0f;
 
-			// Applica justify per la riga se c'è spazio e nessuno cresce
 			if (freeSpace > 0.0f && line.totalGrow <= 0.0f && !line.items.empty())
 			{
 				switch (style_.currentStyle.justify)

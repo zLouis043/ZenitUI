@@ -13,7 +13,6 @@ static SimpleSelector idSel(const char* n) {
     SimpleSelector s; s.kind = SimpleSelector::Kind::Id;    s.name = n; return s;
 }
 
-// ---------- computeSpecificity ----------
 
 TEST(Theme_specificity, empty_is_zero) {
     std::vector<SimpleSelector> chain;
@@ -67,7 +66,6 @@ TEST(Theme_specificity, one_id_beats_many_classes) {
     CHECK(computeSpecificity(many) < computeSpecificity(oneId));
 }
 
-// ---------- addRule / addKeyframes / clear ----------
 
 TEST(Theme_addRule, assigns_specificity) {
     Theme t;
@@ -102,7 +100,6 @@ TEST(Theme_clear, resets_all) {
     CHECK(!t.root.opacity.is_set);
 }
 
-// ---------- Specificity with compound selectors ----------
 
 TEST(Theme_specificity, tag_plus_class) {
     SimpleSelector ss;

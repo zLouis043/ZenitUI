@@ -6,9 +6,6 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
-// ============================================================
-//  Scene helper: TextInput con focus, in una scena minima.
-// ============================================================
 
 struct TextInputScene
 {
@@ -33,7 +30,6 @@ static TextInputScene makeFocusedInput(Env& env,
     env.frame(s.root);
     env.frame(s.root);
 
-    // Click per dare focus.
     Rect r = s.ti->getRect();
     env.click(s.root, { r.x + r.width * 0.5f, r.center().y });
     env.frame(s.root);
@@ -42,11 +38,7 @@ static TextInputScene makeFocusedInput(Env& env,
     return s;
 }
 
-// ============================================================
-//  TextInput: cursor position
-// ============================================================
 
-// ---- getCursorPos / setCursorPos -------------------------------------
 
 TEST(Widget_textinput, initial_cursor_at_end)
 {
@@ -83,19 +75,18 @@ TEST(Widget_textinput, setText_clamps_cursor)
 {
     Env env;
     auto ti = TextInput::create("hello");
-    ti->setCursorPos(5);        // fine del testo
-    ti->setText("hi");          // testo più corto
+    ti->setCursorPos(5);
+    ti->setText("hi");
     CHECK(ti->getCursorPos() == 2);
 }
 
-// ---- click-to-position -----------------------------------------------
 
 TEST(Widget_textinput, click_at_left_edge_sets_cursor_to_zero)
 {
     Env env;
 
     auto ti = TextInput::create("hello");
-    ti->getInlineBase().padding = Spacing(Px(0));   // semplifica il calcolo
+    ti->getInlineBase().padding = Spacing(Px(0));
     ti->getInlineBase().letterSpacing = Px(0);
     ti->getInlineBase().minWidth = Px(200);
 
@@ -104,9 +95,8 @@ TEST(Widget_textinput, click_at_left_edge_sets_cursor_to_zero)
     root->addChild(ti);
 
     env.frame(root);
-    env.frame(root);   // secondo frame: layout stabile
+    env.frame(root);
 
-    // Click nell'angolo in alto a sinistra del widget.
     Rect r = ti->getRect();
     env.click(root, { r.x + 1.0f, r.center().y });
 
@@ -130,7 +120,6 @@ TEST(Widget_textinput, click_at_right_edge_sets_cursor_to_end)
     env.frame(root);
 
     Rect r = ti->getRect();
-    // Click oltre la fine del testo: il cursore va all'ultimo index.
     env.click(root, { r.x + r.width - 1.0f, r.center().y });
 
     CHECK(ti->getCursorPos() == 5);
@@ -140,11 +129,6 @@ TEST(Widget_textinput, click_at_letter_boundary)
 {
     Env env;
 
-    // MockRenderer: charWidth = 8.0, spacing default 0 (passiamo 0).
-    // "ab" misura 16px, "abc" 24px. Un click a x=20 cade tra la
-    // seconda e la terza lettera: il cursore va a 2 o 3, il più
-    // vicino — 20 è equidistante (16 vs 24), scegliamo il primo
-    // che risulta più vicino.
     auto ti = TextInput::create("abc");
     ti->getInlineBase().padding = Spacing(Px(0));
     ti->getInlineBase().letterSpacing = Px(0);
@@ -158,12 +142,10 @@ TEST(Widget_textinput, click_at_letter_boundary)
     env.frame(root);
 
     Rect r = ti->getRect();
-    // click a x = r.x + 22 → più vicino a 24 (index 3) che a 16 (index 2)
     env.click(root, { r.x + 22.0f, r.center().y });
     CHECK(ti->getCursorPos() == 3);
 }
 
-// ---- integrazione con setText dopo setCursorPos ----------------------
 
 TEST(Widget_textinput, cursor_moves_with_keyboard)
 {
@@ -180,15 +162,11 @@ TEST(Widget_textinput, cursor_moves_with_keyboard)
     env.frame(root);
     env.frame(root);
 
-    // Focus via click al centro (non importa dove — mettiamo il
-    // cursore al punto giusto dopo).
     Rect r = ti->getRect();
     env.click(root, { r.x + r.width * 0.5f, r.center().y });
 
-    // Forza il cursore all'inizio per un test deterministico.
     ti->setCursorPos(0);
 
-    // Right arrow sposta di 1.
     env.platform.holdKey(Key::Right);
     env.frame(root);
     CHECK(ti->getCursorPos() == 1);
@@ -213,7 +191,6 @@ TEST(Widget_textinput, home_end_move_cursor)
     env.frame(root);
     env.frame(root);
 
-    // Focus.
     Rect r = ti->getRect();
     env.click(root, { r.x + r.width * 0.5f, r.center().y });
 
@@ -229,9 +206,6 @@ TEST(Widget_textinput, home_end_move_cursor)
 }
 
 
-// ============================================================
-//  Editing: insertion, backspace, delete
-// ============================================================
 
 TEST(Widget_textinput, type_chars_inserts_at_cursor)
 {
@@ -251,7 +225,6 @@ TEST(Widget_textinput, type_char_replaces_cursor_position)
     Env env;
     auto s = makeFocusedInput(env, "ac");
 
-    // Sposta il cursore dopo 'a' (tra 'a' e 'c').
     s.ti->setCursorPos(1);
     env.frame(s.root);
 
@@ -318,9 +291,6 @@ TEST(Widget_textinput, delete_at_end_is_noop)
     CHECK(s.ti->getCursorPos() == 3);
 }
 
-// ============================================================
-//  Callbacks
-// ============================================================
 
 TEST(Widget_textinput, onTextChanged_fires_on_edit)
 {
@@ -355,7 +325,6 @@ TEST(Widget_textinput, onTextChanged_does_not_fire_when_no_change)
     int calls = 0;
     s.ti->onTextChanged = [&](const std::string&) { calls++; };
 
-    // Backspace all'inizio non cambia nulla.
     s.ti->setCursorPos(0);
     env.frame(s.root);
 
@@ -365,9 +334,6 @@ TEST(Widget_textinput, onTextChanged_does_not_fire_when_no_change)
     CHECK(calls == 0);
 }
 
-// ============================================================
-//  Enter / Escape
-// ============================================================
 
 TEST(Widget_textinput, enter_fires_onSubmit_and_releases_focus)
 {
@@ -408,22 +374,14 @@ TEST(Widget_textinput, escape_releases_focus_without_submit)
     CHECK(!UIContext::get().hasFocus(s.ti.get()));
 }
 
-// ============================================================
-//  Key repeat
-// ============================================================
 
 TEST(Widget_textinput, key_repeat_deletes_multiple)
 {
     Env env;
     auto s = makeFocusedInput(env, "abcdef");
 
-    // Cursore alla fine.
     s.ti->setCursorPos(6);
 
-    // Tieni premuto Backspace per 1 secondo (60 frame a 60 fps).
-    // Repeat: delay 0.4s, interval 0.04s → dopo 1s dovrebbe aver
-    // cancellato (1s - 0.4s) / 0.04s + 1 ≈ 16 caratteri, ma il testo
-    // è solo 6. Quindi il testo diventa "".
     for (int i = 0; i < 60; ++i)
     {
         env.platform.holdKey(Key::Backspace);
@@ -441,7 +399,6 @@ TEST(Widget_textinput, key_repeat_stops_when_released)
 
     s.ti->setCursorPos(10);
 
-    // Tieni premuto per 10 frame.
     for (int i = 0; i < 10; ++i)
     {
         env.platform.holdKey(Key::Backspace);
@@ -450,19 +407,14 @@ TEST(Widget_textinput, key_repeat_stops_when_released)
 
     std::string afterHold = s.ti->getText();
 
-    // Rilascia (nessun holdKey) per 30 frame.
     for (int i = 0; i < 30; ++i)
     {
         env.frame(s.root);
     }
 
-    // Il testo è rimasto lo stesso.
     CHECK(s.ti->getText() == afterHold);
 }
 
-// ============================================================
-//  Horizontal scroll of the cursor
-// ============================================================
 
 TEST(Widget_textinput, cursor_scrolls_into_view_when_long)
 {
@@ -483,7 +435,6 @@ TEST(Widget_textinput, type_after_scroll_keeps_cursor_at_end)
     Env env;
     auto s = makeFocusedInput(env, "");
 
-    // Riempi il campo.
     for (int i = 0; i < 30; ++i)
     {
         env.platform.typeChar('x');
@@ -493,9 +444,6 @@ TEST(Widget_textinput, type_after_scroll_keeps_cursor_at_end)
     CHECK(s.ti->getText() == std::string(30, 'x'));
     CHECK(s.ti->getCursorPos() == 30);
 
-    // L'ultimo carattere digitato deve essere visibile, il che
-    // significa che il cursore è alla fine e non è stato spostato
-    // dallo scroll.
     env.platform.typeChar('y');
     env.frame(s.root);
 
@@ -503,9 +451,6 @@ TEST(Widget_textinput, type_after_scroll_keeps_cursor_at_end)
     CHECK(s.ti->getCursorPos() == 31);
 }
 
-// ============================================================
-//  Selection and Clipboard
-// ============================================================
 
 TEST(Widget_textinput, type_with_selection_replaces_it) {
     Env env;
@@ -514,7 +459,7 @@ TEST(Widget_textinput, type_with_selection_replaces_it) {
     s.ti->setCursorPos(11);
     env.platform.mods.shift = true;
     for (int i = 0; i < 5; ++i) {
-        env.platform.holdKey(Key::Left); // Usa holdKey per la navigazione
+        env.platform.holdKey(Key::Left);
         env.frame(s.root);
         env.frame(s.root);
     }
@@ -540,7 +485,7 @@ TEST(Widget_textinput, backspace_with_selection_deletes_it) {
     }
     env.platform.mods.shift = false;
     
-    env.platform.holdKey(Key::Backspace); // Usa holdKey
+    env.platform.holdKey(Key::Backspace);
     env.frame(s.root);
     
     CHECK(s.ti->getText() == "helrld");
@@ -561,7 +506,7 @@ TEST(Widget_textinput, ctrl_c_copies_selection) {
     
     env.platform.mods.shift = false;
     env.platform.mods.ctrl = true;
-    env.platform.pressKey(Key::C); // Ctrl+C legge ev.keys, pressKey va bene
+    env.platform.pressKey(Key::C);
     env.frame(s.root);
     env.platform.mods.ctrl = false;
     
@@ -605,12 +550,10 @@ TEST(Widget_textinput, undo_redo_works) {
     Env env;
     auto s = makeFocusedInput(env, "Start");
     
-    // Scrive 'X' -> "StartX"
     env.platform.typeChar('X');
     env.frame(s.root);
     CHECK(s.ti->getText() == "StartX");
     
-    // Ctrl+Z (Undo) -> Torna a "Start"
     env.platform.mods.ctrl = true;
     env.platform.pressKey(Key::Z);
     env.frame(s.root);
@@ -618,7 +561,6 @@ TEST(Widget_textinput, undo_redo_works) {
     
     CHECK(s.ti->getText() == "Start");
     
-    // Ctrl+Y (Redo) -> Torna a "StartX"
     env.platform.mods.ctrl = true;
     env.platform.pressKey(Key::Y);
     env.frame(s.root);
@@ -631,24 +573,19 @@ TEST(Widget_textinput, double_click_selects_word) {
     Env env;
     auto s = makeFocusedInput(env, "One Two Three");
     
-    // Click su "Two"
     Rect r = s.ti->getRect();
     
     env.platform.currentTime = 1.0;
     env.click(s.root, { r.x + 35.0f, r.center().y });
     
-    // Secondo click ravvicinato (< 0.4s)
     env.platform.currentTime = 1.1;
     env.click(s.root, { r.x + 35.0f, r.center().y });
     
-    // Assicuriamoci che abbia selezionato la parola ("Two" va dall'indice 4 al 7)
-    // Non testiamo l'esatto posizionamento del mock in px, ma simuliamo il Ctrl+C per leggere
     env.platform.mods.ctrl = true;
     env.platform.pressKey(Key::C);
     env.frame(s.root);
     env.platform.mods.ctrl = false;
     
-    // Controlliamo che il testo catturato non sia vuoto (significa che c'è selezione)
     CHECK(!env.platform.getClipboardText().empty());
 }
 
@@ -658,7 +595,6 @@ TEST(Widget_textinput, triple_click_selects_all) {
     
     Rect r = s.ti->getRect();
     
-    // 3 Click rapidissimi
     env.platform.currentTime = 1.0;
     env.click(s.root, { r.x + 20.0f, r.center().y });
     env.platform.currentTime = 1.1;
@@ -678,7 +614,6 @@ TEST(Widget_textinput, undo_restores_deleted_selection) {
     Env env;
     auto s = makeFocusedInput(env, "hello world");
     
-    // Seleziona "world"
     s.ti->setCursorPos(11);
     env.platform.mods.shift = true;
     for (int i = 0; i < 5; ++i) {
@@ -687,14 +622,12 @@ TEST(Widget_textinput, undo_restores_deleted_selection) {
     }
     env.platform.mods.shift = false;
     
-    // Cancella la selezione ("world")
     env.platform.holdKey(Key::Backspace);
     env.frame(s.root);
     env.frame(s.root);
     
     CHECK(s.ti->getText() == "hello ");
     
-    // Ctrl+Z (Undo) deve far riapparire "world"
     env.platform.mods.ctrl = true;
     env.platform.pressKey(Key::Z);
     env.frame(s.root);

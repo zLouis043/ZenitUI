@@ -4,11 +4,6 @@
 namespace ZenitUI
 {
 
-	// =========================================================================
-	//  STILE (StyleResolver)
-	//  Cascata CSS (defaults + regole + inline + stato) e transizioni di stato.
-	//  I ::part hanno una propria transizione interna per-part.
-	// =========================================================================
 
 	ComputedStyle StyleResolver::resolveFor(Layout &node)
 	{
@@ -20,15 +15,6 @@ namespace ZenitUI
 		};
 		std::vector<Match> matches;
 
-		// Use the by-tag index built by Theme::addRule.
-		//
-		// A rule whose rightmost selector is a tag can only match a
-		// node with that same tag. So we scan only the bucket for the
-		// node's tag, plus the "no tag" bucket (class/id rightmost),
-		// which can match any node.
-		//
-		// ::part rules are not in the index — they are resolved by
-		// `partFor`, not here.
 		{
 			const std::string &tag = node.getStyleTag();
 
@@ -65,9 +51,6 @@ namespace ZenitUI
 			finalStyle.overlay(m.rule->style);
 		finalStyle.overlay(inlineBase);
 
-		// --- Custom properties ---
-		// 1) Eredita dal parent (o dal root se siamo top-level).
-		// 2) Merge con quelle dichiarate localmente (vincono).
 		std::unordered_map<std::string, std::string> allCustomProps;
 		if (auto p = node.getParent())
 			allCustomProps = p->getStyle().customProps;
@@ -77,7 +60,6 @@ namespace ZenitUI
 		for (const auto &[k, v] : finalStyle.customProps)
 			allCustomProps[k] = v;
 
-		// --- Risoluzione delle prop che contengono var() ---
 		if (!finalStyle.unresolvedProps.empty())
 		{
 			Style resolved = resolveUnresolvedProps(finalStyle.unresolvedProps, allCustomProps);
@@ -85,7 +67,6 @@ namespace ZenitUI
 			finalStyle.unresolvedProps.clear();
 		}
 
-		// --- Stato (inline hover/pressed/focus/checked) ---
 		if (!node.getEnabled())
 			finalStyle.overlay(inlineDisabled);
 		else
@@ -210,11 +191,6 @@ namespace ZenitUI
 		{
 			if (node.anim_.hasActiveImperative())
 			{
-				// L'animazione imperativa riscrive lo stile ogni frame. Il
-				// target cambia continuamente, quindi il sistema di
-				// transizioni resetterebbe il timer a ogni frame e non
-				// progredirebbe mai. Saltiamo la transizione e allineiamo
-				// currentStyle al target immediatamente.
 				currentStyle = newTarget;
 				targetStyle = std::move(newTarget);
 				transitionStartStyle = currentStyle;

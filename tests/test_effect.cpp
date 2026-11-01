@@ -2,7 +2,6 @@
 #include "StyleParser.hpp"
 #include "Theme.hpp"
 
-// Aggiunti per i test dei filter params (fix 1.4)
 #include "Mocks.hpp"
 #include "FilterRegistry.hpp"
 #include "UIContext.hpp"
@@ -10,9 +9,6 @@
 using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
 
-// ============================================================
-//  Parser di `effect:`
-// ============================================================
 
 TEST(Parser_effect, simple_name)
 {
@@ -41,9 +37,6 @@ TEST(Parser_effect, coexists_with_filter)
     CHECK(t.rules[0].style.filters.value.size() == 1);
 }
 
-// ============================================================
-//  Filter params: Vec3 / Vec4 non scalano a [0, 255]  (fix 1.4)
-// ============================================================
 
 using namespace ZenitUI::Test;
 
@@ -155,7 +148,7 @@ TEST(Filter_float, default_used_when_no_arg)
 
     FilterRef ref;
     ref.name = "test";
-    ref.args = {}; // nessun argomento
+    ref.args = {};
 
     FilterContext ctx;
     ctx.renderer = &env.renderer;
@@ -192,8 +185,6 @@ TEST(Filter_vec2, consumes_two_args)
 
     applyFilter(def, ctx);
 
-    // Nota: applySinglePass chiama anche setEffectVec2("texSize", ...)
-    // automaticamente. Cerchiamo specificamente l'uniform "offset".
     bool found = false;
     for (const auto &c : env.renderer.capturedVec2)
     {

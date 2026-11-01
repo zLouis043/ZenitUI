@@ -11,9 +11,6 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
-// ============================================================
-//  Construction and basic access
-// ============================================================
 
 TEST(Bindable_construct, default_is_value_initialized)
 {
@@ -33,9 +30,6 @@ TEST(Bindable_construct, string_value)
     CHECK(b.get() == "hello");
 }
 
-// ============================================================
-//  set() and notification
-// ============================================================
 
 TEST(Bindable_set, same_value_does_not_fire_callback)
 {
@@ -73,9 +67,6 @@ TEST(Bindable_set, two_subscribers_fire_in_registration_order)
     CHECK(order[1] == 2);
 }
 
-// ============================================================
-//  Subscription RAII
-// ============================================================
 
 TEST(Bindable_subscription, raii_destroy_unsubscribes)
 {
@@ -86,10 +77,10 @@ TEST(Bindable_subscription, raii_destroy_unsubscribes)
         auto sub = b.onChanged([&](const int&){ calls++; });
         b.set(1);
         CHECK(calls == 1);
-    }   // sub destroyed here
+    }
 
     b.set(2);
-    CHECK(calls == 1);   // no additional call
+    CHECK(calls == 1);
 }
 
 TEST(Bindable_subscription, explicit_unsubscribe)
@@ -113,8 +104,8 @@ TEST(Bindable_subscription, unsubscribe_is_idempotent)
     auto sub = b.onChanged([&](const int&){ calls++; });
 
     sub.unsubscribe();
-    sub.unsubscribe();   // no crash
-    sub.unsubscribe();   // no crash
+    sub.unsubscribe();
+    sub.unsubscribe();
 
     b.set(1);
     CHECK(calls == 0);
@@ -137,17 +128,13 @@ TEST(Bindable_subscription, move_construction)
     auto sub1 = b.onChanged([&](const int&){ calls++; });
     auto sub2 = std::move(sub1);
 
-    // Old sub should no longer own the subscription.
     CHECK(!sub1.active());
     CHECK(sub2.active());
 
     b.set(1);
-    CHECK(calls == 1);   // not 2
+    CHECK(calls == 1);
 }
 
-// ============================================================
-//  Recursion / unsubscribe during iteration
-// ============================================================
 
 TEST(Bindable_recursion, unsubscribe_in_own_callback_does_not_crash)
 {
@@ -155,13 +142,10 @@ TEST(Bindable_recursion, unsubscribe_in_own_callback_does_not_crash)
     int calls_a = 0;
     int calls_b = 0;
 
-    // Declare the Subscription first so the lambda can capture it by
-    // reference. Assign after, so the lambda body sees the populated
-    // Subscription once the callback fires.
     Bindable<int>::Subscription subA;
     subA = b.onChanged([&](const int&){
         calls_a++;
-        subA.unsubscribe();   // remove self during notification
+        subA.unsubscribe();
     });
     auto subB = b.onChanged([&](const int&){ calls_b++; });
 
@@ -170,7 +154,7 @@ TEST(Bindable_recursion, unsubscribe_in_own_callback_does_not_crash)
     CHECK(calls_b == 1);
 
     b.set(2);
-    CHECK(calls_a == 1);   // A unsubscribed itself
+    CHECK(calls_a == 1);
     CHECK(calls_b == 2);
 }
 
@@ -180,7 +164,7 @@ TEST(Bindable_recursion, set_same_value_in_callback_no_infinite_loop)
     int calls = 0;
     auto sub = b.onChanged([&](const int& v){
         calls++;
-        b.set(v);   // echo the same value — no recursion
+        b.set(v);
     });
 
     b.set(1);
@@ -188,9 +172,6 @@ TEST(Bindable_recursion, set_same_value_in_callback_no_infinite_loop)
     CHECK(b.get() == 1);
 }
 
-// ============================================================
-//  bindTo — widget method binding
-// ============================================================
 
 TEST(Bindable_bindTo, float_setter)
 {
@@ -198,7 +179,7 @@ TEST(Bindable_bindTo, float_setter)
     auto pb = ProgressBar::create(0.0f);
 
     auto sub = vol.bindTo(pb, &ProgressBar::setValue);
-    CHECK_NEAR(pb->getValue(), 0.0f, 1e-6);   // not called yet
+    CHECK_NEAR(pb->getValue(), 0.0f, 1e-6);
 
     vol.set(0.7f);
     CHECK_NEAR(pb->getValue(), 0.7f, 1e-6);
@@ -210,7 +191,7 @@ TEST(Bindable_bindTo, string_setter)
     auto lbl = Label("_");
 
     auto sub = name.bindTo(lbl, &Text::setText);
-    CHECK(lbl->getText() == "_");   // not called yet
+    CHECK(lbl->getText() == "_");
 
     name.set(std::string("updated"));
     CHECK(lbl->getText() == "updated");
@@ -222,7 +203,7 @@ TEST(Bindable_bindTo, bool_setter)
     auto w = std::make_shared<Layout>(LayoutType::Stack);
 
     auto sub = enabled.bindTo(w, &Layout::setEnabled);
-    CHECK(w->getEnabled());   // initial, not from bindable
+    CHECK(w->getEnabled());
 
     enabled.set(false);
     CHECK(!w->getEnabled());
@@ -237,10 +218,8 @@ TEST(Bindable_bindTo, expired_weakptr_does_not_call)
         auto pb = ProgressBar::create(0.0f);
         weakPb = pb;
         auto sub = vol.bindTo(weakPb, &ProgressBar::setValue);
-        // pb destroyed here
     }
 
-    // No crash, no call.
     vol.set(0.9f);
     CHECK(true);
 }
@@ -263,9 +242,6 @@ TEST(Bindable_bindTo, fire_immediately_on_string)
     CHECK(lbl->getText() == "start");
 }
 
-// ============================================================
-//  Lifetime: Subscription vs Bindable
-// ============================================================
 
 TEST(Bindable_lifetime, subscription_outlives_bindable)
 {
@@ -275,10 +251,10 @@ TEST(Bindable_lifetime, subscription_outlives_bindable)
         Bindable<float> b{0.0f};
         sub = b.onChanged([](const float&){});
         CHECK(sub.active());
-    }   // b destroyed
+    }
 
     CHECK(!sub.active());
-    sub.unsubscribe();   // no-op, no crash
+    sub.unsubscribe();
 }
 
 TEST(Bindable_lifetime, bindable_destroyed_then_subscription_destructed)
@@ -288,8 +264,6 @@ TEST(Bindable_lifetime, bindable_destroyed_then_subscription_destructed)
         Bindable<float> b{0.0f};
         sub = b.onChanged([](const float&){});
     }
-    // sub destructs at end of scope, b already gone.
-    // No crash = pass.
     CHECK(true);
 }
 
@@ -298,14 +272,10 @@ TEST(Bindable_lifetime, bindable_destroyed_then_set_not_possible)
     auto holder = std::make_unique<Bindable<int>>(0);
     auto sub = holder->onChanged([](const int&){});
 
-    holder.reset();   // Bindable destroyed
+    holder.reset();
     CHECK(!sub.active());
-    // sub destructor runs at end of scope, must be safe
 }
 
-// ============================================================
-//  Type constraints
-// ============================================================
 
 TEST(Bindable_constraints, not_copyable_not_movable)
 {

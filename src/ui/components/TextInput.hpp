@@ -93,7 +93,6 @@ namespace ZenitUI::UI
             float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
             float availW = std::max(0.0f, rect.width - pl - pr - 4.0f);
 
-            // --- Multi-click e Drag ---
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
@@ -161,7 +160,6 @@ namespace ZenitUI::UI
                 return false;
             };
 
-            // --- Tasti e Modifiers ---
             if (ctx.modifiers.ctrl || ctx.modifiers.super)
             {
                 for (int k : ev.keys)
@@ -378,7 +376,6 @@ namespace ZenitUI::UI
                 internal_.pendingTransition = 1;
             }
 
-            // --- Scroll orizzontale automatico ---
             {
                 auto r = UIContext::get().renderer;
                 if (!r)
@@ -479,7 +476,6 @@ namespace ZenitUI::UI
             return best;
         }
 
-        // ---- UNDO / REDO SYSTEM ----
         struct HistoryState
         {
             std::string text;
