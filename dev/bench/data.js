@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793558863316,
+  "lastUpdate": 1793564756942,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -5980,6 +5980,150 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.large1000",
             "value": 567.801,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "0694bf548f7f252a1a74ed704078b5706c8a6acc",
+          "message": "Moved from pure Makefiles to CMake (i know i fell for this trap too). Removed vendored raylib, improved and added msvc to the matrix for the tests and examples.",
+          "timestamp": "2026-11-01T21:24:49+01:00",
+          "tree_id": "7901d1f3c088cbaa1dd0ae4848850e9141b0dbbf",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/0694bf548f7f252a1a74ed704078b5706c8a6acc"
+        },
+        "date": 1793564756279,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 395.928,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 6.28483,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.0128214,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0577416,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0463059,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.937536,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 1.12509,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 1.04419,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.467784,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 1.21463,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 48.5456,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 61.981,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 15.9777,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 12.7299,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 36.9399,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.0093385,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 52.9376,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 381.459,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 56.1553,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 137.675,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 108.955,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 61.2995,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 147.935,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 567.235,
             "unit": "us"
           }
         ]
