@@ -80,6 +80,111 @@ fully compatible with the same styling system.
 
 ---
 
+## Building ZenitUI
+
+ZenitUI uses **CMake** as its primary build system. A thin `Makefile` at
+the repo root preserves the classic developer workflow (`make test`,
+`make examples`, …) and delegates every step to CMake — so there's no
+drift between the two.
+
+### Requirements
+
+- CMake ≥ 3.20
+- A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)
+- Ninja (recommended; falls back to the default generator if absent)
+- Git (used by `FetchContent` to pull Raylib for the examples)
+
+### From source
+
+```bash
+git clone https://github.com/zLouis043/ZenitUI
+cd ZenitUI
+
+make               # build libzenit.a + unit tests
+make test          # run the test suite
+make examples      # build all examples (fetches Raylib automatically)
+make run-00_demo   # build + run a specific example
+make bench         # build the benchmark harness
+```
+
+The `examples` and `run-*` targets use CMake's `FetchContent` to
+download and build Raylib on demand. There is **no `deps/raylib/`**
+folder in the repo — the build is self-contained.
+
+### `dist/` — consumable artifacts
+
+```bash
+make dist          # → dist/ with headers, libzenit.a, and CMake config
+```
+
+`dist/` contains everything a consumer project needs, in a stable layout:
+
+```
+dist/
+├── include/ZenitUI/...          # public headers
+├── lib/libzenit.a               # static library
+└── lib/cmake/ZenitUI/...        # CMake package files
+```
+
+## Integration with CMake
+
+The target is always `ZenitUI::ZenitUI`, whether you consume the library
+from source or from an install — your `CMakeLists.txt` doesn't change.
+
+### As a subdirectory (source tree)
+
+```cmake
+add_subdirectory(third_party/ZenitUI)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+```
+
+### As an installed package
+
+```cmake
+find_package(ZenitUI REQUIRED)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+```
+
+```bash
+cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist
+```
+
+The public interface (include dirs, C++20, warning flags) is propagated
+automatically. To use the Raylib reference backend, link it too:
+
+```cmake
+target_link_libraries(my_app PRIVATE
+    ZenitUI::ZenitUI
+    ZenitUI::RaylibBackend
+)
+```
+
+### Without CMake
+
+```bash
+make libzenit      # → build/libzenit.a
+g++ main.cpp -Idist/include -Ldist/lib -lzenit -std=c++20
+```
+
+## Repository layout
+
+```
+ZenitUI/
+├── include/              # public headers (installed)
+│   └── components/       # widget headers
+├── src/
+│   ├── layout/           # layout engine, style resolver, measure/arrange
+│   └── internal/         # animation, input, scroll, z-markup parser, …
+├── backends/raylib/      # reference backend (optional, fetched Raylib)
+├── examples/             # one folder per example (each has main.cpp)
+├── tests/                # unit tests
+├── benchmarks/           # benchmark harness
+├── build/                # CMake build tree (gitignored)
+└── dist/                 # installed artifacts via `make dist` (gitignored)
+```
+
+---
+
 ## Quick start
 
 ```cpp

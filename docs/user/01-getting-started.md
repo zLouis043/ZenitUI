@@ -7,7 +7,97 @@ By the end you will have a window with a styled, clickable button.
 
 ---
 
+## 0. Getting ZenitUI
+
+ZenitUI is distributed as source. There are three ways to consume it —
+pick the one that matches how your project is built.
+
+### Path A — CMake subdirectory (games, tools, plugins)
+
+The simplest option: drop the repo into your project (or add it as a
+git submodule) and link the alias target.
+
+```bash
+git submodule add https://github.com/zLouis043/ZenitUI third_party/ZenitUI
+```
+
+```cmake
+# CMakeLists.txt
+add_subdirectory(third_party/ZenitUI)
+
+add_executable(my_game main.cpp)
+target_link_libraries(my_game PRIVATE
+    ZenitUI::ZenitUI         # core — no graphics dependency
+    ZenitUI::RaylibBackend   # optional Raylib reference backend
+)
+```
+
+Raylib is fetched and built automatically via `FetchContent`. There is
+no manual download, and no `deps/raylib/` directory.
+
+### Path B — installed package (`find_package`)
+
+Preferred for engine plugins, CI, and anything that shouldn't vendor
+the ZenitUI source tree.
+
+```bash
+git clone https://github.com/zLouis043/ZenitUI
+cd ZenitUI
+make dist    # → dist/ with headers, libzenit.a, and CMake config
+```
+
+Then in your project:
+
+```cmake
+find_package(ZenitUI REQUIRED)
+
+add_executable(my_game main.cpp)
+target_link_libraries(my_game PRIVATE
+    ZenitUI::ZenitUI
+    ZenitUI::RaylibBackend
+)
+```
+
+```bash
+cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist
+```
+
+### Path C — manual, no CMake
+
+If your project uses Meson, Bazel, xmake, or a plain shell script:
+
+```bash
+cd ZenitUI
+make libzenit    # → build/libzenit.a
+```
+
+```bash
+g++ main.cpp \
+    -I/path/to/ZenitUI/include \
+    -L/path/to/ZenitUI/build -lzenit \
+    -std=c++20 \
+    -o my_game
+```
+
+For the Raylib backend, add `backends/raylib/RaylibBackend.cpp` to your
+sources and link Raylib separately. See the examples' `main.cpp` files
+for the exact include order.
+
+### Which one?
+
+| Situation | Path |
+|-----------|------|
+| You're building a game/app with CMake | **A** |
+| You ship a plugin that can't vendor ZenitUI | **B** |
+| Your build system isn't CMake | **C** |
+| You want reproducible CI (pinned version, installed prefix) | **B** |
+
+---
+
 ## 1. Prerequisites
+
+Assuming you already have ZenitUI available through one of the paths in
+§0, the rest of this guide needs:
 
 - **C++20** or newer.
 - A **backend**. ZenitUI ships a reference implementation for
@@ -22,7 +112,7 @@ By the end you will have a window with a styled, clickable button.
 
   If you want to use a different graphics library, implement those three
   and you're done. Nothing else in the framework touches the GPU.
-
+  
 ---
 
 ## 2. Initialize the backend
