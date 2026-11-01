@@ -77,10 +77,10 @@ fully compatible with the same styling system.
 | **Input** | Hover / pressed / focus state machine, `Tab` navigation, pointer capture, `passThrough`, right-click, context menus |
 | **Effects** | `filter: blur(...) drop-shadow(...)`, arbitrary shaders, extensible `FilterRegistry`, `box-shadow` |
 | **Widgets** | Text, Button, Panel, Toggle, Checkbox, Slider, ProgressBar, TextInput, ScrollView, Dropdown, Modal, Tooltip, Popup, Canvas, ImageContainer |
-| **Backend** | Pluggable. Reference implementation ships for **Raylib**. The core only depends on `IRenderer` / `IPlatform` / `IAssetProvider`. |
+| **Backends** | Pluggable. Reference implementation for **Raylib**, plus a headless **mock** backend for tests and CI. The core only depends on `IRenderer` / `IPlatform` / `IAssetProvider`. |
 | **Debugging** | Optional `Debug::dumpStyle` / `dumpTree` / `dumpTheme` / `dumpParts`, structured `Logger` with source locations |
 | **Data binding** | `Bindable<T>` — observable values with RAII subscriptions, lifetime-safe, zero dependencies |
-| **Testing** | Headless `MockRenderer` + `MockPlatform` allow full interaction tests without opening a window |
+| **Testing** | The `ZenitUI::MockBackend` target provides `MockRenderer`, `MockPlatform`, and `MockAssetProvider` for full headless interaction tests. |
 
 ---
 
@@ -130,35 +130,138 @@ A full walkthrough is in **[Getting Started](docs/user/01-getting-started.md)**.
 
 ## Building
 
-The project is built with a plain **Makefile**. It expects:
+ZenitUI uses **CMake** as its primary build system. A thin `Makefile`
+at the repository root preserves the classic developer workflow and
+delegates every step to CMake — there is no drift between the two.
 
-- A C++20 compiler (`g++` by default).
-- **Raylib** unpacked in `deps/raylib/`, with:
-  - headers in `deps/raylib/include/`
-  - libraries in `deps/raylib/lib/`
+### Requirements
 
-### Common targets
+- CMake ≥ 3.20
+- A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)
+- Ninja (recommended; falls back to the default generator if absent)
+- Git (used by `FetchContent` to pull Raylib for the examples)
+
+### From source
 
 ```bash
-make          # builds ./bin/testui (the demo app)
-make test     # builds and runs the headless test suite
-make clean    # removes build artifacts
-make all      # main + test
+git clone https://github.com/zLouis043/ZenitUI
+cd ZenitUI
+
+make               # build libzenit.a + unit tests
+make test          # run the test suite
+make examples      # build all examples (fetches Raylib automatically)
+make run-00_demo   # build + run a specific example
+make bench         # build the benchmark harness
+make dist          # install into dist/ for downstream consumption
 ```
 
-### Portability note
+The `examples` and `run-*` targets fetch and build Raylib on demand.
+There is **no `deps/raylib/`** folder in the repo — the build is
+self-contained.
 
-The current Makefile targets **MinGW / GCC on Windows** (it links
-`-lopengl32 -lgdi32 -lwinmm`). On Linux and macOS, the same targets work
-if Raylib is present and the link flags are adjusted for the platform
-(`-lGL -lm -lpthread -ldl -lrt -lX11` on Linux, no extra flags on
-macOS).
+### Without the Makefile
 
-The **test suite is fully portable** — it doesn't link Raylib at all.
-On Linux and macOS, `make test` works out of the box.
+The Makefile is purely a convenience. The same workflow works with
+plain CMake:
 
-A CMake build for full cross-platform support (including MSVC) is
-planned — see [docs/ROADMAP.md](docs/ROADMAP.md).
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+### `dist/` — consumable artifacts
+
+```bash
+make dist          # → dist/ with headers, libzenit.a, and CMake config
+```
+
+`dist/` contains everything a consumer project needs, in a stable
+layout:
+
+```
+dist/
+├── include/...                   # public headers
+├── lib/libzenit.a                # static library
+└── lib/cmake/ZenitUI/...         # CMake package files
+```
+
+---
+
+## Integration with CMake
+
+The target is always `ZenitUI::ZenitUI`, whether you consume the
+library from source or from an install. Your `CMakeLists.txt` doesn't
+change.
+
+### As a subdirectory (source tree)
+
+```cmake
+add_subdirectory(third_party/ZenitUI)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+```
+
+### As an installed package
+
+```cmake
+find_package(ZenitUI REQUIRED)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+```
+
+```bash
+cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist
+```
+
+The public interface (include dirs, C++20, warning flags) is propagated
+automatically.
+
+### Backends
+
+The core is backend-agnostic; backends are opt-in. Currently available:
+
+| Backend | CMake target | Purpose |
+|---------|--------------|---------|
+| `raylib` | `ZenitUI::RaylibBackend` | Reference implementation |
+| `mock`   | `ZenitUI::MockBackend`   | Headless testing (no GPU, no window) |
+
+Enable them with `-DZENITUI_BACKENDS="raylib;mock"` (semicolon-separated).
+Tests automatically pull in `mock`; examples default to `raylib`.
+
+```cmake
+target_link_libraries(my_app PRIVATE
+    ZenitUI::ZenitUI
+    ZenitUI::RaylibBackend
+)
+```
+
+### Without CMake
+
+```bash
+make libzenit    # → build/libzenit.a
+g++ main.cpp -I/path/to/ZenitUI/include -L/path/to/ZenitUI/build -lzenit -std=c++20
+```
+
+---
+
+## Repository layout
+
+```
+ZenitUI/
+├── include/              # public headers (installed)
+│   └── components/       # widget headers
+├── src/
+│   ├── layout/           # layout engine, style resolver, measure/arrange
+│   └── internal/         # animation, input, scroll, ZMarkup parser, …
+├── backends/
+│   ├── raylib/           # reference backend (fetches Raylib)
+│   └── mock/             # headless mock backend for tests
+├── examples/             # one folder per example (each has main.cpp)
+├── tests/                # unit tests
+├── benchmarks/           # benchmark harness
+├── docs/                 # user, internals, api
+├── build/                # CMake build tree (gitignored)
+└── dist/                 # installed artifacts via `make dist` (gitignored)
+```
 
 ---
 
