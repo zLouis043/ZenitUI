@@ -1,7 +1,7 @@
 #include "bench_framework.hpp"
 
 #include "Mocks.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 #include <memory>
 #include <string>

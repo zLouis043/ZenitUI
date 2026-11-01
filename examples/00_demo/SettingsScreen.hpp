@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 using namespace ZenitUI;
 using namespace ZenitUI::UI;

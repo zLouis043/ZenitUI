@@ -18,7 +18,7 @@
 #include <raylib.h>
 
 #include "RaylibBackend.hpp"
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 
 #include <cmath>
 #include <cstdio>

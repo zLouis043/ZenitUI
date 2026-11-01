@@ -6,7 +6,7 @@ else
   CXXFLAGS := -O2 -ggdb -std=c++20 -Wall -Wextra -Wno-missing-field-initializers
 endif
 
-CPPFLAGS := -I./src -I./src/ui -I./tests
+CPPFLAGS := -I./include -I./include/components -I./tests
 
 OBJ_DIR := obj
 BIN_DIR := bin
@@ -18,7 +18,7 @@ else
   EXE :=
 endif
 
-FRAMEWORK_SRCS := $(wildcard src/ui/layout/*.cpp) $(wildcard src/ui/internal/*.cpp)
+FRAMEWORK_SRCS := $(wildcard src/layout/*.cpp) $(wildcard src/internal/*.cpp)
 TEST_SRCS      := $(wildcard tests/*.cpp)
 
 FRAMEWORK_OBJS := $(FRAMEWORK_SRCS:%.cpp=$(OBJ_DIR)/%.o)
@@ -29,7 +29,6 @@ DEPS := $(FRAMEWORK_OBJS:.o=.d) $(TEST_OBJS:.o=.d)
 LIB_BIN   := $(LIB_DIR)/libzenit.a
 TESTS_BIN := $(BIN_DIR)/tests$(EXE)
 
-# --- Target di default ---
 all: $(LIB_BIN) $(TESTS_BIN)
 
 libzenit: $(LIB_BIN)
@@ -40,11 +39,11 @@ $(LIB_BIN): $(FRAMEWORK_OBJS) | $(LIB_DIR)
 $(TESTS_BIN): $(TEST_OBJS) $(LIB_BIN) | $(BIN_DIR)
 	$(CXX) $(TEST_OBJS) -L$(LIB_DIR) -lzenit -o $@
 
-$(OBJ_DIR)/src/ui/layout/%.o: src/ui/layout/%.cpp
+$(OBJ_DIR)/src/layout/%.o: src/layout/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
 
-$(OBJ_DIR)/src/ui/internal/%.o: src/ui/internal/%.cpp
+$(OBJ_DIR)/src/internal/%.o: src/internal/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
 
@@ -59,7 +58,6 @@ $(BIN_DIR):
 $(LIB_DIR):
 	mkdir -p $@
 
-# --- Comandi utente ---
 test: $(TESTS_BIN)
 	./$(TESTS_BIN)
 

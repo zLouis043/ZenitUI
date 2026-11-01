@@ -808,7 +808,7 @@ A button with hover, focus, keyboard activation, and a custom right-click
 handler:
 
 ```cpp
-#include "UI.hpp"
+#include "ZenitUI.hpp"
 using namespace ZenitUI;
 using namespace ZenitUI::UI;
 
