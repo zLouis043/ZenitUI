@@ -28,16 +28,13 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential
+          sudo apt-get install -y build-essential cmake ninja-build
 
-      - name: Build library
-        run: make -j4 libzenit
-
-      - name: Build benchmark
-        run: make -C benchmarks
+      - name: Build library and benchmark
+        run: make -j4 bench
 
       - name: Run benchmark
-        run: ./benchmarks/bin/bench --json > benchmark-output.json
+        run: ./build/benchmarks/bin/bench --json > benchmark-output.json
 
       - name: Show benchmark output
         run: cat benchmark-output.json
