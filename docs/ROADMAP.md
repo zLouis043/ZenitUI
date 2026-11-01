@@ -9,7 +9,7 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after the per-button input refactor (§5.15).
+Last updated: after the CMake migration (§7.7).
 
 ---
 
@@ -1668,17 +1668,114 @@ platform-independent.
 - [x] Verify it catches the `pointer.pressed` regression (revert one
       example locally, push, confirm CI fails)
 
-**Long-term (separate item):** the `examples/Makefile` currently
-hardcodes Windows link flags (`-lraylibdll -lopengl32 -lgdi32 -lwinmm`),
-which is why the CI job runs on Windows. Making the Makefile
-cross-platform (or replacing it with CMake, as already planned for
-Phase 7) would let the job run on `ubuntu-latest` — faster, cheaper,
-and more representative of the CI environment used for benchmarks.
+**Long-term — resolved by §7.7.** The original plan was to keep the
+per-directory Makefiles and extend them. During the CMake migration
+(§7.7), both `examples/Makefile` and `benchmarks/Makefile` were
+deleted and replaced by CMake. The three sub-items tracked here are
+now closed:
 
-- [ ] Make `examples/Makefile` cross-platform (OS detection)
-- [ ] Move `build-examples` to `ubuntu-latest`
-- [ ] Precompile `RaylibBackend.cpp` into an object file (currently
-      recompiled once per example)
+- [x] ~~Make `examples/Makefile` cross-platform~~ — superseded: the
+      file no longer exists. CMake handles platform differences via
+      `FetchContent` + `raylib`'s own CMake config.
+- [x] ~~Move `build-examples` to `ubuntu-latest`~~ — done, and
+      extended: the job now runs on the full test matrix
+      (Linux GCC/Clang, macOS Apple Clang, Windows MinGW/MSVC).
+      X11 dev packages are installed on Linux for Raylib's GLFW.
+- [x] ~~Precompile `RaylibBackend.cpp` into an object file~~ — done:
+      it's now a single static library target `ZenitUI::RaylibBackend`,
+      linked by every example executable. No per-example recompile.
+
+### 7.7 — Build system: CMake migration
+
+**Severity:** high — required for the library to be consumable as a
+first-class dependency by external CMake projects.
+
+**Context.** ZenitUI was Makefile-only. It worked well for developing
+the library itself, but had three problems for consumers:
+
+- **No `find_package` / `add_subdirectory` support.** Integrating the
+  library into another project meant vendoring it and hand-writing
+  include / lib paths.
+- **`deps/raylib/` checked into the repo.** Platform-specific binaries,
+  no way to pick a different Raylib version, and the Makefile hardcoded
+  `-lraylibdll -lopengl32 -lgdi32 -lwinmm` on Windows.
+- **No install rules.** `make` produced `lib/libzenit.a` in the repo
+  root, which was neither relocatable nor namespaced.
+
+**Migration.** Added a first-class CMake build supporting both
+consumption modes:
+
+- `add_subdirectory(ZenitUI)` → link `ZenitUI::ZenitUI` (source tree).
+- `find_package(ZenitUI)` → link `ZenitUI::ZenitUI` (installed).
+
+Both resolve to the same namespace, so consumer code is identical
+either way. Include dirs, C++20, and warning flags propagate via
+`target_*` properties; no manual `-I` / `-L`.
+
+**Key changes:**
+
+- New top-level `CMakeLists.txt` with `install(TARGETS ... EXPORT ...)`,
+  `install(EXPORT ZenitUITargets ...)`, and
+  `configure_package_config_file` / `write_basic_package_version_file`
+  producing `ZenitUIConfig.cmake` + `ZenitUIConfigVersion.cmake`.
+- New `cmake/ZenitUIConfig.cmake.in` template.
+- New `backends/raylib/CMakeLists.txt`: fetches Raylib via
+  `FetchContent`, builds `ZenitRaylibBackend` (static), exposes
+  `ZenitUI::RaylibBackend`. `deps/raylib/` deleted; `.gitignore`
+  updated.
+- New `examples/CMakeLists.txt`: iterates `*/main.cpp`, one executable
+  per folder, output under `build/examples/bin/<name>/main`.
+- New `benchmarks/CMakeLists.txt`: builds `ZenitBenchmarks`, output
+  `build/benchmarks/bin/bench`, keeps the historic `--update` flag.
+- `Makefile` at root rewritten as a thin CMake frontend: every historic
+  command preserved (`make test`, `make examples`, `make run-*`,
+  `make bench-*`, `make clean`, `make rebuild`). It also forwards
+  `CXX=...` to CMake via a compiler marker, so `make test CXX=clang++`
+  still triggers a clean reconfigure.
+- `examples/Makefile` and `benchmarks/Makefile` deleted.
+- New `make dist` target: `cmake --install build --prefix dist/` →
+  self-contained `dist/` with headers, `libzenit.a`, and CMake config.
+- `set_target_properties(ZenitUI PROPERTIES OUTPUT_NAME zenit)` keeps
+  the historic `libzenit.a` filename.
+- CI updated:
+  - `.github/workflows/ci.yml`: full matrix (GCC, Clang, Apple Clang,
+    MinGW GCC, MSVC) for both `test` and `build-examples`. MSVC uses
+    `ilammy/msvc-dev-cmd` + `choco install ninja` + `shell: cmd` with
+    direct CMake invocation.
+  - X11 dev packages (`libx11-dev`, `libxrandr-dev`, `libxinerama-dev`,
+    `libxcursor-dev`, `libxi-dev`, `libgl1-mesa-dev`,
+    `libglu1-mesa-dev`, `libasound2-dev`, `libpulse-dev`) installed
+    on Linux runners before `make examples`.
+  - `.github/workflows/benchmarks.yml`: `make bench` (single step,
+    library built transitively), output path
+    `./build/benchmarks/bin/bench`.
+- Documentation updated:
+  - `README.md`: new "Building ZenitUI", "Integration with CMake",
+    and "Repository layout" sections.
+  - `docs/user/01-getting-started.md`: new §0 "Getting ZenitUI"
+    with three paths (subdirectory, `find_package`, manual).
+  - `docs/user/02-…11-…` unchanged (they document the API, not the
+    build).
+
+**Consumer impact.** `ZenitUI::ZenitUI` and `ZenitUI::RaylibBackend`
+are the stable public targets. `deps/` is gone. `dist/` is the
+canonical artifact for downstream use. No breaking API changes.
+
+- [x] Add root `CMakeLists.txt` with install / export
+- [x] Add `cmake/ZenitUIConfig.cmake.in`
+- [x] Add `backends/raylib/CMakeLists.txt` using `FetchContent`
+- [x] Add `examples/CMakeLists.txt`
+- [x] Add `benchmarks/CMakeLists.txt`
+- [x] Rewrite root `Makefile` as CMake frontend
+- [x] Delete `examples/Makefile`, `benchmarks/Makefile`
+- [x] Add `make dist` → `dist/` with install rules
+- [x] `OUTPUT_NAME zenit` to preserve `libzenit.a`
+- [x] Delete `deps/raylib/`, update `.gitignore`
+- [x] Update `ci.yml`: full matrix + X11 deps + MSVC setup
+- [x] Update `benchmarks.yml`: `make bench`, new output path
+- [x] Update `README.md` (Building, Integration, Layout)
+- [x] Update `user/01-getting-started.md` (§0 integration paths)
+- [x] Update `ROADMAP.md` (§7.6 closed, §7.7 added)
 
 ---
 
