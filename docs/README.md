@@ -131,6 +131,18 @@ dist/
 The target is always `ZenitUI::ZenitUI`, whether you consume the library
 from source or from an install — your `CMakeLists.txt` doesn't change.
 
+### Backends
+
+The core is backend-agnostic; backends are opt-in. Currently available:
+
+| Backend | CMake target | Purpose |
+|---------|--------------|---------|
+| `raylib` | `ZenitUI::RaylibBackend` | Reference implementation |
+| `mock` | `ZenitUI::MockBackend` | Headless testing (no GPU, no window) |
+
+Enable them with `-DZENITUI_BACKENDS="raylib;mock"` (comma-separated).
+Tests automatically pull in `mock`; examples default to `raylib`.
+
 ### As a subdirectory (source tree)
 
 ```cmake

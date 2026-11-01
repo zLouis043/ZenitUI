@@ -1,9 +1,8 @@
-# Fetch Raylib se non è già stato fornito dal progetto ospite
 if(NOT TARGET raylib)
     include(FetchContent)
     set(BUILD_EXAMPLES  OFF CACHE BOOL "" FORCE)
     set(BUILD_GAMES     OFF CACHE BOOL "" FORCE)
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)  # static → niente raylib.dll
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(CUSTOMIZE_BUILD OFF CACHE BOOL "" FORCE)
 
     FetchContent_Declare(raylib

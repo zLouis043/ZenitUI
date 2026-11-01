@@ -35,16 +35,30 @@ target_include_directories(ZenitUI
         $<INSTALL_INTERFACE:include>
 )
 
+set(ZENITUI_BACKENDS "" CACHE STRING
+    "Semicolon-separated list of backends to build (raylib, mock, ...).")
+
+if(ZENITUI_BUILD_BACKEND AND ZENITUI_BACKENDS STREQUAL "")
+    set(ZENITUI_BACKENDS "raylib" CACHE STRING "" FORCE)
+endif()
+
+if(ZENITUI_BUILD_TESTS AND NOT "mock" IN_LIST ZENITUI_BACKENDS)
+    list(APPEND ZENITUI_BACKENDS "mock")
+    list(REMOVE_DUPLICATES ZENITUI_BACKENDS)
+    set(ZENITUI_BACKENDS "${ZENITUI_BACKENDS}" CACHE STRING "" FORCE)
+endif()
+
 if(ZENITUI_BUILD_TESTS)
     file(GLOB ZENITUI_TEST_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
-    )
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
 
     add_executable(ZenitTests ${ZENITUI_TEST_SOURCES})
-    target_link_libraries(ZenitTests PRIVATE ZenitUI::ZenitUI)
-
+    target_link_libraries(ZenitTests
+        PRIVATE
+            ZenitUI::ZenitUI
+            ZenitUI::MockBackend
+    )
     target_compile_definitions(ZenitTests PRIVATE ZENITUI_DEBUG)
-
     target_include_directories(ZenitTests PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/tests"
     )
@@ -53,10 +67,18 @@ if(ZENITUI_BUILD_TESTS)
     add_test(NAME ZenitTests COMMAND ZenitTests)
 endif()
 
-if(ZENITUI_BUILD_BACKEND OR ZENITUI_BUILD_EXAMPLES)
-    set(ZENITUI_BUILD_BACKEND ON)
-    add_subdirectory(backends/raylib)
+if(ZENITUI_BUILD_EXAMPLES AND ZENITUI_BACKENDS STREQUAL "")
+    set(ZENITUI_BACKENDS "raylib" CACHE STRING "" FORCE)
 endif()
+
+foreach(_backend IN LISTS ZENITUI_BACKENDS)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/backends/${_backend}")
+        message(FATAL_ERROR
+            "Unknown backend '${_backend}'. "
+            "Available: raylib, mock.")
+    endif()
+    add_subdirectory("backends/${_backend}")
+endforeach()
 
 if(ZENITUI_BUILD_EXAMPLES)
     add_subdirectory(examples)
