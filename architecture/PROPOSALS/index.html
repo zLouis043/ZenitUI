@@ -1915,6 +1915,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-5-wrap-for-hstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 5 — Wrap for HStack
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3032,6 +3043,14 @@ roadmap §5.17. Will land as a separate commit.</p>
 - Replaced rigid macro-driven property checks with a centralized <code>getKnownStyleProperties()</code> array automatically synced with <code>BUBBLE_STYLE_PROPS</code>.
 - <code>loadStyleString</code> and <code>loadStyleFile</code> now take an optional <code>DiagnosticSink*</code> and a <code>strict</code> boolean flag.
 - Added 6 unit tests in <code>test_diagnostics.cpp</code> covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.</p>
+<h3 id="proposal-5-wrap-for-hstack">Proposal 5 — Wrap for HStack</h3>
+<p><strong>Shipped:</strong> roadmap §5.21.</p>
+<p><strong>What landed:</strong>
+- Added <code>wrap</code> boolean property to <code>Style</code> (<code>BUBBLE_STYLE_PROPS</code>) and <code>ComputedStyle</code>.
+- <code>StyleParser</code> now parses <code>wrap: true</code>, <code>wrap: 1</code>, and <code>wrap: wrap</code>.
+- <code>Measure.cpp</code> implements <code>arrangeWrapFlow</code> to handle multi-line breaking when horizontal children exceed the container's width.
+- Supports per-line <code>justify</code> (e.g., <code>Center</code>, <code>SpaceBetween</code>, <code>End</code>).
+- <code>contentSize</code> dynamically computes the exact bounding box encompassing all wrapped lines, accurately updating the parent height.</p>
 
 
 

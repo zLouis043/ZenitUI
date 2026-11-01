@@ -2157,6 +2157,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#passo-521-wrap-for-hstack-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passo 5.21: Wrap for HStack ✅ - Done.
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3764,11 +3775,21 @@ applies, but UI use is fine.</p>
 <h3 id="519-slot">5.19 <code>&lt;Slot&gt;</code></h3>
 <p>✅ <strong>Done.</strong> The <code>Slot</code> tag inside a Prefab acts as an injection point for children passed during instantiation. Supports default fallback content.</p>
 <h3 id="520-styleparser-diagnostics">5.20 StyleParser Diagnostics</h3>
-<p>✅ <strong>Done.</strong> The <code>.zstyle</code> parser now supports full diagnostic reporting via a <code>DiagnosticSink</code>. 
-- Validates properties, catching typos like <code>colr</code> and suggesting <code>color</code> via Levenshtein distance.
-- Catches unknown pseudo-classes (e.g., <code>:hovver</code>).
-- Detects duplicate <code>@keyframes</code>.
-- Introduces <code>strict</code> mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.</p>
+<p>✅ <strong>Done.</strong> The <code>.zstyle</code> parser now supports full diagnostic reporting via a <code>DiagnosticSink</code>.</p>
+<ul>
+<li>Validates properties, catching typos like <code>colr</code> and suggesting <code>color</code> via Levenshtein distance.</li>
+<li>Catches unknown pseudo-classes (e.g., <code>:hovver</code>).</li>
+<li>Detects duplicate <code>@keyframes</code>.</li>
+<li>Introduces <code>strict</code> mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.</li>
+</ul>
+<h3 id="passo-521-wrap-for-hstack-done">Passo 5.21: Wrap for HStack ✅ - Done.</h3>
+<ul>
+<li><strong>Object</strong>: Support wrapping children within the <code>HStack</code> layout.</li>
+<li><strong>Details</strong>:</li>
+<li><code>HStack</code> now supports the <code>wrap</code> boolean property, allowing children that exceed the available container width to flow seamlessly onto the next line.</li>
+<li>Fully supports <code>justify</code> alignment (<code>center</code>, <code>space-between</code>, <code>end</code>, etc.) on dynamically wrapped lines.</li>
+<li>Supports cross-axis alignment (<code>items-v</code> / <code>align-v</code>) relative to the specific height of each wrapped line.</li>
+</ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>
