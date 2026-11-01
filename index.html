@@ -419,6 +419,117 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-zenitui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building ZenitUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building ZenitUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dist-consumable-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dist/ — consumable artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with CMake
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with CMake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#as-a-subdirectory-source-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a subdirectory (source tree)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#as-an-installed-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As an installed package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1557,6 +1668,117 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#building-zenitui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building ZenitUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building ZenitUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dist-consumable-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dist/ — consumable artifacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with CMake
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with CMake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#as-a-subdirectory-source-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a subdirectory (source tree)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#as-an-installed-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As an installed package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Without CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1749,6 +1971,79 @@ fully compatible with the same styling system.</p>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="building-zenitui">Building ZenitUI</h2>
+<p>ZenitUI uses <strong>CMake</strong> as its primary build system. A thin <code>Makefile</code> at
+the repo root preserves the classic developer workflow (<code>make test</code>,
+<code>make examples</code>, …) and delegates every step to CMake — so there's no
+drift between the two.</p>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>CMake ≥ 3.20</li>
+<li>A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)</li>
+<li>Ninja (recommended; falls back to the default generator if absent)</li>
+<li>Git (used by <code>FetchContent</code> to pull Raylib for the examples)</li>
+</ul>
+<h3 id="from-source">From source</h3>
+<pre><code class="language-bash">git clone https://github.com/zLouis043/ZenitUI
+cd ZenitUI
+
+make               # build libzenit.a + unit tests
+make test          # run the test suite
+make examples      # build all examples (fetches Raylib automatically)
+make run-00_demo   # build + run a specific example
+make bench         # build the benchmark harness
+</code></pre>
+<p>The <code>examples</code> and <code>run-*</code> targets use CMake's <code>FetchContent</code> to
+download and build Raylib on demand. There is <strong>no <code>deps/raylib/</code></strong>
+folder in the repo — the build is self-contained.</p>
+<h3 id="dist-consumable-artifacts"><code>dist/</code> — consumable artifacts</h3>
+<pre><code class="language-bash">make dist          # → dist/ with headers, libzenit.a, and CMake config
+</code></pre>
+<p><code>dist/</code> contains everything a consumer project needs, in a stable layout:</p>
+<pre><code>dist/
+├── include/ZenitUI/...          # public headers
+├── lib/libzenit.a               # static library
+└── lib/cmake/ZenitUI/...        # CMake package files
+</code></pre>
+<h2 id="integration-with-cmake">Integration with CMake</h2>
+<p>The target is always <code>ZenitUI::ZenitUI</code>, whether you consume the library
+from source or from an install — your <code>CMakeLists.txt</code> doesn't change.</p>
+<h3 id="as-a-subdirectory-source-tree">As a subdirectory (source tree)</h3>
+<pre><code class="language-cmake">add_subdirectory(third_party/ZenitUI)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+</code></pre>
+<h3 id="as-an-installed-package">As an installed package</h3>
+<pre><code class="language-cmake">find_package(ZenitUI REQUIRED)
+target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)
+</code></pre>
+<pre><code class="language-bash">cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist
+</code></pre>
+<p>The public interface (include dirs, C++20, warning flags) is propagated
+automatically. To use the Raylib reference backend, link it too:</p>
+<pre><code class="language-cmake">target_link_libraries(my_app PRIVATE
+    ZenitUI::ZenitUI
+    ZenitUI::RaylibBackend
+)
+</code></pre>
+<h3 id="without-cmake">Without CMake</h3>
+<pre><code class="language-bash">make libzenit      # → build/libzenit.a
+g++ main.cpp -Idist/include -Ldist/lib -lzenit -std=c++20
+</code></pre>
+<h2 id="repository-layout">Repository layout</h2>
+<pre><code>ZenitUI/
+├── include/              # public headers (installed)
+│   └── components/       # widget headers
+├── src/
+│   ├── layout/           # layout engine, style resolver, measure/arrange
+│   └── internal/         # animation, input, scroll, z-markup parser, …
+├── backends/raylib/      # reference backend (optional, fetched Raylib)
+├── examples/             # one folder per example (each has main.cpp)
+├── tests/                # unit tests
+├── benchmarks/           # benchmark harness
+├── build/                # CMake build tree (gitignored)
+└── dist/                 # installed artifacts via `make dist` (gitignored)
+</code></pre>
 <hr />
 <h2 id="quick-start">Quick start</h2>
 <pre><code class="language-cpp">#include &lt;raylib.h&gt;

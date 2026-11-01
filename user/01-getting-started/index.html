@@ -508,6 +508,67 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#0-getting-zenitui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Getting ZenitUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Getting ZenitUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-a-cmake-subdirectory-games-tools-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path A — CMake subdirectory (games, tools, plugins)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-b-installed-package-find_package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path B — installed package (find_package)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-c-manual-no-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path C — manual, no CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which one?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1592,6 +1653,67 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#0-getting-zenitui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Getting ZenitUI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. Getting ZenitUI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-a-cmake-subdirectory-games-tools-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path A — CMake subdirectory (games, tools, plugins)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-b-installed-package-find_package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path B — installed package (find_package)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-c-manual-no-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path C — manual, no CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which one?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1760,7 +1882,88 @@
 create a root layout, add a widget, and run the frame loop.</p>
 <p>By the end you will have a window with a styled, clickable button.</p>
 <hr />
+<h2 id="0-getting-zenitui">0. Getting ZenitUI</h2>
+<p>ZenitUI is distributed as source. There are three ways to consume it —
+pick the one that matches how your project is built.</p>
+<h3 id="path-a-cmake-subdirectory-games-tools-plugins">Path A — CMake subdirectory (games, tools, plugins)</h3>
+<p>The simplest option: drop the repo into your project (or add it as a
+git submodule) and link the alias target.</p>
+<pre><code class="language-bash">git submodule add https://github.com/zLouis043/ZenitUI third_party/ZenitUI
+</code></pre>
+<pre><code class="language-cmake"># CMakeLists.txt
+add_subdirectory(third_party/ZenitUI)
+
+add_executable(my_game main.cpp)
+target_link_libraries(my_game PRIVATE
+    ZenitUI::ZenitUI         # core — no graphics dependency
+    ZenitUI::RaylibBackend   # optional Raylib reference backend
+)
+</code></pre>
+<p>Raylib is fetched and built automatically via <code>FetchContent</code>. There is
+no manual download, and no <code>deps/raylib/</code> directory.</p>
+<h3 id="path-b-installed-package-find_package">Path B — installed package (<code>find_package</code>)</h3>
+<p>Preferred for engine plugins, CI, and anything that shouldn't vendor
+the ZenitUI source tree.</p>
+<pre><code class="language-bash">git clone https://github.com/zLouis043/ZenitUI
+cd ZenitUI
+make dist    # → dist/ with headers, libzenit.a, and CMake config
+</code></pre>
+<p>Then in your project:</p>
+<pre><code class="language-cmake">find_package(ZenitUI REQUIRED)
+
+add_executable(my_game main.cpp)
+target_link_libraries(my_game PRIVATE
+    ZenitUI::ZenitUI
+    ZenitUI::RaylibBackend
+)
+</code></pre>
+<pre><code class="language-bash">cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist
+</code></pre>
+<h3 id="path-c-manual-no-cmake">Path C — manual, no CMake</h3>
+<p>If your project uses Meson, Bazel, xmake, or a plain shell script:</p>
+<pre><code class="language-bash">cd ZenitUI
+make libzenit    # → build/libzenit.a
+</code></pre>
+<pre><code class="language-bash">g++ main.cpp \
+    -I/path/to/ZenitUI/include \
+    -L/path/to/ZenitUI/build -lzenit \
+    -std=c++20 \
+    -o my_game
+</code></pre>
+<p>For the Raylib backend, add <code>backends/raylib/RaylibBackend.cpp</code> to your
+sources and link Raylib separately. See the examples' <code>main.cpp</code> files
+for the exact include order.</p>
+<h3 id="which-one">Which one?</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You're building a game/app with CMake</td>
+<td><strong>A</strong></td>
+</tr>
+<tr>
+<td>You ship a plugin that can't vendor ZenitUI</td>
+<td><strong>B</strong></td>
+</tr>
+<tr>
+<td>Your build system isn't CMake</td>
+<td><strong>C</strong></td>
+</tr>
+<tr>
+<td>You want reproducible CI (pinned version, installed prefix)</td>
+<td><strong>B</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="1-prerequisites">1. Prerequisites</h2>
+<p>Assuming you already have ZenitUI available through one of the paths in
+§0, the rest of this guide needs:</p>
 <ul>
 <li><strong>C++20</strong> or newer.</li>
 <li>A <strong>backend</strong>. ZenitUI ships a reference implementation for
