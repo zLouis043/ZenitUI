@@ -112,7 +112,6 @@ TEST(Parser_keyframes, from_to) {
 TEST(Parser_comments, ignored) {
     Theme t;
     loadStyleString(R"(
-        // line comment
         Toggle { color: red; } /* block comment */
     )", t);
     CHECK(t.rules.size() == 1);
@@ -185,7 +184,6 @@ TEST(Parser_boxshadow, not_set_if_only_two_tokens) {
     CHECK(!t.rules[0].style.boxShadow.is_set);
 }
 
-// ---------- Compound selectors ----------
 
 TEST(Parser_compound, tag_with_class) {
     Theme t;

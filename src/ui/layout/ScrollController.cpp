@@ -5,10 +5,6 @@
 namespace ZenitUI
 {
 
-    // =========================================================================
-    //  SCROLL
-    //  Comportamento per-asse: overflow-x/y indipendenti.
-    // =========================================================================
 
     static bool isBarVisible(Overflow o, float maxScroll)
     {
@@ -32,9 +28,6 @@ namespace ZenitUI
         scrolling = false;
     }
 
-    // =========================================================================
-    //  ARRANGE
-    // =========================================================================
 
     bool ScrollController::needsFullArrange(const Layout &node, bool positionChanged) const
     {
@@ -94,9 +87,6 @@ namespace ZenitUI
         state.clamp();
     }
 
-    // =========================================================================
-    //  INPUT
-    // =========================================================================
 
     void ScrollController::tickInput(Layout &node)
     {
@@ -111,7 +101,6 @@ namespace ZenitUI
         const bool canScrollY = state.maxScroll.y > 0.0f && st.overflowY != Overflow::Hidden;
         const bool canScrollX = state.maxScroll.x > 0.0f && st.overflowX != Overflow::Hidden;
 
-        // --- Inizio drag o click sul track ---
         if (!node.hasPointerCapture())
         {
             if (pointer[MouseButton::Left].pressed && ctx.topmostConsumer == &node)
@@ -181,7 +170,6 @@ namespace ZenitUI
             }
         }
 
-        // --- Wheel ---
         if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
             !node.hasPointerCapture() && rect.contains(pointer.pos))
         {
@@ -205,9 +193,6 @@ namespace ZenitUI
         scrolling = node.hasPointerCapture() || std::abs(state.velocity.x) > ScrollState::VELOCITY_MIN || std::abs(state.velocity.y) > ScrollState::VELOCITY_MIN;
     }
 
-    // =========================================================================
-    //  RENDER
-    // =========================================================================
 
     void ScrollController::drawScrollbar(const Layout &node, float parentOpacity) const
     {

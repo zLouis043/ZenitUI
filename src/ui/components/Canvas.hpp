@@ -32,10 +32,6 @@ namespace ZenitUI::UI
             }
             float op = style_.currentStyle.opacity * parentOp;
 
-            // Il subtree è disegnato in coordinate schermo (i rect sono
-            // assoluti). Dentro il target, il sistema di coordinate riparte
-            // da (0,0), quindi serve un offset che porti il nodo in cima
-            // al target. Stesso pattern usato da Layout::drawLayer.
             Transform2D offsetTr;
             offsetTr.pivot = {0.0f, 0.0f};
             offsetTr.translate = {-rect.x, -rect.y};
@@ -51,7 +47,6 @@ namespace ZenitUI::UI
             r->popTransform();
             r->popTarget();
 
-            // Disegna il target sul framebuffer con le transform del nodo.
             Transform2D tr;
             tr.pivot = rect.center();
             tr.translate = {
@@ -60,9 +55,6 @@ namespace ZenitUI::UI
             tr.rotationDeg = style_.currentStyle.rotation;
             tr.scale = style_.currentStyle.scale;
 
-            // Resolve the shader to apply. Priority: `effect:` property
-            // (if set and resolvable), then `setShader()` handle, then
-            // nothing. Same priority as regular Layout nodes.
             EffectHandle fx = resolveActiveEffect();
             const bool applyFx = fx.valid() && r->supports(Feature::Effects);
 

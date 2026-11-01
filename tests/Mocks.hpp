@@ -12,29 +12,20 @@
 namespace ZenitUI::Test
 {
 
-    // ============================================================
-    //  MockRenderer
-    // ============================================================
 
     class MockRenderer : public IRenderer
     {
     public:
-        // Contatori per le assert (non tutti usati, ma a portata)
         int fillRectCount{0};
         int drawTextCount{0};
         int pushClipCount{0};
         int popClipCount{0};
 
-        // Dimensione fissa per il testo: 8px per char + spacing
         float charWidth{8.0f};
 
-        // Clip stack
         std::vector<Rect> clipStack;
         Rect currentClip{0, 0, 1e9f, 1e9f};
 
-        // Dimensions of the last render target created via createTarget().
-        // Used by tests that verify the filter region computation (e.g. after
-        // a rotation, the target must be large enough to cover the rotated AABB).
         int lastCreatedTargetW{0};
         int lastCreatedTargetH{0};
 
@@ -117,7 +108,6 @@ namespace ZenitUI::Test
         {
             pushClipCount++;
             clipStack.push_back(currentClip);
-            // Intersezione AABB con il clip corrente
             float x1 = std::max(currentClip.x, r.x);
             float y1 = std::max(currentClip.y, r.y);
             float x2 = std::min(currentClip.x + currentClip.width, r.x + r.width);
@@ -156,7 +146,6 @@ namespace ZenitUI::Test
         }
         void drawTarget(TargetHandle, Rect, Color) override {}
 
-        // Effetti shader
         void setEffectFloat(EffectHandle, const char *name, float value) override
         {
             capturedFloat.push_back({name, value});
@@ -180,7 +169,6 @@ namespace ZenitUI::Test
         bool inTarget() const override { return activeTargetDepth > 0; }
         void clearTarget(TargetHandle, Color) override {}
 
-        // Ciclo di frame (se hai aggiunto beginFrame/endFrame/setDpiScale a IRenderer)
         void beginFrame() override {}
         void endFrame() override {}
         void setDpiScale(float) override {}
@@ -195,9 +183,6 @@ namespace ZenitUI::Test
         }
     };
 
-    // ============================================================
-    //  MockPlatform
-    // ============================================================
 
     class MockPlatform : public IPlatform
     {
@@ -220,9 +205,6 @@ namespace ZenitUI::Test
             PointerState p = nextPointer;
             nextPointer.wheelY = 0.0f;
 
-            // Clear all per-button edges. Iterating over the array
-            // keeps this in sync with MouseButton::Count if it ever
-            // grows.
             for (auto &b : nextPointer.buttons)
             {
                 b.pressed = false;
@@ -244,7 +226,6 @@ namespace ZenitUI::Test
             return 1.0f;
         }
 
-        // --- Scripting helpers ---
         void moveMouse(Vec2 pos)
         {
             nextPointer.pos = pos;
@@ -354,9 +335,6 @@ namespace ZenitUI::Test
         }
     };
 
-    // ============================================================
-    //  MockAssetProvider
-    // ============================================================
 
     class MockAssetProvider : public IAssetProvider
     {
@@ -369,7 +347,6 @@ namespace ZenitUI::Test
             return it != registeredEffects.end() ? it->second : EffectHandle{};
         }
 
-        // Test helper
         void registerEffect(std::string name)
         {
             static uint32_t nextId = 100;
@@ -380,9 +357,6 @@ namespace ZenitUI::Test
         std::unordered_map<std::string, EffectHandle> registeredEffects;
     };
 
-    // ============================================================
-    //  Fixture
-    // ============================================================
 
     struct Env
     {
@@ -401,7 +375,6 @@ namespace ZenitUI::Test
 
         ~Env()
         {
-            // Non possiamo lasciare il UIContext puntato a oggetti distrutti
             auto &ctx = UIContext::get();
             ctx.renderer = nullptr;
             ctx.platform = nullptr;
@@ -458,7 +431,6 @@ namespace ZenitUI::Test
             renderer.lastCreatedTargetH = 0;
         }
 
-        // Esegue un singolo frame di UI: beginFrame + update + measure + arrange.
         void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
         {
             auto &ctx = UIContext::get();
@@ -469,7 +441,6 @@ namespace ZenitUI::Test
             root->draw();
         }
 
-        // Helper: simula un click completo (down + up) al punto indicato.
         void click(std::shared_ptr<Layout> root, Vec2 pos)
         {
             platform.pressLeft(pos);

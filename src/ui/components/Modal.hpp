@@ -36,13 +36,6 @@ namespace ZenitUI::UI
                 onHide();
         }
 
-        // Content slot for ZMarkup. The modal builds an internal
-        // `content` wrapper in onBuild() (with the Intro animation).
-        // Markup children should end up inside that wrapper, not as
-        // siblings of it, so that the animation applies to them.
-        // Layout::contentTarget() tells ZMarkup::create where to
-        // attach. Regular C++ code can keep using addChild(), which
-        // routes to the same place.
         Layout *contentTarget() override
         {
             return content ? content.get() : this;
@@ -61,7 +54,7 @@ namespace ZenitUI::UI
             base.background = Colors::Black.withAlpha(0.6f);
             base.opacity = 0.0f;
             setInlineBase(base);
-            setEnabled(false); // <-- disabilita il modal finché non è mostrato
+            setEnabled(false);
 
             content = VStack()->cls("modal-content");
             addChild(content);

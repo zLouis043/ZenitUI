@@ -99,14 +99,8 @@ namespace ZenitUI
 		EdgeInsets safeArea;
 		ModifierState modifiers;
 		bool wheelConsumedThisFrame{false};
-		// Per-button consumption. Canonical source of truth for "has
-		// this mouse button's event already been handled this frame?".
-		// Index with (size_t)MouseButton.
 		std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
 
-		// Per-button consumption. Marked when a node handles a
-		// button's event and the node isn't passThrough, so ancestors
-		// skip their own handling.
 		void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
 		bool wasConsumed(MouseButton b) const { return buttonConsumed[(size_t)b]; }
 
@@ -116,22 +110,13 @@ namespace ZenitUI
 
 		uint32_t viewportGeneration{0};
 
-		// Force a full style re-resolution on the next frame for every
-		// node in the tree. The mechanism reuses the viewport-generation
-		// counter that already drives media-query re-evaluation: bumping
-		// it forces every node to re-resolve its style on the next
-		// update, regardless of whether the viewport actually changed.
-		//
-		// Intended use: after swapping the contents of the global Theme
-		// (e.g. reloading stylesheets at runtime). See StyleParser.hpp
-		// for the load functions.
 		void invalidateStyles() { viewportGeneration++; }
 
 		Layout *topmostConsumer{nullptr};
 
-		Layout *hoverTarget{nullptr};	// topmost sotto il mouse (geometrico)
-		Layout *pressTarget{nullptr};	// fissato al mouse-down
-		Layout *releaseTarget{nullptr}; // fissato al mouse-up
+		Layout *hoverTarget{nullptr};
+		Layout *pressTarget{nullptr};
+		Layout *releaseTarget{nullptr};
 
 		bool isPressTarget(const Layout *n) const { return pressTarget == n; }
 		bool isValidClick() const
@@ -151,8 +136,8 @@ namespace ZenitUI
 			wheelConsumedThisFrame = false;
 			buttonConsumed.fill(false);
 			topmostConsumer = nullptr;
-			hoverTarget = nullptr;	 // <-- nuovo
-			releaseTarget = nullptr; // <-- nuovo
+			hoverTarget = nullptr;
+			releaseTarget = nullptr;
 			activePortals = std::move(framePortals);
 			framePortals.clear();
 			if (platform)

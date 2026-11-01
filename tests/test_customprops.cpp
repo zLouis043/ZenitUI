@@ -6,7 +6,6 @@
 using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
 
-// ---------- Parsing: custom properties ----------
 
 TEST(CustomProps_parse, root_stores_prop)
 {
@@ -23,7 +22,6 @@ TEST(CustomProps_parse, rule_stores_prop)
     CHECK(t.rules.size() == 1);
     CHECK(t.rules[0].style.customProps.count("--accent") == 1);
     CHECK(t.rules[0].style.customProps.at("--accent") == "#00FF00");
-    // La prop normale coesiste con la custom
     CHECK(t.rules[0].style.color.is_set);
 }
 
@@ -37,7 +35,6 @@ TEST(CustomProps_parse, var_goes_into_unresolved)
     CHECK(t.rules[0].style.unresolvedProps.at("background") == "var(--primary)");
 }
 
-// ---------- substituteVarRefs ----------
 
 TEST(CustomProps_substitute, simple_replacement)
 {
@@ -61,14 +58,12 @@ TEST(CustomProps_substitute, embedded_in_expression)
 
 TEST(CustomProps_substitute, chained_replacement)
 {
-    // --a refers to --b, che ha valore concreto.
     std::unordered_map<std::string, std::string> props{
         {"--a", "var(--b)"},
         {"--b", "#00FF00"}};
     CHECK(substituteVarRefs("var(--a)", props) == "#00FF00");
 }
 
-// ---------- resolveUnresolvedProps ----------
 
 TEST(CustomProps_resolve, color_from_var)
 {
@@ -98,18 +93,16 @@ TEST(CustomProps_resolve, unknown_var_leaves_unset)
         {"background", "var(--missing)"}};
     std::unordered_map<std::string, std::string> props{};
     Style out = resolveUnresolvedProps(unresolved, props);
-    // parseColorToken fallisce su "var(--missing)" → background non set
     CHECK(!out.background.is_set);
 }
 
-// ---------- Ereditarietà via ComputedStyle::from ----------
 
 TEST(CustomProps_inherit, from_parent)
 {
     ComputedStyle parent;
     parent.customProps["--primary"] = "#FF0000";
 
-    Style local; // nessuna custom prop
+    Style local;
     auto c = ComputedStyle::from(local, &parent, nullptr);
 
     CHECK(c.customProps.count("--primary") == 1);

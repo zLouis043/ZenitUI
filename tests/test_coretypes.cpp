@@ -3,7 +3,6 @@
 
 using namespace ZenitUI;
 
-// ---------- Vec2 ----------
 TEST(CoreTypes_Vec2, add) {
     Vec2 a{1, 2}, b{3, 4};
     Vec2 c = a + b;
@@ -25,7 +24,6 @@ TEST(CoreTypes_Vec2, scalar_mul) {
     CHECK_NEAR(c.y, 6.0f, 1e-6);
 }
 
-// ---------- Rect ----------
 TEST(CoreTypes_Rect, contains_inside) {
     Rect r{10, 20, 100, 50};
     CHECK(r.contains({50, 40}));
@@ -57,7 +55,6 @@ TEST(CoreTypes_Rect, center_and_size) {
     CHECK_NEAR(s.y, 50.0f,  1e-6);
 }
 
-// ---------- Color ----------
 TEST(CoreTypes_Color, withAlpha) {
     Color c{100, 150, 200, 255};
     Color half = c.withAlpha(0.5f);
@@ -78,7 +75,6 @@ TEST(CoreTypes_Color, eq) {
     CHECK((Color{1,2,3,4}) != (Color{1,2,3,5}));
 }
 
-// ---------- Transform2D ----------
 TEST(CoreTypes_Transform, identity_apply) {
     Transform2D t;
     t.pivot = {0, 0};

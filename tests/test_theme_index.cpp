@@ -5,11 +5,7 @@
 using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
 
-// ============================================================
-//  Theme index (rulesByTag / rulesNoTag)
-// ============================================================
 
-// ---- bucket population ----------------------------------------------
 
 TEST(ThemeIndex, tag_rule_goes_to_tag_bucket)
 {
@@ -88,7 +84,6 @@ TEST(ThemeIndex, state_on_class_goes_to_no_tag_bucket)
 TEST(ThemeIndex, descendant_rule_uses_last_selector_for_indexing)
 {
     Theme t;
-    // .card Button → rightmost is Button → indexed under "Button"
     loadStyleString(".card Button { color: red; }", t);
 
     CHECK(t.rules.size() == 1);
@@ -99,9 +94,6 @@ TEST(ThemeIndex, descendant_rule_uses_last_selector_for_indexing)
 TEST(ThemeIndex, descendant_rule_with_class_rightmost)
 {
     Theme t;
-    // "Button .title" (spazio) → descendant con rightmost .title → no tag.
-    // ("Button.title" senza spazio sarebbe un compound con tag, non
-    // un descendant; è coperto da compound_with_tag_is_indexed_under_tag.)
     loadStyleString("Button .title { color: red; }", t);
 
     CHECK(t.rules.size() == 1);
@@ -158,11 +150,10 @@ TEST(ThemeIndex, mixed_rules_distribute_correctly)
     CHECK(t.rulesByTag.at("Toggle")[0] == 2);
 
     CHECK(t.rulesNoTag.size() == 2);
-    CHECK(t.rulesNoTag[0] == 1);   // .card
-    CHECK(t.rulesNoTag[1] == 3);   // #save
+    CHECK(t.rulesNoTag[0] == 1);
+    CHECK(t.rulesNoTag[1] == 3);
 }
 
-// ---- clear ----------------------------------------------------------
 
 TEST(ThemeIndex, clear_empties_index)
 {
@@ -180,7 +171,6 @@ TEST(ThemeIndex, clear_empties_index)
     CHECK(t.keyframes.empty());
 }
 
-// ---- rule order matches index entries ------------------------------
 
 TEST(ThemeIndex, index_entries_point_to_valid_rules)
 {
@@ -191,7 +181,6 @@ TEST(ThemeIndex, index_entries_point_to_valid_rules)
         Toggle { color: blue; }
     )", t);
 
-    // Every index points to a rule with the expected rightmost tag.
     for (const auto &[tag, idxs] : t.rulesByTag)
     {
         for (size_t idx : idxs)

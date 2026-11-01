@@ -23,7 +23,6 @@ inline std::shared_ptr<Layout> HStack(std::initializer_list<std::shared_ptr<Layo
     return l;
 }
 
-// ---------- Panel ----------
 class Panel : public TLayout<Panel>
 {
 public:

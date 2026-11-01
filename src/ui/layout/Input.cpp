@@ -4,11 +4,6 @@
 namespace ZenitUI
 {
 
-	// =========================================================================
-	//  INPUT (InputController)
-	//  Macchina a stati (Idle/Hover/Pressed/Disabled), callback di click,
-	//  gestione tastiera, focus. Nessuno stato proprio: opera su Layout.
-	// =========================================================================
 
 	void InputController::updateFlags(Layout &node, bool selfBlocked, bool scrolling)
 	{
@@ -17,8 +12,6 @@ namespace ZenitUI
 
 		if (scrolling)
 		{
-			// Durante lo scroll congeliamo l'hover: evita di marcare dirty
-			// ogni bottone attraversato dal mouse mentre la lista scorre.
 			bool focusNow = ctx.hasFocus(&node);
 			if (focusNow != node.state.focused)
 			{
@@ -73,7 +66,6 @@ namespace ZenitUI
 		auto &ctx = UIContext::get();
 		auto &pointer = ctx.pointer;
 
-		// ---- Hover transitions ----
 		if (stateChanged)
 		{
 			bool wasHovered = (prevState == UIState::Hover || prevState == UIState::Pressed);
@@ -85,22 +77,10 @@ namespace ZenitUI
 				node.onHoverExit();
 		}
 
-				// ---- Click-based buttons: Left and Middle ----
-		//
-		// These follow the standard click model: press, then release on
-		// the same target. The legacy onPress/onRelease/onClick callbacks
-		// fire only for Left (they're the historical API). The unified
-		// onButtonPress/onButtonRelease/onButtonClick fire for every
-		// button that uses this model, currently Left and Middle.
-		//
-		// Both legacy and unified callbacks can be set at the same time.
-		// If they are, both fire — the user gets two callbacks for the
-		// same event, which is what they asked for by setting both.
 		auto fireClickButton = [&](MouseButton button, bool isLeftLegacy)
 		{
 			const auto &btn = pointer[button];
 
-			// --- Press ---
 			if (btn.pressed && !ctx.wasConsumed(button))
 			{
 				bool inPressPath = (ctx.pressTarget == &node) ||
@@ -116,7 +96,6 @@ namespace ZenitUI
 				}
 			}
 
-			// --- Release + Click ---
 			if (btn.released)
 			{
 				bool pressedHere  = (ctx.pressTarget == &node)   ||
@@ -127,17 +106,11 @@ namespace ZenitUI
 
 				if (validClick)
 				{
-					// onRelease fires unconditionally when the click is
-					// valid (matches the legacy behavior: release is a
-					// lower-level event than click).
 					if (isLeftLegacy && node.onRelease)
 						node.onRelease();
 					if (node.onButtonRelease)
 						node.onButtonRelease(button);
 
-					// onClick / onButtonClick are gated by consumption:
-					// if a descendant already consumed the event, they
-					// don't fire here.
 					if (!ctx.wasConsumed(button))
 					{
 						if (isLeftLegacy && node.onClick)
@@ -154,18 +127,6 @@ namespace ZenitUI
 		fireClickButton(MouseButton::Left,   /*isLeftLegacy=*/true);
 		fireClickButton(MouseButton::Middle, /*isLeftLegacy=*/false);
 
-		// ---- Right button: onRightClick ----
-		//
-		// Semantic is intentionally different from Left/Middle: fires
-		// on press if the node is hovered, without validating a full
-		// click pair. This matches the historical "right-click" model
-		// (one-shot, typically for context menus).
-		//
-		// onButton* callbacks do NOT fire for Right. If a future design
-		// wants to unify right-click under the same model, that's a
-		// separate decision — Right's "one-shot on press" semantic has
-		// legitimate uses that would be lost by adopting the click-pair
-		// model.
 		{
 			const auto &btn = pointer[MouseButton::Right];
 

@@ -6,16 +6,7 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
-// ============================================================
-//  Layout::scrollIntoView
-// ============================================================
 
-// Scene: a vertical scroll container with:
-//   - a filler on top (h_tall)
-//   - the target node (h_short)
-//   - a filler on the bottom (h_tall)
-//
-// The root is returned so the caller keeps it alive across frames.
 struct ScrollScene
 {
     std::shared_ptr<Layout> root;
@@ -59,7 +50,6 @@ static ScrollScene makeScrollScene(Env& env,
 
     return s;
 }
-// ---- casi base -------------------------------------------------------
 
 TEST(Widget_scrollIntoView, no_ancestor_is_noop)
 {
@@ -104,60 +94,47 @@ TEST(Widget_scrollIntoView, already_visible_is_noop)
     CHECK(sv->getScrollY() == 0.0f);
 }
 
-// ---- scroll verso il basso -------------------------------------------
 
 TEST(Widget_scrollIntoView, below_view_scrolls_down)
 {
     Env env;
     auto scene = makeScrollScene(env);
 
-    // target è a y=500, altezza 20 → bottom = 520.
-    // view = [0, 100]. Deve scrollare a 520 - 100 = 420.
     CHECK(scene.sv->getScrollY() == 0.0f);
     CHECK(scene.target->scrollIntoView());
     CHECK_NEAR(scene.sv->getScrollY(), 420.0f, 1.0f);
 }
 
-// ---- scroll verso l'alto --------------------------------------------
 
 TEST(Widget_scrollIntoView, above_view_scrolls_up)
 {
     Env env;
     auto scene = makeScrollScene(env);
 
-    // Porta il target fuori dalla view (sopra).
     scene.sv->scrollToY(550.0f);
     env.frame(scene.root);
     env.frame(scene.root);
 
-    // target è a y = 500 - 550 = -50, view = [0, 100].
-    // Deve scrollare a 550 + (-50 - 0) = 500.
     CHECK(scene.target->scrollIntoView());
     CHECK_NEAR(scene.sv->getScrollY(), 500.0f, 1.0f);
 }
 
-// ---- margin ---------------------------------------------------------
 
 TEST(Widget_scrollIntoView, margin_reserves_space)
 {
     Env env;
     auto scene = makeScrollScene(env);
 
-    // Con margin=20: dy = 520 - (100 - 20) = 440.
     CHECK(scene.target->scrollIntoView(20.0f));
     CHECK_NEAR(scene.sv->getScrollY(), 440.0f, 1.0f);
 }
 
-// ---- overload con sub-rect ------------------------------------------
 
 TEST(Widget_scrollIntoView, subrect_is_used_instead_of_full_rect)
 {
     Env env;
     auto scene = makeScrollScene(env);
 
-    // target->getRect() è [0, 500, 200, 20].
-    // Passiamo solo la metà superiore: [0, 500, 200, 5].
-    // bottom del subRect = 505. dy = 505 - 100 = 405.
     Rect sub = scene.target->getRect();
     sub.height = 5.0f;
 
@@ -165,7 +142,6 @@ TEST(Widget_scrollIntoView, subrect_is_used_instead_of_full_rect)
     CHECK_NEAR(scene.sv->getScrollY(), 405.0f, 1.0f);
 }
 
-// ---- idempotenza -----------------------------------------------------
 
 TEST(Widget_scrollIntoView, second_call_is_noop)
 {

@@ -8,7 +8,6 @@ using namespace ZenitUI::Test;
 
 namespace {
 
-// Sottoclasse di Layout che conta le notifiche di focus sui discendenti.
 struct NotifyingContainer : public TLayout<NotifyingContainer>
 {
     NotifyingContainer() : TLayout<NotifyingContainer>(LayoutType::Stack) {}
@@ -18,11 +17,8 @@ protected:
     void onDescendantFocused(Layout*) override { notifyCount++; }
 };
 
-} // namespace
+}
 
-// ============================================================
-//  Helper: piccolo nodo cliccabile
-// ============================================================
 
 static std::shared_ptr<Layout> makeClickTarget(int& counter, float w = 100, float h = 50) {
     auto n = std::make_shared<Layout>(LayoutType::Stack);
@@ -33,9 +29,6 @@ static std::shared_ptr<Layout> makeClickTarget(int& counter, float w = 100, floa
     return n;
 }
 
-// ============================================================
-//  Click di base
-// ============================================================
 
 TEST(Interaction_click, simple_click_increments) {
     Env env;
@@ -46,10 +39,8 @@ TEST(Interaction_click, simple_click_increments) {
     auto btn = makeClickTarget(count, 100, 50);
     root->addChild(btn);
 
-    // Primo frame per calcolare layout
     env.frame(root);
 
-    // Il btn è in alto a sinistra di root (Stack, Start/Start)
     env.click(root, { 50, 25 });
 
     CHECK(count == 1);
@@ -65,7 +56,7 @@ TEST(Interaction_click, click_outside_does_nothing) {
     root->addChild(btn);
 
     env.frame(root);
-    env.click(root, { 500, 500 });   // fuori dal btn
+    env.click(root, { 500, 500 });
 
     CHECK(count == 0);
 }
@@ -84,12 +75,9 @@ TEST(Interaction_click, press_only_no_click) {
     env.platform.pressLeft({ 50, 25 });
     env.frame(root);
 
-    CHECK(count == 0);   // click scatta solo al release
+    CHECK(count == 0);
 }
 
-// ============================================================
-//  Bubbling e passThrough
-// ============================================================
 
 TEST(Interaction_bubbling, child_consumes_parent_does_not_fire) {
     Env env;
@@ -109,7 +97,7 @@ TEST(Interaction_bubbling, child_consumes_parent_does_not_fire) {
     env.click(root, { 50, 25 });
 
     CHECK(childCount == 1);
-    CHECK(parentCount == 0);   // il figlio ha consumato
+    CHECK(parentCount == 0);
 }
 
 TEST(Interaction_bubbling, passThrough_lets_parent_fire) {
@@ -134,9 +122,6 @@ TEST(Interaction_bubbling, passThrough_lets_parent_fire) {
     CHECK(parentCount == 1);
 }
 
-// ============================================================
-//  Focus e Tab navigation
-// ============================================================
 
 TEST(Interaction_focus, click_gives_focus) {
     Env env;
@@ -188,7 +173,7 @@ TEST(Interaction_focus, tab_cycles_through_focusables) {
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));   // wrap
+    CHECK(UIContext::get().hasFocus(a.get()));
 }
 
 TEST(Interaction_focus, click_outside_releases_focus) {
@@ -211,9 +196,6 @@ TEST(Interaction_focus, click_outside_releases_focus) {
     CHECK(!UIContext::get().hasFocus(btn.get()));
 }
 
-// ============================================================
-//  Pointer capture
-// ============================================================
 
 TEST(Interaction_capture, captured_node_receives_events_outside) {
     Env env;
@@ -228,13 +210,12 @@ TEST(Interaction_capture, captured_node_receives_events_outside) {
     btn->setBlocksRaycast(true);
     btn->onPress = [&pressCount, b = btn.get()]() {
         pressCount++;
-        b->capturePointer();      // <-- Cattura esplicita (come fa Slider)
+        b->capturePointer();
     };
     root->addChild(btn);
 
     env.frame(root);
 
-    // Press dentro → cattura
     env.platform.pressLeft({ 50, 25 });
     env.frame(root);
     CHECK(pressCount == 1);
@@ -242,18 +223,13 @@ TEST(Interaction_capture, captured_node_receives_events_outside) {
     auto captured = UIContext::get().pointerCapture.lock();
     CHECK(captured.get() == btn.get());
 
-    // Release fuori: la capture mantiene gli eventi su btn fino al rilascio
     env.platform.releaseLeft({ 500, 500 });
     env.frame(root);
 
-    // Dopo il release, capture rilasciato automaticamente
     auto after = UIContext::get().pointerCapture.lock();
     CHECK(!after);
 }
 
-// ============================================================
-//  Portal
-// ============================================================
 
 TEST(Interaction_portal, portal_wins_over_overlap) {
     Env env;
@@ -263,34 +239,26 @@ TEST(Interaction_portal, portal_wins_over_overlap) {
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
 
-    // Nodo normale a (0,0) 200x200
     auto normal = makeClickTarget(normalCount, 200, 200);
     root->addChild(normal);
 
-    // Portal sopra: si arrangia da solo
     auto portal = std::make_shared<Layout>(LayoutType::Stack);
     portal->size(Px(100), Px(100));
     portal->setInteractive(true);
     portal->setBlocksRaycast(true);
     portal->setPortal(true);
     portal->onClick = [&portalCount]() { portalCount++; };
-    // In portal, l'arrange lo fa il portal stesso — lo posizioniamo manualmente
     portal->arrange({ 50, 50, 100, 100 });
     root->addChild(portal);
 
     env.frame(root);
 
-    // Click nel punto di overlap (100,100) — dentro entrambi
     env.click(root, { 100, 100 });
 
-    // Il portal dovrebbe vincere (portals hanno precedenza in hitTest)
     CHECK(portalCount == 1);
     CHECK(normalCount == 0);
 }
 
-// ============================================================
-//  z-index
-// ============================================================
 
 TEST(Interaction_zindex, higher_z_wins) {
     Env env;
@@ -345,13 +313,11 @@ TEST(Interaction_subtree, checked_propagates_to_children) {
 
     toggle->setChecked(true);
 
-    // Dopo 2 frame, il knob si deve essere mosso dalla posizione iniziale.
     env.frame(root);
     env.frame(root);
-    CHECK(knob->getRect().x > 10.5f);   // si è mosso
-    CHECK(knob->getRect().x < 60.0f);   // ma non è ancora arrivato
+    CHECK(knob->getRect().x > 10.5f);
+    CHECK(knob->getRect().x < 60.0f);
 
-    // Dopo abbastanza frame, deve essere a 60.
     for (int i = 0; i < 30; ++i)
         env.frame(root);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
@@ -374,24 +340,20 @@ TEST(Interaction_hover, exit_does_not_fire_on_press) {
 
     env.frame(root);
 
-    // Hover
     env.platform.moveMouse({50, 25});
     env.frame(root);
     CHECK(enters == 1);
     CHECK(exits  == 0);
 
-    // Press (ancora sopra il bottone): non deve sparare onHoverExit
     env.platform.pressLeft({50, 25});
     env.frame(root);
     CHECK(enters == 1);
-    CHECK(exits  == 0);   // <-- la regressione era qui
+    CHECK(exits  == 0);
 
-    // Release (ancora sopra)
     env.platform.releaseLeft({50, 25});
     env.frame(root);
     CHECK(exits == 0);
 
-    // Uscita reale
     env.platform.moveMouse({500, 500});
     env.frame(root);
     CHECK(exits == 1);
@@ -415,17 +377,14 @@ TEST(Interaction_scroll, reset_on_overflow_change_only) {
 
     env.frame(root);
 
-    // Scroll a metà
     sv->scrollToY(100.0f);
     env.frame(root);
     CHECK(sv->getScrollY() > 0.0f);
 
-    // Cambia un'altra proprietà: NON deve resettare lo scroll
-    sv->setEnabled(true);   // già true, ma tocca il flag
+    sv->setEnabled(true);
     env.frame(root);
     CHECK(sv->getScrollY() > 0.0f);
 
-    // Cambia overflow: DEVE resettare
     sv->getInlineBase().overflowY = Overflow::Hidden;
     env.frame(root);
     env.frame(root);
@@ -461,7 +420,6 @@ TEST(Interaction_scroll, portal_does_not_move_with_scroll) {
     sv->scrollToY(200.0f);
     env.frame(root);
 
-    // Il portal non deve essere traslato dallo scroll
     CHECK_NEAR(portal->getRect().y, py0, 0.5f);
 }
 
@@ -480,7 +438,6 @@ TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     sv->size(Px(300), Px(200));
     sv->cls("scroller");
 
-    // Spacer per far stare il Dropdown un po' in basso
     auto spacer = std::make_shared<Layout>(LayoutType::Stack);
     spacer->size(Px(10), Px(80));
     sv->addChild(spacer);
@@ -488,7 +445,6 @@ TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     auto dd = UI::Dropdown::create(std::vector<std::string>{"A", "B", "C"}, 0);
     sv->addChild(dd);
 
-    // Contenuto dopo per rendere il container scrollabile
     auto filler = std::make_shared<Layout>(LayoutType::Stack);
     filler->size(Px(10), Px(500));
     sv->addChild(filler);
@@ -496,14 +452,12 @@ TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     root->addChild(sv);
     env.frame(root);
 
-    // Apri il dropdown e lascia che il portal si registri
     dd->setOpen(true);
     env.frame(root);
     env.frame(root);
 
-    auto list = dd->children[1];  // listContainer
+    auto list = dd->children[1];
 
-    // Scrolla
     sv->scrollToY(60.0f);
     env.frame(root);
     env.frame(root);
@@ -511,7 +465,6 @@ TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     Rect btnRect  = dd->children[0]->getRect();
     Rect listRect = list->getRect();
 
-    // La lista deve essere ancorata al bottone (sotto o sopra, gap ~4)
     float gapBelow = listRect.y - (btnRect.y + btnRect.height);
     float gapAbove = btnRect.y - (listRect.y + listRect.height);
 
@@ -542,7 +495,6 @@ TEST(Interaction_focus, click_fires_on_descendant_focused)
 
     CHECK(container->notifyCount == 0);
 
-    // Click sul bottone → focus + notifica agli antenati.
     env.click(root, { 50, 25 });
 
     CHECK(UIContext::get().hasFocus(btn.get()));
@@ -556,11 +508,9 @@ TEST(Interaction_modal, hidden_modal_does_not_block_click)
 
     int clicks = 0;
 
-    // Root: a Stack that fills the viewport.
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
 
-    // A button somewhere on the page.
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->size(Px(200), Px(60));
     btn->setInteractive(true);
@@ -568,26 +518,22 @@ TEST(Interaction_modal, hidden_modal_does_not_block_click)
     btn->onClick = [&clicks]{ clicks++; };
     root->addChild(btn);
 
-    // A modal added at the root, full-screen, initially hidden.
     auto modal = UI::Modal::create();
     modal->size(Percent(100), Percent(100));
     root->addChild(modal);
 
     env.frame(root);
 
-    // While hidden, clicking where the button is must reach the button.
     env.click(root, { 100, 30 });
     CHECK(clicks == 1);
 
-    // Show the modal. Now it must capture the click.
     modal->show();
     env.frame(root);
-    env.frame(root);   // second frame so the intro animation state settles
+    env.frame(root);
 
     env.click(root, { 100, 30 });
-    CHECK(clicks == 1);   // <-- still 1: modal intercepted the click
+    CHECK(clicks == 1);
 
-    // Hide again. The button must be reachable.
     modal->hide();
     env.frame(root);
     env.frame(root);
@@ -627,9 +573,6 @@ TEST(Interaction_modal, show_and_hide_callbacks)
     CHECK(hideCount == 2);
 }
 
-// ============================================================
-//  Unified button callbacks (5.15d)
-// ============================================================
 
 TEST(Interaction_buttonCallbacks, middle_press_fires_onButtonPress)
 {
@@ -733,7 +676,7 @@ TEST(Interaction_buttonCallbacks, right_click_does_not_fire_onButtonClick)
     env.frame(root);
 
     CHECK(legacyRightCalls == 1);
-    CHECK(unifiedCalls == 0);   // Right stays on the legacy semantic
+    CHECK(unifiedCalls == 0);
 }
 
 TEST(Interaction_buttonCallbacks, middle_click_on_empty_area_does_not_fire)
@@ -753,7 +696,6 @@ TEST(Interaction_buttonCallbacks, middle_click_on_empty_area_does_not_fire)
 
     env.frame(root);
 
-    // Middle-click far from the button.
     env.platform.pressMiddle({500, 500});
     env.frame(root);
     env.platform.releaseMiddle({500, 500});
@@ -776,9 +718,6 @@ TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
     std::weak_ptr<Layout> weakRow = row;
 
     {
-        // btn is owned only by row->children. The callback captures
-        // a weak_ptr to row (the same pattern as the 11_ref_list
-        // example), so no shared_ptr cycle is created.
         auto btn = std::make_shared<Layout>(LayoutType::Stack);
         btn->size(Px(40), Px(40));
         btn->setInteractive(true);
@@ -795,17 +734,8 @@ TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
 
     env.frame(root);
 
-    // Drop the local shared_ptr<row> so it's held only by
-    // root->children. When row is culled during the click, it's
-    // destroyed, which destroys btn, which triggers the fix in
-    // ~Layout that clears the context pointers.
     row.reset();
 
-    // Press + release. In the release frame, btn fires onClick →
-    // row->removeFromParent() → row is culled by root → ~Layout(row)
-    // destroys btn → ~Layout(btn) clears ctx.pressTarget.
-    // Without the fix, the ancestor's isAncestorOf(pressTarget)
-    // would dereference freed memory.
     env.click(root, {20, 20});
     env.frame(root);
 
@@ -833,7 +763,6 @@ TEST(Interaction_scroll, container_shrinks_after_child_removal)
     scroller->cls("scroller");
     root->addChild(scroller);
 
-    // Add 10 rows of 20px each = 200px of content, clamped to 100.
     std::vector<std::shared_ptr<Layout>> rows;
     for (int i = 0; i < 10; ++i)
     {
@@ -846,22 +775,18 @@ TEST(Interaction_scroll, container_shrinks_after_child_removal)
     env.frame(root);
     env.frame(root);
 
-    // Content overflows: maxScroll > 0, container is at max-height.
     CHECK(scroller->getMaxScrollY() > 0.0f);
     CHECK_NEAR(scroller->getRect().height, 100.0f, 1.0f);
 
-    // Remove 9 of the 10 rows: content is now 20px, below max-height.
     for (int i = 0; i < 9; ++i)
         rows[i]->removeFromParent();
 
     env.frame(root);
-    env.frame(root);   // second frame lets measure settle
+    env.frame(root);
 
-    // Container should have shrunk: no scroll, natural height.
     CHECK_NEAR(scroller->getMaxScrollY(), 0.0f, 0.5f);
     CHECK_NEAR(scroller->getRect().height, 20.0f, 2.0f);
 
-    // Remove the last one: container collapses to zero.
     rows[9]->removeFromParent();
     env.frame(root);
     env.frame(root);
@@ -869,15 +794,11 @@ TEST(Interaction_scroll, container_shrinks_after_child_removal)
     CHECK_NEAR(scroller->getRect().height, 0.0f, 1.0f);
 }
 
-// ============================================================
-//  Tooltip Clamping
-// ============================================================
 TEST(Interaction_tooltip, clamps_to_viewport_and_flips_below) {
     Env env;
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
     
-    // Anchor posizionato esattamente sul soffitto dello schermo (y = 0)
     auto anchor = std::make_shared<Layout>(LayoutType::Stack);
     anchor->size(Px(100), Px(50));
     anchor->getInlineBase().position = Position::Absolute;
@@ -889,11 +810,9 @@ TEST(Interaction_tooltip, clamps_to_viewport_and_flips_below) {
     auto tip = UI::Tooltip::attach(anchor, "Test tip", 0.0f);
     
     env.frame(root);
-    env.platform.moveMouse({50, 25}); // Hover
+    env.platform.moveMouse({50, 25});
     env.frame(root);
-    env.frame(root); // Mostra il tooltip
+    env.frame(root);
     
-    // Visto che l'anchor è a Y=0, il tooltip non può essere disegnato sopra.
-    // La logica di clamping deve ribaltarlo SOTTO l'anchor (y = 50 + 6 = 56).
     CHECK(tip->getRect().y >= 56.0f);
 }

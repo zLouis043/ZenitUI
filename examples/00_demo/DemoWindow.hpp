@@ -69,7 +69,6 @@ private:
         parent->addChild(d);
     }
 
-    // ---------- TAB 1: WIDGET BASE ----------
     void buildBasicWidgets(std::shared_ptr<Layout> parent) {
         addHeader(parent, "1. Widget di Base",
             "Panoramica dei componenti UI standard: input testuale, slider, progress, toggle, checkbox e bottoni.");
@@ -115,7 +114,6 @@ private:
         parent->addChild(card);
     }
 
-    // ---------- TAB 2: FLEXBOX ----------
     void buildFlexboxTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "2. Layout & Flexbox",
             "Justify, grow/shrink, gap, allineamento cross-axis.");
@@ -160,7 +158,6 @@ private:
         }
     }
 
-    // ---------- TAB 3: PORTAL ----------
     void buildPortalTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "3. Z-Index & Portal",
             "Il Dropdown usa i Portal per scavalcare il clipping della ScrollView.");
@@ -171,12 +168,10 @@ private:
         dropdown->getInlineBase().width = VW(20.0f);
         card->addChild(HStack({ Label("Valore: ")->cls("normal-text")->cls("setting-label"), dropdown })->cls("setting-row"));
 
-        // Box contenitore con position: relative (implicito per absolute)
         auto stage = VStack()->cls("card");
         stage->getInlineBase().height = VH(30.0f);
         stage->getInlineBase().position = Position::Relative;
 
-        // Badge in alto a destra: right=8, top=8
         auto badge = Label("BADGE")->cls("normal-text");
         badge->getInlineBase().position = Position::Absolute;
         badge->getInlineBase().top    = Px(8.0f);
@@ -186,17 +181,14 @@ private:
         badge->getInlineBase().radius = Px(4.0f);
         stage->addChild(badge);
 
-        // Label centrato: left=50% + right=50% → stretch a 0, quindi left+width esplicito
         auto center = Label("centrato")->cls("normal-text");
         center->getInlineBase().position = Position::Absolute;
         center->getInlineBase().top = Percent(50);
         center->getInlineBase().left = Percent(50);
         center->getInlineBase().width = Px(100.0f);
-        // left 50% del parent, e poi translato a metà larghezza per centrare:
         center->getInlineBase().translateX = Percent(-50.0f);
         stage->addChild(center);
 
-        // Stretch horizontal: left=0, right=0, width auto
         auto stretch = Label("stretch left→right")->cls("normal-text");
         stretch->getInlineBase().position = Position::Absolute;
         stretch->getInlineBase().left  = Px(0.0f);
@@ -210,7 +202,6 @@ private:
         parent->addChild(card);
     }
 
-    // ---------- TAB 4: MARKUP ----------
     void buildMarkupTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "4. Markup Layout",
             "Layout costruito interamente da stringa ZMarkup. Supporta tag, classi, id, attributi inline e annidamento.");
@@ -287,7 +278,6 @@ private:
         if (auto r2 = ui2.root()) parent->addChild(r2);
     }
 
-    // ---------- TAB 5: ANIMAZIONI ----------
     void buildAnimationsTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "5. Animazioni",
             "Keyframes CSS e transizioni di stato. Ora la trasformazione animata viene applicata anche al draw.");
@@ -329,7 +319,6 @@ private:
         }
     }
 
-    // ---------- TAB 6: BUBBLING ----------
     void buildBubblingTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "6. Event Bubbling",
             "Propagazione bottom-up dei click e passThrough per lasciare che il click raggiunga il genitore.");
@@ -356,7 +345,6 @@ private:
         card->addChild(parentBox);
         parent->addChild(card);
 
-        // --- Test Popup ---
         auto popupTest = VStack()->cls("card");
         popupTest->addChild(Label("Popup / ContextMenu")->cls("card-title"));
         popupTest->addChild(Label("Click sinistro o destro sul bottone per aprire un menu contestuale.")->cls("card-desc"));
@@ -370,8 +358,6 @@ private:
             { "Voce lunga di test", []() { std::printf("Menu: Voce lunga\n"); } },
         });
 
-        // Il popup è figlio del trigger (per il lifetime), ma essendo portal
-        // viene renderizzato sopra tutto.
         trigger->addChild(menu);
         
         trigger->onClick      = [trigger, menu]() { menu->openBelow(trigger); };
@@ -392,7 +378,6 @@ private:
         parent->addChild(popupTest);
     }
 
-    // ---------- TAB 7: STRESS ----------
     void buildCullingTest(std::shared_ptr<Layout> parent) {
         addHeader(parent, "7. Stress & Culling",
             "200 elementi in una ScrollView. Il culling evita di disegnare quelli fuori dal viewport.");

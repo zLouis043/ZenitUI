@@ -6,13 +6,7 @@
 namespace ZenitUI
 {
 
-    // =========================================================================
-    //  Registry
-    // =========================================================================
 
-    // Draw ctx.src to the current destination (target if write_target valid,
-    // else framebuffer at ctx.region). Used by the fallback path and by
-    // patterns that write the original image without a shader.
     static void drawUnmodified(const FilterContext &c)
     {
         if (c.write_target.valid())
@@ -54,9 +48,6 @@ namespace ZenitUI
         return it == defs_.end() ? nullptr : &it->second;
     }
 
-    // =========================================================================
-    //  Parametri: applica gli uniform al shader attivo
-    // =========================================================================
 
     static float parseLengthArg(const std::string &s)
     {
@@ -139,9 +130,6 @@ namespace ZenitUI
         }
     }
 
-    // =========================================================================
-    //  Applicazione per pattern
-    // =========================================================================
 
     static void applySinglePass(const FilterContext &c, EffectHandle fx)
     {
@@ -166,7 +154,6 @@ namespace ZenitUI
     static void applySeparable(const FilterContext &c, EffectHandle fx,
                                const FilterDef & /*def*/)
     {
-        // H pass: src -> scratch
         c.renderer->pushTarget(c.scratch);
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
@@ -175,7 +162,6 @@ namespace ZenitUI
         c.renderer->popEffect();
         c.renderer->popTarget();
 
-        // V pass: scratch -> write_target (or framebuffer)
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
         c.renderer->setEffectVec2(fx, "direction", {0.0f, 1.0f});
@@ -211,7 +197,6 @@ namespace ZenitUI
         {
             c.renderer->pushTarget(c.write_target);
 
-            // Shadow pass
             Rect shadowDst = {c.dst.x + dx, c.dst.y + dy,
                               c.dst.width, c.dst.height};
             c.renderer->pushEffect(fx);
@@ -219,7 +204,6 @@ namespace ZenitUI
             c.renderer->drawTarget(c.src, shadowDst, Colors::White);
             c.renderer->popEffect();
 
-            // Original on top
             c.renderer->drawTarget(c.src, c.dst, Colors::White);
 
             c.renderer->popTarget();
@@ -280,15 +264,12 @@ namespace ZenitUI
         }
     }
 
-    // =========================================================================
-    //  Built-in
-    // =========================================================================
 
     void registerBuiltinFilters()
     {
         auto &reg = FilterRegistry::get();
         if (reg.find("blur"))
-            return; // già registrati
+            return;
 
         reg.add({.name = "blur",
                  .shader = "blur",

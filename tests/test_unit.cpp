@@ -3,9 +3,6 @@
 
 using namespace ZenitUI;
 
-// ------------------------------------------------------------
-//  Costruzione e query di base
-// ------------------------------------------------------------
 
 TEST(Unit, default_is_auto) {
     Value v;
@@ -23,9 +20,6 @@ TEST(Unit, px_is_simple) {
     CHECK_NEAR(v.terms[0].coeff, 10.0f, 1e-6);
 }
 
-// ------------------------------------------------------------
-//  resolveH / resolveV / resolveSelfH / resolveSelfV
-// ------------------------------------------------------------
 
 TEST(Unit, resolve_px) {
     Value v = Px(42.0f);
@@ -35,8 +29,8 @@ TEST(Unit, resolve_px) {
 
 TEST(Unit, resolve_percent_is_axis_dependent) {
     Value v = Percent(50.0f);
-    CHECK_NEAR(v.resolveH(200, 100), 100.0f, 1e-6);  // 50% di larghezza
-    CHECK_NEAR(v.resolveV(200, 100), 50.0f,  1e-6);  // 50% di altezza
+    CHECK_NEAR(v.resolveH(200, 100), 100.0f, 1e-6);
+    CHECK_NEAR(v.resolveV(200, 100), 50.0f,  1e-6);
 }
 
 TEST(Unit, resolve_pw_always_width) {
@@ -69,9 +63,6 @@ TEST(Unit, resolveSelf_percent_uses_self) {
     CHECK_NEAR(v.resolveSelfV(200.0f, 100.0f), 50.0f,  1e-6);
 }
 
-// ------------------------------------------------------------
-//  Somma, sottrazione, moltiplicazione, normalizzazione
-// ------------------------------------------------------------
 
 TEST(Unit, add_same_unit_collapses) {
     Value c = Px(10.0f) + Px(5.0f);
@@ -82,13 +73,11 @@ TEST(Unit, add_same_unit_collapses) {
 TEST(Unit, add_mixed_units_keeps_both_terms) {
     Value c = Px(10.0f) + Percent(50.0f);
     CHECK(c.terms.size() == 2);
-    // Su parent 200: 10 + 100 = 110
     CHECK_NEAR(c.resolveH(200, 100), 110.0f, 1e-6);
 }
 
 TEST(Unit, sub_two_units) {
     Value c = PW(100.0f) - PH(80.0f);
-    // Su parent 100x50: 100 - 40 = 60
     CHECK_NEAR(c.resolveH(100, 50), 60.0f, 1e-4);
 }
 
@@ -115,9 +104,6 @@ TEST(Unit, normalize_combines_same_units) {
     CHECK_NEAR(sum.terms[0].coeff, 18.0f, 1e-6);
 }
 
-// ------------------------------------------------------------
-//  Uguaglianza
-// ------------------------------------------------------------
 
 TEST(Unit, eq_simple) {
     CHECK(Px(10.0f) == Px(10.0f));
@@ -137,9 +123,6 @@ TEST(Unit, eq_mixed) {
     CHECK(a != (PW(100.0f) - PH(79.0f)));
 }
 
-// ------------------------------------------------------------
-//  Mul/div con unità (calcola l'operazione di calc)
-// ------------------------------------------------------------
 
 TEST(Unit, mulWith_number_on_right) {
     Value a = Percent(50.0f);

@@ -14,9 +14,6 @@
 namespace ZenitUI::ZMarkup
 {
 
-    // =========================================================================
-    //  Utility
-    // =========================================================================
     inline std::string trim(std::string s)
     {
         size_t a = 0, b = s.size();
@@ -140,22 +137,17 @@ namespace ZenitUI::ZMarkup
         return std::stof(std::string(s));
     }
 
-    // =========================================================================
-    //  Applica una singola dichiarazione (gestisce transition/animation longhand)
-    // =========================================================================
     inline void applyStyleDeclaration(Style &st, const std::string &keyRaw, const std::string &valRaw, const SourceSpan &loc, DiagnosticSink *sink = nullptr, bool strict = false)
     {
         std::string k = trim(keyRaw);
         std::string v = trim(valRaw);
 
-        // ---------- CUSTOM PROPERTY ----------
         if (k.rfind("--", 0) == 0)
         {
             st.customProps[k] = v;
             return;
         }
 
-        // ---------- VALORI CON var() ----------
         if (v.find("var(") != std::string::npos)
         {
             st.unresolvedProps[k] = v;
@@ -163,13 +155,11 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- WRAP ----------
         if (k == "wrap") {
             st.wrap = (v == "true" || v == "1" || v == "wrap");
             return;
         }
 
-        // ---------- TRANSITION ----------
         if (k == "transition")
         {
             std::vector<TransitionSpec> specs;
@@ -283,7 +273,6 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- ANIMATION ----------
         if (k == "animation")
         {
             std::vector<AnimationRef> anims;
@@ -507,7 +496,6 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- FILTER ----------
         if (k == "filter")
         {
             std::vector<FilterRef> refs;
@@ -515,7 +503,6 @@ namespace ZenitUI::ZMarkup
             size_t pos = 0;
             while (pos < cur.size())
             {
-                // Trova la prossima virgola top-level
                 size_t comma = pos;
                 int depth = 0;
                 while (comma < cur.size())
@@ -575,7 +562,6 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- BOX-SHADOW ----------
         if (k == "box-shadow")
         {
             auto tokens = splitWs(v);
@@ -605,7 +591,6 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- Overflow ----------
         auto parseOverflowValue = [&](const std::string &val, Overflow &out) -> bool
         {
             if (val == "visible")
@@ -692,7 +677,6 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        // ---------- Proprietà base (bubbled) ----------
         if (!applyStyleAttr(st, k, v))
         {
             if (sink)
@@ -728,9 +712,6 @@ namespace ZenitUI::ZMarkup
             }
         }
     }
-    // =========================================================================
-    //  AST
-    // =========================================================================
 
     struct Declaration
     {
@@ -743,8 +724,8 @@ namespace ZenitUI::ZMarkup
     {
         struct Rule
         {
-            std::vector<SimpleSelector> chain; // es. [Tag Toggle {checked}, Class knob]
-            std::string part;                  // vuoto se non è ::part
+            std::vector<SimpleSelector> chain;
+            std::string part;
             std::vector<Declaration> decls;
             SourceSpan loc{};
             std::optional<MediaQuery> media;
@@ -769,9 +750,6 @@ namespace ZenitUI::ZMarkup
         std::vector<Declaration> rootDecls;
     };
 
-    // =========================================================================
-    //  Parser con tracking riga/colonna
-    // =========================================================================
     class StyleParser
     {
     public:
@@ -919,15 +897,9 @@ namespace ZenitUI::ZMarkup
 
                 if (p.rfind("--", 0) == 0)
                 {
-                    // Variabile CSS: la teniamo anche in sheet.vars (retrocompat),
-                    // ma va comunque registrata come declaration per finire
-                    // in theme.root.customProps tramite applyStyleDeclaration.
                     sheet.vars[p] = v;
                 }
 
-                // Sempre: push come declaration. Se è una var, applyStyleDeclaration
-                // la instrada in theme.root.customProps; se è una prop normale,
-                // la instrada nella root Style.
                 Declaration d;
                 d.prop = p;
                 d.value = v;
@@ -1006,7 +978,6 @@ namespace ZenitUI::ZMarkup
         {
             skipWs();
 
-            // Parse della condizione fino a '{'.
             std::string cond;
             while (!atEnd() && peek() != '{')
                 cond.push_back(get());
@@ -1016,7 +987,6 @@ namespace ZenitUI::ZMarkup
 
             MediaQuery query = parseMediaQuery(cond);
 
-            // Le regole dentro ereditano questa query.
             while (!atEnd() && peek() != '}')
             {
                 skipWs();
@@ -1030,8 +1000,6 @@ namespace ZenitUI::ZMarkup
         MediaQuery parseMediaQuery(const std::string &s)
         {
             MediaQuery q;
-            // Formato: "(min-width: 600px) and (orientation: landscape)"
-            // Facciamo uno split per " and " e parse di ogni condizione.
             std::vector<std::string> parts;
             std::string cur;
             size_t depth = 0;
@@ -1063,7 +1031,6 @@ namespace ZenitUI::ZMarkup
 
             for (auto &p : parts)
             {
-                // p = "(min-width: 600px)" → estrai "min-width" e "600px"
                 std::string inner = p;
                 if (inner.size() >= 2 && inner.front() == '(' && inner.back() == ')')
                     inner = inner.substr(1, inner.size() - 2);
@@ -1104,7 +1071,6 @@ namespace ZenitUI::ZMarkup
                 }
                 else if (key == "min-aspect-ratio")
                 {
-                    // "16/9" o "1.77"
                     c.kind = MediaCondition::Kind::MinAspectRatio;
                     c.value = parseAspectRatio(val);
                 }
@@ -1133,9 +1099,6 @@ namespace ZenitUI::ZMarkup
 
         void parseRuleWithMedia(const MediaQuery &media)
         {
-            // Identico a parseRule(), ma prima di push nella sheet imposta tr.media.
-            // Per non duplicare 100 righe, si rifattorizza parseRule per accettare
-            // un Opt<MediaQuery>. Vedi sotto.
             parseRule(&media);
         }
 
@@ -1150,7 +1113,6 @@ namespace ZenitUI::ZMarkup
             if (!match('{'))
                 return;
 
-            // Raccogli declarations
             std::vector<Declaration> decls;
             while (!atEnd() && peek() != '}')
             {
@@ -1181,7 +1143,6 @@ namespace ZenitUI::ZMarkup
             }
             match('}');
 
-            // Split per virgole (selettori multipli)
             std::vector<std::string> selectors;
             {
                 std::string cur;
@@ -1209,7 +1170,6 @@ namespace ZenitUI::ZMarkup
                 if (media)
                     rule.media = *media;
 
-                // 1) Separa "::part" (doppia colon), che sta sempre in fondo.
                 std::string chainPart = sel;
                 size_t dcolon = sel.rfind("::");
                 if (dcolon != std::string::npos)
@@ -1218,7 +1178,6 @@ namespace ZenitUI::ZMarkup
                     rule.part = trim(sel.substr(dcolon + 2));
                 }
 
-                // 2) Split della chain per whitespace (discendente).
                 std::vector<std::string> tokens;
                 {
                     std::string cur;
@@ -1241,10 +1200,6 @@ namespace ZenitUI::ZMarkup
                 if (tokens.empty())
                     continue;
 
-                // 3) Per ogni token, estrai base (tag/.class/#id) e stato (dopo ':').
-                // 3) Per ogni token, estrai base (tag/.class/#id) e stato (dopo ':').
-                //    Il base può essere un selettore composto: `Button.btn-primary`,
-                //    `.card.elevated`, `Button#save`.
                 for (auto &tok : tokens)
                 {
                     SimpleSelector ss;
@@ -1258,13 +1213,9 @@ namespace ZenitUI::ZMarkup
                         state = tok.substr(colon + 1);
                     }
 
-                    // Split di `base` in componenti: ogni '.' o '#' inizia un
-                    // nuovo componente. Il testo prima di qualsiasi marker è
-                    // il tag (se presente).
                     std::vector<std::pair<SimpleSelector::Kind, std::string>> components;
                     {
                         size_t i = 0;
-                        // Tag iniziale (fino al primo '.' o '#')
                         if (i < base.size() && base[i] != '.' && base[i] != '#')
                         {
                             size_t start = i;
@@ -1273,7 +1224,6 @@ namespace ZenitUI::ZMarkup
                             components.push_back({SimpleSelector::Kind::Tag,
                                                   base.substr(start, i - start)});
                         }
-                        // Componenti successivi
                         while (i < base.size())
                         {
                             char marker = base[i];
@@ -1289,11 +1239,8 @@ namespace ZenitUI::ZMarkup
                         }
                     }
 
-                    // Il primo componente va in ss.kind / ss.name.
-                    // Gli altri vanno in ss.extras.
                     if (components.empty())
                     {
-                        // Token vuoto o malformato: salta.
                         continue;
                     }
 
@@ -1302,7 +1249,6 @@ namespace ZenitUI::ZMarkup
                     for (size_t ci = 1; ci < components.size(); ++ci)
                         ss.extras.push_back(components[ci]);
 
-                    // Split per ':' per gestire stati composti tipo "checked:hover".
                     size_t pos = 0;
                     while (pos < state.size())
                     {
@@ -1350,15 +1296,11 @@ namespace ZenitUI::ZMarkup
         }
     };
 
-    // =========================================================================
-    //  Auto-fill dei keyframe non uniformi + warning
-    // =========================================================================
     inline void normalizeKeyframes(KeyframeAnimation &anim, const SourceSpan &loc)
     {
         if (anim.keyframes.size() < 2)
             return;
 
-        // 1) Raccogli l'unione di tutte le prop
         std::set<std::string> allProps;
         for (const auto &k : anim.keyframes)
             forEachSetStyleProp(k.delta, [&](const char *n)
@@ -1367,14 +1309,12 @@ namespace ZenitUI::ZMarkup
         if (allProps.empty())
             return;
 
-        // 2) Per ogni keyframe, controlla le prop mancanti e fai auto-fill
         for (size_t i = 0; i < anim.keyframes.size(); ++i)
         {
             for (const auto &prop : allProps)
             {
                 if (!hasStyleProp(anim.keyframes[i].delta, prop))
                 {
-                    // Cerca sorgente: precedente se esiste, altrimenti successivo
                     bool filled = false;
                     if (i > 0)
                         filled = copyStyleProp(anim.keyframes[i].delta, anim.keyframes[i - 1].delta, prop);
@@ -1390,18 +1330,13 @@ namespace ZenitUI::ZMarkup
         }
     }
 
-    // =========================================================================
-    //  Applica lo sheet al Theme
-    // =========================================================================
     inline void applyStyleSheet(const StyleSheet &sheet, Theme &theme, DiagnosticSink *sink = nullptr, bool strict = false)
     {
-        // :root → Style base
         for (auto &d : sheet.rootDecls)
         {
             applyStyleDeclaration(theme.root, d.prop, d.value, d.loc, sink, strict);
         }
 
-        // Regole normali → ThemeRule
         for (auto &r : sheet.rules)
         {
             ThemeRule tr;
@@ -1417,7 +1352,6 @@ namespace ZenitUI::ZMarkup
             theme.addRule(std::move(tr));
         }
 
-        // Keyframes (invariato tranne check duplicati)
         std::set<std::string> seenKf;
         for (auto &kf : sheet.keyframes)
         {
@@ -1459,9 +1393,6 @@ namespace ZenitUI::ZMarkup
         }
     }
 
-    // =========================================================================
-    //  Entry point
-    // =========================================================================
     inline bool loadStyleString(std::string_view src, Theme &theme = Theme::get(), const std::string &fileName = "<string>", DiagnosticSink *sink = nullptr, bool strict = false)
     {
         NullDiagnosticSink nullSink;

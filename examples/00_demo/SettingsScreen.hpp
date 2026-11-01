@@ -27,14 +27,11 @@ protected:
         setInteractive(true);
         setBlocksRaycast(true);
 
-        // ---- Panel centrale ----
         auto panel = VStack()->cls("settings-panel");
         panel->setInteractive(true);
         panel->setBlocksRaycast(true);
-        // Un click sul panel (o figli) non deve risalire all'overlay.
         panel->onClick = []() { /* consuma il click */ };
 
-        // ---------- Header ----------
         auto header = HStack()->cls("settings-header");
         header->addChild(Label("Impostazioni")->cls("settings-title"));
         header->addChild(std::make_shared<Layout>()->cls("spacer-grow"));
@@ -45,19 +42,16 @@ protected:
         header->addChild(closeBtn);
         panel->addChild(header);
 
-        // ---------- Body (placeholder) ----------
         auto body = ScrollView::create(LayoutType::Vertical)->cls("settings-body");
         buildAudioSection(body);
         buildVideoSection(body);
         buildGameplaySection(body);
         panel->addChild(body);
 
-        // ---------- Footer ----------
         auto footer = HStack()->cls("settings-footer");
 
         auto resetBtn = Btn("Ripristina default", [this]()
                             {
-                                // TODO Step 5
                             })
                             ->cls("btn-secondary");
 
@@ -67,7 +61,6 @@ protected:
 
         auto saveBtn = Btn("Salva", [this]()
                            {
-            // TODO Step 5
             close(); })
                            ->cls("btn-primary");
         saveBtn->setEnabled(false); // finché non dirty
@@ -83,7 +76,6 @@ protected:
 
         void onUpdate(float) override
     {
-        // Click sull'overlay ma fuori dal panel → chiudi.
         auto &ctx = UIContext::get();
         if (ctx.pointer[ZenitUI::MouseButton::Left].pressed && ctx.topmostConsumer == this)
         {
@@ -91,7 +83,6 @@ protected:
             return;
         }
 
-        // ESC chiude.
         for (int k : ctx.inputEvents.keys)
         {
             if (k == Key::Escape)
@@ -105,9 +96,6 @@ protected:
 private:
     std::function<void()> onCloseCb;
 
-    // ============================================================
-    //  Sezione Audio — markup ZMarkup + binding in C++
-    // ============================================================
     void buildAudioSection(std::shared_ptr<Layout> parent)
     {
         static const char *markup = R"(
@@ -139,14 +127,10 @@ private:
 
         parent->addChild(ui.root());
 
-        // Binding percentuali live
         bindPercent(ui, "music-slider", "music-value");
         bindPercent(ui, "sfx-slider", "sfx-value");
     }
 
-    // ============================================================
-    //  Sezione Video
-    // ============================================================
     void buildVideoSection(std::shared_ptr<Layout> parent)
     {
         static const char *markup = R"(
@@ -176,7 +160,6 @@ private:
             auto label = ui.find<Text>("fps-value");
             fps->setSelected(1); // default: 60
 
-            // refresh iniziale della label
             if (label)
                 label->setText("60 FPS");
 
@@ -192,9 +175,6 @@ private:
         }
     }
 
-    // ============================================================
-    //  Sezione Gameplay
-    // ============================================================
     void buildGameplaySection(std::shared_ptr<Layout> parent)
     {
         static const char *markup = R"(
@@ -248,7 +228,6 @@ private:
         if (!slider || !label)
             return;
 
-        // Settiamo subito il testo iniziale
         label->setText(std::to_string((int)std::lround(slider->getValue() * 100.0f)) + "%");
 
         slider->onValueChanged = [label](float v)

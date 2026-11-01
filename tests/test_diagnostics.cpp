@@ -7,9 +7,6 @@ using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
 using namespace ZenitUI::Test;
 
-// ============================================================
-//  DiagnosticSink e Strict Mode
-// ============================================================
 
 TEST(Diagnostics, valid_style_no_diagnostics) {
     CollectingDiagnosticSink sink;
@@ -28,19 +25,17 @@ TEST(Diagnostics, unknown_property_emits_warning) {
     const auto& d = sink.diagnostics().front();
     CHECK(d.code == DiagnosticCode::UnknownProperty);
     CHECK(d.severity == DiagnosticSeverity::Warning);
-    // Il suggerimento "color" deve essere stato generato
     CHECK(d.hint.find("color") != std::string::npos);
-    CHECK(!sink.hasErrors()); // Con strict=false è solo un warning
+    CHECK(!sink.hasErrors());
 }
 
 TEST(Diagnostics, unknown_property_strict_emits_error) {
     CollectingDiagnosticSink sink;
     Theme t;
-    // Passiamo strict = true
     loadStyleString("Button { colr: #fff; }", t, "test.zstyle", &sink, true);
     CHECK(sink.diagnostics().size() == 1);
     CHECK(sink.diagnostics().front().severity == DiagnosticSeverity::Error);
-    CHECK(sink.hasErrors()); // Ora deve essere un errore bloccante
+    CHECK(sink.hasErrors());
 }
 
 TEST(Diagnostics, unknown_pseudo_class) {
@@ -63,13 +58,10 @@ TEST(Diagnostics, duplicate_keyframes) {
     CHECK(sink.diagnostics().front().code == DiagnosticCode::DuplicateRule);
 }
 
-// ============================================================
-//  Levenshtein Distance Helper
-// ============================================================
 
 TEST(Diagnostics, edit_distance_basics) {
     CHECK(editDistance("color", "color") == 0);
-    CHECK(editDistance("colr", "color") == 1);      // inserimento
-    CHECK(editDistance("colour", "color") == 1);    // rimozione
-    CHECK(editDistance("red", "blue") == 4);        // totalmente diversi
+    CHECK(editDistance("colr", "color") == 1);
+    CHECK(editDistance("colour", "color") == 1);
+    CHECK(editDistance("red", "blue") == 4);
 }

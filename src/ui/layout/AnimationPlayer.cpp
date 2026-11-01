@@ -4,15 +4,11 @@
 namespace ZenitUI
 {
 
-// =========================================================================
-//  PRIMITIVE (namespace Anim)
-// =========================================================================
 
 void Anim::syncRefs(std::vector<ActiveCssAnimation>& anims,
                     const std::vector<AnimationRef>& refs,
                     double now)
 {
-    // 1) Rimuovi orfani (anims il cui nome non è in refs).
     anims.erase(
         std::remove_if(anims.begin(), anims.end(),
                        [&](const ActiveCssAnimation& a)
@@ -24,7 +20,6 @@ void Anim::syncRefs(std::vector<ActiveCssAnimation>& anims,
                        }),
         anims.end());
 
-    // 2) Aggiorna esistenti / aggiungi nuove.
     for (const auto& r : refs)
     {
         bool found = false;
@@ -142,9 +137,6 @@ void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAni
     }
 }
 
-// =========================================================================
-//  IMPERATIVE
-// =========================================================================
 
 void AnimationPlayer::play(Layout& node, const std::string& name, bool playReverse)
 {
@@ -223,8 +215,6 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
 
         if (justFinished)
         {
-            // Copia il callback: potrebbe invalidare la mappa imperative
-            // (es. removeFromParent lanciato dal callback stesso).
             auto cb = s.anim->onFinished;
             if (cb) cb();
         }
@@ -233,9 +223,6 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
     return localBlocks;
 }
 
-// =========================================================================
-//  CSS NODO
-// =========================================================================
 
 void AnimationPlayer::syncCss(Layout& node)
 {
@@ -248,9 +235,6 @@ void AnimationPlayer::tickCss(Layout& /*node*/, float dt)
     Anim::tickIncremental(css, dt);
 }
 
-// =========================================================================
-//  CSS PART
-// =========================================================================
 
 void AnimationPlayer::applyCssToPart(Layout& /*node*/, const std::string& partName, Style& out)
 {

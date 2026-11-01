@@ -4,7 +4,6 @@
 using namespace ZenitUI;
 using namespace ZenitUI::ZMarkup;
 
-// ---------- parseValueToken ----------
 
 TEST(ValueParsers_valueToken, empty_returns_nullopt) {
     CHECK(!parseValueToken("").has_value());
@@ -91,7 +90,6 @@ TEST(ValueParsers_valueToken, calc_invalid_returns_nullopt) {
     CHECK(!parseValueToken("calc((10px").has_value());
 }
 
-// ---------- parseColorToken ----------
 
 TEST(ValueParsers_colorToken, named) {
     auto c = parseColorToken("red");
@@ -131,7 +129,6 @@ TEST(ValueParsers_colorToken, invalid) {
     CHECK(!parseColorToken("").has_value());
 }
 
-// ---------- parseSpacingToken ----------
 
 TEST(ValueParsers_spacingToken, one_value) {
     auto s = parseSpacingToken("10px");
@@ -164,7 +161,6 @@ TEST(ValueParsers_spacingToken, empty) {
     CHECK(!parseSpacingToken("").has_value());
 }
 
-// ---------- parseAlignToken / parseJustifyToken ----------
 
 TEST(ValueParsers_alignToken, all) {
     CHECK(parseAlignToken("auto")    == Align::Auto);
@@ -200,7 +196,6 @@ TEST(ValueParsers_colorToken, rgba_with_alpha)
     CHECK(c->r == 255);
     CHECK(c->g == 128);
     CHECK(c->b == 0);
-    // 0.5 * 255 = 127.5, rounded to 128
     CHECK(c->a == 128);
 }
 

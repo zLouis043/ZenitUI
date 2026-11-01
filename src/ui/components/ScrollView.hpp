@@ -5,9 +5,6 @@
 
 namespace ZenitUI::UI {
 
-// Zucchero: produce un Layout con overflow:scroll impostato inline.
-// Tutto il comportamento (measure, arrange, input, scrollbar, draw)
-// vive in Layout ed è guidato da `currentStyle.overflow`.
 class ScrollView : public TLayout<ScrollView>
 {
 public:

@@ -4,11 +4,6 @@
 namespace ZenitUI
 {
 
-	// =========================================================================
-	//  ORCHESTRAZIONE
-	//  update() coordina i sottosistemi. Non contiene logica di dettaglio:
-	//  quella vive in Style/Anim/Input/Scroll/Measure/Render.
-	// =========================================================================
 
 	void Layout::update(float dt, bool ancestorBlocked, bool ancestorScrolling)
 	{
@@ -17,8 +12,6 @@ namespace ZenitUI
 
 		initStyleIfNeeded();
 
-		// Se il viewport è cambiato dall'ultimo frame, le media query CSS
-		// possono aver cambiato l'esito: forziamo una ri-risoluzione.
 		uint32_t gen = UIContext::get().viewportGeneration;
 		if (gen != lastViewportGen_)
 		{
@@ -101,11 +94,6 @@ namespace ZenitUI
 			else
 				++it;
 		}
-		// Removing a child changes the content size and max-scroll.
-		// Without this flag, recomputeDirty would see an unchanged
-		// subtree and measure would short-circuit — leaving a
-		// scroll container with the wrong size and a stale
-		// scrollbar after content shrinks.
 		if (removed)
 			internal_.hadRemovedChildren = 1;
 	}
@@ -184,12 +172,6 @@ namespace ZenitUI
 
 		ctx.hoverTarget = ctx.topmostConsumer;
 
-		// pressTarget / releaseTarget are set if ANY mouse button fired
-		// its edge this frame. The per-button callbacks (onButtonPress,
-		// onButtonRelease, onButtonClick) need this to fire for Left and
-		// Middle: the per-button callbacks (onButtonPress, onButtonRelease,
-		// onButtonClick) need this to fire for Left and Middle. The
-		// legacy `pointer.pressed` field used to cover only Left.
 		bool anyPressed = false;
 		bool anyReleased = false;
 		bool anyDown = false;

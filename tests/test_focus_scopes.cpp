@@ -5,11 +5,7 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
-// ============================================================
-//  Focus scopes — 3.7
-// ============================================================
 
-// Helper: crea un Layout che è focusable, con nome per debug.
 static std::shared_ptr<Layout> makeFocusable(const std::string& id,
                                                float w = 50.0f,
                                                float h = 30.0f)
@@ -23,7 +19,6 @@ static std::shared_ptr<Layout> makeFocusable(const std::string& id,
     return n;
 }
 
-// ---- Tab dentro scope ------------------------------------------------
 
 TEST(FocusScope_tab, tab_stays_within_scope)
 {
@@ -32,11 +27,9 @@ TEST(FocusScope_tab, tab_stays_within_scope)
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
 
-    // Un focusable FUORI dallo scope.
     auto outside = makeFocusable("outside");
     root->addChild(outside);
 
-    // Uno scope con due focusable dentro.
     auto scope = std::make_shared<Layout>(LayoutType::Stack);
     scope->size(Px(200), Px(200));
     scope->setFocusScope(true);
@@ -48,8 +41,6 @@ TEST(FocusScope_tab, tab_stays_within_scope)
 
     env.frame(root);
 
-    // Focus su a. Da lì, Tab deve andare a b, e poi tornare ad a.
-    // Non deve MAI raggiungere outside.
     UIContext::get().requestFocus(a);
     env.frame(root);
     CHECK(UIContext::get().hasFocus(a.get()));
@@ -66,7 +57,6 @@ TEST(FocusScope_tab, tab_stays_within_scope)
     env.frame(root);
     CHECK(UIContext::get().hasFocus(b.get()));
 
-    // Mai su outside.
     CHECK(!UIContext::get().hasFocus(outside.get()));
 }
 
@@ -100,10 +90,9 @@ TEST(FocusScope_tab, shift_tab_reverses_within_scope)
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(c.get()));   // wrap-around
+    CHECK(UIContext::get().hasFocus(c.get()));
 }
 
-// ---- scope annidati --------------------------------------------------
 
 TEST(FocusScope_nested, inner_scope_wins)
 {
@@ -112,7 +101,6 @@ TEST(FocusScope_nested, inner_scope_wins)
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
 
-    // Scope esterno con due focusable.
     auto outerScope = std::make_shared<Layout>(LayoutType::Stack);
     outerScope->size(Px(400), Px(400));
     outerScope->setFocusScope(true);
@@ -121,7 +109,6 @@ TEST(FocusScope_nested, inner_scope_wins)
     outerScope->addChild(oa);
     outerScope->addChild(ob);
 
-    // Scope interno, dentro l'esterno, con due focusable.
     auto innerScope = std::make_shared<Layout>(LayoutType::Stack);
     innerScope->size(Px(200), Px(200));
     innerScope->setFocusScope(true);
@@ -134,8 +121,6 @@ TEST(FocusScope_nested, inner_scope_wins)
     root->addChild(outerScope);
     env.frame(root);
 
-    // Focus su ia (dentro lo scope interno). Tab deve restare
-    // nello scope interno, NON passare a ob.
     UIContext::get().requestFocus(ia);
     env.frame(root);
     CHECK(UIContext::get().hasFocus(ia.get()));
@@ -146,12 +131,11 @@ TEST(FocusScope_nested, inner_scope_wins)
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(ia.get()));   // wrap
+    CHECK(UIContext::get().hasFocus(ia.get()));
 
     CHECK(!UIContext::get().hasFocus(ob.get()));
 }
 
-// ---- focus release ---------------------------------------------------
 
 TEST(FocusScope_release, click_outside_releases_focus)
 {
@@ -169,7 +153,6 @@ TEST(FocusScope_release, click_outside_releases_focus)
     env.frame(root);
     CHECK(UIContext::get().hasFocus(a.get()));
 
-    // Click in un punto vuoto (lontano dal focusable, che è a 0,0).
     env.click(root, {500.0f, 500.0f});
     env.frame(root);
 
@@ -198,7 +181,6 @@ TEST(FocusScope_release, disable_releases_focus)
     CHECK(!UIContext::get().hasFocus(a.get()));
 }
 
-// ---- no scope => root is the scope ----------------------------------
 
 TEST(FocusScope_default, no_scope_uses_root)
 {
@@ -207,8 +189,6 @@ TEST(FocusScope_default, no_scope_uses_root)
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
 
-    // Due focusable senza scope esplicito: Tab deve ciclare su entrambi
-    // attraverso il root.
     auto a = makeFocusable("a");
     auto b = makeFocusable("b");
     root->addChild(a);
@@ -226,17 +206,16 @@ TEST(FocusScope_default, no_scope_uses_root)
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));   // wrap
+    CHECK(UIContext::get().hasFocus(a.get()));
 }
 
-// ---- disabled subtrees -----------------------------------------------
 TEST(FocusScope_disabled, collect_skips_disabled_containers) {
     Env env;
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
     
     auto container = std::make_shared<Layout>(LayoutType::Stack);
-    container->setEnabled(false); // Disabilitato!
+    container->setEnabled(false);
     auto btn1 = makeFocusable("btn1");
     container->addChild(btn1);
     
@@ -247,8 +226,6 @@ TEST(FocusScope_disabled, collect_skips_disabled_containers) {
     
     env.frame(root);
     
-    // Premiamo Tab. Dato che container è disabilitato, btn1 deve essere ignorato
-    // e il focus deve andare direttamente a btn2.
     env.platform.pressKey(Key::Tab);
     env.frame(root);
     

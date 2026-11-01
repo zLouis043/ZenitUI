@@ -20,17 +20,16 @@ namespace ZenitUI
             MaxAspectRatio,
         };
         Kind kind;
-        float value{0.0f}; // non usato per orientation
+        float value{0.0f};
     };
 
     struct MediaQuery
     {
-        std::vector<MediaCondition> conditions; // AND
+        std::vector<MediaCondition> conditions;
 
         bool empty() const { return conditions.empty(); }
     };
 
-    // Valuta la query contro il viewport corrente (in logical pixel).
     inline bool evaluateMedia(const MediaQuery &q, Vec2 viewport)
     {
         for (const auto &c : q.conditions)

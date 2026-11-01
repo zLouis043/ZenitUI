@@ -10,7 +10,6 @@ namespace ZenitUI
 
 	class Layout;
 
-	// ===================== UIAnimation imperativa (invariata) =====================
 	class UIAnimation
 	{
 	public:
@@ -62,7 +61,6 @@ namespace ZenitUI
 		bool reverse{false};
 	};
 
-	// ===================== Keyframes (definizione pura, senza timing) =====================
 	struct Keyframe
 	{
 		float t{0.0f};
@@ -75,7 +73,6 @@ namespace ZenitUI
 		std::vector<Keyframe> keyframes;
 	};
 
-	// ===================== Istanza attiva (timing incluso) =====================
 	struct ActiveCssAnimation
 	{
 		std::string name;
@@ -83,32 +80,17 @@ namespace ZenitUI
 		double startTime{0.0};
 		float duration{1.0f};
 		float delay{0.0f};
-		int iterations{1}; // -1 = infinite
+		int iterations{1};
 		bool alternate{false};
 		bool fillForwards{false};
 		bool finished{false};
 		TransitionFunction ease{TransitionFunction::Linear};
 
-		// ---------------------------------------------------------------------
-		//  Cache for sampleActive.
-		//
-		//  sampleActive is called twice per animation per frame: once during
-		//  the tick phase (to detect whether the animation just finished) and
-		//  once during the overlay phase (to compute localT for the keyframe
-		//  evaluation). Between the two calls, `elapsed` doesn't change, so
-		//  the second call is guaranteed to return the same result. We cache
-		//  the first result and reuse it in the second call.
-		//
-		//  The cache is invalidated automatically whenever `elapsed` differs
-		//  from `cachedSampleElapsed`. There's no frame counter involved:
-		//  the elapsed time itself is the cache key.
-		// ---------------------------------------------------------------------
 		mutable float cachedSampleElapsed{-1.0f};
 		mutable float cachedLocalT{0.0f};
 		mutable bool cachedFinished{false};
 	};
 
-	// ===================== Evaluators =====================
 	inline Style evaluateKeyframes(const KeyframeAnimation &anim, float localT, TransitionFunction ease)
 	{
 		Style out;
@@ -146,7 +128,6 @@ namespace ZenitUI
 		return out;
 	}
 
-	// Campiona un'istanza attiva: ritorna localT ∈ [0,1] e setta finished.
 	inline float sampleActive(const ActiveCssAnimation &a, bool &finished)
 	{
 		finished = false;
@@ -167,8 +148,6 @@ namespace ZenitUI
 		}
 		float iter = std::floor(t / a.duration);
 
-		// Quando finished e t è esattamente su total, iter punta alla prossima
-		// iterazione inesistente. Lo clampiamo all'ultima valida.
 		if (a.iterations > 0 && finished && iter > 0.0f)
 		{
 			iter = std::min(iter, (float)(a.iterations - 1));
@@ -180,17 +159,6 @@ namespace ZenitUI
 		return std::clamp(local, 0.0f, 1.0f);
 	}
 
-	// Cache-aware wrapper around sampleActive.
-	//
-	// Returns the same value as sampleActive for the current state of `a`,
-	// but if it was already called for the same `elapsed` (which happens
-	// on every normal frame, because tick advances `elapsed` and overlay
-	// reads it again without modifying it), the cached result is returned
-	// instead of recomputing.
-	//
-	// The signature is `const ActiveCssAnimation&` because sampleActive
-	// is logically a read-only query; the cache fields are `mutable` so
-	// the function can still update them.
 	inline float sampleActiveCached(const ActiveCssAnimation &a, bool &finished)
 	{
 		if (a.cachedSampleElapsed == a.elapsed)

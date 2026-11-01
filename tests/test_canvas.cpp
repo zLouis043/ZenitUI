@@ -6,9 +6,6 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
-// ============================================================
-//  CanvasLayout
-// ============================================================
 
 TEST(Canvas, pushes_offset_transform_inside_target)
 {
@@ -25,10 +22,6 @@ TEST(Canvas, pushes_offset_transform_inside_target)
 
     Rect r = canvas->getRect();
 
-    // Il canvas deve pushare una transform di offset mentre disegna
-    // dentro il target. Serve a portare il subtree in coordinate
-    // locali del target (0,0 in alto a sinistra), invece che disegnarlo
-    // alle coordinate schermo (bug 1.9).
     bool found = false;
     for (const auto& t : env.renderer.transformHistory)
     {
@@ -51,13 +44,13 @@ TEST(Canvas, offset_transform_matches_canvas_rect)
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
-    root->getInlineBase().padding = Spacing(Px(30));   // canvas non parte da (0,0)
+    root->getInlineBase().padding = Spacing(Px(30));
     root->addChild(canvas);
 
     env.frame(root);
 
     Rect r = canvas->getRect();
-    CHECK(r.x > 0.0f);   // sanity: il padding ha spostato il canvas
+    CHECK(r.x > 0.0f);
     CHECK(r.y > 0.0f);
 
     bool found = false;
@@ -82,10 +75,6 @@ TEST(Canvas, effect_property_pushes_shader)
     auto canvas = CanvasLayout::create();
     canvas->size(Px(200), Px(150));
 
-    // The `effect:` property on a node is normally consumed by
-    // Layout::draw(). CanvasLayout overrides draw() entirely, so
-    // before 5.14 this property was silently ignored on a canvas.
-    // The fix routes it through resolveActiveEffect().
     canvas->getInlineBase().effect = "wave_post";
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
@@ -94,9 +83,6 @@ TEST(Canvas, effect_property_pushes_shader)
 
     env.frame(root);
 
-    // The mock reports supportsEffects = true, so the canvas
-    // should have pushed the effect exactly once around the
-    // final composite step.
     CHECK(env.renderer.pushEffectCount >= 1);
     CHECK(env.renderer.lastPushedEffect.valid());
 }
@@ -109,7 +95,6 @@ TEST(Canvas, no_effect_means_no_push)
     auto canvas = CanvasLayout::create();
     canvas->size(Px(200), Px(150));
 
-    // No `effect:` property, no setShader() call.
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
     root->addChild(canvas);

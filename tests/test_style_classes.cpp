@@ -5,11 +5,7 @@
 using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
-// ============================================================
-//  Layout: addClass / removeClass / hasClass / clearStyleClasses
-// ============================================================
 
-// ---- addClass --------------------------------------------------------
 
 TEST(Widget_classes, addClass_appends)
 {
@@ -38,7 +34,6 @@ TEST(Widget_classes, addClass_avoids_duplicates)
     CHECK(node->getStyleClasses()[0] == "a");
 }
 
-// ---- hasClass --------------------------------------------------------
 
 TEST(Widget_classes, hasClass_true_when_present)
 {
@@ -61,7 +56,6 @@ TEST(Widget_classes, hasClass_false_when_absent)
     CHECK(!node->hasClass(""));
 }
 
-// ---- removeClass -----------------------------------------------------
 
 TEST(Widget_classes, removeClass_removes_present)
 {
@@ -96,14 +90,9 @@ TEST(Widget_classes, removeClass_removes_all_occurrences)
     Env env;
     auto node = std::make_shared<Layout>(LayoutType::Stack);
 
-    // addClass deduplica, quindi per forzare dei duplicati
-    // scriviamo direttamente nel vettore via getStyleClasses().
-    // (getStyleClasses() ritorna const&, quindi non possiamo;
-    // usiamo addClass e poi verifichiamo che non ci siano duplicati
-    // già in partenza.)
     node->addClass("dup");
     node->addClass("other");
-    node->addClass("dup");   // ignorato
+    node->addClass("dup");
 
     CHECK((int)node->getStyleClasses().size() == 2);
 
@@ -113,7 +102,6 @@ TEST(Widget_classes, removeClass_removes_all_occurrences)
     CHECK((int)node->getStyleClasses().size() == 1);
 }
 
-// ---- clearStyleClasses -----------------------------------------------
 
 TEST(Widget_classes, clearStyleClasses_empties_vector)
 {
@@ -133,11 +121,10 @@ TEST(Widget_classes, clearStyleClasses_on_empty_is_noop)
 {
     Env env;
     auto node = std::make_shared<Layout>(LayoutType::Stack);
-    node->clearStyleClasses();   // non deve crashare
+    node->clearStyleClasses();
     CHECK(node->getStyleClasses().empty());
 }
 
-// ---- integration: removeClass triggers a re-resolve ------------------
 
 TEST(Widget_classes, removeClass_triggers_style_recompute)
 {
@@ -155,7 +142,6 @@ TEST(Widget_classes, removeClass_triggers_style_recompute)
     root->size(Percent(100), Percent(100));
     root->addChild(node);
 
-    // Lascia che la transizione iniziale si completi.
     for (int i = 0; i < 15; ++i) env.frame(root);
     CHECK(node->getStyle().background == (Color{0xff, 0x00, 0x00, 0xff}));
 

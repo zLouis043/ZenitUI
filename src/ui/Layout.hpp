@@ -17,32 +17,6 @@
 
 namespace ZenitUI
 {
-	// =========================================================================
-	//  Node flag groups
-	//
-	//  Layout carries three conceptually distinct groups of boolean state.
-	//  Splitting them into bitfield structs has three effects:
-	//
-	//    1. Memory: 3 * uint32_t = 12 bytes, vs ~19-24 bytes for individual
-	//       bool fields (padding included). Matters at 1000+ node counts.
-	//
-	//    2. Readability: `node.state.hovered` vs `node.isHovered`,
-	//       `node.config.interactive` vs `node.isInteractive`. The prefix
-	//       tells you at a glance which group a flag belongs to.
-	//
-	//    3. Extensibility: adding a new flag is a new bit in one of the
-	//       three structs, not a new bool field in Layout. Future features
-	//       (mouse buttons, additional state) can be added without
-	//       growing Layout's field count.
-	//
-	//  Group meanings:
-	//    - NodeState:    per-frame runtime state, computed by the framework
-	//                    from input, animated by the style system.
-	//    - NodeConfig:   static configuration, set by the constructor or
-	//                    by user code via setters. Changes rarely.
-	//    - NodeInternal: framework bookkeeping. Not part of the public
-	//                    surface, not meaningful to user code.
-	// =========================================================================
 
 	struct NodeState
 	{
@@ -81,9 +55,6 @@ namespace ZenitUI
 	public:
 		Layout(LayoutType type = LayoutType::Stack) : type(type)
 		{
-			// Non-zero defaults, matching the previous bool field
-			// initializers: interactive, enabled, subtree dirty, and
-			// pending transition all start true.
 			config.interactive = 1;
 			config.enabled = 1;
 			internal_.subtreeDirty = 1;
@@ -92,13 +63,6 @@ namespace ZenitUI
 
 		virtual ~Layout()
 		{
-			// Clear any dangling pointer in the context. During a
-			// recursive update, a node can be destroyed (via
-			// cullRemovedChildren) while a later ancestor still needs
-			// to consult pressTarget / releaseTarget / topmostConsumer
-			// / hoverTarget. If the destroyed node was one of those,
-			// the pointers would dangle. Resetting here makes the
-			// ancestor's check a no-op instead of a crash.
 			auto &ctx = UIContext::get();
 			if (ctx.pressTarget == this)
 				ctx.pressTarget = nullptr;
@@ -131,8 +95,6 @@ namespace ZenitUI
 		friend struct InputController;
 		friend struct ScrollController;
 
-		// Adds a CSS class. No-op if the class is already present,
-		// so calling it twice does not create duplicates.
 		void addClass(const std::string &className)
 		{
 			for (const auto &c : styleClasses)
@@ -142,8 +104,6 @@ namespace ZenitUI
 			internal_.pendingTransition = 1;
 		}
 
-		// Removes every occurrence of the class. No-op if the class
-		// isn't present.
 		void removeClass(const std::string &className)
 		{
 			auto it = std::remove(styleClasses.begin(),
@@ -155,7 +115,6 @@ namespace ZenitUI
 			internal_.pendingTransition = 1;
 		}
 
-		// True if the class is currently set on this node.
 		bool hasClass(const std::string &className) const
 		{
 			for (const auto &c : styleClasses)
@@ -164,15 +123,11 @@ namespace ZenitUI
 			return false;
 		}
 
-		// True if the node's id matches. The id is set via setId() (or the
-		// `id` fluent helper, or `#name` in ZMarkup). Returns false if the
-		// node has no id, or if the given id is empty.
 		bool hasId(const std::string &targetId) const
 		{
 			return !targetId.empty() && nodeId == targetId;
 		}
 
-		// Removes every class. No-op if there were none.
 		void clearStyleClasses()
 		{
 			if (styleClasses.empty())
@@ -202,7 +157,6 @@ namespace ZenitUI
 			internal_.pendingTransition = 1;
 		}
 
-		// --- API fluent (ritornano shared_from_this, NON usare nel costruttore) ---
 		std::shared_ptr<Layout> cls(const std::string &className)
 		{
 			addClass(className);
@@ -229,9 +183,6 @@ namespace ZenitUI
 			if (!child)
 				return;
 
-			// Rete di sicurezza: se il chiamante è un costruttore o uno stato
-			// dove shared_from_this() non è ancora valido, avvisa e ignora.
-			// Usa X::create() e metti questa logica in onBuild().
 			if (weak_from_this().expired())
 			{
 				logWarn("Layout", "", 0, 0,
@@ -245,28 +196,9 @@ namespace ZenitUI
 			internal_.pendingTransition = 1;
 		}
 
-		// Returns the node to which ZMarkup should attach children. Default
-		// returns `this`. Composite widgets (Modal) override it to point at
-		// their internal content slot, so that markup children end up
-		// inside the widget's styled content area rather than as siblings
-		// of the widget's internal nodes.
-		//
-		// Regular C++ code should not need this: use addChild() directly on
-		// the widget and it will route to the same place the widget considers
-		// its content area.
 		virtual Layout *contentTarget() { return this; }
 
 		void removeFromParent() { internal_.wantsRemoval = 1; }
-		// Removes every child in one shot. Unlike `removeFromParent` on
-		// each child, this is immediate: the `children` vector is cleared
-		// right away, and each removed child's `parent` pointer is reset
-		// to null.
-		//
-		// Use this to rebuild the content of a container (a list, a
-		// settings panel) without having to allocate a new node.
-		//
-		// Note: any shared_ptr the caller still holds to a removed child
-		// keeps it alive; only the tree relationship is broken.
 		void removeAllChildren()
 		{
 			for (auto &c : children)
@@ -292,7 +224,6 @@ namespace ZenitUI
 			return false;
 		}
 
-		// --- Stato / stile ---
 		void setInteractive(bool interactive) { config.interactive = interactive ? 1 : 0; }
 		void setBlocksRaycast(bool blocks) { config.blocksRaycast = blocks ? 1 : 0; }
 
@@ -359,7 +290,6 @@ namespace ZenitUI
 			return style_.currentStyle.zIndex.isAuto ? 0 : style_.currentStyle.zIndex.value;
 		}
 
-		// --- Scroll (attivo se currentStyle.overflow != Visible) ---
 		bool isScrollContainer() const
 		{
 			return style_.currentStyle.overflowX != Overflow::Visible || style_.currentStyle.overflowY != Overflow::Visible;
@@ -396,20 +326,8 @@ namespace ZenitUI
 				scrollToX(scroll_.state.maxScroll.x);
 		}
 
-		// Scrolls the nearest scrollable ancestor so this node becomes
-		// visible. Does nothing if the node has no scrollable ancestor,
-		// or if the node is already fully visible.
-		//
-		// `margin` reserves that many pixels of padding around the node
-		// inside the container's viewport. Use it to avoid the node
-		// being flush against the container's edge.
-		//
-		// Returns true if the scroll offset was changed.
 		bool scrollIntoView(float margin = 0.0f);
 
-		// Same as above, but for a sub-region of the node. Useful when
-		// the "interesting" part of the node is smaller than its full
-		// rect (a label inside a large padding, a specific line of text).
 		bool scrollIntoView(const Rect &subRect, float margin = 0.0f);
 
 		float getScrollX() const { return scroll_.state.offset.x; }
@@ -427,10 +345,6 @@ namespace ZenitUI
 		void setPassThrough(bool p) { config.passThrough = p ? 1 : 0; }
 		bool getPassThrough() const { return config.passThrough != 0; }
 
-		// Pointer capture: finché un nodo ha il capture attivo, ogni evento
-		// pointer viene indirizzato a lui, indipendentemente dalla posizione
-		// del cursore. Il capture viene rilasciato automaticamente quando il
-		// tasto del mouse viene sollevato.
 		void capturePointer()
 		{
 			UIContext::get().pointerCapture = shared_from_this();
@@ -502,7 +416,6 @@ namespace ZenitUI
 			return style_.inlineDefaults;
 		}
 
-		// --- Animazioni imperative ---
 		void addAnimation(const std::string &name, std::shared_ptr<UIAnimation> anim)
 		{
 			anim_.imperative[name] = {anim, 0.0f, 0.0f, false, false};
@@ -516,7 +429,6 @@ namespace ZenitUI
 			return anim_.hasActive(*this);
 		}
 
-		// --- Animazioni CSS ---
 		void addCssAnimation(const std::string &name)
 		{
 			for (auto &a : anim_.css)
@@ -531,10 +443,6 @@ namespace ZenitUI
 					a.finished = true;
 		}
 
-		// ============================================================
-		//  CICLO DI VITA
-		//  Chiamati dal runtime (main loop + updateTree). Non override.
-		// ============================================================
 		virtual Vec2 measure(float parent_w, float parent_h);
 		virtual void arrange(Rect space);
 		virtual void update(float dt, bool ancestorBlocked = false, bool scrolling = false);
@@ -545,12 +453,8 @@ namespace ZenitUI
 						const Rect *clipLocal = nullptr);
 		void updateTree(float dt);
 
-		// Ciclo di logica: beginFrame + updateTree + measure + arrange.
-		// Chiamato dal root una volta per frame, prima di BeginDrawing.
 		void runFrame(float dt);
 
-		// Ciclo di disegno: renderer->beginFrame + draw + renderer->endFrame.
-		// Chiamato dal root una volta per frame, tra BeginDrawing e EndDrawing.
 		void renderFrame();
 
 		Rect getRect() const { return rect; }
@@ -558,27 +462,10 @@ namespace ZenitUI
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
-		// ---- Callbacks (Left button, legacy names) ----
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
 
-		// ---- Callbacks (Right button, legacy semantic) ----
-		//
-		// Fires on right-button press when the node is hovered. Not a
-		// full click (press + release on the same target): the right
-		// button is meant for one-shot events like context menus, and
-		// the historical semantic is "press-on-hover".
 		std::function<void()> onRightClick;
 
-		// ---- Callbacks (unified, Left + Middle) ----
-		//
-		// Same click model as onPress/onRelease/onClick (press and
-		// release on the same target), but parameterized by MouseButton
-		// so that Middle is covered without a new pair of callback
-		// fields. Currently fires for Left and Middle. Right is NOT
-		// covered here — its semantic is different (see onRightClick
-		// above). Adding a new button to the MouseButton enum extends
-		// onButton* automatically, as long as the button follows the
-		// press+release model.
 		std::function<void(MouseButton)> onButtonPress;
 		std::function<void(MouseButton)> onButtonRelease;
 		std::function<void(MouseButton)> onButtonClick;
@@ -586,13 +473,8 @@ namespace ZenitUI
 		std::function<void()> onAnimationsFinished;
 		std::vector<std::shared_ptr<Layout>> children;
 
-		// Style id: matches #id in ZMarkup, participates in CSS
-		// specificity as an id selector.
 		std::string nodeId;
 
-		// Logic ref: matches @ref in ZMarkup, does NOT participate in
-		// CSS. Used by UINode::ref / UINode::refAll for C++ lookup.
-		// Can be shared by multiple nodes.
 		std::string ref;
 
 		void setBackgroundTexture(TextureHandle tex, NineSlice np = {0, 0, 0, 0})
@@ -625,17 +507,16 @@ namespace ZenitUI
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
-		TargetHandle layerTarget_;	  // ping-pong A
-		TargetHandle layerScratch_;	  // ping-pong B
-		TargetHandle layerSeparable_; // intermediate for Separable filters
-		EffectHandle customEffect;	  // cache dell'handle risolto
-		std::string effectName_;	  // nome stile, per detect cambio
-		EffectHandle currentEffect_;  // cache dell'handle risolto
+		TargetHandle layerTarget_;
+		TargetHandle layerScratch_;
+		TargetHandle layerSeparable_;
+		EffectHandle customEffect;
+		std::string effectName_;
+		EffectHandle currentEffect_;
 		bool hasShader{false};
 
 		AnimationPlayer anim_;
 
-		// Buffer riusati in draw() per evitare allocazioni per-frame.
 		std::vector<Layout *> drawNegZ_, drawNormal_, drawPosZ_;
 
 		std::weak_ptr<Layout> parent;
@@ -653,38 +534,14 @@ namespace ZenitUI
 			return style_.partFor(*this, partName);
 		}
 
-		// Ritorna la size intrinseca del widget (es. dimensione del testo).
-		// Chiamato in fase di measure, prima di arrangiare i figli.
-		// Default: {0,0}. Override solo se il widget ha una dimensione "naturale".
 		virtual Vec2 computeIntrinsicSize(float /*availW*/, float /*availH*/) { return {0, 0}; }
 
-		// Chiamato dopo che `rect` è stato settato (subito dopo arrangeInto).
-		// Usalo per ricalcolare cose che dipendono dalla size FINALE, come il
-		// wrap del testo. Non deve modificare `measuredSize`.
 		virtual void onLayout() {}
 
-		// Per-frame update. Chiamato una volta per frame, dopo tutto il
-		// processing di stato (hover/pressed/focus). Usalo per input custom,
-		// animazioni locali, logica di drag, ecc.
 		virtual void onUpdate(float /*dt*/) {}
 
-		// Chiamato quando isEnabled cambia. Usalo per pulire cache di stato o
-		// chiudere popup/menu. Non serve per la logica per-frame: per quella
-		// c'è onUpdate, che di default non gira quando il nodo è disabilitato.
 		virtual void onEnabledChanged(bool /*nowEnabled*/) {}
 
-		// Resolves the effect to apply to this node's draw call,
-		// considering both possible sources.
-		//
-		// Priority:
-		//   1. `effect:` style property (resolved against assets).
-		//   2. `setShader()` handle set from C++.
-		//   3. Invalid handle (no effect).
-		//
-		// Subclasses that override draw() — currently only CanvasLayout —
-		// should call this instead of touching `currentEffect_` or
-		// `customEffect` directly, so that the priority stays consistent
-		// with the rest of the framework.
 		EffectHandle resolveActiveEffect()
 		{
 			resolveEffectIfNeeded(style_.currentStyle);
@@ -695,12 +552,8 @@ namespace ZenitUI
 			return {};
 		}
 
-		// Disegno del contenuto del widget.
-		// Chiamato DOPO renderChrome, PRIMA dei figli.
 		virtual void renderContent(float /*op*/, const ComputedStyle & /*style*/) {}
 
-		// Sfondo + bordo. Default: fill del background + stroke del border dallo
-		// Style. Override solo per texture, nine-slice o "vestiti" particolari.
 		virtual void renderChrome(float op, const ComputedStyle &style)
 		{
 			auto r = UIContext::get().renderer;
@@ -712,7 +565,6 @@ namespace ZenitUI
 			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
 			float rPx = std::clamp(style.radius.resolveH(maxRadius * 2.0f, maxRadius * 2.0f), 0.0f, maxRadius);
 
-			// 0) Box-shadow (dietro a tutto)
 			if (style.boxShadow.enabled)
 			{
 				const auto &sh = style.boxShadow;
@@ -734,7 +586,6 @@ namespace ZenitUI
 				}
 				else
 				{
-					// Approssimazione: 5 strati concentrici con alpha decrescente.
 					constexpr int LAYERS = 5;
 					for (int i = 0; i < LAYERS; ++i)
 					{
@@ -751,7 +602,6 @@ namespace ZenitUI
 				}
 			}
 
-			// 1) Colore di sfondo (sotto la texture)
 			Color bg = style.background.withAlpha(op);
 			if (bg.a > 0)
 			{
@@ -761,7 +611,6 @@ namespace ZenitUI
 					r->fillRect(rect, bg);
 			}
 
-			// 2) Texture: CSS se presente, altrimenti il fallback del widget
 			auto resolved = resolveBgTexture(style, bgTexture, bgPatchInfo);
 			if (resolved.valid())
 			{
@@ -773,13 +622,11 @@ namespace ZenitUI
 				}
 				else
 				{
-					// stretch semplice: src = dimensioni intere, dst = rect
 					Rect src{0, 0, (float)resolved.tex.width, (float)resolved.tex.height};
 					r->drawTexture(resolved.tex, src, rect, tint);
 				}
 			}
 
-			// 3) Bordo
 			Color bc = style.borderColor.withAlpha(op);
 			float bw = style.borderWidth.resolveH(maxRadius * 2.0f, maxRadius * 2.0f);
 			if (bc.a > 0 && bw > 0.0f)
@@ -791,16 +638,9 @@ namespace ZenitUI
 			}
 		}
 
-		// Chiamato quando un discendente ottiene il focus.
 		virtual void onDescendantFocused(Layout * /*descendant*/) {}
 
-		// ============================================================
-		//  LAYOUT ENGINE (interno)
-		// ============================================================
 
-		// Layout dei figli. Non override: se hai bisogno di un layout custom
-		// (scroll, portal, ...) override `arrange` e chiama `arrangeInto`
-		// con lo spazio che vuoi.
 		void arrangeInto(Rect space);
 
 		Transform2D currentTransform(const ComputedStyle &style) const
@@ -825,9 +665,6 @@ namespace ZenitUI
 		void drawLayer(const ComputedStyle &renderStyle, float globalOp);
 		void drawChildren(float globalOp);
 
-		// ------------------------------------------------------------
-		//  Arrange: fasi (estratte da arrangeInto() per leggibilità)
-		// ------------------------------------------------------------
 		void arrangeAbsoluteAndPortals(const Rect &inner);
 		void arrangeAbsolute(Layout *c, const ComputedStyle &cst, const Rect &in);
 		void arrangeVerticalFlow(const Rect &inner, float gapY);
@@ -840,11 +677,6 @@ namespace ZenitUI
 		static float clampSafe(float v, float lo, float hi);
 	};
 
-	// CRTP helper: aggiunge la fluent API tipizzata su una Base qualsiasi.
-	// Uso:
-	//   class Text   : public TLayout<Text>              // Base = Layout
-	//   class Panel  : public TLayout<Panel>             // Base = Layout
-	//   class Button : public TLayout<Button, Panel>     // Base = Panel
 	template <typename Derived, typename Base = Layout>
 	class TLayout : public Base
 	{
@@ -903,8 +735,6 @@ namespace ZenitUI
 		if (!node)
 			return false;
 
-		// Le pseudo-classi sono richieste a livello di compound intero:
-		// se sono presenti, il nodo deve soddisfarle tutte.
 		if (ss.requireHover && !node->isHoveredState())
 			return false;
 		if (ss.requirePressed && !node->isPressedState())
@@ -916,8 +746,6 @@ namespace ZenitUI
 		if (ss.requireChecked && !node->isCheckedState())
 			return false;
 
-		// Helper: verifica che un singolo componente (tipo, nome) matchi
-		// il nodo.
 		auto matchesComponent = [node](SimpleSelector::Kind kind,
 									   const std::string &name) -> bool
 		{
@@ -925,19 +753,15 @@ namespace ZenitUI
 				return node->getStyleTag() == name;
 			if (kind == SimpleSelector::Kind::Id)
 				return node->nodeId == name;
-			// Class
 			for (const auto &c : node->getStyleClasses())
 				if (c == name)
 					return true;
 			return false;
 		};
 
-		// Componente principale.
 		if (!matchesComponent(ss.kind, ss.name))
 			return false;
 
-		// Componenti aggiuntivi del compound selector: tutti devono matchare
-		// lo stesso nodo.
 		for (const auto &[kind, name] : ss.extras)
 		{
 			if (!matchesComponent(kind, name))

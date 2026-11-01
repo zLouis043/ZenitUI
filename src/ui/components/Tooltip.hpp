@@ -95,7 +95,6 @@ namespace ZenitUI::UI
                     float targetX = a.x + a.width * 0.5f - ms.x * 0.5f;
                     float targetY = a.y - ms.y - 6.0f;
 
-                    // Clamping orizzontale
                     if (targetX < 0.0f)
                         targetX = 0.0f;
                     if (targetX + ms.x > Metrics::viewport.x)

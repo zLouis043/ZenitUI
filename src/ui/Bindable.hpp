@@ -5,47 +5,11 @@
 namespace ZenitUI
 {
 
-    // =========================================================================
-    //  Bindable<T>
-    //
-    //  A plain value with observer semantics. Not a Layout, not a widget,
-    //  not involved in the frame loop. Holds a value of type T, and
-    //  notifies subscribers when set() changes it.
-    //
-    //  Thread safety: none. Single-thread only. If a background thread
-    //  produces values, post them to the main thread before calling set().
-    //
-    //  Requirements on T:
-    //    - operator== (set() uses it to detect real changes)
-    //    - default-constructible if you use the default constructor of
-    //      Bindable itself. Bindable<T>{initial} works for non-default-
-    //      constructible T.
-    //    - copy-constructible / move-constructible as set() and get()
-    //      require.
-    //
-    //  Design notes:
-    //    - Subscribers are stored in std::vector<Entry>, preserving
-    //      insertion order. Notification order is guaranteed by the
-    //      standard for std::vector iteration, unlike unordered_map.
-    //    - A Subscription holds a shared_ptr to a ControlBlock. ~Bindable
-    //      sets ControlBlock::alive_ = false, so a Subscription that
-    //      outlives its Bindable can be safely destroyed or unsubscribed
-    //      without touching freed memory.
-    //    - Bindable is non-copyable and non-movable, so the ControlBlock
-    //      is unique per Bindable. This makes subscription identity stable
-    //      across the Bindable's lifetime.
-    // =========================================================================
 
     template <typename T>
     class Bindable
     {
     public:
-        // =====================================================================
-        //  Subscription
-        //
-        //  RAII token for one subscription. Destroying it unsubscribes.
-        //  Move-only; non-copyable.
-        // =====================================================================
         class Subscription
         {
         public:
@@ -95,9 +59,6 @@ namespace ZenitUI
         private:
             friend class Bindable;
 
-            // Shared between the Bindable and every Subscription it hands
-            // out. `alive_` is set to false by ~Bindable, so a dangling
-            // Subscription knows not to touch `owner_`.
             struct ControlBlock
             {
                 Bindable *owner_{nullptr};
@@ -111,9 +72,6 @@ namespace ZenitUI
             uint64_t token_{0};
         };
 
-        // =====================================================================
-        //  Construction
-        // =====================================================================
 
         Bindable() = default;
 
@@ -131,9 +89,6 @@ namespace ZenitUI
         Bindable(Bindable &&) = delete;
         Bindable &operator=(Bindable &&) = delete;
 
-        // =====================================================================
-        //  Value access
-        // =====================================================================
 
         const T &get() const { return value_; }
 
@@ -143,9 +98,6 @@ namespace ZenitUI
                 return;
             value_ = std::move(v);
 
-            // Snapshot: a callback may call unsubscribe, which modifies
-            // subscribers_ during iteration. Iterating a copy is the
-            // simplest safe approach; N is expected to be small.
             auto snapshot = subscribers_;
             for (const auto &entry : snapshot)
             {
@@ -154,9 +106,6 @@ namespace ZenitUI
             }
         }
 
-        // =====================================================================
-        //  Subscription
-        // =====================================================================
 
         Subscription onChanged(std::function<void(const T &)> cb,
                                bool fireImmediately = false)
@@ -179,14 +128,6 @@ namespace ZenitUI
             return sub;
         }
 
-        // Convenience: bind to a widget method, with lifetime safety.
-        //
-        // `Arg` is deduced, so the method can take the parameter by value
-        // (void(ProgressBar::*)(float)) or by const-ref
-        // (void(Layout::*)(const std::string&)) — both work without a
-        // wrapper lambda. Without the deduction, every call site would
-        // need a wrapper because C++ does not convert method pointer
-        // signatures implicitly.
         template <typename W, typename Arg>
         Subscription bindTo(std::weak_ptr<W> widget,
                             void (W::*method)(Arg),
@@ -201,9 +142,6 @@ namespace ZenitUI
                 fireImmediately);
         }
 
-        // Convenience overload for shared_ptr. Users typically hold a
-        // shared_ptr (from X::create()); forcing a weak_ptr cast at every
-        // call site would be noise.
         template <typename W, typename Arg>
         Subscription bindTo(std::shared_ptr<W> widget,
                             void (W::*method)(Arg),

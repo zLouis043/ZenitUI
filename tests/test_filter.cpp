@@ -54,7 +54,6 @@ TEST(Parser_filter, empty_value_leaves_empty_vector)
 {
     Theme t;
     loadStyleString(".card { filter: ; }", t);
-    // filters è set ma vuoto, o non set; in entrambi i casi il valore è []
     if (t.rules[0].style.filters.is_set)
         CHECK(t.rules[0].style.filters.value.empty());
     else
@@ -64,7 +63,7 @@ TEST(Parser_filter, empty_value_leaves_empty_vector)
 TEST(Filter_chaining, two_filters_ping_pong_through_targets)
 {
     Env env;
-    env.renderer.supportsEffects = true; // <-- attiva il path "layer"
+    env.renderer.supportsEffects = true;
 
     env.assets.registerEffect("fx1");
     env.assets.registerEffect("fx2");
@@ -85,9 +84,6 @@ TEST(Filter_chaining, two_filters_ping_pong_through_targets)
 
     env.frame(root);
 
-    // Subtree render: 1 pushTarget (into layerTarget_)
-    // Filter 0 (fx1, not last): 1 pushTarget (into currentWrite)
-    // Filter 1 (fx2, last): 0 pushTarget (writes to framebuffer)
     CHECK(env.renderer.pushTargetCount == 2);
 }
 
@@ -104,9 +100,6 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     node->size(Px(100), Px(100));
     node->getInlineBase().filters = std::vector<FilterRef>{{"fx", {}}};
 
-    // Translate the node so its pivot sits well inside the mock viewport.
-    // Without this, a 45-degree rotation would push the AABB past the
-    // origin and the region would be clipped, making the test fragile.
     node->getInlineBase().translateX = Px(200);
     node->getInlineBase().translateY = Px(200);
 
@@ -117,18 +110,11 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     env.frame(root);
     env.frame(root);
 
-    // No rotation: the region equals the node's rect.
     const int wNoRot = env.renderer.lastCreatedTargetW;
     const int hNoRot = env.renderer.lastCreatedTargetH;
     CHECK(wNoRot == 100);
     CHECK(hNoRot == 100);
 
-    // Rotate 45 degrees. The AABB of a 100x100 square rotated 45 degrees
-    // is 100 * sqrt(2) ~= 141.4. The target must grow to cover it.
-    //
-    // Disable the transition first: the default transitionTime is 0.15s,
-    // so without this the rotation would only be ~5 degrees after one
-    // frame, and ~10 after two, producing an AABB below the threshold.
     node->getInlineBase().transitionTime = 0.0f;
 
     env.renderer.lastCreatedTargetW = 0;
@@ -143,9 +129,6 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     CHECK(wRot >= 141);
     CHECK(hRot >= 141);
 
-    // Rotation also affects the AABB for arbitrary angles. Sanity check
-    // for 30 degrees: the AABB is w*cos(a) + h*sin(a) in each axis.
-    // For a 100x100 square: 100*cos(30) + 100*sin(30) ~= 86.6 + 50 = 136.6.
     env.renderer.lastCreatedTargetW = 0;
     env.renderer.lastCreatedTargetH = 0;
 
@@ -185,7 +168,6 @@ TEST(Filter_nested, falls_back_to_inline_when_nested_targets_unsupported)
 
     env.frame(root);
 
-    // Solo outer usa il layer target (1 pushTarget). Inner ripiega su inline.
     CHECK(env.renderer.pushTargetCount == 1);
     CHECK(env.renderer.activeTargetDepth == 0);
 }
@@ -216,8 +198,6 @@ TEST(Filter_nested, renders_nested_layer_when_supported)
 
     env.frame(root);
 
-    // Sia outer che inner usano il proprio layer target (2 pushTarget totali)
-    // e lo stack torna a profondità 0 a fine frame.
     CHECK(env.renderer.pushTargetCount == 2);
     CHECK(env.renderer.activeTargetDepth == 0);
 }

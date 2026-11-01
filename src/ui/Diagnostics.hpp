@@ -10,28 +10,24 @@
 
 namespace ZenitUI {
 
-// ---------------------------------------------------------------- SourceSpan
 
 struct SourceSpan {
     std::string file;
-    std::uint32_t line   = 0;  // 1-based
-    std::uint32_t column = 0;  // 1-based
-    std::uint32_t length = 0;  // 0 = unknown
+    std::uint32_t line   = 0;
+    std::uint32_t column = 0;
+    std::uint32_t length = 0;
 
     [[nodiscard]] bool valid() const noexcept { return line != 0 && column != 0; }
 };
 
-// ---------------------------------------------------------- Codes / severity
 
 enum class DiagnosticSeverity { Info, Warning, Error };
 
 enum class DiagnosticCode {
-    // parser
     UnterminatedString,
     UnbalancedBrace,
     UnexpectedToken,
 
-    // resolver / dichiarazioni
     UnknownProperty,
     InvalidValue,
     UnknownPseudo,
@@ -39,7 +35,6 @@ enum class DiagnosticCode {
     UnresolvedVariable,
     UnusedVariable,
 
-    // selettori (post-build)
     UnknownSelectorTag,
     SelectorMatchesNothing,
     DuplicateRule,
@@ -48,15 +43,14 @@ enum class DiagnosticCode {
 [[nodiscard]] const char* toString(DiagnosticSeverity s) noexcept;
 [[nodiscard]] const char* toString(DiagnosticCode c) noexcept;
 
-// ----------------------------------------------------------- Diagnostic
 
 struct ZStyleDiagnostic {
     DiagnosticCode     code{};
     DiagnosticSeverity severity{DiagnosticSeverity::Error};
     SourceSpan         span{};
     std::string        message;
-    std::string        hint;                    // "did you mean 'color'?"
-    std::optional<SourceSpan> related;          // es. definizione di --x
+    std::string        hint;
+    std::optional<SourceSpan> related;
 };
 
 [[nodiscard]] ZStyleDiagnostic
@@ -66,7 +60,6 @@ makeDiagnostic(DiagnosticCode code,
                std::string message,
                std::string hint = {});
 
-// ---------------------------------------------------------------- Sinks
 
 class DiagnosticSink {
 public:
@@ -103,7 +96,6 @@ private:
     std::vector<ZStyleDiagnostic> diagnostics_;
 };
 
-// ---------------------------------------------------------------- Helpers
 
 [[nodiscard]] std::size_t editDistance(std::string_view a, std::string_view b);
 
