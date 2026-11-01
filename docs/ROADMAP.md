@@ -1546,6 +1546,13 @@ applies, but UI use is fine.
 ### 5.19 `<Slot>`
 ✅ **Done.** The `Slot` tag inside a Prefab acts as an injection point for children passed during instantiation. Supports default fallback content.
 
+### 5.20 StyleParser Diagnostics
+✅ **Done.** The `.zstyle` parser now supports full diagnostic reporting via a `DiagnosticSink`. 
+- Validates properties, catching typos like `colr` and suggesting `color` via Levenshtein distance.
+- Catches unknown pseudo-classes (e.g., `:hovver`).
+- Detects duplicate `@keyframes`.
+- Introduces `strict` mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.
+
 ---
 
 ## Phase 6 — Internationalization
