@@ -226,7 +226,8 @@ namespace ZenitUI
 	X(Value, left, Value::autoSize())                       \
 	X(Value, right, Value::autoSize())                      \
 	X(Value, bottom, Value::autoSize())                     \
-	X(std::string, font, "")
+	X(std::string, font, "")                                \
+	X(bool, wrap, false)
 
 	inline bool isInheritedProp(std::string_view name)
 	{
@@ -598,7 +599,7 @@ namespace ZenitUI
 		return false;
 	}
 
-	using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
+	using PropValue = std::variant<bool, float, Value, Color, Spacing, Align, Justify,
 								   TransitionFunction, Overflow, Position, ZIndex,
 								   std::string, TextureRef, std::vector<FilterRef>,
 								   BoxShadow>;

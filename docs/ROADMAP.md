@@ -1541,17 +1541,29 @@ applies, but UI use is fine.
 - [x] Add `examples/12_bindable` — model → 3 widgets, `bindTo` lifetime safety demonstrated live (follow-up commit)
 
 ### 5.18 UIPrefab
+
 ✅ **Done.** `ZMarkup::registerPrefab` parses a ZMarkup string once. Instantiation clones the AST, merges root attributes (`.class`, `#id`, `@ref`, inline styles), and provides blazing fast reusable components.
 
 ### 5.19 `<Slot>`
+
 ✅ **Done.** The `Slot` tag inside a Prefab acts as an injection point for children passed during instantiation. Supports default fallback content.
 
 ### 5.20 StyleParser Diagnostics
-✅ **Done.** The `.zstyle` parser now supports full diagnostic reporting via a `DiagnosticSink`. 
+
+✅ **Done.** The `.zstyle` parser now supports full diagnostic reporting via a `DiagnosticSink`.
+
 - Validates properties, catching typos like `colr` and suggesting `color` via Levenshtein distance.
 - Catches unknown pseudo-classes (e.g., `:hovver`).
 - Detects duplicate `@keyframes`.
 - Introduces `strict` mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.
+
+### Passo 5.21: Wrap for HStack ✅ - Done.
+
+- **Object**: Support wrapping children within the `HStack` layout.
+- **Details**:
+  - `HStack` now supports the `wrap` boolean property, allowing children that exceed the available container width to flow seamlessly onto the next line.
+  - Fully supports `justify` alignment (`center`, `space-between`, `end`, etc.) on dynamically wrapped lines.
+  - Supports cross-axis alignment (`items-v` / `align-v`) relative to the specific height of each wrapped line.
 
 ---
 

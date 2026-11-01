@@ -832,6 +832,7 @@ namespace ZenitUI
 		void arrangeAbsolute(Layout *c, const ComputedStyle &cst, const Rect &in);
 		void arrangeVerticalFlow(const Rect &inner, float gapY);
 		void arrangeHorizontalFlow(const Rect &inner, float gapX);
+		void arrangeWrapFlow(const Rect &inner, float gapX, float gapY);
 		void arrangeStackFlow(const Rect &inner);
 
 		void translateSubtree(float dx, float dy);

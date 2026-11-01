@@ -94,6 +94,7 @@ left:  clamp(10px, 5vw, 50px);
 | `minWidth` / `minHeight` | `min-width` / `min-height` | Value | `auto` |
 | `maxWidth` / `maxHeight` | `max-width` / `max-height` | Value | `auto` |
 | `grow` / `shrink` | `grow` / `shrink` | float | `0` / `1` |
+| `wrap` | `true`, `false`, `wrap` | Allows `HStack` children to flow onto the next line if they exceed the container's width. |
 | `gap` | `gap` | Value | `0` |
 | `padding` | `padding` | Spacing | `0` |
 | `margin` | `margin` | Spacing | `0` |

@@ -1003,3 +1003,14 @@ roadmap §5.17. Will land as a separate commit.
 - Replaced rigid macro-driven property checks with a centralized `getKnownStyleProperties()` array automatically synced with `BUBBLE_STYLE_PROPS`.
 - `loadStyleString` and `loadStyleFile` now take an optional `DiagnosticSink*` and a `strict` boolean flag.
 - Added 6 unit tests in `test_diagnostics.cpp` covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.
+
+### Proposal 5 — Wrap for HStack
+
+**Shipped:** roadmap §5.21.
+
+**What landed:**
+- Added `wrap` boolean property to `Style` (`BUBBLE_STYLE_PROPS`) and `ComputedStyle`.
+- `StyleParser` now parses `wrap: true`, `wrap: 1`, and `wrap: wrap`.
+- `Measure.cpp` implements `arrangeWrapFlow` to handle multi-line breaking when horizontal children exceed the container's width.
+- Supports per-line `justify` (e.g., `Center`, `SpaceBetween`, `End`).
+- `contentSize` dynamically computes the exact bounding box encompassing all wrapped lines, accurately updating the parent height.
