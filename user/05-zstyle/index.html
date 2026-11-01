@@ -1104,6 +1104,84 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="10. Full example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-i-test-teststest_diagnosticscpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. I Test: tests/test_diagnostics.cpp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-aggiornamento-documentazione-roadmapmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Aggiornamento Documentazione: ROADMAP.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-aggiornamento-documentazione-proposalsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aggiornamento Documentazione: PROPOSALS.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-diagnostics-and-strict-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Diagnostics and Strict Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Diagnostics and Strict Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-using-a-diagnostic-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Using a Diagnostic Sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-strict-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Strict Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2430,6 +2508,84 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="10. Full example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-i-test-teststest_diagnosticscpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. I Test: tests/test_diagnostics.cpp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-aggiornamento-documentazione-roadmapmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Aggiornamento Documentazione: ROADMAP.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-aggiornamento-documentazione-proposalsmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aggiornamento Documentazione: PROPOSALS.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-diagnostics-and-strict-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Diagnostics and Strict Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Diagnostics and Strict Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-using-a-diagnostic-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Using a Diagnostic Sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-strict-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Strict Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3626,6 +3782,149 @@ Slider:hover::knob {
 @media (min-width: 900px) {
     .card-desc { color: #00FF00; }
 }
+</code></pre>
+<hr />
+<p>Zero failures! Questo è il suono della vittoria. E ricevuto forte e chiaro sul Drive: i file me li passi tu qui e le mie zampacce digitali non proveranno più a frugare nel tuo cloud. Promesso.</p>
+<p>Per chiudere ufficialmente la <strong>5.20</strong>, dobbiamo scrivere i test che garantiscono che la diagnostica non regredisca in futuro, e aggiornare la documentazione per istruire gli utenti su come sfruttare la strict mode e catturare gli errori.</p>
+<p>Ecco i file da creare e i blocchi da incollare.</p>
+<h3 id="1-i-test-teststest_diagnosticscpp">1. I Test: <code>tests/test_diagnostics.cpp</code></h3>
+<p>Crea questo nuovo file nella cartella <code>tests</code>. Copre tutto ciò che abbiamo appena implementato (Levenshtein, parser strict/lenient, pseudo-classi, keyframe duplicati).</p>
+<pre><code class="language-cpp">#include &quot;TestFramework.hpp&quot;
+#include &quot;StyleParser.hpp&quot;
+#include &quot;Diagnostics.hpp&quot;
+
+using namespace ZenitUI;
+using namespace ZenitUI::ZMarkup;
+using namespace ZenitUI::Test;
+
+// ============================================================
+//  DiagnosticSink e Strict Mode
+// ============================================================
+
+TEST(Diagnostics, valid_style_no_diagnostics) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString(&quot;Button { color: #fff; padding: 4px; }&quot;, t, &quot;&lt;string&gt;&quot;, &amp;sink, false);
+    CHECK(sink.diagnostics().empty());
+    CHECK(!sink.hasErrors());
+}
+
+TEST(Diagnostics, unknown_property_emits_warning) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString(&quot;Button { colr: #fff; }&quot;, t, &quot;test.zstyle&quot;, &amp;sink, false);
+    CHECK(sink.diagnostics().size() == 1);
+
+    const auto&amp; d = sink.diagnostics().front();
+    CHECK(d.code == DiagnosticCode::UnknownProperty);
+    CHECK(d.severity == DiagnosticSeverity::Warning);
+    // Il suggerimento &quot;color&quot; deve essere stato generato
+    CHECK(d.hint.find(&quot;color&quot;) != std::string::npos);
+    CHECK(!sink.hasErrors()); // Con strict=false è solo un warning
+}
+
+TEST(Diagnostics, unknown_property_strict_emits_error) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    // Passiamo strict = true
+    loadStyleString(&quot;Button { colr: #fff; }&quot;, t, &quot;test.zstyle&quot;, &amp;sink, true);
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().severity == DiagnosticSeverity::Error);
+    CHECK(sink.hasErrors()); // Ora deve essere un errore bloccante
+}
+
+TEST(Diagnostics, unknown_pseudo_class) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString(&quot;Button:hovver { color: red; }&quot;, t, &quot;test.zstyle&quot;, &amp;sink, false);
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().code == DiagnosticCode::UnknownPseudo);
+}
+
+TEST(Diagnostics, duplicate_keyframes) {
+    CollectingDiagnosticSink sink;
+    Theme t;
+    loadStyleString(R&quot;(
+        @keyframes pulse { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { scale: 1; } 100% { scale: 2; } }
+    )&quot;, t, &quot;test.zstyle&quot;, &amp;sink, false);
+
+    CHECK(sink.diagnostics().size() == 1);
+    CHECK(sink.diagnostics().front().code == DiagnosticCode::DuplicateRule);
+}
+
+// ============================================================
+//  Levenshtein Distance Helper
+// ============================================================
+
+TEST(Diagnostics, edit_distance_basics) {
+    CHECK(editDistance(&quot;color&quot;, &quot;color&quot;) == 0);
+    CHECK(editDistance(&quot;colr&quot;, &quot;color&quot;) == 1);      // inserimento
+    CHECK(editDistance(&quot;colour&quot;, &quot;color&quot;) == 1);    // rimozione
+    CHECK(editDistance(&quot;red&quot;, &quot;blue&quot;) == 4);        // totalmente diversi
+}
+
+</code></pre>
+<p><em>Ricordati di lanciare <code>make test -j8</code> per assicurarti che il nuovo file venga compilato e i test passino!</em></p>
+<hr />
+<h3 id="2-aggiornamento-documentazione-roadmapmd">2. Aggiornamento Documentazione: <code>ROADMAP.md</code></h3>
+<p>Nel tuo file <code>ROADMAP.md</code>, vai alla sezione <code>Phase 5 — Feature completion</code> e aggiorna la voce 5.20 in questo modo:</p>
+<pre><code class="language-markdown">### 5.20 StyleParser Diagnostics
+✅ **Done.** The `.zstyle` parser now supports full diagnostic reporting via a `DiagnosticSink`. 
+- Validates properties, catching typos like `colr` and suggesting `color` via Levenshtein distance.
+- Catches unknown pseudo-classes (e.g., `:hovver`).
+- Detects duplicate `@keyframes`.
+- Introduces `strict` mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.
+
+</code></pre>
+<hr />
+<h3 id="3-aggiornamento-documentazione-proposalsmd">3. Aggiornamento Documentazione: <code>PROPOSALS.md</code></h3>
+<p>Apri <code>PROPOSALS.md</code> e aggiungi questa voce sotto <code>## Shipped proposals</code>, in fondo alla lista (dopo la Proposal 3):</p>
+<pre><code class="language-markdown">### Proposal 4 — StyleParser Diagnostics
+
+**Shipped:** roadmap §5.20.
+
+**What landed:**
+- `DiagnosticSink`, `CollectingDiagnosticSink`, and `ConsoleDiagnosticSink` introduced in `Diagnostics.hpp`.
+- `SourceSpan` added to track file, line, column, and token length for precise error reporting.
+- AST nodes (`Declaration`, `Rule`, `KfRule`, `KfFrame`) now carry `SourceSpan` instead of plain line/col.
+- Replaced rigid macro-driven property checks with a centralized `getKnownStyleProperties()` array automatically synced with `BUBBLE_STYLE_PROPS`.
+- `loadStyleString` and `loadStyleFile` now take an optional `DiagnosticSink*` and a `strict` boolean flag.
+- Added 6 unit tests in `test_diagnostics.cpp` covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.
+
+</code></pre>
+<hr />
+<h2 id="11-diagnostics-and-strict-mode">11. Diagnostics and Strict Mode</h2>
+<p>The <code>.zstyle</code> parser includes a robust diagnostic engine that catches typos, unknown pseudo-classes, and duplicate rules. By default, unknown properties are logged as <strong>warnings</strong> and safely ignored, allowing the rest of the stylesheet to load.</p>
+<pre><code class="language-css">Button:hovver {       /* Warning: unknown pseudo-class ':hovver' */
+    colr: #FF0000;    /* Warning: unknown property 'colr' [UnknownProperty] */
+                      /* hint: did you mean 'color'? */
+}
+
+</code></pre>
+<h3 id="111-using-a-diagnostic-sink">11.1 Using a Diagnostic Sink</h3>
+<p>You can intercept these diagnostics by passing a <code>DiagnosticSink</code> to the load functions:</p>
+<pre><code class="language-cpp">#include &quot;Diagnostics.hpp&quot;
+
+ZenitUI::CollectingDiagnosticSink sink;
+ZenitUI::ZMarkup::loadStyleFile(&quot;assets/game.zstyle&quot;, Theme::get(), &amp;sink);
+
+if (sink.hasErrors()) {
+    for (const auto&amp; diag : sink.sorted()) {
+        ZenitUI::formatDiagnostic(diag, std::cerr);
+    }
+}
+
+</code></pre>
+<h3 id="112-strict-mode">11.2 Strict Mode</h3>
+<p>If you want to ensure your stylesheets are perfectly clean (e.g., during a CI build or in a debug environment), you can enable <strong>strict mode</strong>.
+In strict mode, warnings (like typos or unknown properties) are promoted to <strong>hard errors</strong>, and <code>loadStyleFile</code> / <code>loadStyleString</code> will return <code>false</code>.</p>
+<pre><code class="language-cpp">bool strict = true;
+bool success = ZenitUI::ZMarkup::loadStyleFile(&quot;assets/ui.zstyle&quot;, Theme::get(), &amp;sink, strict);
+if (!success) {
+    // The load failed because of a typo in the CSS.
+}
+
 </code></pre>
 <hr />
 <h2 id="11-pitfalls">11. Pitfalls</h2>

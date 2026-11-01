@@ -2146,6 +2146,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#520-styleparser-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.20 StyleParser Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3752,6 +3763,12 @@ applies, but UI use is fine.</p>
 <p>✅ <strong>Done.</strong> <code>ZMarkup::registerPrefab</code> parses a ZMarkup string once. Instantiation clones the AST, merges root attributes (<code>.class</code>, <code>#id</code>, <code>@ref</code>, inline styles), and provides blazing fast reusable components.</p>
 <h3 id="519-slot">5.19 <code>&lt;Slot&gt;</code></h3>
 <p>✅ <strong>Done.</strong> The <code>Slot</code> tag inside a Prefab acts as an injection point for children passed during instantiation. Supports default fallback content.</p>
+<h3 id="520-styleparser-diagnostics">5.20 StyleParser Diagnostics</h3>
+<p>✅ <strong>Done.</strong> The <code>.zstyle</code> parser now supports full diagnostic reporting via a <code>DiagnosticSink</code>. 
+- Validates properties, catching typos like <code>colr</code> and suggesting <code>color</code> via Levenshtein distance.
+- Catches unknown pseudo-classes (e.g., <code>:hovver</code>).
+- Detects duplicate <code>@keyframes</code>.
+- Introduces <code>strict</code> mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.</p>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>

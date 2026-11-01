@@ -1904,6 +1904,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-4-styleparser-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 4 — StyleParser Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3012,6 +3023,15 @@ roadmap §5.17. Will land as a separate commit.</p>
 <li>New example <code>13_prefabs</code> demonstrating a dynamic Settings UI built entirely with reusable components.</li>
 <li>Comprehensive updates to <code>user/04-zmarkup.md</code> (§6), <code>CHEATSHEET.md</code>, <code>GLOSSARY.md</code>, and <code>ROADMAP.md</code>.</li>
 </ul>
+<h3 id="proposal-4-styleparser-diagnostics">Proposal 4 — StyleParser Diagnostics</h3>
+<p><strong>Shipped:</strong> roadmap §5.20.</p>
+<p><strong>What landed:</strong>
+- <code>DiagnosticSink</code>, <code>CollectingDiagnosticSink</code>, and <code>ConsoleDiagnosticSink</code> introduced in <code>Diagnostics.hpp</code>.
+- <code>SourceSpan</code> added to track file, line, column, and token length for precise error reporting.
+- AST nodes (<code>Declaration</code>, <code>Rule</code>, <code>KfRule</code>, <code>KfFrame</code>) now carry <code>SourceSpan</code> instead of plain line/col.
+- Replaced rigid macro-driven property checks with a centralized <code>getKnownStyleProperties()</code> array automatically synced with <code>BUBBLE_STYLE_PROPS</code>.
+- <code>loadStyleString</code> and <code>loadStyleFile</code> now take an optional <code>DiagnosticSink*</code> and a <code>strict</code> boolean flag.
+- Added 6 unit tests in <code>test_diagnostics.cpp</code> covering Levenshtein suggestions, strict mode, pseudo-class validation, and duplicate keyframe detection.</p>
 
 
 
