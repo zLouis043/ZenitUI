@@ -101,6 +101,7 @@ namespace ZenitUI
 				if (c == className)
 					return;
 			styleClasses.push_back(className);
+			invalidateStyleCacheRecursive();
 			internal_.pendingTransition = 1;
 		}
 
@@ -112,6 +113,7 @@ namespace ZenitUI
 			if (it == styleClasses.end())
 				return;
 			styleClasses.erase(it, styleClasses.end());
+			invalidateStyleCacheRecursive();
 			internal_.pendingTransition = 1;
 		}
 
@@ -134,6 +136,7 @@ namespace ZenitUI
 				return;
 			styleClasses.clear();
 			internal_.pendingTransition = 1;
+			invalidateStyleCacheRecursive();
 		}
 
 		void setId(const std::string &node_id)
@@ -146,7 +149,7 @@ namespace ZenitUI
 			ref = r;
 		}
 
-		void setStyleTag(const std::string &t) { styleTag = t; }
+		void setStyleTag(const std::string &t) { styleTag = t; invalidateStyleCacheRecursive(); }
 		const std::string &getStyleTag() const { return styleTag; }
 		const std::vector<std::string> &getStyleClasses() const { return styleClasses; }
 
@@ -529,6 +532,14 @@ namespace ZenitUI
 				c->markInheritanceDirty();
 		}
 
+		void invalidateStyleCacheRecursive()
+		{
+			style_.invalidateCache();
+			internal_.pendingTransition = 1;
+			for (auto &c : children)
+				c->invalidateStyleCacheRecursive();
+		}
+
 		Style partStyle(const std::string &partName)
 		{
 			return style_.partFor(*this, partName);
@@ -639,7 +650,6 @@ namespace ZenitUI
 		}
 
 		virtual void onDescendantFocused(Layout * /*descendant*/) {}
-
 
 		void arrangeInto(Rect space);
 

@@ -7,9 +7,9 @@ using namespace ZenitUI;
 
 inline void InitializeGameTheme() {
     if (!ZMarkup::loadStyleFile("./assets/game.zstyle")) {
-        std::fprintf(stderr, "[GameTheme] Impossibile caricare assets/game.zstyle\n");
+        std::fprintf(stderr, "[GameTheme] Failed to load assets/game.zstyle\n");
     }
     if (!ZMarkup::loadStyleFile("./assets/settings.zstyle")) {
-        std::fprintf(stderr, "[Settings] Impossibile caricare assets/settings.zstyle\n");
+        std::fprintf(stderr, "[Settings] Failed to load assets/settings.zstyle\n");
     }
 }

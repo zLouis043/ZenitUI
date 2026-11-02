@@ -30,7 +30,7 @@ protected:
         auto panel = VStack()->cls("settings-panel");
         panel->setInteractive(true);
         panel->setBlocksRaycast(true);
-        panel->onClick = []() { /* consuma il click */ };
+        panel->onClick = []() { /* consume click */ };
 
         auto header = HStack()->cls("settings-header");
         header->addChild(Label("Impostazioni")->cls("settings-title"));
@@ -63,7 +63,7 @@ protected:
                            {
             close(); })
                            ->cls("btn-primary");
-        saveBtn->setEnabled(false); // finché non dirty
+        saveBtn->setEnabled(false);
 
         footer->addChild(resetBtn);
         footer->addChild(std::make_shared<Layout>()->cls("spacer-grow"));
@@ -158,7 +158,7 @@ private:
         if (auto fps = ui.find<Dropdown>("fps-dropdown"))
         {
             auto label = ui.find<Text>("fps-value");
-            fps->setSelected(1); // default: 60
+            fps->setSelected(1);
 
             if (label)
                 label->setText("60 FPS");
@@ -207,7 +207,7 @@ private:
         if (auto diff = ui.find<Dropdown>("diff-dropdown"))
         {
             auto label = ui.find<Text>("diff-value");
-            diff->setSelected(1); // default: Normale
+            diff->setSelected(1);
             if (label)
                 label->setText("Normale");
 

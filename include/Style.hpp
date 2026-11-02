@@ -451,11 +451,18 @@ namespace ZenitUI
 			return {b.transitionTime, b.ease};
 		};
 
-#define X(T, name, def)                                                             \
-	{                                                                               \
-		auto [dur, ease] = timingFor(#name);                                        \
-		float tp = (dur > 0.0f) ? std::clamp(realElapsed / dur, 0.0f, 1.0f) : 1.0f; \
-		r.name = lerpProp(a.name, b.name, getRatio(tp, ease));                      \
+#define X(T, name, def)                                                                 \
+	{                                                                                   \
+		if (a.name == b.name)                                                           \
+		{                                                                               \
+			r.name = a.name;                                                            \
+		}                                                                               \
+		else                                                                            \
+		{                                                                               \
+			auto [dur, ease] = timingFor(#name);                                        \
+			float tp = (dur > 0.0f) ? std::clamp(realElapsed / dur, 0.0f, 1.0f) : 1.0f; \
+			r.name = lerpProp(a.name, b.name, getRatio(tp, ease));                      \
+		}                                                                               \
 	}
 		BUBBLE_STYLE_PROPS(X)
 #undef X
