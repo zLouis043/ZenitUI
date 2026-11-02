@@ -76,6 +76,7 @@ namespace ZenitUI
 		{
 			internal_.styleInitialized = 1;
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
+			style_.transitionDirtyMask_ = 0; 
 			internal_.pendingTransition = 0;
 			anim_.syncCss(*this);
 		}

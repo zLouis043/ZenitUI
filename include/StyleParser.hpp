@@ -10,11 +10,14 @@
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <charconv>
+#include <cctype>
+#include <algorithm>
 
 namespace ZenitUI::ZMarkup
 {
 
-    inline std::string trim(std::string s)
+    inline std::string_view trim(std::string_view s)
     {
         size_t a = 0, b = s.size();
         while (a < b && std::isspace((unsigned char)s[a]))
@@ -26,6 +29,11 @@ namespace ZenitUI::ZMarkup
 
     inline std::string stripComments(std::string_view src)
     {
+        if (src.find("//") == std::string_view::npos &&
+            src.find("/*") == std::string_view::npos)
+        {
+            return std::string(src);
+        }
         std::string out;
         out.reserve(src.size());
         size_t i = 0;
@@ -88,74 +96,82 @@ namespace ZenitUI::ZMarkup
         return out;
     }
 
-    inline std::vector<std::string> splitBy(std::string_view s, char sep)
+    inline std::vector<std::string_view> splitBy(std::string_view s, char sep)
     {
-        std::vector<std::string> out;
-        std::string cur;
-        for (char c : s)
+        std::vector<std::string_view> out;
+        size_t start = 0;
+        for (size_t i = 0; i < s.size(); ++i)
         {
-            if (c == sep)
+            if (s[i] == sep)
             {
-                out.push_back(cur);
-                cur.clear();
+                out.push_back(s.substr(start, i - start));
+                start = i + 1;
             }
-            else
-                cur.push_back(c);
         }
-        out.push_back(cur);
+        out.push_back(s.substr(start));
         return out;
     }
 
-    inline std::vector<std::string> splitWs(std::string_view s)
+    inline std::vector<std::string_view> splitWs(std::string_view s)
     {
-        std::vector<std::string> out;
-        std::string cur;
-        for (char c : s)
+        std::vector<std::string_view> out;
+        size_t start = 0;
+        for (size_t i = 0; i < s.size(); ++i)
         {
-            if (std::isspace((unsigned char)c))
+            if (std::isspace((unsigned char)s[i]))
             {
-                if (!cur.empty())
+                if (i > start)
                 {
-                    out.push_back(cur);
-                    cur.clear();
+                    out.push_back(s.substr(start, i - start));
                 }
+                start = i + 1;
             }
-            else
-                cur.push_back(c);
         }
-        if (!cur.empty())
-            out.push_back(cur);
+        if (start < s.size())
+        {
+            out.push_back(s.substr(start));
+        }
         return out;
     }
 
     inline float parseDurationSec(std::string_view s)
     {
+        auto parseFloat = [](std::string_view sv) -> float
+        {
+            float value = 0.0f;
+            auto [ptr, ec] = std::from_chars(sv.data(), sv.data() + sv.size(), value);
+            if (ec == std::errc())
+                return value;
+            std::string tmp(sv);
+            return std::strtof(tmp.c_str(), nullptr);
+        };
         if (s.size() >= 2 && s.substr(s.size() - 2) == "ms")
-            return std::stof(std::string(s.substr(0, s.size() - 2))) / 1000.0f;
+            return parseFloat(s.substr(0, s.size() - 2)) / 1000.0f;
         if (!s.empty() && s.back() == 's')
-            return std::stof(std::string(s.substr(0, s.size() - 1)));
-        return std::stof(std::string(s));
+            return parseFloat(s.substr(0, s.size() - 1));
+        return parseFloat(s);
     }
 
-    inline void applyStyleDeclaration(Style &st, const std::string &keyRaw, const std::string &valRaw, const SourceSpan &loc, DiagnosticSink *sink = nullptr, bool strict = false)
+    inline void applyStyleDeclaration(Style &st, std::string_view keyRaw, std::string_view valRaw, const SourceSpan &loc, DiagnosticSink *sink = nullptr, bool strict = false)
     {
-        std::string k = trim(keyRaw);
-        std::string v = trim(valRaw);
+        std::string_view k = trim(keyRaw);
+        std::string_view v = trim(valRaw);
 
         if (k.rfind("--", 0) == 0)
         {
-            st.customProps[k] = v;
+            st.customProps[std::string(k)] = std::string(v);
             return;
         }
 
-        if (v.find("var(") != std::string::npos)
+        if (v.find("var(") != std::string_view::npos)
         {
-            st.unresolvedProps[k] = v;
-            clearStyleProp(st, k);
+            st.unresolvedProps[std::string(k)] = std::string(v);
+            clearStyleProp(st, std::string(k));
             return;
         }
 
-        if (k == "wrap") {
+        if (k == "wrap")
+        {
             st.wrap = (v == "true" || v == "1" || v == "wrap");
             return;
         }
@@ -331,13 +347,12 @@ namespace ZenitUI::ZMarkup
                         }
                         continue;
                     }
-                    try
+                    int n = 0;
+                    auto [ptr, ec] = std::from_chars(t.data(), t.data() + t.size(), n);
+                    if (ec == std::errc())
                     {
-                        a.iterations = std::stoi(t);
+                        a.iterations = n;
                         continue;
-                    }
-                    catch (...)
-                    {
                     }
                 }
                 anims.push_back(std::move(a));
@@ -439,17 +454,14 @@ namespace ZenitUI::ZMarkup
             }
             int n = 1;
             if (v == "infinite")
+            {
                 n = -1;
+            }
             else
             {
-                try
-                {
-                    n = std::stoi(v);
-                }
-                catch (...)
-                {
+                auto [ptr, ec] = std::from_chars(v.data(), v.data() + v.size(), n);
+                if (ec != std::errc())
                     return;
-                }
             }
             for (auto &a : st.animations.value)
                 a.iterations = n;
@@ -499,7 +511,7 @@ namespace ZenitUI::ZMarkup
         if (k == "filter")
         {
             std::vector<FilterRef> refs;
-            std::string cur = v;
+            std::string cur(v);
             size_t pos = 0;
             while (pos < cur.size())
             {
@@ -516,7 +528,7 @@ namespace ZenitUI::ZMarkup
                         break;
                     comma++;
                 }
-                std::string part = trim(cur.substr(pos, comma - pos));
+                std::string part = std::string(trim(std::string_view(cur).substr(pos, comma - pos)));
                 pos = (comma < cur.size()) ? comma + 1 : cur.size();
                 if (part.empty())
                     continue;
@@ -525,12 +537,12 @@ namespace ZenitUI::ZMarkup
                 size_t lparen = part.find('(');
                 if (lparen == std::string::npos)
                 {
-                    ref.name = trim(part);
+                    ref.name = std::string(trim(part));
                 }
                 else
                 {
                     size_t rparen = part.find(')', lparen);
-                    ref.name = trim(part.substr(0, lparen));
+                    ref.name = std::string(trim(std::string_view(part).substr(0, lparen)));
                     std::string args = (rparen == std::string::npos)
                                            ? part.substr(lparen + 1)
                                            : part.substr(lparen + 1, rparen - lparen - 1);
@@ -545,7 +557,7 @@ namespace ZenitUI::ZMarkup
                             argDepth--;
                         if (c == ',' && argDepth == 0)
                         {
-                            ref.args.push_back(trim(curArg));
+                            ref.args.push_back(std::string(trim(curArg)));
                             curArg.clear();
                         }
                         else
@@ -554,7 +566,7 @@ namespace ZenitUI::ZMarkup
                         }
                     }
                     if (!curArg.empty())
-                        ref.args.push_back(trim(curArg));
+                        ref.args.push_back(std::string(trim(curArg)));
                 }
                 refs.push_back(std::move(ref));
             }
@@ -591,7 +603,7 @@ namespace ZenitUI::ZMarkup
             return;
         }
 
-        auto parseOverflowValue = [&](const std::string &val, Overflow &out) -> bool
+        auto parseOverflowValue = [](std::string_view val, Overflow &out) -> bool
         {
             if (val == "visible")
             {
@@ -628,12 +640,12 @@ namespace ZenitUI::ZMarkup
             {
                 if (sink)
                 {
-                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow value not recognized: '" + v + "'"));
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow value not recognized: '" + std::string(v) + "'"));
                 }
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "overflow value not recognized: '" + v + "'. Ignored.");
+                            "overflow value not recognized: '" + std::string(v) + "'. Ignored.");
                 }
             }
             return;
@@ -647,12 +659,12 @@ namespace ZenitUI::ZMarkup
             {
                 if (sink)
                 {
-                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-x value not recognized: '" + v + "'"));
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-x value not recognized: '" + std::string(v) + "'"));
                 }
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "overflow-x value not recognized: '" + v + "'. Ignored.");
+                            "overflow-x value not recognized: '" + std::string(v) + "'. Ignored.");
                 }
             }
             return;
@@ -666,12 +678,12 @@ namespace ZenitUI::ZMarkup
             {
                 if (sink)
                 {
-                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-y value not recognized: '" + v + "'"));
+                    sink->report(makeDiagnostic(DiagnosticCode::InvalidValue, DiagnosticSeverity::Warning, loc, "overflow-y value not recognized: '" + std::string(v) + "'"));
                 }
                 else
                 {
                     logWarn("StyleParser", loc.file, loc.line, loc.column,
-                            "overflow-y value not recognized: '" + v + "'. Ignored.");
+                            "overflow-y value not recognized: '" + std::string(v) + "'. Ignored.");
                 }
             }
             return;
@@ -686,7 +698,7 @@ namespace ZenitUI::ZMarkup
                     DiagnosticCode::UnknownProperty,
                     sev,
                     loc,
-                    "unknown property '" + k + "'",
+                    "unknown property '" + std::string(k) + "'",
                     [&]
                     {
                         auto sugg = suggestSimilar(k, getKnownStyleProperties());
@@ -708,7 +720,7 @@ namespace ZenitUI::ZMarkup
             else
             {
                 logWarn("StyleParser", loc.file, loc.line, loc.column,
-                        "unknown property '" + k + "'. Ignored.");
+                        "unknown property '" + std::string(k) + "'. Ignored.");
             }
         }
     }
@@ -892,8 +904,8 @@ namespace ZenitUI::ZMarkup
                     val.push_back(get());
                 match(';');
 
-                std::string p = trim(prop);
-                std::string v = trim(val);
+                std::string p = std::string(trim(prop));
+                std::string v = std::string(trim(val));
 
                 if (p.rfind("--", 0) == 0)
                 {
@@ -931,7 +943,7 @@ namespace ZenitUI::ZMarkup
                 std::string ts;
                 while (!atEnd() && peek() != '{')
                     ts.push_back(get());
-                ts = trim(ts);
+                ts = std::string(trim(ts));
                 skipWs();
                 if (!match('{'))
                     break;
@@ -981,7 +993,7 @@ namespace ZenitUI::ZMarkup
             std::string cond;
             while (!atEnd() && peek() != '{')
                 cond.push_back(get());
-            cond = trim(cond);
+            cond = std::string(trim(cond));
             if (!match('{'))
                 return;
 
@@ -1019,7 +1031,7 @@ namespace ZenitUI::ZMarkup
                 else if (depth == 0 && i + 5 <= s.size() &&
                          s.compare(i, 5, " and ") == 0)
                 {
-                    parts.push_back(trim(cur));
+                    parts.push_back(std::string(trim(cur)));
                     cur.clear();
                     i += 4;
                 }
@@ -1027,7 +1039,7 @@ namespace ZenitUI::ZMarkup
                     cur.push_back(c);
             }
             if (!cur.empty())
-                parts.push_back(trim(cur));
+                parts.push_back(std::string(trim(cur)));
 
             for (auto &p : parts)
             {
@@ -1036,8 +1048,15 @@ namespace ZenitUI::ZMarkup
                     inner = inner.substr(1, inner.size() - 2);
 
                 size_t colon = inner.find(':');
-                std::string key = trim(colon == std::string::npos ? inner : inner.substr(0, colon));
-                std::string val = colon == std::string::npos ? "" : trim(inner.substr(colon + 1));
+                std::string_view keySrc = (colon == std::string::npos)
+                                              ? std::string_view(inner)
+                                              : std::string_view(inner).substr(0, colon);
+                std::string key(trim(keySrc));
+                std::string val;
+                if (colon != std::string::npos)
+                {
+                    val = trim(std::string_view(inner).substr(colon + 1));
+                }
 
                 MediaCondition c;
                 if (key == "min-width")
@@ -1108,7 +1127,7 @@ namespace ZenitUI::ZMarkup
             std::string selector;
             while (!atEnd() && peek() != '{')
                 selector.push_back(get());
-            selector = trim(selector);
+            selector = std::string(trim(selector));
             skipWs();
             if (!match('{'))
                 return;
@@ -1150,18 +1169,18 @@ namespace ZenitUI::ZMarkup
                 {
                     if (c == ',')
                     {
-                        selectors.push_back(trim(cur));
+                        selectors.push_back(std::string(trim(cur)));
                         cur.clear();
                     }
                     else
                         cur.push_back(c);
                 }
-                selectors.push_back(trim(cur));
+                selectors.push_back(std::string(trim(cur)));
             }
 
             for (auto &rawSel : selectors)
             {
-                std::string sel = trim(rawSel);
+                std::string sel = std::string(trim(rawSel));
                 if (sel.empty())
                     continue;
 
@@ -1175,7 +1194,7 @@ namespace ZenitUI::ZMarkup
                 if (dcolon != std::string::npos)
                 {
                     chainPart = sel.substr(0, dcolon);
-                    rule.part = trim(sel.substr(dcolon + 2));
+                    rule.part = std::string(trim(std::string_view(sel).substr(dcolon + 2)));
                 }
 
                 std::vector<std::string> tokens;

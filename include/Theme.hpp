@@ -85,6 +85,8 @@ namespace ZenitUI
 		std::unordered_map<std::string, std::vector<size_t>> rulesByTag;
 		std::vector<size_t> rulesNoTag;
 
+		 uint32_t version{0};
+
 		static Theme &get()
 		{
 			static Theme instance;
@@ -106,11 +108,13 @@ namespace ZenitUI
 			}
 
 			rules.push_back(std::move(r));
+			++version;
 		}
 
 		void addKeyframes(const KeyframeAnimation &anim)
 		{
 			keyframes[anim.name] = anim;
+			++version;
 		}
 
 		void clear()
@@ -120,6 +124,7 @@ namespace ZenitUI
 			root = Style{};
 			rulesByTag.clear();
 			rulesNoTag.clear();
+			++version;
 		}
 	};
 }

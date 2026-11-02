@@ -24,7 +24,6 @@ int main(void)
 
     backendAssets.loadFont("calibri", "./assets/calibrib.ttf", 64);
 
-    // Stili CSS essenziali per i widget! (Senza questi, il Toggle è 0x0 invisibile)
     ZMarkup::loadStyleString(R"(
         Toggle {
             width: 50px;

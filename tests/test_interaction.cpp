@@ -816,3 +816,41 @@ TEST(Interaction_tooltip, clamps_to_viewport_and_flips_below) {
     
     CHECK(tip->getRect().y >= 56.0f);
 }
+
+TEST(Interaction_subtree, class_change_propagates_to_children)
+{
+    Env env;
+    Theme::get().clear();
+
+    ZMarkup::loadStyleString(R"(
+        Toggle { width: 100px; height: 50px; }
+        .toggle-knob {
+            position: absolute;
+            width: 30px; height: 30px;
+            top: 10px; left: 10px;
+        }
+        Toggle.active .toggle-knob { left: 60px; }
+    )");
+
+    auto ui = ZMarkup::build(R"(Toggle#t)");
+    auto toggle = ui.find("t");
+    auto knob   = toggle->children[0];
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(toggle);
+
+    env.frame(root);
+    CHECK_NEAR(knob->getRect().x, 10.0f, 1.0f);
+    
+    toggle->addClass("active");
+
+    env.frame(root);
+    env.frame(root);
+    CHECK(knob->getRect().x > 10.5f);
+    CHECK(knob->getRect().x < 60.0f);
+
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+    CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
+}

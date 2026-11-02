@@ -1,13 +1,88 @@
 #include "Layout.hpp"
 #include "Debug.hpp"
 
+#define ZENIT_COUNT_FIELD(T, name, def) +1
+static_assert(0 BUBBLE_STYLE_PROPS(ZENIT_COUNT_FIELD) <= 64,
+			  "transitionDirtyMask_ is a uint64_t: add a second field"
+			  "or upgrade to unsigned __int128");
+#undef ZENIT_COUNT_FIELD
+
 namespace ZenitUI
 {
-
 
 	ComputedStyle StyleResolver::resolveFor(Layout &node)
 	{
 		auto &theme = Theme::get();
+
+		const auto parent = node.getParent();
+		const bool cacheable =
+			inlineBase.customProps.empty() &&
+			inlineBase.unresolvedProps.empty() &&
+			(!parent || parent->getStyle().customProps.empty());
+
+		uint64_t key = 0;
+		if (cacheable)
+		{
+			auto mix = [&key](uint64_t v)
+			{
+				key ^= v;
+				key *= 1099511628211ULL;
+			};
+
+			mix(theme.version);
+			mix((uint64_t)UIContext::get().viewportGeneration);
+			mix((uint64_t)reinterpret_cast<uintptr_t>(&node));
+			mix(node.getEnabled() ? 1u : 0u);
+			mix((uint32_t)node.isHoveredState());
+			mix((uint32_t)node.isPressedState());
+			mix((uint32_t)node.isFocusedState());
+			mix((uint32_t)node.isCheckedState());
+
+			for (char c : node.getStyleTag())
+				mix((uint64_t)(unsigned char)c);
+
+			for (auto &c : node.getStyleClasses())
+			{
+				for (char ch : c)
+					mix((uint64_t)(unsigned char)ch);
+				mix(0xFF);
+			}
+
+			for (auto p = node.getParent(); p; p = p->getParent())
+			{
+				mix(p->getEnabled() ? 1u : 0u);
+				mix((uint32_t)p->isHoveredState());
+				mix((uint32_t)p->isPressedState());
+				mix((uint32_t)p->isFocusedState());
+				mix((uint32_t)p->isCheckedState());
+			}
+
+			if (cachedValid_ && cachedKey_ == key)
+			{
+				ComputedStyle result = cachedThemeStyle_;
+
+				if (!node.getEnabled())
+					overlayComputed(result, inlineDisabled);
+				else
+				{
+					if (node.isHoveredState() || node.isPressedState())
+						overlayComputed(result, inlineHover);
+					if (node.isPressedState())
+						overlayComputed(result, inlinePressed);
+					if (node.isFocusedState())
+						overlayComputed(result, inlineFocus);
+					if (node.isCheckedState())
+						overlayComputed(result, inlineChecked);
+				}
+				overlayComputed(result, inlineBase);
+				if (inlineBase.transitions.is_set)
+					result.transitions = inlineBase.transitions.value;
+				if (inlineBase.animations.is_set)
+					result.animations = inlineBase.animations.value;
+
+				return result;
+			}
+		}
 
 		struct Match
 		{
@@ -49,7 +124,6 @@ namespace ZenitUI
 		finalStyle.overlay(inlineDefaults);
 		for (const auto &m : matches)
 			finalStyle.overlay(m.rule->style);
-		finalStyle.overlay(inlineBase);
 
 		std::unordered_map<std::string, std::string> allCustomProps;
 		if (auto p = node.getParent())
@@ -67,26 +141,43 @@ namespace ZenitUI
 			finalStyle.unresolvedProps.clear();
 		}
 
-		if (!node.getEnabled())
-			finalStyle.overlay(inlineDisabled);
-		else
-		{
-			if (node.isHoveredState() || node.isPressedState())
-				finalStyle.overlay(inlineHover);
-			if (node.isPressedState())
-				finalStyle.overlay(inlinePressed);
-			if (node.isFocusedState())
-				finalStyle.overlay(inlineFocus);
-			if (node.isCheckedState())
-				finalStyle.overlay(inlineChecked);
-		}
-
 		const ComputedStyle *parentStyle = nullptr;
 		if (auto p = node.getParent())
 			parentStyle = &p->getStyle();
 
 		ComputedStyle result = ComputedStyle::from(finalStyle, parentStyle, &theme.root);
 		result.customProps = std::move(allCustomProps);
+
+		if (cacheable)
+		{
+			cachedThemeStyle_ = result;
+			cachedKey_ = key;
+			cachedValid_ = true;
+		}
+		else
+		{
+			cachedValid_ = false;
+		}
+
+		if (!node.getEnabled())
+			overlayComputed(result, inlineDisabled);
+		else
+		{
+			if (node.isHoveredState() || node.isPressedState())
+				overlayComputed(result, inlineHover);
+			if (node.isPressedState())
+				overlayComputed(result, inlinePressed);
+			if (node.isFocusedState())
+				overlayComputed(result, inlineFocus);
+			if (node.isCheckedState())
+				overlayComputed(result, inlineChecked);
+		}
+		overlayComputed(result, inlineBase);
+		if (inlineBase.transitions.is_set)
+			result.transitions = inlineBase.transitions.value;
+		if (inlineBase.animations.is_set)
+			result.animations = inlineBase.animations.value;
+
 		return result;
 	}
 
@@ -180,6 +271,15 @@ namespace ZenitUI
 		transitionStartStyle = currentStyle;
 		targetStyle = resolveFor(node);
 		node.internal_.pendingTransition = 0;
+
+		transitionDirtyMask_ = 0;
+		int i = 0;
+#define X(T, name, def)                           \
+	if (!(currentStyle.name == targetStyle.name)) \
+		transitionDirtyMask_ |= (1ULL << i);      \
+	++i;
+		BUBBLE_STYLE_PROPS(X)
+#undef X
 	}
 
 	void StyleResolver::resolvePendingTransition(Layout &node)
@@ -195,9 +295,18 @@ namespace ZenitUI
 				targetStyle = std::move(newTarget);
 				transitionStartStyle = currentStyle;
 				transitionTimer = 1.0f;
+				transitionDirtyMask_ = 0;
 			}
 			else
 			{
+				transitionDirtyMask_ = 0;
+				int i = 0;
+#define X(T, name, def)                         \
+	if (!(currentStyle.name == newTarget.name)) \
+		transitionDirtyMask_ |= (1ULL << i);    \
+	++i;
+				BUBBLE_STYLE_PROPS(X)
+#undef X
 				transitionStartStyle = currentStyle;
 				transitionTimer = 0.0f;
 				targetStyle = std::move(newTarget);
@@ -210,6 +319,7 @@ namespace ZenitUI
 			{
 				currentStyle = targetStyle;
 				transitionStartStyle = currentStyle;
+				transitionDirtyMask_ = 0;
 			}
 		}
 	}
@@ -227,21 +337,45 @@ namespace ZenitUI
 		{
 			transitionTimer = 1.0f;
 			currentStyle = targetStyle;
+			transitionDirtyMask_ = 0;
+			return;
 		}
-		else
+
+		float elapsed = transitionTimer * maxDur;
+		transitionTimer += dt / maxDur;
+		if (transitionTimer >= 1.0f)
 		{
-			float elapsed = transitionTimer * maxDur;
-			transitionTimer += dt / maxDur;
-			if (transitionTimer >= 1.0f)
-			{
-				transitionTimer = 1.0f;
-				currentStyle = targetStyle;
-			}
-			else
-			{
-				currentStyle = lerpStyleTimed(transitionStartStyle, targetStyle, elapsed);
-			}
+			transitionTimer = 1.0f;
+			currentStyle = targetStyle;
+			transitionDirtyMask_ = 0;
+			return;
 		}
+
+		if (transitionDirtyMask_ == 0)
+			return;
+
+		auto timingFor = [&](const char *propName) -> std::pair<float, TransitionFunction>
+		{
+			for (const auto &spec : targetStyle.transitions)
+			{
+				if (spec.prop == propName || spec.prop == "all")
+					return {spec.duration, spec.ease};
+			}
+			return {targetStyle.transitionTime, targetStyle.ease};
+		};
+
+		int i = 0;
+#define X(T, name, def)                                                           \
+	if (transitionDirtyMask_ & (1ULL << i))                                       \
+	{                                                                             \
+		auto [dur, ease] = timingFor(#name);                                      \
+		float tp = (dur > 0.0f) ? std::clamp(elapsed / dur, 0.0f, 1.0f) : 1.0f;   \
+		currentStyle.name = lerpProp(transitionStartStyle.name, targetStyle.name, \
+									 getRatio(tp, ease));                         \
+	}                                                                             \
+	++i;
+		BUBBLE_STYLE_PROPS(X)
+#undef X
 	}
 
 	void StyleResolver::propagateInheritance(Layout &node)

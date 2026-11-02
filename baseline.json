@@ -1,0 +1,31 @@
+# ZenitUI benchmark baseline.
+# Format: <name> <median_us>. Lower is better.
+# Regenerate with: ./benchmarks/bin/bench --update
+#
+# A change of more than 20% (either direction) is flagged by
+# `bench --check`.
+
+parse.zstyle.200rules 470.08
+parse.zmarkup.100elements 9.26
+micro.Value.construct_1term 0.00358
+micro.Value.construct_2term 0.025999
+micro.Value.lerp 0.021387
+micro.ComputedStyle.from 0.64891
+micro.ComputedStyle.copy 0.797895
+micro.ComputedStyle.from_with_parent 0.830085
+micro.evaluateKeyframes 0.39093
+micro.tickCss.100 0.775
+micro.tickCssAndOverlay.100 40.999
+micro.tickImperative.100 62.56
+micro.tree.addChild.1000 34.945
+micro.tree.removeAllChildren.1000 22.82
+micro.tree.drawChildren.500 39.414
+micro.SmallVector.push_back_inline 0.002753
+system.frame.static100 71.948
+system.frame.200rules 147.19
+system.frame.transitions100 81.032
+system.frame.animated100 155.278
+system.frame.wide200 138.294
+system.frame.layout_stress 75.05
+system.frame.mixed200 156.622
+system.frame.large1000 799.675
