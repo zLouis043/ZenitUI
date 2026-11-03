@@ -854,3 +854,108 @@ TEST(Interaction_subtree, class_change_propagates_to_children)
         env.frame(root);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
 }
+
+TEST(Style_reverseDep, unrelated_class_does_not_trigger_reresolve)
+{
+    Env env;
+    Theme::get().clear();
+
+    ZMarkup::loadStyleString(R"(
+        .knob { position: absolute; }
+        .active .knob { left: 60px; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto a = std::make_shared<Layout>(LayoutType::Stack);
+    a->size(Px(100), Px(50));
+    auto knobA = std::make_shared<Layout>(LayoutType::Stack);
+    knobA->cls("knob");
+    knobA->size(Px(30), Px(30));
+    a->addChild(knobA);
+
+    auto b = std::make_shared<Layout>(LayoutType::Stack);
+    b->size(Px(100), Px(50));
+    auto plainB = std::make_shared<Layout>(LayoutType::Stack);
+    plainB->size(Px(30), Px(30));
+    b->addChild(plainB);
+
+    root->addChild(a);
+    root->addChild(b);
+    env.frame(root);
+
+    CHECK_NEAR(knobA->getRect().x, 0.0f, 1.0f);
+
+    a->addClass("active");
+    b->addClass("active");
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+
+    CHECK_NEAR(knobA->getRect().x, 60.0f, 1.0f);
+    CHECK_NEAR(plainB->getRect().x, 0.0f, 1.0f);
+}
+
+TEST(Style_reverseDep, class_change_reresolves_knob_with_relevant_ancestor_class)
+{
+    Env env;
+    Theme::get().clear();
+
+    ZMarkup::loadStyleString(R"(
+        .knob { position: absolute; }
+        .active .knob { left: 60px; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto a = std::make_shared<Layout>(LayoutType::Stack);
+    a->size(Px(100), Px(50));
+
+    auto knobA = std::make_shared<Layout>(LayoutType::Stack);
+    knobA->cls("knob");
+    knobA->size(Px(30), Px(30));
+    a->addChild(knobA);
+
+    root->addChild(a);
+    env.frame(root);
+
+    CHECK_NEAR(knobA->getRect().x, 0.0f, 1.0f);
+
+    a->addClass("active");
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+    CHECK_NEAR(knobA->getRect().x, 60.0f, 1.0f);
+
+    a->removeClass("active");
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+    CHECK_NEAR(knobA->getRect().x, 0.0f, 1.0f);
+}
+
+TEST(Style_reverseDep, class_mentioned_only_in_unmatched_rules_still_invalidates)
+{
+    Env env;
+    Theme::get().clear();
+
+    ZMarkup::loadStyleString(R"(
+        .bar { position: absolute; }
+        .foo .bar { left: 50px; }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->cls("bar");
+    child->size(Px(30), Px(30));
+    root->addChild(child);
+
+    env.frame(root);
+    CHECK_NEAR(child->getRect().x, 0.0f, 1.0f);
+
+    root->addClass("foo");
+    for (int i = 0; i < 30; ++i)
+        env.frame(root);
+    CHECK_NEAR(child->getRect().x, 50.0f, 1.0f);
+}

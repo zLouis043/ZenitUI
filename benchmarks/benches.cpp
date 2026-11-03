@@ -373,7 +373,7 @@ namespace Bench
           // draw() chiama drawChildren() che riusa i vettori membri.
           root->draw();
           g_sink += (float)root->children.size(); });
-          
+
         // =======================================================================
         //  SmallVector
         // =======================================================================
@@ -659,6 +659,44 @@ namespace Bench
                       {
                   env.frame(root);
                   g_sink += (float)root->children.size(); });
+            }
+
+            {
+                static Env env;
+                static std::shared_ptr<Layout> root;
+                constexpr int FRAMES = 200;
+
+                R.add("system.frame.classChange.1000", "frame", FRAMES,
+                      /*setup=*/[&]
+                      {
+              env.reset();
+              Theme::get().clear();
+              ZMarkup::loadStyleString(R"(
+                  .btn { position: absolute; width: 10px; height: 10px; }
+                  .panel .btn { left: 100px; }
+              )");
+
+              root = std::make_shared<Layout>(LayoutType::Stack);
+              root->size(Percent(100), Percent(100));
+
+              for (int i = 0; i < 1000; ++i)
+              {
+                  auto n = std::make_shared<Layout>(LayoutType::Stack);
+                  n->size(Px(10), Px(10));
+                  if (i < 5)
+                      n->cls("btn");
+                  root->addChild(n);
+              }
+              for (int i = 0; i < 5; ++i)
+                  env.frame(root); },
+                      /*body=*/[&]
+                      {
+              static int i = 0;
+              if (i % 2 == 0) root->addClass("panel");
+              else            root->removeClass("panel");
+              ++i;
+              env.frame(root);
+              g_sink += (float)root->children.size(); });
             }
         }
     }

@@ -14,6 +14,7 @@
 #include "ScrollController.hpp"
 #include "UIEnums.hpp"
 #include "Media.hpp"
+#include "SmallVector.hpp"
 
 namespace ZenitUI
 {
@@ -101,8 +102,12 @@ namespace ZenitUI
 				if (c == className)
 					return;
 			styleClasses.push_back(className);
-			invalidateStyleCacheRecursive();
+
+			style_.invalidateCache();
 			internal_.pendingTransition = 1;
+
+			for (auto &c : children)
+				c->invalidateIfRelevant(SimpleSelector::Kind::Class, className);
 		}
 
 		void removeClass(const std::string &className)
@@ -113,8 +118,46 @@ namespace ZenitUI
 			if (it == styleClasses.end())
 				return;
 			styleClasses.erase(it, styleClasses.end());
-			invalidateStyleCacheRecursive();
+
+			style_.invalidateCache();
 			internal_.pendingTransition = 1;
+
+			for (auto &c : children)
+				c->invalidateIfRelevant(SimpleSelector::Kind::Class, className);
+		}
+
+		void clearStyleClasses()
+		{
+			if (styleClasses.empty())
+				return;
+
+			auto removed = styleClasses;
+			styleClasses.clear();
+
+			style_.invalidateCache();
+			internal_.pendingTransition = 1;
+
+			for (const auto &name : removed)
+				for (auto &c : children)
+					c->invalidateIfRelevant(SimpleSelector::Kind::Class, name);
+		}
+
+		void setStyleTag(const std::string &t)
+		{
+			const std::string oldTag = styleTag;
+			styleTag = t;
+
+			style_.invalidateCache();
+			internal_.pendingTransition = 1;
+
+			if (oldTag != t)
+			{
+				for (auto &c : children)
+				{
+					c->invalidateIfRelevant(SimpleSelector::Kind::Tag, oldTag);
+					c->invalidateIfRelevant(SimpleSelector::Kind::Tag, t);
+				}
+			}
 		}
 
 		bool hasClass(const std::string &className) const
@@ -130,15 +173,6 @@ namespace ZenitUI
 			return !targetId.empty() && nodeId == targetId;
 		}
 
-		void clearStyleClasses()
-		{
-			if (styleClasses.empty())
-				return;
-			styleClasses.clear();
-			internal_.pendingTransition = 1;
-			invalidateStyleCacheRecursive();
-		}
-
 		void setId(const std::string &node_id)
 		{
 			nodeId = node_id;
@@ -149,7 +183,6 @@ namespace ZenitUI
 			ref = r;
 		}
 
-		void setStyleTag(const std::string &t) { styleTag = t; invalidateStyleCacheRecursive(); }
 		const std::string &getStyleTag() const { return styleTag; }
 		const std::vector<std::string> &getStyleClasses() const { return styleClasses; }
 
@@ -506,6 +539,8 @@ namespace ZenitUI
 		std::string styleTag;
 		std::vector<std::string> styleClasses;
 		StyleResolver style_;
+		SmallVector<std::pair<SimpleSelector::Kind, std::string_view>, 8> relevantSymbols_;
+		uint32_t relevantThemeVersion_{~0u};
 		InputController input_;
 
 		TextureHandle bgTexture;
@@ -530,6 +565,32 @@ namespace ZenitUI
 			internal_.subtreeDirty = 1;
 			for (auto &c : children)
 				c->markInheritanceDirty();
+		}
+
+		void invalidateIfRelevant(SimpleSelector::Kind kind, std::string_view name)
+		{
+			if (relevantThemeVersion_ != Theme::get().version)
+			{
+				invalidateStyleCacheRecursive();
+				return;
+			}
+
+			bool relevant = false;
+			for (auto &[k, n] : relevantSymbols_)
+			{
+				if (k == kind && n == name)
+				{
+					relevant = true;
+					break;
+				}
+			}
+			if (relevant)
+			{
+				style_.invalidateCache();
+				internal_.pendingTransition = 1;
+			}
+			for (auto &c : children)
+				c->invalidateIfRelevant(kind, name);
 		}
 
 		void invalidateStyleCacheRecursive()

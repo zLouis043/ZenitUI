@@ -874,6 +874,33 @@ framework code.
 - [x] Regenerate `benchmarks/baseline.json`
 - [x] Update `internals/11-benchmarks.md` with a note on build profiles
 
+### §4.8 — Style resolution caching and reverse dependency (DONE)
+
+- `StyleResolver::resolveFor` caches the theme-only result. Key includes
+  `theme.version`, `viewportGeneration`, node pointer, tag, classes,
+  state flags, and ancestor state flags. Inline overlays (`inlineBase`,
+  hover, pressed, focus, checked, disabled) are applied on top, so
+  modifying `inlineBase` (e.g. opacity every frame) does not trigger a
+  full CSS re-resolve.
+- `StyleResolver::tick` uses `uint64_t transitionDirtyMask_` computed at
+  `resolvePendingTransition`/`beginStateTransition`, so only the fields
+  that differ are lerped. Reducing the per-frame lerp from ~46 fields to
+  the number of changed fields.
+- `Theme::rulesByLastSymbol` indexes rules by their rightmost selector
+  (and its extras). `Layout::relevantSymbols_` records, per node, the
+  set of symbols that appear in rules whose rightmost selector matches
+  the node. `Layout::invalidateIfRelevant(symbol)` walks the subtree and
+  invalidates only nodes whose `relevantSymbols_` contain the symbol.
+- `Theme::version` is checked before using `relevantSymbols_` (the
+  string_views point into `Theme::rules`); on mismatch, falls back to
+  `invalidateStyleCacheRecursive` for safety.
+
+**Impact (Windows, MinGW GCC 15.1, median of 5):**
+- `system.frame.200rules`: 378 → 148 µs
+- `system.frame.mixed200`: 181 → 158 µs
+- `micro.tickImperative.100`: 72 → 63 µs
+- `system.frame.classChange.1000` (new): ~2200 µs pre-opt → 820 µs
+
 ---
 
 ## Phase 5 — Feature completion
