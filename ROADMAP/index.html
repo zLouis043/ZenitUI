@@ -1859,6 +1859,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#48-style-resolution-caching-and-reverse-dependency-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §4.8 — Style resolution caching and reverse dependency (DONE)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3166,6 +3177,32 @@ framework code.</p>
 <li>[x] Regenerate <code>benchmarks/baseline.json</code></li>
 <li>[x] Update <code>internals/11-benchmarks.md</code> with a note on build profiles</li>
 </ul>
+<h3 id="48-style-resolution-caching-and-reverse-dependency-done">§4.8 — Style resolution caching and reverse dependency (DONE)</h3>
+<ul>
+<li><code>StyleResolver::resolveFor</code> caches the theme-only result. Key includes
+  <code>theme.version</code>, <code>viewportGeneration</code>, node pointer, tag, classes,
+  state flags, and ancestor state flags. Inline overlays (<code>inlineBase</code>,
+  hover, pressed, focus, checked, disabled) are applied on top, so
+  modifying <code>inlineBase</code> (e.g. opacity every frame) does not trigger a
+  full CSS re-resolve.</li>
+<li><code>StyleResolver::tick</code> uses <code>uint64_t transitionDirtyMask_</code> computed at
+  <code>resolvePendingTransition</code>/<code>beginStateTransition</code>, so only the fields
+  that differ are lerped. Reducing the per-frame lerp from ~46 fields to
+  the number of changed fields.</li>
+<li><code>Theme::rulesByLastSymbol</code> indexes rules by their rightmost selector
+  (and its extras). <code>Layout::relevantSymbols_</code> records, per node, the
+  set of symbols that appear in rules whose rightmost selector matches
+  the node. <code>Layout::invalidateIfRelevant(symbol)</code> walks the subtree and
+  invalidates only nodes whose <code>relevantSymbols_</code> contain the symbol.</li>
+<li><code>Theme::version</code> is checked before using <code>relevantSymbols_</code> (the
+  string_views point into <code>Theme::rules</code>); on mismatch, falls back to
+  <code>invalidateStyleCacheRecursive</code> for safety.</li>
+</ul>
+<p><strong>Impact (Windows, MinGW GCC 15.1, median of 5):</strong>
+- <code>system.frame.200rules</code>: 378 → 148 µs
+- <code>system.frame.mixed200</code>: 181 → 158 µs
+- <code>micro.tickImperative.100</code>: 72 → 63 µs
+- <code>system.frame.classChange.1000</code> (new): ~2200 µs pre-opt → 820 µs</p>
 <hr />
 <h2 id="phase-5-feature-completion">Phase 5 — Feature completion</h2>
 <p>Not blocking for beta, but needed for 1.0.</p>
