@@ -172,11 +172,39 @@ namespace ZenitUI
 			if (node.isCheckedState())
 				overlayComputed(result, inlineChecked);
 		}
-		overlayComputed(result, inlineBase);
+				overlayComputed(result, inlineBase);
 		if (inlineBase.transitions.is_set)
 			result.transitions = inlineBase.transitions.value;
 		if (inlineBase.animations.is_set)
 			result.animations = inlineBase.animations.value;
+
+		node.relevantSymbols_.clear();
+
+		auto collectFrom = [&](SimpleSelector::Kind kind, const std::string &name)
+		{
+			auto it = theme.rulesByLastSymbol.find(
+				Theme::SymbolKey{kind, name});
+			if (it == theme.rulesByLastSymbol.end())
+				return;
+			for (uint32_t idx : it->second)
+			{
+				const auto &r = theme.rules[idx];
+				for (const auto &sel : r.chain)
+				{
+					node.relevantSymbols_.push_back({sel.kind, sel.name});
+					for (const auto &[k, n] : sel.extras)
+						node.relevantSymbols_.push_back({k, n});
+				}
+			}
+		};
+
+		collectFrom(SimpleSelector::Kind::Tag, node.getStyleTag());
+		for (const auto &cls : node.getStyleClasses())
+			collectFrom(SimpleSelector::Kind::Class, cls);
+		if (!node.nodeId.empty())
+			collectFrom(SimpleSelector::Kind::Id, node.nodeId);
+
+		node.relevantThemeVersion_ = theme.version;
 
 		return result;
 	}

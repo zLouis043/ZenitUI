@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common.hpp"
-
 #include "Style.hpp"
 #include "AnimPrimitives.hpp"
 #include "Media.hpp"
@@ -76,6 +75,26 @@ namespace ZenitUI
 	class Theme
 	{
 	public:
+		struct SymbolKey
+		{
+			SimpleSelector::Kind kind;
+			std::string name;
+
+			bool operator==(const SymbolKey &o) const noexcept
+			{
+				return kind == o.kind && name == o.name;
+			}
+		};
+
+		struct SymbolKeyHash
+		{
+			size_t operator()(const SymbolKey &k) const noexcept
+			{
+				return std::hash<std::string>{}(k.name) ^
+					   (static_cast<size_t>(k.kind) * 0x9e3779b97f4a7c15ULL);
+			}
+		};
+
 		std::vector<ThemeRule> rules;
 
 		Style root;
@@ -85,7 +104,9 @@ namespace ZenitUI
 		std::unordered_map<std::string, std::vector<size_t>> rulesByTag;
 		std::vector<size_t> rulesNoTag;
 
-		 uint32_t version{0};
+		std::unordered_map<SymbolKey, std::vector<uint32_t>, SymbolKeyHash> rulesByLastSymbol;
+
+		uint32_t version{0};
 
 		static Theme &get()
 		{
@@ -105,6 +126,12 @@ namespace ZenitUI
 					rulesByTag[back.name].push_back((size_t)r.order);
 				else
 					rulesNoTag.push_back((size_t)r.order);
+
+				rulesByLastSymbol[SymbolKey{back.kind, back.name}]
+					.push_back((uint32_t)r.order);
+				for (const auto &[kind, name] : back.extras)
+					rulesByLastSymbol[SymbolKey{kind, name}]
+						.push_back((uint32_t)r.order);
 			}
 
 			rules.push_back(std::move(r));
@@ -124,6 +151,7 @@ namespace ZenitUI
 			root = Style{};
 			rulesByTag.clear();
 			rulesNoTag.clear();
+			rulesByLastSymbol.clear();
 			++version;
 		}
 	};
