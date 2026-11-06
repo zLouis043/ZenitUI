@@ -922,9 +922,12 @@ Not blocking for beta, but needed for 1.0.
 
 ### 5.2 Font handling
 
-- [ ] Font fallback chain (e.g. `font: mont, calibri, sans`)
+- [x] Font fallback chain (e.g. `font: mont, calibri, sans`)
 - [ ] Runtime font loading / registration
-- [ ] Font metrics caching
+- [ ] Font metrics caching — **deferred post-1.0**: `measureText` is already
+  cached at widget level (`Text` caches wrapped lines); Renderer level cache
+  would require a cache invalidation upon `unloadFont`, which is not in the
+  `IRenderer` contract.
 
 ### 5.3 `calc()` extensions
 

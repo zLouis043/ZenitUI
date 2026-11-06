@@ -9,7 +9,6 @@
 namespace ZenitUI::Test
 {
 
-
     class MockRenderer : public IRenderer
     {
     public:
@@ -180,7 +179,6 @@ namespace ZenitUI::Test
         }
     };
 
-
     class MockPlatform : public IPlatform
     {
     public:
@@ -324,19 +322,21 @@ namespace ZenitUI::Test
         EdgeInsets safe{};
         EdgeInsets safeArea() override { return safe; }
 
-        void setClipboardText(const std::string& text) override {
+        void setClipboardText(const std::string &text) override
+        {
             clipboardData = text;
         }
-        std::string getClipboardText() override {
+        std::string getClipboardText() override
+        {
             return clipboardData;
         }
     };
 
-
     class MockAssetProvider : public IAssetProvider
     {
     public:
-        FontHandle getFont(std::string_view) override { return {}; }
+        using IAssetProvider::getFont;
+
         TextureHandle getTexture(std::string_view) override { return {}; }
         EffectHandle getEffect(std::string_view name) override
         {
@@ -350,10 +350,21 @@ namespace ZenitUI::Test
             registeredEffects[name] = EffectHandle{nextId++};
         }
 
+        void registerFont(const std::string &name, FontHandle h)
+        {
+            fonts_[name] = h;
+        }
+
+        FontHandle getFont(std::string_view name) override
+        {
+            auto it = fonts_.find(std::string(name));
+            return it != fonts_.end() ? it->second : FontHandle{};
+        }
+
     private:
         std::unordered_map<std::string, EffectHandle> registeredEffects;
+        std::unordered_map<std::string, FontHandle> fonts_;
     };
-
 
     struct Env
     {

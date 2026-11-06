@@ -2,6 +2,8 @@
 
 #include "Common.hpp"
 
+#include "SmallVector.hpp"
+
 #include <algorithm>
 
 namespace ZenitUI
@@ -114,6 +116,19 @@ namespace ZenitUI
 		float scale{1.0f};
 	};
 
+	struct FontStack : SmallVector<std::string, 3>
+	{
+		FontStack() = default;
+		using SmallVector<std::string, 3>::SmallVector;
+
+		FontStack(const char *s)
+			: SmallVector<std::string, 3>{std::string(s)} {}
+		FontStack(std::string s)
+			: SmallVector<std::string, 3>{std::move(s)} {}
+		FontStack(std::string_view s)
+			: SmallVector<std::string, 3>{std::string(s)} {}
+	};
+
 	enum class MouseButton : uint8_t
 	{
 		Left,
@@ -167,15 +182,15 @@ namespace ZenitUI
 		constexpr int Space = 10;
 
 		constexpr int Up = 11;
-        constexpr int Down = 12;
+		constexpr int Down = 12;
 
 		constexpr int A = 65;
-        constexpr int C = 67;
-        constexpr int V = 86;
-        constexpr int X = 88;
+		constexpr int C = 67;
+		constexpr int V = 86;
+		constexpr int X = 88;
 
 		constexpr int Y = 89;
-        constexpr int Z = 90;
+		constexpr int Z = 90;
 	}
 
 	struct InputEvents

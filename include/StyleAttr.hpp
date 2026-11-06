@@ -319,6 +319,46 @@ namespace ZenitUI
             }
         };
 
+        inline FontStack parseFontStack(std::string_view raw)
+        {
+            FontStack out;
+            size_t i = 0;
+            while (i < raw.size())
+            {
+                while (i < raw.size() &&
+                       (std::isspace((unsigned char)raw[i]) || raw[i] == ','))
+                    ++i;
+                if (i >= raw.size())
+                    break;
+
+                char quote = 0;
+                if (raw[i] == '"' || raw[i] == '\'')
+                {
+                    quote = raw[i];
+                    ++i;
+                }
+
+                size_t start = i;
+                if (quote)
+                {
+                    while (i < raw.size() && raw[i] != quote)
+                        ++i;
+                    out.push_back(std::string(raw.substr(start, i - start)));
+                    if (i < raw.size())
+                        ++i;
+                }
+                else
+                {
+                    while (i < raw.size() &&
+                           raw[i] != ',' &&
+                           !std::isspace((unsigned char)raw[i]))
+                        ++i;
+                    out.push_back(std::string(raw.substr(start, i - start)));
+                }
+            }
+            return out;
+        }
+
     } // namespace detail
 
     inline std::optional<Value> parseValueToken(std::string_view s)
@@ -781,7 +821,7 @@ namespace ZenitUI
         }
         else if (key == "font")
         {
-            st.font = std::string(val);
+            st.font = detail::parseFontStack(val);
             return true;
         }
         else if (key == "background-texture")

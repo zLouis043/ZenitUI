@@ -90,6 +90,21 @@ namespace ZenitUI::Debug
         return "[" + valueToString(s.top) + " " + valueToString(s.right) + " " + valueToString(s.bottom) + " " + valueToString(s.left) + "]";
     }
 
+    inline std::string toString(const FontStack &stack)
+    {
+        if (stack.empty())
+            return "\"\"";
+        std::string out = "[";
+        for (size_t i = 0; i < stack.size(); ++i)
+        {
+            if (i)
+                out += ", ";
+            out += stack[i];
+        }
+        out += "]";
+        return out;
+    }
+
     inline std::string toString(Align a)
     {
         switch (a)

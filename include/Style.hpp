@@ -5,6 +5,8 @@
 #include "Easing.hpp"
 #include "Unit.hpp"
 
+#include <ostream>
+
 namespace ZenitUI
 {
 
@@ -43,6 +45,19 @@ namespace ZenitUI
 		}
 		bool operator!=(const Spacing &o) const { return !(*this == o); }
 	};
+
+	inline std::ostream &operator<<(std::ostream &os, const FontStack &stack)
+	{
+		os << "[";
+		for (size_t i = 0; i < stack.size(); ++i)
+		{
+			if (i)
+				os << ", ";
+			os << stack[i];
+		}
+		os << "]";
+		return os;
+	}
 
 	struct TransitionSpec
 	{
@@ -214,7 +229,7 @@ namespace ZenitUI
 	X(Value, left, Value::autoSize())                       \
 	X(Value, right, Value::autoSize())                      \
 	X(Value, bottom, Value::autoSize())                     \
-	X(std::string, font, "")                                \
+	X(FontStack, font, FontStack{})                         \
 	X(bool, wrap, false)
 
 	inline bool isInheritedProp(std::string_view name)
@@ -355,6 +370,11 @@ namespace ZenitUI
 			return static_cast<uint8_t>(std::clamp(std::lround(v), 0L, 255L));
 		};
 		return {mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b), mix(a.a, b.a)};
+	}
+
+	inline FontStack lerpProp(const FontStack &a, const FontStack &b, float t)
+	{
+		return t > 0.0f ? b : a;
 	}
 
 	inline Value lerpProp(const Value &a, const Value &b, float t)
@@ -574,8 +594,8 @@ namespace ZenitUI
 
 	using PropValue = std::variant<bool, float, Value, Color, Spacing, Align, Justify,
 								   TransitionFunction, Overflow, Position, ZIndex,
-								   std::string, TextureRef, std::vector<FilterRef>,
-								   BoxShadow>;
+								   std::string, FontStack, TextureRef,
+								   std::vector<FilterRef>, BoxShadow>;
 
 	struct PropDesc
 	{
