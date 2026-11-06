@@ -2179,6 +2179,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#522-drag-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.22 Drag &amp; Drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#523-virtuallist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.23 VirtualList
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2411,7 +2433,8 @@ pending, and what's blocking.</p>
 <p>It's derived from a full code + documentation review. The <strong>blocking</strong>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
-<p>Last updated: after the CMake migration (§7.7).</p>
+<p>Last updated: after §5.21 (Wrap for HStack) and §4.8 (Style resolution
+caching + reverse dependency).</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -3330,10 +3353,15 @@ transformed area" is computed consistently everywhere.</p>
 <p>Currently callbacks are individual <code>std::function</code> fields. A future
 version could expose a vector for multi-listener patterns. Not critical
 but sometimes needed.</p>
-<ul>
-<li>[ ] Decide if needed</li>
-<li>[ ] If yes, add <code>addOnClickListener</code> etc.</li>
-</ul>
+<p><strong>Status:</strong> ❌ declined.</p>
+<p>Decision: single-callback model is sufficient. Frameworks that need
+multi-listener (Qt, WPF) pay a complexity cost that isn't justified
+for game/tool UI. When two listeners are needed, compose them with a
+lambda at the call site:</p>
+<pre><code class="language-cpp">    btn-&gt;onClick = [a, b]() { a(); b(); };
+</code></pre>
+<p>Revisit only if real usage shows the lambda pattern becomes a
+significant boilerplate source (&gt;50 occurrences in a typical app).</p>
 <h3 id="510-live-reload-for-zstyle-delegated-to-the-consumer">5.10 Live reload for <code>.zstyle</code> — delegated to the consumer</h3>
 <p><strong>Moved out of the library scope.</strong></p>
 <p>Hot reload is a consumer concern, not a library concern. ZenitUI
@@ -3837,6 +3865,39 @@ applies, but UI use is fine.</p>
 <li><code>HStack</code> now supports the <code>wrap</code> boolean property, allowing children that exceed the available container width to flow seamlessly onto the next line.</li>
 <li>Fully supports <code>justify</code> alignment (<code>center</code>, <code>space-between</code>, <code>end</code>, etc.) on dynamically wrapped lines.</li>
 <li>Supports cross-axis alignment (<code>items-v</code> / <code>align-v</code>) relative to the specific height of each wrapped line.</li>
+</ul>
+<h3 id="522-drag-drop">5.22 Drag &amp; Drop</h3>
+<p><strong>Status:</strong> 🟡 planned — proposal to be written.</p>
+<p>Design not yet formalized. Tracked here so it doesn't fall off the
+radar. Expected to touch 6 files (<code>UIContext</code>, <code>InputController</code>,
+<code>Layout</code>, <code>StyleResolver</code>, <code>StyleParser</code>, <code>hitTest</code>) and to be split
+into 3 PRs:</p>
+<ul>
+<li><code>5.22a</code> — input capture and drag state in <code>UIContext</code></li>
+<li><code>5.22b</code> — <code>draggable</code> / <code>droppable</code> style properties and hit-test
+  integration</li>
+<li>
+<p><code>5.22c</code> — visual feedback (drag ghost) and drop callbacks</p>
+</li>
+<li>
+<p>[ ] <code>5.22a</code> — input capture and drag state</p>
+</li>
+<li>[ ] <code>5.22b</code> — <code>draggable</code> / <code>droppable</code> style properties</li>
+<li>[ ] <code>5.22c</code> — visual feedback and drop callbacks</li>
+<li>[ ] Proposal written in <code>PROPOSALS.md</code></li>
+</ul>
+<h3 id="523-virtuallist">5.23 VirtualList</h3>
+<p><strong>Status:</strong> 🟡 planned — depends on §5.18 (UIPrefab) and §5.19 (Slot).</p>
+<p>A list widget that materializes only the visible rows and recycles
+the off-screen ones. Common for lists with 10k+ items. Depends on
+UIPrefab so each row can be defined once and instantiated N times.</p>
+<ul>
+<li>[ ] Row template registration (via UIPrefab)</li>
+<li>[ ] Visible-range computation from scroll offset + item height</li>
+<li>[ ] Node recycling (reuse <code>Layout</code> instances across rows)</li>
+<li>[ ] Callback <code>onRowBound(index, Layout*)</code> for data binding</li>
+<li>[ ] Tests with 10k synthetic rows</li>
+<li>[ ] Update <code>user/03-widgets.md</code></li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
