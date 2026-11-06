@@ -2201,6 +2201,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#524-virtualview-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.24 VirtualView ✅ — Done
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2433,7 +2444,7 @@ pending, and what's blocking.</p>
 <p>It's derived from a full code + documentation review. The <strong>blocking</strong>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
-<p>Last updated: after §5.21 (Wrap for HStack) and §4.8 (Style resolution
+<p>Last updated: after §5.24 (VirtualView) and §4.8 (Style resolution
 caching + reverse dependency).</p>
 <hr />
 <h2 id="status">Status</h2>
@@ -3909,6 +3920,9 @@ into 3 PRs:</p>
 </ul>
 <h3 id="523-virtuallist">5.23 VirtualList</h3>
 <p><strong>Status:</strong> 🟡 planned — depends on §5.18 (UIPrefab) and §5.19 (Slot).</p>
+<p><strong>Related:</strong> §5.24 (VirtualView) ships a simpler, non-recycling
+variant of the same idea. If VirtualList is deferred, VirtualView is
+the supported path for large lists today.</p>
 <p>A list widget that materializes only the visible rows and recycles
 the off-screen ones. Common for lists with 10k+ items. Depends on
 UIPrefab so each row can be defined once and instantiated N times.</p>
@@ -3919,6 +3933,55 @@ UIPrefab so each row can be defined once and instantiated N times.</p>
 <li>[ ] Callback <code>onRowBound(index, Layout*)</code> for data binding</li>
 <li>[ ] Tests with 10k synthetic rows</li>
 <li>[ ] Update <code>user/03-widgets.md</code></li>
+</ul>
+<h3 id="524-virtualview-done">5.24 VirtualView ✅ — Done</h3>
+<p><strong>Object</strong>: a lightweight virtualized vertical list that materializes
+only the visible rows plus a small buffer.</p>
+<p><strong>Details</strong>:</p>
+<ul>
+<li>Extends <code>ScrollView</code> (vertical). Wheel, inertia, scrollbar, clipping
+  and <code>scrollToY</code> are inherited unchanged.</li>
+<li>Factory-based: <code>ItemFactory = std::function&lt;std::shared_ptr&lt;Layout&gt;(int index)&gt;</code>.
+  A convenience overload accepts <code>std::function&lt;std::shared_ptr&lt;Layout&gt;()&gt;</code>
+  for the index-independent case.</li>
+<li>Two measurement modes:</li>
+<li><code>uniformHeight &gt; 0</code> — O(N) arithmetic, no factory call during
+    measurement, fast path.</li>
+<li><code>uniformHeight == 0</code> — the factory is called once per index and
+    <code>measure</code> is invoked on each returned node to build
+    <code>cumulativeHeights</code>.</li>
+<li>Materialization window: visible range expanded by 2 rows above and 2
+  below. Out-of-range nodes are detached and erased; missing indices
+  are built by the factory and positioned absolutely at
+  <code>top = cumulative[i]</code>.</li>
+<li>Visibility queries: <code>getFirstVisibleItem</code>, <code>getLastVisibleItem</code>,
+  both returning <code>-1</code> before the first measure and for empty lists.</li>
+<li><code>scrollToItem(index)</code> aligns the top of the row with the top of the
+  viewport.</li>
+<li><code>onItemCreated(Layout*, int)</code> fires every time a node is
+  materialized, including re-materialization after scrolling out and
+  back in.</li>
+<li><code>removeAllChildren()</code> clears the materialized set and the base
+  children; the visible rows come back on the next frame.</li>
+</ul>
+<p><strong>Difference from §5.23 VirtualList</strong>: VirtualView does not recycle
+nodes. Each row entering the materialization window creates a new
+node; each row leaving it destroys the node. VirtualList (planned)
+recycles nodes and uses prefabs, which is a larger design (depends on
+§5.18 UIPrefab and §5.19 Slot). VirtualView is the simpler, already
+shipped alternative.</p>
+<p><strong>What does NOT change</strong>: <code>ScrollView</code> itself, <code>Layout</code>, <code>Theme</code>,
+<code>ZMarkup</code>, <code>ZStyle</code> are untouched. VirtualView is a new header-only
+component in <code>include/components/VirtualView.hpp</code>.</p>
+<ul>
+<li>[x] Implementation in <code>include/components/VirtualView.hpp</code></li>
+<li>[x] Tests in <code>tests/test_virtual_view.cpp</code> (14 tests)</li>
+<li>[x] User documentation in <code>docs/user/12-virtual_view.md</code></li>
+<li>[x] API reference in <code>docs/api/Widgets.md</code></li>
+<li>[x] Widgets overview in <code>docs/user/03-widgets.md</code></li>
+<li>[x] <code>CHEATSHEET.md</code>, <code>GLOSSARY.md</code>, <code>docs/README.md</code> updated</li>
+<li>[ ] (Follow-up) ZMarkup registration — VirtualView needs a C++
+      factory, which cannot be expressed in markup</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>

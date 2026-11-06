@@ -1806,6 +1806,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#large-virtualized-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Large virtualized list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#focus-keyboard-activation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2544,6 +2555,11 @@ all work.</p>
 <td>—</td>
 </tr>
 <tr>
+<td><code>VirtualView</code></td>
+<td><code>VirtualView::create(factory, count)</code></td>
+<td><code>onItemCreated(Layout*, int)</code></td>
+</tr>
+<tr>
 <td><code>Dropdown</code></td>
 <td><code>Dropdown::create({"A","B"}, selected)</code></td>
 <td><code>onChange(int, string)</code></td>
@@ -2828,6 +2844,25 @@ sv-&gt;getInlineBase().height = VH(50);
 for (int i = 0; i &lt; 100; ++i)
     sv-&gt;addChild(Label(&quot;Item &quot; + std::to_string(i)));
 </code></pre>
+<h3 id="large-virtualized-list">Large virtualized list</h3>
+<pre><code class="language-cpp">auto vv = VirtualView::create(
+    [](int i) {
+        auto row = std::make_shared&lt;Layout&gt;(LayoutType::Stack);
+        row-&gt;size(Percent(100), Px(24));
+        return row;
+    },
+    10000);
+
+vv-&gt;size(Percent(100), VH(50));
+vv-&gt;setUniformHeight(24.0f);   // fast path, O(N) arithmetic
+vv-&gt;onItemCreated = [](Layout* row, int i) {
+    // populate row for index i
+};
+root-&gt;addChild(vv);
+</code></pre>
+<p><code>setUniformHeight(0)</code> (default) measures each row via the factory
+instead; only ~visible+4 rows are ever materialized. Full guide:
+<a href="../user/12-virtual_view/">VirtualView</a>.</p>
 <h3 id="focus-keyboard-activation">Focus + keyboard activation</h3>
 <pre><code class="language-cpp">auto btn = Btn(&quot;OK&quot;, []{ /* ... */ });
 btn-&gt;setFocusable(true);
@@ -2873,6 +2908,7 @@ Debug::dumpParts(*slider, std::cout);
 <li>Missing assets fall back silently — check the logs.</li>
 <li>Portals are hit-tested one frame after they render.</li>
 <li>Missing <code>onClick</code> callbacks: check <code>setInteractive(true)</code>.</li>
+<li>VirtualView: the factory runs once per item with auto height — keep it cheap, or use <code>setUniformHeight</code>.</li>
 </ul>
 <hr />
 <h2 id="see-also">See also</h2>
