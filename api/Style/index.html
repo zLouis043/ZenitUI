@@ -923,6 +923,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#21-fontstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 FontStack
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2008,6 +2019,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#21-fontstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 FontStack
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2590,7 +2612,7 @@ cascade work: an unset property doesn't override a lower-priority one.</p>
     X(Value, left, Value::autoSize())                       \
     X(Value, right, Value::autoSize())                      \
     X(Value, bottom, Value::autoSize())                     \
-    X(std::string, font, &quot;&quot;)
+    X(FontStack, font, FontStack{})
 </code></pre>
 <p>Every operation on <code>Style</code> and <code>ComputedStyle</code> (<code>overlay</code>, <code>operator==</code>,
 <code>lerp</code>, <code>stylesDiffer</code>, <code>forEachSetStyleProp</code>, <code>propTable</code>, etc.) uses
@@ -2649,6 +2671,28 @@ this macro. Adding a property means editing this macro and the parser
 </table>
 <p>All property names use <strong>camelCase</strong> in C++ and <strong>kebab-case</strong> in
 <code>.zstyle</code> (<code>borderWidth</code> ↔ <code>border-width</code>).</p>
+<h3 id="21-fontstack">2.1 FontStack</h3>
+<p><code>FontStack</code> is the type of the <code>font</code> property. It is a
+<code>SmallVector&lt;std::string, 3&gt;</code> with implicit constructors from
+<code>const char*</code>, <code>std::string</code>, and <code>std::string_view</code>:</p>
+<pre><code class="language-cpp">struct FontStack : SmallVector&lt;std::string, 3&gt; {
+    FontStack() = default;
+    using SmallVector&lt;std::string, 3&gt;::SmallVector;
+
+    FontStack(const char* s);
+    FontStack(std::string s);
+    FontStack(std::string_view s);
+};
+</code></pre>
+<p>The implicit constructors let both <code>s.font = "calibri"</code> and
+<code>s.font = FontStack{"calibri", "sans"}</code> compile. Because <code>SmallVector</code>
+provides <code>operator==</code>, <code>operator!=</code>, and copy/move semantics, no extra
+code is needed for comparison, interpolation, or assignment.</p>
+<p>A <code>FontStack</code> is always ordered by priority: <code>getFont(stack)</code> iterates
+left to right and returns the first valid handle. An empty stack means
+"no explicit font" (the renderer's default is used).</p>
+<p>Under interpolation, <code>lerpProp(FontStack, FontStack, t)</code> returns <code>b</code> if
+<code>t &gt; 0</code>, else <code>a</code> — font families snap rather than blend.</p>
 <hr />
 <h2 id="3-style-the-declared-style">3. <code>Style</code> — the declared style</h2>
 <pre><code class="language-cpp">struct Style {
@@ -3004,10 +3048,10 @@ inline bool operator!=(const std::vector&lt;FilterRef&gt;&amp; a,
 <p>is <code>{x=4px, y=4px, blur=8px, color={0,0,0,128}, enabled=true}</code>.</p>
 <hr />
 <h2 id="13-property-table">13. Property table</h2>
-<pre><code class="language-cpp">using PropValue = std::variant&lt;float, Value, Color, Spacing, Align, Justify,
+<pre><code class="language-cpp">using PropValue = std::variant&lt;bool, float, Value, Color, Spacing, Align, Justify,
                                 TransitionFunction, Overflow, Position, ZIndex,
-                                std::string, TextureRef, std::vector&lt;FilterRef&gt;,
-                                BoxShadow&gt;;
+                                std::string, FontStack, TextureRef,
+                                std::vector&lt;FilterRef&gt;, BoxShadow&gt;;
 
 struct PropDesc {
     const char* name;

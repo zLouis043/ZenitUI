@@ -2300,8 +2300,8 @@ auto sub2 = volume.onChanged([label](const float&amp; v) {
 <tr>
 <td><code>font</code></td>
 <td><code>font</code></td>
-<td>string</td>
-<td><code>""</code></td>
+<td>FontStack</td>
+<td><code>[]</code></td>
 </tr>
 <tr>
 <td><code>fontSize</code></td>
@@ -2329,6 +2329,9 @@ auto sub2 = volume.onChanged([label](const float&amp; v) {
 </tr>
 </tbody>
 </table>
+<p><code>font</code> accepts a comma-separated fallback stack
+(<code>font: Inter, "Helvetica Neue", sans-serif</code>). Family names with spaces
+must be quoted. See <a href="../user/05-zstyle/#48-typography">ZStyle §4.8</a>.</p>
 <h3 id="colors">Colors</h3>
 <p>Named: <code>white</code>, <code>black</code>, <code>transparent</code>, <code>blank</code>, <code>red</code>, <code>maroon</code>,
 <code>green</code>, <code>blue</code>, <code>yellow</code>, <code>gray</code>, <code>darkgray</code>, <code>lightgray</code>.</p>

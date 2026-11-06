@@ -3243,12 +3243,30 @@ framework code.</p>
 <h3 id="52-font-handling">5.2 Font handling</h3>
 <ul>
 <li>[x] Font fallback chain (e.g. <code>font: mont, calibri, sans</code>)</li>
-<li>[ ] Runtime font loading / registration</li>
-<li>[ ] Font metrics caching — <strong>deferred post-1.0</strong>: <code>measureText</code> is already
-  cached at widget level (<code>Text</code> caches wrapped lines); Renderer level cache
-  would require a cache invalidation upon <code>unloadFont</code>, which is not in the
-  <code>IRenderer</code> contract.</li>
+<li>[x] Runtime font loading / registration</li>
+<li>[ ] Font metrics caching — <strong>deferred post-1.0</strong>: <code>measureText</code> is
+      already cached at the widget level (<code>Text</code> caches wrapped lines);
+      a renderer-level cache would require invalidation on <code>unloadFont</code>,
+      which is not part of <code>IRenderer</code>'s contract. Revisit only if
+      benchmarks show <code>measureText</code> in the frame profile.</li>
 </ul>
+<p><strong>Notes.</strong>
+- <code>FontStack</code> lives in <code>Style.hpp</code> as <code>SmallVector&lt;std::string, 3&gt;</code> with
+  implicit constructors from <code>const char*</code>, <code>std::string</code>,
+  <code>std::string_view</code>. The <code>font</code> property in <code>ComputedStyle</code> and
+  <code>Style</code> is now <code>FontStack</code>.
+- <code>parseFontStack</code> (in <code>StyleAttr.hpp</code>) splits on commas, trims, and
+  honors <code>"..."</code> / <code>'...'</code> quotes for family names containing spaces.
+- <code>IAssetProvider::getFont(const FontStack&amp;)</code> iterates the stack and
+  returns the first valid handle. It is non-pure: backends only need to
+  implement <code>getFont(std::string_view)</code>.
+- <code>IAssetProvider::loadFont</code> / <code>loadFontFromMemory</code> / <code>unloadFont</code> are
+  virtual with no-op defaults. <code>RaylibAssetProvider</code> implements them;
+  <code>MockAssetProvider</code> implements them for tests.
+- <code>RaylibRenderer::unregisterFont</code> frees the GPU texture and removes the
+  <code>::Font</code> from <code>res.fonts</code>. Calling <code>unloadFont</code> on a name that is still
+  in use by a <code>ComputedStyle</code> is documented as undefined behavior: the
+  next <code>drawText</code> falls back to the renderer's default font.</p>
 <h3 id="53-calc-extensions">5.3 <code>calc()</code> extensions</h3>
 <ul>
 <li>[x] <code>min(a, b)</code> / <code>max(a, b)</code> / <code>clamp(min, val, max)</code></li>

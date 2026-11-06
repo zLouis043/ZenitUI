@@ -2072,6 +2072,10 @@ or <code>requestFocus</code>. Only one node is focused at a time, globally.</p>
 A boundary for Tab navigation. A node with <code>setFocusScope(true)</code>
 restricts the Tab cycle to its descendants. Used by <code>Modal</code> and
 <code>SettingsScreen</code>.</p>
+<p><strong>Font stack</strong> — An ordered list of font family names tried in sequence
+when resolving a <code>font</code> property. The first name registered in the
+<code>IAssetProvider</code> wins. Parsed from <code>font: "Inter", "Helvetica Neue",
+sans-serif</code>. Represented by <code>FontStack</code> (<code>SmallVector&lt;std::string, 3&gt;</code>).</p>
 <p><strong>Frustum culling</strong>
 Skipping a node during <code>draw</code> if its rect is entirely outside the
 current clip. The main optimization for large scrollable lists.</p>

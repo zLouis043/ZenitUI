@@ -883,6 +883,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.8 Typography">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#font-fallback-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Font fallback stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime-font-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime font loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2287,6 +2315,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.8 Typography">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#font-fallback-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Font fallback stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime-font-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime font loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -3247,8 +3303,8 @@ channel is important and the hex form would be less readable.</p>
 <tbody>
 <tr>
 <td><code>font</code></td>
-<td>string</td>
-<td><code>""</code> (backend default)</td>
+<td>FontStack</td>
+<td><code>[]</code> (empty stack, backend default)</td>
 </tr>
 <tr>
 <td><code>font-size</code></td>
@@ -3280,8 +3336,28 @@ channel is important and the hex form would be less readable.</p>
     text-align: center;
 }
 </code></pre>
-<p><code>font</code> is resolved at style time via <code>IAssetProvider::getFont(name)</code>. If
-the name isn't registered, the backend default font is used.</p>
+<h4 id="font-fallback-stack">Font fallback stack</h4>
+<p><code>font</code> accepts a comma-separated <strong>fallback stack</strong>, matching CSS:</p>
+<pre><code class="language-css">.label { font: Inter; }
+.title { font: Inter, &quot;Helvetica Neue&quot;, sans-serif; }
+</code></pre>
+<p>The resolver iterates the stack in order and returns the first family
+that is registered with the <code>IAssetProvider</code>. If none is found, the
+renderer's default font is used.</p>
+<p>Family names that contain spaces must be quoted with <code>"</code> or <code>'</code>.
+Single-token names (letters, digits, <code>_</code>, <code>-</code>) can be unquoted:</p>
+<pre><code class="language-css">.body    { font: mont; }              /* single word, no quotes */
+.heading { font: &quot;Comic Sans MS&quot;; }   /* spaces, quote required */
+</code></pre>
+<h4 id="runtime-font-loading">Runtime font loading</h4>
+<p>Fonts can be registered at runtime through <code>IAssetProvider</code>:</p>
+<pre><code class="language-cpp">UIContext::get().assets-&gt;loadFont(&quot;Inter&quot;, &quot;assets/Inter-Regular.ttf&quot;);
+// ... later ...
+UIContext::get().assets-&gt;unloadFont(&quot;Inter&quot;);
+</code></pre>
+<p>Both methods default to no-ops; backends that support runtime loading
+override them. See <a href="../../api/UIContext/#2-the-three-interfaces">IAssetProvider</a>
+for the full contract and the caveat about unloading a font still in use.</p>
 <p>The properties <code>font</code>, <code>font-size</code>, <code>color</code>, <code>letter-spacing</code>, and
 <code>text-align</code> are <strong>inherited</strong> by descendants. All other properties are
 not.</p>
