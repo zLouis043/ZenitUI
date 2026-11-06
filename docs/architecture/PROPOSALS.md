@@ -18,12 +18,15 @@ implementation.
 
 - ✅ **Proposal 1 — `ref`**: shipped as roadmap §5.16. See
   `docs/user/04-zmarkup.md` §2.4 and `docs/api/ZMarkup.md` §6 for
-  the user-facing API. The "Open questions" section below is kept
-  for historical context.
+  the user-facing API. The "Open questions" sections below are kept for historical context;
+  where the implementation diverged from the proposal, the diff is
+  recorded under "Shipped — implementation notes" at the end of the file.
 - ✅ **Proposal 2 — `Bindable<T>`**: shipped as roadmap §5.17. See
   `docs/user/11-bindable.md` and `docs/api/Bindable.md` for the
   user-facing API.
 - ✅ **Proposal 3 — UIPrefab and Slot**: shipped as roadmap §5.18 and §5.19.
+- ✅ **Proposal 4 — StyleParser Diagnostics**: shipped as roadmap §5.20.
+- ✅ **Proposal 5 — Wrap for HStack**: shipped as roadmap §5.21.
 
 ---
 
@@ -32,6 +35,10 @@ implementation.
 - [Proposal 1 — `ref`: separation of style identity and logic lookup](#proposal-1--ref-separation-of-style-identity-and-logic-lookup)
 - [Proposal 2 — `Bindable<T>`: lightweight data binding](#proposal-2--bindablet-lightweight-data-binding)
 - [Proposal 3 — UIPrefab and Slot](#proposal-3--uiprefab-and-slot)
+- [Proposal 4 — StyleParser Diagnostics](#proposal-4--styleparser-diagnostics)
+- [Proposal 5 — Wrap for HStack](#proposal-5--wrap-for-hstack)
+- [Proposal 6 — VirtualList](#proposal-6--virtuallist)
+- [Proposal 7 — Drag & Drop](#proposal-7--drag--drop)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -694,8 +701,8 @@ Total: ~16 new tests.
 - `Bindable<T>` is opt-in. No existing code uses it. No existing code
   breaks.
 - No new dependency: `Bindable<T>` uses only `<functional>`,
-  `<memory>`, `<unordered_map>` (no — vector, see §2.3.1),
-  `<cstdint>`, `<utility>` — all already included by `Common.hpp`.
+  `<memory>`, `<vector>`, `<cstdint>`, `<utility>` — all already
+  included by `Common.hpp`.
 - No `std::atomic` is used. The `ControlBlock::alive_` flag is a
   plain `bool`, safe because `Bindable` is single-thread (see §2.6).
 
@@ -818,6 +825,918 @@ Estimated: ~100-150 lines of additions.
 * Prefab instance with `.class`, `#id`, `@ref` -> applied to the prefab root.
 * Instantiating a prefab that has no `Slot` but passing children -> warning logged, children ignored.
 
+## Proposal 4 — StyleParser Diagnostics
+
+**Priority:** high — without this, a typo in a `.zstyle` file is
+silently ignored and the developer has to bisect the stylesheet to
+find it.
+
+**Complexity:** medium (~1 day).
+
+**Depends on:** nothing.
+
+**Status:** ✅ shipped as roadmap §5.20.
+
+### 4.1 Problem
+
+The `.zstyle` parser was defensive — it ignored unknown properties
+and unknown pseudo-classes — but it reported nothing. A typo like
+`colr: #fff` would simply not apply, with no diagnostic. A misspelled
+pseudo-class (`:hovver`) would silently fail to match. A duplicated
+`@keyframes` would silently overwrite the previous one. Debugging
+these required bisecting the stylesheet by hand.
+
+Worse, the parser had no notion of source location. Even when a
+diagnostic could have been produced, there was no way to say *where*
+in the file the problem was.
+
+### 4.2 Solution
+
+Introduce a structured diagnostic system:
+
+- **`SourceSpan`** — file, line, column, token length. Every AST node
+  (declarations, rules, keyframe frames) carries one.
+- **`DiagnosticCode`** and **`DiagnosticSeverity`** — enumerated
+  categories and severities (`Info`, `Warning`, `Error`).
+- **`DiagnosticSink`** — an abstract interface that receives
+  diagnostics. Three implementations: `NullDiagnosticSink` (default,
+  discards), `CollectingDiagnosticSink` (stores for later inspection),
+  `ConsoleDiagnosticSink` (prints via `Logger`).
+- **`suggestSimilar`** — Levenshtein-based "did you mean?" suggestions
+  for unknown properties and pseudo-classes.
+- **`strict` mode** — a flag on `loadStyleString` / `loadStyleFile`
+  that promotes warnings to errors and makes the load return `false`
+  if any diagnostic is an error. Useful in CI and debug builds.
+
+The parser is unchanged in its error tolerance: it still ignores
+bad declarations and continues. Only the reporting is new.
+
+### 4.3 API
+
+~~~cpp
+namespace ZenitUI
+{
+
+struct SourceSpan
+{
+    std::string   file;
+    std::uint32_t line   = 0;
+    std::uint32_t column = 0;
+    std::uint32_t length = 0;
+
+    [[nodiscard]] bool valid() const noexcept;
+};
+
+enum class DiagnosticSeverity { Info, Warning, Error };
+
+enum class DiagnosticCode
+{
+    UnterminatedString, UnbalancedBrace, UnexpectedToken,
+    UnknownProperty, InvalidValue, UnknownPseudo, UnknownPart,
+    UnresolvedVariable, UnusedVariable,
+    UnknownSelectorTag, SelectorMatchesNothing, DuplicateRule,
+};
+
+struct ZStyleDiagnostic
+{
+    DiagnosticCode     code;
+    DiagnosticSeverity severity;
+    SourceSpan         span;
+    std::string        message;
+    std::string        hint;
+    std::optional<SourceSpan> related;
+};
+
+class DiagnosticSink
+{
+public:
+    virtual ~DiagnosticSink() = default;
+    virtual void report(ZStyleDiagnostic d) = 0;
+    virtual bool hasErrors() const = 0;
+    virtual std::vector<ZStyleDiagnostic> sorted() const = 0;
+};
+
+class NullDiagnosticSink final : public DiagnosticSink { /* ... */ };
+class CollectingDiagnosticSink final : public DiagnosticSink { /* ... */ };
+
+std::size_t editDistance(std::string_view a, std::string_view b);
+
+std::vector<std::string> suggestSimilar(
+    std::string_view unknown,
+    const std::vector<std::string_view>& candidates,
+    std::size_t maxDistance    = 2,
+    std::size_t maxSuggestions = 3);
+
+const std::vector<std::string_view>& getKnownStyleProperties();
+
+}
+~~~
+
+The load functions gain two optional parameters:
+
+~~~cpp
+bool loadStyleString(
+    std::string_view src,
+    Theme& theme = Theme::get(),
+    const std::string& fileName = "<string>",
+    DiagnosticSink* sink = nullptr,
+    bool strict = false);
+
+bool loadStyleFile(
+    const std::filesystem::path& path,
+    Theme& theme = Theme::get(),
+    DiagnosticSink* sink = nullptr,
+    bool strict = false);
+~~~
+
+Both default `sink` to `nullptr` (no diagnostics collected) and
+`strict` to `false` (warnings don't fail the load). Fully backward
+compatible.
+
+### 4.4 Semantics
+
+**Unknown properties.** `applyStyleDeclaration` checks
+`applyStyleAttr`; if it returns `false` (property not recognized), a
+diagnostic is emitted with `DiagnosticCode::UnknownProperty` and a
+hint built from `suggestSimilar`.
+
+**Unknown pseudo-classes.** The parser recognizes `:hover`,
+`:pressed`, `:focus`, `:disabled`, `:checked`. Any other `:name`
+emits `DiagnosticCode::UnknownPseudo`.
+
+**Duplicate `@keyframes`.** `applyStyleSheet` tracks keyframe names
+in a `std::set`. A second `@keyframes` with the same name emits
+`DiagnosticCode::DuplicateRule`.
+
+**Strict mode.** Every warning is emitted as an error if
+`strict == true`. The load function returns `false` if
+`sink->hasErrors()`.
+
+**Default sink.** When `sink == nullptr`, an internal
+`NullDiagnosticSink` is used and diagnostics go to `Logger` (the
+existing behavior). This preserves backward compatibility.
+
+**Location accuracy.** Every declaration, rule, and frame carries
+the line/column of the **start of the token**, not of the enclosing
+block. This matches common LSP conventions.
+
+### 4.5 File-by-file changes
+
+| File | Change |
+|------|--------|
+| `include/Diagnostics.hpp` | New file. `SourceSpan`, `DiagnosticCode`, `DiagnosticSeverity`, `ZStyleDiagnostic`, `DiagnosticSink` and its implementations, `editDistance`, `suggestSimilar`, `getKnownStyleProperties`. |
+| `src/internal/Diagnostics.cpp` | New file. `toString` overloads, `formatDiagnostic`, `editDistance`, `suggestSimilar`, the static `getKnownStyleProperties` table. |
+| `include/StyleParser.hpp` | `applyStyleDeclaration` gains `DiagnosticSink*` and `bool strict`. `StyleSheet::Declaration` (and `Rule`, `KfRule`, `KfFrame`) gain a `SourceSpan loc`. `loadStyleString` / `loadStyleFile` gain `sink` and `strict`. |
+| `include/StyleAttr.hpp` | (No signature change; the diagnostic path calls `applyStyleAttr` and uses its return value.) |
+| `tests/test_diagnostics.cpp` | New file. 6 tests. |
+| `docs/ROADMAP.md` | §5.20 closed. |
+
+No source files other than the two new ones and `StyleParser.hpp`.
+
+### 4.6 Tests
+
+`tests/test_diagnostics.cpp`:
+
+- `valid_style_no_diagnostics` — a clean stylesheet produces no
+  diagnostics.
+- `unknown_property_emits_warning` — `colr: #fff` produces a
+  `Warning` with `UnknownProperty` and a hint containing "color".
+- `unknown_property_strict_emits_error` — the same stylesheet with
+  `strict = true` produces an `Error` and `hasErrors()` is true.
+- `unknown_pseudo_class` — `Button:hovver` produces `UnknownPseudo`.
+- `duplicate_keyframes` — two `@keyframes pulse` produce
+  `DuplicateRule`.
+- `edit_distance_basics` — `editDistance` sanity checks (equal,
+  insert, delete, totally different).
+
+All 6 pass on the current implementation.
+
+### 4.7 Documentation
+
+- `docs/user/05-zstyle.md` §11 "Diagnostics and Strict Mode" — how to
+  use a `DiagnosticSink`, what `strict` mode does, the format of the
+  hint.
+- `docs/api/Style.md` — no change (the diagnostic API is documented
+  in the new `Diagnostics.hpp`; a `docs/api/Diagnostics.md` would be
+  redundant for a header-only utility).
+- `docs/ROADMAP.md` §5.20 — mark shipped.
+
+### 4.8 What does NOT change
+
+- The `.zstyle` grammar: unchanged. Diagnostics only *report* on
+  existing syntax.
+- The default behavior: still tolerant. Bad declarations are still
+  ignored by default (`strict = false`).
+- The `Logger` path: preserved as the fallback when no sink is
+  provided.
+- `applyStyleAttr`: unchanged. It still returns `bool` (whether it
+  recognized the property), and the caller (the diagnostic path) uses
+  that return value.
+
+### 4.9 Open questions (resolved at ship time)
+
+1. **Should the sink be required?** No — a required sink would break
+   every existing call. Default to `nullptr` and fall back to
+   `Logger`.
+2. **Should `strict` default to `true` in debug builds?** Tempting,
+   but it would change behavior based on build flags, which is
+   surprising. Keep `strict = false` by default; CI and debug
+   environments can opt in.
+3. **Should diagnostics include a related span?** The struct has a
+   `related` field for future use (e.g. "this rule shadows the
+   previous one at line X"), but nothing populates it yet. Reserved.
+
+---
+
+## Proposal 5 — Wrap for HStack
+
+**Priority:** medium — HStacks with many children overflow today; a
+responsive toolbar or a tag cloud is awkward to build without wrap.
+
+**Complexity:** medium (~1 day).
+
+**Depends on:** nothing.
+
+**Status:** ✅ shipped as roadmap §5.21.
+
+### 5.1 Problem
+
+An `HStack` lays out its children in a single horizontal line. If the
+sum of the children's widths exceeds the container's inner width, the
+children overflow: they are placed beyond the right edge and (if the
+container has `overflow: visible`) draw outside their bounds. There is
+no way to make them flow onto the next line.
+
+This is the single biggest limitation of the current layout engine
+for UI patterns like:
+
+- Toolbars with an unknown number of buttons.
+- Tag clouds.
+- Image grids.
+- Any responsive row of items.
+
+CSS solves this with `flex-wrap: wrap`. We need the equivalent.
+
+### 5.2 Solution
+
+Add a `wrap` boolean property to `Style` / `ComputedStyle`, parsed
+from `.zstyle` (`wrap: true`, `wrap: 1`, `wrap: wrap`) and settable
+in C++ (`s.wrap = true`).
+
+When `type == Horizontal` and `wrap == true`, `arrange` uses a
+multi-line algorithm:
+
+- Iterate the children, accumulating widths.
+- Before placing a child, if `currentLineWidth + childWidth > innerW`
+  and the line is non-empty, start a new line.
+- Track the height of each line (max of its children's heights).
+- After line breaking, distribute `justify` **per line** (each line
+  is centered / spaced independently, not the whole row).
+- `align-v` (`items-v`) is resolved against the line's height, not
+  the container's height.
+
+`computeIntrinsicSize` is updated to compute the total height as the
+sum of line heights + gaps, and the width as the max line width.
+
+`Vertical` and `Stack` layouts ignore the `wrap` flag (it has no
+meaning for them).
+
+### 5.3 API
+
+`.zstyle`:
+
+~~~css
+.toolbar { wrap: true; }
+.toolbar Button { /* each button is a child */ }
+~~~
+
+C++:
+
+~~~cpp
+s.wrap = true;
+~~~
+
+No new methods, no new types. Only the `Opt<bool> wrap` field in
+`Style` and `bool wrap` in `ComputedStyle`, both already generated by
+`BUBBLE_STYLE_PROPS`.
+
+### 5.4 Semantics
+
+**Line breaking trigger.** A new line is started when the current
+line already has at least one child and the next child's outer width
+(child width + margins) would exceed `innerW`. A child alone on a
+line is always placed, even if it exceeds `innerW` (matching CSS:
+overflow rather than a zero-width column).
+
+**Gap.** `gap` (X axis) is inserted **between children on the same
+line**, not between lines. `gap` (Y axis) is inserted **between
+lines**, not between rows within a line. This matches CSS
+`row-gap` / `column-gap` semantics with a single `gap` property.
+
+**Justify per line.** `justify: center`, `end`, `space-between` are
+applied per line independently. A line with a single child and
+`justify: space-between` behaves like `justify: start` (no extra
+space to distribute). This matches CSS.
+
+**Cross-axis align per line.** `items-v` (`start`, `center`, `end`,
+`stretch`) is resolved against the **line height**, not the
+container height. A child that is `items-v: center` is centered
+vertically within its own line.
+
+**Wrap does not affect Vertical or Stack.** On a `Vertical` or
+`Stack` container, `wrap: true` is silently ignored. The property is
+documented as "HStack only".
+
+**Interaction with `grow` / `shrink`.** Both are applied per line, as
+in the non-wrap case, after line breaking. A line whose children are
+all `grow: 0` keeps its natural width; a line with a `grow: 1` child
+expands that child to fill the line.
+
+### 5.5 File-by-file changes
+
+| File | Change |
+|------|--------|
+| `include/Style.hpp` | `X(bool, wrap, false)` added to `BUBBLE_STYLE_PROPS`. `isInheritedProp` unchanged (wrap is not inherited). |
+| `include/StyleAttr.hpp` | `else if (key == "wrap") { st.wrap = (v == "true" || v == "1" || v == "wrap"); return true; }` |
+| `include/StyleParser.hpp` | No change — `applyStyleAttr` handles the key. |
+| `src/ui/layout/Measure.cpp` | New `arrangeWrapFlow` (was `arrangeHorizontalFlow` with a wrap branch added; kept as a separate function for clarity). `arrangeInto` dispatches to it when `type == Horizontal && style.wrap`. `computeIntrinsicSize` updated to compute multi-line height. |
+| `tests/test_layout.cpp` | 6 tests added (see §5.6). |
+| `docs/ROADMAP.md` | §5.21 closed. |
+
+No source files other than `Measure.cpp`. `Style.hpp` and
+`StyleAttr.hpp` get one line each.
+
+### 5.6 Tests
+
+`tests/test_layout.cpp`, group `Layout_wrap`:
+
+- `no_wrap_overflows` — without `wrap`, three 100-wide children in
+  a 250-wide container are all at the same `y` and overflow.
+- `wrap_moves_to_next_line` — with `wrap: true`, the third child is
+  on a new line.
+- `wrap_measures_correct_height` — the container's measured height
+  is the sum of line heights + gap.
+- `wrap_multiple_lines_with_gap` — four children in a 250-wide
+  container produce two lines, with `gap` between children on each
+  line and between lines.
+- `wrap_justify_center` — a line with `justify: center` centers its
+  children within the line.
+- `wrap_cross_axis_alignment` — a child with `items-v: center` is
+  centered within its line's height.
+
+All 6 pass on the current implementation.
+
+### 5.7 Documentation
+
+- `docs/user/02-layout.md` §HStack: add a "Wrap" subsection with an
+  example, the `gap` semantics, and the "HStack only" caveat.
+- `docs/CHEATSHEET.md` §3 Layout types: add a `wrap` row.
+- `docs/api/Style.md` §2 (property list): already lists `wrap`
+  because it's in `BUBBLE_STYLE_PROPS`; no change.
+- `docs/ROADMAP.md` §5.21: mark shipped.
+
+### 5.8 What does NOT change
+
+- Vertical and Stack layout: unchanged. `wrap` is ignored.
+- Non-wrap Horizontal layout: unchanged. `arrangeHorizontalFlow` is
+  untouched.
+- `computeIntrinsicSize` for non-wrap Horizontal: unchanged.
+- Alignment semantics for non-wrap: unchanged.
+- ZMarkup: no new tag or attribute. `wrap` is an inline style
+  attribute that already existed in the parser's `applyStyleAttr`
+  (it was a no-op, now it's wired to the layout).
+
+### 5.9 Open questions (resolved at ship time)
+
+1. **Should `wrap` also apply to `Vertical`?** No — vertical already
+   has multiple lines by construction (the Y axis is the line axis).
+   `wrap` would be meaningless.
+2. **Should `wrap` accept a direction or alignment?** No, matching
+   CSS `flex-wrap: wrap` (not `wrap-reverse`). A future
+   `flex-wrap: wrap-reverse` would be a separate property.
+3. **Should `justify` distribute space across lines or within
+   lines?** Within lines. This matches CSS and is what users expect
+   for toolbars.
+
+## Proposal 6 — VirtualList
+
+**Priority:** high — unblocks large lists (10k+ items) and is the most
+requested feature after UIPrefab.
+
+**Complexity:** medium-high (~1-2 weeks for the fixed-height version,
++1 week for variable-height rows).
+
+**Depends on:** §5.18 (UIPrefab), §5.19 (Slot), `ScrollController`.
+
+**Status:** 🟡 proposed.
+
+**Roadmap mapping:** ships as §5.23.
+
+### 6.1 Problem
+
+Today, rendering a list of N items means materializing N `Layout`
+nodes. At N = 1000 this is already measurable (`large1000` allocates
+1000 nodes, measures them, and keeps them alive); at N = 10,000 it's
+unusable: memory grows linearly, `measure`/`arrange` walk the whole
+tree every frame, and `draw` culls but still iterates.
+
+The standard solution is **virtualization**: materialize only the rows
+currently visible in the scroll viewport, plus a small buffer, and
+recycle the materialized nodes when they scroll out and new ones
+scroll in. This is what Qt's `QListView`, React's `react-window`, and
+every mobile list widget do.
+
+### 6.2 Solution
+
+Introduce a `VirtualList` class that:
+
+- holds a **data model** (item count + a per-item binding callback),
+- holds a **row template** (a `UIPrefab` name),
+- materializes only the rows intersecting the scroll viewport,
+- recycles materialized rows when they scroll out,
+- re-binds recycled rows to a new index (the "recycled row" pattern).
+
+It is a sibling of `ScrollView`, not a subclass: `ScrollView` is a
+generic container, `VirtualList` is a specialized one with a mandatory
+row model. Sharing code would force `ScrollView` to grow hooks it
+doesn't need.
+
+### 6.3 API
+
+~~~cpp
+namespace ZenitUI::UI
+{
+
+class VirtualList : public TLayout<VirtualList, ScrollView>
+{
+public:
+    static std::shared_ptr<VirtualList> create(
+        std::string prefabName,
+        int         itemCount);
+
+    void  setItemCount(int count);
+    int   getItemCount() const;
+
+    void  setRowHeight(float px);
+    float getRowHeight() const;
+
+    // Called when a row is (re)bound to an index. `row` is the root
+    // of the prefab instance. Look up nodes inside it with
+    // `find` / `ref` / `refAll` on that root.
+    std::function<void(int index, Layout* row)> onBindRow;
+
+    // Called once per row when the row is first created. Use for
+    // one-time setup (e.g. attaching a click handler whose closure
+    // captures a weak_ptr to the row).
+    std::function<void(Layout* row)> onRowCreated;
+
+    void scrollToRow(int index);
+    int  getFirstVisibleRow() const;
+    int  getLastVisibleRow() const;
+};
+
+} // namespace ZenitUI::UI
+~~~
+
+`.zstyle` / ZMarkup:
+
+~~~zmarkup
+VirtualList#log-view prefab="LogRow" items="10000" row-height="24"
+~~~
+
+`prefab`, `items`, and `row-height` are consumed by
+`VirtualList::onBuild`; other attributes are applied to the internal
+scroll container as usual.
+
+### 6.4 Semantics
+
+**Row recycling.** The list maintains a pool of `Layout` instances
+materialized from the prefab. When the viewport scrolls, a row that
+scrolled out is detached from its index and re-bound to a new one.
+The number of `Layout` instances is bounded by
+`ceil(viewportHeight / rowHeight) + 2 * buffer`. The buffer defaults
+to 2 rows on each side.
+
+**Binding order.** When a row is recycled, `onBindRow(newIndex, row)`
+fires **after** the row's children have been rearranged but **before**
+the next `measure`/`arrange` pass. This lets the binding callback
+mutate the row (set text, change classes) without causing a second
+layout pass.
+
+**Row identity.** A row is identified by its index in the model, not
+by a stable id. Supporting stable ids would require the user to
+provide an equality function and the list to maintain an id→index
+map. If stable ids are needed, encode the id in the row itself via
+`ref` in the binding callback.
+
+**Empty state.** When `itemCount == 0`, the list renders nothing
+beyond the scrollbar. A future extension could add an
+`onEmpty`/`emptyPrefab` hook; not in this proposal.
+
+**Scrollbar.** The scrollbar reflects the full model size
+(`itemCount * rowHeight`), not the visible rows. The thumb is
+proportional to the viewport / content ratio.
+
+**Interaction.** Rows are normal `Layout` instances. Clicks, hover,
+focus, and keyboard navigation work as in a normal `ScrollView`. A
+hovered row that is recycled under the pointer triggers
+`onHoverExit` on the old index and `onHoverEnter` on the new index.
+
+**Vertical only, LTR only.** Horizontal lists and RTL are §5.23b.
+
+### 6.5 File-by-file changes
+
+| File | Change |
+|------|--------|
+| `include/components/VirtualList.hpp` | New file. Class declaration + implementation (header-only, like the other widgets). |
+| `src/ui/UI.hpp` | `#include "components/VirtualList.hpp"` |
+| `src/ui/ZMarkup.hpp` | Register `VirtualList` in the default registry; parse `prefab`, `items`, `row-height`. |
+| `tests/test_virtual_list.cpp` | New file. ~15 tests. |
+| `examples/14_virtual_list/main.cpp` | New example. 10,000 rows, ~30 materialized. |
+| `docs/user/03-widgets.md` | New §VirtualList section. |
+| `docs/api/Widgets.md` | New `VirtualList` entry. |
+| `docs/ROADMAP.md` | §5.23 checklist and closure. |
+
+Estimated: ~400 lines of new code, ~300 lines of test, ~150 lines of
+docs, ~80 lines of example.
+
+### 6.6 Tests
+
+Model semantics:
+- `setItemCount` updates the model.
+- `setRowHeight` updates the scroll content size.
+- `getItemCount` returns what was set.
+- Zero-item list renders no rows.
+- One-item list renders exactly one row.
+
+Recycling behavior:
+- After scrolling by `N * rowHeight`, `getFirstVisibleRow` returns `N`.
+- After scrolling by `N * rowHeight`, `getLastVisibleRow` returns
+  `N + visibleCount - 1`.
+- A row that scrolls out and back in is rebound (`onBindRow` fires
+  again with the same index).
+- `onRowCreated` fires exactly `ceil(viewportH / rowH) + 2 * buffer`
+  times, no more.
+- After scrolling past all items, `getFirstVisibleRow` is
+  `max(0, itemCount - visibleCount)`.
+- Hover during recycling: a hovered row that is recycled under the
+  pointer triggers `onHoverExit` on the old index and `onHoverEnter`
+  on the new index.
+
+Integration:
+- A `VirtualList` inside a `ScrollView` scrolls correctly.
+- Clicking a row fires its `onClick` with the closure captured in
+  `onBindRow` for the current index.
+
+Estimated: ~15 tests.
+
+### 6.7 Documentation
+
+- `docs/user/03-widgets.md` §VirtualList: motivation, API, the
+  fixed-height limitation, the recycling contract for `onBindRow`,
+  the "closures capture `index` by value" pattern.
+- `docs/api/Widgets.md` `VirtualList`: full method reference.
+- `docs/CHEATSHEET.md`: a one-liner and a five-line example.
+- `examples/14_virtual_list`: 10k rows, shows only the visible ones.
+
+### 6.8 What does NOT change
+
+- `ScrollView` behavior: unchanged. `VirtualList` uses a private
+  `ScrollView` instance internally, not a subclass.
+- `UIPrefab` behavior: unchanged.
+- `Layout` behavior: unchanged.
+- `Theme` behavior: unchanged.
+- ZMarkup grammar: one new reserved tag (`VirtualList`), three new
+  attributes (`prefab`, `items`, `row-height`). All existing markup
+  is unaffected.
+
+### 6.9 Open questions
+
+1. **Fixed vs variable row height.** Fixed height is much simpler
+   and covers ~80% of use cases (logs, tables, chat messages).
+   Variable height requires per-row `measure` and a two-pass layout;
+   it's a substantial API surface. Decision: **fixed height only**;
+   variable height is §5.23a, deferred.
+
+2. **Recycling policy.** FIFO vs LRU. FIFO is simpler and gives a
+   stable memory pattern; LRU keeps recently-visible rows hot, but
+   the pool is small enough that it doesn't matter. Decision:
+   **FIFO**.
+
+3. **Selection state.** Selection is a property of the model, not of
+   the row. The proposal doesn't ship a selection API; the user
+   implements it in `onBindRow`. If a selection API is ever needed,
+   it's §5.23c.
+
+4. **Scroll momentum during row reuse.** The `ScrollController`'s
+   inertia is based on velocity, not on content identity. Recycling
+   rows mid-fling is safe. No special handling required.
+
+5. **Row height changes.** `setRowHeight` after the first frame
+   forces a full rebuild of the row pool and a `measure`
+   invalidation. Allowed but expensive; documented as "call before
+   the first `runFrame` in practice".
+
+6. **Nested lists.** A `VirtualList` inside a `VirtualList` row is
+   technically possible but not tested. The outer recycling destroys
+   the inner list when the outer row scrolls out; the inner list's
+   scroll position is lost. Documented as a limitation.
+
+7. **Prefab mutation.** `onBindRow` can freely mutate the row (set
+   text, change classes). It must not add or remove children from
+   the row — the row's child structure is owned by the prefab and
+   is assumed stable across recycles. Documented.
+
+## Proposal 7 — Drag & Drop
+
+**Priority:** medium — unblocks reorderable lists, file pickers, and
+palette-based UIs.
+
+**Complexity:** medium-high (~2-3 weeks, split into 3 PRs).
+
+**Depends on:** nothing strictly; benefits from §5.23 (VirtualList).
+
+**Status:** 🟡 proposed.
+
+**Roadmap mapping:** ships as §5.22 (a/b/c).
+
+### 7.1 Problem
+
+Today, reordering items or dragging a node onto another requires
+per-widget ad-hoc code: manual pointer capture, manual hit-test,
+manual visual feedback, manual drop detection. There's no shared
+abstraction, so every widget that needs drag reimplements it with
+subtly different behavior (does the drag ghost clip? does the drop
+target get hover state? what happens on Esc?).
+
+The standard solution is a framework-level drag & drop protocol with
+three roles: **draggable source**, **drop target**, **drag ghost**.
+
+### 7.2 Solution
+
+Three cooperating pieces:
+
+1. **Drag state in `UIContext`.** A single optional
+   `ActiveDrag { source, payload, ghost, offset }` set when a drag
+   starts and cleared when it ends. The payload is an opaque
+   `std::any` so the framework doesn't need to know what's being
+   dragged.
+
+2. **`draggable` and `droppable` flags on `Layout`.** Set via C++
+   (`setDraggable(true)`, `setDroppable(true)`) or `.zstyle`
+   (`draggable: true`). A `draggable` node initiates a drag on press
+   + move beyond a threshold. A `droppable` node accepts a drop if
+   the payload satisfies a user-provided predicate.
+
+3. **Drag ghost.** When a drag starts, a user-provided ghost factory
+   materializes a `Layout` that follows the pointer. The ghost is
+   added to a dedicated overlay layer (a portal-like mechanism) so
+   it isn't clipped by the source's ancestors.
+
+The protocol:
+
+- `onPress` on a `draggable` node starts a **pending drag**.
+- If the pointer moves more than `dragThreshold` pixels while
+  pressed, the pending drag becomes an **active drag**.
+- While active: `UIContext::activeDrag` is set, `onDragStart` fires
+  on the source, the ghost is created and follows the pointer.
+- Each frame, `hitTest` on `droppable` nodes (excluding the source
+  and the ghost) determines `dragHoverTarget`.
+  `onDragEnter` / `onDragLeave` fire on hover transitions.
+- On release, `onDrop` fires on `dragHoverTarget` (if any),
+  `onDragEnd` fires on the source, drag state is cleared.
+- On Esc during a drag, `onDragCancel` fires and the drag is
+  cleared without a drop.
+
+### 7.3 API
+
+~~~cpp
+namespace ZenitUI
+{
+
+struct DragPayload
+{
+    std::any    data;
+    std::string typeTag;   // e.g. "list-item", "file", "color"
+};
+
+struct ActiveDrag
+{
+    std::weak_ptr<Layout>   source;
+    std::weak_ptr<Layout>   ghost;
+    DragPayload             payload;
+    Vec2                    startPos;
+    Vec2                    currentPos;
+    Layout*                 hoverTarget{nullptr};
+    bool                    active{false};
+};
+
+}
+~~~
+
+In `Layout`:
+
+~~~cpp
+void setDraggable(bool v);
+void setDroppable(bool v);
+bool isDraggable() const;
+bool isDroppable() const;
+
+std::function<void(DragPayload&)>        onDragStart;
+std::function<void()>                    onDragEnd;
+std::function<void()>                    onDragCancel;
+
+std::function<bool(const DragPayload&)>  canAcceptDrop;
+std::function<void(const DragPayload&)>  onDrop;
+std::function<void()>                    onDragEnter;
+std::function<void()>                    onDragLeave;
+~~~
+
+In `UIContext`:
+
+~~~cpp
+ActiveDrag activeDrag;
+float      dragThreshold{5.0f};
+std::function<std::shared_ptr<Layout>(const DragPayload&)> dragGhostFactory;
+~~~
+
+`.zstyle` / ZMarkup:
+
+~~~css
+.list-item { draggable: true; }
+.drop-zone { droppable: true; }
+~~~
+
+`onDragStart`, `onDrop`, etc. are C++-only. The DSL expresses flags
+but not callbacks.
+
+### 7.4 Semantics
+
+**Threshold.** A drag doesn't start until the pointer has moved
+`dragThreshold` pixels from the press position. This lets clicks on
+a draggable element fire normally. Matching CSS / OS behavior.
+
+**Hit-testing during drag.** `hitTest` is called with the current
+pointer position, but the source and ghost are excluded from the
+walk. Only `isDroppable()` nodes are considered; non-droppable
+nodes are skipped entirely (not just "not accepted"). A non-droppable
+parent of a droppable child does not block the child.
+
+**`canAcceptDrop` predicate.** If provided, called once per hover
+target change with the payload. Returning false excludes the node;
+the walk continues to its parent. If not provided, every droppable
+accepts every payload.
+
+**Visual feedback.** The framework does not apply any style change to
+hover targets automatically. The user reacts via
+`onDragEnter`/`onDragLeave` (e.g. add a `.drop-hover` class).
+
+**Ghost layer.** The ghost is added to a per-frame overlay layer
+drawn after the main tree, on top of everything. Not clipped by any
+ancestor. Follows the pointer with the offset captured at drag start.
+
+**Drop.** On release, if `dragHoverTarget` is non-null and
+`canAcceptDrop` returns true (or isn't set), `onDrop(payload)` fires.
+Then `onDragEnd()` fires on the source. Then `activeDrag` is cleared.
+
+**Cancel.** On Esc or on window-leave, `onDragCancel()` fires on the
+source, the ghost is destroyed, `activeDrag` is cleared, and
+`onDrop` does not fire.
+
+**Source and ghost lifetime.** Both are `weak_ptr` in `ActiveDrag`.
+Destroying either mid-drag auto-cancels on the next frame.
+
+**Reentrancy.** Starting a drag from within `onDrop` of another drag
+is undefined. Documented as "don't".
+
+**Payload lifetime.** `DragPayload::data` is copied once at drag
+start. The user is responsible for making the data copyable (or use
+`std::shared_ptr<T>` inside the `std::any`). Documented.
+
+### 7.5 File-by-file changes
+
+Split into three PRs, matching the a/b/c split in the roadmap.
+
+**PR a — input capture and drag state** (~150 lines):
+
+| File | Change |
+|------|--------|
+| `include/UIContext.hpp` | `ActiveDrag`, `dragThreshold`, `dragGhostFactory`. |
+| `include/Layout.hpp` | `setDraggable` / `setDroppable` / flags in `NodeConfig`. |
+| `src/ui/input/InputController.cpp` | Threshold detection, state machine. |
+| `tests/test_drag.cpp` | ~8 tests: threshold, Esc cancel, source-death cancel, no-drag-on-click. |
+| `docs/ROADMAP.md` | §5.22a checklist. |
+
+**PR b — droppable protocol and hit-test** (~200 lines):
+
+| File | Change |
+|------|--------|
+| `include/Layout.hpp` | Drag callbacks. |
+| `src/ui/layout/Layout.cpp` | Drag-aware `hitTest` (skip source and ghost). `updateTree` updates `dragHoverTarget` after regular hover. |
+| `tests/test_drag.cpp` | ~10 tests: drop, enter/leave, `canAcceptDrop` filter, nested droppables. |
+| `docs/ROADMAP.md` | §5.22b checklist. |
+
+**PR c — visual feedback and ghost** (~150 lines):
+
+| File | Change |
+|------|--------|
+| `include/Layout.hpp` | Ghost layer registration. |
+| `src/ui/layout/Layout.cpp` | Draw ghost after the main tree. |
+| `include/UIContext.hpp` | Per-frame overlay list. |
+| `tests/test_drag.cpp` | ~5 tests: ghost created / destroyed / not clipped. |
+| `examples/15_drag_drop/main.cpp` | New example. Reorderable 10-card list. |
+| `docs/user/06-events.md` | New §Drag and Drop. |
+| `docs/api/Layout.md` | Document drag callbacks. |
+| `docs/CHEATSHEET.md` | Five-line drag example. |
+
+### 7.6 Tests
+
+PR a:
+- No drag start on a simple click.
+- Drag start on press + move > threshold.
+- Esc cancels a drag.
+- Source destruction cancels a drag.
+- `onDragCancel` fires before `activeDrag` is cleared.
+- Drag doesn't start if the source is disabled mid-press.
+- Release without move doesn't start a drag.
+- Press, move, back to origin, release: `onDragEnd` fires
+  (drag started, no drop).
+
+PR b:
+- `onDrop` fires on the droppable under the pointer.
+- `onDrop` doesn't fire on a non-droppable parent.
+- `onDragEnter` / `onDragLeave` fire on hover transitions.
+- `canAcceptDrop` returning false excludes the node.
+- Nested droppables: innermost wins.
+- Droppable above the source's ancestor doesn't block.
+
+PR c:
+- Ghost is created at drag start.
+- Ghost follows the pointer.
+- Ghost is destroyed on drop and on cancel.
+- Ghost isn't clipped by the source's `overflow: hidden` ancestor.
+
+Total: ~23 tests.
+
+### 7.7 Documentation
+
+- `docs/user/06-events.md` §Drag and Drop: motivation, three roles,
+  protocol, "use `shared_ptr` for payload" pattern, "don't start a
+  drag from `onDrop`" warning.
+- `docs/api/Layout.md`: `setDraggable`, `setDroppable`, callbacks.
+- `docs/api/UIContext.md`: `activeDrag`, `dragThreshold`,
+  `dragGhostFactory`.
+- `docs/CHEATSHEET.md`: reorderable list in ~10 lines.
+- `examples/15_drag_drop`: reorderable 10-card list with ghost.
+
+### 7.8 What does NOT change
+
+- Click behavior: unchanged. Threshold preserves clicks.
+- Hover behavior: unchanged for non-draggable nodes.
+- Focus behavior: unchanged. A drag doesn't steal focus.
+- Keyboard behavior: unchanged. Esc is intercepted only during a
+  drag.
+- `Layout` public API: additive only.
+- `UIContext` public API: additive only.
+- ZMarkup grammar: two new attributes (`draggable`, `droppable`).
+
+### 7.9 Open questions
+
+1. **Payload type — `std::any` vs template.** `std::any` is simple but
+   requires copyable payloads. A `DragPayload<T>` template would
+   force `Layout` to be templated on the payload type — absurd.
+   Decision: **`std::any`** with a documented "use `shared_ptr<T>`
+   inside the any if T is expensive to copy".
+
+2. **Ghost factory — global or per-source?** Global is simple but
+   uniform; per-source gives per-widget control but adds a field.
+   Decision: **per-source first, global fallback**. `Layout::onGhostFactory`
+   is the per-source hook; `UIContext::dragGhostFactory` is the fallback.
+
+3. **Drop on Esc.** `onDrop` does not fire on Esc. Matches OS
+   behavior.
+
+4. **Multi-pointer drag.** Two simultaneous drags (left + right
+   mouse) are not supported. `activeDrag` is a single struct.
+   Documented.
+
+5. **Cross-process drag.** Dragging from another application into
+   the window is not supported. Deferred to post-1.0 (would require
+   `IPlatform` extensions).
+
+6. **Auto-scroll during drag.** Dragging near the edge of a
+   `ScrollView` should auto-scroll. Not in this proposal; the user
+   can implement it in `onDragEnter`/`onUpdate`. Deferred to §5.22d.
+
+7. **Drop between two lists.** The `typeTag` field is designed to
+   support this (a droppable can check the tag), but the proposal
+   doesn't ship a built-in mechanism for moving items between lists.
+   The user implements it in `onDrop`.
+
+8. **Visual feedback during drag.** No automatic style change on
+   hover targets. Deliberate. A built-in `.drop-hover` class could be
+   added as a follow-up.
+
 ---
 
 ## Out of scope (future rounds)
@@ -828,13 +1747,8 @@ re-discussing them.
 
 | Feature | Why deferred |
 |---------|--------------|
-| `UIPrefab` | High value but depends on `ref` landing first. Separate proposal. |
-| `<Slot>` | Completes `UIPrefab`. Separate proposal. |
-| Drag & Drop | Touches 6 files (UIContext, InputController, Layout, StyleResolver, StyleParser, hitTest). Must be split into 3 PRs. Separate proposal. |
-| `wrap` (HStack wrap) | Medium value, ~100 lines in `Measure.cpp`. Separate proposal. |
 | `GridLayout` | Low priority. `Stack`/`Vertical`/`Horizontal` cover 90% of use cases. Later. |
-| `VirtualList` | Depends on `UIPrefab`. After `UIPrefab`. |
-| Memory management (arena + pool + `UIHandle`/`UIProxy`) | Post-1.0. API-breaking. Performance numbers don't justify it today (500 µs for 1000 nodes = 3% of a 60 fps frame budget). |
+| Memory management (arena + pool + `UIHandle`/`UIProxy`) | Post-1.0. API-breaking. Performance numbers don't justify it today. |
 | `EventBus` (zero-RTTI) | Out of scope for ZenitUI. Belongs to the game engine roadmap. |
 | Hot reload | Out of scope for ZenitUI. Belongs to the consumer. See roadmap §5.10. |
 
@@ -842,19 +1756,29 @@ re-discussing them.
 
 ## Implementation sequence
 
-1. **Proposal 1 — `ref`** (1 day). Ships in roadmap as §5.16.
-2. **Proposal 2 — `Bindable<T>`** (half a day). Ships in roadmap as §5.17.
-3. **`UIPrefab`** (1–2 days). Ships in roadmap as §5.18. Depends on `ref`.
-4. **`<Slot>`** (half a day). Ships as §5.19. Depends on `UIPrefab`.
-5. **StyleParser diagnostics** (half a day). Ships as §5.20. Covers
-   *ZStyle-side* warnings only: unknown properties (already logged),
-   unparseable values (already logged), unknown pseudo-classes
-   (currently silent), duplicate `@keyframes` names, unused `:root`
-   custom properties. The `find` / `ref` warnings are **not** part of
-   §5.20 — they ship with Proposal 1 as §5.16.
-6. **`wrap`** (1 day). Ships as §5.21.
-7. **Drag & Drop** (2–3 days, split in 3 PRs). Ships as §5.22a/b/c.
-8. **`VirtualList`** (1–2 weeks). Ships as §5.23. Depends on `UIPrefab`.
+**Shipped** (roadmap §5.16 – §5.21):
+
+1. Proposal 1 — `ref` → §5.16
+2. Proposal 2 — `Bindable<T>` → §5.17
+3. UIPrefab → §5.18 (depends on `ref`)
+4. `<Slot>` → §5.19 (depends on UIPrefab)
+5. Proposal 4 — StyleParser Diagnostics → §5.20
+6. Proposal 5 — Wrap for HStack → §5.21
+
+**Proposed** (next, in this order):
+
+7. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
+   Benefits: unblocks 10k+ item lists, the most-requested feature
+   after UIPrefab.
+8. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c). Benefits from
+   VirtualList for the "reorderable list" example, but doesn't
+   strictly depend on it.
+
+**Post-1.0:**
+
+- Memory management (Phase 8 in the roadmap).
+- `GridLayout`.
+- Out-of-scope items as decided by the user.
 
 Post-1.0:
 
@@ -864,33 +1788,7 @@ Post-1.0:
 
 ---
 
-## File impact summary
-
-| File | Proposal 1 | Proposal 2 |
-|------|------------|------------|
-| `src/ui/Layout.hpp` | +field, +2 methods | — |
-| `src/ui/ZMarkup.hpp` | +parser, +2 UINode methods, +logging | — |
-| `src/ui/Bindable.hpp` | — | new file |
-| `src/ui/UI.hpp` | — | +include |
-| `src/ui/Debug.hpp` | +ref in dump | — |
-| `tests/test_zmarkup_build.cpp` | +12 tests | — |
-| `tests/test_layout.cpp` | +2 tests | — |
-| `tests/test_bindable.cpp` | — | +16 tests |
-| `docs/user/04-zmarkup.md` | edit | — |
-| `docs/user/11-bindable.md` | — | new file |
-| `docs/api/ZMarkup.md` | edit | — |
-| `docs/api/Layout.md` | edit | — |
-| `docs/api/Bindable.md` | — | new file |
-| `docs/internals/01-architecture.md` | edit | — |
-| `docs/CHEATSHEET.md` | edit | edit |
-| `docs/GLOSSARY.md` | edit | edit |
-| `docs/ROADMAP.md` | +§5.16 | +§5.17 |
-
-Zero deletions in either proposal. Both are purely additive.
-
----
-
-## Shipped proposals
+## Change log — how the implementation differs from the proposal
 
 ### Proposal 1 — `ref`
 
