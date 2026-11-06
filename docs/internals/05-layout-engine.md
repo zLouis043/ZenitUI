@@ -85,6 +85,18 @@ and then returns instantly for every subsequent frame.
 by `markInheritanceDirty` when a parent's inherited properties change.
 When `internal_.subtreeDirty` is 1, the cache is invalidated.
 
+`subtreeDirty` is also set when a child is removed. `cullRemovedChildren`
+sets a separate `internal_.hadRemovedChildren` bit on the parent when at
+least one child is actually erased; `recomputeDirty` reads it, ORs it into
+`subtreeDirty` for the current frame, and clears it. This forces the
+parent — and, transitively through the normal `anyChildDirty` check, its
+ancestors — to re-measure on the frame after a removal, so the container
+shrinks and its scrollbar disappears when the content no longer overflows.
+Without this bit, `recomputeDirty` would see an unchanged subtree (the
+remaining children are clean, the parent's own style is unchanged) and
+`measure` would short-circuit, leaving `contentSize` and `maxScroll` at
+their pre-removal values.
+
 ### 2.2 Style resolution
 
 ```cpp
