@@ -381,7 +381,7 @@ upward through the normal `anyChildDirty` check.
 - [x] Set the flag in `cullRemovedChildren` when a child is erased
 - [x] OR the flag into `recomputeDirty` and clear it
 - [x] Add regression test in `test_interaction.cpp`
-- [ ] Update `internals/05-layout-engine.md` §7 (dirty tracking) to
+- [x] Update `internals/05-layout-engine.md` §7 (dirty tracking) to
       mention the "removed children" bit
 
 ---
