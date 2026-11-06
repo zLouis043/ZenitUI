@@ -967,9 +967,10 @@ This is a deliberate constraint, not a defect — `set()` needs to
 detect "same value" for the short-circuit. `float` works with the
 usual caveat.
 
-**Follow-up (not in this proposal):** `examples/12_bindable` as a
-live demonstration of the API, tracked as an unchecked item in
-roadmap §5.17. Will land as a separate commit.
+**Shipped:** `examples/12_bindable` landed as a follow-up commit
+(`251e7dd`), demonstrating model → 3 widgets and the `bindTo`
+lifetime safety. Roadmap §5.17 has the corresponding checkbox
+marked `[x]`.
 
 ### Proposal 3 — UIPrefab and Slot
 

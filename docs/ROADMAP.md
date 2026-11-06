@@ -9,7 +9,8 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after the CMake migration (§7.7).
+Last updated: after §5.21 (Wrap for HStack) and §4.8 (Style resolution
+caching + reverse dependency).
 
 ---
 
@@ -1046,8 +1047,19 @@ Currently callbacks are individual `std::function` fields. A future
 version could expose a vector for multi-listener patterns. Not critical
 but sometimes needed.
 
-- [ ] Decide if needed
-- [ ] If yes, add `addOnClickListener` etc.
+**Status:** ❌ declined.
+
+Decision: single-callback model is sufficient. Frameworks that need
+multi-listener (Qt, WPF) pay a complexity cost that isn't justified
+for game/tool UI. When two listeners are needed, compose them with a
+lambda at the call site:
+
+```cpp
+    btn->onClick = [a, b]() { a(); b(); };
+```
+
+Revisit only if real usage shows the lambda pattern becomes a
+significant boilerplate source (>50 occurrences in a typical app).
 
 ### 5.10 Live reload for `.zstyle` — delegated to the consumer
 
@@ -1591,6 +1603,40 @@ applies, but UI use is fine.
   - `HStack` now supports the `wrap` boolean property, allowing children that exceed the available container width to flow seamlessly onto the next line.
   - Fully supports `justify` alignment (`center`, `space-between`, `end`, etc.) on dynamically wrapped lines.
   - Supports cross-axis alignment (`items-v` / `align-v`) relative to the specific height of each wrapped line.
+
+### 5.22 Drag & Drop
+
+**Status:** 🟡 planned — proposal to be written.
+
+Design not yet formalized. Tracked here so it doesn't fall off the
+radar. Expected to touch 6 files (`UIContext`, `InputController`,
+`Layout`, `StyleResolver`, `StyleParser`, `hitTest`) and to be split
+into 3 PRs:
+
+- `5.22a` — input capture and drag state in `UIContext`
+- `5.22b` — `draggable` / `droppable` style properties and hit-test
+  integration
+- `5.22c` — visual feedback (drag ghost) and drop callbacks
+
+- [ ] `5.22a` — input capture and drag state
+- [ ] `5.22b` — `draggable` / `droppable` style properties
+- [ ] `5.22c` — visual feedback and drop callbacks
+- [ ] Proposal written in `PROPOSALS.md`
+
+### 5.23 VirtualList
+
+**Status:** 🟡 planned — depends on §5.18 (UIPrefab) and §5.19 (Slot).
+
+A list widget that materializes only the visible rows and recycles
+the off-screen ones. Common for lists with 10k+ items. Depends on
+UIPrefab so each row can be defined once and instantiated N times.
+
+- [ ] Row template registration (via UIPrefab)
+- [ ] Visible-range computation from scroll offset + item height
+- [ ] Node recycling (reuse `Layout` instances across rows)
+- [ ] Callback `onRowBound(index, Layout*)` for data binding
+- [ ] Tests with 10k synthetic rows
+- [ ] Update `user/03-widgets.md`
 
 ---
 
