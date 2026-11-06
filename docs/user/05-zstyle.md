@@ -510,7 +510,7 @@ channel is important and the hex form would be less readable.
 
 | Property | Type | Default |
 |----------|------|---------|
-| `font` | string | `""` (backend default) |
+| `font` | FontStack | `[]` (empty stack, backend default) |
 | `font-size` | Value | `20` |
 | `letter-spacing` | Value | `2` |
 | `color` | Color | `#FFFFFF` |
@@ -526,8 +526,40 @@ Text {
 }
 ```
 
-`font` is resolved at style time via `IAssetProvider::getFont(name)`. If
-the name isn't registered, the backend default font is used.
+#### Font fallback stack
+
+`font` accepts a comma-separated **fallback stack**, matching CSS:
+
+```css
+.label { font: Inter; }
+.title { font: Inter, "Helvetica Neue", sans-serif; }
+```
+
+The resolver iterates the stack in order and returns the first family
+that is registered with the `IAssetProvider`. If none is found, the
+renderer's default font is used.
+
+Family names that contain spaces must be quoted with `"` or `'`.
+Single-token names (letters, digits, `_`, `-`) can be unquoted:
+
+```css
+.body    { font: mont; }              /* single word, no quotes */
+.heading { font: "Comic Sans MS"; }   /* spaces, quote required */
+```
+
+#### Runtime font loading
+
+Fonts can be registered at runtime through `IAssetProvider`:
+
+```cpp
+UIContext::get().assets->loadFont("Inter", "assets/Inter-Regular.ttf");
+// ... later ...
+UIContext::get().assets->unloadFont("Inter");
+```
+
+Both methods default to no-ops; backends that support runtime loading
+override them. See [IAssetProvider](../api/UIContext.md#2-the-three-interfaces)
+for the full contract and the caveat about unloading a font still in use.
 
 The properties `font`, `font-size`, `color`, `letter-spacing`, and
 `text-align` are **inherited** by descendants. All other properties are

@@ -123,8 +123,34 @@ public:
     virtual FontHandle    getFont(std::string_view name) = 0;
     virtual TextureHandle getTexture(std::string_view name) = 0;
     virtual EffectHandle  getEffect(std::string_view name) = 0;
+
+    // Fallback stack lookup. Iterates `stack` and returns the first
+    // valid handle. Has a default implementation (calls the
+    // string_view overload for each element) and does not need to be
+    // overridden.
+    virtual FontHandle getFont(const FontStack& stack);
+
+    // Runtime font loading. All three default to no-ops; backends that
+    // support runtime loading override them.
+    virtual FontHandle loadFont(std::string_view name,
+                                std::string_view path);
+    virtual FontHandle loadFontFromMemory(std::string_view name,
+                                          const void* data, size_t size);
+    virtual void       unloadFont(std::string_view name);
 };
 ```
+
+**FontStack.** `FontStack` is `SmallVector<std::string, 3>` with
+implicit constructors from `const char*`, `std::string`, and
+`std::string_view`, so both `assets.getFont("calibri")` and
+`assets.getFont(FontStack{"calibri", "sans"})` are valid.
+
+**`unloadFont` caveat.** Calling `unloadFont` on a name that is still
+referenced by a `ComputedStyle` is undefined behavior at the framework
+level. The Raylib backend handles it by removing the resource and
+falling back to the renderer's default font on subsequent draw calls.
+Callers must not assume a previously-resolved handle remains valid
+after `unloadFont`. A refcount-based solution is tracked as post-1.0.
 
 ### `Feature`
 

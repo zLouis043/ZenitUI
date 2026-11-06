@@ -3,10 +3,14 @@
 #define NOUSER
 
 #include "RaylibBackend.hpp"
+#include "Logger.hpp"
 #include <raylib.h>
 #include <rlgl.h>
 #include <string>
 #include <unordered_map>
+#include <filesystem>
+#include <fstream>
+#include <system_error>
 
 namespace ZenitUI
 {
@@ -112,17 +116,15 @@ namespace ZenitUI
 	float RaylibPlatform::dpiScale()
 	{
 #if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(__APPLE__)
-		return 1.0f; 
+		return 1.0f;
 #else
-		return 1.0f; 
+		return 1.0f;
 #endif
 	}
 
 	EdgeInsets RaylibPlatform::safeArea()
 	{
-		
-		
-		
+
 		return {};
 	}
 
@@ -254,7 +256,7 @@ namespace ZenitUI
 
 	Rect RaylibRenderer::transformClipToScreen(const Rect &local) const
 	{
-		
+
 		if (transformStack.empty())
 			return local;
 
@@ -269,7 +271,7 @@ namespace ZenitUI
 			for (auto &c : corners)
 				c = applyTransform(*it, c);
 		}
-		
+
 		float minX = corners[0].x, maxX = corners[0].x;
 		float minY = corners[0].y, maxY = corners[0].y;
 		for (int i = 1; i < 4; ++i)
@@ -304,7 +306,7 @@ namespace ZenitUI
 
 	void RaylibRenderer::pushTransform(const Transform2D &t)
 	{
-		transformStack.push_back(t); 
+		transformStack.push_back(t);
 
 		rlPushMatrix();
 		rlTranslatef(t.pivot.x + t.translate.x, t.pivot.y + t.translate.y, 0);
@@ -316,7 +318,7 @@ namespace ZenitUI
 	{
 		rlPopMatrix();
 		if (!transformStack.empty())
-			transformStack.pop_back(); 
+			transformStack.pop_back();
 	}
 
 	void RaylibRenderer::applyScissor(const Rect &clip)
@@ -336,8 +338,6 @@ namespace ZenitUI
 			return;
 		}
 
-		
-		
 		rlDrawRenderBatchActive();
 		rlEnableScissorTest();
 		if (w <= 0 || h <= 0)
@@ -397,7 +397,6 @@ namespace ZenitUI
 
 		rlDrawRenderBatchActive();
 
-		
 		for (size_t i = 0; i < transformStack.size(); ++i)
 			rlPopMatrix();
 
@@ -410,7 +409,7 @@ namespace ZenitUI
 		clipStack.clear();
 		currentClip = {0.0f, 0.0f, (float)t.width, (float)t.height};
 
-		transformStack.clear(); 
+		transformStack.clear();
 
 		currentTarget_ = t;
 		currentTargetW_ = t.width;
@@ -428,11 +427,10 @@ namespace ZenitUI
 
 		rlDrawRenderBatchActive();
 
-		
 		for (size_t i = 0; i < transformStack.size(); ++i)
 			rlPopMatrix();
 
-		EndTextureMode(); 
+		EndTextureMode();
 
 		if (!targetStates_.empty())
 		{
@@ -442,7 +440,7 @@ namespace ZenitUI
 			clipActive = s.clipActive;
 			currentClip = s.currentClip;
 			clipStack = s.clipStack;
-			transformStack = s.transformStack; 
+			transformStack = s.transformStack;
 			currentTargetW_ = s.targetW;
 			currentTargetH_ = s.targetH;
 		}
@@ -464,7 +462,6 @@ namespace ZenitUI
 			BeginTextureMode(res.targets[currentTarget_.id]);
 		}
 
-		
 		for (const auto &tr : transformStack)
 		{
 			rlPushMatrix();
@@ -512,8 +509,7 @@ namespace ZenitUI
 
 	Rect RaylibRenderer::getClipRect() const
 	{
-		
-		
+
 		if (insideTarget_ && !targetStates_.empty())
 		{
 			const auto &root = targetStates_.front();
@@ -562,6 +558,33 @@ namespace ZenitUI
 		uint32_t id = res.nextId++;
 		res.shaders[id] = s;
 		return {id};
+	}
+
+	void RaylibRenderer::unregisterFont(FontHandle h)
+	{
+		auto it = res.fonts.find(h.id);
+		if (it == res.fonts.end())
+			return;
+		UnloadFont(it->second);
+		res.fonts.erase(it);
+	}
+
+	void RaylibRenderer::unregisterTexture(TextureHandle h)
+	{
+		auto it = res.textures.find(h.id);
+		if (it == res.textures.end())
+			return;
+		UnloadTexture(it->second);
+		res.textures.erase(it);
+	}
+
+	void RaylibRenderer::unregisterEffect(EffectHandle h)
+	{
+		auto it = res.shaders.find(h.id);
+		if (it == res.shaders.end())
+			return;
+		UnloadShader(it->second);
+		res.shaders.erase(it);
 	}
 
 	static int shaderLoc(EffectHandle e, const char *name)
@@ -614,5 +637,114 @@ namespace ZenitUI
 			return;
 		float arr[4] = {value.r / 255.0f, value.g / 255.0f, value.b / 255.0f, value.a / 255.0f};
 		SetShaderValue(res.shaders[e.id], loc, arr, SHADER_UNIFORM_VEC4);
+	}
+
+	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize)
+	{
+		if (name.empty() || !path)
+			return false;
+		if (fonts.count(name))
+		{
+			logWarn("Assets", "", 0, 0,
+					"font '" + name + "' already loaded");
+			return false;
+		}
+
+		::Font f = LoadFontEx(path, baseSize, nullptr, 0);
+		if (f.texture.id == 0)
+		{
+			logError("Assets", "", 0, 0,
+					 "failed to load font '" + name + "' from '" + path + "'");
+			return false;
+		}
+		SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
+		fonts[name] = renderer.registerFont(f);
+		return true;
+	}
+
+	FontHandle RaylibAssetProvider::loadFont(std::string_view name, std::string_view path)
+	{
+		if (!loadFont(std::string(name), std::string(path).c_str(), 96))
+			return {};
+		return fonts[std::string(name)];
+	}
+
+	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
+													   const void *data, size_t size)
+	{
+		if (name.empty() || !data || size == 0)
+			return {};
+
+		const std::string key(name);
+		if (fonts.count(key))
+		{
+			logWarn("Assets", "", 0, 0,
+					"font '" + key + "' already loaded");
+			return fonts[key];
+		}
+
+		std::filesystem::path tmp =
+			std::filesystem::temp_directory_path() / ("zenit_font_" + key + ".ttf");
+		{
+			std::ofstream out(tmp, std::ios::binary);
+			if (!out)
+			{
+				logError("Assets", "", 0, 0,
+						 "failed to open temp file for font '" + key + "'");
+				return {};
+			}
+			out.write(static_cast<const char *>(data),
+					  static_cast<std::streamsize>(size));
+		}
+
+		::Font f = LoadFontEx(tmp.string().c_str(), 96, nullptr, 0);
+		std::error_code ec;
+		std::filesystem::remove(tmp, ec);
+
+		if (f.texture.id == 0)
+		{
+			logError("Assets", "", 0, 0,
+					 "failed to load font '" + key + "' from memory");
+			return {};
+		}
+		SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
+		FontHandle h = renderer.registerFont(f);
+		fonts[key] = h;
+		return h;
+	}
+
+	void RaylibAssetProvider::unloadFont(std::string_view name)
+	{
+		auto it = fonts.find(std::string(name));
+		if (it == fonts.end())
+			return;
+		renderer.unregisterFont(it->second);
+		fonts.erase(it);
+	}
+
+	bool RaylibAssetProvider::loadTexture(std::string name, const char *path)
+	{
+		if (name.empty() || !path)
+			return false;
+		if (textures.count(name))
+			return false;
+		::Texture2D t = LoadTexture(path);
+		if (t.id == 0)
+			return false;
+		textures[name] = renderer.registerTexture(t);
+		return true;
+	}
+
+	bool RaylibAssetProvider::loadEffect(std::string name, const char *fsPath, const char *vsPath)
+	{
+		if (name.empty() || !fsPath)
+			return false;
+		if (effects.count(name))
+			return false;
+		::Shader s = LoadShader(vsPath, fsPath);
+		if (s.id == 0)
+			return false;
+		effects[name] = renderer.registerEffect(s);
+		return true;
 	}
 }

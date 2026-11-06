@@ -923,11 +923,30 @@ Not blocking for beta, but needed for 1.0.
 ### 5.2 Font handling
 
 - [x] Font fallback chain (e.g. `font: mont, calibri, sans`)
-- [ ] Runtime font loading / registration
-- [ ] Font metrics caching — **deferred post-1.0**: `measureText` is already
-  cached at widget level (`Text` caches wrapped lines); Renderer level cache
-  would require a cache invalidation upon `unloadFont`, which is not in the
-  `IRenderer` contract.
+- [x] Runtime font loading / registration
+- [ ] Font metrics caching — **deferred post-1.0**: `measureText` is
+      already cached at the widget level (`Text` caches wrapped lines);
+      a renderer-level cache would require invalidation on `unloadFont`,
+      which is not part of `IRenderer`'s contract. Revisit only if
+      benchmarks show `measureText` in the frame profile.
+
+**Notes.**
+- `FontStack` lives in `Style.hpp` as `SmallVector<std::string, 3>` with
+  implicit constructors from `const char*`, `std::string`,
+  `std::string_view`. The `font` property in `ComputedStyle` and
+  `Style` is now `FontStack`.
+- `parseFontStack` (in `StyleAttr.hpp`) splits on commas, trims, and
+  honors `"..."` / `'...'` quotes for family names containing spaces.
+- `IAssetProvider::getFont(const FontStack&)` iterates the stack and
+  returns the first valid handle. It is non-pure: backends only need to
+  implement `getFont(std::string_view)`.
+- `IAssetProvider::loadFont` / `loadFontFromMemory` / `unloadFont` are
+  virtual with no-op defaults. `RaylibAssetProvider` implements them;
+  `MockAssetProvider` implements them for tests.
+- `RaylibRenderer::unregisterFont` frees the GPU texture and removes the
+  `::Font` from `res.fonts`. Calling `unloadFont` on a name that is still
+  in use by a `ComputedStyle` is documented as undefined behavior: the
+  next `drawText` falls back to the renderer's default font.
 
 ### 5.3 `calc()` extensions
 
