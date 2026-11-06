@@ -95,6 +95,26 @@ namespace ZenitUI
 			}
 			return {};
 		}
+
+		FontHandle getFont(const char *name)
+		{
+			return getFont(std::string_view(name));
+		}
+
+		virtual FontHandle loadFont(std::string_view /*name*/,
+									std::string_view /*path*/)
+		{
+			return {};
+		}
+
+		virtual FontHandle loadFontFromMemory(std::string_view /*name*/,
+											  const void * /*data*/,
+											  size_t /*size*/)
+		{
+			return {};
+		}
+
+		virtual void unloadFont(std::string_view /*name*/) {}
 	};
 
 	struct UIContext

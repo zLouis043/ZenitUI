@@ -168,11 +168,15 @@ Full guide: [Bindable](user/11-bindable.md).
 
 | C++ field | `.zstyle` | Type | Default |
 |-----------|-----------|------|---------|
-| `font` | `font` | string | `""` |
+| `font` | `font` | FontStack | `[]` |
 | `fontSize` | `font-size` | Value | `20` |
 | `letterSpacing` | `letter-spacing` | Value | `2` |
 | `color` | `color` | Color | `#FFFFFF` |
 | `textAlign` | `text-align` | Align | `auto` |
+
+`font` accepts a comma-separated fallback stack
+(`font: Inter, "Helvetica Neue", sans-serif`). Family names with spaces
+must be quoted. See [ZStyle §4.8](user/05-zstyle.md#48-typography).
 
 ### Colors
 

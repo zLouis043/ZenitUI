@@ -95,7 +95,7 @@ All properties of `Style` and `ComputedStyle` are defined by one macro:
     X(Value, left, Value::autoSize())                       \
     X(Value, right, Value::autoSize())                      \
     X(Value, bottom, Value::autoSize())                     \
-    X(std::string, font, "")
+    X(FontStack, font, FontStack{})
 ```
 
 Every operation on `Style` and `ComputedStyle` (`overlay`, `operator==`,
@@ -120,6 +120,35 @@ this macro. Adding a property means editing this macro and the parser
 
 All property names use **camelCase** in C++ and **kebab-case** in
 `.zstyle` (`borderWidth` ↔ `border-width`).
+
+### 2.1 FontStack
+
+`FontStack` is the type of the `font` property. It is a
+`SmallVector<std::string, 3>` with implicit constructors from
+`const char*`, `std::string`, and `std::string_view`:
+
+```cpp
+struct FontStack : SmallVector<std::string, 3> {
+    FontStack() = default;
+    using SmallVector<std::string, 3>::SmallVector;
+
+    FontStack(const char* s);
+    FontStack(std::string s);
+    FontStack(std::string_view s);
+};
+```
+
+The implicit constructors let both `s.font = "calibri"` and
+`s.font = FontStack{"calibri", "sans"}` compile. Because `SmallVector`
+provides `operator==`, `operator!=`, and copy/move semantics, no extra
+code is needed for comparison, interpolation, or assignment.
+
+A `FontStack` is always ordered by priority: `getFont(stack)` iterates
+left to right and returns the first valid handle. An empty stack means
+"no explicit font" (the renderer's default is used).
+
+Under interpolation, `lerpProp(FontStack, FontStack, t)` returns `b` if
+`t > 0`, else `a` — font families snap rather than blend.
 
 ---
 
@@ -503,10 +532,10 @@ is `{x=4px, y=4px, blur=8px, color={0,0,0,128}, enabled=true}`.
 ## 13. Property table
 
 ```cpp
-using PropValue = std::variant<float, Value, Color, Spacing, Align, Justify,
+using PropValue = std::variant<bool, float, Value, Color, Spacing, Align, Justify,
                                 TransitionFunction, Overflow, Position, ZIndex,
-                                std::string, TextureRef, std::vector<FilterRef>,
-                                BoxShadow>;
+                                std::string, FontStack, TextureRef,
+                                std::vector<FilterRef>, BoxShadow>;
 
 struct PropDesc {
     const char* name;

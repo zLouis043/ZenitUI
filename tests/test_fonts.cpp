@@ -52,7 +52,7 @@ TEST(FontStack, fallback_first_match_wins)
 
     FontStack stack{"mont", "calibri", "sans"};
     FontHandle h = assets.getFont(stack);
-    CHECK(h.id == 1);  // calibri, perché mont non c'è
+    CHECK(h.id == 1);
 }
 
 TEST(FontStack, fallback_none_match)
@@ -63,4 +63,52 @@ TEST(FontStack, fallback_none_match)
     FontStack stack{"mont", "sans"};
     FontHandle h = assets.getFont(stack);
     CHECK(h.id == 0);
+}
+
+TEST(FontStack, load_and_unload)
+{
+    MockAssetProvider assets;
+
+    FontHandle h = assets.loadFont("test", "dummy.ttf");
+    CHECK(h.id != 0);
+
+    FontHandle again = assets.getFont("test");
+    CHECK(again.id == h.id);
+
+    assets.unloadFont("test");
+    FontHandle after = assets.getFont("test");
+    CHECK(after.id == 0);
+}
+
+TEST(FontStack, load_from_memory)
+{
+    MockAssetProvider assets;
+    char data[4] = {0, 1, 2, 3};
+    FontHandle h = assets.loadFontFromMemory("mem", data, sizeof(data));
+    CHECK(h.id != 0);
+    CHECK(assets.getFont("mem").id == h.id);
+}
+
+TEST(FontStack, fallback_uses_runtime_loaded)
+{
+    MockAssetProvider assets;
+    assets.loadFont("mont", "dummy.ttf");
+
+    FontStack stack{"mont", "calibri", "sans"};
+    FontHandle h = assets.getFont(stack);
+    CHECK(h.id != 0);
+}
+
+TEST(FontStack, load_empty_name_is_noop)
+{
+    MockAssetProvider assets;
+    CHECK(assets.loadFont("", "x.ttf").id == 0);
+    CHECK(assets.loadFontFromMemory("", nullptr, 0).id == 0);
+}
+
+TEST(FontStack, unload_unknown_is_noop)
+{
+    MockAssetProvider assets;
+    assets.unloadFont("nonexistent");
+    CHECK(assets.getFont("nonexistent").id == 0);
 }

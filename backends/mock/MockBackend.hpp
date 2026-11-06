@@ -361,6 +361,27 @@ namespace ZenitUI::Test
             return it != fonts_.end() ? it->second : FontHandle{};
         }
 
+        FontHandle loadFont(std::string_view name, std::string_view /*path*/) override
+        {
+            if (name.empty())
+                return {};
+            static uint32_t nextId = 500;
+            FontHandle h{nextId++};
+            fonts_[std::string(name)] = h;
+            return h;
+        }
+
+        FontHandle loadFontFromMemory(std::string_view name,
+                                      const void * /*data*/, size_t /*size*/) override
+        {
+            return loadFont(name, "");
+        }
+
+        void unloadFont(std::string_view name) override
+        {
+            fonts_.erase(std::string(name));
+        }
+
     private:
         std::unordered_map<std::string, EffectHandle> registeredEffects;
         std::unordered_map<std::string, FontHandle> fonts_;

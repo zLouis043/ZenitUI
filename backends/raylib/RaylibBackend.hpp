@@ -69,6 +69,10 @@ namespace ZenitUI
 		FontHandle registerFont(const ::Font &f);
 		EffectHandle registerEffect(const ::Shader &s);
 
+		void unregisterFont(FontHandle h);
+		void unregisterTexture(TextureHandle h);
+		void unregisterEffect(EffectHandle h);
+
 		void setEffectFloat(EffectHandle e, const char *name, float value) override;
 		void setEffectVec2(EffectHandle e, const char *name, Vec2 value) override;
 		void setEffectVec3(EffectHandle e, const char *name, Vec3 value) override;
@@ -113,35 +117,22 @@ namespace ZenitUI
 	class RaylibAssetProvider : public IAssetProvider
 	{
 	public:
+		using IAssetProvider::getFont;
+		using IAssetProvider::loadFont;
+		using IAssetProvider::loadFontFromMemory;
+		using IAssetProvider::unloadFont;
+
 		explicit RaylibAssetProvider(RaylibRenderer &r) : renderer(r) {}
 
-		bool loadFont(std::string name, const char *path, int baseSize = 96)
-		{
-			::Font f = LoadFontEx(path, baseSize, nullptr, 0);
-			if (f.texture.id == 0)
-				return false;
-			SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
-			fonts[std::move(name)] = renderer.registerFont(f);
-			return true;
-		}
+		bool loadFont(std::string name, const char *path, int baseSize = 96);
 
-		bool loadTexture(std::string name, const char *path)
-		{
-			::Texture2D t = LoadTexture(path);
-			if (t.id == 0)
-				return false;
-			textures[std::move(name)] = renderer.registerTexture(t);
-			return true;
-		}
+		bool loadTexture(std::string name, const char *path);
+		bool loadEffect(std::string name, const char *fsPath, const char *vsPath = nullptr);
 
-		bool loadEffect(std::string name, const char *fsPath, const char *vsPath = nullptr)
-		{
-			::Shader s = LoadShader(vsPath, fsPath);
-			if (s.id == 0)
-				return false;
-			effects[std::move(name)] = renderer.registerEffect(s);
-			return true;
-		}
+		FontHandle loadFont(std::string_view name, std::string_view path) override;
+		FontHandle loadFontFromMemory(std::string_view name,
+									  const void *data, size_t size) override;
+		void unloadFont(std::string_view name) override;
 
 		FontHandle getFont(std::string_view name) override
 		{

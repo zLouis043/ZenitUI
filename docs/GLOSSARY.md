@@ -166,6 +166,11 @@ A boundary for Tab navigation. A node with `setFocusScope(true)`
 restricts the Tab cycle to its descendants. Used by `Modal` and
 `SettingsScreen`.
 
+**Font stack** — An ordered list of font family names tried in sequence
+when resolving a `font` property. The first name registered in the
+`IAssetProvider` wins. Parsed from `font: "Inter", "Helvetica Neue",
+sans-serif`. Represented by `FontStack` (`SmallVector<std::string, 3>`).
+
 **Frustum culling**
 Skipping a node during `draw` if its rect is entirely outside the
 current clip. The main optimization for large scrollable lists.
