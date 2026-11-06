@@ -456,6 +456,17 @@ with the same type.
 The logical screen size, in UI pixels. Stored in `Metrics::viewport`
 and updated each frame from `IPlatform::viewportSize`.
 
+**VirtualView**
+A virtualized vertical list widget (a `ScrollView` subclass). It only
+materializes the rows visible in the viewport, plus a 2-row buffer
+above and below, so a list with 10,000 items costs roughly the same
+as one with 12. Rows are built by a user-supplied factory
+(`std::shared_ptr<Layout>(int index)`) and destroyed when they leave
+the materialization window — VirtualView does **not** recycle nodes.
+Contrast with **VirtualList** (planned, `ROADMAP.md` §5.23), which
+recycles rows and depends on **Prefab** and **Slot**. See
+[VirtualView](user/12-virtual_view.md) and [API](api/Widgets.md).
+
 **`var()`**
 A reference to a **custom property**. Substituted at cascade time.
 

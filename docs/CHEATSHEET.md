@@ -280,6 +280,7 @@ Requires the shorthand first.
 | `ProgressBar` | `ProgressBar::create(float)` | — |
 | `TextInput` | `TextInput::create("initial")` | `onTextChanged`, `onSubmit` |
 | `ScrollView` | `ScrollView::create(LayoutType)` | — |
+| `VirtualView` | `VirtualView::create(factory, count)` | `onItemCreated(Layout*, int)` |
 | `Dropdown` | `Dropdown::create({"A","B"}, selected)` | `onChange(int, string)` |
 | `ImageContainer` | `ImageContainer::create(tex)` | — |
 | `Modal` | `Modal::create()` | — |
@@ -525,6 +526,29 @@ for (int i = 0; i < 100; ++i)
     sv->addChild(Label("Item " + std::to_string(i)));
 ```
 
+### Large virtualized list
+
+```cpp
+auto vv = VirtualView::create(
+    [](int i) {
+        auto row = std::make_shared<Layout>(LayoutType::Stack);
+        row->size(Percent(100), Px(24));
+        return row;
+    },
+    10000);
+
+vv->size(Percent(100), VH(50));
+vv->setUniformHeight(24.0f);   // fast path, O(N) arithmetic
+vv->onItemCreated = [](Layout* row, int i) {
+    // populate row for index i
+};
+root->addChild(vv);
+```
+
+`setUniformHeight(0)` (default) measures each row via the factory
+instead; only ~visible+4 rows are ever materialized. Full guide:
+[VirtualView](user/12-virtual_view.md).
+
 ### Focus + keyboard activation
 
 ```cpp
@@ -588,6 +612,7 @@ Logger::set(&myLogger);
 - Missing assets fall back silently — check the logs.
 - Portals are hit-tested one frame after they render.
 - Missing `onClick` callbacks: check `setInteractive(true)`.
+- VirtualView: the factory runs once per item with auto height — keep it cheap, or use `setUniformHeight`.
 
 ---
 

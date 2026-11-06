@@ -24,6 +24,7 @@ only the additions are listed here.
 | `ProgressBar` | `ProgressBar.hpp` | `TLayout<ProgressBar>` | — | `ProgressBar` | no |
 | `TextInput` | `TextInput.hpp` | `TLayout<TextInput>` | — | `TextInput` | yes |
 | `ScrollView` | `ScrollView.hpp` | `TLayout<ScrollView>` | — | `ScrollView` | yes |
+| `VirtualView` | `VirtualView.hpp` | `TLayout<VirtualView, ScrollView>` | — | — | yes |
 | `Dropdown` | `Dropdown.hpp` | `TLayout<Dropdown>` | — | `Dropdown` | yes |
 | `CanvasLayout` | `Canvas.hpp` | `TLayout<CanvasLayout>` | — | — | — |
 | `Modal` | `Modal.hpp` | `TLayout<Modal>` | — | — | yes |
@@ -553,6 +554,117 @@ ScrollView#sv {
     Text "..."
 }
 ```
+
+---
+
+## `VirtualView`
+
+Virtualized vertical list. Extends `ScrollView`. Only the rows visible
+in the viewport (plus a 2-row buffer above and below) are materialized,
+so a 10,000-item list costs roughly the same as a 12-item one. Full
+conceptual guide: [VirtualView (guide)](../user/12-virtual_view.md).
+
+```cpp
+class VirtualView : public TLayout<VirtualView, ScrollView> {
+public:
+    using ItemFactory =
+        std::function<std::shared_ptr<Layout>(int index)>;
+
+    VirtualView(ItemFactory factory, int itemCount);
+
+    static std::shared_ptr<VirtualView> create(
+        ItemFactory factory, int count);
+    static std::shared_ptr<VirtualView> create(
+        std::function<std::shared_ptr<Layout>()> factory, int count);
+
+    int   getItemCount() const noexcept;
+    void  setItemCount(int count);
+
+    float getUniformHeight() const noexcept;
+    void  setUniformHeight(float px);
+
+    int   getFirstVisibleItem() const;
+    int   getLastVisibleItem()  const;
+    void  scrollToItem(int index);
+
+    void  removeAllChildren() override;
+
+    std::function<void(Layout*, int)> onItemCreated;
+};
+```
+
+### Methods
+
+| Name | Description |
+|------|-------------|
+| `create(ItemFactory, int)` | Static. Builds a `VirtualView` from a row factory and an item count. `ItemFactory` is `std::function<std::shared_ptr<Layout>(int index)>`. |
+| `create(std::function<std::shared_ptr<Layout>()>, int)` | Static. Convenience overload for index-independent rows. |
+| `getItemCount()` / `setItemCount(int)` | Total number of items. `setItemCount` clamps to `>= 0` and invalidates the materialization; the new rows appear on the next `arrange`. |
+| `getUniformHeight()` / `setUniformHeight(float)` | Fixed row height. `> 0` enables the O(N) arithmetic fast path (factory not called during measurement). `0` (default) measures each row via the factory. |
+| `getFirstVisibleItem()` / `getLastVisibleItem()` | Visibility queries against the current scroll offset and viewport height. Both return `-1` before the first measure and for empty lists. |
+| `scrollToItem(int)` | Aligns the top of row `index` with the top of the viewport. Clamps `index` to `[0, itemCount - 1]`. |
+| `removeAllChildren()` | Override. Clears the materialized set and the base children. Unlike `setItemCount(0)`, does not reset `itemCount` — the visible rows come back on the next frame. |
+| `onItemCreated` | `std::function<void(Layout*, int)>`. Fires every time a node is materialized, including re-materialization after scrolling out and back in. The node is already parented and positioned when the callback runs. |
+
+The full `ScrollView` scroll API is inherited unchanged: `scrollToY`,
+`getScrollY`, `getMaxScrollY`, `scrollToTop`, `scrollToBottom`, etc.
+
+### Style tag
+
+`"VirtualView"` (set in `onBuild`). Not registered in ZMarkup, so no
+markup tag exists — create it in C++ and `addChild` it to a
+ZMarkup-built tree.
+
+### Flags
+
+- `setInteractive(true)`
+- `setBlocksRaycast(true)`
+
+### Materialization model
+
+On each `arrange`, VirtualView:
+
+1. reads `getFirstVisibleItem()` and `getLastVisibleItem()` from the
+   current scroll offset and viewport height;
+2. expands the range by 2 rows above and 2 below:
+   `start = max(0, first - 2)`, `end = min(itemCount - 1, last + 2)`;
+3. detaches every node in the materialized set whose index is outside
+   `[start, end]`;
+4. builds every index in `[start, end]` that is not already
+   materialized, positions it absolutely at `top = cumulative[i]`,
+   `left = 0`, `width = 100%`,
+   `height = cumulative[i+1] - cumulative[i]`, and appends it as a
+   child;
+5. runs the inherited `ScrollView::arrange`.
+
+Children are positioned in **content coordinates**. The inherited
+scroll translation and clip move them with the scroll; VirtualView
+does not reposition rows on every frame.
+
+With `uniformHeight > 0` the number of materialized children is
+bounded by `ceil(viewportHeight / uniformHeight) + 4`.
+
+`onItemCreated` fires on every materialization, including
+re-materialization. VirtualView creates and destroys row nodes; it
+does **not** recycle them — see `VirtualList` (`ROADMAP.md` §5.23)
+for the planned recycling variant.
+
+### ZMarkup
+
+No ZMarkup tag. The row content is a C++ factory
+(`std::function<std::shared_ptr<Layout>(int)>`) and cannot be
+expressed in markup. A future follow-up could register a tag taking
+a prefab name, but it is not available today.
+
+### See also
+
+- [VirtualView (guide)](../user/12-virtual_view.md) — when to use,
+  quick start, pitfalls, examples.
+- [Widgets (guide)](../user/03-widgets.md) — `VirtualView` section.
+- [Proposals](../architecture/PROPOSALS.md) Proposal 8 — design
+  notes and implementation diff.
+- [ROADMAP](../ROADMAP.md) §5.23 (`VirtualList`) and §5.24
+  (`VirtualView`).
 
 ---
 

@@ -27,6 +27,9 @@ implementation.
 - ✅ **Proposal 3 — UIPrefab and Slot**: shipped as roadmap §5.18 and §5.19.
 - ✅ **Proposal 4 — StyleParser Diagnostics**: shipped as roadmap §5.20.
 - ✅ **Proposal 5 — Wrap for HStack**: shipped as roadmap §5.21.
+- ✅ **Proposal 8 — VirtualView**: shipped as roadmap §5.24. See
+  `docs/user/12-virtual_view.md` and `docs/api/Widgets.md` for the
+  user-facing API.
 
 ---
 
@@ -39,6 +42,7 @@ implementation.
 - [Proposal 5 — Wrap for HStack](#proposal-5--wrap-for-hstack)
 - [Proposal 6 — VirtualList](#proposal-6--virtuallist)
 - [Proposal 7 — Drag & Drop](#proposal-7--drag--drop)
+- [Proposal 8 — VirtualView](#proposal-8--virtualview)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -1737,6 +1741,239 @@ Total: ~23 tests.
    hover targets. Deliberate. A built-in `.drop-hover` class could be
    added as a follow-up.
 
+## Proposal 8 — VirtualView
+
+**Priority:** high — unblocks large lists without requiring UIPrefab
+or Slot, so it ships before Proposal 6 (VirtualList).
+
+**Complexity:** medium (~2-3 days).
+
+**Depends on:** `ScrollController` (shipped).
+
+**Status:** ✅ shipped as roadmap §5.24.
+
+**Roadmap mapping:** ships as §5.24.
+
+### 8.1 Problem
+
+Rendering a list of N items with a plain `Vertical` / `VStack` means
+materializing N `Layout` nodes, measuring all of them, and arranging
+all of them. At N = 10,000 this is unusable: memory grows linearly,
+`measure`/`arrange` walk the whole tree every frame, and `draw`
+culls but still iterates.
+
+The standard solution is **virtualization**: materialize only the
+rows currently visible in the scroll viewport, plus a small buffer.
+Unlike `VirtualList` (Proposal 6), VirtualView does **not** recycle
+nodes: each row entering the viewport is built by a user-supplied
+factory, each row leaving is destroyed. That makes it usable without
+UIPrefab and Slot, at the cost of losing node reuse.
+
+### 8.2 Solution
+
+Introduce a `VirtualView` class that:
+
+- extends `ScrollView` (vertical), inheriting wheel, inertia,
+  scrollbar, clipping and `scrollToY` unchanged;
+- holds a **factory** that builds a row for a given index;
+- holds an **item count**;
+- optionally holds a **uniform row height** for the O(N) fast path;
+- computes **cumulative heights** once per width / count change and
+  reuses them for binary-search visibility queries;
+- materializes only the rows in `[first - 2, last + 2]`, where
+  `first` / `last` come from `getFirstVisibleItem` /
+  `getLastVisibleItem`;
+- destroys the rows that fall outside that window.
+
+Because VirtualView is a `ScrollView` subclass, "where the rows are"
+and "how the scrollbar behaves" are inherited. VirtualView only owns
+the materialization window and the row positioning.
+
+### 8.3 API
+
+~~~cpp
+namespace ZenitUI::UI
+{
+
+class VirtualView : public TLayout<VirtualView, ScrollView>
+{
+public:
+    using ItemFactory =
+        std::function<std::shared_ptr<Layout>(int index)>;
+
+    static std::shared_ptr<VirtualView> create(
+        ItemFactory factory, int count);
+
+    static std::shared_ptr<VirtualView> create(
+        std::function<std::shared_ptr<Layout>()> factory,
+        int count);
+
+    int   getItemCount() const noexcept;
+    void  setItemCount(int count);
+
+    float getUniformHeight() const noexcept;
+    void  setUniformHeight(float px);
+
+    int   getFirstVisibleItem() const;
+    int   getLastVisibleItem()  const;
+    void  scrollToItem(int index);
+
+    void  removeAllChildren() override;
+
+    std::function<void(Layout*, int)> onItemCreated;
+};
+
+}
+~~~
+
+No `.zstyle` / ZMarkup attributes: the factory is a C++ callable and
+cannot be expressed in markup. A future follow-up could register a
+tag that takes a prefab name, but that requires UIPrefab and Slot
+(Proposal 3) and is out of scope for this proposal.
+
+### 8.4 Semantics
+
+**Two measurement modes.** When `uniformHeight > 0`, the cumulative
+heights are `i * uniformHeight` for `i` in `[0, itemCount]` and the
+factory is **not** called during measurement. When `uniformHeight == 0`
+(the default), the factory is called once per index and `measure` is
+invoked on each returned node to build the cumulative heights. The
+auto path is O(N) factory calls on the frame the cumulative heights
+are (re)built; the uniform path is O(N) arithmetic.
+
+**Materialization window.** `first` and `last` are computed from the
+current scroll offset and viewport height. The window is
+`[max(0, first - 2), min(itemCount - 1, last + 2)]`. Rows inside the
+window are materialized (if not already), rows outside are detached
+and erased from the internal vector. The 2-row buffer above and below
+avoids churn when scrolling by small amounts.
+
+**Row positioning.** Materialized rows are positioned absolutely at
+`left = 0`, `width = 100%`, `top = cumulative[i]`,
+`height = cumulative[i+1] - cumulative[i]`, in **content
+coordinates**. The inherited `ScrollView` translation and clip then
+move them with the scroll — VirtualView does not reposition rows on
+every frame.
+
+**Visibility queries.** `getFirstVisibleItem()` is
+`itemAtY(getScrollY())`, `getLastVisibleItem()` is
+`itemAtY(getScrollY() + rect.height - eps)`, where `itemAtY` is a
+binary search over the cumulative heights. Both return `-1` before
+the first measure and for empty lists.
+
+**Scrolling.** `scrollToItem(i)` clamps `i` to `[0, itemCount - 1]`
+and calls `scrollToY(cumulative[i])`. The rest of the `ScrollView`
+API is inherited unchanged.
+
+**Callbacks.** `onItemCreated(Layout*, int)` fires every time a node
+is materialized, including re-materialization after a row scrolled
+out of the window and back in. It is not "once per index, ever".
+
+**Lifecycle.** `removeAllChildren()` clears the materialized set and
+the base children; the visible rows come back on the next `arrange`.
+Unlike `setItemCount(0)`, it does not reset `itemCount`.
+
+**Caching.** `setItemCount` and `setUniformHeight` both clear
+`cumulativeHeights` and `lastMeasuredWidth` and set `subtreeDirty` +
+`pendingTransition`. With auto height, the cumulative heights are
+also rebuilt when the available width changes (`lastMeasuredWidth`
+cache).
+
+### 8.5 File-by-file changes
+
+| File | Change |
+|------|--------|
+| `include/components/VirtualView.hpp` | New file. Class declaration + implementation (header-only, like the other widgets). |
+| `src/ui/UI.hpp` | `#include "components/VirtualView.hpp"` |
+| `tests/test_virtual_view.cpp` | New file. 14 tests. |
+| `docs/user/12-virtual_view.md` | New user-facing page. |
+| `docs/api/Widgets.md` | New `VirtualView` entry. |
+| `docs/user/03-widgets.md` | New `VirtualView` section. |
+| `docs/CHEATSHEET.md`, `docs/GLOSSARY.md`, `docs/README.md` | Cross-references. |
+| `docs/ROADMAP.md` | §5.24 checklist and closure. |
+
+Estimated: ~350 lines of new code, ~200 lines of test, ~250 lines of
+docs.
+
+### 8.6 Tests
+
+`tests/test_virtual_view.cpp`:
+
+- `item_count_get_set` — `setItemCount` clamps to `>= 0`.
+- `uniform_height_get_set` — `setUniformHeight` clamps to `>= 0`.
+- `first_visible_uniform_at_top` — 100 items, viewport 240, height 24
+  → first = 0, last = 9.
+- `first_visible_uniform_after_scroll` — after `scrollToY(240)` →
+  first = 10, last = 19.
+- `zero_items` — `getFirstVisibleItem` / `getLastVisibleItem` return
+  `-1`.
+- `content_size_uniform` — `getMaxScrollY` = `100 * 24 - 240`.
+- `scroll_to_item_uniform` — `scrollToItem(500)` makes 500 visible.
+- `auto_height_measure_variable` — alternating 24 / 48 → total 3600.
+- `auto_first_visible_at_top` — cumulative = `[0, 24, 72, 96, 144,
+  168, 216, 240, ...]` → last = 6 at the top.
+- `materialized_count_bounded` — 12 children for 10 visible with a
+  2-row buffer top and bottom.
+- `materialized_dropped_when_out_of_range` — after scrolling by
+  `1000 * 24`, the created indices are all in `[998, 1011]`; the
+  first visible is in `[998, 1000]`.
+- `on_item_created_fires_for_materialized` — 12 calls on the first
+  frame, indices 0–9 included.
+- `removeAllChildren_clears_materialized` — clears then re-fills on
+  the next frame.
+- `first_visible_before_measure_is_minus_one` — before the first
+  `arrange`, both queries return `-1`.
+
+Total: 14 tests, all passing.
+
+### 8.7 What does NOT change
+
+- `ScrollView` behavior: unchanged. `VirtualView` is a `ScrollView`
+  subclass and inherits everything the base class does.
+- `Layout` behavior: unchanged.
+- `Theme` / `ZStyle`: unchanged.
+- `ZMarkup` grammar: unchanged. VirtualView is C++-only because the
+  factory is a `std::function`.
+- No new style properties.
+
+### 8.8 Open questions
+
+1. **Recycling.** Proposal 6 (`VirtualList`) recycles nodes across
+   indices; VirtualView does not. VirtualView is the simpler ship; a
+   future VirtualView could adopt recycling without changing the
+   public API, but that would effectively merge it with VirtualList.
+   Decision: **no recycling in VirtualView**. VirtualList remains the
+   recycling variant.
+
+2. **Variable height with heavy factory.** With auto height, the
+   factory runs once per index during the first measure. For
+   heavy-per-row factories, users must use `setUniformHeight` or
+   cache. Documented in the user page §5 and §7.
+
+3. **Infinite scroll.** No built-in hook. Users react to
+   `getLastVisibleItem()` and call `setItemCount` with a larger value.
+   Documented in the user page §8.3.
+
+4. **ZMarkup tag.** VirtualView cannot be expressed in markup today
+   because the row content is a C++ factory. A future follow-up could
+   register a tag that takes a prefab name (requires UIPrefab and
+   Slot, both shipped), but it is out of scope here. Tracked as the
+   open checkbox at the end of `ROADMAP.md` §5.24.
+
+### 8.9 Documentation
+
+- `docs/user/12-virtual_view.md` — user-facing page: when to use,
+  quick start, full API, materialization model, uniform-vs-auto
+  comparison, interaction with scroll, pitfalls, examples.
+- `docs/api/Widgets.md` — `VirtualView` entry with the full method
+  reference.
+- `docs/user/03-widgets.md` — `VirtualView` section, cross-linked to
+  the user page.
+- `docs/CHEATSHEET.md` — one-liner and short example.
+- `docs/GLOSSARY.md` — "VirtualView" entry.
+- `docs/README.md` — link to the new user page.
+- `docs/ROADMAP.md` — §5.24 with the shipped checklist.
+
 ---
 
 ## Out of scope (future rounds)
@@ -1764,6 +2001,7 @@ re-discussing them.
 4. `<Slot>` → §5.19 (depends on UIPrefab)
 5. Proposal 4 — StyleParser Diagnostics → §5.20
 6. Proposal 5 — Wrap for HStack → §5.21
+
 
 **Proposed** (next, in this order):
 
@@ -1913,3 +2151,60 @@ marked `[x]`.
 - `Measure.cpp` implements `arrangeWrapFlow` to handle multi-line breaking when horizontal children exceed the container's width.
 - Supports per-line `justify` (e.g., `Center`, `SpaceBetween`, `End`).
 - `contentSize` dynamically computes the exact bounding box encompassing all wrapped lines, accurately updating the parent height.
+
+### Proposal 8 — VirtualView
+
+**Shipped:** roadmap §5.24.
+
+**Changes from the proposal:**
+
+- **Materialization buffer of 2 rows above and 2 below**, not 1.
+  The 1-row buffer in the proposal caused visible churn during
+  scrollbar drags (the boundary row was destroyed and rebuilt every
+  few pixels). 2 rows is the smallest value that hides the churn in
+  practice; the cost is +2 nodes in the steady state.
+- **`onItemCreated` fires on every materialization, including
+  re-materialization.** The proposal did not specify whether the
+  callback fires once per index or every time a node is created. The
+  implementation picks "every time" because that is the only
+  definition that lets the callback configure the new node — the node
+  is destroyed on out-of-window, so a new node must be configured
+  from scratch on re-entry. Documented in the user page §7 pitfall 3.
+- **`getFirstVisibleItem` / `getLastVisibleItem` return `-1` before
+  the first measure and for empty lists.** The proposal did not
+  specify the empty-state value. `-1` was chosen because it is not a
+  valid index in any case and can be checked with a single `< 0`
+  condition. Documented in the user page §3.4.
+- **No ZMarkup registration.** The proposal listed a possible
+  follow-up tag taking a prefab name, but the implementation ships
+  C++-only. The `ROADMAP.md` §5.24 checklist keeps the item open as
+  `- [ ] (Follow-up) ZMarkup registration`.
+
+**What landed:**
+
+- `include/components/VirtualView.hpp` — `VirtualView` class,
+  header-only, as a `TLayout<VirtualView, ScrollView>`.
+- `src/ui/UI.hpp` — include added.
+- `tests/test_virtual_view.cpp` — 14 tests covering item count,
+  uniform height, visibility queries (uniform and auto),
+  `getMaxScrollY`, `scrollToItem`, materialization bound, drop on
+  scroll, `onItemCreated`, `removeAllChildren`, and the
+  before-first-measure sentinel.
+- `docs/user/12-virtual_view.md` — full user page: when to use, quick
+  start, API, materialization model, uniform-vs-auto comparison,
+  scroll interaction, pitfalls, examples.
+- `docs/api/Widgets.md` — `VirtualView` entry.
+- `docs/user/03-widgets.md` — `VirtualView` section.
+- `docs/CHEATSHEET.md`, `docs/GLOSSARY.md`, `docs/README.md` —
+  cross-references.
+- `docs/ROADMAP.md` — §5.24 with the shipped checklist.
+
+**Known limitation carried forward:** VirtualView does not recycle
+nodes. Scrolling a long list for a long time keeps allocating and
+freeing row nodes; for most lists the allocator handles this fine,
+but a user who scrolls a 100k-row list for minutes will see GC-like
+pauses. This is the exact problem VirtualList (Proposal 6 / roadmap
+§5.23) solves with node recycling. VirtualView is not deprecated by
+VirtualList — it stays the simpler option for lists where allocation
+churn is not a concern, and it is the only large-list option until
+VirtualList ships.

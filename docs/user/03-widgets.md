@@ -24,6 +24,7 @@ differences.
 | Progress bar | `ProgressBar` | — | `ProgressBar` | no |
 | Text input | `TextInput` | — | `TextInput` | yes |
 | Scroll view | `ScrollView` | — | `ScrollView` | yes |
+| Virtual list | `VirtualView` | — | — | yes |
 | Dropdown | `Dropdown` | — | `Dropdown` | yes |
 | Canvas (render target) | `CanvasLayout` | — | — | — |
 | Modal | `Modal` | — | — | yes |
@@ -806,7 +807,126 @@ it appear only when needed. See [Layout §8 Overflow](02-layout.md).
 
 ---
 
-## 13. Dropdown
+## 13. VirtualView
+
+A virtualized vertical list. It extends `ScrollView`, so wheel, inertia,
+scrollbar and clipping are inherited unchanged; on top of that it
+materializes only the rows that are actually visible (plus a 2-row
+buffer above and below), so a 10,000-item list costs roughly the same
+as a 12-item one.
+
+Full reference and conceptual model: [VirtualView](12-virtual_view.md).
+
+### C++
+
+```cpp
+auto v = VirtualView::create(
+    [](int i) {
+        auto row = std::make_shared<Layout>(LayoutType::Stack);
+        row->size(Percent(100), Px(24));
+        return row;
+    },
+    10000);
+
+v->size(Percent(100), Px(240));   // viewport: 240 px tall
+v->setUniformHeight(24.0f);        // fast path: all rows 24 px
+v->onItemCreated = [](Layout* row, int i) {
+    // populate row for index i
+};
+root->addChild(v);
+```
+
+An overload without the index exists for index-independent rows:
+
+```cpp
+auto v = VirtualView::create(
+    [] { return std::make_shared<Layout>(LayoutType::Stack); },
+    10000);
+```
+
+### ZMarkup
+
+VirtualView is **not** registered as a ZMarkup tag. The row content is
+a C++ factory (`std::function<std::shared_ptr<Layout>(int)>`) and
+cannot be expressed in markup. A future follow-up could register a tag
+taking a prefab name, but that is not available today. Create it in
+C++ and attach it to a ZMarkup-built tree with `addChild`.
+
+### API
+
+| Method / field | Description |
+|----------------|-------------|
+| `create(ItemFactory, int)` | Static. Builds a VirtualView from a row factory and an item count. `ItemFactory` is `std::function<std::shared_ptr<Layout>(int index)>`. |
+| `create(std::function<std::shared_ptr<Layout>()>, int)` | Static. Convenience overload for index-independent rows. |
+| `getItemCount()` / `setItemCount(int)` | Total number of items. `setItemCount` clamps to `>= 0` and invalidates the materialization; the new rows appear on the next `arrange`. |
+| `getUniformHeight()` / `setUniformHeight(float)` | Fixed row height. `> 0` enables the O(N) arithmetic fast path (factory not called during measurement). `0` (default) measures each row via the factory. |
+| `getFirstVisibleItem()` / `getLastVisibleItem()` | Visibility queries against the current scroll offset and viewport height. Both return `-1` before the first measure and for empty lists. |
+| `scrollToItem(int)` | Aligns the top of row `index` with the top of the viewport. Clamps `index` to `[0, itemCount - 1]`. |
+| `removeAllChildren()` | Override. Clears the materialized set and the base children. Unlike `setItemCount(0)`, it does not reset `itemCount` — the visible rows come back on the next frame. |
+| `onItemCreated` | `std::function<void(Layout*, int)>`. Fires every time a node is materialized, including re-materialization after scrolling out and back in. The node is already parented and positioned when the callback runs. |
+
+The full `ScrollView` scroll API is inherited unchanged: `scrollToY`,
+`getScrollY`, `getMaxScrollY`, `scrollToTop`, `scrollToBottom`, and so
+on.
+
+### Styling
+
+VirtualView has no own style tag, because it is not registered in
+ZMarkup. Its style tag defaults to `"VirtualView"` (set in `onBuild`),
+so C++-created instances can be styled with:
+
+```css
+VirtualView {
+    background: #1A1A20;
+    overflow: scroll;
+    padding: 8px;
+}
+```
+
+Rows are normal `Layout` instances. Style them by their own tag or by
+adding classes in the factory or in `onItemCreated`:
+
+```cpp
+v->onItemCreated = [](Layout* row, int i) {
+    row->addClass(i % 2 == 0 ? "row-even" : "row-odd");
+};
+```
+
+```css
+.row-even { background: #1E1E24; }
+.row-odd  { background: #1A1A20; }
+```
+
+### Notes
+
+- Two measurement modes. With `uniformHeight > 0`, the cumulative
+  heights are `i * uniformHeight` — O(N) arithmetic, no factory call
+  during measurement. With `uniformHeight == 0`, the factory is called
+  once per index on the frame the cumulative heights are (re)built, and
+  `measure` is invoked on each returned node. The auto path is O(N)
+  factory + measure; keep the factory cheap, or use
+  `setUniformHeight`.
+- Rows are positioned in content coordinates (`top = cumulative[i]`).
+  The inherited `ScrollView` translation and clip move them with the
+  scroll; VirtualView does not reposition rows on every frame.
+- With `uniformHeight > 0`, the number of materialized children is
+  bounded by `ceil(viewportHeight / uniformHeight) + 4` (2 rows above
+  and 2 below). This is the whole point of the widget.
+- `onItemCreated` fires on every materialization, including
+  re-materialization. Do not assume "once per index, ever".
+- VirtualView creates and destroys row nodes; it does not recycle them.
+  If allocation churn on very long, continuously-scrolled lists
+  becomes a problem, `VirtualList` (`ROADMAP.md` §5.23) is the planned
+  recycling variant.
+- There is no built-in infinite scroll. React to
+  `getLastVisibleItem()` and call `setItemCount` with a larger value
+  when the user is close to the end. Note that `setItemCount` with
+  auto height is O(N) — prefer `setUniformHeight` or a chunked append
+  strategy.
+- Full user page with pitfalls and examples:
+  [VirtualView](12-virtual_view.md).
+
+## 14. Dropdown
 
 A button that opens a scrollable list of options. The list is a
 **portal** — it renders above everything else, ignoring clipping and
@@ -922,6 +1042,7 @@ Individual options are assigned the `.dropdown-item` class automatically. You ca
 }
 .dropdown-item:hover { background: #3296FF60; }
 .dropdown-item:checked { background: #3296FF80; color: #FDF900; }
+```
 
 ### Notes
 
@@ -938,7 +1059,7 @@ Individual options are assigned the `.dropdown-item` class automatically. You ca
 
 ---
 
-## 14. Canvas (render target)
+## 15. Canvas (render target)
 
 A `CanvasLayout` renders its subtree into an offscreen render target,
 then draws that target as a texture. Useful for effects that need to be
@@ -969,7 +1090,7 @@ yourself via `ZMarkup::Registry::reg("Canvas", ...)`.
 
 ---
 
-## 15. Modal
+## 16. Modal
 
 A full-screen overlay with a centered content panel and an intro
 animation.
@@ -1054,7 +1175,7 @@ focusable descendants only, not the whole tree. See
 
 ---
 
-## 16. Tooltip
+## 17. Tooltip
 
 A small floating box shown when hovering its owner, after a delay.
 
@@ -1121,7 +1242,7 @@ Tooltips are `Panel` subclasses with `setPortal(true)` and
 
 ---
 
-## 17. Popup / ContextMenu
+## 18. Popup / ContextMenu
 
 A floating panel that can be opened below, above, or at an arbitrary
 screen position. Used for context menus, dropdown menus, and tooltips
@@ -1217,7 +1338,7 @@ animated by a state transition; the content can have its own animations.
 
 ---
 
-## 18. VStack / HStack
+## 19. VStack / HStack
 
 Thin helpers that create a `Layout` of the right type and set the style
 tag. They're not classes.
@@ -1261,7 +1382,7 @@ debugging.
 
 ---
 
-## 19. Widget composition
+## 20. Widget composition
 
 The factories `Btn`, `Label`, `VStack`, `HStack` return the widget
 directly. For composite widgets (`Toggle`, `Dropdown`, `Modal`,
