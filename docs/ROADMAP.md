@@ -1236,7 +1236,7 @@ framework is still in beta. Revisit when:
 - A plugin system needs to expose "just the tree" without the drawing
   half.
 
-- [ ] 5.11a — Group state flags into a bitfield struct (low risk)
+- [x] 5.11a — Group state flags into a bitfield struct (low risk)
 - [ ] 5.11b — Listener array (tracked in 5.9)
 - [x] 5.11c — Remove `friend` — declined, deliberate design choice
 - [ ] 5.11d — Split hierarchy — deferred to post-1.0
@@ -1618,7 +1618,7 @@ applies, but UI use is fine.
 - Detects duplicate `@keyframes`.
 - Introduces `strict` mode: warnings (which normally just ignore the bad rule) can be promoted to hard errors to fail the build/load step.
 
-### Passo 5.21: Wrap for HStack ✅ - Done.
+### 5.21: Wrap for HStack ✅ - Done.
 
 - **Object**: Support wrapping children within the `HStack` layout.
 - **Details**:
