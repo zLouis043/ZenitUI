@@ -235,7 +235,7 @@ namespace ZenitUI
 		virtual Layout *contentTarget() { return this; }
 
 		void removeFromParent() { internal_.wantsRemoval = 1; }
-		void removeAllChildren()
+		virtual void removeAllChildren()
 		{
 			for (auto &c : children)
 				if (c)
