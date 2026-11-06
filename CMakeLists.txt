@@ -55,17 +55,29 @@ if(ZENITUI_BUILD_TESTS)
 
     add_executable(ZenitTests ${ZENITUI_TEST_SOURCES})
     target_link_libraries(ZenitTests
-        PRIVATE
-            ZenitUI::ZenitUI
-            ZenitUI::MockBackend
-    )
+        PRIVATE ZenitUI::ZenitUI ZenitUI::MockBackend)
     target_compile_definitions(ZenitTests PRIVATE ZENITUI_DEBUG)
     target_include_directories(ZenitTests PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests"
-    )
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
-    enable_testing()
-    add_test(NAME ZenitTests COMMAND ZenitTests)
+    enable_testing()                                      # 1
+
+    set(_zenit_tests_file "${CMAKE_CURRENT_BINARY_DIR}/ZenitTests_tests.cmake")
+
+    if(NOT EXISTS "${_zenit_tests_file}")
+        file(WRITE "${_zenit_tests_file}" "# placeholder\n")  # 2
+    endif()
+
+    set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES
+                 "${_zenit_tests_file}")                  # 3  ← QUESTA È LA CHIAVE
+
+    add_custom_command(TARGET ZenitTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND}
+            -D "TEST_EXECUTABLE=$<TARGET_FILE:ZenitTests>"
+            -D "TEST_OUTPUT_FILE=${_zenit_tests_file}"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateZenitTests.cmake"
+        VERBATIM
+    )                                                     # 4
 endif()
 
 if(ZENITUI_BUILD_EXAMPLES AND ZENITUI_BACKENDS STREQUAL "")

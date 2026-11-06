@@ -10,6 +10,9 @@
 
 namespace Test {
 
+inline bool        listMode      = false;
+inline std::string filterPattern; 
+
 struct TestCase {
     std::string suite;
     std::string name;
@@ -39,8 +42,21 @@ inline void fail(const char* file, int line, const std::string& msg) {
 }
 
 inline int run() {
+    if (listMode) {
+        for (auto& t : registry())
+            std::cout << t.suite << "." << t.name << "\n";
+        return 0;
+    }
+
     std::string lastSuite;
+    int matched = 0;
     for (auto& t : registry()) {
+        if (!filterPattern.empty()) {
+            std::string full = t.suite + "." + t.name;
+            if (full != filterPattern) continue;
+        }
+        ++matched;
+
         if (t.suite != lastSuite) {
             std::cout << "=== " << t.suite << " ===\n";
             lastSuite = t.suite;
@@ -56,6 +72,11 @@ inline int run() {
         }
         if (failureCount() == before)
             std::cout << "  ok   " << t.name << "\n";
+    }
+
+    if (!filterPattern.empty() && matched == 0) {
+        std::cerr << "No test matched filter: " << filterPattern << "\n";
+        return 2;
     }
 
     std::cout << "\n";
