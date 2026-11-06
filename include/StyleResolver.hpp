@@ -43,7 +43,7 @@ namespace ZenitUI
             bool focused{false};
             bool enabled{true};
             bool checked{false};
-            std::string font;
+            FontStack font;
             Value fontSize;
             Color color;
             Value letterSpacing;

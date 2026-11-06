@@ -73,8 +73,8 @@ namespace ZenitUI
 		virtual InputEvents pollInputEvents() = 0;
 		virtual float dpiScale() = 0;
 		virtual EdgeInsets safeArea() = 0;
-		virtual void setClipboardText(const std::string& text) = 0;
-        virtual std::string getClipboardText() = 0;
+		virtual void setClipboardText(const std::string &text) = 0;
+		virtual std::string getClipboardText() = 0;
 	};
 
 	class IAssetProvider
@@ -84,6 +84,17 @@ namespace ZenitUI
 		virtual FontHandle getFont(std::string_view name) = 0;
 		virtual TextureHandle getTexture(std::string_view name) = 0;
 		virtual EffectHandle getEffect(std::string_view name) = 0;
+
+		virtual FontHandle getFont(const FontStack &stack)
+		{
+			for (const auto &name : stack)
+			{
+				FontHandle h = getFont(std::string_view(name));
+				if (h.id != 0)
+					return h;
+			}
+			return {};
+		}
 	};
 
 	struct UIContext
