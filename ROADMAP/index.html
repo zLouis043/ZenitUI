@@ -3242,9 +3242,12 @@ framework code.</p>
 </ul>
 <h3 id="52-font-handling">5.2 Font handling</h3>
 <ul>
-<li>[ ] Font fallback chain (e.g. <code>font: mont, calibri, sans</code>)</li>
+<li>[x] Font fallback chain (e.g. <code>font: mont, calibri, sans</code>)</li>
 <li>[ ] Runtime font loading / registration</li>
-<li>[ ] Font metrics caching</li>
+<li>[ ] Font metrics caching — <strong>deferred post-1.0</strong>: <code>measureText</code> is already
+  cached at widget level (<code>Text</code> caches wrapped lines); Renderer level cache
+  would require a cache invalidation upon <code>unloadFont</code>, which is not in the
+  <code>IRenderer</code> contract.</li>
 </ul>
 <h3 id="53-calc-extensions">5.3 <code>calc()</code> extensions</h3>
 <ul>
