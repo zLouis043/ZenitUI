@@ -18,6 +18,16 @@ else
   NPROC := $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 endif
 
+JOBS      ?= $(NPROC)
+CTEST_JOBS ?= 1
+
+ifeq ($(VERBOSE),1)
+  CTEST_VERBOSE_FLAGS := -V
+else
+  CTEST_VERBOSE_FLAGS := --output-on-failure
+endif
+CTEST_FLAGS := $(CTEST_VERBOSE_FLAGS) --no-tests=error
+
 ifdef BUILD
   BUILD_TYPE := $(if $(filter debug,$(BUILD)),Debug,Release)
 endif
@@ -31,7 +41,7 @@ CMAKE_FLAGS := $(CMAKE_GEN) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
 ifdef ZENITUI_USE_MINGW
   CMAKE_FLAGS += -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc
 endif
-BUILD_CMD   := $(CMAKE) --build $(BUILD_DIR) --parallel $(NPROC)
+BUILD_CMD   := $(CMAKE) --build $(BUILD_DIR) --parallel $(JOBS)
 
 # --- Compiler forwarding ------------------------------------------------
 # Allows 'make test CXX=clang++' to drive CMake's compiler selection.
@@ -74,7 +84,7 @@ tests:
 	@$(BUILD_CMD) --target ZenitTests
 
 test: tests
-	@ctest --test-dir $(BUILD_DIR) --output-on-failure
+	@ctest --test-dir $(BUILD_DIR) $(CTEST_FLAGS) -j$(CTEST_JOBS)
 
 examples:
 	$(call configure,-DZENITUI_BUILD_EXAMPLES=ON -DZENITUI_BUILD_TESTS=OFF)
