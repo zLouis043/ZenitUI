@@ -5,6 +5,8 @@
 #include "components/Button.hpp"
 #include "components/ImageContainer.hpp"
 
+#include "components/VirtualView.hpp"
+
 #include "components/Toggle.hpp"
 #include "components/Checkbox.hpp"
 #include "components/Slider.hpp"
