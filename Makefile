@@ -84,6 +84,11 @@ tests:
 	@$(BUILD_CMD) --target ZenitTests
 
 test: tests
+	@ctest --test-dir $(BUILD_DIR) -j$(CTEST_JOBS) -Q || \
+	    (ctest --test-dir $(BUILD_DIR) --rerun-failed --output-on-failure; exit 1)
+	@echo "All tests passed"
+
+test-verbose: tests
 	@ctest --test-dir $(BUILD_DIR) $(CTEST_FLAGS) -j$(CTEST_JOBS)
 
 examples:
@@ -115,4 +120,4 @@ dist:
 	@$(BUILD_CMD)
 	@$(CMAKE) --install $(BUILD_DIR) --prefix $(CURDIR)/dist
 
-.PHONY: all libzenit tests test examples run-% bench bench-run bench-update clean rebuild dist
+.PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist

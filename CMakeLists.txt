@@ -60,16 +60,16 @@ if(ZENITUI_BUILD_TESTS)
     target_include_directories(ZenitTests PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
-    enable_testing()                                      # 1
+    enable_testing()
 
     set(_zenit_tests_file "${CMAKE_CURRENT_BINARY_DIR}/ZenitTests_tests.cmake")
 
     if(NOT EXISTS "${_zenit_tests_file}")
-        file(WRITE "${_zenit_tests_file}" "# placeholder\n")  # 2
+        file(WRITE "${_zenit_tests_file}" "# placeholder\n")
     endif()
 
     set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES
-                 "${_zenit_tests_file}")                  # 3  ← QUESTA È LA CHIAVE
+                 "${_zenit_tests_file}")
 
     add_custom_command(TARGET ZenitTests POST_BUILD
         COMMAND ${CMAKE_COMMAND}
@@ -77,7 +77,7 @@ if(ZENITUI_BUILD_TESTS)
             -D "TEST_OUTPUT_FILE=${_zenit_tests_file}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/GenerateZenitTests.cmake"
         VERBATIM
-    )                                                     # 4
+    )
 endif()
 
 if(ZENITUI_BUILD_EXAMPLES AND ZENITUI_BACKENDS STREQUAL "")
