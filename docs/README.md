@@ -253,6 +253,7 @@ See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
 - [Effects](user/09-effects.md) — filters, shaders, `FilterRegistry`
 - [Custom Widgets](user/10-custom-widgets.md) — build your own component
 - [Data Binding](user/11-bindable.md) — `Bindable<T>` for model ↔ UI
+- [VirtualView](user/12-virtual_view.md) — virtualized lists for 10k+ rows
 
 ### For contributors (extending the core)
 

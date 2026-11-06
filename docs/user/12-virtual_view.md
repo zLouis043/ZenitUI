@@ -1,191 +1,392 @@
 # VirtualView
 
-VirtualView is a ScrollView subclass that materializes only the items in (or
-near) the visible viewport. It is designed for large collections where every
-item must exist as data (bound to a model with thousands of entries) but
-constructing one Layout per item is too expensive.
+VirtualView is a virtualized vertical list: it materializes only the
+rows that are actually visible (plus a small buffer), so a list with
+10.000 items costs roughly the same as a list with 12.
 
-## When to use it
+It is a ScrollView subclass. All scrolling behaviour — wheel, inertia,
+scrollbar, clipping, scrollToY / getScrollY — is inherited from
+ScrollView. VirtualView only adds row virtualization on top.
+
+---
+
+## 1. When to use it
 
 Use VirtualView when:
 
-- The collection has many items (typically hundreds to tens of thousands).
-- Items are homogeneous or near-homogeneous in height.
-- Losing per-item state when scrolling out of view is acceptable (VirtualView
-  destroys and recreates out-of-window items).
+- the list has more than a few hundred rows;
+- the row count is known up front (or can be updated with
+  setItemCount);
+- rows can be built by a factory function
+  std::shared_ptr<Layout>(int index).
 
-Do not use VirtualView when:
+Do **not** use it when:
 
-- The collection is small (under ~100 items) — a plain Vertical layout is
-  simpler.
-- Items have highly variable heights AND depend on inherited style (font-size
-  in em, inherited custom properties). See the auto-mode caveats below.
-- You need per-item focus rings or hover state that survive scrolling out of
-  view. VirtualView destroys out-of-window nodes; their focus/hover state is
-  lost.
+- the list has a small, fixed number of children — a plain `Vertical`
+  or `VStack` is simpler;
+- rows need to *recycle* the same node instances across indices (that
+  is the job of the planned `VirtualList`, see `PROPOSALS.md`
+  Proposal 6 / `ROADMAP.md` §5.23). VirtualView creates and destroys
+  nodes; it does not recycle.
 
-## Quick start
+---
 
-    auto list = VirtualView::create(
-        [](int i) {
-            return Text::create("Item #" + std::to_string(i));
-        },
-        10000);
+## 2. Quick start
 
-    list->setUniformHeight(24.0f);
-    list->size(Percent(100), Percent(100));
-    root->addChild(list);
+```cpp
+auto v = VirtualView::create(
+    [](int i) {
+        auto row = std::make_shared<Layout>(LayoutType::Stack);
+        row->size(Percent(100), Px(24));
+        return row;
+    },
+    10000);
+```
 
-On the first frame(), VirtualView:
+That is a 10.000-row list that materializes 12 nodes.
 
-1. Computes the total content height (24 * 10000 = 240000px).
-2. Finds the first and last visible item indices.
-3. Materializes indices [first-2, last+2] (the buffer).
-4. Arranges them as absolutely positioned children.
+The overload without the index is for the case where the factory does
+not depend on the row index:
 
-As you scroll, the window slides: out-of-window items are dropped, in-window
-items are created.
+```cpp
+auto v = VirtualView::create(
+    [] { return std::make_shared<Layout>(LayoutType::Stack); },
+    10000);
+```
 
-## API
+Both overloads are static and return `std::shared_ptr<VirtualView>`.
 
-### create(factory, count)
+---
 
-Two overloads:
+## 3. API
 
-    static std::shared_ptr<VirtualView> create(
-        std::function<std::shared_ptr<Layout>(int index)> factory,
-        int count);
+### 3.1 Creation
 
-    static std::shared_ptr<VirtualView> create(
-        std::function<std::shared_ptr<Layout>()> factory,
-        int count);
+```cpp
+using ItemFactory = std::function<std::shared_ptr<Layout>(int index)>;
 
-The first is the standard form. The second wraps a zero-argument factory. The
-factory may throw; exceptions propagate to the caller of frame().
+static std::shared_ptr<VirtualView> create(ItemFactory factory, int count);
+static std::shared_ptr<VirtualView> create(
+    std::function<std::shared_ptr<Layout>()> factory, int count);
+```
 
-### setItemCount(int) / getItemCount()
+`count` is clamped to `>= 0`. `factory` may return `nullptr` for an
+index — in that case the row is skipped (no node is materialized for
+it, and the cumulative height for that row falls back to 1 px).
 
-Total number of items. Negative values clamp to zero. Setting a new count
-invalidates the height cache and re-triggers materialization on the next frame.
+### 3.2 Item count
 
-### setUniformHeight(float) / getUniformHeight()
+```cpp
+int  getItemCount() const noexcept;
+void setItemCount(int count);
+```
 
-Controls the height model:
+`setItemCount` clamps to `>= 0` and invalidates the cached cumulative
+heights and the current materialization on the next frame. It does
+**not** synchronously create or destroy children; that happens on the
+next `arrange`.
 
-- px > 0: uniform mode. Every item is treated as px tall. measure is never
-  called. Recommended for lists of identical rows, or whenever the height is
-  known.
-- px == 0: auto mode. Every item's height is measured once per width change.
-  See caveats below.
+### 3.3 Uniform height
 
-### getFirstVisibleItem() / getLastVisibleItem()
+```cpp
+float getUniformHeight() const noexcept;
+void  setUniformHeight(float px);
+```
 
-Return the indices of the first and last visible items (not the buffered
-range). Return -1 when the list is empty or when heights have not yet been
-computed (i.e. before the first measure).
+When `uniformHeight > 0`, VirtualView assumes every row is exactly
+that tall and computes `cumulativeHeights` in O(N) arithmetic — the
+factory is **not** called during measurement, only during
+materialization. This is the fast path and should be preferred
+whenever rows have a fixed height.
 
-### scrollToItem(int)
+When `uniformHeight == 0` (the default), VirtualView measures every
+row by calling the factory with each index and invoking `measure` on
+the returned node. This is O(N) factory calls + N `measure` calls on
+the frame where the cumulative heights are (re)built. See §5 for the
+performance implications.
 
-Scrolls so that the given item is at the top of the viewport. Clamps index to
-[0, count-1].
+`setUniformHeight` invalidates the same caches as `setItemCount`.
 
-### onItemCreated
+### 3.4 Visibility queries
 
-    std::function<void(Layout* node, int index)> onItemCreated;
+```cpp
+int getFirstVisibleItem() const;
+int getLastVisibleItem()  const;
+```
 
-Called every time a node is materialized (added to children as part of the
-window). Not called when the same node is re-shown after being dropped —
-VirtualView recreates it. Use this hook to set up per-item bindings, hover
-handlers, lazy-loaded data, etc.
+Both are computed against the **current** scroll offset and the
+current viewport height:
 
-### removeAllChildren()
+- `getFirstVisibleItem() == itemAtY(getScrollY())`
+- `getLastVisibleItem()  == itemAtY(getScrollY() + rect.height - eps)`
 
-Overridden from Layout. Clears children and the internal materialized tracker.
-After this call, the next frame() re-materializes the current window from
-scratch.
+`itemAtY(y)` is a binary search over the cumulative heights; it
+returns the index whose span `[cumulative[i], cumulative[i+1])`
+contains `y`, clamped to `[0, itemCount - 1]`.
 
-Note: if you only need to clear items, prefer setItemCount(0). It is the
-semantically correct way and reuses the same code path.
+If `itemCount == 0`, or if the cumulative heights have not been built
+yet (before the first `measure`), both return `-1`. This is the
+documented "not laid out yet" sentinel — see the test
+`first_visible_before_measure_is_minus_one`.
 
-## The two height modes
+### 3.5 Scrolling
 
-### Uniform mode (setUniformHeight(px > 0))
+```cpp
+void scrollToItem(int index);
+```
 
-- measure: skipped entirely. cumulativeHeights[i] = i * px.
-- Cost: O(N) to fill the cumulative array once, then O(log N) per query.
-- Use this whenever possible.
+Clamps `index` to `[0, itemCount - 1]` and calls
+`scrollToY(cumulativeHeights[index])`. In other words it aligns the
+top of the row with the top of the viewport.
 
-### Auto mode (setUniformHeight(0))
+The usual `ScrollView` API is also available:
+`scrollToY`, `getScrollY`, `getMaxScrollY`, `scrollToTop`,
+`scrollToBottom`, and so on.
 
-- measure: called once per item on the first frame, and again on every width
-  change.
-- Cost: O(N) measure() calls at startup and on every resize. For 10000 items,
-  expect roughly 10–30 ms on first frame and on each window resize.
+### 3.6 Callbacks
 
-#### Caveats
+```cpp
+std::function<void(Layout* node, int index)> onItemCreated;
+```
 
-1. No parent inheritance. rebuildCumulative calls node->measure(availW, 1e9f)
-   on an unattached node. If your item's height depends on inherited style
-   (font-size in em, font-family, custom properties via var()), the measured
-   height will differ from the in-tree height. Use setUniformHeight if that
-   matters.
+Fires **every time a row is materialized**, i.e. every time a node is
+created by the factory and inserted as a child. This is not
+"once per row": if a row scrolls out of the buffer and later scrolls
+back in, a *new* node is created and `onItemCreated` fires again with
+the same index.
 
-2. O(N) on resize. If the app window is frequently resized, auto mode
-   re-measures everything. Prefer uniform mode.
+### 3.7 Lifecycle
 
-3. Lazy factories. The factory is called once per item in auto mode (during
-   rebuildCumulative), plus once per materialization. If your factory is
-   expensive, cache inside it.
+```cpp
+void removeAllChildren() override;
+```
 
-## The materialization window
+Clears the internal `materialized` vector **and** the base class
+children. On the next `arrange`, the visible range is recomputed and
+the rows are recreated via the factory. Unlike `setItemCount(0)`,
+`removeAllChildren()` does **not** reset `itemCount`.
 
-For visible range [first, last], VirtualView materializes [first - 2, last + 2]:
+---
 
-- 2 items of buffer on each side produce smooth scrolling without popping.
-- Out-of-window items are dropped on the next arrange.
-- In-window items are kept (not recreated). Their state (hover, focus, scroll)
-  persists.
+## 4. How materialization works
 
-onItemCreated fires at materialization, not at "becomes visible". With a
-buffer of 2, the two usually coincide, but conceptually they are different.
+On each `arrange`:
 
-## Performance
+1. `updateMaterialization()` runs *before* the parent `ScrollView`
+   arranges.
+2. It reads `getFirstVisibleItem()` and `getLastVisibleItem()` from
+   the current scroll offset and viewport height.
+3. It expands the range by 2 rows above and 2 rows below:
+   `start = max(0, first - 2)`, `end = min(itemCount - 1, last + 2)`.
+4. Every entry in `materialized` whose index is outside `[start, end]`
+   is detached (`node->removeFromParent()`) and erased from the
+   vector.
+5. Every index in `[start, end]` that is not already materialized is
+   built by calling the factory, positioned absolutely with
+   `top = cumulative[i]`, `left = 0`, `width = 100%`,
+   `height = cumulative[i+1] - cumulative[i]`, and appended as a
+   child.
+6. Finally the base `ScrollView::arrange` runs.
 
-    Operation   Uniform                     Auto
-    ---------   -------------------------   -----------------------------------
-    measure     O(N) once                   O(N) once + O(N) per resize
-    update      skipped for out-of-window   skipped for out-of-window
-    arrange     O(window)                   O(window)
-    draw        skipped by viewport clip    skipped by viewport clip
+The children are positioned in **content coordinates**, not viewport
+coordinates. The `ScrollView` scroll offset translates (or clips) the
+subtree as usual, so the rows move with the scroll without
+VirtualView having to reposition them on every frame.
 
-The arrange cost is the remaining bottleneck: every materialized node must be
-positioned, even if it is off-screen. This is why VirtualView does not help
-with an eager VStack of 10000 children — those are all in children and all
-need arrange. VirtualView avoids the problem by not having 10000 children.
+The buffer of 2 rows above and 2 below means that scrolling by a
+small amount does not immediately cause the boundary row to be
+destroyed and a new one to be created. It also gives the row a chance
+to be already materialized when the scroll is fast.
 
-## Relationship with content-visibility (Proposal 8)
+The number of materialized children is therefore bounded by
+`ceil(viewportHeight / rowHeight) + 4` (2 above + 2 below) when
+`uniformHeight > 0`. For mixed heights the bound is the same
+expression with `rowHeight` replaced by the minimum row height — in
+practice it is a small constant.
 
-They solve different problems:
+---
 
-- VirtualView reduces the number of children (only visible + buffer are
-  materialized). Ideal for lists where items are data-bound and lazily
-  constructed.
-- content-visibility: auto (Proposal 8) keeps all children in the tree but
-  skips measure, update, and draw for those outside the clip rect. arrange is
-  still O(N). Ideal for deep static subtrees that happen to be off-screen
-  (e.g. a hidden Modal with 200 children).
+## 4. How materialization works
 
-They compose: a Modal opened on top of a VirtualView can benefit from
-content-visibility on the modal content, while the underlying list uses
-VirtualView.
+On each `arrange`:
 
-## Common pitfalls
+1. `updateMaterialization()` runs *before* the parent `ScrollView`
+   arranges.
+2. It reads `getFirstVisibleItem()` and `getLastVisibleItem()` from
+   the current scroll offset and viewport height.
+3. It expands the range by 2 rows above and 2 rows below:
+   `start = max(0, first - 2)`, `end = min(itemCount - 1, last + 2)`.
+4. Every entry in `materialized` whose index is outside `[start, end]`
+   is detached (`node->removeFromParent()`) and erased from the
+   vector.
+5. Every index in `[start, end]` that is not already materialized is
+   built by calling the factory, positioned absolutely with
+   `top = cumulative[i]`, `left = 0`, `width = 100%`,
+   `height = cumulative[i+1] - cumulative[i]`, and appended as a
+   child.
+6. Finally the base `ScrollView::arrange` runs.
 
-- Calling removeAllChildren() directly: safe in this version, but
-  setItemCount(0) is the recommended way.
-- Accessing getFirstVisibleItem() before the first frame(): returns -1.
-- Calling arrange() directly: it is protected. Use Env::frame(root) in tests,
-  or drive the app's normal frame loop.
-- Relying on onItemCreated for cleanup: there is no onItemDestroyed. If you
-  need it, wrap the item in a custom widget that holds the resource in its
-  constructor/destructor.
+The children are positioned in **content coordinates**, not viewport
+coordinates. The `ScrollView` scroll offset translates (or clips) the
+subtree as usual, so the rows move with the scroll without
+VirtualView having to reposition them on every frame.
+
+The buffer of 2 rows above and 2 below means that scrolling by a
+small amount does not immediately cause the boundary row to be
+destroyed and a new one to be created. It also gives the row a chance
+to be already materialized when the scroll is fast.
+
+The number of materialized children is therefore bounded by
+`ceil(viewportHeight / rowHeight) + 4` (2 above + 2 below) when
+`uniformHeight > 0`. For mixed heights the bound is the same
+expression with `rowHeight` replaced by the minimum row height — in
+practice it is a small constant.
+
+With auto height, the factory is called **once per item** the first
+time the cumulative heights are built, and the returned node is only
+used for `measure` — it is discarded and a fresh node is created
+during materialization. **The factory must be cheap.** If it loads
+assets or allocates heavily, either switch to `setUniformHeight` or
+cache the row's data inside the factory closure and only build the
+`Layout` on materialization.
+
+`setItemCount` and `setUniformHeight` both clear `cumulativeHeights`,
+so the next `measure` rebuilds them from scratch. Avoid calling them
+every frame — they are model-change setters, not per-frame setters.
+
+The `lastMeasuredWidth` cache means that, with auto height, the
+cumulative heights are only rebuilt when the available width changes
+(from a resize) or when `setItemCount` / `setUniformHeight` is called.
+
+---
+
+## 6. Interaction with scrolling
+
+VirtualView is a `ScrollView`, so:
+
+- `getMaxScrollY() == totalContentHeight - viewportHeight`;
+- the scrollbar (if enabled on the parent / theme) reflects the full
+  `itemCount`, not the materialized rows;
+- wheel and inertia behave exactly as in any other `ScrollView`.
+
+There is no built-in infinite scroll. To implement it, react to
+`getLastVisibleItem()` in an `onUpdate` and call `setItemCount` with a
+larger value when the user is close to the end. Because
+`setItemCount` invalidates the cumulative heights, the next frame
+rebuilds them; for a large list with auto height this is the O(N)
+cost described in §5, so prefer `setUniformHeight` or a chunked
+append strategy.
+
+---
+
+## 7. Common pitfalls
+
+**1. Calling the factory for measurement is not free.**
+The factory runs once per item during the first measure with auto
+height. Do not put heavy work in it. If you need heavy work per row,
+either use `uniformHeight` or cache the data in the closure and only
+build the `Layout` when the index is actually materialized (you can
+distinguish by tracking a `materialized` set in the closure, or by
+doing the heavy work inside `onItemCreated`).
+
+**2. The factory must return a node whose height matches the
+cumulative height.**
+For uniform height, VirtualView overrides the row's height to
+`uniformHeight` on materialization, so a mismatch in the factory is
+harmless. For auto height, the row's height is taken from the
+measured size; if `onItemCreated` later changes the row's content
+without changing its measured height, the row will draw outside its
+slot. Keep row content stable, or call `setUniformHeight` /
+`setItemCount` to force a rebuild.
+
+**3. `onItemCreated` fires on re-materialization.**
+If a row scrolls out of the buffer and back in, its node is new and
+the callback fires again. Do not assume "one call per index, ever".
+For idempotent setup (setting text, attaching a click that captures
+the index by value) this is fine; for "register a global listener
+once" it is not. Guard with an external `std::set<int>` if needed.
+
+**4. `removeAllChildren` is not `setItemCount(0)`.**
+`removeAllChildren` destroys the nodes but keeps `itemCount`; the rows
+come back on the next frame. `setItemCount(0)` empties the model and
+stays empty until the count is changed again.
+
+**5. Queries before the first frame return -1.**
+`getFirstVisibleItem` / `getLastVisibleItem` return `-1` before the
+first measure, because the cumulative heights have not been built
+yet. Do not treat `-1` as "empty list" — for an empty list they also
+return `-1`. Check `getItemCount() == 0` first if you need to
+disambiguate.
+
+---
+
+## 8. Examples
+
+### 8.1 Fixed-height log viewer
+
+```cpp
+auto log = VirtualView::create(
+    [](int) {
+        auto row = std::make_shared<Layout>(LayoutType::Stack);
+        row->size(Percent(100), Px(20));
+        return row;
+    },
+    100000);
+
+log->size(Percent(100), Px(400));
+log->setUniformHeight(20.0f);
+
+log->onItemCreated = [](Layout* row, int i) {
+    // populate row from the log buffer at index i
+};
+
+log->scrollToItem(99999);   // bottom of the log
+```
+
+### 8.2 Variable-height chat
+
+```cpp
+auto chat = VirtualView::create(
+    [&messages](int i) {
+        auto row = std::make_shared<Layout>(LayoutType::Vertical);
+        auto label = Text::create(messages[i].text);
+        label->setWrap(true);
+        row->addChild(label);
+        return row;
+    },
+    (int)messages.size());
+
+chat->size(Percent(100), Percent(100));
+chat->onItemCreated = [&messages](Layout* row, int i) {
+    // e.g. attach a timestamp tooltip
+};
+```
+
+The factory here is cheap (the message text is already in memory), so
+the one-call-per-item during the first measure is acceptable. If the
+text had to be loaded from disk per row, move the load into a cache
+populated before creating the VirtualView.
+
+### 8.3 Updating the count on scroll (infinite scroll)
+
+```cpp
+// inside the screen's onUpdate
+int last = vv->getLastVisibleItem();
+if (last >= 0 && last >= vv->getItemCount() - 20) {
+    vv->setItemCount(vv->getItemCount() + 50);
+}
+```
+
+Note the O(N) cost of `setItemCount` with auto height — for very long
+lists, prefer `setUniformHeight` or append in chunks with a debounce.
+
+---
+
+## 9. See also
+
+- `docs/user/02-layout.md` — `Vertical` / `VStack` for non-virtualized
+  lists.
+- `docs/user/03-widgets.md` — `ScrollView`, the base class.
+- `docs/architecture/PROPOSALS.md` Proposal 6 and `ROADMAP.md` §5.23
+  — `VirtualList`, the planned recycling-based variant.
+- `docs/api/Widgets.md` — full API reference.

@@ -9,7 +9,7 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after §5.21 (Wrap for HStack) and §4.8 (Style resolution
+Last updated: after §5.24 (VirtualView) and §4.8 (Style resolution
 caching + reverse dependency).
 
 ---
@@ -1649,6 +1649,10 @@ into 3 PRs:
 
 **Status:** 🟡 planned — depends on §5.18 (UIPrefab) and §5.19 (Slot).
 
+**Related:** §5.24 (VirtualView) ships a simpler, non-recycling
+variant of the same idea. If VirtualList is deferred, VirtualView is
+the supported path for large lists today.
+
 A list widget that materializes only the visible rows and recycles
 the off-screen ones. Common for lists with 10k+ items. Depends on
 UIPrefab so each row can be defined once and instantiated N times.
@@ -1659,6 +1663,58 @@ UIPrefab so each row can be defined once and instantiated N times.
 - [ ] Callback `onRowBound(index, Layout*)` for data binding
 - [ ] Tests with 10k synthetic rows
 - [ ] Update `user/03-widgets.md`
+
+### 5.24 VirtualView ✅ — Done
+
+**Object**: a lightweight virtualized vertical list that materializes
+only the visible rows plus a small buffer.
+
+**Details**:
+
+- Extends `ScrollView` (vertical). Wheel, inertia, scrollbar, clipping
+  and `scrollToY` are inherited unchanged.
+- Factory-based: `ItemFactory = std::function<std::shared_ptr<Layout>(int index)>`.
+  A convenience overload accepts `std::function<std::shared_ptr<Layout>()>`
+  for the index-independent case.
+- Two measurement modes:
+  - `uniformHeight > 0` — O(N) arithmetic, no factory call during
+    measurement, fast path.
+  - `uniformHeight == 0` — the factory is called once per index and
+    `measure` is invoked on each returned node to build
+    `cumulativeHeights`.
+- Materialization window: visible range expanded by 2 rows above and 2
+  below. Out-of-range nodes are detached and erased; missing indices
+  are built by the factory and positioned absolutely at
+  `top = cumulative[i]`.
+- Visibility queries: `getFirstVisibleItem`, `getLastVisibleItem`,
+  both returning `-1` before the first measure and for empty lists.
+- `scrollToItem(index)` aligns the top of the row with the top of the
+  viewport.
+- `onItemCreated(Layout*, int)` fires every time a node is
+  materialized, including re-materialization after scrolling out and
+  back in.
+- `removeAllChildren()` clears the materialized set and the base
+  children; the visible rows come back on the next frame.
+
+**Difference from §5.23 VirtualList**: VirtualView does not recycle
+nodes. Each row entering the materialization window creates a new
+node; each row leaving it destroys the node. VirtualList (planned)
+recycles nodes and uses prefabs, which is a larger design (depends on
+§5.18 UIPrefab and §5.19 Slot). VirtualView is the simpler, already
+shipped alternative.
+
+**What does NOT change**: `ScrollView` itself, `Layout`, `Theme`,
+`ZMarkup`, `ZStyle` are untouched. VirtualView is a new header-only
+component in `include/components/VirtualView.hpp`.
+
+- [x] Implementation in `include/components/VirtualView.hpp`
+- [x] Tests in `tests/test_virtual_view.cpp` (14 tests)
+- [x] User documentation in `docs/user/12-virtual_view.md`
+- [x] API reference in `docs/api/Widgets.md`
+- [x] Widgets overview in `docs/user/03-widgets.md`
+- [x] `CHEATSHEET.md`, `GLOSSARY.md`, `docs/README.md` updated
+- [ ] (Follow-up) ZMarkup registration — VirtualView needs a C++
+      factory, which cannot be expressed in markup
 
 ---
 
