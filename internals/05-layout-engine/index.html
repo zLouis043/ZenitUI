@@ -2807,6 +2807,17 @@ and then returns instantly for every subsequent frame.</p>
 <p><code>internal_.subtreeDirty</code> is set by <code>recomputeDirty</code> at the end of <code>update</code>, and
 by <code>markInheritanceDirty</code> when a parent's inherited properties change.
 When <code>internal_.subtreeDirty</code> is 1, the cache is invalidated.</p>
+<p><code>subtreeDirty</code> is also set when a child is removed. <code>cullRemovedChildren</code>
+sets a separate <code>internal_.hadRemovedChildren</code> bit on the parent when at
+least one child is actually erased; <code>recomputeDirty</code> reads it, ORs it into
+<code>subtreeDirty</code> for the current frame, and clears it. This forces the
+parent — and, transitively through the normal <code>anyChildDirty</code> check, its
+ancestors — to re-measure on the frame after a removal, so the container
+shrinks and its scrollbar disappears when the content no longer overflows.
+Without this bit, <code>recomputeDirty</code> would see an unchanged subtree (the
+remaining children are clean, the parent's own style is unchanged) and
+<code>measure</code> would short-circuit, leaving <code>contentSize</code> and <code>maxScroll</code> at
+their pre-removal values.</p>
 <h3 id="22-style-resolution">2.2 Style resolution</h3>
 <pre><code class="language-cpp">if (!internal_.styleInitialized) {
     internal_.styleInitialized = 1;
