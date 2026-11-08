@@ -380,10 +380,18 @@ Each value can be any supported unit, including `vw` / `vh` / `pw` /
 | Property | Type | Default |
 |----------|------|---------|
 | `justify` | Justify | `start` |
-| `items-h` | Align | `start` |
-| `items-v` | Align | `start` |
+| `align-items` | Align | `start` |
 | `align-h` | Align | `auto` |
 | `align-v` | Align | `auto` |
+
+**Deprecated aliases.** `items-h` and `items-v` are deprecated and will be
+removed in 1.0. They continue to work during migration:
+
+- `items-h` on the child of a `VStack` behaves like `align-items`.
+- `items-v` on the child of an `HStack` behaves like `align-items`.
+- On any other parent they are silently ignored, as before.
+
+Loading a `.zstyle` that uses these names logs a one-time warning.
 
 `Justify`: `start`, `center`, `end`, `space-between`.
 `Align`: `auto`, `start`, `center`, `end`, `stretch`.
@@ -517,6 +525,10 @@ channel is important and the hex form would be less readable.
 | `letter-spacing` | Value | `2` |
 | `color` | Color | `#FFFFFF` |
 | `text-align` | Align | `auto` |
+| `vertical-align` | Align | `auto` |
+
+`vertical-align` controls the vertical position of the text block inside the `Text` rect. 
+`auto` (the default) uses `start`. Only affects `Text`
 
 ```css
 Text {

@@ -145,8 +145,7 @@ namespace ZenitUI::UI
             button->getInlineDefaults().radius = Px(6.0f);
             button->getInlineDefaults().borderColor = Color{70, 70, 80, 255};
             button->getInlineDefaults().borderWidth = Px(1.0f);
-            button->getInlineDefaults().itemsH = Align::Center;
-            button->getInlineDefaults().itemsV = Align::Center;
+            button->getInlineDefaults().alignItems = Align::Center;
             addChild(button);
 
             listContainer = std::make_shared<ScrollView>();
@@ -159,7 +158,7 @@ namespace ZenitUI::UI
             listContainer->getInlineDefaults().background = Color{30, 30, 36, 255};
             listContainer->getInlineDefaults().borderColor = Color{60, 60, 70, 255};
             listContainer->getInlineDefaults().borderWidth = Px(1.0f);
-            listContainer->getInlineDefaults().itemsH = Align::Stretch;
+            listContainer->getInlineDefaults().alignItems = Align::Stretch;
             listContainer->getInlineDefaults().overflowX = Overflow::Auto;
             listContainer->getInlineDefaults().overflowY = Overflow::Auto;
 
@@ -169,7 +168,7 @@ namespace ZenitUI::UI
                 auto item = Label(options[i]);
                 item->cls("dropdown-item");
                 item->getInlineBase().padding = Spacing(VH(1.0f), VW(1.0f));
-                item->getInlineBase().itemsV = Align::Center;
+                item->getInlineBase().verticalAlign = Align::Center;
                 item->setInteractive(true);
                 item->setFocusable(false);
 

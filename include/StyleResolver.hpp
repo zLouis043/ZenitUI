@@ -22,7 +22,7 @@ namespace ZenitUI
         ComputedStyle currentStyle, targetStyle, transitionStartStyle;
         UIState currentState{UIState::Idle};
         float transitionTimer{1.0f};
-        uint64_t      transitionDirtyMask_{0};
+        uint64_t transitionDirtyMask_{0};
 
         struct PartTransition
         {
@@ -56,6 +56,9 @@ namespace ZenitUI
         ComputedStyle cachedThemeStyle_;
         uint64_t cachedKey_{0};
         bool cachedValid_{false};
+        bool cachedAlignItemsSet_{false};
+        bool cachedItemsHSet_{false};
+        bool cachedItemsVSet_{false};
 
         ComputedStyle resolveFor(Layout &node);
         Style partFor(Layout &node, const std::string &partName);
@@ -65,6 +68,13 @@ namespace ZenitUI
         void tick(Layout &node, float dt);
         void propagateInheritance(Layout &node);
         void invalidateCache() noexcept { cachedValid_ = false; }
+
+    private:
+        void deriveAlignAliases(Layout &node,
+                                const Style &inlineBase,
+                                bool alignItemsSet, bool itemsHSet, bool itemsVSet,
+                                Align styleItemsH, Align styleItemsV,
+                                ComputedStyle &result);
     };
 
 } // namespace ZenitUI

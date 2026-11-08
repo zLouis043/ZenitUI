@@ -387,7 +387,7 @@ namespace ZenitUI
 			cw = clampSafe(cw, minW, std::min(availW, maxW));
 
 			float cx = inner.x + ml;
-			Align aH = (cst.alignH == Align::Auto) ? style_.currentStyle.itemsH : cst.alignH;
+			Align aH = (cst.alignH == Align::Auto) ? style_.currentStyle.alignItems : cst.alignH;
 			if (aH == Align::Stretch)
 				cw = clampSafe(availW, minW, std::min(availW, maxW));
 			else if (aH == Align::Center)
@@ -471,7 +471,7 @@ namespace ZenitUI
 			ch = clampSafe(ch, minH, std::min(availH, maxH));
 
 			float cy = inner.y + mt;
-			Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.itemsV : cst.alignV;
+			Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV;
 			if (aV == Align::Stretch)
 				ch = clampSafe(availH, minH, std::min(availH, maxH));
 			else if (aV == Align::Center)
@@ -511,8 +511,8 @@ namespace ZenitUI
 			float cx = inner.x + ml;
 			float cy = inner.y + mt;
 
-			Align aH = (cst.alignH == Align::Auto) ? style_.currentStyle.itemsH : cst.alignH;
-			Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.itemsV : cst.alignV;
+			Align aH = (cst.alignH == Align::Auto) ? style_.currentStyle.alignItems : cst.alignH;
+			Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV;
 
 			if (aH == Align::Stretch)
 				cw = clampSafe(availW, minW, std::min(availW, maxW));
@@ -759,7 +759,7 @@ namespace ZenitUI
 				ch = clampSafe(ch, minH, std::min(availH, maxH));
 
 				float cy = curY + mt;
-				Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.itemsV : cst.alignV;
+				Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV;
 				if (aV == Align::Stretch)
 					ch = clampSafe(availH, minH, std::min(availH, maxH));
 				else if (aV == Align::Center)

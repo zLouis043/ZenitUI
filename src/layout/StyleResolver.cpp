@@ -1,5 +1,6 @@
 #include "Layout.hpp"
 #include "Debug.hpp"
+#include "StyleResolver.hpp"
 
 #define ZENIT_COUNT_FIELD(T, name, def) +1
 static_assert(0 BUBBLE_STYLE_PROPS(ZENIT_COUNT_FIELD) <= 64,
@@ -75,10 +76,19 @@ namespace ZenitUI
 						overlayComputed(result, inlineChecked);
 				}
 				overlayComputed(result, inlineBase);
+
 				if (inlineBase.transitions.is_set)
 					result.transitions = inlineBase.transitions.value;
 				if (inlineBase.animations.is_set)
 					result.animations = inlineBase.animations.value;
+
+				deriveAlignAliases(node, inlineBase,
+								   cachedAlignItemsSet_,
+								   cachedItemsHSet_,
+								   cachedItemsVSet_,
+								   cachedThemeStyle_.itemsH,
+								   cachedThemeStyle_.itemsV,
+								   result);
 
 				return result;
 			}
@@ -150,6 +160,9 @@ namespace ZenitUI
 
 		if (cacheable)
 		{
+			cachedAlignItemsSet_ = finalStyle.alignItems.is_set;
+			cachedItemsHSet_ = finalStyle.itemsH.is_set;
+			cachedItemsVSet_ = finalStyle.itemsV.is_set;
 			cachedThemeStyle_ = result;
 			cachedKey_ = key;
 			cachedValid_ = true;
@@ -172,11 +185,19 @@ namespace ZenitUI
 			if (node.isCheckedState())
 				overlayComputed(result, inlineChecked);
 		}
-				overlayComputed(result, inlineBase);
+		overlayComputed(result, inlineBase);
 		if (inlineBase.transitions.is_set)
 			result.transitions = inlineBase.transitions.value;
 		if (inlineBase.animations.is_set)
 			result.animations = inlineBase.animations.value;
+
+		deriveAlignAliases(node, inlineBase,
+						   finalStyle.alignItems.is_set,
+						   finalStyle.itemsH.is_set,
+						   finalStyle.itemsV.is_set,
+						   finalStyle.itemsH.get_or(Align::Start),
+						   finalStyle.itemsV.get_or(Align::Start),
+						   result);
 
 		node.relevantSymbols_.clear();
 
@@ -440,4 +461,81 @@ namespace ZenitUI
 		lastInherited.overflowY = currentStyle.overflowY;
 	}
 
+	void StyleResolver::deriveAlignAliases(Layout &node,
+										   const Style &inlineBase,
+										   bool alignItemsSet, bool itemsHSet, bool itemsVSet,
+										   Align styleItemsH, Align styleItemsV,
+										   ComputedStyle &result)
+	{
+		const auto parent = node.getParent();
+		const LayoutType selfType = node.getLayoutType();
+		const LayoutType parentType = parent ? parent->getLayoutType()
+											 : LayoutType::Stack;
+
+		const bool hasExplicitItemsH = itemsHSet || inlineBase.itemsH.is_set;
+		const bool hasExplicitItemsV = itemsVSet || inlineBase.itemsV.is_set;
+		const Align itemsHVal = inlineBase.itemsH.is_set ? inlineBase.itemsH.value : styleItemsH;
+		const Align itemsVVal = inlineBase.itemsV.is_set ? inlineBase.itemsV.value : styleItemsV;
+
+		// Priority 1: explicit align-items on this node.
+		// Non-CSS behavior kept for compatibility: also acts as an align-self
+		// hint when the node is a child of a VStack/HStack.
+		if (alignItemsSet || inlineBase.alignItems.is_set)
+		{
+			if (parent)
+			{
+				if (parentType == LayoutType::Vertical && !inlineBase.alignH.is_set && result.alignH == Align::Auto)
+				{
+					result.alignH = result.alignItems;
+				}
+				else if (parentType == LayoutType::Horizontal && !inlineBase.alignV.is_set && result.alignV == Align::Auto)
+				{
+					result.alignV = result.alignItems;
+				}
+			}
+			return;
+		}
+
+		// Priority 2a: parent-level deprecated alias.
+		// The node itself is a VStack/HStack/Stack that used itemsH/itemsV to
+		// control how its own children align along the cross-axis.
+		if (hasExplicitItemsH || hasExplicitItemsV)
+		{
+			if (selfType == LayoutType::Vertical)
+			{
+				if (hasExplicitItemsH)
+					result.alignItems = itemsHVal;
+			}
+			else if (selfType == LayoutType::Horizontal)
+			{
+				if (hasExplicitItemsV)
+					result.alignItems = itemsVVal;
+			}
+			else if (selfType == LayoutType::Stack)
+			{
+				if (hasExplicitItemsH)
+					result.alignItems = itemsHVal;
+				else if (hasExplicitItemsV)
+					result.alignItems = itemsVVal;
+			}
+		}
+
+		// Priority 2b: child-level deprecated alias (align-self hint).
+		// The node's parent is a VStack/HStack and itemsH/itemsV on the node
+		// indicate where the user wanted the node itself to align along the
+		// parent's cross-axis. This matches the tests written for §5.25 and is
+		// kept for compatibility with pre-rename code that set itemsH/itemsV
+		// on a leaf child.
+		if (parent)
+		{
+			if (parentType == LayoutType::Vertical && hasExplicitItemsH && !inlineBase.alignH.is_set && result.alignH == Align::Auto)
+			{
+				result.alignH = itemsHVal;
+			}
+			else if (parentType == LayoutType::Horizontal && hasExplicitItemsV && !inlineBase.alignV.is_set && result.alignV == Align::Auto)
+			{
+				result.alignV = itemsVVal;
+			}
+		}
+	}
 } // namespace ZenitUI

@@ -400,6 +400,8 @@ namespace ZenitUI
 		void setKeyboardActivates(bool v) { config.keyboardActivates = v ? 1 : 0; }
 		bool getKeyboardActivates() const { return config.keyboardActivates != 0; }
 
+		LayoutType getLayoutType() const { return type; }
+
 		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {})
 		{
 			if (style.font.empty() || !UIContext::get().assets)
