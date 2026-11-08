@@ -334,6 +334,22 @@ ignored — they never break the parse.
 | `white-space` | `normal` \| `nowrap` | `normal` |
 | `text-overflow` | `visible` \| `ellipsis` | `visible` |
 
+**`min-height` / `min-width` default.** Flex items (children of a
+`VStack` or `HStack`) default to `min-height: auto` / `min-width:
+auto`, matching CSS. With `overflow: visible`, the auto value resolves
+to the item's own content size, forming a floor that `shrink` cannot
+push below. To allow an item to shrink past its content, set
+`overflow: hidden` (or `scroll` / `auto`) on it, or give it an
+explicit `min-height: 0` / `min-width: 0`.
+
+```css
+/* Header keeps its natural height even when the parent is constrained */
+.header { min-height: auto; }   /* default */
+
+/* Toolbar may shrink; its overflow is clipped */
+.toolbar { overflow: hidden; }  /* min-height auto resolves to 0 */
+```
+
 ```css
 .card {
     width: 100%;

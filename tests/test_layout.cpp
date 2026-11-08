@@ -595,3 +595,75 @@ TEST(Layout_border, uniform_border_renders_rounded)
     parent->arrange({0, 0, 100, 100});
     CHECK_NEAR(parent->getRect().width, 100.0f, 0.5f);
 }
+
+TEST(Layout_flex, min_height_auto_prevents_collapse)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(100));
+
+    auto title = std::make_shared<Layout>(LayoutType::Stack);
+    title->size(Px(200), Px(50));
+    parent->addChild(title);
+
+    auto content = std::make_shared<Layout>(LayoutType::Stack);
+    content->size(Auto(), Px(200));
+    parent->addChild(content);
+
+    parent->measure(200, 100);
+    parent->arrange({0, 0, 200, 100});
+
+    // Total children = 250, parent = 100, freeSpace = -150.
+    // Both items have shrink: 1, but overflow: visible floors each at
+    // its content size, so neither collapses to 0.
+    CHECK(title->getRect().height >= 50.0f - 0.5f);
+    CHECK(content->getRect().height >= 200.0f - 0.5f);
+}
+
+TEST(Layout_flex, min_height_auto_respects_overflow_hidden)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(100));
+
+    auto header = std::make_shared<Layout>(LayoutType::Stack);
+    header->size(Px(200), Px(50));
+    header->getInlineBase().overflowY = Overflow::Hidden;
+    parent->addChild(header);
+
+    auto body = std::make_shared<Layout>(LayoutType::Stack);
+    body->size(Auto(), Px(200));
+    parent->addChild(body);
+
+    parent->measure(200, 100);
+    parent->arrange({0, 0, 200, 100});
+
+    // header: overflow hidden -> floor at 0, can shrink freely.
+    // body: overflow visible -> floor at 200, does not collapse.
+    CHECK(header->getRect().height < 50.0f - 0.5f);
+    CHECK(body->getRect().height >= 200.0f - 0.5f);
+}
+
+TEST(Layout_flex, min_width_auto_prevents_collapse)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
+    parent->size(Px(100), Px(200));
+
+    auto left = std::make_shared<Layout>(LayoutType::Stack);
+    left->size(Px(80), Px(200));
+    parent->addChild(left);
+
+    auto right = std::make_shared<Layout>(LayoutType::Stack);
+    right->size(Px(200), Px(200));
+    parent->addChild(right);
+
+    parent->measure(100, 200);
+    parent->arrange({0, 0, 100, 200});
+
+    // Total children = 280, parent = 100, freeSpace = -180.
+    // Both items have overflow: visible -> floored at their content
+    // width, neither collapses.
+    CHECK(left->getRect().width >= 80.0f - 0.5f);
+    CHECK(right->getRect().width >= 200.0f - 0.5f);
+}
