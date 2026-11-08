@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794139781201,
+  "lastUpdate": 1794140194134,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -8920,6 +8920,155 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.classChange.1000",
             "value": 549.904,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "65752c71e441f199dbd580f2d34945e3614271b6",
+          "message": "Fix: subtract border-width from the content box in arrange and measure.",
+          "timestamp": "2026-11-08T13:14:33+01:00",
+          "tree_id": "1f03a67f2466925d335ae1cf27390013c570f057",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/65752c71e441f199dbd580f2d34945e3614271b6"
+        },
+        "date": 1794140192699,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 351.274,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.89703,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00435916,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0369695,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.02615,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.700101,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.872359,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.820323,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.423174,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.769193,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 40.9399,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 48.5655,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 16.5907,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 15.7097,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 37.3183,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00373093,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 48.6704,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 153.879,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 53.0261,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 127.7,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 99.1552,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 52.8021,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 119.28,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 539.272,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 546.713,
             "unit": "us"
           }
         ]
