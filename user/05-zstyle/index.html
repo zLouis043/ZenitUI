@@ -3111,12 +3111,7 @@ ignored — they never break the parse.</p>
 <td><code>start</code></td>
 </tr>
 <tr>
-<td><code>items-h</code></td>
-<td>Align</td>
-<td><code>start</code></td>
-</tr>
-<tr>
-<td><code>items-v</code></td>
+<td><code>align-items</code></td>
 <td>Align</td>
 <td><code>start</code></td>
 </tr>
@@ -3132,6 +3127,14 @@ ignored — they never break the parse.</p>
 </tr>
 </tbody>
 </table>
+<p><strong>Deprecated aliases.</strong> <code>items-h</code> and <code>items-v</code> are deprecated and will be
+removed in 1.0. They continue to work during migration:</p>
+<ul>
+<li><code>items-h</code> on the child of a <code>VStack</code> behaves like <code>align-items</code>.</li>
+<li><code>items-v</code> on the child of an <code>HStack</code> behaves like <code>align-items</code>.</li>
+<li>On any other parent they are silently ignored, as before.</li>
+</ul>
+<p>Loading a <code>.zstyle</code> that uses these names logs a one-time warning.</p>
 <p><code>Justify</code>: <code>start</code>, <code>center</code>, <code>end</code>, <code>space-between</code>.
 <code>Align</code>: <code>auto</code>, <code>start</code>, <code>center</code>, <code>end</code>, <code>stretch</code>.</p>
 <pre><code class="language-css">.row { justify: space-between; }
@@ -3358,8 +3361,15 @@ channel is important and the hex form would be less readable.</p>
 <td>Align</td>
 <td><code>auto</code></td>
 </tr>
+<tr>
+<td><code>vertical-align</code></td>
+<td>Align</td>
+<td><code>auto</code></td>
+</tr>
 </tbody>
 </table>
+<p><code>vertical-align</code> controls the vertical position of the text block inside the <code>Text</code> rect. 
+<code>auto</code> (the default) uses <code>start</code>. Only affects <code>Text</code></p>
 <pre><code class="language-css">Text {
     font: calibri;
     font-size: 3vh;
