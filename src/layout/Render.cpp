@@ -31,7 +31,6 @@ namespace ZenitUI
 		scroll_.drawScrollbar(*this, parentOpacity);
 	}
 
-
 	void Layout::draw(float parentOpacity)
 	{
 		if (config.portal)
@@ -82,6 +81,7 @@ namespace ZenitUI
 		}
 	}
 
+	// TODO: push this version in the main repo.
 	void Layout::drawInline(const ComputedStyle &renderStyle, float globalOp)
 	{
 		auto renderer = UIContext::get().renderer;
@@ -98,16 +98,18 @@ namespace ZenitUI
 		if (currentEffect_.valid() && renderer->supports(Feature::Effects))
 			renderer->pushEffect(currentEffect_);
 
+		renderChrome(globalOp, renderStyle);
+
 		bool needsClip = renderStyle.overflowX != Overflow::Visible || renderStyle.overflowY != Overflow::Visible;
 		if (needsClip)
 			renderer->pushClip(rect);
 
-		renderChrome(globalOp, renderStyle);
 		renderContent(globalOp, renderStyle);
 		drawChildren(globalOp);
 
 		if (needsClip)
 			renderer->popClip();
+
 		if (currentEffect_.valid() && renderer->supports(Feature::Effects))
 			renderer->popEffect();
 		if (hasShader && renderer->supports(Feature::Effects))
@@ -195,7 +197,8 @@ namespace ZenitUI
 			tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
 		renderer->pushTransform(offsetTr);
-    	if (!identity) renderer->pushTransform(tr);
+		if (!identity)
+			renderer->pushTransform(tr);
 
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->pushEffect(customEffect);
