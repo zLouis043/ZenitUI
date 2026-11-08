@@ -184,6 +184,13 @@ namespace ZenitUI
 		bool operator!=(const BoxShadow &o) const { return !(*this == o); }
 	};
 
+// TODO: change itemsH and itemsV to main justify-content and align-items that use
+//       the main axis and the cross axis
+// TODO: change the default value for itemsH and itemsV to stretch to follow the css standard.
+// TODO: change default min-height on flex items to auto
+// TODO: add flex : N as an attribute that maps on { grow : N; shrink : 1; width : 0;}
+//       but with an internal flag isFlexBasis that tells measure/arrange to handle width as basis
+//       but to not propagate it to the childrens as parent_w
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
