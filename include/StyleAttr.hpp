@@ -576,6 +576,24 @@ namespace ZenitUI
         return std::nullopt;
     }
 
+    inline std::optional<WhiteSpace> parseWhiteSpaceToken(std::string_view s)
+    {
+        if (s == "normal")
+            return WhiteSpace::Normal;
+        if (s == "nowrap")
+            return WhiteSpace::Nowrap;
+        return std::nullopt;
+    }
+
+    inline std::optional<TextOverflow> parseTextOverflowToken(std::string_view s)
+    {
+        if (s == "visible")
+            return TextOverflow::Visible;
+        if (s == "ellipsis")
+            return TextOverflow::Ellipsis;
+        return std::nullopt;
+    }
+
     inline bool applyStyleAttr(Style &st, std::string_view key, std::string_view val)
     {
         if (key == "width")
@@ -775,6 +793,18 @@ namespace ZenitUI
         {
             if (auto v = parseAlignToken(val))
                 st.textAlign = *v;
+            return true;
+        }
+        else if (key == "white-space")
+        {
+            if (auto v = parseWhiteSpaceToken(val))
+                st.whiteSpace = *v;
+            return true;
+        }
+        else if (key == "text-overflow")
+        {
+            if (auto v = parseTextOverflowToken(val))
+                st.textOverflow = *v;
             return true;
         }
         else if (key == "transition-time")

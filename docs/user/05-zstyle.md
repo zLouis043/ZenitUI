@@ -331,6 +331,8 @@ ignored — they never break the parse.
 | `min-height` | Value | `auto` |
 | `max-width` | Value | `auto` |
 | `max-height` | Value | `auto` |
+| `white-space` | `normal` \| `nowrap` | `normal` |
+| `text-overflow` | `visible` \| `ellipsis` | `visible` |
 
 ```css
 .card {
@@ -560,6 +562,63 @@ UIContext::get().assets->unloadFont("Inter");
 Both methods default to no-ops; backends that support runtime loading
 override them. See [IAssetProvider](../api/UIContext.md#2-the-three-interfaces)
 for the full contract and the caveat about unloading a font still in use.
+
+#### Wrapping, whitespace and ellipsis
+
+`Text` supports three independent aspects of text layout:
+
+1. **Wrapping** — `wrap: true` in C++ or the `wrap` attribute in
+   ZMarkup. Breaks long content across multiple lines to fit the
+   available width.
+2. **Whitespace** — `white-space`. Controls whether long content is
+   forced onto a single line.
+3. **Overflow** — `text-overflow`. How to render text that does not fit
+   on a single line.
+
+`\n` in the source text always produces a hard line break, regardless
+of `wrap` or `white-space`. A `Text` with `"foo\nbar"` renders as two
+lines in every mode. Consecutive `\n` produce empty lines.
+
+`white-space: normal` (the default) allows wrapping (when `wrap: true`
+is set) and honours `\n`. `white-space: nowrap` disables wrapping: long
+content stays on one line per `\n`-separated part, and overflows if it
+is wider than the available width. In practice, `white-space: nowrap`
+and `wrap: false` are equivalent — both force single-line layout per
+logical line. They differ only in intent: `wrap: false` is set in C++
+when the widget is constructed, `white-space: nowrap` can be set from
+`.zstyle` and overrides a `wrap: true` set in code.
+
+`text-overflow: ellipsis` truncates a single-line text that overflows
+the available width, appending `...`. It is a **render-time**
+transformation only: it does not change the layout box of the `Text`.
+Two `Text` nodes with the same content and the same width measure to
+the same size regardless of `text-overflow`; only the drawn pixels
+differ. `ellipsis` applies only when the text is laid out on one line
+(i.e. no `\n` and either `wrap: false` or `white-space: nowrap`); on a
+multi-line text it has no effect.
+
+```css
+/* Long title: one line, truncated with ... */
+.title {
+    width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Paragraph: wraps and honours '\n' in the content */
+.description {
+    white-space: normal;
+    width: 100%;
+}
+```
+
+Long words without spaces (URLs, hashes) are broken across lines when
+they do not fit, even with `white-space: normal`. This is the
+equivalent of CSS `word-break: break-word` and happens automatically.
+
+`white-space: pre` (preserve spaces and newlines without wrapping) is
+not supported. `text-overflow: clip` (truncate without `...`) is not
+supported. Both are tracked as future work.
 
 The properties `font`, `font-size`, `color`, `letter-spacing`, and
 `text-align` are **inherited** by descendants. All other properties are
@@ -926,7 +985,8 @@ translate-x    translate-y    top            left
 right          bottom         font-size      letter-spacing
 items-h        items-v        align-h        align-v
 justify        text-align     position       z-index
-font           background-texture            effect
+white-space    text-overflow  font           background-texture
+effect
 ```
 
 Values follow the same grammar as in `.zstyle`, including `calc()` and
@@ -1269,3 +1329,12 @@ animation overlays the transition result. The overlay happens in
 style. So `getStyle()` reports the transition value; only the render
 path sees the animated value. This is a known limitation of the current
 implementation.
+
+**`text-overflow: ellipsis` without `white-space: nowrap`.**
+`text-overflow` only truncates single-line text. On a wrapping
+paragraph (the default, `white-space: normal`), the text flows to the
+next line and there is nothing to truncate. Pair the two properties:
+
+```css
+.title { white-space: nowrap; text-overflow: ellipsis; }
+```
