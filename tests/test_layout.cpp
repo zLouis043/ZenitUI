@@ -329,3 +329,44 @@ TEST(Layout_ref, withRef_is_chainable)
     CHECK(btn->hasClass("btn-primary"));
     CHECK(chained.get() == btn.get());
 }
+
+TEST(Layout_arrange, border_subtracted_from_content_box)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->getInlineBase().width      = Px(200);
+    parent->getInlineBase().height     = Px(200);
+    parent->getInlineBase().padding    = Spacing(5);
+    parent->getInlineBase().borderWidth = Px(10);
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->getInlineBase().width  = Px(50);
+    child->getInlineBase().height = Px(50);
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // inner = 200 - 5 - 5 - 10 - 10 = 170, offset 5 + 10 = 15
+    CHECK_NEAR(child->getRect().x, 15.0f, 1e-4);
+    CHECK_NEAR(child->getRect().y, 15.0f, 1e-4);
+}
+
+TEST(Layout_measure, border_added_to_auto_width)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->getInlineBase().padding     = Spacing(5);
+    parent->getInlineBase().borderWidth = Px(10);
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->getInlineBase().width  = Px(100);
+    child->getInlineBase().height = Px(100);
+    parent->addChild(child);
+
+    Vec2 sz = parent->measure(1000, 1000);
+
+    // content = 100, padding 10, border 20 → 130
+    CHECK_NEAR(sz.x, 130.0f, 1e-4);
+    CHECK_NEAR(sz.y, 130.0f, 1e-4);
+}
