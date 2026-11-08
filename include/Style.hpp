@@ -191,6 +191,10 @@ namespace ZenitUI
 // TODO: add flex : N as an attribute that maps on { grow : N; shrink : 1; width : 0;}
 //       but with an internal flag isFlexBasis that tells measure/arrange to handle width as basis
 //       but to not propagate it to the childrens as parent_w
+// TODO: add margin: auto, maybe mx: auto and my: auto, as a symmetrical grow.
+// TODO: make border-width a Spacing value instead of a uniform scalar Value, so we can change 
+//       size depending on the side.
+// TODO: better text wrapping.
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
