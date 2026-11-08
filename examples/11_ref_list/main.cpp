@@ -110,7 +110,7 @@ int main()
             width: 100%;
             height: 100%;
             background: #1a1a1e;
-            items-h: center;
+            align-items: center;
             justify: center;
         }
         .card {
@@ -122,7 +122,7 @@ int main()
         }
         .header {
             gap: 8px;
-            items-v: center;
+            align-items: center;
         }
         .counter {
             color: #4a9eff;
@@ -136,7 +136,7 @@ int main()
             radius: 4px;
             padding: 8px 12px;
             gap: 12px;
-            items-v: center;
+            align-items: center;
         }
         .item-label {
             grow: 1;

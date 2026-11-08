@@ -48,7 +48,7 @@ Stack#page {
     radius: 6px;
     padding: 10px 14px;
     gap: 16px;
-    items-v: center;
+    align-items: center;
     width: 100%;
 }
 

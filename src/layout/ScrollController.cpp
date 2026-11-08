@@ -5,7 +5,6 @@
 namespace ZenitUI
 {
 
-
     static bool isBarVisible(Overflow o, float maxScroll)
     {
         if (o == Overflow::Scroll)
@@ -27,7 +26,6 @@ namespace ZenitUI
         arrangeInitialized = false;
         scrolling = false;
     }
-
 
     bool ScrollController::needsFullArrange(const Layout &node, bool positionChanged) const
     {
@@ -87,7 +85,6 @@ namespace ZenitUI
         state.clamp();
     }
 
-
     void ScrollController::tickInput(Layout &node)
     {
         const auto &st = node.style_.currentStyle;
@@ -103,7 +100,15 @@ namespace ZenitUI
 
         if (!node.hasPointerCapture())
         {
-            if (pointer[MouseButton::Left].pressed && ctx.topmostConsumer == &node)
+            // Accept the click when topmostConsumer is either this scroll container
+            // or one of its descendants. A passive child (Stack wrapper, layout
+            // container, etc.) does not block scrollbar interaction: the click
+            // bubbles to the scroll container, matching CSS behaviour.
+            const bool pointerInsideScroll =
+                (ctx.topmostConsumer == &node) ||
+                (ctx.topmostConsumer && node.isAncestorOf(ctx.topmostConsumer));
+
+            if (pointer[MouseButton::Left].pressed && pointerInsideScroll)
             {
                 bool handled = false;
 
@@ -192,7 +197,6 @@ namespace ZenitUI
 
         scrolling = node.hasPointerCapture() || std::abs(state.velocity.x) > ScrollState::VELOCITY_MIN || std::abs(state.velocity.y) > ScrollState::VELOCITY_MIN;
     }
-
 
     void ScrollController::drawScrollbar(const Layout &node, float parentOpacity) const
     {

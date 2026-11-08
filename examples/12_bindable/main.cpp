@@ -91,7 +91,7 @@ int main()
             width: 100%;
             height: 100%;
             background: #1a1a1e;
-            items-h: center;
+            align-items: center;
             justify: center;
             gap: 16px;
         }
@@ -112,7 +112,7 @@ int main()
         }
         .row {
             gap: 10px;
-            items-v: center;
+            align-items: center;
             width: 100%;
         }
         .label {
@@ -127,7 +127,7 @@ int main()
         }
         .actions {
             gap: 8px;
-            items-v: center;
+            align-items: center;
         }
         Button {
             background: #4a9eff;
