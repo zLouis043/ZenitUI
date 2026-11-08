@@ -3028,6 +3028,19 @@ ignored — they never break the parse.</p>
 </tr>
 </tbody>
 </table>
+<p><strong><code>min-height</code> / <code>min-width</code> default.</strong> Flex items (children of a
+<code>VStack</code> or <code>HStack</code>) default to <code>min-height: auto</code> / <code>min-width:
+auto</code>, matching CSS. With <code>overflow: visible</code>, the auto value resolves
+to the item's own content size, forming a floor that <code>shrink</code> cannot
+push below. To allow an item to shrink past its content, set
+<code>overflow: hidden</code> (or <code>scroll</code> / <code>auto</code>) on it, or give it an
+explicit <code>min-height: 0</code> / <code>min-width: 0</code>.</p>
+<pre><code class="language-css">/* Header keeps its natural height even when the parent is constrained */
+.header { min-height: auto; }   /* default */
+
+/* Toolbar may shrink; its overflow is clipped */
+.toolbar { overflow: hidden; }  /* min-height auto resolves to 0 */
+</code></pre>
 <pre><code class="language-css">.card {
     width: 100%;
     height: auto;
@@ -3272,7 +3285,7 @@ height</strong> (self-relative). Pivot is always the node's center.</p>
 </tr>
 <tr>
 <td><code>border-width</code></td>
-<td>Value</td>
+<td>Spacing</td>
 <td><code>0</code></td>
 </tr>
 <tr>
@@ -3292,6 +3305,25 @@ height</strong> (self-relative). Pivot is always the node's center.</p>
 </tr>
 </tbody>
 </table>
+<p><code>border-width</code> accepts the same 1/2/3/4-value syntax as <code>padding</code> and
+<code>margin</code>:</p>
+<pre><code class="language-css">.card { border-width: 1px; }                    /* uniform */
+.box  { border-width: 1px 2px; }                /* vertical | horizontal */
+.nav  { border-width: 1px 2px 3px; }            /* top | h | bottom */
+.edge { border-width: 1px 2px 3px 4px; }        /* top | right | bottom | left */
+</code></pre>
+<p>Per-side overrides are also available:</p>
+<pre><code class="language-css">.nav-tab.active {
+    border-bottom-width: 2px;
+    /* shorthand: border-bottom: 2px; */
+}
+.toast {
+    border-left-width: 4px;
+    /* shorthand: border-left: 4px; */
+}
+</code></pre>
+<p><code>border-color</code> is still a single <code>Color</code> applied uniformly to all
+four sides. Per-side colors are tracked as a future enhancement.</p>
 <pre><code class="language-css">.card {
     background: #2A2A32FF;
     background-texture: bubble;

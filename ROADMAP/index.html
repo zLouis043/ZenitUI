@@ -2268,6 +2268,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#527-min-height-auto-min-width-auto-on-flex-items_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.27 min-height: auto / min-width: auto on flex items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#528-flex-n-shorthand" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2297,6 +2308,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="5.30 borderWidth as Spacing (per-side borders)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#530a-rendercontent-should-offset-by-the-border" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.30a renderContent should offset by the border
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -4196,9 +4224,7 @@ horizontally. Regression test for the deprecated alias.</p>
 <p><strong>Problem:</strong> <code>itemsH</code> / <code>itemsV</code> default to <code>Align::Start</code>. In CSS the
 initial value of <code>align-items</code> is <code>stretch</code>. The current default forces
 every layout to write <code>items-*: stretch</code> explicitly on the container,
-and has already caused bugs in this roadmap (cf. the DM Companion
-layout, where <code>#init_layout</code> and <code>#init_list_container</code> both required
-an explicit <code>items-*: stretch</code> to work).</p>
+and has already caused bugs in this roadmap.</p>
 <p><strong>Expected:</strong> a flex child inside an HStack / VStack stretches along
 the cross axis by default. <code>start</code> / <code>center</code> / <code>end</code> are written
 explicitly when needed.</p>
@@ -4220,46 +4246,51 @@ children stretch vertically.</p>
 <li>[x] Update <code>docs/user/05-zstyle.md</code> (note on the CSS default)</li>
 </ul>
 <h3 id="527-min-height-auto-min-width-auto-on-flex-items">5.27 <code>min-height: auto</code> / <code>min-width: auto</code> on flex items</h3>
-<p><strong>Status:</strong> 🟡 planned — additive feature, depends on §5.25 (clearer
-notion of "flex item").</p>
+<h3 id="527-min-height-auto-min-width-auto-on-flex-items_1">5.27 <code>min-height: auto</code> / <code>min-width: auto</code> on flex items</h3>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> a flex item with <code>shrink: 1</code> and no explicit <code>min-height</code>
-can shrink below the size of its content. The classic case is a title
-collapsing to <code>0px</code> when there is not enough space. In CSS this does
-not happen: the default <code>min-height: auto</code> on a flex item resolves to
-the content's intrinsic size (for items with <code>overflow: visible</code>),
-forming a "floor" that flex shrink cannot cross.</p>
-<p>The symptom already appeared in this roadmap: <code>.tab-title</code> with
-<code>shrink: 1</code> collapses to <code>0px</code> inside DM Companion's
-<code>#iniziativa_root</code> card, and the user had to write <code>shrink: 0</code>
-explicitly to work around it.</p>
+could shrink below its own content size. The typical symptom is a
+title or header collapsing to <code>0px</code> inside a constrained vertical
+container, which then shifts the sibling content upward and makes the
+title disappear.</p>
+<p>In CSS this does not happen: the default <code>min-height: auto</code> on a flex
+item resolves to the content's intrinsic size (for items with
+<code>overflow: visible</code>), forming a floor that flex shrink cannot cross.</p>
 <p><strong>Expected:</strong> a flex item with <code>overflow: visible</code> never shrinks below
-its content size. To allow shrinking, the user sets <code>overflow: hidden</code>
-(or <code>scroll</code> / <code>auto</code>) or <code>min-height: 0</code> explicitly.</p>
-<p><strong>Fix:</strong> entirely in the four <code>arrange*Flow</code> functions. <code>measure</code> is
-not touched — it already reports the natural content size, which is
-exactly the floor we want. In <code>arrangeVerticalFlow</code> and
-<code>arrangeHorizontalFlow</code>, replace the <code>minH</code> / <code>minW</code> computation:</p>
-<pre><code class="language-cpp">float minH;
-if (cst.minHeight.isAuto()) {
-    minH = (cst.overflowY == Overflow::Visible) ? c-&gt;measuredSize.y : 0.0f;
-} else {
-    minH = cst.minHeight.resolveV(inner.width, inner.height);
-}
-</code></pre>
-<p>Idem for <code>minW</code> with <code>cst.overflowX</code> and <code>c-&gt;measuredSize.x</code> in the
-horizontal flow, the stack flow, and the wrap flow.</p>
-<p><strong>Files:</strong> <code>Measure.cpp</code> (the four <code>arrange*Flow</code> functions).</p>
-<p><strong>Tests:</strong> VStack with a header <code>height: 64px</code> and content <code>grow: 1</code>,
-total height 100px. The header must stay at 64px (shrink not applied
-because of <code>min-height: auto</code>). With <code>overflow-y: auto</code> on the header
-instead, it must be allowed to shrink.</p>
+its content size. To allow shrinking, the user sets
+<code>overflow: hidden</code> (or <code>scroll</code> / <code>auto</code>) or an explicit
+<code>min-height: 0</code> on the item.</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>[ ] Apply the floor in <code>arrangeVerticalFlow</code></li>
-<li>[ ] Apply the floor in <code>arrangeHorizontalFlow</code></li>
-<li>[ ] Apply the floor in <code>arrangeStackFlow</code></li>
-<li>[ ] Apply the floor in <code>arrangeWrapFlow</code></li>
-<li>[ ] Regression test (VStack + header, HStack + side panel)</li>
-<li>[ ] Update <code>docs/user/05-zstyle.md</code></li>
+<li>New helper <code>resolveFlexMin</code> in <code>Measure.cpp</code> centralises the
+  resolution: explicit min wins; otherwise auto resolves to the
+  content size for <code>overflow: visible</code>, and to 0 for any other
+  overflow value.</li>
+<li><code>arrangeVerticalFlow</code> and <code>arrangeHorizontalFlow</code> use it for the
+  main-axis floor (<code>minH</code> in VStack, <code>minW</code> in HStack).</li>
+<li><code>arrangeStackFlow</code> and <code>arrangeWrapFlow</code> are unchanged. Stack is a
+  free-positioning container where "content size" is not a
+  CSS-equivalent concept, and wrap has no shrink on the main axis.</li>
+<li>Cross-axis floor (<code>minW</code> in VStack, <code>minH</code> in HStack) is unchanged.
+  It already had a <code>min(availCross, maxCross)</code> clamp; adding the
+  content floor there is scope for a follow-up if a concrete case
+  appears.</li>
+</ul>
+<p><strong>Breaking for users:</strong> callers no longer need <code>shrink: 0</code> on items
+that should keep their content size. Layouts that relied on an item
+collapsing to 0 with <code>overflow: visible</code> must set <code>overflow: hidden</code>
+or <code>min-height: 0</code> explicitly.</p>
+<p><strong>Files:</strong> <code>Measure.cpp</code>, <code>docs/user/05-zstyle.md</code>,
+<code>tests/test_layout.cpp</code>.</p>
+<p><strong>Tests:</strong> 3 new (<code>min_height_auto_prevents_collapse</code>,
+<code>min_height_auto_respects_overflow_hidden</code>,
+<code>min_width_auto_prevents_collapse</code>).</p>
+<ul>
+<li>[x] Add <code>resolveFlexMin</code> helper in <code>Measure.cpp</code></li>
+<li>[x] Use it in <code>arrangeVerticalFlow</code></li>
+<li>[x] Use it in <code>arrangeHorizontalFlow</code></li>
+<li>[x] Tests (vertical floor, horizontal floor, <code>overflow: hidden</code> override)</li>
+<li>[x] Document the default and the overflow rule in §4.1</li>
 </ul>
 <h3 id="528-flex-n-shorthand">5.28 <code>flex: N</code> shorthand</h3>
 <p><strong>Status:</strong> 🟡 planned — additive feature, requires care with <code>basis</code>.</p>
@@ -4341,62 +4372,80 @@ active has no effect (the free space is already consumed by grow).</p>
 <li>[ ] Document the interaction with <code>grow</code></li>
 </ul>
 <h3 id="530-borderwidth-as-spacing-per-side-borders">5.30 <code>borderWidth</code> as <code>Spacing</code> (per-side borders)</h3>
-<p><strong>Status:</strong> 🟡 planned — additive feature, touches the backend.</p>
-<p><strong>Problem:</strong> <code>borderWidth</code> is a uniform scalar (<code>Value</code>) applied to all
-four sides. The reference HTML project (DM Companion) uses asymmetric
-borders in several places:</p>
-<ul>
-<li><code>.nav-tab.active { border-bottom: 2px }</code> (bottom only)</li>
-<li><code>.toast { border-left: 4px }</code> (left only)</li>
-<li><code>.card h2 { border-bottom: 1px }</code> (internal divider)</li>
-</ul>
-<p>In addition, the §1.13 fix (border subtracted in <code>arrangeInto</code>) is
-incomplete: <code>measure</code> does not subtract the border, so there is still
-a mismatch between the space available in <code>measure</code> and the space
-actually used in <code>arrange</code>. With asymmetric <code>borderWidth</code>, the
-mismatch would grow.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
+<p><strong>Problem:</strong> <code>borderWidth</code> was a uniform <code>Value</code>, so per-side borders
+were impossible. The HTML reference (DM Companion) uses asymmetric
+borders in several places: <code>.nav-tab.active { border-bottom: 2px }</code>,
+<code>.toast { border-left: 4px }</code>, <code>.card h2 { border-bottom: 1px }</code>.</p>
+<p>Additionally, <code>measure</code> did not subtract the border from the content
+box (§1.13 fixed only <code>arrangeInto</code>), so nodes with asymmetric borders
+reported a wider size than they arranged.</p>
 <p><strong>Expected:</strong></p>
 <ol>
-<li><code>borderWidth</code> becomes <code>Spacing</code> (top/right/bottom/left).</li>
-<li><code>measure</code> subtracts <code>bw.left + bw.right</code> (or top/bottom) from
-   <code>innerW</code> (or <code>innerH</code>), and adds <code>bw.left + bw.right</code> to <code>finalW</code>
-   for <code>width: auto</code>.</li>
-<li><code>renderChrome</code> draws four separate rectangles when borders are
-   asymmetric, and <code>strokeRoundedRect</code> when they are uniform (to keep
-   the rounded corners correct).</li>
+<li><code>borderWidth</code> becomes <code>Spacing</code> (top / right / bottom / left).</li>
+<li><code>measure</code> subtracts the border (per side) from the content box, and
+   adds it back when <code>width</code>/<code>height</code> is auto.</li>
+<li><code>renderChrome</code> draws each side independently when the four sides
+   differ, and keeps rounded corners when they are uniform.</li>
 </ol>
-<p><strong>Fix:</strong></p>
-<ol>
-<li><code>Style.hpp</code>: <code>X(Spacing, borderWidth, Spacing())</code>.</li>
-<li><code>StyleAttr.hpp</code>: <code>border-width</code> (uniform), <code>border-top-width</code>,
-   <code>border-right-width</code>, <code>border-bottom-width</code>, <code>border-left-width</code>.
-   Shorthand <code>border-bottom</code> (no <code>-width</code>) maps to
-   <code>border-bottom-width</code>.</li>
-<li><code>Measure.cpp</code>: <code>arrangeInto</code> and <code>measure</code> use <code>bw.left</code> etc.</li>
-<li><code>Render.cpp</code> (<code>renderChrome</code>): if all four sides are equal,
-   <code>strokeRoundedRect</code>; otherwise, for each non-zero side, <code>fillRect</code>
-   the corresponding strip.</li>
-<li><code>RaylibBackend</code>: add <code>fillBorder(Rect r, EdgeInsets sides, Color c)</code>
-   to <code>IRenderer</code> and implement it in <code>RaylibRenderer</code>.</li>
-</ol>
-<p><strong>Breaking for users:</strong> <code>border-width: 1px</code> keeps working (uniform
-<code>Spacing</code>). No breaking changes.</p>
-<p><strong>Files:</strong> <code>Style.hpp</code>, <code>StyleAttr.hpp</code>, <code>Measure.cpp</code>, <code>Render.cpp</code>,
-<code>UIContext.hpp</code> (new <code>IRenderer::fillBorder</code>),
-<code>RaylibBackend.cpp</code> / <code>.hpp</code>, <code>Text.hpp</code> (<code>renderContent</code> subtracts
-the border), <code>docs/user/05-zstyle.md</code>, <code>docs/api/Style.md</code>.</p>
-<p><strong>Tests:</strong> a nav-tab with <code>border-bottom-width: 2px</code> renders the border
-only at the bottom; a card with <code>border-width: 10px</code> renders uniformly
-(correct rounded corners).</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>[ ] <code>borderWidth: Spacing</code> in <code>Style.hpp</code></li>
-<li>[ ] Parser for individual sides</li>
-<li>[ ] <code>Measure.cpp</code> consistent (subtracts and adds the border)</li>
-<li>[ ] <code>IRenderer::fillBorder</code> + Raylib implementation</li>
-<li>[ ] <code>renderChrome</code> with <code>fillBorder</code> for asymmetric borders</li>
-<li>[ ] <code>Text::renderContent</code> subtracts the border</li>
-<li>[ ] Regression test (uniform border + per-side border)</li>
-<li>[ ] Update documentation</li>
+<li><code>borderWidth: Spacing</code>. <code>border-width: Npx</code> keeps working and
+  applies uniformly (implicit <code>Spacing(Value)</code> conversion).</li>
+<li>New CSS properties: <code>border-top-width</code>, <code>border-right-width</code>,
+  <code>border-bottom-width</code>, <code>border-left-width</code> and their shorthands
+  <code>border-top</code> / <code>border-right</code> / <code>border-bottom</code> / <code>border-left</code>
+  (which map to the <code>-width</code> only; <code>border-color</code> stays uniform).</li>
+<li><code>measure()</code> computes <code>innerW</code> / <code>innerH</code> as
+  <code>avail - padding - border</code> per side, and <code>finalW</code> / <code>finalH</code> as
+  <code>content + padding + border</code> per side.</li>
+<li><code>arrangeInto()</code> uses the per-side border (was <code>2 * bw</code>).</li>
+<li><code>IRenderer::fillBorder(Rect, EdgeInsets, Color)</code> is a new virtual
+  with a default implementation (up to 4 <code>fillRect</code> calls). Backends
+  do not need to override it.</li>
+<li><code>renderChrome</code> uses <code>fillBorder</code> when the four sides differ, and
+  falls back to <code>strokeRoundedRect</code> / <code>strokeRect</code> for uniform
+  borders, preserving rounded corners.</li>
+</ul>
+<p><strong>Breaking for users:</strong> none. <code>border-width: 1px</code> is unchanged.
+<code>border-color</code> remains a single <code>Color</code>; per-side colors are tracked
+as future work.</p>
+<p><strong>Known issue (deferred):</strong> <code>renderContent</code> of <code>Text</code>, <code>TextInput</code>,
+<code>Slider</code>, <code>ProgressBar</code>, <code>Checkbox</code> positions its content at
+<code>rect + padding</code>, ignoring the border. When <code>border-width &gt; padding</code>,
+the content overlaps the border. This is a pre-existing issue for all
+widgets and is not addressed by this change. Tracked as future work
+(see §5.30a).</p>
+<p><strong>Files:</strong> <code>Style.hpp</code>, <code>StyleAttr.hpp</code>, <code>Measure.cpp</code>, <code>Layout.hpp</code>
+(<code>renderChrome</code>), <code>UIContext.hpp</code>, <code>TextInput.hpp</code>, <code>Debug.hpp</code>,
+<code>docs/user/05-zstyle.md</code>, <code>tests/test_layout.cpp</code>.</p>
+<p><strong>Tests:</strong> 3 new (<code>per_side_borders</code>, <code>measure_with_per_side_borders</code>,
+<code>uniform_border_renders_rounded</code>). The two existing border tests
+(<code>border_subtracted_from_content_box</code>, <code>border_added_to_auto_width</code>)
+keep passing unchanged because uniform <code>Px(N)</code> still converts to
+<code>Spacing(N)</code>.</p>
+<ul>
+<li>[x] <code>borderWidth: Spacing</code> in <code>Style.hpp</code></li>
+<li>[x] Parser for individual sides</li>
+<li>[x] <code>Measure.cpp</code> consistent (subtracts and adds the border per side)</li>
+<li>[x] <code>IRenderer::fillBorder</code> + default impl</li>
+<li>[x] <code>renderChrome</code> uses <code>fillBorder</code> for asymmetric borders</li>
+<li>[x] Regression test (uniform border + per-side border)</li>
+<li>[x] Update documentation</li>
+</ul>
+<h4 id="530a-rendercontent-should-offset-by-the-border">5.30a <code>renderContent</code> should offset by the border</h4>
+<p><strong>Status:</strong> 🟡 planned.</p>
+<p><code>Text</code>, <code>TextInput</code>, <code>Slider</code>, <code>ProgressBar</code>, <code>Checkbox</code> draw their
+content at <code>rect + padding</code>, ignoring the border. With
+<code>border-width &gt; padding</code>, content overlaps the border. Fix: each
+widget's <code>renderContent</code> should offset by <code>rect + border + padding</code>,
+and the available inner size should subtract both. This is a visual
+correctness bug for asymmetric borders on content widgets;</p>
+<ul>
+<li>[ ] <code>Text::renderContent</code> offsets by border</li>
+<li>[ ] <code>TextInput::renderContent</code> offsets by border</li>
+<li>[ ] <code>Slider</code> / <code>ProgressBar</code> / <code>Checkbox</code> offset by border</li>
+<li>[ ] Regression test</li>
 </ul>
 <h3 id="531-text-wrapping-completeness">5.31 <code>Text</code> wrapping completeness</h3>
 <p><strong>Status:</strong> 🟡 planned — bug fix + enhancement.</p>
