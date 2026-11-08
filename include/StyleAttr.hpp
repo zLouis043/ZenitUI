@@ -762,13 +762,25 @@ namespace ZenitUI
         else if (key == "items-h")
         {
             if (auto v = parseAlignToken(val))
+            {
                 st.itemsH = *v;
+                static int warned = 0;
+                if (warned++ < 5)
+                    logWarn("Style", "", 0, 0,
+                            "items-h is deprecated, use align-items instead");
+            }
             return true;
         }
         else if (key == "items-v")
         {
             if (auto v = parseAlignToken(val))
+            {
                 st.itemsV = *v;
+                static int warned = 0;
+                if (warned++ < 5)
+                    logWarn("Style", "", 0, 0,
+                            "items-v is deprecated, use align-items instead");
+            }
             return true;
         }
         else if (key == "align-h")
@@ -805,6 +817,18 @@ namespace ZenitUI
         {
             if (auto v = parseTextOverflowToken(val))
                 st.textOverflow = *v;
+            return true;
+        }
+        else if (key == "align-items")
+        {
+            if (auto v = parseAlignToken(val))
+                st.alignItems = *v;
+            return true;
+        }
+        else if (key == "vertical-align")
+        {
+            if (auto v = parseAlignToken(val))
+                st.verticalAlign = *v;
             return true;
         }
         else if (key == "transition-time")

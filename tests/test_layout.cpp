@@ -370,3 +370,95 @@ TEST(Layout_measure, border_added_to_auto_width)
     CHECK_NEAR(sz.x, 130.0f, 1e-4);
     CHECK_NEAR(sz.y, 130.0f, 1e-4);
 }
+
+TEST(Layout_align, default_align_items_is_start_in_commit1)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // Default Start: child at top-left, no stretch.
+    CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().width, 50.0f, 0.5f);
+}
+
+TEST(Layout_align, align_items_center_on_vstack)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+    parent->getInlineBase().alignItems = Align::Center;
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // Child 50 wide, parent 200: centered at x = 75.
+    CHECK_NEAR(child->getRect().x, 75.0f, 0.5f);
+}
+
+TEST(Layout_align, deprecated_items_h_on_vstack_maps_to_align_items)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    child->getInlineBase().itemsH = Align::Center;   // deprecated
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // Alias derivation: items-h on child of VStack -> alignItems = Center.
+    CHECK_NEAR(child->getRect().x, 75.0f, 0.5f);
+}
+
+TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    child->getInlineBase().itemsH = Align::Center;   // wrong parent type
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // items-h on child of HStack: no derivation, default Start.
+    CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().height, 50.0f, 0.5f);
+}
+
+TEST(Layout_align, explicit_align_items_wins_over_deprecated_alias)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    child->getInlineBase().alignItems = Align::End;    // new name
+    child->getInlineBase().itemsH     = Align::Center; // deprecated
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // align-items wins: End -> child at x = 150.
+    CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
+}

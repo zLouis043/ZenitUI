@@ -207,6 +207,7 @@ namespace ZenitUI
 // TODO: make border-width a Spacing value instead of a uniform scalar Value, so we can change
 //       size depending on the side.
 // TODO: better text wrapping.
+// itemsH and itemsV are now deprecated
 #define BUBBLE_STYLE_PROPS(X)                               \
 	X(Value, width, Value::autoSize())                      \
 	X(Value, height, Value::autoSize())                     \
@@ -223,6 +224,8 @@ namespace ZenitUI
 	X(Align, alignV, Align::Auto)                           \
 	X(Align, itemsH, Align::Start)                          \
 	X(Align, itemsV, Align::Start)                          \
+	X(Align, alignItems, Align::Start)                      \
+	X(Align, verticalAlign, Align::Auto)                    \
 	X(Justify, justify, Justify::Start)                     \
 	X(Align, textAlign, Align::Auto)                        \
 	X(Color, background, Colors::Blank)                     \

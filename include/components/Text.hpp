@@ -93,11 +93,11 @@ namespace ZenitUI::UI
                     totalTextH += ln.size.y;
 
             Vec2 pos = {rect.x + pl, rect.y + pt};
-            Align ha = (style.textAlign == Align::Auto) ? style.itemsH : style.textAlign;
+            Align ha = (style.textAlign == Align::Auto) ? style.alignItems : style.textAlign;
 
-            if (style.itemsV == Align::Center)
+            if (style.verticalAlign == Align::Center)
                 pos.y += (availH - totalTextH) * 0.5f;
-            else if (style.itemsV == Align::End)
+            else if (style.verticalAlign == Align::End)
                 pos.y += availH - totalTextH;
 
             auto r = UIContext::get().renderer;
