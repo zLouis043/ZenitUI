@@ -384,6 +384,67 @@ upward through the normal `anyChildDirty` check.
 - [x] Update `internals/05-layout-engine.md` §7 (dirty tracking) to
       mention the "removed children" bit
 
+### 1.12 Border clipped by `pushClip` in `drawInline`
+
+**Severity:** high — every node with a `border` and non-`visible`
+`overflow` renders the border only at rounded corners (the straight
+sides are clipped).
+
+**Location:** `src/Render.cpp`, `Layout::drawInline`.
+
+**Problem:** `pushClip(rect)` was called before `renderChrome`, so the
+border (drawn by `strokeRoundedRect` with the stroke centered on the
+boundary of `rect`) was partially clipped. Only the portion inside the
+rounded corners survived.
+
+**Expected:** per the CSS box model, `overflow` clips the *content*
+(padding box), not the border. The border is always visible.
+
+**Fix:** moved `renderChrome` before `pushClip(rect)` in `drawInline`.
+Children and content remain clipped; the chrome does not.
+
+**Test:** visual verification on a node with `border: 10px;
+overflow-y: auto`. No automated test was added because it requires
+framebuffer readback; documented under `tests/manual/`.
+
+- [x] Move `renderChrome` before `pushClip`
+- [x] Verify that nodes with only `overflow` (no border) have no
+      regressions
+
+### 1.13 Border not subtracted from the content box in `arrangeInto`
+
+**Severity:** high — children of a node with a `border` overlapped the
+border itself.
+
+**Location:** `src/Measure.cpp`, `Layout::arrangeInto`.
+
+**Problem:** `arrangeInto` computed `inner = rect - padding`, but the
+border stayed inside `inner`. Children were positioned on top of the
+border instead of inside the padding box.
+
+**Expected:** consistent border-box model: the content box is
+`rect - padding - border`.
+
+**Fix:**
+
+```cpp
+float bw = style_.currentStyle.borderWidth.resolveH(space.width, space.height);
+Rect inner = {
+    space.x + pl + bw,
+    space.y + pt + bw,
+    std::max(0.0f, space.width  - pl - pr - bw * 2.0f),
+    std::max(0.0f, space.height - pt - pb - bw * 2.0f)};
+```
+
+The `arrange*Flow` functions receive `inner` as a parameter, so they
+inherit the new computation automatically.
+
+**Test:** `tests/test_layout.cpp`,
+`Layout_arrange.border_subtracted_from_content_box`.
+
+- [x] Subtract the border in `arrangeInto`
+- [x] Add regression test
+
 ---
 
 ## Phase 2 — Missing core API
@@ -1715,6 +1776,379 @@ component in `include/components/VirtualView.hpp`.
 - [x] `CHEATSHEET.md`, `GLOSSARY.md`, `docs/README.md` updated
 - [ ] (Follow-up) ZMarkup registration — VirtualView needs a C++
       factory, which cannot be expressed in markup
+
+### 5.25 `align-items` / `justify-content` (breaking)
+
+**Status:** 🟡 planned — breaking change, requires a dedicated branch.
+
+**Problem:** `itemsH` / `itemsV` are named after the geometric axis
+("horizontal", "vertical"), but their meaning depends on the parent's
+layout type. In addition:
+
+- On a `VStack` (main axis vertical), `itemsV` is **never read**: it is
+  a silent no-op.
+- On an `HStack` (main axis horizontal), `itemsH` is **never read**.
+- The property that actually does something is always the one
+  *opposite* to the parent type (`itemsH` on a VStack, `itemsV` on an
+  HStack), which is counterintuitive and has already caused
+  user-facing bugs in this roadmap (cf. §1.7 Dropdown, §5.14 Canvas).
+
+**Expected:** CSS semantics — two properties whose names do not depend
+on the parent:
+
+- `justify-content` → always the main axis.
+- `align-items` → always the cross axis.
+
+**Fix:**
+
+1. Replace `itemsH` / `itemsV` with a single `alignItems` of type
+   `Align`.
+2. Update `arrangeVerticalFlow` (uses `alignItems` for the cross axis,
+   currently reads `itemsH`) and `arrangeHorizontalFlow` (idem,
+   currently reads `itemsV`).
+3. Update `Text::renderContent`: there `itemsH` / `itemsV` are used for
+   the alignment of the text *inside* the rect, not of the children.
+   After the rename, use `alignItems` (documented as a leaf-widget
+   exception) or a dedicated `verticalAlign`.
+4. Update `Checkbox`, `Button`, `Dropdown`, `TextInput` for references
+   to `itemsH` / `itemsV`.
+5. Parser: `align-items` accepts a single value; `justify` becomes a
+   deprecated alias of `justify-content` (or is renamed directly).
+   `items-h` / `items-v` become deprecated aliases that emit a `Debug`
+   warning and fall back to the correct cross axis.
+6. Update every internal `.zs` / `.zm` (examples, tests).
+
+**Note on `alignH` / `alignV`:** these are per-child overrides of the
+parent's `items*` (equivalent to CSS `align-self`). They can stay as-is
+in this round to limit scope, or be folded into a single `alignSelf`
+in a follow-up. Not required for the rename, but a natural follow-up.
+
+**Breaking for users:** any `.zs` that uses `items-h` / `items-v`
+keeps working via the deprecated aliases, with a warning until it is
+migrated. Aliases are removed in 1.0.
+
+**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`, `Text.hpp`,
+`Render.cpp`, `StyleResolver.cpp`, `docs/user/05-zstyle.md`,
+`docs/api/Style.md`.
+
+**Tests:** HStack with `align-items: stretch` → children stretch
+vertically; VStack with `align-items: stretch` → children stretch
+horizontally. Regression test for the deprecated alias.
+
+- [ ] Add `alignItems` in `BUBBLE_STYLE_PROPS`, remove `itemsH` / `itemsV`
+- [ ] Update `arrangeVerticalFlow` / `arrangeHorizontalFlow`
+- [ ] Update `Text::renderContent` and other widgets
+- [ ] Parser: `align-items`, deprecated aliases with warning
+- [ ] Update internal `.zs` / `.zm`
+- [ ] Regression test + deprecated-alias test
+- [ ] Update user and API documentation
+
+### 5.26 `align-items: stretch` as default (breaking)
+
+**Status:** 🟡 planned — breaking change, same branch as §5.25.
+
+**Problem:** `itemsH` / `itemsV` default to `Align::Start`. In CSS the
+initial value of `align-items` is `stretch`. The current default forces
+every layout to write `items-*: stretch` explicitly on the container,
+and has already caused bugs in this roadmap (cf. the DM Companion
+layout, where `#init_layout` and `#init_list_container` both required
+an explicit `items-*: stretch` to work).
+
+**Expected:** a flex child inside an HStack / VStack stretches along
+the cross axis by default. `start` / `center` / `end` are written
+explicitly when needed.
+
+**Fix:** in `BUBBLE_STYLE_PROPS`, change the default of `alignItems`
+(ex `itemsH` / `itemsV`) from `Align::Start` to `Align::Stretch`.
+
+**Breaking for users:** every layout that relies on the old `start`
+default changes behavior. Must ship in the same branch as §5.25 and be
+visually verified against every example.
+
+**Files:** `Style.hpp`, plus every example and `.zs` that relies on
+the old default.
+
+**Tests:** review the existing suite to confirm the new expected rects;
+add a specific test: HStack without an explicit `align-items` →
+children stretch vertically.
+
+- [ ] Change the default in `BUBBLE_STYLE_PROPS`
+- [ ] Visually verify the examples (`examples/*`)
+- [ ] Update `.zs` files that relied on the old default
+- [ ] Regression test
+- [ ] Update `docs/user/05-zstyle.md` (note on the CSS default)
+
+### 5.27 `min-height: auto` / `min-width: auto` on flex items
+
+**Status:** 🟡 planned — additive feature, depends on §5.25 (clearer
+notion of "flex item").
+
+**Problem:** a flex item with `shrink: 1` and no explicit `min-height`
+can shrink below the size of its content. The classic case is a title
+collapsing to `0px` when there is not enough space. In CSS this does
+not happen: the default `min-height: auto` on a flex item resolves to
+the content's intrinsic size (for items with `overflow: visible`),
+forming a "floor" that flex shrink cannot cross.
+
+The symptom already appeared in this roadmap: `.tab-title` with
+`shrink: 1` collapses to `0px` inside DM Companion's
+`#iniziativa_root` card, and the user had to write `shrink: 0`
+explicitly to work around it.
+
+**Expected:** a flex item with `overflow: visible` never shrinks below
+its content size. To allow shrinking, the user sets `overflow: hidden`
+(or `scroll` / `auto`) or `min-height: 0` explicitly.
+
+**Fix:** entirely in the four `arrange*Flow` functions. `measure` is
+not touched — it already reports the natural content size, which is
+exactly the floor we want. In `arrangeVerticalFlow` and
+`arrangeHorizontalFlow`, replace the `minH` / `minW` computation:
+
+```cpp
+float minH;
+if (cst.minHeight.isAuto()) {
+    minH = (cst.overflowY == Overflow::Visible) ? c->measuredSize.y : 0.0f;
+} else {
+    minH = cst.minHeight.resolveV(inner.width, inner.height);
+}
+```
+
+Idem for `minW` with `cst.overflowX` and `c->measuredSize.x` in the
+horizontal flow, the stack flow, and the wrap flow.
+
+**Files:** `Measure.cpp` (the four `arrange*Flow` functions).
+
+**Tests:** VStack with a header `height: 64px` and content `grow: 1`,
+total height 100px. The header must stay at 64px (shrink not applied
+because of `min-height: auto`). With `overflow-y: auto` on the header
+instead, it must be allowed to shrink.
+
+- [ ] Apply the floor in `arrangeVerticalFlow`
+- [ ] Apply the floor in `arrangeHorizontalFlow`
+- [ ] Apply the floor in `arrangeStackFlow`
+- [ ] Apply the floor in `arrangeWrapFlow`
+- [ ] Regression test (VStack + header, HStack + side panel)
+- [ ] Update `docs/user/05-zstyle.md`
+
+### 5.28 `flex: N` shorthand
+
+**Status:** 🟡 planned — additive feature, requires care with `basis`.
+
+**Problem:** the manual pattern `width: 0; grow: 1` works but has a
+known side effect: `width: 0` is propagated to children as
+`parent_w = 0` during measure, so children with `width: 100%` measure 0
+(cf. §5.24 VirtualView and DM Companion's layout).
+
+In CSS `flex: 1` means `flex-grow: 1; flex-shrink: 1; flex-basis: 0`,
+but `flex-basis: 0` is only a starting point for the grow calculation
+— it is not propagated to children as "the parent's width". Children
+measure against the width actually assigned after grow.
+
+**Expected:** `flex: N` equivalent to CSS. Children with `width: 100%`
+measure against the flexed width, not against 0.
+
+**Fix (draft, to be refined in the PR):**
+
+1. Add `Opt<Value> flex` to `Style`. When set, it maps internally to
+   `grow = N; shrink = 1; basis = Px(0)`.
+2. Add an internal `basis` field (separate from `width`) to
+   `ComputedStyle`. `basis` controls only the starting point of the
+   grow calculation; it is not used to compute children's `availW`.
+3. In `measure`, `availW = calcStyle.width.isAuto() ? parent_w :
+   calcStyle.width.resolveH(...)` — i.e. if `width` is auto, children
+   measure against `parent_w` (not against `basis`). This is already
+   the current behavior; `basis` never touches it.
+4. In `arrange*Flow`, the initial `cw` is `c->measuredSize.x` as today;
+   grow adds free space as today. `basis = 0` does not change this
+   calculation, it only changes the internal measure.
+
+The edge case "child with `width: auto` that depends on `parent_w`"
+remains imperfect (measured at the original `parent_w`, arranged at
+the flexed width). This is the classic double-pass problem, not
+solvable without a two-pass measure. Accept and document the
+limitation.
+
+**Breaking for users:** none — additive. The `width: 0; grow: 1`
+pattern keeps working (with its side effect).
+
+**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`.
+
+**Tests:** HStack with a `flex: 1` child and a `width: 100px` child →
+flex child occupies `parent_w - 100`. Inner child with
+`width: 100%` → measures against the flexed width.
+
+- [ ] Add `flex` to `Style`, `basis` to `ComputedStyle`
+- [ ] Map `flex: N` → `{ grow: N, shrink: 1, basis: 0 }`
+- [ ] Fix `measure` for `basis`
+- [ ] Regression test (`flex` + child with `width: 100%`)
+- [ ] Document the double-pass limitation
+
+### 5.29 `margin: auto`
+
+**Status:** 🟡 planned — additive feature, small.
+
+**Problem:** `parseValueToken` already accepts `auto` as a value
+(`Value::autoSize()`), so `margin: auto` is parsed, but
+`margin.left.resolveH(...)` returns 0 for auto. The result is that
+`margin: auto` is silently accepted and ignored. The most common use
+case is missing: centering an element with `max-width` inside a wider
+container (`margin: 0 auto` in CSS).
+
+**Expected:** when a margin is `auto`, the parent's free space is
+distributed to that side. If there are two autos (e.g. left+right),
+the free space is split in half. If there is only one, all the free
+space goes to that side.
+
+**Fix:** in the four `arrange*Flow` functions, after computing
+`freeSpace` and before applying `justify`:
+
+1. Count how many margins are `auto` (`ml.isAuto()`, `mr.isAuto()`,
+   `mt.isAuto()`, `mb.isAuto()`).
+2. If > 0, distribute `freeSpace` equally among the auto margins, and
+   ignore `justify` for that axis.
+3. Apply the resolved margins when positioning the child.
+
+Documented limitation: `margin: auto` on an axis where `grow` is
+active has no effect (the free space is already consumed by grow).
+
+**Files:** `Measure.cpp` (the four `arrange*Flow` functions).
+
+**Tests:** Stack with a child `max-width: 600px; margin: 0 auto` in a
+1000px parent → child at `x = (1000 - 600) / 2 = 200`.
+
+- [ ] Handle auto margins in `arrangeVerticalFlow`
+- [ ] Handle auto margins in `arrangeHorizontalFlow`
+- [ ] Handle auto margins in `arrangeStackFlow`
+- [ ] Handle auto margins in `arrangeWrapFlow`
+- [ ] Regression test (horizontal and vertical centering)
+- [ ] Document the interaction with `grow`
+
+### 5.30 `borderWidth` as `Spacing` (per-side borders)
+
+**Status:** 🟡 planned — additive feature, touches the backend.
+
+**Problem:** `borderWidth` is a uniform scalar (`Value`) applied to all
+four sides. The reference HTML project (DM Companion) uses asymmetric
+borders in several places:
+
+- `.nav-tab.active { border-bottom: 2px }` (bottom only)
+- `.toast { border-left: 4px }` (left only)
+- `.card h2 { border-bottom: 1px }` (internal divider)
+
+In addition, the §1.13 fix (border subtracted in `arrangeInto`) is
+incomplete: `measure` does not subtract the border, so there is still
+a mismatch between the space available in `measure` and the space
+actually used in `arrange`. With asymmetric `borderWidth`, the
+mismatch would grow.
+
+**Expected:**
+
+1. `borderWidth` becomes `Spacing` (top/right/bottom/left).
+2. `measure` subtracts `bw.left + bw.right` (or top/bottom) from
+   `innerW` (or `innerH`), and adds `bw.left + bw.right` to `finalW`
+   for `width: auto`.
+3. `renderChrome` draws four separate rectangles when borders are
+   asymmetric, and `strokeRoundedRect` when they are uniform (to keep
+   the rounded corners correct).
+
+**Fix:**
+
+1. `Style.hpp`: `X(Spacing, borderWidth, Spacing())`.
+2. `StyleAttr.hpp`: `border-width` (uniform), `border-top-width`,
+   `border-right-width`, `border-bottom-width`, `border-left-width`.
+   Shorthand `border-bottom` (no `-width`) maps to
+   `border-bottom-width`.
+3. `Measure.cpp`: `arrangeInto` and `measure` use `bw.left` etc.
+4. `Render.cpp` (`renderChrome`): if all four sides are equal,
+   `strokeRoundedRect`; otherwise, for each non-zero side, `fillRect`
+   the corresponding strip.
+5. `RaylibBackend`: add `fillBorder(Rect r, EdgeInsets sides, Color c)`
+   to `IRenderer` and implement it in `RaylibRenderer`.
+
+**Breaking for users:** `border-width: 1px` keeps working (uniform
+`Spacing`). No breaking changes.
+
+**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`, `Render.cpp`,
+`UIContext.hpp` (new `IRenderer::fillBorder`),
+`RaylibBackend.cpp` / `.hpp`, `Text.hpp` (`renderContent` subtracts
+the border), `docs/user/05-zstyle.md`, `docs/api/Style.md`.
+
+**Tests:** a nav-tab with `border-bottom-width: 2px` renders the border
+only at the bottom; a card with `border-width: 10px` renders uniformly
+(correct rounded corners).
+
+- [ ] `borderWidth: Spacing` in `Style.hpp`
+- [ ] Parser for individual sides
+- [ ] `Measure.cpp` consistent (subtracts and adds the border)
+- [ ] `IRenderer::fillBorder` + Raylib implementation
+- [ ] `renderChrome` with `fillBorder` for asymmetric borders
+- [ ] `Text::renderContent` subtracts the border
+- [ ] Regression test (uniform border + per-side border)
+- [ ] Update documentation
+
+### 5.31 `Text` wrapping completeness
+
+**Status:** 🟡 planned — bug fix + enhancement.
+
+**Problem:** `Text` already supports `wrap: true` (partial) and
+`onLayout` re-wraps on width change, but it has three bugs and one
+shortcoming:
+
+1. **Explicit `\n` is ignored.** `wrapText` uses
+   `std::istringstream >> word`, which treats `\n` and spaces
+   identically. The result is that multi-line paragraphs (Compendium
+   descriptions, DM notes, stat blocks) collapse into a single
+   paragraph.
+2. **Long words overflow.** In `wrapText`, if `cur.empty()` the word is
+   appended anyway even when `sz.x > availW`. Horizontal overflow on
+   strings without spaces (URLs, hashes).
+3. **No `text-overflow: ellipsis`.** With `wrap: false` and text wider
+   than `availW`, it overflows and stays. DM Companion's `.init-name`
+   uses `text-overflow: ellipsis; white-space: nowrap` to truncate
+   long names.
+4. **`renderContent` uses `itemsH` / `itemsV` for text alignment.**
+   This is a semantic mix-up: `items*` are properties for *children*,
+   not for the text inside the widget. It works because `Text` has no
+   children, but it should be documented or replaced by `textAlign` +
+   a dedicated `verticalAlign`.
+
+**Expected:**
+
+- Explicit `\n` produces a line break.
+- Words longer than `availW` are broken (word-break).
+- New properties: `white-space` (`normal` | `nowrap`), `text-overflow`
+  (`visible` | `ellipsis`). With `nowrap + ellipsis`, the text stays
+  on one line and gets a trailing `...` if it overflows.
+- `renderContent` documented to use `textAlign` + `alignItems` only as
+  a leaf-widget exception.
+
+**Fix:**
+
+1. `wrapText`: split the text on `\n` into logical lines, then wrap
+   each line. For words longer than `availW`, break them at `availW`.
+2. `renderContent`: if `whiteSpace == nowrap` and `textOverflow ==
+   ellipsis`, measure and truncate, appending `...`.
+3. `Style`: add `WhiteSpace whiteSpace` and `TextOverflow
+   textOverflow` (new enums).
+4. `renderContent`: use `style.textAlign` for horizontal alignment,
+   `style.alignItems` (ex `itemsH` / `itemsV`) for vertical alignment
+   (documented as the leaf-widget exception).
+
+**Breaking for users:** none — additive.
+
+**Files:** `Text.hpp`, `Style.hpp`, `StyleAttr.hpp`,
+`docs/user/03-widgets.md` (Text section), `docs/api/Widgets.md`.
+
+**Tests:** text with `\n` → separate lines; a long word with no spaces
+→ broken; `nowrap + ellipsis` on long text → one line with `...`.
+
+- [ ] Handle `\n` in `wrapText`
+- [ ] Break long words
+- [ ] Add `whiteSpace` / `textOverflow` to `Style`
+- [ ] Implement ellipsis in `renderContent`
+- [ ] Document `alignItems` on `Text`
+- [ ] Regression test
+- [ ] Update documentation
 
 ---
 
