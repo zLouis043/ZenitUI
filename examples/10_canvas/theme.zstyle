@@ -15,8 +15,7 @@
 Stack#root {
     width: 100%;
     height: 100%;
-    items-h: stretch;
-    items-v: stretch;
+    align-items: stretch;
 }
 
 .page {
@@ -27,8 +26,7 @@ Stack#root {
     gap: 12px;
     width: 100%;
     height: 100%;
-    items-h: stretch;
-    items-v: start;
+    align-items: stretch;
 }
 
 .panel {
@@ -47,7 +45,7 @@ Stack#root {
 
 .row {
     gap: 16px;
-    items-v: center;
+    align-items: center;
     width: 100%;
 }
 
@@ -70,8 +68,7 @@ Canvas {
 /* The scene inside each canvas. */
 .scene {
     gap: 6px;
-    items-h: center;
-    items-v: center;
+    align-items: center;
 }
 
 .scene-label {

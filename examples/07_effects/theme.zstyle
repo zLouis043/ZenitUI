@@ -37,7 +37,7 @@ Panel {
 
 .row {
     gap: 16px;
-    items-v: center;
+    align-items: center;
     width: 100%;
 }
 
@@ -54,8 +54,8 @@ Panel {
     radius: 8px;
     padding: 14px 22px;
     min-width: 140px;
-    items-h: center;
-    items-v: center;
+    align-items: center;
+    align-items: center;
     font-size: 15px;
 }
 

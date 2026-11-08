@@ -1779,19 +1779,14 @@ component in `include/components/VirtualView.hpp`.
 
 ### 5.25 `align-items` / `justify-content` (breaking)
 
-**Status:** 🟡 planned — breaking change, requires a dedicated branch.
+**Status:** 🟢 done.
 
 **Problem:** `itemsH` / `itemsV` are named after the geometric axis
 ("horizontal", "vertical"), but their meaning depends on the parent's
-layout type. In addition:
-
-- On a `VStack` (main axis vertical), `itemsV` is **never read**: it is
-  a silent no-op.
-- On an `HStack` (main axis horizontal), `itemsH` is **never read**.
-- The property that actually does something is always the one
-  *opposite* to the parent type (`itemsH` on a VStack, `itemsV` on an
-  HStack), which is counterintuitive and has already caused
-  user-facing bugs in this roadmap (cf. §1.7 Dropdown, §5.14 Canvas).
+layout type. On a `VStack` `itemsV` is never read; on an `HStack`
+`itemsH` is never read. The property that does something is always the
+one opposite to the parent type, which is counterintuitive and caused
+user-facing bugs (§1.7 Dropdown, §5.14 Canvas).
 
 **Expected:** CSS semantics — two properties whose names do not depend
 on the parent:
@@ -1799,29 +1794,30 @@ on the parent:
 - `justify-content` → always the main axis.
 - `align-items` → always the cross axis.
 
-**Fix:**
+**What landed:**
 
-1. Replace `itemsH` / `itemsV` with a single `alignItems` of type
-   `Align`.
-2. Update `arrangeVerticalFlow` (uses `alignItems` for the cross axis,
-   currently reads `itemsH`) and `arrangeHorizontalFlow` (idem,
-   currently reads `itemsV`).
-3. Update `Text::renderContent`: there `itemsH` / `itemsV` are used for
-   the alignment of the text *inside* the rect, not of the children.
-   After the rename, use `alignItems` (documented as a leaf-widget
-   exception) or a dedicated `verticalAlign`.
-4. Update `Checkbox`, `Button`, `Dropdown`, `TextInput` for references
-   to `itemsH` / `itemsV`.
-5. Parser: `align-items` accepts a single value; `justify` becomes a
-   deprecated alias of `justify-content` (or is renamed directly).
-   `items-h` / `items-v` become deprecated aliases that emit a `Debug`
-   warning and fall back to the correct cross axis.
-6. Update every internal `.zs` / `.zm` (examples, tests).
+- `align-items` and `vertical-align` are the canonical properties.
+- `items-h` / `items-v` are kept as deprecated aliases, resolved in
+  `StyleResolver::deriveAlignAliases` based on the parent layout type.
+  Removal is deferred to 1.0.
+- `deriveAlignAliases` handles both the self-level case (how a node
+  aligns its own children, e.g. a Stack with `align-items: center`)
+  and the child-level case (deprecated `items-h`/`items-v` on a leaf
+  acting as an align-self hint, preserved for compatibility).
+- Stack defaults to `Start` for its children (free-positioning
+  container); VStack uses `align-items` for the cross axis; HStack
+  idem.
+- `Text::renderContent` uses `vertical-align` for vertical centering
+  of the text block (was `itemsV`). This is the only allowed semantic
+  mixing: `Text` is a leaf widget, so vertical alignment of the text
+  inside its rect is a widget-internal concern, not the parent's
+  cross-axis alignment.
+- The parser emits a one-time warning when `items-h` or `items-v` are
+  used.
 
-**Note on `alignH` / `alignV`:** these are per-child overrides of the
-parent's `items*` (equivalent to CSS `align-self`). They can stay as-is
-in this round to limit scope, or be folded into a single `alignSelf`
-in a follow-up. Not required for the rename, but a natural follow-up.
+**Note on `alignH` / `alignV`:** these are per-child overrides, kept
+as-is in this round. They can be folded into a single `align-self` in
+a follow-up; not required for the rename.
 
 **Breaking for users:** any `.zs` that uses `items-h` / `items-v`
 keeps working via the deprecated aliases, with a warning until it is
@@ -1835,21 +1831,24 @@ migrated. Aliases are removed in 1.0.
 vertically; VStack with `align-items: stretch` → children stretch
 horizontally. Regression test for the deprecated alias.
 
-- [ ] Add `alignItems` in `BUBBLE_STYLE_PROPS`, remove `itemsH` / `itemsV`
-- [ ] Update `arrangeVerticalFlow` / `arrangeHorizontalFlow`
-- [ ] Update `Text::renderContent` and other widgets
-- [ ] Parser: `align-items`, deprecated aliases with warning
-- [ ] Update internal `.zs` / `.zm`
-- [ ] Regression test + deprecated-alias test
-- [ ] Document the leaf-widget exception: `Text::renderContent` uses
-      `align-items` for vertical text alignment (was `itemsV` /
-      `itemsH`) — this is the only allowed semantic mixing, because
+- [x] Add `alignItems` in `BUBBLE_STYLE_PROPS`; keep `itemsH`/`itemsV`
+      as deprecated aliases (removal in 1.0)
+- [x] Update `arrangeVerticalFlow` / `arrangeHorizontalFlow` to read
+      `alignItems`
+- [x] Update `Text::renderContent` (via `verticalAlign`) and other
+      widgets
+- [x] Parser: `align-items`, deprecated aliases with one-time warning
+- [x] Update internal `.zs` / `.zm` (examples, tests)
+- [x] Regression test + deprecated-alias test
+- [x] Update user and API documentation
+- [x] Document the leaf-widget exception: `Text::renderContent` uses
+      `vertical-align` for vertical alignment of the text block (was
+      `itemsV`); this is the only allowed semantic mixing, because
       `Text` has no children
-- [ ] Update user and API documentation
 
 ### 5.26 `align-items: stretch` as default (breaking)
 
-**Status:** 🟡 planned — breaking change, same branch as §5.25.
+**Status:** 🟢 done.
 
 **Problem:** `itemsH` / `itemsV` default to `Align::Start`. In CSS the
 initial value of `align-items` is `stretch`. The current default forces
@@ -1876,11 +1875,11 @@ the old default.
 add a specific test: HStack without an explicit `align-items` →
 children stretch vertically.
 
-- [ ] Change the default in `BUBBLE_STYLE_PROPS`
-- [ ] Visually verify the examples (`examples/*`)
-- [ ] Update `.zs` files that relied on the old default
-- [ ] Regression test
-- [ ] Update `docs/user/05-zstyle.md` (note on the CSS default)
+- [x] Change the default in `BUBBLE_STYLE_PROPS`
+- [x] Visually verify the examples (`examples/*`)
+- [x] Update `.zs` files that relied on the old default
+- [x] Regression test
+- [x] Update `docs/user/05-zstyle.md` (note on the CSS default)
 
 ### 5.27 `min-height: auto` / `min-width: auto` on flex items
 

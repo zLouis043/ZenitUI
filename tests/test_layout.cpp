@@ -371,11 +371,12 @@ TEST(Layout_measure, border_added_to_auto_width)
     CHECK_NEAR(sz.y, 130.0f, 1e-4);
 }
 
-TEST(Layout_align, default_align_items_is_start_in_commit1)
+TEST(Layout_align, align_items_explicit_start_on_vstack)
 {
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
+    parent->getInlineBase().alignItems = Align::Start;
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
     child->size(Px(50), Px(50));
@@ -384,7 +385,6 @@ TEST(Layout_align, default_align_items_is_start_in_commit1)
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // Default Start: child at top-left, no stretch.
     CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().width, 50.0f, 0.5f);
 }
@@ -430,6 +430,7 @@ TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
     parent->size(Px(200), Px(200));
+    parent->getInlineBase().alignItems = Align::Start;   // explicit
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
     child->size(Px(50), Px(50));
@@ -439,7 +440,8 @@ TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // items-h on child of HStack: no derivation, default Start.
+    // items-h on child of HStack: no derivation, no-op. With explicit
+    // Start, child stays at its natural size.
     CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().height, 50.0f, 0.5f);
 }
@@ -461,4 +463,80 @@ TEST(Layout_align, explicit_align_items_wins_over_deprecated_alias)
 
     // align-items wins: End -> child at x = 150.
     CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
+}
+
+TEST(Layout_align, default_is_stretch_on_vstack)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    // No explicit width: expect stretch to 200.
+    child->size(Auto(), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
+}
+
+TEST(Layout_align, default_is_stretch_on_hstack)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    // No explicit height: expect stretch to 200.
+    child->size(Px(50), Auto());
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().height, 200.0f, 0.5f);
+}
+
+TEST(Layout_align, default_is_start_on_stack)
+{
+    freshTheme();
+    // Stack children do NOT stretch: Stack is a free-positioning
+    // container, not a flex container. CSS analogy: a position: relative
+    // div does not stretch its children.
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().width, 50.0f, 0.5f);
+    CHECK_NEAR(child->getRect().height, 50.0f, 0.5f);
+}
+
+TEST(Layout_align, explicit_align_items_stretch_on_stack)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Stack);
+    parent->size(Px(200), Px(200));
+    parent->getInlineBase().alignItems = Align::Stretch;
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
+    CHECK_NEAR(child->getRect().height, 200.0f, 0.5f);
 }

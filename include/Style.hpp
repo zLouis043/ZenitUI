@@ -224,7 +224,7 @@ namespace ZenitUI
 	X(Align, alignV, Align::Auto)                           \
 	X(Align, itemsH, Align::Start)                          \
 	X(Align, itemsV, Align::Start)                          \
-	X(Align, alignItems, Align::Start)                      \
+	X(Align, alignItems, Align::Stretch)                    \
 	X(Align, verticalAlign, Align::Auto)                    \
 	X(Justify, justify, Justify::Start)                     \
 	X(Align, textAlign, Align::Auto)                        \

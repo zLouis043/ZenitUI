@@ -380,7 +380,7 @@ Each value can be any supported unit, including `vw` / `vh` / `pw` /
 | Property | Type | Default |
 |----------|------|---------|
 | `justify` | Justify | `start` |
-| `align-items` | Align | `start` |
+| `align-items` | Align | `stretch` |
 | `align-h` | Align | `auto` |
 | `align-v` | Align | `auto` |
 
@@ -390,6 +390,12 @@ removed in 1.0. They continue to work during migration:
 - `items-h` on the child of a `VStack` behaves like `align-items`.
 - `items-v` on the child of an `HStack` behaves like `align-items`.
 - On any other parent they are silently ignored, as before.
+
+**Breaking change in this release.** `align-items` now defaults to
+`stretch`, matching the CSS initial value. Previously the default was
+`start`. Layouts that relied on the old default should set
+`align-items: start` explicitly, or use `align-h` / `align-v` on the
+individual children.
 
 Loading a `.zstyle` that uses these names logs a one-time warning.
 
