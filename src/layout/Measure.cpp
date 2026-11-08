@@ -13,7 +13,6 @@ namespace ZenitUI
 		return {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
 	}
 
-
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
 		if (!internal_.subtreeDirty &&
@@ -37,12 +36,13 @@ namespace ZenitUI
 		float pr = calcStyle.padding.right.resolveH(parent_w, parent_h);
 		float pt = calcStyle.padding.top.resolveV(parent_w, parent_h);
 		float pb = calcStyle.padding.bottom.resolveV(parent_w, parent_h);
+		float bw = calcStyle.borderWidth.resolveH(parent_w, parent_h);
 
 		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
 		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
 
-		float innerW = std::max(0.0f, availW - pl - pr);
-		float innerH = std::max(0.0f, availH - pt - pb);
+		float innerW = std::max(0.0f, availW - pl - pr - bw * 2.0f);
+		float innerH = std::max(0.0f, availH - pt - pb - bw * 2.0f);
 
 		if (type == LayoutType::Vertical && calcStyle.overflowY != Overflow::Visible)
 			innerH = 1e9f;
@@ -151,8 +151,8 @@ namespace ZenitUI
 
 		scroll_.contentSize = contentSize;
 
-		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr) : availW;
-		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb) : availH;
+		float finalW = calcStyle.width.isAuto() ? (contentSize.x + pl + pr + bw * 2.0f) : availW;
+		float finalH = calcStyle.height.isAuto() ? (contentSize.y + pt + pb + bw * 2.0f) : availH;
 
 		float minW = calcStyle.minWidth.isAuto() ? 0.0f : calcStyle.minWidth.resolveH(parent_w, parent_h);
 		float maxW = calcStyle.maxWidth.isAuto() ? 1e9f : calcStyle.maxWidth.resolveH(parent_w, parent_h);
@@ -201,18 +201,21 @@ namespace ZenitUI
 			c->translateSubtree(dx, dy);
 		}
 	}
+
+	// TODO: push into the main repo
 	void Layout::arrangeInto(Rect space)
 	{
 		float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
 		float pr = style_.currentStyle.padding.right.resolveH(space.width, space.height);
 		float pt = style_.currentStyle.padding.top.resolveV(space.width, space.height);
 		float pb = style_.currentStyle.padding.bottom.resolveV(space.width, space.height);
+		float bw = style_.currentStyle.borderWidth.resolveH(space.width, space.height);
 
 		Rect inner = {
-			space.x + pl,
-			space.y + pt,
-			std::max(0.0f, space.width - pl - pr),
-			std::max(0.0f, space.height - pt - pb)};
+			space.x + pl + bw,
+			space.y + pt + bw,
+			std::max(0.0f, space.width - pl - pr - bw * 2.0f),
+			std::max(0.0f, space.height - pt - pb - bw * 2.0f)};
 
 		float gapX = style_.currentStyle.gap.resolveH(inner.width, inner.height);
 		float gapY = style_.currentStyle.gap.resolveV(inner.width, inner.height);
