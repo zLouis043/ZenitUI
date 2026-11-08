@@ -908,6 +908,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#wrapping-whitespace-and-ellipsis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrapping, whitespace and ellipsis
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2340,6 +2351,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#wrapping-whitespace-and-ellipsis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrapping, whitespace and ellipsis
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2994,6 +3016,16 @@ ignored — they never break the parse.</p>
 <td>Value</td>
 <td><code>auto</code></td>
 </tr>
+<tr>
+<td><code>white-space</code></td>
+<td><code>normal</code> | <code>nowrap</code></td>
+<td><code>normal</code></td>
+</tr>
+<tr>
+<td><code>text-overflow</code></td>
+<td><code>visible</code> | <code>ellipsis</code></td>
+<td><code>visible</code></td>
+</tr>
 </tbody>
 </table>
 <pre><code class="language-css">.card {
@@ -3358,6 +3390,55 @@ UIContext::get().assets-&gt;unloadFont(&quot;Inter&quot;);
 <p>Both methods default to no-ops; backends that support runtime loading
 override them. See <a href="../../api/UIContext/#2-the-three-interfaces">IAssetProvider</a>
 for the full contract and the caveat about unloading a font still in use.</p>
+<h4 id="wrapping-whitespace-and-ellipsis">Wrapping, whitespace and ellipsis</h4>
+<p><code>Text</code> supports three independent aspects of text layout:</p>
+<ol>
+<li><strong>Wrapping</strong> — <code>wrap: true</code> in C++ or the <code>wrap</code> attribute in
+   ZMarkup. Breaks long content across multiple lines to fit the
+   available width.</li>
+<li><strong>Whitespace</strong> — <code>white-space</code>. Controls whether long content is
+   forced onto a single line.</li>
+<li><strong>Overflow</strong> — <code>text-overflow</code>. How to render text that does not fit
+   on a single line.</li>
+</ol>
+<p><code>\n</code> in the source text always produces a hard line break, regardless
+of <code>wrap</code> or <code>white-space</code>. A <code>Text</code> with <code>"foo\nbar"</code> renders as two
+lines in every mode. Consecutive <code>\n</code> produce empty lines.</p>
+<p><code>white-space: normal</code> (the default) allows wrapping (when <code>wrap: true</code>
+is set) and honours <code>\n</code>. <code>white-space: nowrap</code> disables wrapping: long
+content stays on one line per <code>\n</code>-separated part, and overflows if it
+is wider than the available width. In practice, <code>white-space: nowrap</code>
+and <code>wrap: false</code> are equivalent — both force single-line layout per
+logical line. They differ only in intent: <code>wrap: false</code> is set in C++
+when the widget is constructed, <code>white-space: nowrap</code> can be set from
+<code>.zstyle</code> and overrides a <code>wrap: true</code> set in code.</p>
+<p><code>text-overflow: ellipsis</code> truncates a single-line text that overflows
+the available width, appending <code>...</code>. It is a <strong>render-time</strong>
+transformation only: it does not change the layout box of the <code>Text</code>.
+Two <code>Text</code> nodes with the same content and the same width measure to
+the same size regardless of <code>text-overflow</code>; only the drawn pixels
+differ. <code>ellipsis</code> applies only when the text is laid out on one line
+(i.e. no <code>\n</code> and either <code>wrap: false</code> or <code>white-space: nowrap</code>); on a
+multi-line text it has no effect.</p>
+<pre><code class="language-css">/* Long title: one line, truncated with ... */
+.title {
+    width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Paragraph: wraps and honours '\n' in the content */
+.description {
+    white-space: normal;
+    width: 100%;
+}
+</code></pre>
+<p>Long words without spaces (URLs, hashes) are broken across lines when
+they do not fit, even with <code>white-space: normal</code>. This is the
+equivalent of CSS <code>word-break: break-word</code> and happens automatically.</p>
+<p><code>white-space: pre</code> (preserve spaces and newlines without wrapping) is
+not supported. <code>text-overflow: clip</code> (truncate without <code>...</code>) is not
+supported. Both are tracked as future work.</p>
 <p>The properties <code>font</code>, <code>font-size</code>, <code>color</code>, <code>letter-spacing</code>, and
 <code>text-align</code> are <strong>inherited</strong> by descendants. All other properties are
 not.</p>
@@ -3766,7 +3847,8 @@ translate-x    translate-y    top            left
 right          bottom         font-size      letter-spacing
 items-h        items-v        align-h        align-v
 justify        text-align     position       z-index
-font           background-texture            effect
+white-space    text-overflow  font           background-texture
+effect
 </code></pre>
 <p>Values follow the same grammar as in <code>.zstyle</code>, including <code>calc()</code> and
 <code>var()</code> (though <code>var()</code> inside an inline attribute is unusual — you
@@ -4053,6 +4135,12 @@ animation overlays the transition result. The overlay happens in
 style. So <code>getStyle()</code> reports the transition value; only the render
 path sees the animated value. This is a known limitation of the current
 implementation.</p>
+<p><strong><code>text-overflow: ellipsis</code> without <code>white-space: nowrap</code>.</strong>
+<code>text-overflow</code> only truncates single-line text. On a wrapping
+paragraph (the default, <code>white-space: normal</code>), the text flows to the
+next line and there is nothing to truncate. Pair the two properties:</p>
+<pre><code class="language-css">.title { white-space: nowrap; text-overflow: ellipsis; }
+</code></pre>
 
 
 

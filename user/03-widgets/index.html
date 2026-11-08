@@ -725,6 +725,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wrapping-whitespace-and-ellipsis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrapping, whitespace and ellipsis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2850,6 +2861,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wrapping-whitespace-and-ellipsis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrapping, whitespace and ellipsis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4260,6 +4282,79 @@ can be a bare flag (defaults to <code>true</code>) or <code>wrap=false</code> / 
 }
 </code></pre>
 <p>Text is not interactive. It has no pseudo-states.</p>
+<h3 id="wrapping-whitespace-and-ellipsis">Wrapping, whitespace and ellipsis</h3>
+<p><code>Text</code> supports three independent aspects of text layout:</p>
+<ol>
+<li><strong>Wrapping</strong> (<code>wrap: true</code>): break long content across multiple lines
+   to fit the available width.</li>
+<li><strong>Whitespace</strong> (<code>white-space</code>): controls whether explicit <code>\n</code>
+   characters and automatic wrapping produce multiple lines.</li>
+<li><strong>Overflow</strong> (<code>text-overflow</code>): how to render text that does not fit
+   on a single line.</li>
+</ol>
+<p>They compose, but only in one useful combination per case:</p>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th><code>wrap</code></th>
+<th><code>white-space</code></th>
+<th><code>text-overflow</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Paragraph (multi-line, wraps)</td>
+<td><code>true</code></td>
+<td><code>normal</code></td>
+<td><code>visible</code></td>
+</tr>
+<tr>
+<td>Single-line, breaks on <code>\n</code></td>
+<td><code>false</code></td>
+<td><code>normal</code></td>
+<td><code>visible</code></td>
+</tr>
+<tr>
+<td>Truncate with <code>...</code> on one line</td>
+<td><code>false</code></td>
+<td><code>nowrap</code></td>
+<td><code>ellipsis</code></td>
+</tr>
+<tr>
+<td>Truncate with <code>...</code> inside a wrapping paragraph</td>
+<td><code>true</code></td>
+<td><code>nowrap</code></td>
+<td><code>ellipsis</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Explicit newlines.</strong> With <code>white-space: normal</code> (the default), <code>\n</code>
+characters in the text produce a hard line break, independent of
+wrapping. Consecutive <code>\n</code> produce empty lines.</p>
+<p><strong>Long words without spaces.</strong> When a single word is wider than the
+available width, it is broken across lines rather than overflowing.
+This applies to URLs, hashes, and any content without whitespace.</p>
+<p><strong>Ellipsis.</strong> <code>text-overflow: ellipsis</code> is only meaningful when the
+text is laid out on a single line (<code>wrap: false</code> or
+<code>white-space: nowrap</code>). When the text overflows the available width,
+the rendered output is truncated to the longest prefix that fits,
+with <code>...</code> appended. Ellipsis is a <strong>render-time</strong> transformation: it
+does not change the layout box of the <code>Text</code> node. Two <code>Text</code> nodes
+with the same text and different <code>textOverflow</code> measure to the same
+size; only the drawn pixels differ.</p>
+<pre><code class="language-cpp">auto title = Text::create(&quot;A very long title that will be truncated&quot;);
+title-&gt;setWrap(false);
+title-&gt;getInlineBase().whiteSpace   = WhiteSpace::Nowrap;
+title-&gt;getInlineBase().textOverflow = TextOverflow::Ellipsis;
+title-&gt;size(Px(200), Auto());
+</code></pre>
+<p><strong>Cache note.</strong> Toggling between wrapped and single-line modes at
+runtime (via <code>setWrap</code> or <code>white-space</code>) invalidates the internal
+measurement cache. No manual invalidation is needed.</p>
+<p><strong>Scope.</strong> <code>white-space: pre</code> (preserve spaces and newlines without
+wrapping) is not supported. <code>text-overflow: clip</code> (truncate without
+<code>...</code>) is not supported. Both are tracked as future work.</p>
 <h3 id="notes">Notes</h3>
 <ul>
 <li>Intrinsic size is the measured text box. With <code>wrap</code>, it depends on the

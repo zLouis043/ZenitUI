@@ -4187,6 +4187,10 @@ horizontally. Regression test for the deprecated alias.</p>
 <li>[ ] Parser: <code>align-items</code>, deprecated aliases with warning</li>
 <li>[ ] Update internal <code>.zs</code> / <code>.zm</code></li>
 <li>[ ] Regression test + deprecated-alias test</li>
+<li>[ ] Document the leaf-widget exception: <code>Text::renderContent</code> uses
+      <code>align-items</code> for vertical text alignment (was <code>itemsV</code> /
+      <code>itemsH</code>) — this is the only allowed semantic mixing, because
+      <code>Text</code> has no children</li>
 <li>[ ] Update user and API documentation</li>
 </ul>
 <h3 id="526-align-items-stretch-as-default-breaking">5.26 <code>align-items: stretch</code> as default (breaking)</h3>
@@ -4441,6 +4445,11 @@ shortcoming:</p>
 <li><code>renderContent</code>: use <code>style.textAlign</code> for horizontal alignment,
    <code>style.alignItems</code> (ex <code>itemsH</code> / <code>itemsV</code>) for vertical alignment
    (documented as the leaf-widget exception).</li>
+<li><code>measureSingleLine</code> / <code>measureWrapped</code> cache keys now include whether the last measurement was wrapped (<code>cachedWrapW &gt;= 0</code> vs <code>&lt; 0</code>)
+   Without this, switching between wrapped and single-line modes reused a stale <code>cachedSize</code>.</li>
+<li><code>measureSingleLine</code> now also splits on <code>\n</code>.
+    Previously <code>\n</code> was only honoured in wrapped mode, so single-line Text rendered the newline character literally. 
+    The layout box and the number of lines are now consistent across <code>wrap</code> / <code>white-space</code> combinations.</li>
 </ol>
 <p><strong>Breaking for users:</strong> none — additive.</p>
 <p><strong>Files:</strong> <code>Text.hpp</code>, <code>Style.hpp</code>, <code>StyleAttr.hpp</code>,
@@ -4448,13 +4457,12 @@ shortcoming:</p>
 <p><strong>Tests:</strong> text with <code>\n</code> → separate lines; a long word with no spaces
 → broken; <code>nowrap + ellipsis</code> on long text → one line with <code>...</code>.</p>
 <ul>
-<li>[ ] Handle <code>\n</code> in <code>wrapText</code></li>
-<li>[ ] Break long words</li>
-<li>[ ] Add <code>whiteSpace</code> / <code>textOverflow</code> to <code>Style</code></li>
-<li>[ ] Implement ellipsis in <code>renderContent</code></li>
-<li>[ ] Document <code>alignItems</code> on <code>Text</code></li>
-<li>[ ] Regression test</li>
-<li>[ ] Update documentation</li>
+<li>[x] Handle <code>\n</code> in <code>wrapText</code></li>
+<li>[x] Break long words</li>
+<li>[x] Add <code>whiteSpace</code> / <code>textOverflow</code> to <code>Style</code></li>
+<li>[x] Implement ellipsis in <code>renderContent</code></li>
+<li>[x] Regression test</li>
+<li>[x] Update documentation</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
