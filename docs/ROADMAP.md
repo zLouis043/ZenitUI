@@ -1841,6 +1841,10 @@ horizontally. Regression test for the deprecated alias.
 - [ ] Parser: `align-items`, deprecated aliases with warning
 - [ ] Update internal `.zs` / `.zm`
 - [ ] Regression test + deprecated-alias test
+- [ ] Document the leaf-widget exception: `Text::renderContent` uses
+      `align-items` for vertical text alignment (was `itemsV` /
+      `itemsH`) — this is the only allowed semantic mixing, because
+      `Text` has no children
 - [ ] Update user and API documentation
 
 ### 5.26 `align-items: stretch` as default (breaking)
@@ -2133,6 +2137,11 @@ shortcoming:
 4. `renderContent`: use `style.textAlign` for horizontal alignment,
    `style.alignItems` (ex `itemsH` / `itemsV`) for vertical alignment
    (documented as the leaf-widget exception).
+5. `measureSingleLine` / `measureWrapped` cache keys now include whether the last measurement was wrapped (`cachedWrapW >= 0` vs `< 0`)
+   Without this, switching between wrapped and single-line modes reused a stale `cachedSize`.
+6. `measureSingleLine` now also splits on `\n`.
+    Previously `\n` was only honoured in wrapped mode, so single-line Text rendered the newline character literally. 
+    The layout box and the number of lines are now consistent across `wrap` / `white-space` combinations.
 
 **Breaking for users:** none — additive.
 
@@ -2142,13 +2151,12 @@ shortcoming:
 **Tests:** text with `\n` → separate lines; a long word with no spaces
 → broken; `nowrap + ellipsis` on long text → one line with `...`.
 
-- [ ] Handle `\n` in `wrapText`
-- [ ] Break long words
-- [ ] Add `whiteSpace` / `textOverflow` to `Style`
-- [ ] Implement ellipsis in `renderContent`
-- [ ] Document `alignItems` on `Text`
-- [ ] Regression test
-- [ ] Update documentation
+- [x] Handle `\n` in `wrapText`
+- [x] Break long words
+- [x] Add `whiteSpace` / `textOverflow` to `Style`
+- [x] Implement ellipsis in `renderContent`
+- [x] Regression test
+- [x] Update documentation
 
 ---
 

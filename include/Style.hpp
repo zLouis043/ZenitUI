@@ -108,6 +108,18 @@ namespace ZenitUI
 		Auto
 	};
 
+	enum class WhiteSpace
+	{
+		Normal,
+		Nowrap
+	};
+
+	enum class TextOverflow
+	{
+		Visible,
+		Ellipsis
+	};
+
 	struct TextureRef
 	{
 		std::string name;
@@ -192,7 +204,7 @@ namespace ZenitUI
 //       but with an internal flag isFlexBasis that tells measure/arrange to handle width as basis
 //       but to not propagate it to the childrens as parent_w
 // TODO: add margin: auto, maybe mx: auto and my: auto, as a symmetrical grow.
-// TODO: make border-width a Spacing value instead of a uniform scalar Value, so we can change 
+// TODO: make border-width a Spacing value instead of a uniform scalar Value, so we can change
 //       size depending on the side.
 // TODO: better text wrapping.
 #define BUBBLE_STYLE_PROPS(X)                               \
@@ -241,7 +253,9 @@ namespace ZenitUI
 	X(Value, right, Value::autoSize())                      \
 	X(Value, bottom, Value::autoSize())                     \
 	X(FontStack, font, FontStack{})                         \
-	X(bool, wrap, false)
+	X(bool, wrap, false)                                    \
+	X(WhiteSpace, whiteSpace, WhiteSpace::Normal)           \
+	X(TextOverflow, textOverflow, TextOverflow::Visible)
 
 	inline bool isInheritedProp(std::string_view name)
 	{
@@ -606,7 +620,8 @@ namespace ZenitUI
 	using PropValue = std::variant<bool, float, Value, Color, Spacing, Align, Justify,
 								   TransitionFunction, Overflow, Position, ZIndex,
 								   std::string, FontStack, TextureRef,
-								   std::vector<FilterRef>, BoxShadow>;
+								   std::vector<FilterRef>, BoxShadow,
+								   WhiteSpace, TextOverflow>;
 
 	struct PropDesc
 	{

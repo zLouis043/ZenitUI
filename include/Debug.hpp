@@ -169,6 +169,30 @@ namespace ZenitUI::Debug
         return "?";
     }
 
+    inline std::string toString(WhiteSpace w)
+    {
+        switch (w)
+        {
+        case WhiteSpace::Normal:
+            return "normal";
+        case WhiteSpace::Nowrap:
+            return "nowrap";
+        }
+        return "unknown";
+    }
+
+    inline std::string toString(TextOverflow t)
+    {
+        switch (t)
+        {
+        case TextOverflow::Visible:
+            return "visible";
+        case TextOverflow::Ellipsis:
+            return "ellipsis";
+        }
+        return "unknown";
+    }
+
     inline std::string toString(TransitionFunction f)
     {
         switch (f)

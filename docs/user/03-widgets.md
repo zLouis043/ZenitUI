@@ -201,6 +201,59 @@ Text {
 
 Text is not interactive. It has no pseudo-states.
 
+### Wrapping, whitespace and ellipsis
+
+`Text` supports three independent aspects of text layout:
+
+1. **Wrapping** (`wrap: true`): break long content across multiple lines
+   to fit the available width.
+2. **Whitespace** (`white-space`): controls whether explicit `\n`
+   characters and automatic wrapping produce multiple lines.
+3. **Overflow** (`text-overflow`): how to render text that does not fit
+   on a single line.
+
+They compose, but only in one useful combination per case:
+
+| Use case | `wrap` | `white-space` | `text-overflow` |
+|---|---|---|---|
+| Paragraph (multi-line, wraps) | `true` | `normal` | `visible` |
+| Single-line, breaks on `\n` | `false` | `normal` | `visible` |
+| Truncate with `...` on one line | `false` | `nowrap` | `ellipsis` |
+| Truncate with `...` inside a wrapping paragraph | `true` | `nowrap` | `ellipsis` |
+
+**Explicit newlines.** With `white-space: normal` (the default), `\n`
+characters in the text produce a hard line break, independent of
+wrapping. Consecutive `\n` produce empty lines.
+
+**Long words without spaces.** When a single word is wider than the
+available width, it is broken across lines rather than overflowing.
+This applies to URLs, hashes, and any content without whitespace.
+
+**Ellipsis.** `text-overflow: ellipsis` is only meaningful when the
+text is laid out on a single line (`wrap: false` or
+`white-space: nowrap`). When the text overflows the available width,
+the rendered output is truncated to the longest prefix that fits,
+with `...` appended. Ellipsis is a **render-time** transformation: it
+does not change the layout box of the `Text` node. Two `Text` nodes
+with the same text and different `textOverflow` measure to the same
+size; only the drawn pixels differ.
+
+```cpp
+auto title = Text::create("A very long title that will be truncated");
+title->setWrap(false);
+title->getInlineBase().whiteSpace   = WhiteSpace::Nowrap;
+title->getInlineBase().textOverflow = TextOverflow::Ellipsis;
+title->size(Px(200), Auto());
+```
+
+**Cache note.** Toggling between wrapped and single-line modes at
+runtime (via `setWrap` or `white-space`) invalidates the internal
+measurement cache. No manual invalidation is needed.
+
+**Scope.** `white-space: pre` (preserve spaces and newlines without
+wrapping) is not supported. `text-overflow: clip` (truncate without
+`...`) is not supported. Both are tracked as future work.
+
 ### Notes
 
 - Intrinsic size is the measured text box. With `wrap`, it depends on the
