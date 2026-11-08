@@ -540,3 +540,58 @@ TEST(Layout_align, explicit_align_items_stretch_on_stack)
     CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
     CHECK_NEAR(child->getRect().height, 200.0f, 0.5f);
 }
+
+TEST(Layout_border, per_side_borders)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+    parent->getInlineBase().borderWidth =
+        Spacing(Px(5), Px(10), Px(15), Px(20));  // top, right, bottom, left
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // inner = {left=20, top=5, w=170, h=180}, child at (20, 5)
+    CHECK_NEAR(child->getRect().x, 20.0f, 0.5f);
+    CHECK_NEAR(child->getRect().y, 5.0f, 0.5f);
+}
+
+TEST(Layout_border, measure_with_per_side_borders)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->getInlineBase().borderWidth =
+        Spacing(Px(5), Px(10), Px(15), Px(20));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->getInlineBase().width  = Px(100);
+    child->getInlineBase().height = Px(100);
+    parent->addChild(child);
+
+    Vec2 sz = parent->measure(1000, 1000);
+
+    // w = 100 + (left 20 + right 10) = 130
+    // h = 100 + (top 5 + bottom 15)   = 120
+    CHECK_NEAR(sz.x, 130.0f, 1e-4);
+    CHECK_NEAR(sz.y, 120.0f, 1e-4);
+}
+
+TEST(Layout_border, uniform_border_renders_rounded)
+{
+    // Smoke test: no crash, no assert. Corner rounding is verified
+    // visually in examples/07_effects.
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(100), Px(100));
+    parent->getInlineBase().borderWidth = Px(2);
+    parent->getInlineBase().radius      = Px(8);
+    parent->getInlineBase().borderColor = Color{255, 0, 0, 255};
+    parent->measure(100, 100);
+    parent->arrange({0, 0, 100, 100});
+    CHECK_NEAR(parent->getRect().width, 100.0f, 0.5f);
+}

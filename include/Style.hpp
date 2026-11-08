@@ -236,7 +236,7 @@ namespace ZenitUI
 	X(std::string, effect, "")                              \
 	X(std::vector<FilterRef>, filters, {})                  \
 	X(Color, borderColor, Colors::Blank)                    \
-	X(Value, borderWidth, Value(0.0f))                      \
+	X(Spacing, borderWidth, Spacing())                      \
 	X(Value, radius, Value(0.0f))                           \
 	X(float, opacity, 1.0f)                                 \
 	X(float, scale, 1.0f)                                   \

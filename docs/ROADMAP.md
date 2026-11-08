@@ -1853,9 +1853,7 @@ horizontally. Regression test for the deprecated alias.
 **Problem:** `itemsH` / `itemsV` default to `Align::Start`. In CSS the
 initial value of `align-items` is `stretch`. The current default forces
 every layout to write `items-*: stretch` explicitly on the container,
-and has already caused bugs in this roadmap (cf. the DM Companion
-layout, where `#init_layout` and `#init_list_container` both required
-an explicit `items-*: stretch` to work).
+and has already caused bugs in this roadmap.
 
 **Expected:** a flex child inside an HStack / VStack stretches along
 the cross axis by default. `start` / `center` / `end` are written
@@ -1892,11 +1890,6 @@ collapsing to `0px` when there is not enough space. In CSS this does
 not happen: the default `min-height: auto` on a flex item resolves to
 the content's intrinsic size (for items with `overflow: visible`),
 forming a "floor" that flex shrink cannot cross.
-
-The symptom already appeared in this roadmap: `.tab-title` with
-`shrink: 1` collapses to `0px` inside DM Companion's
-`#iniziativa_root` card, and the user had to write `shrink: 0`
-explicitly to work around it.
 
 **Expected:** a flex item with `overflow: visible` never shrinks below
 its content size. To allow shrinking, the user sets `overflow: hidden`
@@ -2028,66 +2021,88 @@ active has no effect (the free space is already consumed by grow).
 
 ### 5.30 `borderWidth` as `Spacing` (per-side borders)
 
-**Status:** 🟡 planned — additive feature, touches the backend.
+**Status:** 🟢 done.
 
-**Problem:** `borderWidth` is a uniform scalar (`Value`) applied to all
-four sides. The reference HTML project (DM Companion) uses asymmetric
-borders in several places:
+**Problem:** `borderWidth` was a uniform `Value`, so per-side borders
+were impossible. The HTML reference (DM Companion) uses asymmetric
+borders in several places: `.nav-tab.active { border-bottom: 2px }`,
+`.toast { border-left: 4px }`, `.card h2 { border-bottom: 1px }`.
 
-- `.nav-tab.active { border-bottom: 2px }` (bottom only)
-- `.toast { border-left: 4px }` (left only)
-- `.card h2 { border-bottom: 1px }` (internal divider)
-
-In addition, the §1.13 fix (border subtracted in `arrangeInto`) is
-incomplete: `measure` does not subtract the border, so there is still
-a mismatch between the space available in `measure` and the space
-actually used in `arrange`. With asymmetric `borderWidth`, the
-mismatch would grow.
+Additionally, `measure` did not subtract the border from the content
+box (§1.13 fixed only `arrangeInto`), so nodes with asymmetric borders
+reported a wider size than they arranged.
 
 **Expected:**
 
-1. `borderWidth` becomes `Spacing` (top/right/bottom/left).
-2. `measure` subtracts `bw.left + bw.right` (or top/bottom) from
-   `innerW` (or `innerH`), and adds `bw.left + bw.right` to `finalW`
-   for `width: auto`.
-3. `renderChrome` draws four separate rectangles when borders are
-   asymmetric, and `strokeRoundedRect` when they are uniform (to keep
-   the rounded corners correct).
+1. `borderWidth` becomes `Spacing` (top / right / bottom / left).
+2. `measure` subtracts the border (per side) from the content box, and
+   adds it back when `width`/`height` is auto.
+3. `renderChrome` draws each side independently when the four sides
+   differ, and keeps rounded corners when they are uniform.
 
-**Fix:**
+**What landed:**
 
-1. `Style.hpp`: `X(Spacing, borderWidth, Spacing())`.
-2. `StyleAttr.hpp`: `border-width` (uniform), `border-top-width`,
-   `border-right-width`, `border-bottom-width`, `border-left-width`.
-   Shorthand `border-bottom` (no `-width`) maps to
-   `border-bottom-width`.
-3. `Measure.cpp`: `arrangeInto` and `measure` use `bw.left` etc.
-4. `Render.cpp` (`renderChrome`): if all four sides are equal,
-   `strokeRoundedRect`; otherwise, for each non-zero side, `fillRect`
-   the corresponding strip.
-5. `RaylibBackend`: add `fillBorder(Rect r, EdgeInsets sides, Color c)`
-   to `IRenderer` and implement it in `RaylibRenderer`.
+- `borderWidth: Spacing`. `border-width: Npx` keeps working and
+  applies uniformly (implicit `Spacing(Value)` conversion).
+- New CSS properties: `border-top-width`, `border-right-width`,
+  `border-bottom-width`, `border-left-width` and their shorthands
+  `border-top` / `border-right` / `border-bottom` / `border-left`
+  (which map to the `-width` only; `border-color` stays uniform).
+- `measure()` computes `innerW` / `innerH` as
+  `avail - padding - border` per side, and `finalW` / `finalH` as
+  `content + padding + border` per side.
+- `arrangeInto()` uses the per-side border (was `2 * bw`).
+- `IRenderer::fillBorder(Rect, EdgeInsets, Color)` is a new virtual
+  with a default implementation (up to 4 `fillRect` calls). Backends
+  do not need to override it.
+- `renderChrome` uses `fillBorder` when the four sides differ, and
+  falls back to `strokeRoundedRect` / `strokeRect` for uniform
+  borders, preserving rounded corners.
 
-**Breaking for users:** `border-width: 1px` keeps working (uniform
-`Spacing`). No breaking changes.
+**Breaking for users:** none. `border-width: 1px` is unchanged.
+`border-color` remains a single `Color`; per-side colors are tracked
+as future work.
 
-**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`, `Render.cpp`,
-`UIContext.hpp` (new `IRenderer::fillBorder`),
-`RaylibBackend.cpp` / `.hpp`, `Text.hpp` (`renderContent` subtracts
-the border), `docs/user/05-zstyle.md`, `docs/api/Style.md`.
+**Known issue (deferred):** `renderContent` of `Text`, `TextInput`,
+`Slider`, `ProgressBar`, `Checkbox` positions its content at
+`rect + padding`, ignoring the border. When `border-width > padding`,
+the content overlaps the border. This is a pre-existing issue for all
+widgets and is not addressed by this change. Tracked as future work
+(see §5.30a).
 
-**Tests:** a nav-tab with `border-bottom-width: 2px` renders the border
-only at the bottom; a card with `border-width: 10px` renders uniformly
-(correct rounded corners).
+**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`, `Layout.hpp`
+(`renderChrome`), `UIContext.hpp`, `TextInput.hpp`, `Debug.hpp`,
+`docs/user/05-zstyle.md`, `tests/test_layout.cpp`.
 
-- [ ] `borderWidth: Spacing` in `Style.hpp`
-- [ ] Parser for individual sides
-- [ ] `Measure.cpp` consistent (subtracts and adds the border)
-- [ ] `IRenderer::fillBorder` + Raylib implementation
-- [ ] `renderChrome` with `fillBorder` for asymmetric borders
-- [ ] `Text::renderContent` subtracts the border
-- [ ] Regression test (uniform border + per-side border)
-- [ ] Update documentation
+**Tests:** 3 new (`per_side_borders`, `measure_with_per_side_borders`,
+`uniform_border_renders_rounded`). The two existing border tests
+(`border_subtracted_from_content_box`, `border_added_to_auto_width`)
+keep passing unchanged because uniform `Px(N)` still converts to
+`Spacing(N)`.
+
+- [x] `borderWidth: Spacing` in `Style.hpp`
+- [x] Parser for individual sides
+- [x] `Measure.cpp` consistent (subtracts and adds the border per side)
+- [x] `IRenderer::fillBorder` + default impl
+- [x] `renderChrome` uses `fillBorder` for asymmetric borders
+- [x] Regression test (uniform border + per-side border)
+- [x] Update documentation
+
+#### 5.30a `renderContent` should offset by the border
+
+**Status:** 🟡 planned.
+
+`Text`, `TextInput`, `Slider`, `ProgressBar`, `Checkbox` draw their
+content at `rect + padding`, ignoring the border. With
+`border-width > padding`, content overlaps the border. Fix: each
+widget's `renderContent` should offset by `rect + border + padding`,
+and the available inner size should subtract both. This is a visual
+correctness bug for asymmetric borders on content widgets;
+
+- [ ] `Text::renderContent` offsets by border
+- [ ] `TextInput::renderContent` offsets by border
+- [ ] `Slider` / `ProgressBar` / `Checkbox` offset by border
+- [ ] Regression test
 
 ### 5.31 `Text` wrapping completeness
 

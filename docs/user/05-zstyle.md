@@ -462,10 +462,36 @@ height** (self-relative). Pivot is always the node's center.
 | `background-texture` | TextureRef | — |
 | `tint` | Color | `#FFFFFF` |
 | `border-color` | Color | `transparent` |
-| `border-width` | Value | `0` |
+| `border-width` | Spacing | `0` |
 | `radius` | Value | `0` |
 | `opacity` | float | `1` |
 | `box-shadow` | BoxShadow | — |
+
+`border-width` accepts the same 1/2/3/4-value syntax as `padding` and
+`margin`:
+
+```css
+.card { border-width: 1px; }                    /* uniform */
+.box  { border-width: 1px 2px; }                /* vertical | horizontal */
+.nav  { border-width: 1px 2px 3px; }            /* top | h | bottom */
+.edge { border-width: 1px 2px 3px 4px; }        /* top | right | bottom | left */
+```
+
+Per-side overrides are also available:
+
+```css
+.nav-tab.active {
+    border-bottom-width: 2px;
+    /* shorthand: border-bottom: 2px; */
+}
+.toast {
+    border-left-width: 4px;
+    /* shorthand: border-left: 4px; */
+}
+```
+
+`border-color` is still a single `Color` applied uniformly to all
+four sides. Per-side colors are tracked as a future enhancement.
 
 ```css
 .card {

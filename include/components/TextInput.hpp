@@ -440,7 +440,9 @@ namespace ZenitUI::UI
             {
                 Style cursorStyle = partStyle("cursor");
                 Color cursorColor = cursorStyle.color.is_set ? cursorStyle.color.value : textColor;
-                float cursorW = cursorStyle.borderWidth.is_set ? cursorStyle.borderWidth.value.resolveH(fs, fs) : 2.0f;
+                float cursorW = cursorStyle.borderWidth.is_set
+                                    ? cursorStyle.borderWidth.value.left.resolveH(fs, fs)
+                                    : 2.0f;
                 float cx = pos.x + r->measureText(f, text.substr(0, cursorPos), fs, sp).x;
                 r->fillRect({cx, pos.y, cursorW, fs}, cursorColor.withAlpha(op));
             }
