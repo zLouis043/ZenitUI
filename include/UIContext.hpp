@@ -27,6 +27,22 @@ namespace ZenitUI
 		virtual void strokeRect(Rect r, float thickness, Color c) = 0;
 		virtual void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) = 0;
 
+		virtual void fillBorder(Rect r, EdgeInsets sides, Color c)
+		{
+			if (sides.top > 0.0f)
+				fillRect({r.x, r.y, r.width, sides.top}, c);
+			if (sides.bottom > 0.0f)
+				fillRect({r.x, r.y + r.height - sides.bottom, r.width, sides.bottom}, c);
+			float innerH = r.height - sides.top - sides.bottom;
+			if (innerH > 0.0f)
+			{
+				if (sides.left > 0.0f)
+					fillRect({r.x, r.y + sides.top, sides.left, innerH}, c);
+				if (sides.right > 0.0f)
+					fillRect({r.x + r.width - sides.right, r.y + sides.top, sides.right, innerH}, c);
+			}
+		}
+
 		virtual void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) = 0;
 		virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) = 0;
 

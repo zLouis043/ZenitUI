@@ -702,13 +702,24 @@ namespace ZenitUI
 			}
 
 			Color bc = style.borderColor.withAlpha(op);
-			float bw = style.borderWidth.resolveH(maxRadius * 2.0f, maxRadius * 2.0f);
-			if (bc.a > 0 && bw > 0.0f)
+			const auto &bws = style.borderWidth;
+			float bwRef = maxRadius * 2.0f;
+			float bwl = bws.left.resolveH(bwRef, bwRef);
+			float bwr = bws.right.resolveH(bwRef, bwRef);
+			float bwt = bws.top.resolveH(bwRef, bwRef);
+			float bwb = bws.bottom.resolveH(bwRef, bwRef);
+
+			const bool anyBorder = (bwl > 0.0f || bwr > 0.0f || bwt > 0.0f || bwb > 0.0f);
+			const bool uniform = (bwl == bwr && bwr == bwb && bwb == bwt);
+
+			if (bc.a > 0 && anyBorder)
 			{
-				if (rPx > 0.0f && maxRadius > 0.0f)
-					r->strokeRoundedRect(rect, rPx, bw, bc);
+				if (uniform && rPx > 0.0f && maxRadius > 0.0f)
+					r->strokeRoundedRect(rect, rPx, bwl, bc);
+				else if (uniform)
+					r->strokeRect(rect, bwl, bc);
 				else
-					r->strokeRect(rect, bw, bc);
+					r->fillBorder(rect, EdgeInsets{bwt, bwr, bwb, bwl}, bc);
 			}
 		}
 

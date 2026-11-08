@@ -686,8 +686,48 @@ namespace ZenitUI
         }
         else if (key == "border-width")
         {
-            if (auto v = parseValueToken(val))
+            if (auto v = parseSpacingToken(val))
                 st.borderWidth = *v;
+            return true;
+        }
+        else if (key == "border-top-width" || key == "border-top")
+        {
+            if (auto v = parseValueToken(val))
+            {
+                Spacing bws = st.borderWidth.get_or(Spacing());
+                bws.top = *v;
+                st.borderWidth = bws;
+            }
+            return true;
+        }
+        else if (key == "border-right-width" || key == "border-right")
+        {
+            if (auto v = parseValueToken(val))
+            {
+                Spacing bws = st.borderWidth.get_or(Spacing());
+                bws.right = *v;
+                st.borderWidth = bws;
+            }
+            return true;
+        }
+        else if (key == "border-bottom-width" || key == "border-bottom")
+        {
+            if (auto v = parseValueToken(val))
+            {
+                Spacing bws = st.borderWidth.get_or(Spacing());
+                bws.bottom = *v;
+                st.borderWidth = bws;
+            }
+            return true;
+        }
+        else if (key == "border-left-width" || key == "border-left")
+        {
+            if (auto v = parseValueToken(val))
+            {
+                Spacing bws = st.borderWidth.get_or(Spacing());
+                bws.left = *v;
+                st.borderWidth = bws;
+            }
             return true;
         }
         else if (key == "radius")

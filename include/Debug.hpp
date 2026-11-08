@@ -317,9 +317,9 @@ namespace ZenitUI::Debug
         os << " padding=" << toString(cs.padding);
         os << " margin=" << toString(cs.margin);
         os << " radius=" << valueToString(cs.radius);
-        if (!cs.borderWidth.isAuto())
+        if (cs.borderWidth != Spacing())
         {
-            os << " borderW=" << valueToString(cs.borderWidth);
+            os << " borderW=" << toString(cs.borderWidth);
             os << " borderC=" << toString(cs.borderColor);
         }
         if (cs.opacity != 1.0f)
