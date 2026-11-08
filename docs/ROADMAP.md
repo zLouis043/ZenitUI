@@ -1881,50 +1881,58 @@ children stretch vertically.
 
 ### 5.27 `min-height: auto` / `min-width: auto` on flex items
 
-**Status:** 🟡 planned — additive feature, depends on §5.25 (clearer
-notion of "flex item").
+### 5.27 `min-height: auto` / `min-width: auto` on flex items
+
+**Status:** 🟢 done.
 
 **Problem:** a flex item with `shrink: 1` and no explicit `min-height`
-can shrink below the size of its content. The classic case is a title
-collapsing to `0px` when there is not enough space. In CSS this does
-not happen: the default `min-height: auto` on a flex item resolves to
-the content's intrinsic size (for items with `overflow: visible`),
-forming a "floor" that flex shrink cannot cross.
+could shrink below its own content size. The typical symptom is a
+title or header collapsing to `0px` inside a constrained vertical
+container, which then shifts the sibling content upward and makes the
+title disappear.
+
+In CSS this does not happen: the default `min-height: auto` on a flex
+item resolves to the content's intrinsic size (for items with
+`overflow: visible`), forming a floor that flex shrink cannot cross.
 
 **Expected:** a flex item with `overflow: visible` never shrinks below
-its content size. To allow shrinking, the user sets `overflow: hidden`
-(or `scroll` / `auto`) or `min-height: 0` explicitly.
+its content size. To allow shrinking, the user sets
+`overflow: hidden` (or `scroll` / `auto`) or an explicit
+`min-height: 0` on the item.
 
-**Fix:** entirely in the four `arrange*Flow` functions. `measure` is
-not touched — it already reports the natural content size, which is
-exactly the floor we want. In `arrangeVerticalFlow` and
-`arrangeHorizontalFlow`, replace the `minH` / `minW` computation:
+**What landed:**
 
-```cpp
-float minH;
-if (cst.minHeight.isAuto()) {
-    minH = (cst.overflowY == Overflow::Visible) ? c->measuredSize.y : 0.0f;
-} else {
-    minH = cst.minHeight.resolveV(inner.width, inner.height);
-}
-```
+- New helper `resolveFlexMin` in `Measure.cpp` centralises the
+  resolution: explicit min wins; otherwise auto resolves to the
+  content size for `overflow: visible`, and to 0 for any other
+  overflow value.
+- `arrangeVerticalFlow` and `arrangeHorizontalFlow` use it for the
+  main-axis floor (`minH` in VStack, `minW` in HStack).
+- `arrangeStackFlow` and `arrangeWrapFlow` are unchanged. Stack is a
+  free-positioning container where "content size" is not a
+  CSS-equivalent concept, and wrap has no shrink on the main axis.
+- Cross-axis floor (`minW` in VStack, `minH` in HStack) is unchanged.
+  It already had a `min(availCross, maxCross)` clamp; adding the
+  content floor there is scope for a follow-up if a concrete case
+  appears.
 
-Idem for `minW` with `cst.overflowX` and `c->measuredSize.x` in the
-horizontal flow, the stack flow, and the wrap flow.
+**Breaking for users:** callers no longer need `shrink: 0` on items
+that should keep their content size. Layouts that relied on an item
+collapsing to 0 with `overflow: visible` must set `overflow: hidden`
+or `min-height: 0` explicitly.
 
-**Files:** `Measure.cpp` (the four `arrange*Flow` functions).
+**Files:** `Measure.cpp`, `docs/user/05-zstyle.md`,
+`tests/test_layout.cpp`.
 
-**Tests:** VStack with a header `height: 64px` and content `grow: 1`,
-total height 100px. The header must stay at 64px (shrink not applied
-because of `min-height: auto`). With `overflow-y: auto` on the header
-instead, it must be allowed to shrink.
+**Tests:** 3 new (`min_height_auto_prevents_collapse`,
+`min_height_auto_respects_overflow_hidden`,
+`min_width_auto_prevents_collapse`).
 
-- [ ] Apply the floor in `arrangeVerticalFlow`
-- [ ] Apply the floor in `arrangeHorizontalFlow`
-- [ ] Apply the floor in `arrangeStackFlow`
-- [ ] Apply the floor in `arrangeWrapFlow`
-- [ ] Regression test (VStack + header, HStack + side panel)
-- [ ] Update `docs/user/05-zstyle.md`
+- [x] Add `resolveFlexMin` helper in `Measure.cpp`
+- [x] Use it in `arrangeVerticalFlow`
+- [x] Use it in `arrangeHorizontalFlow`
+- [x] Tests (vertical floor, horizontal floor, `overflow: hidden` override)
+- [x] Document the default and the overflow rule in §4.1
 
 ### 5.28 `flex: N` shorthand
 

@@ -13,6 +13,25 @@ namespace ZenitUI
 		return {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
 	}
 
+	// Resolve the effective minimum cross-axis size for a flex item.
+	// CSS default: min-height/min-width auto resolves to the content size
+	// when overflow is visible, and to 0 otherwise. An explicit value
+	// overrides the auto rule.
+	inline float resolveFlexMin(const ComputedStyle &cst,
+								bool isVerticalAxis,
+								float contentSize,
+								float parentW, float parentH)
+	{
+		const Value &mv = isVerticalAxis ? cst.minHeight : cst.minWidth;
+		const Overflow ov = isVerticalAxis ? cst.overflowY : cst.overflowX;
+
+		if (!mv.isAuto())
+			return isVerticalAxis ? mv.resolveV(parentW, parentH)
+								  : mv.resolveH(parentW, parentH);
+
+		return (ov == Overflow::Visible) ? contentSize : 0.0f;
+	}
+
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
 		if (!internal_.subtreeDirty &&
@@ -389,7 +408,9 @@ namespace ZenitUI
 			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
 				ch += freeSpace * (cst.shrink / totalShrink);
 
-			float minH = cst.minHeight.isAuto() ? 0.0f : cst.minHeight.resolveV(inner.width, inner.height);
+			float minH = resolveFlexMin(cst, /*isVerticalAxis=*/true,
+                            c->measuredSize.y,
+                            inner.width, inner.height);
 			float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 			ch = clampSafe(ch, minH, maxH);
 
@@ -473,7 +494,9 @@ namespace ZenitUI
 			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
 				cw += freeSpace * (cst.shrink / totalShrink);
 
-			float minW = cst.minWidth.isAuto() ? 0.0f : cst.minWidth.resolveH(inner.width, inner.height);
+			float minW = resolveFlexMin(cst, /*isVerticalAxis=*/false,
+                            c->measuredSize.x,
+                            inner.width, inner.height);
 			float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
 			cw = clampSafe(cw, minW, maxW);
 
