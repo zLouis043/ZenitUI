@@ -4129,48 +4129,43 @@ component in <code>include/components/VirtualView.hpp</code>.</p>
       factory, which cannot be expressed in markup</li>
 </ul>
 <h3 id="525-align-items-justify-content-breaking">5.25 <code>align-items</code> / <code>justify-content</code> (breaking)</h3>
-<p><strong>Status:</strong> 🟡 planned — breaking change, requires a dedicated branch.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> <code>itemsH</code> / <code>itemsV</code> are named after the geometric axis
 ("horizontal", "vertical"), but their meaning depends on the parent's
-layout type. In addition:</p>
-<ul>
-<li>On a <code>VStack</code> (main axis vertical), <code>itemsV</code> is <strong>never read</strong>: it is
-  a silent no-op.</li>
-<li>On an <code>HStack</code> (main axis horizontal), <code>itemsH</code> is <strong>never read</strong>.</li>
-<li>The property that actually does something is always the one
-  <em>opposite</em> to the parent type (<code>itemsH</code> on a VStack, <code>itemsV</code> on an
-  HStack), which is counterintuitive and has already caused
-  user-facing bugs in this roadmap (cf. §1.7 Dropdown, §5.14 Canvas).</li>
-</ul>
+layout type. On a <code>VStack</code> <code>itemsV</code> is never read; on an <code>HStack</code>
+<code>itemsH</code> is never read. The property that does something is always the
+one opposite to the parent type, which is counterintuitive and caused
+user-facing bugs (§1.7 Dropdown, §5.14 Canvas).</p>
 <p><strong>Expected:</strong> CSS semantics — two properties whose names do not depend
 on the parent:</p>
 <ul>
 <li><code>justify-content</code> → always the main axis.</li>
 <li><code>align-items</code> → always the cross axis.</li>
 </ul>
-<p><strong>Fix:</strong></p>
-<ol>
-<li>Replace <code>itemsH</code> / <code>itemsV</code> with a single <code>alignItems</code> of type
-   <code>Align</code>.</li>
-<li>Update <code>arrangeVerticalFlow</code> (uses <code>alignItems</code> for the cross axis,
-   currently reads <code>itemsH</code>) and <code>arrangeHorizontalFlow</code> (idem,
-   currently reads <code>itemsV</code>).</li>
-<li>Update <code>Text::renderContent</code>: there <code>itemsH</code> / <code>itemsV</code> are used for
-   the alignment of the text <em>inside</em> the rect, not of the children.
-   After the rename, use <code>alignItems</code> (documented as a leaf-widget
-   exception) or a dedicated <code>verticalAlign</code>.</li>
-<li>Update <code>Checkbox</code>, <code>Button</code>, <code>Dropdown</code>, <code>TextInput</code> for references
-   to <code>itemsH</code> / <code>itemsV</code>.</li>
-<li>Parser: <code>align-items</code> accepts a single value; <code>justify</code> becomes a
-   deprecated alias of <code>justify-content</code> (or is renamed directly).
-   <code>items-h</code> / <code>items-v</code> become deprecated aliases that emit a <code>Debug</code>
-   warning and fall back to the correct cross axis.</li>
-<li>Update every internal <code>.zs</code> / <code>.zm</code> (examples, tests).</li>
-</ol>
-<p><strong>Note on <code>alignH</code> / <code>alignV</code>:</strong> these are per-child overrides of the
-parent's <code>items*</code> (equivalent to CSS <code>align-self</code>). They can stay as-is
-in this round to limit scope, or be folded into a single <code>alignSelf</code>
-in a follow-up. Not required for the rename, but a natural follow-up.</p>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>align-items</code> and <code>vertical-align</code> are the canonical properties.</li>
+<li><code>items-h</code> / <code>items-v</code> are kept as deprecated aliases, resolved in
+  <code>StyleResolver::deriveAlignAliases</code> based on the parent layout type.
+  Removal is deferred to 1.0.</li>
+<li><code>deriveAlignAliases</code> handles both the self-level case (how a node
+  aligns its own children, e.g. a Stack with <code>align-items: center</code>)
+  and the child-level case (deprecated <code>items-h</code>/<code>items-v</code> on a leaf
+  acting as an align-self hint, preserved for compatibility).</li>
+<li>Stack defaults to <code>Start</code> for its children (free-positioning
+  container); VStack uses <code>align-items</code> for the cross axis; HStack
+  idem.</li>
+<li><code>Text::renderContent</code> uses <code>vertical-align</code> for vertical centering
+  of the text block (was <code>itemsV</code>). This is the only allowed semantic
+  mixing: <code>Text</code> is a leaf widget, so vertical alignment of the text
+  inside its rect is a widget-internal concern, not the parent's
+  cross-axis alignment.</li>
+<li>The parser emits a one-time warning when <code>items-h</code> or <code>items-v</code> are
+  used.</li>
+</ul>
+<p><strong>Note on <code>alignH</code> / <code>alignV</code>:</strong> these are per-child overrides, kept
+as-is in this round. They can be folded into a single <code>align-self</code> in
+a follow-up; not required for the rename.</p>
 <p><strong>Breaking for users:</strong> any <code>.zs</code> that uses <code>items-h</code> / <code>items-v</code>
 keeps working via the deprecated aliases, with a warning until it is
 migrated. Aliases are removed in 1.0.</p>
@@ -4181,20 +4176,23 @@ migrated. Aliases are removed in 1.0.</p>
 vertically; VStack with <code>align-items: stretch</code> → children stretch
 horizontally. Regression test for the deprecated alias.</p>
 <ul>
-<li>[ ] Add <code>alignItems</code> in <code>BUBBLE_STYLE_PROPS</code>, remove <code>itemsH</code> / <code>itemsV</code></li>
-<li>[ ] Update <code>arrangeVerticalFlow</code> / <code>arrangeHorizontalFlow</code></li>
-<li>[ ] Update <code>Text::renderContent</code> and other widgets</li>
-<li>[ ] Parser: <code>align-items</code>, deprecated aliases with warning</li>
-<li>[ ] Update internal <code>.zs</code> / <code>.zm</code></li>
-<li>[ ] Regression test + deprecated-alias test</li>
-<li>[ ] Document the leaf-widget exception: <code>Text::renderContent</code> uses
-      <code>align-items</code> for vertical text alignment (was <code>itemsV</code> /
-      <code>itemsH</code>) — this is the only allowed semantic mixing, because
+<li>[x] Add <code>alignItems</code> in <code>BUBBLE_STYLE_PROPS</code>; keep <code>itemsH</code>/<code>itemsV</code>
+      as deprecated aliases (removal in 1.0)</li>
+<li>[x] Update <code>arrangeVerticalFlow</code> / <code>arrangeHorizontalFlow</code> to read
+      <code>alignItems</code></li>
+<li>[x] Update <code>Text::renderContent</code> (via <code>verticalAlign</code>) and other
+      widgets</li>
+<li>[x] Parser: <code>align-items</code>, deprecated aliases with one-time warning</li>
+<li>[x] Update internal <code>.zs</code> / <code>.zm</code> (examples, tests)</li>
+<li>[x] Regression test + deprecated-alias test</li>
+<li>[x] Update user and API documentation</li>
+<li>[x] Document the leaf-widget exception: <code>Text::renderContent</code> uses
+      <code>vertical-align</code> for vertical alignment of the text block (was
+      <code>itemsV</code>); this is the only allowed semantic mixing, because
       <code>Text</code> has no children</li>
-<li>[ ] Update user and API documentation</li>
 </ul>
 <h3 id="526-align-items-stretch-as-default-breaking">5.26 <code>align-items: stretch</code> as default (breaking)</h3>
-<p><strong>Status:</strong> 🟡 planned — breaking change, same branch as §5.25.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> <code>itemsH</code> / <code>itemsV</code> default to <code>Align::Start</code>. In CSS the
 initial value of <code>align-items</code> is <code>stretch</code>. The current default forces
 every layout to write <code>items-*: stretch</code> explicitly on the container,
@@ -4215,11 +4213,11 @@ the old default.</p>
 add a specific test: HStack without an explicit <code>align-items</code> →
 children stretch vertically.</p>
 <ul>
-<li>[ ] Change the default in <code>BUBBLE_STYLE_PROPS</code></li>
-<li>[ ] Visually verify the examples (<code>examples/*</code>)</li>
-<li>[ ] Update <code>.zs</code> files that relied on the old default</li>
-<li>[ ] Regression test</li>
-<li>[ ] Update <code>docs/user/05-zstyle.md</code> (note on the CSS default)</li>
+<li>[x] Change the default in <code>BUBBLE_STYLE_PROPS</code></li>
+<li>[x] Visually verify the examples (<code>examples/*</code>)</li>
+<li>[x] Update <code>.zs</code> files that relied on the old default</li>
+<li>[x] Regression test</li>
+<li>[x] Update <code>docs/user/05-zstyle.md</code> (note on the CSS default)</li>
 </ul>
 <h3 id="527-min-height-auto-min-width-auto-on-flex-items">5.27 <code>min-height: auto</code> / <code>min-width: auto</code> on flex items</h3>
 <p><strong>Status:</strong> 🟡 planned — additive feature, depends on §5.25 (clearer

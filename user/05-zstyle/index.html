@@ -3113,7 +3113,7 @@ ignored — they never break the parse.</p>
 <tr>
 <td><code>align-items</code></td>
 <td>Align</td>
-<td><code>start</code></td>
+<td><code>stretch</code></td>
 </tr>
 <tr>
 <td><code>align-h</code></td>
@@ -3134,6 +3134,11 @@ removed in 1.0. They continue to work during migration:</p>
 <li><code>items-v</code> on the child of an <code>HStack</code> behaves like <code>align-items</code>.</li>
 <li>On any other parent they are silently ignored, as before.</li>
 </ul>
+<p><strong>Breaking change in this release.</strong> <code>align-items</code> now defaults to
+<code>stretch</code>, matching the CSS initial value. Previously the default was
+<code>start</code>. Layouts that relied on the old default should set
+<code>align-items: start</code> explicitly, or use <code>align-h</code> / <code>align-v</code> on the
+individual children.</p>
 <p>Loading a <code>.zstyle</code> that uses these names logs a one-time warning.</p>
 <p><code>Justify</code>: <code>start</code>, <code>center</code>, <code>end</code>, <code>space-between</code>.
 <code>Align</code>: <code>auto</code>, <code>start</code>, <code>center</code>, <code>end</code>, <code>stretch</code>.</p>
