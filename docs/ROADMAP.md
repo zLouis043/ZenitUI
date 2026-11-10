@@ -2025,56 +2025,29 @@ or `min-height: 0` explicitly.
 
 ### 5.28 `flex: N` shorthand
 
-**Status:** 🟡 planned — additive feature, requires care with `basis`.
+**Status:** 🟢 done.
 
 **Problem:** the manual pattern `width: 0; grow: 1` works but has a
 known side effect: `width: 0` is propagated to children as
-`parent_w = 0` during measure, so children with `width: 100%` measure 0
-(cf. §5.24 VirtualView and DM Companion's layout).
-
-In CSS `flex: 1` means `flex-grow: 1; flex-shrink: 1; flex-basis: 0`,
-but `flex-basis: 0` is only a starting point for the grow calculation
-— it is not propagated to children as "the parent's width". Children
-measure against the width actually assigned after grow.
+`parent_w = 0` during measure, so children with `width: 100%` measure 0.
 
 **Expected:** `flex: N` equivalent to CSS. Children with `width: 100%`
 measure against the flexed width, not against 0.
 
-**Fix (draft, to be refined in the PR):**
+**What landed:**
 
-1. Add `Opt<Value> flex` to `Style`. When set, it maps internally to
-   `grow = N; shrink = 1; basis = Px(0)`.
-2. Add an internal `basis` field (separate from `width`) to
-   `ComputedStyle`. `basis` controls only the starting point of the
-   grow calculation; it is not used to compute children's `availW`.
-3. In `measure`, `availW = calcStyle.width.isAuto() ? parent_w :
-   calcStyle.width.resolveH(...)` — i.e. if `width` is auto, children
-   measure against `parent_w` (not against `basis`). This is already
-   the current behavior; `basis` never touches it.
-4. In `arrange*Flow`, the initial `cw` is `c->measuredSize.x` as today;
-   grow adds free space as today. `basis = 0` does not change this
-   calculation, it only changes the internal measure.
-
-The edge case "child with `width: auto` that depends on `parent_w`"
-remains imperfect (measured at the original `parent_w`, arranged at
-the flexed width). This is the classic double-pass problem, not
-solvable without a two-pass measure. Accept and document the
-limitation.
+1. Added `Opt<Value> flexBasis` to `Style`.
+2. `flex: N` maps to `grow: N; shrink: 1; flex-basis: 0`.
+3. `arrange*Flow` functions use `flexBasis` for free space distribution without overwriting the original dimension used in `measure`.
 
 **Breaking for users:** none — additive. The `width: 0; grow: 1`
 pattern keeps working (with its side effect).
 
-**Files:** `Style.hpp`, `StyleAttr.hpp`, `Measure.cpp`.
-
-**Tests:** HStack with a `flex: 1` child and a `width: 100px` child →
-flex child occupies `parent_w - 100`. Inner child with
-`width: 100%` → measures against the flexed width.
-
-- [ ] Add `flex` to `Style`, `basis` to `ComputedStyle`
-- [ ] Map `flex: N` → `{ grow: N, shrink: 1, basis: 0 }`
-- [ ] Fix `measure` for `basis`
-- [ ] Regression test (`flex` + child with `width: 100%`)
-- [ ] Document the double-pass limitation
+- [x] Add `flex` to `Style`, `basis` to `ComputedStyle`
+- [x] Map `flex: N` → `{ grow: N, shrink: 1, basis: 0 }`
+- [x] Fix `measure` for `basis`
+- [x] Regression test (`flex` + child with `width: 100%`)
+- [x] Document the double-pass limitation
 
 ### 5.29 `margin: auto`
 

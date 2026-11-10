@@ -648,6 +648,31 @@ namespace ZenitUI
             (void)detail::parseOptFloatSV(val, st.shrink);
             return true;
         }
+        else if (key == "flex")
+        {
+            if (auto v = parseValueToken(val))
+            {
+                if (v->isNumber())
+                {
+                    st.grow = v->asNumber();
+                    st.shrink = 1.0f;
+                    st.flexBasis = Value::px(0.0f);
+                }
+                else
+                {
+                    st.flexBasis = *v;
+                    st.grow = 1.0f;
+                    st.shrink = 1.0f;
+                }
+            }
+            return true;
+        }
+        else if (key == "flex-basis")
+        {
+            if (auto v = parseValueToken(val))
+                st.flexBasis = *v;
+            return true;
+        }
         else if (key == "padding")
         {
             if (auto v = parseSpacingToken(val))

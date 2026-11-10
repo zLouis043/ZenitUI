@@ -391,7 +391,12 @@ namespace ZenitUI
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
-			totalFixedH += cst.margin.top.resolveV(inner.width, inner.height) + c->measuredSize.y + cst.margin.bottom.resolveV(inner.width, inner.height);
+
+			float baseH = cst.flexBasis.isAuto() ? c->measuredSize.y : cst.flexBasis.resolveV(inner.width, inner.height);
+			totalFixedH += cst.margin.top.resolveV(inner.width, inner.height) +
+						   baseH +
+						   cst.margin.bottom.resolveV(inner.width, inner.height);
+
 			totalGrow += cst.grow;
 			totalShrink += cst.shrink;
 			visibleChildren++;
@@ -435,7 +440,8 @@ namespace ZenitUI
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
-			float ch = c->measuredSize.y;
+			float baseH = cst.flexBasis.isAuto() ? c->measuredSize.y : cst.flexBasis.resolveV(inner.width, inner.height);
+			float ch = baseH;
 			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
 				ch += freeSpace * (cst.grow / totalGrow);
 			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
@@ -476,9 +482,12 @@ namespace ZenitUI
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
+
+			float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
 			totalFixedW += cst.margin.left.resolveH(inner.width, inner.height) +
-						   c->measuredSize.x +
+						   baseW +
 						   cst.margin.right.resolveH(inner.width, inner.height);
+
 			totalGrow += cst.grow;
 			totalShrink += cst.shrink;
 			visibleChildren++;
@@ -518,7 +527,8 @@ namespace ZenitUI
 			float mr = cst.margin.right.resolveH(inner.width, inner.height);
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
-			float cw = c->measuredSize.x;
+			float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
+			float cw = baseW;
 			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
 				cw += freeSpace * (cst.grow / totalGrow);
 			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)

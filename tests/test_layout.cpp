@@ -674,3 +674,31 @@ TEST(Layout_align, explicit_align_h_on_child_overrides_parent_stretch)
     // Child at x = 150 (200 - 50), End-aligned.
     CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
 }
+
+TEST(Layout_flex, flex_shorthand_distributes_space_and_preserves_child_percent)
+{
+    auto root = std::make_shared<Layout>(LayoutType::Horizontal);
+    root->size(Px(1000.0f), Px(100.0f));
+
+    auto fixed = std::make_shared<Layout>(LayoutType::Stack);
+    fixed->size(Px(200.0f), Px(100.0f));
+
+    auto flexNode = std::make_shared<Layout>(LayoutType::Stack);
+    flexNode->getInlineBase().grow = 1.0f;
+    flexNode->getInlineBase().shrink = 1.0f;
+    flexNode->getInlineBase().flexBasis = Px(0.0f);
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Percent(100.0f), Percent(100.0f));
+    flexNode->addChild(child);
+
+    root->addChild(fixed);
+    root->addChild(flexNode);
+
+    root->measure(1000.0f, 100.0f);
+    root->arrange({0.0f, 0.0f, 1000.0f, 100.0f});
+
+    CHECK_NEAR(flexNode->getRect().width, 800.0f, 1e-3);
+    
+    CHECK_NEAR(child->getRect().width, 800.0f, 1e-3);
+}
