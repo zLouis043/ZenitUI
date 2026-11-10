@@ -17,7 +17,7 @@ public:
         setFocusable(true);
         setKeyboardActivates(true);
         setStyleTag("Button");
-        getInlineBase().alignItems = Align::Center;
+        getInlineDefaults().alignItems = Align::Center;
     }
 
     std::string text() const

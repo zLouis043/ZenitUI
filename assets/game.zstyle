@@ -6,10 +6,6 @@
   font: calibri;
 }
 
-/* ============================================================
-   Tipi (selettori universali per widget)
-   ============================================================ */
-
 Toggle {
   width: 10vh;
   height: 5vh;
@@ -150,13 +146,13 @@ TextInput:hover::cursor {
 }
 
 .dropdown-trigger {
-  min-height: 5vh;          /* ~30px @600 — il bottone non può essere più basso del suo testo */
-  padding: 0.8vh 1vw;       /* respiro verticale e orizzontale */
-  items-h: start;           /* il testo parte da sinistra, non centrato */
+  min-height: 5vh;/
+  padding: 0.8vh 1vw;
+  items-h: start;
 }
 
 .dropdown-trigger .btn-text {
-  font-size: 2.4vh;         /* ~14.4px — comodo dentro 30px con padding */
+  font-size: 2.4vh;
 }
 
 .dropdown-item {
@@ -169,15 +165,10 @@ TextInput:hover::cursor {
     background: #3C3C46;
 }
 
-/* Ecco l'highlight dell'elemento selezionato! */
 .dropdown-item:checked {
     background: #3C3C46;
     color: #FFFF00;
 }
-
-/* ============================================================
-   Classi (varianti semantiche)
-   ============================================================ */
 
 .settings-panel {
   width: 100%;
@@ -188,6 +179,7 @@ TextInput:hover::cursor {
   gap: 3vh;
   border-color: #FDF900;
   border-width: 2px;
+  background: rgba(255,0,0,0.2)
 }
 
 .dialog-overlay {
@@ -257,9 +249,6 @@ TextInput:hover::cursor {
   font-size: 3vh;
 }
 
-/* ============================================================
-   Keyframes
-   ============================================================ */
 @keyframes pulse {
   0%   { scale: 1.00; }
   50%  { scale: 1.18; }
@@ -317,21 +306,22 @@ TextInput:hover::cursor {
   border-width: 1px; 
   border-color: #3A3A40;
   background-texture: bubble;
-  //filter: blur(4px);
 }
 
 .card-title { color: var(--primary); font-size: 3.5vh; margin: 0 0 1vh 0; }
 .card-desc  { color: #A0A0A0; font-size: 2.5vh; margin: 0 0 2vh 0; }
 
 .tab-btn {
-  background: transparent; justify: start;
-  padding: 2vh; radius: 6px;
+  background: transparent;
+  justify: start;
+  align-items: start;
+  padding: 2vh;
+  radius: 6px;
   transition: background 0.15s linear;
 }
 .tab-btn:hover { background: #3296FF40; }
 .tab-btn:pressed { background: #3296FF80; }
 
-/* Test per il Bubbling */
 .bubbling-box {
   width: 100%; height: auto;
   background: #3A3A45; padding: 5vh; radius: 8px;
@@ -340,10 +330,6 @@ TextInput:hover::cursor {
 }
 .bubbling-box:hover { background: #4A4A55; }
 .bubbling-box:pressed { background: #5A5A65; border-color: #FDF900; border-width: 2px; }
-
-/* ============================================================
-   Animazioni extra
-   ============================================================ */
 
 @keyframes breathe {
   0%   { opacity: 0.6; scale: 0.98; }
@@ -383,7 +369,8 @@ TextInput:hover::cursor {
 }
 
 .side-panel {
-  width: 50%;        /* era: width auto + grow 1 */
+  grow: 1;
+  min-width: 0;
   background: #2A2A32;
   radius: 8px;
   padding: 3vh;
@@ -422,4 +409,4 @@ Popup {
     .card-desc { color: #00FF00; }
 }
 
-.demo-content .card { filter: sepia(0.8); }
+// .demo-content .card { filter: sepia(0.8); }

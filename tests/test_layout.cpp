@@ -407,24 +407,6 @@ TEST(Layout_align, align_items_center_on_vstack)
     CHECK_NEAR(child->getRect().x, 75.0f, 0.5f);
 }
 
-TEST(Layout_align, deprecated_items_h_on_vstack_maps_to_align_items)
-{
-    freshTheme();
-    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
-    parent->size(Px(200), Px(200));
-
-    auto child = std::make_shared<Layout>(LayoutType::Stack);
-    child->size(Px(50), Px(50));
-    child->getInlineBase().itemsH = Align::Center;   // deprecated
-    parent->addChild(child);
-
-    parent->measure(200, 200);
-    parent->arrange({0, 0, 200, 200});
-
-    // Alias derivation: items-h on child of VStack -> alignItems = Center.
-    CHECK_NEAR(child->getRect().x, 75.0f, 0.5f);
-}
-
 TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
 {
     freshTheme();
@@ -444,25 +426,6 @@ TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
     // Start, child stays at its natural size.
     CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().height, 50.0f, 0.5f);
-}
-
-TEST(Layout_align, explicit_align_items_wins_over_deprecated_alias)
-{
-    freshTheme();
-    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
-    parent->size(Px(200), Px(200));
-
-    auto child = std::make_shared<Layout>(LayoutType::Stack);
-    child->size(Px(50), Px(50));
-    child->getInlineBase().alignItems = Align::End;    // new name
-    child->getInlineBase().itemsH     = Align::Center; // deprecated
-    parent->addChild(child);
-
-    parent->measure(200, 200);
-    parent->arrange({0, 0, 200, 200});
-
-    // align-items wins: End -> child at x = 150.
-    CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
 }
 
 TEST(Layout_align, default_is_stretch_on_vstack)
@@ -666,4 +629,48 @@ TEST(Layout_flex, min_width_auto_prevents_collapse)
     // width, neither collapses.
     CHECK(left->getRect().width >= 80.0f - 0.5f);
     CHECK(right->getRect().width >= 200.0f - 0.5f);
+}
+
+TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
+{
+    // itemsH is a deprecated alias for align-items, which controls how
+    // a node aligns its OWN children. It must NOT be interpreted as an
+    // align-self hint on the node itself. This was the bug introduced
+    // in §5.25 and fixed here.
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    child->getInlineBase().itemsH = Align::Center;
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // Parent has no explicit align-items -> Stretch default.
+    // Child does not derive alignH from itemsH -> stretched.
+    CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
+    CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
+}
+
+TEST(Layout_align, explicit_align_h_on_child_overrides_parent_stretch)
+{
+    // The correct way to align a single child is align-h / align-v
+    // (align-self), not align-items / items-h on the child.
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(50), Px(50));
+    child->getInlineBase().alignH = Align::End;   // align-self
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    // Child at x = 150 (200 - 50), End-aligned.
+    CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
 }
