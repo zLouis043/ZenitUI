@@ -467,38 +467,19 @@ namespace ZenitUI
 										   Align styleItemsH, Align styleItemsV,
 										   ComputedStyle &result)
 	{
-		const auto parent = node.getParent();
 		const LayoutType selfType = node.getLayoutType();
-		const LayoutType parentType = parent ? parent->getLayoutType()
-											 : LayoutType::Stack;
 		const bool hasH = itemsHSet || inlineBase.itemsH.is_set;
 		const bool hasV = itemsVSet || inlineBase.itemsV.is_set;
 		const Align hVal = inlineBase.itemsH.is_set ? inlineBase.itemsH.value : styleItemsH;
 		const Align vVal = inlineBase.itemsV.is_set ? inlineBase.itemsV.value : styleItemsV;
 
-		// --- Priority 1: explicit align-items on this node.
-		//     - Self-level: ComputedStyle::from already set it, nothing to do.
-		//     - Child-level (non-CSS compatibility): acts as an align-self
-		//       hint. This is what makes "align-items: End on a child of a
-		//       VStack" align the child. It also takes precedence over
-		//       itemsH/itemsV (tested by explicit_align_items_wins_over_*).
+		// Priority 1: explicit align-items wins. Nothing to derive.
 		if (alignItemsSet || inlineBase.alignItems.is_set)
-		{
-			if (parentType == LayoutType::Vertical && !inlineBase.alignH.is_set && result.alignH == Align::Auto)
-			{
-				result.alignH = result.alignItems;
-			}
-			else if (parentType == LayoutType::Horizontal && !inlineBase.alignV.is_set && result.alignV == Align::Auto)
-			{
-				result.alignV = result.alignItems;
-			}
 			return;
-		}
 
-		// --- Priority 2: deprecated items-h/items-v on this node.
-		//     Self-level: control how this node's children align.
-		//     Stack defaults to Start; VStack uses items-h (cross axis);
-		//     HStack uses items-v (cross axis).
+		// Priority 2: derive align-items from deprecated items-h / items-v
+		// on this node. Self-level only: how this node aligns ITS OWN
+		// children. There is no child-level derivation.
 		if (selfType == LayoutType::Stack)
 		{
 			if (hasH)
@@ -515,17 +496,6 @@ namespace ZenitUI
 		else if (selfType == LayoutType::Horizontal && hasV)
 		{
 			result.alignItems = vVal;
-		}
-
-		//     Child-level: deprecated items-h/items-v on a child acts as
-		//     align-self, matching pre-rename behavior.
-		if (parentType == LayoutType::Vertical && hasH && !inlineBase.alignH.is_set && result.alignH == Align::Auto)
-		{
-			result.alignH = hVal;
-		}
-		else if (parentType == LayoutType::Horizontal && hasV && !inlineBase.alignV.is_set && result.alignV == Align::Auto)
-		{
-			result.alignV = vVal;
 		}
 	}
 } // namespace ZenitUI

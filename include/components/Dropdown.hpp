@@ -139,7 +139,8 @@ namespace ZenitUI::UI
             button->cls("dropdown-trigger");
             button->setFocusable(false);
 
-            button->getInlineBase().width = Percent(100);
+            button->getInlineBase().alignH = Align::Stretch;
+            button->getInlineDefaults().minWidth = Px(120.0f);
             button->getInlineDefaults().height = VH(3.0f);
             button->getInlineDefaults().background = Color{40, 40, 45, 255};
             button->getInlineDefaults().radius = Px(6.0f);

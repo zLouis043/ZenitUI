@@ -403,11 +403,11 @@ TEST(Scroll_thumb, click_on_track_jumps_to_position)
     Env env;
     auto s = makeVScroll(env);
 
-    env.platform.pressLeft({100.0f, 80.0f});
+    env.platform.pressLeft({193.0f, 80.0f});
     env.frame(s.root);
 
     CHECK_NEAR(s.sv->getScrollY(), 350.0f, 1.0f);
 
-    env.platform.releaseLeft({100.0f, 80.0f});
+    env.platform.releaseLeft({193.0f, 80.0f});
     env.frame(s.root);
 }

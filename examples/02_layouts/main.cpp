@@ -80,6 +80,7 @@ int main()
         auto content = std::make_shared<Layout>(LayoutType::Vertical);
         content->getInlineBase().gap = Px(6);
         content->getInlineBase().grow = 1;
+        content->getInlineBase().alignItems = Align::Start;
 
         content->addChild(Box("A", ZenitUI::Color{200, 80, 80, 255}));
         content->addChild(Box("B", ZenitUI::Color{80, 200, 80, 255}));
@@ -106,7 +107,6 @@ int main()
         auto content = std::make_shared<Layout>(LayoutType::Horizontal);
         content->getInlineBase().gap = Px(6);
         content->getInlineBase().grow = 1;
-        content->getInlineBase().width = Percent(100);
 
         auto a = Box("grow 1", ZenitUI::Color{200, 80, 80, 255});
         auto b = Box("grow 2", ZenitUI::Color{80, 200, 80, 255});
@@ -128,7 +128,6 @@ int main()
         auto content = std::make_shared<Layout>(LayoutType::Horizontal);
         content->getInlineBase().gap = Px(6);
         content->getInlineBase().grow = 1;
-        content->getInlineBase().width = Percent(100);
         content->getInlineBase().justify = Justify::SpaceBetween;
 
         content->addChild(Box("A", ZenitUI::Color{200, 80, 80, 255}));

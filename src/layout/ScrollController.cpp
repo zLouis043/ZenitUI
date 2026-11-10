@@ -112,9 +112,20 @@ namespace ZenitUI
             {
                 bool handled = false;
 
+                const float MARGIN = 4.0f;
+                const float TRACK_W = 6.0f;
+                const float reservedH = canScrollX ? (TRACK_W + MARGIN) : 0.0f;
+                const float reservedV = canScrollY ? (TRACK_W + MARGIN) : 0.0f;
+
                 if (canScrollY)
                 {
                     Rect thumb = verticalThumb(node);
+                    Rect track = {
+                        rect.x + rect.width - TRACK_W - MARGIN,
+                        rect.y + MARGIN,
+                        TRACK_W,
+                        rect.height - MARGIN * 2.0f - reservedH};
+
                     if (thumb.contains(pointer.pos))
                     {
                         node.capturePointer();
@@ -123,10 +134,23 @@ namespace ZenitUI
                         state.velocity = {0.0f, 0.0f};
                         handled = true;
                     }
+                    else if (track.contains(pointer.pos))
+                    {
+                        float ratio = (rect.height > 0.0f) ? ((pointer.pos.y - rect.y) / rect.height) : 0.0f;
+                        state.offset.y = std::clamp(ratio * contentSize.y - rect.height * 0.5f, 0.0f, state.maxScroll.y);
+                        handled = true;
+                    }
                 }
+
                 if (!handled && canScrollX)
                 {
                     Rect thumb = horizontalThumb(node);
+                    Rect track = {
+                        rect.x + MARGIN,
+                        rect.y + rect.height - TRACK_W - MARGIN,
+                        rect.width - MARGIN * 2.0f - reservedV,
+                        TRACK_W};
+
                     if (thumb.contains(pointer.pos))
                     {
                         node.capturePointer();
@@ -135,25 +159,12 @@ namespace ZenitUI
                         state.velocity = {0.0f, 0.0f};
                         handled = true;
                     }
-                }
-
-                if (!handled && canScrollY && !canScrollX)
-                {
-                    float ratio = (rect.height > 0.0f)
-                                      ? ((pointer.pos.y - rect.y) / rect.height)
-                                      : 0.0f;
-                    state.offset.y = std::clamp(
-                        ratio * contentSize.y - rect.height * 0.5f,
-                        0.0f, state.maxScroll.y);
-                }
-                else if (!handled && canScrollX && !canScrollY)
-                {
-                    float ratio = (rect.width > 0.0f)
-                                      ? ((pointer.pos.x - rect.x) / rect.width)
-                                      : 0.0f;
-                    state.offset.x = std::clamp(
-                        ratio * contentSize.x - rect.width * 0.5f,
-                        0.0f, state.maxScroll.x);
+                    else if (track.contains(pointer.pos))
+                    {
+                        float ratio = (rect.width > 0.0f) ? ((pointer.pos.x - rect.x) / rect.width) : 0.0f;
+                        state.offset.x = std::clamp(ratio * contentSize.x - rect.width * 0.5f, 0.0f, state.maxScroll.x);
+                        handled = true;
+                    }
                 }
             }
         }

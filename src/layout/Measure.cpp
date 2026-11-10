@@ -17,29 +17,21 @@ namespace ZenitUI
 	// CSS default: min-height/min-width auto resolves to the content size
 	// when overflow is visible, and to 0 otherwise. An explicit value
 	// overrides the auto rule.
-	inline float resolveFlexMin(const ComputedStyle &cst,
-								bool isVerticalAxis,
-								float contentSize,
-								float parentW, float parentH)
+	inline float resolveFlexMin(const ComputedStyle &cst, bool isVerticalAxis,
+								float contentSize, float parentW, float parentH)
 	{
 		const Value &mv = isVerticalAxis ? cst.minHeight : cst.minWidth;
 		const Overflow ov = isVerticalAxis ? cst.overflowY : cst.overflowX;
-
 		if (!mv.isAuto())
 			return isVerticalAxis ? mv.resolveV(parentW, parentH)
 								  : mv.resolveH(parentW, parentH);
-
 		return (ov == Overflow::Visible) ? contentSize : 0.0f;
 	}
 
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
-		if (!internal_.subtreeDirty &&
-			parent_w == lastMeasureW_ &&
-			parent_h == lastMeasureH_)
-		{
+		if (!internal_.subtreeDirty && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
 			return measuredSize;
-		}
 		lastMeasureW_ = parent_w;
 		lastMeasureH_ = parent_h;
 
@@ -49,13 +41,12 @@ namespace ZenitUI
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
 			internal_.pendingTransition = 0;
 		}
-		ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this) : style_.currentStyle;
 
+		ComputedStyle calcStyle = internal_.pendingTransition ? style_.resolveFor(*this) : style_.currentStyle;
 		float pl = calcStyle.padding.left.resolveH(parent_w, parent_h);
 		float pr = calcStyle.padding.right.resolveH(parent_w, parent_h);
 		float pt = calcStyle.padding.top.resolveV(parent_w, parent_h);
 		float pb = calcStyle.padding.bottom.resolveV(parent_w, parent_h);
-
 		const auto &bws = calcStyle.borderWidth;
 		float bwl = bws.left.resolveH(parent_w, parent_h);
 		float bwr = bws.right.resolveH(parent_w, parent_h);
@@ -64,7 +55,6 @@ namespace ZenitUI
 
 		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
 		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
-
 		float innerW = std::max(0.0f, availW - pl - pr - bwl - bwr);
 		float innerH = std::max(0.0f, availH - pt - pb - bwt - bwb);
 
@@ -74,7 +64,6 @@ namespace ZenitUI
 			innerW = 1e9f;
 
 		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
-
 		float gapX = calcStyle.gap.resolveH(innerW, innerH);
 		float gapY = calcStyle.gap.resolveV(innerW, innerH);
 
@@ -94,9 +83,7 @@ namespace ZenitUI
 				float mb = cst.margin.bottom.resolveV(innerW, innerH);
 				float childW = cs.x + ml + mr;
 				float childH = cs.y + mt + mb;
-
 				float spaceNeeded = childW + (visibleInLine > 0 ? gapX : 0.0f);
-
 				if (visibleInLine > 0 && curX + spaceNeeded > innerW && innerW > 0.0f)
 				{
 					maxW = std::max(maxW, curX);
@@ -106,7 +93,6 @@ namespace ZenitUI
 					visibleInLine = 0;
 					spaceNeeded = childW;
 				}
-
 				if (visibleInLine > 0)
 					curX += gapX;
 				curX += childW;
@@ -114,37 +100,93 @@ namespace ZenitUI
 				visibleInLine++;
 			}
 			maxW = std::max(maxW, curX);
-
 			contentSize.x = maxW;
 			contentSize.y = curY + maxLineH;
+		}
+		else if (type == LayoutType::Horizontal)
+		{
+			float fixedMainSize = 0.0f;
+			float maxCrossSize = 0.0f;
+			float totalGrow = 0.0f;
+			int visibleChildren = 0;
+
+			for (auto &c : children)
+			{
+				c->initStyleIfNeeded();
+				if (c->internal_.pendingTransition)
+					c->style_.currentStyle = c->style_.resolveFor(*c);
+
+				const auto &cst = c->getStyle();
+				if (cst.position == Position::Absolute || c->isPortal())
+				{
+					c->measure(innerW, innerH);
+					continue;
+				}
+				visibleChildren++;
+				if (cst.grow > 0.0f && cst.width.isAuto() && innerW < 1e8f)
+				{
+					totalGrow += cst.grow;
+				}
+				else
+				{
+					Vec2 cs = c->measure(innerW, innerH);
+					float ml = cst.margin.left.resolveH(innerW, innerH);
+					float mr = cst.margin.right.resolveH(innerW, innerH);
+					float mt = cst.margin.top.resolveV(innerW, innerH);
+					float mb = cst.margin.bottom.resolveV(innerW, innerH);
+					fixedMainSize += cs.x + ml + mr;
+					maxCrossSize = std::max(maxCrossSize, cs.y + mt + mb);
+				}
+			}
+
+			float totalMainSize = fixedMainSize;
+			float totalGaps = (visibleChildren > 1) ? gapX * (visibleChildren - 1) : 0.0f;
+			float remW = std::max(0.0f, innerW - fixedMainSize - totalGaps);
+
+			if (totalGrow > 0.0f)
+			{
+				for (auto &c : children)
+				{
+					const auto &cst = c->getStyle();
+					if (cst.position == Position::Absolute || c->isPortal())
+						continue;
+					if (cst.grow > 0.0f && cst.width.isAuto() && innerW < 1e8f)
+					{
+						float ml = cst.margin.left.resolveH(innerW, innerH);
+						float mr = cst.margin.right.resolveH(innerW, innerH);
+						float mt = cst.margin.top.resolveV(innerW, innerH);
+						float mb = cst.margin.bottom.resolveV(innerW, innerH);
+						float shareW = remW * (cst.grow / totalGrow);
+						float childAvailW = std::max(0.0f, shareW - ml - mr);
+						Vec2 cs = c->measure(childAvailW, innerH);
+						totalMainSize += cs.x + ml + mr;
+						maxCrossSize = std::max(maxCrossSize, cs.y + mt + mb);
+					}
+				}
+			}
+
+			totalMainSize += totalGaps;
+			contentSize.x = std::max(contentSize.x, totalMainSize);
+			contentSize.y = std::max(contentSize.y, maxCrossSize);
 		}
 		else
 		{
 			float totalMainSize = 0.0f;
 			float maxCrossSize = 0.0f;
 			int visibleChildren = 0;
-
 			for (auto &c : children)
 			{
 				Vec2 cs = c->measure(innerW, innerH);
 				if (c->getStyle().position == Position::Absolute || c->isPortal())
 					continue;
-
 				const auto &cst = c->getStyle();
 				float ml = cst.margin.left.resolveH(innerW, innerH);
 				float mr = cst.margin.right.resolveH(innerW, innerH);
 				float mt = cst.margin.top.resolveV(innerW, innerH);
 				float mb = cst.margin.bottom.resolveV(innerW, innerH);
-
 				float childTotalW = cs.x + ml + mr;
 				float childTotalH = cs.y + mt + mb;
-
-				if (type == LayoutType::Horizontal)
-				{
-					totalMainSize += childTotalW;
-					maxCrossSize = std::max(maxCrossSize, childTotalH);
-				}
-				else if (type == LayoutType::Vertical)
+				if (type == LayoutType::Vertical)
 				{
 					totalMainSize += childTotalH;
 					maxCrossSize = std::max(maxCrossSize, childTotalW);
@@ -156,15 +198,7 @@ namespace ZenitUI
 				}
 				visibleChildren++;
 			}
-
-			if (type == LayoutType::Horizontal)
-			{
-				if (visibleChildren > 1)
-					totalMainSize += gapX * (visibleChildren - 1);
-				contentSize.x = std::max(contentSize.x, totalMainSize);
-				contentSize.y = std::max(contentSize.y, maxCrossSize);
-			}
-			else if (type == LayoutType::Vertical)
+			if (type == LayoutType::Vertical)
 			{
 				if (visibleChildren > 1)
 					totalMainSize += gapY * (visibleChildren - 1);
@@ -230,7 +264,6 @@ namespace ZenitUI
 		}
 	}
 
-	// TODO: push into the main repo
 	void Layout::arrangeInto(Rect space)
 	{
 		float pl = style_.currentStyle.padding.left.resolveH(space.width, space.height);
@@ -409,8 +442,8 @@ namespace ZenitUI
 				ch += freeSpace * (cst.shrink / totalShrink);
 
 			float minH = resolveFlexMin(cst, /*isVerticalAxis=*/true,
-                            c->measuredSize.y,
-                            inner.width, inner.height);
+										c->measuredSize.y,
+										inner.width, inner.height);
 			float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
 			ch = clampSafe(ch, minH, maxH);
 
@@ -438,13 +471,14 @@ namespace ZenitUI
 	{
 		float totalFixedW = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
 		int visibleChildren = 0;
-
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
-			totalFixedW += cst.margin.left.resolveH(inner.width, inner.height) + c->measuredSize.x + cst.margin.right.resolveH(inner.width, inner.height);
+			totalFixedW += cst.margin.left.resolveH(inner.width, inner.height) +
+						   c->measuredSize.x +
+						   cst.margin.right.resolveH(inner.width, inner.height);
 			totalGrow += cst.grow;
 			totalShrink += cst.shrink;
 			visibleChildren++;
@@ -455,7 +489,6 @@ namespace ZenitUI
 		float freeSpace = inner.width - totalFixedW;
 		float startX = inner.x;
 		float extraGap = 0.0f;
-
 		if (freeSpace > 0.0f && totalGrow <= 0.0f && visibleChildren > 0)
 		{
 			switch (style_.currentStyle.justify)
@@ -476,27 +509,23 @@ namespace ZenitUI
 		}
 
 		float curX = startX;
-
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
-
 			float ml = cst.margin.left.resolveH(inner.width, inner.height);
 			float mr = cst.margin.right.resolveH(inner.width, inner.height);
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
-
 			float cw = c->measuredSize.x;
 			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
 				cw += freeSpace * (cst.grow / totalGrow);
 			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
 				cw += freeSpace * (cst.shrink / totalShrink);
-
 			float minW = resolveFlexMin(cst, /*isVerticalAxis=*/false,
-                            c->measuredSize.x,
-                            inner.width, inner.height);
+										c->measuredSize.x,
+										inner.width, inner.height);
 			float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
 			cw = clampSafe(cw, minW, maxW);
 
