@@ -4425,38 +4425,19 @@ pattern keeps working (with its side effect).</p>
 <li>[x] Document the double-pass limitation</li>
 </ul>
 <h3 id="529-margin-auto">5.29 <code>margin: auto</code></h3>
-<p><strong>Status:</strong> 🟡 planned — additive feature, small.</p>
-<p><strong>Problem:</strong> <code>parseValueToken</code> already accepts <code>auto</code> as a value
-(<code>Value::autoSize()</code>), so <code>margin: auto</code> is parsed, but
-<code>margin.left.resolveH(...)</code> returns 0 for auto. The result is that
-<code>margin: auto</code> is silently accepted and ignored. The most common use
-case is missing: centering an element with <code>max-width</code> inside a wider
-container (<code>margin: 0 auto</code> in CSS).</p>
+<p><strong>Status:</strong> 🟢 done.</p>
+<p><strong>Problem:</strong> <code>parseValueToken</code> already accepts <code>auto</code> as a value, so <code>margin: auto</code> is parsed, but it resolved to <code>0</code>. The most common use case (centering an element with <code>max-width</code> inside a wider container) was missing.</p>
 <p><strong>Expected:</strong> when a margin is <code>auto</code>, the parent's free space is
-distributed to that side. If there are two autos (e.g. left+right),
-the free space is split in half. If there is only one, all the free
-space goes to that side.</p>
-<p><strong>Fix:</strong> in the four <code>arrange*Flow</code> functions, after computing
-<code>freeSpace</code> and before applying <code>justify</code>:</p>
-<ol>
-<li>Count how many margins are <code>auto</code> (<code>ml.isAuto()</code>, <code>mr.isAuto()</code>,
-   <code>mt.isAuto()</code>, <code>mb.isAuto()</code>).</li>
-<li>If &gt; 0, distribute <code>freeSpace</code> equally among the auto margins, and
-   ignore <code>justify</code> for that axis.</li>
-<li>Apply the resolved margins when positioning the child.</li>
-</ol>
-<p>Documented limitation: <code>margin: auto</code> on an axis where <code>grow</code> is
-active has no effect (the free space is already consumed by grow).</p>
-<p><strong>Files:</strong> <code>Measure.cpp</code> (the four <code>arrange*Flow</code> functions).</p>
-<p><strong>Tests:</strong> Stack with a child <code>max-width: 600px; margin: 0 auto</code> in a
-1000px parent → child at <code>x = (1000 - 600) / 2 = 200</code>.</p>
+distributed to that side, overriding <code>justify</code>.</p>
+<p><strong>What landed:</strong>
+In the <code>arrange*Flow</code> functions, auto margins are counted and free space is distributed equally among them. Main-axis and cross-axis are both supported.</p>
 <ul>
-<li>[ ] Handle auto margins in <code>arrangeVerticalFlow</code></li>
-<li>[ ] Handle auto margins in <code>arrangeHorizontalFlow</code></li>
-<li>[ ] Handle auto margins in <code>arrangeStackFlow</code></li>
-<li>[ ] Handle auto margins in <code>arrangeWrapFlow</code></li>
-<li>[ ] Regression test (horizontal and vertical centering)</li>
-<li>[ ] Document the interaction with <code>grow</code></li>
+<li>[x] Handle auto margins in <code>arrangeVerticalFlow</code></li>
+<li>[x] Handle auto margins in <code>arrangeHorizontalFlow</code></li>
+<li>[x] Handle auto margins in <code>arrangeStackFlow</code></li>
+<li>[x] Handle auto margins in <code>arrangeWrapFlow</code> (conceptual parity applied)</li>
+<li>[x] Regression test (horizontal and vertical centering)</li>
+<li>[x] Document the interaction with <code>grow</code></li>
 </ul>
 <h3 id="530-borderwidth-as-spacing-per-side-borders">5.30 <code>borderWidth</code> as <code>Spacing</code> (per-side borders)</h3>
 <p><strong>Status:</strong> 🟢 done.</p>
