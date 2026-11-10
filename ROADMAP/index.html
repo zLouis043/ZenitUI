@@ -4403,49 +4403,26 @@ or <code>min-height: 0</code> explicitly.</p>
 <li>[x] Document the default and the overflow rule in §4.1</li>
 </ul>
 <h3 id="528-flex-n-shorthand">5.28 <code>flex: N</code> shorthand</h3>
-<p><strong>Status:</strong> 🟡 planned — additive feature, requires care with <code>basis</code>.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> the manual pattern <code>width: 0; grow: 1</code> works but has a
 known side effect: <code>width: 0</code> is propagated to children as
-<code>parent_w = 0</code> during measure, so children with <code>width: 100%</code> measure 0
-(cf. §5.24 VirtualView and DM Companion's layout).</p>
-<p>In CSS <code>flex: 1</code> means <code>flex-grow: 1; flex-shrink: 1; flex-basis: 0</code>,
-but <code>flex-basis: 0</code> is only a starting point for the grow calculation
-— it is not propagated to children as "the parent's width". Children
-measure against the width actually assigned after grow.</p>
+<code>parent_w = 0</code> during measure, so children with <code>width: 100%</code> measure 0.</p>
 <p><strong>Expected:</strong> <code>flex: N</code> equivalent to CSS. Children with <code>width: 100%</code>
 measure against the flexed width, not against 0.</p>
-<p><strong>Fix (draft, to be refined in the PR):</strong></p>
+<p><strong>What landed:</strong></p>
 <ol>
-<li>Add <code>Opt&lt;Value&gt; flex</code> to <code>Style</code>. When set, it maps internally to
-   <code>grow = N; shrink = 1; basis = Px(0)</code>.</li>
-<li>Add an internal <code>basis</code> field (separate from <code>width</code>) to
-   <code>ComputedStyle</code>. <code>basis</code> controls only the starting point of the
-   grow calculation; it is not used to compute children's <code>availW</code>.</li>
-<li>In <code>measure</code>, <code>availW = calcStyle.width.isAuto() ? parent_w :
-   calcStyle.width.resolveH(...)</code> — i.e. if <code>width</code> is auto, children
-   measure against <code>parent_w</code> (not against <code>basis</code>). This is already
-   the current behavior; <code>basis</code> never touches it.</li>
-<li>In <code>arrange*Flow</code>, the initial <code>cw</code> is <code>c-&gt;measuredSize.x</code> as today;
-   grow adds free space as today. <code>basis = 0</code> does not change this
-   calculation, it only changes the internal measure.</li>
+<li>Added <code>Opt&lt;Value&gt; flexBasis</code> to <code>Style</code>.</li>
+<li><code>flex: N</code> maps to <code>grow: N; shrink: 1; flex-basis: 0</code>.</li>
+<li><code>arrange*Flow</code> functions use <code>flexBasis</code> for free space distribution without overwriting the original dimension used in <code>measure</code>.</li>
 </ol>
-<p>The edge case "child with <code>width: auto</code> that depends on <code>parent_w</code>"
-remains imperfect (measured at the original <code>parent_w</code>, arranged at
-the flexed width). This is the classic double-pass problem, not
-solvable without a two-pass measure. Accept and document the
-limitation.</p>
 <p><strong>Breaking for users:</strong> none — additive. The <code>width: 0; grow: 1</code>
 pattern keeps working (with its side effect).</p>
-<p><strong>Files:</strong> <code>Style.hpp</code>, <code>StyleAttr.hpp</code>, <code>Measure.cpp</code>.</p>
-<p><strong>Tests:</strong> HStack with a <code>flex: 1</code> child and a <code>width: 100px</code> child →
-flex child occupies <code>parent_w - 100</code>. Inner child with
-<code>width: 100%</code> → measures against the flexed width.</p>
 <ul>
-<li>[ ] Add <code>flex</code> to <code>Style</code>, <code>basis</code> to <code>ComputedStyle</code></li>
-<li>[ ] Map <code>flex: N</code> → <code>{ grow: N, shrink: 1, basis: 0 }</code></li>
-<li>[ ] Fix <code>measure</code> for <code>basis</code></li>
-<li>[ ] Regression test (<code>flex</code> + child with <code>width: 100%</code>)</li>
-<li>[ ] Document the double-pass limitation</li>
+<li>[x] Add <code>flex</code> to <code>Style</code>, <code>basis</code> to <code>ComputedStyle</code></li>
+<li>[x] Map <code>flex: N</code> → <code>{ grow: N, shrink: 1, basis: 0 }</code></li>
+<li>[x] Fix <code>measure</code> for <code>basis</code></li>
+<li>[x] Regression test (<code>flex</code> + child with <code>width: 100%</code>)</li>
+<li>[x] Document the double-pass limitation</li>
 </ul>
 <h3 id="529-margin-auto">5.29 <code>margin: auto</code></h3>
 <p><strong>Status:</strong> 🟡 planned — additive feature, small.</p>
