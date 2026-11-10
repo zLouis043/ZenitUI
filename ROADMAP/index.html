@@ -4544,18 +4544,18 @@ keep passing unchanged because uniform <code>Px(N)</code> still converts to
 <li>[x] Update documentation</li>
 </ul>
 <h4 id="530a-rendercontent-should-offset-by-the-border">5.30a <code>renderContent</code> should offset by the border</h4>
-<p><strong>Status:</strong> 🟡 planned.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><code>Text</code>, <code>TextInput</code>, <code>Slider</code>, <code>ProgressBar</code>, <code>Checkbox</code> draw their
 content at <code>rect + padding</code>, ignoring the border. With
 <code>border-width &gt; padding</code>, content overlaps the border. Fix: each
-widget's <code>renderContent</code> should offset by <code>rect + border + padding</code>,
-and the available inner size should subtract both. This is a visual
-correctness bug for asymmetric borders on content widgets;</p>
+widget's <code>renderContent</code> offsets by <code>rect + border + padding</code>,
+and the available inner size subtracts both. This visually fixes
+asymmetric borders on content widgets.</p>
 <ul>
-<li>[ ] <code>Text::renderContent</code> offsets by border</li>
-<li>[ ] <code>TextInput::renderContent</code> offsets by border</li>
-<li>[ ] <code>Slider</code> / <code>ProgressBar</code> / <code>Checkbox</code> offset by border</li>
-<li>[ ] Regression test</li>
+<li>[x] <code>Text::renderContent</code> offsets by border</li>
+<li>[x] <code>TextInput::renderContent</code> offsets by border</li>
+<li>[x] <code>Slider</code> / <code>ProgressBar</code> / <code>Checkbox</code> offset by border</li>
+<li>[x] Regression test</li>
 </ul>
 <h3 id="531-text-wrapping-completeness">5.31 <code>Text</code> wrapping completeness</h3>
 <p><strong>Status:</strong> 🟡 planned — bug fix + enhancement.</p>
