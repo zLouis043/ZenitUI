@@ -1892,6 +1892,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#49-filter-layer-pipeline-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9 Filter layer pipeline performance
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2572,7 +2583,8 @@ pending, and what's blocking.</p>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
 <p>Last updated: after §5.24 (VirtualView) and §4.8 (Style resolution
-caching + reverse dependency).</p>
+caching + reverse dependency); §4.9 (filter layer pipeline performance)
+expanded into a full proposal.</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -3410,6 +3422,104 @@ framework code.</p>
 - <code>system.frame.mixed200</code>: 181 → 158 µs
 - <code>micro.tickImperative.100</code>: 72 → 63 µs
 - <code>system.frame.classChange.1000</code> (new): ~2200 µs pre-opt → 820 µs</p>
+<h3 id="49-filter-layer-pipeline-performance">4.9 Filter layer pipeline performance</h3>
+<p><strong>Status:</strong> 🟡 proposed — design in
+<a href="../architecture/PROPOSALS/#proposal-9--filter-layer-pipeline-performance">PROPOSALS.md, Proposal 9</a>.</p>
+<p><strong>Severity:</strong> high — severe FPS drops on animated or scrolling nodes
+with <code>filter:</code>; the slowdown is much larger than the extra shader
+passes alone would explain.</p>
+<p><strong>Location:</strong> <code>src/layout/Render.cpp</code> (<code>Layout::drawLayer</code>),
+<code>src/layout/FilterRegistry.cpp</code>, <code>backends/raylib/RaylibBackend.cpp</code>
+(<code>createTarget</code>, <code>pushTarget</code>, <code>drawTarget</code>), <code>include/Layout.hpp</code>
+(<code>layerTarget_</code>, <code>layerScratch_</code>, <code>layerSeparable_</code>).</p>
+<p><strong>Problem (measured on the mock backend, no GPU involved, <code>master</code>
+at <code>b2c1046</code>).</strong> The filter
+region is <code>transformed rect ∩ clip</code>. Whenever its size changes,
+<code>drawLayer</code> destroys and recreates <strong>all three</strong> layer targets. Over
+60 frames, with a 200×200 filtered node:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th style="text-align: right;">targets created</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>static, <code>blur</code></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td><code>scale</code> 1.0 → 1.15, <code>blur + drop-shadow</code></td>
+<td style="text-align: right;">45</td>
+</tr>
+<tr>
+<td><code>rotation</code> +3°/frame, <code>blur</code></td>
+<td style="text-align: right;">165</td>
+</tr>
+<tr>
+<td>sliding across the viewport edge, <code>blur</code></td>
+<td style="text-align: right;">177</td>
+</tr>
+</tbody>
+</table>
+<p>Also measured: a single <code>drop-shadow</code> allocates 3 targets (needs 1); 50
+static <code>blur + drop-shadow</code> cards keep 150 targets alive and issue 150
+<code>pushTarget</code> calls per frame. The CPU side of the filter path is
+<strong>not</strong> the bottleneck (~0.5–0.7 µs per filtered card).</p>
+<p><strong>Suspected, not yet measured on a real GPU:</strong> each Raylib target
+includes an unused depth renderbuffer; every <code>pushTarget</code> /
+<code>popTarget</code> flushes the draw batch, switches FBO and clears the whole
+target; no filtered result is cached across frames; the blur is 9 taps
+at full resolution.</p>
+<p><strong>Plan.</strong> Seven independent steps, in this order. Step 0 comes first on
+purpose: it confirms or corrects the "suspected" list above on real
+hardware before the later steps are built.</p>
+<ul>
+<li>[ ] <strong>0.</strong> <code>RenderStats</code> (targets created / destroyed / live,
+      <code>pushTarget</code> calls, filter passes) incremented by the core, a
+      <code>Debug</code> dump, and an on-screen overlay in an example</li>
+<li>[ ] <strong>a.</strong> Lazy per-kind allocation: scratch only for chains of 2+
+      filters, separable intermediate only when a <code>Separable</code> filter is
+      present</li>
+<li>[ ] <strong>b.</strong> Bucketed target sizes (round up to 64 px) with
+      <code>Feature::TargetSubRect</code> and <code>IRenderer::drawTarget(t, src, dst, tint)</code>;
+      exact-size fallback for backends without it</li>
+<li>[ ] <strong>c.</strong> Shared <code>TargetPool</code> on <code>UIContext</code> (acquire / release in
+      <code>drawLayer</code>, trim after a grace period); remove the three layer
+      targets from <code>Layout</code> and from <code>~Layout</code></li>
+<li>[ ] <strong>d.</strong> Raylib hygiene: colour-only framebuffers, no by-value copy
+      of the clip / transform stacks in <code>pushTarget</code>, cached uniform
+      locations, no <code>std::string</code> allocation in <code>getEffect</code> on the hot
+      path</li>
+<li>[ ] <strong>e.</strong> (Optional) <code>FilterDef::downscale</code> for separable filters;
+      opt-in, built-in <code>blur</code> stays at 1 until decided</li>
+<li>[ ] <strong>f.</strong> Tests and benchmarks: static / scale / rotation / clip
+      sweeps, lazy-allocation counts, pool bound with 50 cards, nested
+      layers, fallback backend, <code>FilterContext::texSize</code>, Raylib readback
+      for the sub-rect Y flip; <code>system.frame.filtered50.*</code> benchmarks</li>
+<li>[ ] <strong>g.</strong> (Optional, higher risk) opt-in layer cache with a
+      <code>paintDirty</code> bit — decided only after steps 0–c are measured; if
+      they are enough, record it as declined</li>
+</ul>
+<p><strong>Contract change.</strong> <code>FilterContext</code> gains <code>texSize</code> (the real size of
+the source texture). Custom filters that derive texel size from
+<code>dst.width</code> / <code>dst.height</code> must switch to <code>texSize</code>. The built-in
+filters and <code>assets/blur.fs</code> are updated by step b.</p>
+<p><strong>Docs to update when shipped.</strong></p>
+<ul>
+<li>[ ] <code>user/09-effects.md</code> §1.1 and §7.4 — they say <strong>two</strong> targets per
+      node, "allocated lazily"; the code allocates <strong>three</strong>, every time</li>
+<li>[ ] <code>internals/06-render-pipeline.md</code> — <code>drawLayer</code> section and
+      §13.2 ("Target caching": a node does <em>not</em> only reallocate when it
+      resizes — animation and clipping resize it too)</li>
+<li>[ ] <code>api/FilterRegistry.md</code>, <code>internals/09-backend.md</code>,
+      <code>internals/10-debug.md</code>, <code>internals/11-benchmarks.md</code></li>
+</ul>
+<p><strong>Open questions</strong> (full list in Proposal 9 §9.9): bucket size, trim
+grace period, blur edge behaviour with transparent padding, whether the
+real cost is allocation churn or fill rate / FBO switches (step 0
+answers this), and whether the layer cache is opt-in only.</p>
 <hr />
 <h2 id="phase-5-feature-completion">Phase 5 — Feature completion</h2>
 <p>Not blocking for beta, but needed for 1.0.</p>
