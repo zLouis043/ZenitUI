@@ -1,5 +1,26 @@
 #pragma once
 
+/**
+ * \file Popup.hpp
+ * \brief An anchored floating panel with close-on-outside and close-on-Escape.
+ *
+ * A `Popup` is a `Panel` subclass that:
+ *  - sets `portal = true` (draws and hit-tests above everything else);
+ *  - is hidden by default (`enabled = false`, `opacity = 0`);
+ *  - on open, sizes itself to its content's measured size and positions
+ *    itself adjacent to an anchor widget (or at a screen position);
+ *  - auto-flips above / below the anchor when there is not enough room;
+ *  - closes itself on outside-click or Escape when configured to do so.
+ *
+ * The popup never participates in the parent layout: its `arrange` override
+ * is a no-op, and it takes full ownership of its own rect via `onUpdate`.
+ *
+ * \note `openAbove` sets a flag but does not measure anything: the actual
+ *       positioning decision happens in `onUpdate` on the next frame, once
+ *       the content has been measured. This two-step design lets a popup
+ *       adapt to content that is only known after the first `measure` pass.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 #include "Layouts.hpp"
@@ -8,11 +29,24 @@
 namespace ZenitUI::UI
 {
 
+    /**
+     * \class Popup
+     * \brief A floating, anchored panel.
+     *
+     * Style tag: `"Popup"`. Portal by default. Content is whatever you pass
+     * to `setContent`.
+     */
     class Popup : public TLayout<Popup, Panel>
     {
     public:
         Popup() : TLayout<Popup, Panel>() {}
 
+        /**
+         * \brief Set the popup's content. Replaces any previous content.
+         *
+         * The content is added as a child of the popup; its measured size
+         * determines the popup's size on the next frame.
+         */
         void setContent(std::shared_ptr<Layout> content)
         {
             content_ = std::move(content);
@@ -20,6 +54,7 @@ namespace ZenitUI::UI
                 addChild(content_);
         }
 
+        /** \brief Open the popup just below \p anchor. */
         void openBelow(std::shared_ptr<Layout> anchor)
         {
             anchor_ = anchor.get();
@@ -27,6 +62,12 @@ namespace ZenitUI::UI
             openInternal();
         }
 
+        /**
+         * \brief Open the popup just above \p anchor.
+         *
+         * Sets the preferred direction; `onUpdate` will flip below if there
+         * is not enough room above.
+         */
         void openAbove(std::shared_ptr<Layout> anchor)
         {
             anchor_ = anchor.get();
@@ -34,6 +75,7 @@ namespace ZenitUI::UI
             openInternal();
         }
 
+        /** \brief Open the popup at an absolute screen position. */
         void openAt(Vec2 screenPos)
         {
             anchor_ = nullptr;
@@ -42,6 +84,12 @@ namespace ZenitUI::UI
             openInternal();
         }
 
+        /**
+         * \brief Close the popup, if it is open.
+         *
+         * Fades out via inline style transition, disables the popup, and
+         * fires `onClose`. No-op if already closed.
+         */
         void close()
         {
             if (!isOpen_)
@@ -55,17 +103,23 @@ namespace ZenitUI::UI
                 onClose();
         }
 
+        /** \brief `true` while the popup is visible. */
         bool isOpen() const { return isOpen_; }
 
-        bool closeOnClickOutside{true};
-        bool closeOnEscape{true};
-        float offsetBelow{4.0f};
-        std::function<void()> onOpen;
-        std::function<void()> onClose;
+        bool closeOnClickOutside{true};  ///< Close on any button press outside the popup.
+        bool closeOnEscape{true};        ///< Close on Escape.
+        float offsetBelow{4.0f};         ///< Gap between the anchor and the popup.
+        std::function<void()> onOpen;    ///< Fired after `open*`.
+        std::function<void()> onClose;   ///< Fired after `close`.
 
+        /** \brief No-op: the popup owns its rect via `onUpdate`. */
         void arrange(Rect) override { /* no-op */ }
 
     protected:
+        /**
+         * \brief Initialize the popup: portal, interactive, focusable,
+         *        block-raycast, hidden.
+         */
         void onBuild() override
         {
             setStyleTag("Popup");
@@ -79,6 +133,14 @@ namespace ZenitUI::UI
             setEnabled(false);
         }
 
+        /**
+         * \brief Reposition, resize, and close-on-outside / Escape.
+         *
+         * Runs every frame while open. Positions the popup based on the
+         * anchor's current rect (or `pos_` if opened with `openAt`), flips
+         * if necessary, and clamps to the viewport. Fires the configured
+         * close behaviours.
+         */
         void onUpdate(float) override
         {
             if (!isOpen_)
@@ -150,6 +212,10 @@ namespace ZenitUI::UI
         bool isOpen_{false};
         bool above_{false};
 
+        /**
+         * \brief Common open logic: enable, fade in, request focus, fire
+         *        `onOpen`.
+         */
         void openInternal()
         {
             isOpen_ = true;
@@ -164,6 +230,13 @@ namespace ZenitUI::UI
                 onOpen();
         }
 
+        /**
+         * \brief Compute the popup size from the content's measured size.
+         *
+         * If the content has not been measured yet (first frame after
+         * `setContent`), triggers a measurement with a large available box
+         * and uses the result. Padding is added on top of the content size.
+         */
         Vec2 computePopupSize()
         {
             if (!content_)
@@ -184,6 +257,16 @@ namespace ZenitUI::UI
         }
     };
 
+    /**
+     * \brief Convenience factory: a vertical context menu popup.
+     *
+     * Each item is a full-width, left-aligned button. Clicking an item
+     * closes the popup and fires its callback.
+     *
+     * \param items List of (label, callback) pairs. Empty labels produce
+     *              invisible buttons; use them for separators at your own
+     *              discretion (no special handling).
+     */
     inline std::shared_ptr<Popup> ContextMenu(std::vector<std::pair<std::string, std::function<void()>>> items)
     {
         auto popup = Popup::create();

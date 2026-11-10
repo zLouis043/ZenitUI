@@ -1,5 +1,26 @@
 #pragma once
 
+/**
+ * \file Debug.hpp
+ * \brief Debug-only inspection helpers (tree dump, style dump, theme dump).
+ *
+ * When `ZENITUI_DEBUG` is defined, this header provides real implementations
+ * of the dump functions. When it is not defined, the same symbols exist but
+ * are no-ops, so calling code does not need `#ifdef`s.
+ *
+ * Typical use:
+ * \code{.cpp}
+ * #include "Debug.hpp"
+ * // In a key handler:
+ * ZenitUI::Debug::dumpTree(root);
+ * ZenitUI::Debug::dumpStyle(*someNode);
+ * ZenitUI::Debug::dumpTheme();
+ * \endcode
+ *
+ * Output goes to a `std::ostream` (default `std::cerr`), so it can be
+ * redirected to a file or captured by a test.
+ */
+
 #include "Layout.hpp"
 #include "Theme.hpp"
 #include "Unit.hpp"
@@ -17,6 +38,7 @@
 namespace ZenitUI::Debug
 {
 
+    /** \brief Symbolic unit suffix for the given `Unit` (`"px"`, `"%"`, `"vw"`, …). */
     inline const char *unitName(Unit u)
     {
         switch (u)
@@ -41,6 +63,9 @@ namespace ZenitUI::Debug
         return "?";
     }
 
+    /**
+     * \brief Render a `Value` as a human-readable string.
+     */
     inline std::string valueToString(const Value &v)
     {
         if (v.isAuto())
@@ -276,6 +301,9 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
+    /**
+     * \brief Render a sparse `Style` as `field=value, field=value, …`.
+     */
     inline std::string styleToString(const Style &s)
     {
         std::ostringstream os;
@@ -305,6 +333,9 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
+    /**
+     * \brief Render a `ComputedStyle` as a compact one-line summary.
+     */
     inline std::string computedStyleToString(const ComputedStyle &cs)
     {
         std::ostringstream os;
@@ -362,6 +393,7 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
+    /** \brief Render a selector chain as a CSS-like string (`Button.primary:hover`). */
     inline std::string selectorToString(const ThemeRule &r)
     {
         std::ostringstream os;
@@ -401,6 +433,7 @@ namespace ZenitUI::Debug
         return os.str();
     }
 
+    /** \brief Render the node's interaction flags as `H P F C D` letters (empty → `"-"`). */
     inline std::string stateFlagsToString(const Layout &node)
     {
         std::string s;
@@ -417,6 +450,9 @@ namespace ZenitUI::Debug
         return s.empty() ? "-" : s;
     }
 
+    /**
+     * \brief Dump a node's tag, classes, state, rect, style and matching rules.
+     */
     inline void dumpStyle(const Layout &node, std::ostream &os = std::cerr)
     {
         os << "=== Node ===\n";
@@ -449,6 +485,10 @@ namespace ZenitUI::Debug
         }
     }
 
+    /**
+     * \brief Dump the subtree rooted at \p node, indented by depth.
+     * \param maxDepth Maximum recursion depth; `-1` for unlimited.
+     */
     inline void dumpTree(const Layout &node, std::ostream &os = std::cerr,
                          int maxDepth = -1, int depth = 0)
     {
@@ -476,6 +516,10 @@ namespace ZenitUI::Debug
             dumpTree(*c, os, maxDepth, depth + 1);
     }
 
+    /**
+     * \brief Dump the global theme: rule count, keyframe list, and every rule
+     *        with its specificity and style.
+     */
     inline void dumpTheme(std::ostream &os = std::cerr)
     {
         auto &theme = Theme::get();
@@ -506,6 +550,9 @@ namespace ZenitUI::Debug
         os << "\n";
     }
 
+    /**
+     * \brief Dump the well-known pseudo-elements that have at least one matching rule.
+     */
     inline void dumpParts(const Layout &node, std::ostream &os = std::cerr)
     {
         static const char *candidates[] = {
@@ -538,6 +585,7 @@ namespace ZenitUI::Debug
 namespace ZenitUI::Debug
 {
 
+    // No-op fallbacks. Kept as inline functions so the symbols always exist.
     inline void dumpStyle(const Layout &, std::ostream & = std::cerr) {}
     inline void dumpTree(const Layout &, std::ostream & = std::cerr, int = -1, int = 0) {}
     inline void dumpTheme(std::ostream & = std::cerr) {}

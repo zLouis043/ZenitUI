@@ -1,5 +1,10 @@
 #pragma once
 
+/**
+ * \file Unit.hpp
+ * \brief Length units and the `Value` expression AST used by the style system.
+ */
+
 #include "Common.hpp"
 #include "CoreTypes.hpp"
 #include "SmallVector.hpp"
@@ -7,6 +12,12 @@
 namespace ZenitUI
 {
 
+    /**
+     * \enum Unit
+     * \brief Unit of a single `Value::Term`.
+     *
+     * `Auto` is used as a sentinel: a `Value` with no terms is "auto".
+     */
     enum class Unit
     {
         Auto = -1,
@@ -19,6 +30,7 @@ namespace ZenitUI
         PH = 6
     };
 
+    /** \brief Operator used by a `Value` expression tree when `op != None`. */
     enum class ValueOp
     {
         None,
@@ -35,8 +47,26 @@ namespace ZenitUI
         Mod
     };
 
+    /**
+     * \struct Value
+     * \brief A length expression: either a sum of unit terms or an AST node.
+     *
+     * Two representations coexist:
+     *  - **Linear form**: `terms` holds a sum of `coeff * unit` contributions
+     *    (e.g. `50% + 10px`). Resolved in one pass by `resolveH`/`resolveV`.
+     *  - **AST form**: `op != None` and `args` holds the operands
+     *    (e.g. `clamp(0px, 50%, 100vw)`). Resolved recursively.
+     *
+     * `isAuto()` returns true when both `terms` is empty and `op == None`,
+     * which the layout system treats as "size to content".
+     *
+     * Arithmetic operators (`+`, `-`, `*`, `/`) preserve the representation:
+     * adding two linear values merges their term lists; adding anything to an
+     * AST node produces a new AST node.
+     */
     struct Value
     {
+        /** \brief One contribution to a linear `Value`. */
         struct Term
         {
             float coeff{0.0f};
@@ -53,7 +83,9 @@ namespace ZenitUI
         std::shared_ptr<std::vector<Value>> args;
 
         Value() = default;
+        /** \brief Construct a pixel value. */
         Value(float pixels) : terms{{pixels, Unit::Pixel}} {}
+        /** \brief Construct from an amount and a unit. */
         Value(float amount, Unit u)
         {
             if (u != Unit::Auto)
@@ -104,12 +136,17 @@ namespace ZenitUI
             return v;
         }
 
+        /** \brief `true` if the value has no terms and no AST node (CSS `auto`). */
         bool isAuto() const { return terms.empty(); }
+        /** \brief `true` if the value is a single term. */
         bool isSimple() const { return terms.size() == 1; }
+        /** \brief `true` if the value is a unitless number. */
         bool isNumber() const { return terms.size() == 1 && terms[0].unit == Unit::Number; }
+        /** \brief Return the scalar coefficient, or 0 if not a number. */
         float asNumber() const { return isNumber() ? terms[0].coeff : 0.0f; }
 
     private:
+        /// \brief Resolve argument \p idx of the AST in the given axis mode.
         float resolveArg(size_t idx, float pw, float ph, float autoV, int mode) const
         {
             if (!args || idx >= args->size())
@@ -124,6 +161,7 @@ namespace ZenitUI
             return a.resolveSelfV(pw, ph);
         }
 
+        /// \brief Evaluate the AST with the given operator.
         float resolveAST(float pw, float ph, float autoV, int mode) const
         {
             if (!args)
@@ -191,6 +229,9 @@ namespace ZenitUI
             }
         }
 public:
+        /**
+         * \brief Resolve the value along the horizontal axis.
+         */
         float resolveH(float parentW, float parentH, float autoValue = 0.0f) const
         {
             if (op != ValueOp::None)
@@ -230,6 +271,9 @@ public:
             return result;
         }
 
+        /**
+         * \brief Resolve the value along the vertical axis.
+         */
         float resolveV(float parentW, float parentH, float autoValue = 0.0f) const
         {
             if (op != ValueOp::None)
@@ -269,6 +313,9 @@ public:
             return result;
         }
 
+        /**
+         * \brief Resolve the value against the node's own size (horizontal axis).
+         */
         float resolveSelfH(float selfW, float selfH) const
         {
             if (op != ValueOp::None)
@@ -308,6 +355,9 @@ public:
             return result;
         }
 
+        /**
+         * \brief Resolve the value against the node's own size (vertical axis).
+         */
         float resolveSelfV(float selfW, float selfH) const
         {
             if (op != ValueOp::None)
@@ -347,6 +397,7 @@ public:
             return result;
         }
 
+        /** \brief Concatenate the term lists; falls back to an AST node if either side is an AST. */
         Value operator+(const Value &o) const
         {
             if (op != ValueOp::None || o.op != ValueOp::None)
@@ -368,6 +419,7 @@ public:
             return r;
         }
 
+        /** \brief Subtract the term lists; falls back to an AST node if either side is an AST. */
         Value operator-(const Value &o) const
         {
             if (op != ValueOp::None || o.op != ValueOp::None)
@@ -389,6 +441,7 @@ public:
             return r;
         }
 
+        /** \brief Negate all terms; wraps an AST node in `Mul(-1)`. */
         Value operator-() const
         {
             if (op != ValueOp::None)
@@ -407,6 +460,7 @@ public:
             return r;
         }
 
+        /** \brief Scale all terms by a scalar; wraps an AST node in `Mul(k)`. */
         Value operator*(float k) const
         {
             if (op != ValueOp::None)
@@ -425,6 +479,7 @@ public:
             return r;
         }
 
+        /** \brief Divide all terms by a scalar; `k == 0` is a no-op. */
         Value operator/(float k) const
         {
             if (k == 0.0f) return *this;
@@ -440,6 +495,9 @@ public:
             return (*this) * (1.0f / k);
         }
 
+        /**
+         * \brief Multiply two values, keeping the non-number operand's units.
+         */
         Value mulWith(const Value &o) const
         {
             if (op != ValueOp::None || o.op != ValueOp::None)
@@ -458,6 +516,7 @@ public:
             return *this;
         }
 
+        /** \brief Divide by \p o. Only a unitless divisor is applied; otherwise returns `*this`. */
         Value divWith(const Value &o) const
         {
             if (op != ValueOp::None || o.op != ValueOp::None)
@@ -485,6 +544,7 @@ public:
         }
         bool operator!=(const Value &o) const { return !(*this == o); }
 
+        /** \brief Collapse duplicate unit terms into one coefficient per unit. */
         void normalize()
         {
             float coeffs[7] = {0};
@@ -505,6 +565,8 @@ public:
             }
         }
     };
+
+    // ---- Factory helpers ----
 
     inline Value Auto() { return Value::autoSize(); }
     inline Value Px(float p) { return Value::px(p); }

@@ -1,5 +1,21 @@
 #pragma once
 
+/**
+ * \file StyleAttr.hpp
+ * \brief Parse a single CSS-like declaration (`key: value`) into a `Style`.
+ *
+ * Two entry points:
+ *  - `applyStyleAttr(st, key, value)`: the low-level dispatch, handles both
+ *    attribute-style markup (`width="50"`) and CSS declarations (`width: 50px`).
+ *  - `resolveUnresolvedProps(unresolved, customProps)`: late-binding of
+ *    `var(--name)` references, called from `StyleResolver::resolveFor` after
+ *    the cascade has resolved which custom properties are in scope.
+ *
+ * The `detail` namespace contains the `calc()`-style expression parser and a
+ * few small string helpers that are not part of the public API but are used
+ * by `applyStyleAttr`.
+ */
+
 #include "Common.hpp"
 #include "Logger.hpp"
 #include "CoreTypes.hpp"
@@ -14,8 +30,10 @@
 namespace ZenitUI
 {
 
+    /** \brief Internal helpers; not part of the public API. */
     namespace detail
     {
+        /** \brief Parse a float from a `string_view`. Returns `false` on failure. */
         inline bool parseFloatSV(std::string_view s, float &out)
         {
             if (s.empty())
@@ -24,6 +42,7 @@ namespace ZenitUI
             return ec == std::errc();
         }
 
+        /** \brief One token in a `calc()`-style expression. */
         struct CalcToken
         {
             enum class Kind
@@ -45,6 +64,9 @@ namespace ZenitUI
             std::string ident;
         };
 
+        /**
+         * \brief Split a `calc()`-style expression into tokens.
+         */
         inline std::vector<CalcToken> tokenizeCalc(std::string_view s)
         {
             std::vector<CalcToken> out;
@@ -136,6 +158,7 @@ namespace ZenitUI
             return out;
         }
 
+        /** \brief Parse a float into an `Opt<float>`. Sets `is_set` on success. */
         inline bool parseOptFloatSV(std::string_view s, Opt<float> &out)
         {
             if (s.empty())
@@ -148,6 +171,14 @@ namespace ZenitUI
             return true;
         }
 
+        /**
+         * \class CalcParser
+         * \brief Recursive-descent parser for `calc()`, `min()`, `max()`,
+         *        `clamp()`, `round()`, `floor()`, `ceil()`, `mod()`.
+         *
+         * Produces a `Value` AST. The parser does not resolve units — that
+         * happens later in `Value::resolveH/resolveV`.
+         */
         class CalcParser
         {
         public:
@@ -319,6 +350,9 @@ namespace ZenitUI
             }
         };
 
+        /**
+         * \brief Split a font family list respecting quoted names.
+         */
         inline FontStack parseFontStack(std::string_view raw)
         {
             FontStack out;
@@ -361,6 +395,10 @@ namespace ZenitUI
 
     } // namespace detail
 
+    /**
+     * \brief Parse a single `Value` token.
+     * \return `nullopt` on parse failure or unknown unit.
+     */
     inline std::optional<Value> parseValueToken(std::string_view s)
     {
         if (s.empty())
@@ -409,6 +447,10 @@ namespace ZenitUI
         return std::nullopt;
     }
 
+    /**
+     * \brief Parse a color token.
+     * \return `nullopt` on parse failure.
+     */
     inline std::optional<Color> parseColorToken(std::string_view s)
     {
         if (s == "white")
@@ -519,6 +561,10 @@ namespace ZenitUI
         return std::nullopt;
     }
 
+    /**
+     * \brief Parse a 1-4 value shorthand.
+     * \return `nullopt` if any value fails to parse.
+     */
     inline std::optional<Spacing> parseSpacingToken(std::string_view s)
     {
         std::vector<Value> vals;
@@ -594,6 +640,12 @@ namespace ZenitUI
         return std::nullopt;
     }
 
+    /**
+     * \brief Apply a single `key: value` declaration to \p st.
+     *
+     * \return `true` if the key was recognized, even if the value failed to
+     *         parse. Returns `false` for unknown keys.
+     */
     inline bool applyStyleAttr(Style &st, std::string_view key, std::string_view val)
     {
         if (key == "width")
@@ -970,6 +1022,9 @@ namespace ZenitUI
         return false;
     }
 
+    /**
+     * \brief Recursively substitute `var(--name)` references in \p v.
+     */
     inline std::string substituteVarRefs(
         std::string v,
         const std::unordered_map<std::string, std::string> &customProps)
@@ -1009,6 +1064,9 @@ namespace ZenitUI
         return v;
     }
 
+    /**
+     * \brief Resolve every pending `var(...)` declaration in \p unresolved.
+     */
     inline Style resolveUnresolvedProps(
         const std::unordered_map<std::string, std::string> &unresolved,
         const std::unordered_map<std::string, std::string> &customProps)

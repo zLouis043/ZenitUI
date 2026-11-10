@@ -1,13 +1,62 @@
 #pragma once
+
+/**
+ * \file TextInput.hpp
+ * \brief A single-line editable text field.
+ *
+ * The input is a `Stack` with a single text cursor (no child `Text` node).
+ * All visual is drawn directly by `renderContent`: the text, the cursor
+ * caret (blinking at 1 Hz), and the selection highlight.
+ *
+ * Editing model:
+ *  - The text is stored as a `std::string`; the cursor is a byte offset
+ *    (not a grapheme index). This is simple and correct for ASCII, but
+ *    multi-byte UTF-8 codepoints are treated as multiple "characters" —
+ *    arrows move by byte, backspace deletes one byte. Not Unicode-aware.
+ *  - Only printable ASCII (32..126) can be inserted; pasted text is
+ *    filtered to that range.
+ *
+ * Interaction:
+ *  - Click to place the cursor; double-click selects a word; triple-click
+ *    selects all.
+ *  - Drag to extend the selection.
+ *  - Shift+arrows extend the selection; Ctrl+A selects all.
+ *  - Ctrl+C/X/V: copy / cut / paste via `IPlatform` clipboard.
+ *  - Ctrl+Z/Y: undo / redo (50-step history).
+ *  - Enter: submits and releases focus; Escape: releases focus.
+ *  - Home / End: jump to start / end; Shift extends.
+ *
+ * \note This component dereferences `UIContext::platform` in `onUpdate`
+ *       (for `time()` and clipboard access) without a null check. If you
+ *       use `TextInput` in a headless test or without a platform backend,
+ *       you must set `UIContext::get().platform` to a valid mock, or the
+ *       first `onUpdate` after the field is focused will crash.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 #include <deque>
 
 namespace ZenitUI::UI
 {
+    /**
+     * \class TextInput
+     * \brief A single-line text editor.
+     *
+     * Style tag: `"TextInput"`. Focusable, interactive. Parts: `::selection`
+     * (selection background), `::cursor` (caret colour and width — the width
+     * comes from `borderWidth.left` if set).
+     *
+     * The intrinsic width is sized to roughly 12 "M" glyphs at the current
+     * font size, and the intrinsic height to `1.6 * fontSize`.
+     */
     class TextInput : public TLayout<TextInput>
     {
     public:
+        /**
+         * \brief Construct with initial text.
+         * \param initial Initial content. The cursor is placed at the end.
+         */
         TextInput(std::string initial = "") : TLayout<TextInput>(LayoutType::Stack), text(std::move(initial))
         {
             setInteractive(true);
@@ -25,6 +74,13 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /**
+         * \brief Replace the content and move the cursor to the end.
+         *
+         * Clamps the previous cursor position to the new size if it was past
+         * the end. Clears the selection. Marks the style as pending and
+         * pushes the change to the undo history.
+         */
         void setText(std::string t)
         {
             text = std::move(t);
@@ -34,10 +90,14 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
             saveHistory();
         }
+        /** \brief Current content. */
         const std::string &getText() const { return text; }
+        /** \brief Reset to empty content. */
         void clear() { setText(""); }
 
+        /** \brief Current cursor position in bytes from the start. */
         int getCursorPos() const { return cursorPos; }
+        /** \brief Move the cursor; clears the selection. */
         void setCursorPos(int pos)
         {
             cursorPos = std::clamp(pos, 0, (int)text.size());
@@ -45,16 +105,26 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Override the font used for measurement and rendering. */
         void setFont(FontHandle f)
         {
             defaultFont = f;
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Fired on every content change (typing, paste, delete, cut). */
         std::function<void(const std::string &)> onTextChanged;
+        /** \brief Fired on Enter; the field loses focus immediately after. */
         std::function<void(const std::string &)> onSubmit;
 
     protected:
+        /**
+         * \brief Intrinsic size: roughly 12 glyphs wide, `1.6 * fontSize` tall.
+         *
+         * Measures the `"M"` glyph to estimate the average character width.
+         * Falls back to `0.6 * fontSize` if the renderer is not available
+         * (headless tests).
+         */
         Vec2 computeIntrinsicSize(float, float) override
         {
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
@@ -67,6 +137,12 @@ namespace ZenitUI::UI
             return {std::max(120.0f, charW * 12.0f), fs * 1.6f};
         }
 
+        /**
+         * \brief Reset editing state when the field is disabled.
+         *
+         * Clears focus cache, repeat state, cursor blink, and selection. Does
+         * not clear the text.
+         */
         void onEnabledChanged(bool nowEnabled) override
         {
             if (!nowEnabled)
@@ -78,6 +154,24 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief The main per-frame edit loop.
+         *
+         * Sequence:
+         *  1. Refresh `hasFocusCache` and advance the cursor blink timer.
+         *  2. Handle pointer down: capture pointer, request focus, detect
+         *     double/triple click, set cursor from x position, start
+         *     selection.
+         *  3. Handle pointer drag while captured (clickCount == 1): move
+         *     cursor to follow pointer.
+         *  4. If not focused, clear repeat state and return.
+         *  5. Handle Ctrl/Cmd chords (A, C, X, V, Z, Y).
+         *  6. Handle typed characters (filter 32..126).
+         *  7. Handle key repeat for Backspace, Delete, Left, Right.
+         *  8. Handle Enter (submit + blur) and Escape (blur), Home, End.
+         *  9. If content changed, fire `onTextChanged`.
+         * 10. Update horizontal scroll so the cursor stays visible.
+         */
         void onUpdate(float dt) override
         {
             hasFocusCache = UIContext::get().hasFocus(this);
@@ -399,6 +493,15 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Draw selection, text, and cursor.
+         *
+         * The content is clipped to the inner rect (so overflowing text
+         * disappears rather than spilling out). Selection is drawn first,
+         * then the text, then the caret on top. The caret is hidden when
+         * there is an active selection (`selectionStart != cursorPos`) — this
+         * matches most native widgets.
+         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;
@@ -456,6 +559,15 @@ namespace ZenitUI::UI
         }
 
     private:
+        /**
+         * \brief Map a local x coordinate (relative to the node's left edge)
+         *        to the closest cursor byte index.
+         *
+         * O(n²) in the text length: for each candidate cursor position, it
+         * measures the prefix. Fine for short fields, slow for very long
+         * strings. A linear-time implementation would precompute the
+         * cumulative glyph widths.
+         */
         int cursorIndexFromX(float localX)
         {
             auto r = UIContext::get().renderer;
@@ -484,6 +596,7 @@ namespace ZenitUI::UI
             return best;
         }
 
+        /** \brief One snapshot of (text, cursor) for undo/redo. */
         struct HistoryState
         {
             std::string text;
@@ -492,6 +605,17 @@ namespace ZenitUI::UI
         std::deque<HistoryState> undoStack;
         std::deque<HistoryState> redoStack;
 
+        /**
+         * \brief Push the current state onto the undo stack.
+         *
+         * No-op if the top of the undo stack already has the same text (so
+         * typing many characters one at a time does not push dozens of
+         * entries — wait, it does: each char is a change, each change is a
+         * save. The dedup only helps for "setText called with same content").
+         *
+         * Caps the stack at 50 entries; older entries are discarded.
+         * Clears the redo stack.
+         */
         void saveHistory()
         {
             if (!undoStack.empty() && undoStack.back().text == text)
@@ -502,6 +626,7 @@ namespace ZenitUI::UI
             redoStack.clear();
         }
 
+        /** \brief Restore the previous state. No-op if already at the oldest. */
         void undo()
         {
             if (undoStack.size() > 1)
@@ -515,6 +640,7 @@ namespace ZenitUI::UI
             }
         }
 
+        /** \brief Re-apply the last undone state. No-op if the redo stack is empty. */
         void redo()
         {
             if (!redoStack.empty())
@@ -528,6 +654,14 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Extend the selection to the word surrounding the cursor.
+         *
+         * "Word" is a run of characters for which `std::isalnum` is true and
+         * which is not a space. Note that `isalnum` already returns false for
+         * space, so `&& text[...] != ' '` is redundant. Underscores are
+         * treated as word breaks (they are not alphanumeric).
+         */
         void selectWordAtCursor()
         {
             if (text.empty())
@@ -556,6 +690,7 @@ namespace ZenitUI::UI
         int clickCount{0};
         double lastClickTime{0.0};
 
+        /** \brief Repeat state for held keys (Backspace, Delete, Left, Right). */
         struct RepeatState
         {
             float holdTime{0.0f};

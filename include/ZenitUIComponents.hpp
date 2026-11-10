@@ -1,5 +1,10 @@
 #pragma once
 
+/**
+ * \file ZenitUIComponents.hpp
+ * \brief Aggregation header for all built-in UI widgets.
+ */
+
 #include "components/Layouts.hpp"
 #include "components/Text.hpp"
 #include "components/Button.hpp"

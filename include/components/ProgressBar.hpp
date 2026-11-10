@@ -1,14 +1,33 @@
 #pragma once
 
+/**
+ * \file ProgressBar.hpp
+ * \brief A horizontal progress bar.
+ *
+ * The visual is drawn directly by `renderContent`: a rounded track plus a
+ * rounded fill whose width is `innerW * value`. Theme rules can override
+ * both through the `::track` and `::fill` pseudo-elements.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 
 namespace ZenitUI::UI
 {
 
+    /**
+     * \class ProgressBar
+     * \brief A value-in-`[0, 1]` progress indicator.
+     *
+     * Style tag: `"ProgressBar"`. Default intrinsic size: `120 x max(16, 0.8*fontSize)`.
+     * Not interactive. Parts: `::track` (background), `::fill` (foreground).
+     */
     class ProgressBar : public TLayout<ProgressBar>
     {
     public:
+        /**
+         * \brief Construct with an initial value, clamped to `[0, 1]`.
+         */
         ProgressBar(float v = 0.0f) : TLayout<ProgressBar>(LayoutType::Stack), value(std::clamp(v, 0.0f, 1.0f))
         {
             setInteractive(false);
@@ -17,20 +36,36 @@ namespace ZenitUI::UI
             getInlineBase().radius = Px(4.0f);
         }
 
+        /** \brief Set the value, clamped to `[0, 1]`. */
         void setValue(float v)
         {
             value = std::clamp(v, 0.0f, 1.0f);
             internal_.pendingTransition = 1;
         }
+        /** \brief Current value in `[0, 1]`. */
         float getValue() const { return value; }
 
     protected:
+        /**
+         * \brief Default intrinsic size: `120 x max(16, 0.8 * fontSize)`.
+         *
+         * The height tracks the font size so that a progress bar sits nicely
+         * inside a text-heavy layout by default.
+         */
         Vec2 computeIntrinsicSize(float, float) override
         {
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             return {120.0f, std::max(16.0f, fs * 0.8f)};
         }
 
+        /**
+         * \brief Draw the track and the fill.
+         *
+         * The fill width is `innerW * value`, so a value of `0` or `1`
+         * produces a fully collapsed or fully filled fill respectively. The
+         * fill is skipped entirely below `0.5` pixel to avoid degenerate
+         * geometry on backends that dislike zero-width rectangles.
+         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;

@@ -1,14 +1,40 @@
 #pragma once
 
+/**
+ * \file Slider.hpp
+ * \brief A horizontal value slider in `[0, 1]`.
+ *
+ * Drawn entirely by `renderContent`: a rounded track, a rounded fill, and a
+ * circular knob. The three pieces can be styled independently through the
+ * `::track`, `::fill` and `::knob` pseudo-elements.
+ *
+ * Interaction model:
+ *  - Pointer: press-drag on the track moves the knob; the node captures the
+ *    pointer on the first frame the pointer is held down on it.
+ *  - Keyboard: when focused, `Left` / `Right` step by `5%`; `Shift` reduces
+ *    the step to `1%`.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 
 namespace ZenitUI::UI
 {
 
+    /**
+     * \class Slider
+     * \brief A `[0, 1]` slider with keyboard and pointer control.
+     *
+     * Style tag: `"Slider"`. Default intrinsic size: `120 x max(24, 1.2*fontSize)`.
+     * Parts: `::track`, `::fill`, `::knob`.
+     */
     class Slider : public TLayout<Slider>
     {
     public:
+        /**
+         * \brief Construct with an initial value.
+         * \param val Initial value; clamped to `[0, 1]` on construction.
+         */
         Slider(float val = 0.5f) : TLayout<Slider>(LayoutType::Stack), value(val)
         {
             setInteractive(true);
@@ -16,10 +42,21 @@ namespace ZenitUI::UI
             setStyleTag("Slider");
         }
 
+        /** \brief Fired whenever the value changes, with the new value in `[0, 1]`. */
         std::function<void(float)> onValueChanged = nullptr;
 
+        /** \brief Current value in `[0, 1]`. */
         float getValue() const { return value; }
 
+        /**
+         * \brief Set the value and optionally fire `onValueChanged`.
+         * \param v      New value; clamped to `[0, 1]`.
+         * \param notify When `true` (default), fires `onValueChanged` if the
+         *               value actually changed.
+         *
+         * Setting the same value is a no-op: no callback, no pending
+         * transition. This makes binding idempotent.
+         */
         void setValue(float v, bool notify = true)
         {
             float clamped = std::clamp(v, 0.0f, 1.0f);
@@ -32,12 +69,23 @@ namespace ZenitUI::UI
         }
 
     protected:
+        /**
+         * \brief Default intrinsic size: `120 x max(24, 1.2*fontSize)`.
+         */
         Vec2 computeIntrinsicSize(float, float) override
         {
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             return {120.0f, std::max(24.0f, fs * 1.2f)};
         }
 
+        /**
+         * \brief Handle keyboard stepping and pointer dragging.
+         *
+         * Keyboard handling runs whenever the node has focus (regardless of
+         * pointer state); pointer handling captures the pointer on first
+         * `state.pressed` and releases on button-up (which happens implicitly
+         * in `Layout::updateTree`).
+         */
         void onUpdate(float) override
         {
             if (state.focused)
@@ -97,6 +145,12 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Draw the track, fill and knob.
+         *
+         * All three pieces honor their respective `::part` overrides. The
+         * knob is drawn on top of the fill and the track.
+         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;

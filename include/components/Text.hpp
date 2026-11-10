@@ -1,20 +1,54 @@
 #pragma once
 
+/**
+ * \file Text.hpp
+ * \brief A text-rendering node with optional wrapping and ellipsis.
+ *
+ * Text layout is done in one of two modes:
+ *
+ *  - **Single line** (`wrap_ == false`, or `white-space: nowrap`): each
+ *    explicit `\n` starts a new line; the node's intrinsic width is the
+ *    widest of those lines.
+ *  - **Wrapped** (`wrap_ == true`, default `white-space: normal`): each
+ *    logical line (split on `\n`) is further broken at spaces, and a single
+ *    word that is wider than the available width is broken into chunks via
+ *    binary search over prefix lengths.
+ *
+ * Both modes are cached: `measureSingleLine` / `measureWrapped` keep the
+ * wrapped `lines` vector and a `cachedSize` until `text_dirty` or a relevant
+ * style value changes. `onLayout` re-wraps when the available width changes,
+ * which can happen after the first `arrange` — this is why `Text` overrides
+ * `onLayout` at all: measurement can use one width, layout uses another.
+ *
+ * Ellipsis (`text-overflow: ellipsis`) is applied at **draw time only**, in
+ * `renderContent`: it does not change the layout box. This matches CSS and
+ * means `getRect()` is unaffected by truncation.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 
 namespace ZenitUI::UI
 {
 
+    /**
+     * \class Text
+     * \brief A read-only text node.
+     *
+     * Style tag: `"Text"`. Not interactive. Emits no `:hover` / `:pressed`
+     * states — wrap the text in a `Panel` or a `Button` if you need those.
+     */
     class Text : public TLayout<Text>
     {
     public:
+        /** \brief Construct with initial content. */
         Text(std::string text) : TLayout<Text>(LayoutType::Stack), text(std::move(text))
         {
             setInteractive(false);
             setStyleTag("Text");
         }
 
+        /** \brief Replace the content. Triggers a re-measure and re-wrap next frame. */
         void setText(std::string new_text)
         {
             text = std::move(new_text);
@@ -22,8 +56,10 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Current content. */
         const std::string &getText() const { return text; }
 
+        /** \brief Override the font used for measurement and rendering. */
         void setFont(FontHandle f)
         {
             defaultFont = f;
@@ -31,15 +67,25 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Enable or disable word wrapping. */
         void setWrap(bool w)
         {
             wrap_ = w;
             text_dirty = true;
             internal_.pendingTransition = 1;
         }
+        /** \brief Whether word wrapping is enabled. */
         bool getWrap() const { return wrap_; }
 
     protected:
+        /**
+         * \brief Compute the intrinsic size for the current content.
+         *
+         * Wrapping requires an available width; if none is given
+         * (`availW <= 0`), falls back to single-line measurement. The wrap
+         * flag is combined with `white-space: nowrap`, so a `nowrap` style
+         * wins over a `setWrap(true)` call.
+         */
         Vec2 computeIntrinsicSize(float availW, float /*availH*/) override
         {
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
@@ -50,6 +96,18 @@ namespace ZenitUI::UI
             return measureSingleLine(f);
         }
 
+        /**
+         * \brief Draw the text, applying ellipsis if configured.
+         *
+         * The clip rect is the node's full rect, not the inner content box,
+         * so overshooting glyphs (accents, italics, emoji) are visible even
+         * when the text bounds report otherwise. Padding and border are
+         * subtracted from the text origin, not from the clip.
+         *
+         * \note `align-items` (or `text-align` if set) controls horizontal
+         *       alignment within the content box; `vertical-align` controls
+         *       vertical alignment of the text block as a whole.
+         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             if (lines.empty())
@@ -137,6 +195,15 @@ namespace ZenitUI::UI
             r->popClip();
         }
 
+        /**
+         * \brief Re-wrap when the available width differs from the cached one.
+         *
+         * Measurement uses whatever width the parent passes at measure time,
+         * but the final rect is assigned in `arrange`, and the two can
+         * differ (e.g. a `percent(100)` parent measured against a larger
+         * hypothetical and then arranged against the real parent). This hook
+         * reconciles the two.
+         */
         void onLayout() override
         {
             if (!wrap_ || style_.currentStyle.whiteSpace == WhiteSpace::Nowrap)
@@ -171,12 +238,25 @@ namespace ZenitUI::UI
         }
 
     private:
+        /** \brief A single laid-out line. */
         struct Line
         {
             std::string text;
             Vec2 size;
         };
 
+        /**
+         * \brief Wrap \p text into the `lines` vector at the given width.
+         *
+         * Splits on `\n` (hard line breaks), then within each logical line:
+         *  - splits on single spaces (multiple spaces collapse to one);
+         *  - tries to append each word to the current line;
+         *  - flushes the line if the word does not fit;
+         *  - breaks a too-wide word into chunks via binary search on prefix
+         *    length.
+         *
+         * Consecutive `\n` produce empty lines, matching CSS.
+         */
         void wrapText(float availW, float fs, float sp, FontHandle f)
         {
             lines.clear();
@@ -304,6 +384,13 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Build the truncated string for `text-overflow: ellipsis`.
+         *
+         * Tries the longest prefix such that `prefix + "..."` fits. If even
+         * the bare `"..."` does not fit, tries `".."`, then `"."`, then `""`.
+         * Always returns something that fits in \p availW, possibly empty.
+         */
         std::string buildEllipsisText(std::string_view src, float availW,
                                       FontHandle f, float fs, float sp)
         {
@@ -341,6 +428,13 @@ namespace ZenitUI::UI
             return std::string(src.substr(0, best)) + "...";
         }
 
+        /**
+         * \brief Measure as a single logical line per `\n`.
+         *
+         * Even without wrapping, `\n` produces hard breaks (matching CSS
+         * `white-space: pre-line`). The width is the widest line; the height
+         * is the sum of line heights.
+         */
         Vec2 measureSingleLine(FontHandle f)
         {
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
@@ -388,6 +482,13 @@ namespace ZenitUI::UI
             return cachedSize;
         }
 
+        /**
+         * \brief Measure with wrapping at the given available width.
+         *
+         * Uses the cached wrapped layout when nothing relevant changed
+         * (text, font, size, spacing, available width). Otherwise calls
+         * `wrapText` and updates the cache.
+         */
         Vec2 measureWrapped(float availW, FontHandle f)
         {
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
@@ -426,6 +527,8 @@ namespace ZenitUI::UI
         uint32_t cachedFontId{0};
         std::vector<Line> lines;
     };
+
+    /** \brief Convenience factory: a `Text` node. */
     inline std::shared_ptr<Text> Label(std::string t) { return Text::create(std::move(t)); }
 
 } // namespace ZenitUI::UI
