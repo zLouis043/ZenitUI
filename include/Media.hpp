@@ -1,11 +1,17 @@
 #pragma once
 
+/**
+ * \file Media.hpp
+ * \brief `@media` query representation and evaluation.
+ */
+
 #include "Common.hpp"
 #include "CoreTypes.hpp"
 
 namespace ZenitUI
 {
 
+    /** \brief A single condition inside a `@media` query. */
     struct MediaCondition
     {
         enum class Kind
@@ -23,6 +29,7 @@ namespace ZenitUI
         float value{0.0f};
     };
 
+    /** \brief A conjunction of media conditions. Empty means "always matches". */
     struct MediaQuery
     {
         std::vector<MediaCondition> conditions;
@@ -30,6 +37,12 @@ namespace ZenitUI
         bool empty() const { return conditions.empty(); }
     };
 
+    /**
+     * \brief Evaluate a `MediaQuery` against a viewport size.
+     * \param q        The query to evaluate.
+     * \param viewport Current viewport in logical pixels.
+     * \return `true` if every condition holds (vacuously true for an empty query).
+     */
     inline bool evaluateMedia(const MediaQuery &q, Vec2 viewport)
     {
         for (const auto &c : q.conditions)

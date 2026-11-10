@@ -1,5 +1,33 @@
 #pragma once
 
+/**
+ * \file ZMarkup.hpp
+ * \brief Declarative UI markup: parser, registry, prefab system, and UINode.
+ *
+ * ZMarkup is a small XML-like DSL for building UI trees declaratively:
+ *
+ * \code{.txt}
+ * VStack padding="16" {
+ *     Text "Hello, world" font-size="24"
+ *     Button#ok "OK"
+ *     Button#cancel "Cancel" onclick="close"
+ * }
+ * \endcode
+ *
+ * The pipeline is:
+ *
+ *   1. **Parse** (`Parser`): string → `Element` tree (tag, classes, id, ref,
+ *      attrs, text, children).
+ *   2. **Build** (`Registry::create`): `Element` tree → `shared_ptr<Layout>`
+ *      tree, using per-tag factories. Prefabs are expanded here.
+ *   3. **Wrap** (`UINode`): the root plus a `BuildContext` (id map, ref map)
+ *      for lookup and event wiring.
+ *
+ * \note The `Slot` element is handled specially: it either instantiates the
+ *       children the *caller* passed when invoking a prefab, or falls back to
+ *       the slot's own children.
+ */
+
 #include "Common.hpp"
 #include "Logger.hpp"
 #include "CoreTypes.hpp"
@@ -21,6 +49,10 @@
 namespace ZenitUI::ZMarkup
 {
 
+    /**
+     * \struct Element
+     * \brief Parsed representation of one markup node.
+     */
     struct Element
     {
         std::string tag;
@@ -31,6 +63,7 @@ namespace ZenitUI::ZMarkup
         std::vector<std::pair<std::string, std::string>> attrs;
         std::vector<Element> children;
 
+        /** \brief Return the value of attribute \p k, or \p d if absent. */
         std::string attr(std::string_view k, std::string_view d = "") const
         {
             for (auto &[key, val] : attrs)
@@ -38,6 +71,7 @@ namespace ZenitUI::ZMarkup
                     return val;
             return std::string(d);
         }
+        /** \brief `true` if the element has attribute \p k (regardless of value). */
         bool has(std::string_view k) const
         {
             for (auto &[key, _] : attrs)
@@ -45,6 +79,7 @@ namespace ZenitUI::ZMarkup
                     return true;
             return false;
         }
+        /** \brief Return attribute \p k parsed as `float`, or \p d on failure. */
         float attrFloat(std::string_view k, float d = 0.0f) const
         {
             auto v = attr(k);
@@ -59,6 +94,11 @@ namespace ZenitUI::ZMarkup
                 return d;
             }
         }
+        /**
+         * \brief Return attribute \p k as `bool`.
+         *
+         * Truthy values: `"true"`, `"1"`, `"yes"`. Anything else is false.
+         */
         bool attrBool(std::string_view k, bool d = false) const
         {
             auto v = attr(k);
@@ -68,11 +108,16 @@ namespace ZenitUI::ZMarkup
         }
     };
 
+    /**
+     * \class Parser
+     * \brief Single-pass recursive-descent parser for ZMarkup source.
+     */
     class Parser
     {
     public:
         explicit Parser(std::string_view src) : s(src) {}
 
+        /** \brief Parse the whole source as a single root element. */
         Element parseRoot()
         {
             skipWs();
@@ -254,12 +299,17 @@ namespace ZenitUI::ZMarkup
         }
     };
 
+    /** \brief Parse \p src into a single root `Element`. */
     inline Element parse(std::string_view src)
     {
         Parser p(src);
         return p.parseRoot();
     }
 
+    /**
+     * \struct BuildContext
+     * \brief Per-build accumulator for `#id` and `@ref` lookups.
+     */
     struct BuildContext
     {
         std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
@@ -268,25 +318,38 @@ namespace ZenitUI::ZMarkup
         const std::vector<Element> *currentSlotChildren{nullptr};
     };
 
+    /**
+     * \class Registry
+     * \brief Global tag → factory map plus the prefab table.
+     */
     class Registry
     {
     public:
+        /** \brief Signature for tag factories: `Element` → node. */
         using Factory = std::function<std::shared_ptr<Layout>(const Element &)>;
 
+        /** \brief Register or replace a tag factory. */
         void reg(const std::string &tag, Factory f) { factories[tag] = std::move(f); }
 
+        /**
+         * \brief Register a prefab from inline markup source.
+         */
         void registerPrefab(const std::string &tagName, const std::string &markupSource)
         {
             Element root = parse(markupSource);
             prefabs[tagName] = std::move(root);
         }
 
+        /**
+         * \brief Register a prefab from a file.
+         * \return `false` if the file could not be read.
+         */
         bool registerPrefabFile(const std::string &tagName, const std::filesystem::path &path)
         {
             std::ifstream f(path, std::ios::binary);
             if (!f)
             {
-                logError("ZMarkup", path.string(), 0, 0, "Impossible aprire il file per il prefab");
+                logError("ZMarkup", path.string(), 0, 0, "Impossibile aprire il file per il prefab");
                 return false;
             }
             std::stringstream ss;
@@ -295,6 +358,13 @@ namespace ZenitUI::ZMarkup
             return true;
         }
 
+        /**
+         * \brief Build one or more nodes from \p el.
+         *
+         * Returns a vector (rather than a single node) because `<Slot>` can
+         * expand to multiple siblings. For non-slot tags the result always
+         * has exactly one element.
+         */
         std::vector<std::shared_ptr<Layout>> create_impl(const Element &el, BuildContext &ctx, bool isPrefabRoot = false)
         {
             std::vector<std::shared_ptr<Layout>> result;
@@ -402,6 +472,10 @@ namespace ZenitUI::ZMarkup
             return result;
         }
 
+        /**
+         * \brief Convenience wrapper: build exactly one root node from \p el.
+         * \return `nullptr` if the element expanded to zero nodes.
+         */
         std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx)
         {
             auto res = create_impl(el, ctx);
@@ -413,6 +487,9 @@ namespace ZenitUI::ZMarkup
         std::unordered_map<std::string, Element> prefabs;
     };
 
+    /**
+     * \brief Register the built-in widgets into \p r.
+     */
     inline void registerBuiltins(Registry &r)
     {
         using namespace ZenitUI::UI;
@@ -483,6 +560,9 @@ namespace ZenitUI::ZMarkup
               { return Popup::create(); });
     }
 
+    /**
+     * \brief Return the global registry, initializing built-ins on first call.
+     */
     inline Registry &getGlobalRegistry()
     {
         static Registry registry;
@@ -495,6 +575,10 @@ namespace ZenitUI::ZMarkup
         return registry;
     }
 
+    /**
+     * \class UINode
+     * \brief Root handle returned by `build`: root node + build context + event-wiring helpers.
+     */
     class UINode
     {
     public:
@@ -504,6 +588,10 @@ namespace ZenitUI::ZMarkup
         std::shared_ptr<Layout> root() const { return root_; }
         std::shared_ptr<BuildContext> context() const { return ctx_; }
 
+        /**
+         * \brief Look up a node by its `#id`.
+         * \return The node, or `nullptr` if not found (warns once per id).
+         */
         std::shared_ptr<Layout> find(const std::string &id) const
         {
             auto it = ctx_->byId.find(id);
@@ -516,6 +604,7 @@ namespace ZenitUI::ZMarkup
             return it->second;
         }
 
+        /** \brief Typed `find`: casts the result to `T`. */
         template <typename T = Layout>
         std::shared_ptr<T> find(const std::string &id) const
         {
@@ -523,6 +612,9 @@ namespace ZenitUI::ZMarkup
             return n ? std::static_pointer_cast<T>(n) : nullptr;
         }
 
+        /**
+         * \brief Look up a node by `@ref`.
+         */
         template <typename T = Layout>
         std::shared_ptr<T> ref(const std::string &name) const
         {
@@ -544,6 +636,7 @@ namespace ZenitUI::ZMarkup
             return std::static_pointer_cast<T>(it->second.front());
         }
 
+        /** \brief Return every node sharing the given `@ref`. */
         template <typename T = Layout>
         std::vector<std::shared_ptr<T>> refAll(const std::string &name) const
         {
@@ -591,12 +684,14 @@ namespace ZenitUI::ZMarkup
                 n->onHoverExit = std::move(cb);
             return *this;
         }
+        /** \brief Wire a `Slider`'s `onValueChanged` by id. No-op if the id is not a Slider. */
         UINode &onValueChanged(const std::string &id, std::function<void(float)> cb)
         {
             if (auto s = find<UI::Slider>(id))
                 s->onValueChanged = std::move(cb);
             return *this;
         }
+        /** \brief Wire a `Toggle`'s `onToggle` by id. No-op if the id is not a Toggle. */
         UINode &onToggle(const std::string &id, std::function<void(bool)> cb)
         {
             if (auto t = find<UI::Toggle>(id))
@@ -605,6 +700,7 @@ namespace ZenitUI::ZMarkup
         }
 
     private:
+        /** \brief Log a warning for \p key only the first time it is called. */
         void warnOnce(const std::string &key, const std::string &msg) const
         {
             if (warnedKeys_.insert(key).second)
@@ -617,16 +713,19 @@ namespace ZenitUI::ZMarkup
     };
 
 
+    /** \brief Free-function wrapper around `getGlobalRegistry().registerPrefab`. */
     inline void registerPrefab(const std::string &tagName, const std::string &markupSource)
     {
         getGlobalRegistry().registerPrefab(tagName, markupSource);
     }
 
+    /** \brief Free-function wrapper around `getGlobalRegistry().registerPrefabFile`. */
     inline bool registerPrefabFile(const std::string &tagName, const std::filesystem::path &path)
     {
         return getGlobalRegistry().registerPrefabFile(tagName, path);
     }
 
+    /** \brief Parse \p source and build the corresponding UI tree. */
     inline UINode build(std::string_view source)
     {
         auto ctx = std::make_shared<BuildContext>();
@@ -635,6 +734,12 @@ namespace ZenitUI::ZMarkup
         return UINode(root, ctx);
     }
 
+    /**
+     * \brief Load markup from a file and build the UI tree.
+     *
+     * On read failure, logs an error and returns an empty `UINode` (root is
+     * `nullptr`). Callers should check `ui.root() != nullptr`.
+     */
     inline UINode loadMarkupFile(const std::filesystem::path &path)
     {
         std::ifstream f(path, std::ios::binary);

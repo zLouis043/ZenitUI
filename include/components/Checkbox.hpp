@@ -1,14 +1,43 @@
 #pragma once
 
+/**
+ * \file Checkbox.hpp
+ * \brief A boolean checkbox with a drawn check mark.
+ *
+ * The visual is drawn directly by `renderContent` (a filled rounded rect for
+ * the box, plus a small white square for the check mark when checked). Theme
+ * rules can override both through the `::box` and `::mark` pseudo-elements.
+ *
+ * \warning This component does **not** call `setChecked` in its `onClick`
+ *          handler, unlike `Toggle`. As a result, the `:checked` pseudo-class
+ *          is never set from user interaction; only an explicit
+ *          `setChecked()` call from application code will trigger it. If you
+ *          want `Checkbox:checked { ... }` to work, use `Toggle` or patch
+ *          the component to call `setChecked(isChecked)` after the state
+ *          flip. See `Toggle` for the intended pattern.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 
 namespace ZenitUI::UI
 {
 
+    /**
+     * \class Checkbox
+     * \brief A checkbox with a custom-painted check mark.
+     *
+     * Style tag: `"Checkbox"`. Default intrinsic size: `1.4 * fontSize` square.
+     * Parts: `::box` (the outer square), `::mark` (the check mark glyph —
+     * currently drawn as a white square, not an actual tick).
+     */
     class Checkbox : public TLayout<Checkbox>
     {
     public:
+        /**
+         * \brief Construct with an initial state.
+         * \param state Initial checked state.
+         */
         Checkbox(bool state = false) : TLayout<Checkbox>(LayoutType::Stack), isChecked(state)
         {
             setInteractive(true);
@@ -27,16 +56,32 @@ namespace ZenitUI::UI
             };
         }
 
+        /** \brief Fired after the checked state changes, with the new value. */
         std::function<void(bool)> onToggle = nullptr;
+        /** \brief Current checked state. */
         bool isChecked;
 
     protected:
+        /**
+         * \brief Default intrinsic size: `1.4 * fontSize` on each side.
+         *
+         * Means a checkbox tracks the font size unless the caller overrides
+         * `width` / `height`.
+         */
         Vec2 computeIntrinsicSize(float, float) override
         {
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             return {fs * 1.4f, fs * 1.4f};
         }
 
+        /**
+         * \brief Draw the box and (if checked) the mark.
+         *
+         * Respects `::box.background` / `::box.radius` overrides and
+         * `::mark.color`. When the node is disabled, uses a muted palette
+         * that does not depend on theme rules — so disabled appearance is
+         * consistent across themes.
+         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;

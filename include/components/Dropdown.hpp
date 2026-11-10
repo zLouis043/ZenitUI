@@ -1,4 +1,35 @@
 #pragma once
+
+/**
+ * \file Dropdown.hpp
+ * \brief A select-style dropdown with a popup list.
+ *
+ * The dropdown is a `Vertical` container with two children:
+ *  1. A `Button` (class `"dropdown-trigger"`) whose label shows the currently
+ *     selected option.
+ *  2. A `ScrollView` (portal) that contains one `Label` (class
+ *     `"dropdown-item"`) per option.
+ *
+ * The list is always a portal, so it draws above everything else and is not
+ * clipped by ancestors. It is shown / hidden by toggling its `enabled` flag
+ * and opacity, and its size is computed dynamically in `arrange` from the
+ * available space below the trigger, with automatic flip above if there is
+ * not enough room.
+ *
+ * Interaction:
+ *  - Click on the trigger toggles the list.
+ *  - Click on an item selects it and closes the list.
+ *  - Click outside the trigger and list closes the list.
+ *  - Escape closes the list when the dropdown has focus.
+ *  - Up / Down navigate options when the dropdown has focus and the list is
+ *    open; Up also opens the list from the closed state.
+ *  - Enter / Space toggle the list.
+ *
+ * \note `setSelected` fires `onChange` **even when the index is unchanged**.
+ *       This differs from the usual "only fire on change" convention but is
+ *       relied upon by some tests (`Dropdown_basic.setSelected_same_value_fires_onChange`).
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 #include "Button.hpp"
@@ -7,15 +38,38 @@
 
 namespace ZenitUI::UI
 {
+    /**
+     * \class Dropdown
+     * \brief A single-select dropdown.
+     *
+     * Style tag: `"Dropdown"`. Focusable, keyboard-activatable. The list is
+     * a portal and stays out of the parent's layout flow.
+     */
     class Dropdown : public TLayout<Dropdown>
     {
     public:
+        /**
+         * \brief Construct with options and an initial selection.
+         * \param options  List of option strings.
+         * \param selected Initially selected index. Values outside the valid
+         *                 range are clamped to `0` on the first `setSelected`
+         *                 call — the constructor itself does not validate.
+         */
         Dropdown(std::vector<std::string> options, int selected = 0)
             : TLayout<Dropdown>(LayoutType::Vertical),
               options(std::move(options)), selected(selected) {}
 
+        /** \brief Currently selected index. */
         int getSelected() const { return selected; }
 
+        /**
+         * \brief Select the option at \p idx and close the list.
+         *
+         * Out-of-range indices are ignored. Always fires `onChange` on
+         * success, even if the index was already selected. Marks the style
+         * as pending so the trigger label and item check state update on the
+         * next frame.
+         */
         void setSelected(int idx)
         {
             if (idx < 0 || idx >= (int)options.size())
@@ -28,8 +82,14 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief `true` while the option list is visible. */
         bool getOpen() const { return isOpen; }
 
+        /**
+         * \brief Open or close the option list.
+         *
+         * No-op if \p o matches the current state. Fires `onOpenChanged`.
+         */
         void setOpen(bool o)
         {
             if (isOpen == o)
@@ -40,10 +100,15 @@ namespace ZenitUI::UI
                 onOpenChanged(isOpen);
         }
 
+        /** \brief Fired when an item is selected. Second argument is the option text. */
         std::function<void(int, const std::string &)> onChange;
+        /** \brief Fired when the list is opened or closed. */
         std::function<void(bool)> onOpenChanged;
 
     protected:
+        /**
+         * \brief Close the list when the dropdown is disabled.
+         */
         void onEnabledChanged(bool nowEnabled) override
         {
             if (!nowEnabled && isOpen)
@@ -55,6 +120,13 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Keyboard navigation and close-on-outside-click.
+         *
+         * Keyboard handling only runs when the dropdown has focus. The
+         * outside-click handler checks both the trigger rect and the list
+         * rect, and closes the dropdown on a press outside both.
+         */
         void onUpdate(float) override
         {
             if (isOpen)
@@ -123,6 +195,15 @@ namespace ZenitUI::UI
             }
         }
 
+        /**
+         * \brief Build the trigger button and the option list.
+         *
+         * Wires:
+         *  - the trigger's `onClick` to toggle the list;
+         *  - each item's `onClick` to select the item and close the list.
+         *
+         * The list starts closed with `enabled = false` and `opacity = 0`.
+         */
         void onBuild() override
         {
             setStyleTag("Dropdown");
@@ -133,7 +214,7 @@ namespace ZenitUI::UI
             getInlineBase().zIndex = ZIndex(10);
 
             button = Btn("", [this]()
-                         { 
+                         {
                 UIContext::get().requestFocus(shared_from_this());
                 toggleOpen(); });
             button->cls("dropdown-trigger");
@@ -188,6 +269,20 @@ namespace ZenitUI::UI
             updateListStyles();
         }
 
+        /**
+         * \brief Position the option list under (or above) the trigger.
+         *
+         * The list is a portal: its position is computed from the trigger's
+         * screen-space rect adjusted for any scrolling ancestor's scroll
+         * offset. If the list does not fit below the trigger, it flips above;
+         * if it does not fit above either, it is clamped to the larger of the
+         * two spaces.
+         *
+         * \note Because the list is a portal, its coordinates are absolute
+         *       (screen space). This is why the scroll adjustment is needed:
+         *       the trigger's rect is in content space, and the ancestor's
+         *       scroll offset must be subtracted to get screen space.
+         */
         void arrange(Rect space) override
         {
             TLayout<Dropdown>::arrange(space);
@@ -263,8 +358,15 @@ namespace ZenitUI::UI
         std::shared_ptr<Button> button;
         std::shared_ptr<ScrollView> listContainer;
 
+        /** \brief Toggle the list state. */
         void toggleOpen() { setOpen(!isOpen); }
 
+        /**
+         * \brief Apply the current open state to the list's visibility.
+         *
+         * Uses `enabled` (which also blocks input) plus `opacity` (which
+         * enables the fade transition). Marks the style as pending.
+         */
         void applyOpenState()
         {
             listContainer->setEnabled(isOpen);
@@ -273,6 +375,12 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /**
+         * \brief Update the trigger label with the current selection.
+         *
+         * No-op if the selection is out of range or if the button has no
+         * children (e.g. before `onBuild`).
+         */
         void refreshButtonText()
         {
             if (selected < 0 || selected >= (int)options.size())
@@ -284,6 +392,11 @@ namespace ZenitUI::UI
                 t->setText(options[selected]);
         }
 
+        /**
+         * \brief Update each item's `:checked` state to match the selection.
+         *
+         * Used by themes to highlight the current option.
+         */
         void updateListStyles()
         {
             if (!listContainer)
@@ -295,4 +408,4 @@ namespace ZenitUI::UI
             }
         }
     };
-} // namespace ZenitUI::UI
+}
