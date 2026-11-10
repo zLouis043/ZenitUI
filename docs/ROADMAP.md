@@ -2187,19 +2187,19 @@ keep passing unchanged because uniform `Px(N)` still converts to
 
 #### 5.30a `renderContent` should offset by the border
 
-**Status:** 🟡 planned.
+**Status:** 🟢 done.
 
 `Text`, `TextInput`, `Slider`, `ProgressBar`, `Checkbox` draw their
 content at `rect + padding`, ignoring the border. With
 `border-width > padding`, content overlaps the border. Fix: each
-widget's `renderContent` should offset by `rect + border + padding`,
-and the available inner size should subtract both. This is a visual
-correctness bug for asymmetric borders on content widgets;
+widget's `renderContent` offsets by `rect + border + padding`,
+and the available inner size subtracts both. This visually fixes
+asymmetric borders on content widgets.
 
-- [ ] `Text::renderContent` offsets by border
-- [ ] `TextInput::renderContent` offsets by border
-- [ ] `Slider` / `ProgressBar` / `Checkbox` offset by border
-- [ ] Regression test
+- [x] `Text::renderContent` offsets by border
+- [x] `TextInput::renderContent` offsets by border
+- [x] `Slider` / `ProgressBar` / `Checkbox` offset by border
+- [x] Regression test
 
 ### 5.31 `Text` wrapping completeness
 

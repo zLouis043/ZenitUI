@@ -60,10 +60,15 @@ namespace ZenitUI::UI
             float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height);
-            float pr = style.padding.right.resolveH(rect.width, rect.height);
-            float pt = style.padding.top.resolveV(rect.width, rect.height);
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height);
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
+
+            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
 
             float availW = std::max(0.0f, rect.width - pl - pr);
             float availH = std::max(0.0f, rect.height - pt - pb);
@@ -137,8 +142,10 @@ namespace ZenitUI::UI
             if (!wrap_ || style_.currentStyle.whiteSpace == WhiteSpace::Nowrap)
                 return;
 
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
-            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
+            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
+            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height) + bwr;
             float newAvailW = std::max(0.0f, rect.width - pl - pr);
 
             if (newAvailW > 0.0f && newAvailW != cachedWrapW)
