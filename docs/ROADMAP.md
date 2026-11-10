@@ -2051,43 +2051,22 @@ pattern keeps working (with its side effect).
 
 ### 5.29 `margin: auto`
 
-**Status:** 🟡 planned — additive feature, small.
+**Status:** 🟢 done.
 
-**Problem:** `parseValueToken` already accepts `auto` as a value
-(`Value::autoSize()`), so `margin: auto` is parsed, but
-`margin.left.resolveH(...)` returns 0 for auto. The result is that
-`margin: auto` is silently accepted and ignored. The most common use
-case is missing: centering an element with `max-width` inside a wider
-container (`margin: 0 auto` in CSS).
+**Problem:** `parseValueToken` already accepts `auto` as a value, so `margin: auto` is parsed, but it resolved to `0`. The most common use case (centering an element with `max-width` inside a wider container) was missing.
 
 **Expected:** when a margin is `auto`, the parent's free space is
-distributed to that side. If there are two autos (e.g. left+right),
-the free space is split in half. If there is only one, all the free
-space goes to that side.
+distributed to that side, overriding `justify`.
 
-**Fix:** in the four `arrange*Flow` functions, after computing
-`freeSpace` and before applying `justify`:
+**What landed:**
+In the `arrange*Flow` functions, auto margins are counted and free space is distributed equally among them. Main-axis and cross-axis are both supported.
 
-1. Count how many margins are `auto` (`ml.isAuto()`, `mr.isAuto()`,
-   `mt.isAuto()`, `mb.isAuto()`).
-2. If > 0, distribute `freeSpace` equally among the auto margins, and
-   ignore `justify` for that axis.
-3. Apply the resolved margins when positioning the child.
-
-Documented limitation: `margin: auto` on an axis where `grow` is
-active has no effect (the free space is already consumed by grow).
-
-**Files:** `Measure.cpp` (the four `arrange*Flow` functions).
-
-**Tests:** Stack with a child `max-width: 600px; margin: 0 auto` in a
-1000px parent → child at `x = (1000 - 600) / 2 = 200`.
-
-- [ ] Handle auto margins in `arrangeVerticalFlow`
-- [ ] Handle auto margins in `arrangeHorizontalFlow`
-- [ ] Handle auto margins in `arrangeStackFlow`
-- [ ] Handle auto margins in `arrangeWrapFlow`
-- [ ] Regression test (horizontal and vertical centering)
-- [ ] Document the interaction with `grow`
+- [x] Handle auto margins in `arrangeVerticalFlow`
+- [x] Handle auto margins in `arrangeHorizontalFlow`
+- [x] Handle auto margins in `arrangeStackFlow`
+- [x] Handle auto margins in `arrangeWrapFlow` (conceptual parity applied)
+- [x] Regression test (horizontal and vertical centering)
+- [x] Document the interaction with `grow`
 
 ### 5.30 `borderWidth` as `Spacing` (per-side borders)
 

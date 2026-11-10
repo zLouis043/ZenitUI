@@ -702,3 +702,22 @@ TEST(Layout_flex, flex_shorthand_distributes_space_and_preserves_child_percent)
     
     CHECK_NEAR(child->getRect().width, 800.0f, 1e-3);
 }
+
+TEST(Layout_margin, auto_margins_center_in_stack)
+{
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Px(1000.0f), Px(500.0f));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Percent(100.0f), Px(200.0f));
+    child->getInlineBase().maxWidth = Px(600.0f);
+    
+    child->getInlineBase().margin = Spacing(Px(0), Auto(), Px(0), Auto());
+    root->addChild(child);
+
+    root->measure(1000.0f, 500.0f);
+    root->arrange({0.0f, 0.0f, 1000.0f, 500.0f});
+
+    CHECK_NEAR(child->getRect().x, 200.0f, 1e-3);
+    CHECK_NEAR(child->getRect().width, 600.0f, 1e-3);
+}
