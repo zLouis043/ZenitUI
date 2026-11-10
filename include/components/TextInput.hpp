@@ -89,8 +89,10 @@ namespace ZenitUI::UI
             auto &ev = ctx.inputEvents;
             bool changed = false;
 
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
-            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height);
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
+            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
+            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height) + bwr;
             float availW = std::max(0.0f, rect.width - pl - pr - 4.0f);
 
             if (state.pressed && !hasPointerCapture())
@@ -403,20 +405,23 @@ namespace ZenitUI::UI
             FontHandle f = resolveFont(style, defaultFont);
             float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-            float pl = style.padding.left.resolveH(rect.width, rect.height);
-            float pr = style.padding.right.resolveH(rect.width, rect.height);
-            float pt = style.padding.top.resolveV(rect.width, rect.height);
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height);
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
 
-            Rect innerRect = {
-                rect.x + pl,
-                rect.y + pt,
-                std::max(0.0f, rect.width - pl - pr),
-                std::max(0.0f, rect.height - pt - pb)};
+            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
 
+            float innerW = std::max(0.0f, rect.width - pl - pr);
+            float innerH = std::max(0.0f, rect.height - pt - pb);
+
+            Rect innerRect = {rect.x + pl, rect.y + pt, innerW, innerH};
             r->pushClip(innerRect);
 
-            Vec2 pos = {rect.x + pl - scrollX, rect.y + (rect.height - fs) * 0.5f - fs * 0.1f};
+            Vec2 pos = {rect.x + pl - scrollX, rect.y + pt + (innerH - fs) * 0.5f - fs * 0.1f};
 
             if (hasFocusCache && selectionStart != -1 && selectionStart != cursorPos)
             {
@@ -459,7 +464,8 @@ namespace ZenitUI::UI
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
             float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height);
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
             float targetX = localX - pl + scrollX;
 
             int best = 0;
