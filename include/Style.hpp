@@ -217,6 +217,7 @@ namespace ZenitUI
 	X(Value, maxHeight, Value::autoSize())                  \
 	X(float, grow, 0.0f)                                    \
 	X(float, shrink, 1.0f)                                  \
+	X(Value, flexBasis, Value::autoSize())                  \
 	X(Value, gap, Value(0.0f))                              \
 	X(Spacing, margin, Spacing())                           \
 	X(Spacing, padding, Spacing())                          \
