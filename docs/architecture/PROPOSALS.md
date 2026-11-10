@@ -43,6 +43,7 @@ implementation.
 - [Proposal 6 — VirtualList](#proposal-6--virtuallist)
 - [Proposal 7 — Drag & Drop](#proposal-7--drag--drop)
 - [Proposal 8 — VirtualView](#proposal-8--virtualview)
+- [Proposal 9 — Filter layer pipeline performance](#proposal-9--filter-layer-pipeline-performance)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -1976,6 +1977,388 @@ Total: 14 tests, all passing.
 
 ---
 
+## Proposal 9 — Filter layer pipeline performance
+
+**Priority:** high — severe FPS drops on animated or scrolling nodes
+with `filter:`, and the cost grows quickly with the number of filtered
+nodes.
+
+**Complexity:** medium. Steps 0–c are ~2–3 days. Step g (layer cache)
+is a separate ~1 week task with real regression risk and is only
+tackled if the measurements justify it.
+
+**Depends on:** §5.4 (filter chaining) and §5.5 (nested targets), both
+shipped. Independent of every other proposal.
+
+**Status:** 🟡 proposed.
+
+**Roadmap mapping:** ships as §4.9 (steps 0, a–g).
+
+### 9.1 Problem
+
+Using `filter:` (blur, drop-shadow, custom filters) makes a scene
+disproportionately slow, well beyond the cost of the extra shader
+passes themselves. A review of `Layout::drawLayer`
+(`src/layout/Render.cpp`), `FilterRegistry.cpp` and
+`RaylibRenderer` found several independent causes.
+
+**Evidence — measured.** An instrumented copy of the mock backend
+(counters for `createTarget` / `destroyTarget` / `pushTarget`; no GPU
+involved) was driven against the real library sources, 60 frames per
+scenario, with a 200×200 filtered node. Measured on `master` at
+`b2c1046`; the numbers were identical on `212b9ec`, since the filter
+pipeline (`drawLayer`, `FilterRegistry`, the Raylib backend) did not
+change between the two:
+
+| Scenario | `createTarget` calls | `destroyTarget` calls |
+|----------|---------------------:|----------------------:|
+| Static node, `blur(4px)` (after warm-up) | 0 | 0 |
+| `scale` 1.0 → 1.15, `blur + drop-shadow` | 45 | 45 |
+| `rotation` +3°/frame, `blur` | 165 | 165 |
+| Node sliding across the viewport edge (clip shrinks the region), `blur` | 177 | 177 |
+
+Each resize recreates **three** targets (`layerTarget_`,
+`layerScratch_`, `layerSeparable_`), so the scale case is ~15 resizes
+and the rotation / clipping cases are ~55–59 resizes in 60 frames,
+i.e. almost every frame.
+
+Two more measured facts:
+
+- A chain with a single `drop-shadow` allocates 3 targets on its first
+  frame; it only needs 1.
+- 50 static filtered cards (`blur + drop-shadow`) keep **150 render
+  targets alive** and issue **150 `pushTarget` calls per frame**
+  (3 per card).
+- The CPU side of the filter path is **not** the bottleneck: 50 cards
+  with `blur + drop-shadow` cost ~0.5–0.7 µs per card more than the same 50
+  cards without filters (two runs; mock backend, `-O2`). The per-frame
+  `std::stof` parsing in `setParams` is real but negligible. It must
+  not be the first thing optimised.
+
+**Evidence — from reading the code, not yet measured on a real GPU.**
+
+1. **Resize churn is expensive in Raylib.** `RaylibRenderer::createTarget`
+   calls `LoadRenderTexture`, which creates a framebuffer, a colour
+   texture *and* a depth renderbuffer (useless for a 2D UI), and
+   `destroyTarget` frees them again.
+2. **FBO switches and batch flushes.** Every `pushTarget` /
+   `popTarget` calls `rlDrawRenderBatchActive()` (flushing the current
+   draw batch for the whole UI), switches framebuffer, and clears the
+   whole target. A `blur + drop-shadow` node does 3 pushes per frame.
+   `pushTarget` also copies `clipStack` and `transformStack` by value
+   into `targetStates_`.
+3. **Per-node targets for the whole lifetime of the node.** Targets are
+   only needed during `drawLayer`, but each node keeps up to three
+   alive. VRAM grows as N × 3 × (width × height × 4 bytes colour, plus
+   depth in Raylib).
+4. **No result caching.** A filtered subtree that did not change is
+   still re-rendered and re-filtered every frame. There is no paint
+   dirty flag in the framework (only `subtreeDirty` for layout).
+5. **Fill rate of the blur.** The built-in blur runs 9 taps per pass at
+   full resolution. Cost scales with pixels; a half-resolution blur is
+   4× cheaper and doubles the effective radius.
+6. **Minor:** `GetShaderLocation` (a driver call) on every uniform set
+   every frame; `IAssetProvider::getEffect` builds a `std::string` per
+   filter per frame.
+
+**Limits of this evidence.** Items 1–3 and 5 are inferences from the
+code. The first step of this proposal is therefore to measure, not to
+optimise.
+
+### 9.2 Solution
+
+Seven independent steps, in this order. Each one is shippable on its
+own and each has a test.
+
+**Step 0 — Instrumentation.** A backend-agnostic `RenderStats` struct
+on `UIContext`, incremented by the core (`drawLayer`,
+`FilterRegistry`), so both the mock and the Raylib backends report the
+same numbers: targets created, targets destroyed, live targets,
+`pushTarget` calls, filter passes. Exposed through `Debug` (a one-line
+dump) and usable from an on-screen overlay in the examples. This is
+what lets us confirm items 1–3 on real hardware before spending time
+on later steps.
+
+**Step a — Lazy, per-kind target allocation.** `drawLayer` computes
+from the filter chain which targets it really needs:
+
+| Target | Needed when |
+|--------|-------------|
+| main layer target | always |
+| scratch (ping-pong write target) | the chain has 2 or more filters |
+| separable intermediate | any filter in the chain is `Separable` |
+
+A single `drop-shadow` allocates 1 target (was 3); a single `blur`
+allocates 2; `blur + drop-shadow` allocates 3.
+
+**Step b — Bucketed target size.** A target's size is rounded **up**
+to a multiple of a bucket (proposed: 64 px) and reused for any region
+that fits. The region is drawn into the top-left corner of the target
+and read back through a **source rectangle**. This requires a way to
+draw a sub-rectangle of a target (see 9.3). Targets are then only
+recreated when the region outgrows the bucket, which removes almost
+all of the churn in the scale / rotation / clipping scenarios above.
+Backends that do not support sub-rectangles keep the current
+exact-size behaviour (capability-gated).
+
+**Step c — Shared target pool.** A `TargetPool` owned by `UIContext`.
+`drawLayer` *acquires* the targets it needs and *releases* them when
+the node is done; targets are no longer members of `Layout`. Nested
+layers (§5.5) acquire distinct targets, so the live set is bounded by
+(nesting depth × 3) instead of (filtered nodes × 3). Unused targets are
+destroyed by `endFrame` after a grace period.
+
+**Step d — Backend hygiene (Raylib).** Colour-only framebuffers (no
+depth renderbuffer); avoid the by-value copies in `pushTarget`; cache
+uniform locations per shader; avoid the `std::string` allocation in
+`getEffect` on the hot path. Low risk, modest gain; done after the
+measurements say it is worth it.
+
+**Step e — Optional downscaled separable filters.** `FilterDef` gains
+`downscale` (1, 2 or 4; default 1). The intermediate passes run on
+targets of `size / downscale` and the final draw upscales with bilinear
+filtering. Opt-in because it changes the visual output slightly; the
+built-in `blur` keeps `downscale = 1` until a decision is taken at ship
+time.
+
+**Step f — Benchmarks and regression tests.** See 9.6. The mock
+backend cannot measure GPU time, but it can count targets and passes,
+which is what steps a–c change. A manual stress scene in `examples/`
+covers real GPU timing.
+
+**Step g — Layer cache (optional, higher risk).** Cache the *final
+filtered image* of a node and reuse it while nothing under the node
+changed. This is the largest possible win for static UIs and also the
+only step that can produce stale rendering if the invalidation misses a
+case, so it is designed conservatively:
+
+- **Opt-in** per node (`Layout::setLayerCache(bool)`, default off). The
+  framework cannot know whether a custom widget with its own `draw`
+  (a `Canvas`, `examples/09_custom_widget`) is animating internally.
+- A new `internal_.paintDirty` bit, set when: the node's or a
+  descendant's `currentStyle` changes (including hover / pressed /
+  focus / checked / disabled transitions), a transition or animation is
+  active in the subtree, a child is added or removed, `rect` changes,
+  the scroll offset changes, the transform changes, the viewport
+  changes, or a widget calls `invalidatePaint()` (`setText`,
+  `setValue`, etc.).
+- `invalidatePaint()` propagates upward only to the nearest ancestor
+  that has the cache enabled.
+- A cached node keeps one target (its result) outside the pool.
+
+Step g is decided **after** steps 0–c have been measured. If a–c are
+enough, g is dropped and recorded as declined, like §5.9.
+
+### 9.3 API
+
+Backend interface (`include/UIContext.hpp`):
+
+~~~cpp
+enum class Feature
+{
+    Effects,
+    NestedTargets,
+    TargetSubRect   // new: drawTarget(t, src, dst, tint) is supported
+};
+
+class IRenderer
+{
+    // ...existing...
+    virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+
+    // new — non-pure, like `fillBorder` (added with the border fix
+    // in 65752c7). Default: ignores `src` and forwards to the
+    // existing overload. The core only calls it when
+    // supports(Feature::TargetSubRect) is true.
+    virtual void drawTarget(TargetHandle t, Rect src, Rect dst, Color tint)
+    {
+        drawTarget(t, dst, tint);
+    }
+};
+~~~
+
+Filter contract (`include/FilterRegistry.hpp`):
+
+~~~cpp
+struct FilterContext
+{
+    // ...existing...
+    Rect dst;      // region-sized rect at (0, 0). Also the source rect
+                   // inside `src` when the target is larger than the region.
+    Vec2 texSize;  // NEW: actual size of the `src` texture. Shaders that
+                   // need texel size must use this, not dst.width/height.
+};
+~~~
+
+`FilterContext::texSize` is the one contract change for custom
+filters: with bucketed targets, `dst` can be smaller than the texture.
+The built-in filters are updated by the proposal.
+
+Pool (`include/UIContext.hpp` or a new `include/TargetPool.hpp`):
+
+~~~cpp
+class TargetPool
+{
+public:
+    // Returns a target at least w × h (bucketed when supported).
+    TargetHandle acquire(IRenderer& r, int w, int h);
+    void         release(TargetHandle t);
+
+    // Called once per frame by UIContext::endFrame. Destroys targets
+    // not used for `graceFrames` frames.
+    void trim(IRenderer& r, int graceFrames = 120);
+    void clear(IRenderer& r);   // shutdown
+
+    // For RenderStats and tests.
+    size_t liveCount() const;
+};
+~~~
+
+Style / ZStyle: **no change.** `filter:` syntax and order semantics are
+untouched. If step g ships, a `layer-cache` style property can be added
+later; it is not part of this proposal.
+
+### 9.4 Semantics
+
+- **Pushing a target still clears it** (the whole target, as today). With
+  a bucket of 64 px the slack is small; clearing only the region is a
+  later micro-optimisation.
+- **Blur edge behaviour changes slightly.** Today the shader samples
+  past the region edge and the texture wraps / clamps at the target
+  boundary. With bucketed targets the padding is transparent, so a blur
+  at the edge of the region fades out instead of clamping. This is
+  arguably more correct, but it is a visible difference and is called
+  out in 9.9.
+- **Pool discipline is LIFO.** `acquire` / `release` follow `drawLayer`
+  nesting, so a nested filtered descendant never receives its
+  ancestor's target.
+- **Pool shutdown.** `UIContext` (or the backend's teardown) calls
+  `TargetPool::clear` before the renderer is destroyed. `~Layout` no
+  longer touches targets; the existing destructor code that destroys
+  `layerTarget_` / `layerScratch_` / `layerSeparable_` is removed.
+- **`MAX_TARGET_DIM`** (4096) keeps its meaning and applies to the
+  requested size, before bucketing.
+- **Backends without `TargetSubRect`** still benefit from steps a and c
+  (lazy allocation, pooling) but allocate exact-size targets.
+
+### 9.5 File-by-file changes
+
+- `include/UIContext.hpp` — `Feature::TargetSubRect`, the new
+  `drawTarget` overload, `RenderStats`, `TargetPool` ownership.
+- `include/TargetPool.hpp` (new, header-only) — the pool.
+- `include/FilterRegistry.hpp` — `FilterContext::texSize`;
+  `FilterDef::downscale` (step e).
+- `src/layout/FilterRegistry.cpp` — passes use `texSize` and the source
+  rectangle; `downscale` handling (step e).
+- `src/layout/Render.cpp` — `drawLayer`: compute needed targets
+  (step a), acquire / release from the pool (steps b, c), update
+  `RenderStats`.
+- `include/Layout.hpp` — remove `layerTarget_` / `layerScratch_` /
+  `layerSeparable_` and their destructor cleanup (step c); `paintDirty`
+  and `invalidatePaint()` only if step g ships.
+- `backends/raylib/RaylibBackend.cpp` / `.hpp` — sub-rect `drawTarget`
+  (including the Y flip of render textures), `Feature::TargetSubRect`,
+  colour-only framebuffers, cheaper `pushTarget`, cached uniform
+  locations (steps b, d).
+- `backends/mock/MockBackend.hpp` — `createTargetCount`,
+  `destroyTargetCount`, `liveTargets`, sub-rect support flag, last
+  `drawTarget` source rect.
+- `assets/blur.fs` — read `texSize` as the real texture size.
+- `benchmarks/benches.cpp` — filtered-scene benchmarks.
+- `examples/` — a stress scene with on-screen `RenderStats`.
+- Docs (9.7).
+
+### 9.6 Tests
+
+All on the mock backend unless noted. The scenarios are the ones
+measured in 9.1, turned into regression guards:
+
+- Static filtered node: 0 `createTarget` after the first frame.
+- Scale sweep, rotation sweep and clip sweep (60 frames each): at most
+  a small constant number of `createTarget` calls (to be fixed at
+  implementation time from the measured bucket behaviour), instead of
+  45 / 165 / 177.
+- Lazy allocation: single `drop-shadow` → 1 target; single `blur` → 2;
+  `blur + drop-shadow` → 3; `drop-shadow + blur` → 3.
+- Pool: 50 static filtered cards → live targets ≤ 3 (was 150), and
+  `trim` returns the pool to 0 after the grace period.
+- Pool + nesting: a filtered node inside a filtered node uses distinct
+  targets and releases them in LIFO order.
+- Backend without `TargetSubRect`: falls back to exact-size targets and
+  still passes the lazy-allocation and pool tests.
+- `FilterContext::texSize` equals the texture size, and `dst` equals the
+  region size, when the target is larger than the region.
+- `RenderStats` counters match the mock's own counters.
+- Raylib only, **manual** (the mock has no framebuffer readback; same
+  situation as ROADMAP §1.12): a bucketed target produces the same
+  pixels as an exact-size one for the interior of the region, and the
+  Y flip of the sub-rectangle is correct. Checked visually in the
+  stress scene; automated only if a readback harness is added.
+- If step g ships: cached node is not re-rendered while idle; each
+  invalidation trigger listed in 9.2 forces exactly one re-render.
+
+Benchmarks (mock; CPU and counters only): `system.frame.filtered50.static`,
+`system.frame.filtered50.scaleAnim`, `system.frame.filtered50.rotAnim`.
+GPU time is measured manually with the stress example.
+
+### 9.7 Documentation
+
+- `docs/user/09-effects.md` — §1.1 and §7.4 describe **two** targets
+  per filtered node, "allocated lazily"; the code allocates all three,
+  every time (the chain section of the same page does mention the
+  third). Rewrite for the pool and for the actual cost model; add a
+  short "Performance" section (what makes filters expensive, what to avoid: filters on
+  large animated nodes, many small filtered nodes, deeply nested
+  filtered nodes).
+- `docs/internals/06-render-pipeline.md` — the `drawLayer` section and
+  §13.2 ("Target caching": the claim that a node only reallocates when
+  it resizes is not accurate for animated or clipped nodes).
+- `docs/api/FilterRegistry.md` — `FilterContext::texSize` contract and
+  `downscale`.
+- `docs/internals/09-backend.md` — `Feature::TargetSubRect` and the new
+  `drawTarget` overload.
+- `docs/internals/11-benchmarks.md` — the new benchmarks and what the
+  mock can and cannot measure.
+- `docs/internals/10-debug.md` — `RenderStats`.
+
+### 9.8 What does NOT change
+
+- The `filter:` syntax, the order semantics of a filter chain, and the
+  `effect:` path (§5.4b).
+- The `Layout::draw` public API and the CSS-like style surface.
+- The behaviour of existing backends that do not implement
+  `Feature::TargetSubRect`.
+- `MAX_TARGET_DIM`, the 40 px culling margin and the nested-target
+  support from §5.5.
+
+### 9.9 Open questions
+
+1. **Bucket size.** 64 px, or powers of two? A power of two wastes more
+   VRAM on large nodes; a fixed 64 px means more distinct sizes in the
+   pool.
+2. **Trim policy.** 120 frames of grace is a guess. It should be tuned
+   with the stress scene.
+3. **Blur edge behaviour.** Accept the transparent padding (9.4), or
+   emulate clamp-to-edge in the shader? Needs a visual check in
+   `examples/07_effects`.
+4. **Pool owner.** `UIContext` (backend-agnostic, proposed here as
+   `TargetPool`) or the renderer itself (an earlier draft called it
+   `FboPool` and put it in `IRenderer`)? Keeping it in the core means the
+   mock and every backend get the same pooling for free; putting it in
+   `IRenderer` lets a backend implement it natively.
+5. **`downscale` for the built-in blur.** Keep at 1, or default to 2
+   for radii above some threshold?
+6. **Layer cache: opt-in only (proposed), or auto-enabled for
+   subtrees with no custom `draw` and no running animation?** Auto is a bigger win and a
+   bigger risk. Decide only after steps 0–c are measured.
+7. **Full-target clear vs scissored clear** on `pushTarget`, once
+   bucketing introduces slack.
+8. **Is the real-GPU cost dominated by allocation churn (items 1–3) or
+   by fill rate and FBO switches (items 2, 5)?** Step 0 answers this
+   and may reorder steps d and e.
+
+---
+
 ## Out of scope (future rounds)
 
 The following were discussed in the same review but are **not** part
@@ -2011,6 +2394,10 @@ re-discussing them.
 8. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c). Benefits from
    VirtualList for the "reorderable list" example, but doesn't
    strictly depend on it.
+9. Proposal 9 — Filter layer pipeline performance → §4.9. Independent
+   of the other proposals, so it can ship at any point. Steps 0 (instrumentation),
+   a (lazy targets), b (bucketed sizes) and c (target pool) first; the
+   layer cache (step g) only if the measurements justify it.
 
 **Post-1.0:**
 
