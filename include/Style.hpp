@@ -262,6 +262,13 @@ namespace ZenitUI
         bool operator!=(const BoxShadow &o) const { return !(*this == o); }
     };
 
+    enum class Direction
+    {
+        Auto,
+        Row,
+        Column
+    };
+
 // ---------------------------------------------------------------------------
 // Master property list.
 //
@@ -308,7 +315,7 @@ namespace ZenitUI
     X(Value, translateY, Value(0.0f))                       \
     X(Value, fontSize, Value(20.0f))                        \
     X(Value, letterSpacing, Value(2.0f))                    \
-    X(float, transitionTime, 0.15f)                         \
+    X(float, transitionTime, 0.0f)                         \
     X(TransitionFunction, ease, TransitionFunction::Linear) \
     X(Overflow, overflowX, Overflow::Visible)               \
     X(Overflow, overflowY, Overflow::Visible)               \
@@ -321,7 +328,8 @@ namespace ZenitUI
     X(FontStack, font, FontStack{})                         \
     X(bool, wrap, false)                                    \
     X(WhiteSpace, whiteSpace, WhiteSpace::Normal)           \
-    X(TextOverflow, textOverflow, TextOverflow::Visible)
+    X(TextOverflow, textOverflow, TextOverflow::Visible)    \
+    X(Direction, direction, Direction::Auto)
 
     /**
      * \brief `true` if the named property inherits from parent to child.
@@ -716,7 +724,7 @@ namespace ZenitUI
                                    TransitionFunction, Overflow, Position, ZIndex,
                                    std::string, FontStack, TextureRef,
                                    std::vector<FilterRef>, BoxShadow,
-                                   WhiteSpace, TextOverflow>;
+                                   WhiteSpace, TextOverflow, Direction>;
 
     struct PropDesc
     {

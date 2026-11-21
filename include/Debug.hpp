@@ -15,7 +15,7 @@
  * ZenitUI::Debug::dumpTree(root);
  * ZenitUI::Debug::dumpStyle(*someNode);
  * ZenitUI::Debug::dumpTheme();
- * \endcode
+ * \endcodeinline std::string toString(Position p)
  *
  * Output goes to a `std::ostream` (default `std::cerr`), so it can be
  * redirected to a file or captured by a test.
@@ -174,6 +174,17 @@ namespace ZenitUI::Debug
             return "relative";
         case Position::Absolute:
             return "absolute";
+        }
+        return "?";
+    }
+
+    inline std::string toString(Direction d)
+    {
+        switch (d)
+        {
+        case Direction::Auto: return "auto";
+        case Direction::Row: return "row";
+        case Direction::Column: return "column";
         }
         return "?";
     }

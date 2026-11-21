@@ -62,24 +62,70 @@ namespace ZenitUI::UI
         /** \brief Currently selected index. */
         int getSelected() const { return selected; }
 
+        /** \brief Currently selected option string, or empty if none. */
+        const std::string &getSelectedText() const
+        {
+            static const std::string empty;
+            if (selected < 0 || selected >= (int)options.size())
+                return empty;
+            return options[selected];
+        }
+
+        /** \brief Current option list. */
+        const std::vector<std::string> &getOptions() const { return options; }
+
         /**
-         * \brief Select the option at \p idx and close the list.
-         *
-         * Out-of-range indices are ignored. Always fires `onChange` on
-         * success, even if the index was already selected. Marks the style
-         * as pending so the trigger label and item check state update on the
-         * next frame.
+         * \brief Replace the option list at runtime and rebuild the popup items.
          */
-        void setSelected(int idx)
+        void setOptions(std::vector<std::string> newOptions, int newSelected = 0, bool fireChange = false)
+        {
+            options = std::move(newOptions);
+            if (options.empty())
+                selected = -1;
+            else
+                selected = std::clamp(newSelected, 0, (int)options.size() - 1);
+
+            if (listContainer)
+                rebuildList();
+
+            refreshButtonText();
+            updateListStyles();
+            internal_.pendingTransition = 1;
+
+            if (fireChange && onChange && selected >= 0 && selected < (int)options.size())
+                onChange(selected, options[selected]);
+        }
+
+        /**
+         * \brief Select the option at \p idx.
+         */
+        void setSelected(int idx, bool fireChange = true)
         {
             if (idx < 0 || idx >= (int)options.size())
                 return;
             selected = idx;
             refreshButtonText();
             updateListStyles();
-            if (onChange)
+            if (fireChange && onChange)
                 onChange(selected, options[selected]);
             internal_.pendingTransition = 1;
+        }
+
+        /**
+         * \brief Select the first option whose label equals \p value.
+         * \return `true` if found.
+         */
+        bool setSelectedByText(const std::string &value, bool fireChange = false)
+        {
+            for (size_t i = 0; i < options.size(); ++i)
+            {
+                if (options[i] == value)
+                {
+                    setSelected((int)i, fireChange);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /** \brief `true` while the option list is visible. */
@@ -185,6 +231,27 @@ namespace ZenitUI::UI
             if (!isOpen)
                 return;
 
+            if (button)
+            {
+                Rect br = button->getRect();
+                Layout *p = getParent().get();
+                while (p)
+                {
+                    const auto &st = p->getStyle();
+                    if (st.overflowX != Overflow::Visible || st.overflowY != Overflow::Visible)
+                    {
+                        Rect pr = p->getRect();
+                        if (br.y + br.height <= pr.y || br.y >= pr.y + pr.height ||
+                            br.x + br.width <= pr.x || br.x >= pr.x + pr.width)
+                        {
+                            setOpen(false);
+                            return;
+                        }
+                    }
+                    p = p->getParent().get();
+                }
+            }
+
             if (ctx.pointer[MouseButton::Left].pressed || ctx.pointer[MouseButton::Right].pressed)
             {
                 if (!rect.contains(ctx.pointer.pos) &&
@@ -231,37 +298,20 @@ namespace ZenitUI::UI
             addChild(button);
 
             listContainer = std::make_shared<ScrollView>();
+            listContainer->cls("dropdown-list");
             listContainer->getInlineBase().position = Position::Absolute;
             listContainer->setPortal(true);
 
             listContainer->getInlineDefaults().width = VW(15.0f);
-            int visibleRows = std::min((int)options.size(), 6);
-            listContainer->getInlineDefaults().height = VH(2.0f + visibleRows * 4.0f);
-            listContainer->getInlineDefaults().background = Color{30, 30, 36, 255};
+            listContainer->getInlineDefaults().background = Color{26, 26, 30, 255};
             listContainer->getInlineDefaults().borderColor = Color{60, 60, 70, 255};
             listContainer->getInlineDefaults().borderWidth = Px(1.0f);
+            listContainer->getInlineDefaults().radius = Px(6.0f);
             listContainer->getInlineDefaults().alignItems = Align::Stretch;
-            listContainer->getInlineDefaults().overflowX = Overflow::Auto;
+            listContainer->getInlineDefaults().overflowX = Overflow::Hidden;
             listContainer->getInlineDefaults().overflowY = Overflow::Auto;
 
-            for (size_t i = 0; i < options.size(); ++i)
-            {
-                int idx = (int)i;
-                auto item = Label(options[i]);
-                item->cls("dropdown-item");
-                item->getInlineBase().padding = Spacing(VH(1.0f), VW(1.0f));
-                item->getInlineBase().verticalAlign = Align::Center;
-                item->setInteractive(true);
-                item->setFocusable(false);
-
-                item->onClick = [this, idx]()
-                {
-                    UIContext::get().requestFocus(shared_from_this());
-                    setSelected(idx);
-                    setOpen(false);
-                };
-                listContainer->addChild(item);
-            }
+                        rebuildList();
             addChild(listContainer);
             isOpen = false;
             applyOpenState();
@@ -289,9 +339,8 @@ namespace ZenitUI::UI
             if (!button || !listContainer)
                 return;
 
-            Rect btnRect = button->getRect();
-
-            Layout *clipAncestor = nullptr;
+            float scrollX = 0.0f;
+            float scrollY = 0.0f;
             Layout *p = getParent().get();
             while (p)
             {
@@ -299,28 +348,85 @@ namespace ZenitUI::UI
                 if (st.overflowX != Overflow::Visible ||
                     st.overflowY != Overflow::Visible)
                 {
-                    clipAncestor = p;
-                    break;
+                    scrollX += p->getScrollX();
+                    scrollY += p->getScrollY();
                 }
                 p = p->getParent().get();
             }
 
-            Rect clip;
-            float scrollX = 0.0f;
-            float scrollY = 0.0f;
-            if (clipAncestor)
-            {
-                clip = clipAncestor->getRect();
-                scrollX = clipAncestor->getScrollX();
-                scrollY = clipAncestor->getScrollY();
-            }
-            else
-            {
-                clip = {0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
-            }
+            positionList(scrollX, scrollY);
+        }
 
+        void translateSubtree(float dx, float dy) override
+        {
+            TLayout<Dropdown>::translateSubtree(dx, dy);
+            positionList(0.0f, 0.0f);
+        }
+    private:
+        std::vector<std::string> options;
+        int selected{0};
+        bool isOpen{false};
+        std::shared_ptr<Button> button;
+        std::shared_ptr<ScrollView> listContainer;
+
+        /** \brief Toggle the list state. */
+        void toggleOpen() { setOpen(!isOpen); }
+
+        /**
+         * \brief Apply the current open state to the list's visibility.
+         *
+         * Uses `enabled` (which also blocks input) plus `opacity` (which
+         * enables the fade transition). Marks the style as pending.
+         */
+        void applyOpenState()
+        {
+            if (!listContainer)
+                return;
+            listContainer->setEnabled(isOpen);
+            listContainer->setInteractive(isOpen);
+            listContainer->getInlineBase().opacity = isOpen ? 1.0f : 0.0f;
+            internal_.pendingTransition = 1;
+        }
+
+        void rebuildList()
+        {
+            if (!listContainer)
+                return;
+            listContainer->removeAllChildren();
+
+            int visibleRows = std::clamp((int)options.size(), 1, 6);
+            listContainer->getInlineDefaults().height = Px(8.0f + visibleRows * 34.0f);
+
+            for (size_t i = 0; i < options.size(); ++i)
+            {
+                int idx = (int)i;
+                auto item = Label(options[i]);
+                item->cls("dropdown-item");
+                item->getInlineDefaults().padding = Spacing(Px(8.0f), Px(12.0f));
+                item->getInlineDefaults().verticalAlign = Align::Center;
+                item->setInteractive(true);
+                item->setFocusable(false);
+
+                item->onClick = [this, idx]()
+                {
+                    UIContext::get().requestFocus(shared_from_this());
+                    setSelected(idx);
+                    setOpen(false);
+                };
+                listContainer->addChild(item);
+            }
+        }
+
+        void positionList(float scrollX, float scrollY)
+        {
+            if (!button || !listContainer)
+                return;
+
+            Rect btnRect = button->getRect();
             const float btnScreenX = btnRect.x - scrollX;
             const float btnScreenY = btnRect.y - scrollY;
+
+            const Rect clip = {0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
 
             float listH = listContainer->getMeasuredSize().y;
             float desiredY = btnScreenY + btnRect.height + 4.0f;
@@ -351,30 +457,6 @@ namespace ZenitUI::UI
             listContainer->arrange({btnScreenX, desiredY, btnRect.width, listH});
         }
 
-    private:
-        std::vector<std::string> options;
-        int selected{0};
-        bool isOpen{false};
-        std::shared_ptr<Button> button;
-        std::shared_ptr<ScrollView> listContainer;
-
-        /** \brief Toggle the list state. */
-        void toggleOpen() { setOpen(!isOpen); }
-
-        /**
-         * \brief Apply the current open state to the list's visibility.
-         *
-         * Uses `enabled` (which also blocks input) plus `opacity` (which
-         * enables the fade transition). Marks the style as pending.
-         */
-        void applyOpenState()
-        {
-            listContainer->setEnabled(isOpen);
-            listContainer->setInteractive(isOpen);
-            listContainer->getInlineBase().opacity = isOpen ? 1.0f : 0.0f;
-            internal_.pendingTransition = 1;
-        }
-
         /**
          * \brief Update the trigger label with the current selection.
          *
@@ -383,12 +465,14 @@ namespace ZenitUI::UI
          */
         void refreshButtonText()
         {
-            if (selected < 0 || selected >= (int)options.size())
-                return;
-            if (button->children.empty())
+            if (!button || button->children.empty())
                 return;
             auto t = std::dynamic_pointer_cast<Text>(button->children.front());
-            if (t)
+            if (!t)
+                return;
+            if (selected < 0 || selected >= (int)options.size())
+                t->setText("");
+            else
                 t->setText(options[selected]);
         }
 

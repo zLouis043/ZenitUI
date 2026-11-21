@@ -43,6 +43,18 @@ inline std::shared_ptr<Layout> HStack(std::initializer_list<std::shared_ptr<Layo
 }
 
 /**
+ * \brief Generic Flexbox container modified via CSS (direction).
+ */
+inline std::shared_ptr<Layout> Box(std::initializer_list<std::shared_ptr<Layout>> children = {})
+{
+    auto l = std::make_shared<Layout>(LayoutType::Horizontal);
+    l->setStyleTag("Box");
+    for (auto &c : children)
+        l->addChild(c);
+    return l;
+}
+
+/**
  * \class Panel
  * \brief A generic `Stack` container that blocks raycasts.
  *

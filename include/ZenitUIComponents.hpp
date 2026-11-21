@@ -17,6 +17,7 @@
 #include "components/Slider.hpp"
 #include "components/ProgressBar.hpp"
 #include "components/TextInput.hpp"
+#include "components/TextArea.hpp"
 
 #include "components/ScrollView.hpp"
 #include "components/Dropdown.hpp"

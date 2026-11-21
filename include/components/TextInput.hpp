@@ -65,12 +65,12 @@ namespace ZenitUI::UI
             cursorPos = (int)text.size();
             saveHistory();
 
-            style_.inlineBase.background = Color{30, 30, 36, 255};
-            style_.inlineBase.color = Colors::White;
-            style_.inlineBase.radius = Px(6.0f);
-            style_.inlineBase.padding = Spacing(VH(1.2f), VW(1.5f));
-            style_.inlineBase.borderColor = Color{60, 60, 70, 255};
-            style_.inlineBase.borderWidth = Px(1.0f);
+            style_.inlineDefaults.background = Color{30, 30, 36, 255};
+            style_.inlineDefaults.color = Colors::White;
+            style_.inlineDefaults.radius = Px(6.0f);
+            style_.inlineDefaults.padding = Spacing(VH(1.2f), VW(1.5f));
+            style_.inlineDefaults.borderColor = Color{60, 60, 70, 255};
+            style_.inlineDefaults.borderWidth = Px(1.0f);
             internal_.pendingTransition = 1;
         }
 
@@ -94,6 +94,20 @@ namespace ZenitUI::UI
         const std::string &getText() const { return text; }
         /** \brief Reset to empty content. */
         void clear() { setText(""); }
+
+        /** \brief Placeholder shown when body is empty. */
+        void setPlaceholder(std::string p)
+        {
+            placeholder = std::move(p);
+            internal_.pendingTransition = 1;
+        }
+        const std::string &getPlaceholder() const { return placeholder; }
+        void setPlaceholderWrap(bool w)
+        {
+            placeholderWrap = w;
+            internal_.pendingTransition = 1;
+        }
+        bool getPlaceholderWrap() const { return placeholderWrap; }
 
         /** \brief Current cursor position in bytes from the start. */
         int getCursorPos() const { return cursorPos; }
@@ -125,7 +139,7 @@ namespace ZenitUI::UI
          * Falls back to `0.6 * fontSize` if the renderer is not available
          * (headless tests).
          */
-        Vec2 computeIntrinsicSize(float, float) override
+        Vec2 computeIntrinsicSize(float availW, float) override
         {
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
             float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
@@ -134,7 +148,19 @@ namespace ZenitUI::UI
                 charW = r->measureText(f, "M", fs, 0.0f).x;
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
-            return {std::max(120.0f, charW * 12.0f), fs * 1.6f};
+
+            float w = std::max(120.0f, charW * 12.0f);
+            float h = fs * 1.6f;
+
+            if (placeholderWrap && text.empty() && !placeholder.empty() && availW > 1.0f)
+            {
+                float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+                auto lines = wrapPlaceholderLines(placeholder, availW, f, fs, sp);
+                float wrappedH = static_cast<float>(lines.size()) * (fs * 1.35f);
+                h = std::max(h, wrappedH);
+            }
+
+            return {w, h};
         }
 
         /**
@@ -542,7 +568,46 @@ namespace ZenitUI::UI
             }
 
             Color textColor = config.enabled ? style.color : Color{120, 120, 125, 255};
-            r->drawText(f, text, pos, fs, sp, textColor.withAlpha(op));
+            if (text.empty() && !placeholder.empty())
+            {
+                Style phStyle = partStyle("placeholder");
+                Color phColor = phStyle.color.is_set ? phStyle.color.value : Color{115, 115, 125, 255};
+
+                float phPl = style.padding.left.resolveH(rect.width, rect.height) +
+                             style.borderWidth.left.resolveH(rect.width, rect.height);
+                float phPr = style.padding.right.resolveH(rect.width, rect.height) +
+                             style.borderWidth.right.resolveH(rect.width, rect.height);
+                float phPt = style.padding.top.resolveV(rect.width, rect.height) +
+                             style.borderWidth.top.resolveV(rect.width, rect.height);
+                float phPb = style.padding.bottom.resolveV(rect.width, rect.height) +
+                             style.borderWidth.bottom.resolveV(rect.width, rect.height);
+                float phInnerW = std::max(0.0f, rect.width - phPl - phPr);
+                float phInnerH = std::max(0.0f, rect.height - phPt - phPb);
+
+                if (placeholderWrap && phInnerW > 1.0f)
+                {
+                    auto lines = wrapPlaceholderLines(placeholder, phInnerW, f, fs, sp);
+                    float lineH = fs * 1.35f;
+                    float totalH = (float)lines.size() * lineH;
+                    float startY = rect.y + phPt + std::max(0.0f, (phInnerH - totalH) * 0.5f);
+                    for (size_t i = 0; i < lines.size(); ++i)
+                    {
+                        float ly = startY + (float)i * lineH;
+                        if (ly > rect.y + phPt + phInnerH)
+                            break;
+                        r->drawText(f, lines[i], {rect.x + phPl, ly}, fs, sp, phColor.withAlpha(op));
+                    }
+                }
+                else
+                {
+                    std::string disp = truncatePlaceholder(placeholder, phInnerW, f, fs, sp);
+                    r->drawText(f, disp, pos, fs, sp, phColor.withAlpha(op));
+                }
+            }
+            else
+            {
+                r->drawText(f, text, pos, fs, sp, textColor.withAlpha(op));
+            }
 
             if (hasFocusCache && config.enabled && cursorBlink < 0.5f && (selectionStart == -1 || selectionStart == cursorPos))
             {
@@ -678,7 +743,123 @@ namespace ZenitUI::UI
             }
         }
 
+        static std::vector<std::string_view> wrapPlaceholderLines(const std::string &src, float availW,
+                                                                  FontHandle f, float fs, float sp)
+        {
+            std::vector<std::string_view> out;
+            auto r = UIContext::get().renderer;
+            if (!r || availW <= 1.0f || src.empty())
+            {
+                if (!src.empty())
+                    out.emplace_back(src);
+                return out;
+            }
+
+            auto measure = [&](int a, int b) -> float
+            {
+                if (b <= a)
+                    return 0.0f;
+                return r->measureText(f, std::string_view(src).substr(a, b - a), fs, sp).x;
+            };
+
+            int len = (int)src.size();
+            int pStart = 0;
+            while (true)
+            {
+                int pEnd = pStart;
+                while (pEnd < len && src[pEnd] != '\n')
+                    ++pEnd;
+
+                if (pStart == pEnd)
+                {
+                    out.emplace_back();
+                }
+                else
+                {
+                    int lineStart = pStart;
+                    while (lineStart < pEnd)
+                    {
+                        if (measure(lineStart, pEnd) <= availW)
+                        {
+                            out.emplace_back(std::string_view(src).substr(lineStart, pEnd - lineStart));
+                            break;
+                        }
+
+                        int lo = lineStart + 1;
+                        int hi = pEnd;
+                        while (lo < hi)
+                        {
+                            int mid = lo + (hi - lo + 1) / 2;
+                            if (measure(lineStart, mid) <= availW)
+                                lo = mid;
+                            else
+                                hi = mid - 1;
+                        }
+                        int fitEnd = std::max(lineStart + 1, lo);
+                        int breakPos = fitEnd;
+
+                        if (fitEnd < pEnd && src[fitEnd] == ' ')
+                        {
+                            breakPos = fitEnd + 1;
+                        }
+                        else
+                        {
+                            for (int k = fitEnd - 1; k > lineStart; --k)
+                            {
+                                if (src[k] == ' ')
+                                {
+                                    breakPos = k + 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        int visEnd = breakPos;
+                        while (visEnd > lineStart && src[visEnd - 1] == ' ')
+                            --visEnd;
+                        out.emplace_back(std::string_view(src).substr(lineStart, visEnd - lineStart));
+                        lineStart = breakPos;
+                    }
+                }
+
+                if (pEnd >= len)
+                    break;
+                pStart = pEnd + 1;
+            }
+            return out;
+        }
+
+        static std::string truncatePlaceholder(const std::string &src, float maxW,
+                                               FontHandle f, float fs, float sp)
+        {
+            auto r = UIContext::get().renderer;
+            if (!r || maxW <= 1.0f || src.empty())
+                return src;
+            if (r->measureText(f, src, fs, sp).x <= maxW)
+                return src;
+
+            const std::string ell = "...";
+            float ellW = r->measureText(f, ell, fs, sp).x;
+            if (ellW >= maxW)
+                return "";
+
+            int lo = 0, hi = (int)src.size();
+            while (lo < hi)
+            {
+                int mid = lo + (hi - lo + 1) / 2;
+                if (r->measureText(f, std::string_view(src).substr(0, mid), fs, sp).x + ellW <= maxW)
+                    lo = mid;
+                else
+                    hi = mid - 1;
+            }
+            while (lo > 0 && src[lo - 1] == ' ')
+                --lo;
+            return src.substr(0, lo) + ell;
+        }
+
         std::string text;
+        std::string placeholder;
+        bool placeholderWrap{false};
         int cursorPos{0};
         int selectionStart{-1};
         bool text_dirty{true};

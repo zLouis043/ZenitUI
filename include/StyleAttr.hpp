@@ -609,6 +609,14 @@ namespace ZenitUI
         return std::nullopt;
     }
 
+    inline std::optional<Direction> parseDirectionToken(std::string_view s)
+    {
+        if (s == "row") return Direction::Row;
+        if (s == "column") return Direction::Column;
+        if (s == "auto") return Direction::Auto;
+        return std::nullopt;
+    }
+
     inline std::optional<Justify> parseJustifyToken(std::string_view s)
     {
         if (s == "start")
@@ -985,8 +993,21 @@ namespace ZenitUI
             }
             return true;
         }
-        else if (key == "wrap" || key == "checked" || key == "value" ||
-                 key == "options" || key == "passthrough")
+        else if (key == "direction" || key == "flex-direction")
+        {
+            if (auto v = parseDirectionToken(val))
+                st.direction = *v;
+            return true;
+        }
+        else if (key == "wrap")
+        {
+            st.wrap = (val == "true" || val == "1" || val == "wrap");
+            return true;
+        }
+        else if (key == "checked" || key == "value" ||
+                 key == "options" || key == "passthrough" || 
+                 key == "placeholder" || key == "placeholder-wrap"|| 
+                 key == "rows" || key == "selected")
         {
             return true;
         }

@@ -331,14 +331,14 @@ namespace ZenitUI
 #undef X
 	}
 
-	void StyleResolver::resolvePendingTransition(Layout &node)
+	void StyleResolver::resolvePendingTransition(Layout &node, bool instant)
 	{
 		ComputedStyle newTarget = resolveFor(node);
 		node.internal_.pendingTransition = 0;
 
 		if (newTarget != targetStyle)
 		{
-			if (node.anim_.hasActiveImperative())
+			if (instant || node.anim_.hasActiveImperative())
 			{
 				currentStyle = newTarget;
 				targetStyle = std::move(newTarget);
@@ -364,10 +364,11 @@ namespace ZenitUI
 		else
 		{
 			targetStyle = std::move(newTarget);
-			if (transitionTimer >= 1.0f)
+			if (instant || transitionTimer >= 1.0f)
 			{
 				currentStyle = targetStyle;
 				transitionStartStyle = currentStyle;
+				transitionTimer = 1.0f;
 				transitionDirtyMask_ = 0;
 			}
 		}
@@ -390,7 +391,6 @@ namespace ZenitUI
 			return;
 		}
 
-		float elapsed = transitionTimer * maxDur;
 		transitionTimer += dt / maxDur;
 		if (transitionTimer >= 1.0f)
 		{
@@ -399,6 +399,7 @@ namespace ZenitUI
 			transitionDirtyMask_ = 0;
 			return;
 		}
+		float elapsed = transitionTimer * maxDur;
 
 		if (transitionDirtyMask_ == 0)
 			return;

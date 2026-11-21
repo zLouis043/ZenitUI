@@ -508,6 +508,8 @@ namespace ZenitUI::ZMarkup
               { return VStack(); });
         r.reg("HStack", [](const Element &)
               { return HStack(); });
+        r.reg("Box", [](const Element &)
+              { return Box(); });
 
         r.reg("Text", [](const Element &e)
               {
@@ -521,7 +523,24 @@ namespace ZenitUI::ZMarkup
         return t; });
 
         r.reg("TextInput", [](const Element &e)
-              { return TextInput::create(e.attr("value", e.text)); });
+              {
+                  auto ti = TextInput::create(e.attr("value", e.text));
+                  if (e.has("placeholder"))
+                      ti->setPlaceholder(e.attr("placeholder", ""));
+                  if (e.has("placeholder-wrap"))
+                      ti->setPlaceholderWrap(e.attr("placeholder-wrap", "false") == "true");
+                  return ti;
+              });
+        r.reg("TextArea", [](const Element &e)
+              {
+                  auto ta = TextArea::create(e.attr("value", e.text),
+                                             std::max(1, (int)e.attrFloat("rows", 3.0f)));
+                  if (e.has("placeholder"))
+                      ta->setPlaceholder(e.attr("placeholder", ""));
+                  if (e.has("placeholder-wrap"))
+                      ta->setPlaceholderWrap(e.attr("placeholder-wrap", "true") != "false");
+                  return ta;
+              });
         r.reg("Checkbox", [](const Element &e)
               { return Checkbox::create(e.attrBool("checked", false)); });
         r.reg("ProgressBar", [](const Element &e)
@@ -541,7 +560,8 @@ namespace ZenitUI::ZMarkup
         }
         flush();
         if (opts.empty()) opts.push_back("Default");
-        return Dropdown::create(std::move(opts), 0); });
+        int sel = std::clamp((int)e.attrFloat("selected", 0.0f), 0, (int)opts.size() - 1);
+        return Dropdown::create(std::move(opts), sel); });
         r.reg("Button", [](const Element &e)
               { return Btn(e.text); });
         r.reg("Panel", [](const Element &)

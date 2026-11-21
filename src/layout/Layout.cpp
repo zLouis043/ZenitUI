@@ -7,13 +7,16 @@ namespace ZenitUI
 
 	void Layout::update(float dt, bool ancestorBlocked, bool ancestorScrolling)
 	{
+		auto selfGuard = weak_from_this().lock();
+
 		bool wasPending = internal_.pendingTransition;
 		ComputedStyle styleBefore = style_.currentStyle;
 
 		initStyleIfNeeded();
 
 		uint32_t gen = UIContext::get().viewportGeneration;
-		if (gen != lastViewportGen_)
+		bool viewportChanged = (gen != lastViewportGen_);
+		if (viewportChanged)
 		{
 			lastViewportGen_ = gen;
 			internal_.pendingTransition = 1;
@@ -30,14 +33,20 @@ namespace ZenitUI
 		UIState nextState = input_.computeNextState(*this);
 		bool stateChanged = (style_.currentState != nextState);
 
-		if (stateChanged)
+		if (viewportChanged)
+		{
+			style_.currentState = nextState;
+			style_.resolvePendingTransition(*this, true);
+			anim_.syncCss(*this);
+		}
+		else if (stateChanged)
 		{
 			style_.beginStateTransition(*this, nextState);
 			anim_.syncCss(*this);
 		}
 		else if (internal_.pendingTransition)
 		{
-			style_.resolvePendingTransition(*this);
+			style_.resolvePendingTransition(*this, false);
 			anim_.syncCss(*this);
 		}
 
@@ -55,9 +64,12 @@ namespace ZenitUI
 		}
 
 		{
-			size_t n = children.size();
-			for (size_t i = 0; i < n; ++i)
-				children[i]->update(dt, blockSubtree, scrolling);
+			auto childrenSnapshot = children;
+			for (auto &child : childrenSnapshot)
+			{
+				if (child && child->getParent().get() == this && !child->internal_.wantsRemoval)
+					child->update(dt, blockSubtree, scrolling);
+			}
 		}
 
 		scroll_.tickInput(*this);

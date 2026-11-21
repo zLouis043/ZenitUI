@@ -638,6 +638,15 @@ namespace ZenitUI
 
 		LayoutType getLayoutType() const { return type; }
 
+		LayoutType getEffectiveLayoutType() const
+		{
+			if (style_.currentStyle.direction == Direction::Row)
+				return LayoutType::Horizontal;
+			if (style_.currentStyle.direction == Direction::Column)
+				return LayoutType::Vertical;
+			return type;
+		}
+
 		// ---- Asset convenience helpers ----
 
 		/**
@@ -957,12 +966,13 @@ namespace ZenitUI
 		 */
 		void markInheritanceDirty()
 		{
+			style_.invalidateCache();
 			internal_.pendingTransition = 1;
 			internal_.subtreeDirty = 1;
 			for (auto &c : children)
 				c->markInheritanceDirty();
 		}
-
+		
 		/**
 		 * \brief Propagate a class/tag change to descendants that may match it.
 		 *
@@ -1199,6 +1209,14 @@ namespace ZenitUI
 			return tr;
 		}
 
+		/**
+		 * \brief Translate the subtree (children and their descendants) by `(dx, dy)`.
+		 *
+		 * Used by the scroll fast path. Portals are skipped: their position
+		 * is independent of the scroll container.
+		 */
+		virtual void translateSubtree(float dx, float dy);
+
 	private:
 		// ---- Private internals ----
 
@@ -1274,14 +1292,6 @@ namespace ZenitUI
 
 		/** \brief Lay out children in a Stack: all centered/anchored in the same box. */
 		void arrangeStackFlow(const Rect &inner);
-
-		/**
-		 * \brief Translate the subtree (children and their descendants) by `(dx, dy)`.
-		 *
-		 * Used by the scroll fast path. Portals are skipped: their position
-		 * is independent of the scroll container.
-		 */
-		void translateSubtree(float dx, float dy);
 
 		/**
 		 * \brief `std::clamp` that handles the case where `hi < lo` by returning `hi`.

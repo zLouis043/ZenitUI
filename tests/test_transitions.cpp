@@ -61,7 +61,7 @@ TEST(Transitions_hover, interpolates_background_over_frames)
     CHECK(final.b == 0xFF);
 }
 
-TEST(Transitions_hover, default_transition_time_applies)
+TEST(Transitions_hover, default_transition_time_is_instant)
 {
     Env env;
     Theme::get().clear();
@@ -86,12 +86,7 @@ TEST(Transitions_hover, default_transition_time_applies)
 
     env.platform.moveMouse({50.0f, 25.0f});
     env.frame(root);
-    runFrames(env, root, 3);
 
-    CHECK(btn->getStyle().background.r > 0x00);
-    CHECK(btn->getStyle().background.r < 0xFF);
-
-    runFrames(env, root, 30);
     CHECK(btn->getStyle().background.r == 0xFF);
 }
 

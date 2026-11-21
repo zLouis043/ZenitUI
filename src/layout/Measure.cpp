@@ -55,19 +55,23 @@ namespace ZenitUI
 
 		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
 		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
+		if (!calcStyle.maxWidth.isAuto())
+			availW = std::min(availW, calcStyle.maxWidth.resolveH(parent_w, parent_h));
+		if (!calcStyle.maxHeight.isAuto())
+			availH = std::min(availH, calcStyle.maxHeight.resolveV(parent_w, parent_h));
 		float innerW = std::max(0.0f, availW - pl - pr - bwl - bwr);
 		float innerH = std::max(0.0f, availH - pt - pb - bwt - bwb);
 
-		if (type == LayoutType::Vertical && calcStyle.overflowY != Overflow::Visible)
+		if (getEffectiveLayoutType() == LayoutType::Vertical && calcStyle.overflowY != Overflow::Visible)
 			innerH = 1e9f;
-		if (type == LayoutType::Horizontal && calcStyle.overflowX != Overflow::Visible)
+		if (getEffectiveLayoutType() == LayoutType::Horizontal && calcStyle.overflowX != Overflow::Visible)
 			innerW = 1e9f;
 
 		Vec2 contentSize = computeIntrinsicSize(innerW, innerH);
 		float gapX = calcStyle.gap.resolveH(innerW, innerH);
 		float gapY = calcStyle.gap.resolveV(innerW, innerH);
 
-		if (type == LayoutType::Horizontal && calcStyle.wrap)
+		if (getEffectiveLayoutType() == LayoutType::Horizontal && calcStyle.wrap)
 		{
 			float curX = 0, curY = 0, maxW = 0, maxLineH = 0;
 			int visibleInLine = 0;
@@ -81,7 +85,8 @@ namespace ZenitUI
 				float mr = cst.margin.right.resolveH(innerW, innerH);
 				float mt = cst.margin.top.resolveV(innerW, innerH);
 				float mb = cst.margin.bottom.resolveV(innerW, innerH);
-				float childW = cs.x + ml + mr;
+				float baseW = cst.flexBasis.isAuto() ? cs.x : cst.flexBasis.resolveH(innerW, innerH);
+				float childW = baseW + ml + mr;
 				float childH = cs.y + mt + mb;
 				float spaceNeeded = childW + (visibleInLine > 0 ? gapX : 0.0f);
 				if (visibleInLine > 0 && curX + spaceNeeded > innerW && innerW > 0.0f)
@@ -103,7 +108,7 @@ namespace ZenitUI
 			contentSize.x = maxW;
 			contentSize.y = curY + maxLineH;
 		}
-		else if (type == LayoutType::Horizontal)
+		else if (getEffectiveLayoutType() == LayoutType::Horizontal)
 		{
 			float fixedMainSize = 0.0f;
 			float maxCrossSize = 0.0f;
@@ -186,19 +191,19 @@ namespace ZenitUI
 				float mb = cst.margin.bottom.resolveV(innerW, innerH);
 				float childTotalW = cs.x + ml + mr;
 				float childTotalH = cs.y + mt + mb;
-				if (type == LayoutType::Vertical)
+				if (getEffectiveLayoutType() == LayoutType::Vertical)
 				{
 					totalMainSize += childTotalH;
 					maxCrossSize = std::max(maxCrossSize, childTotalW);
 				}
-				else if (type == LayoutType::Stack)
+				else if (getEffectiveLayoutType() == LayoutType::Stack)
 				{
 					contentSize.x = std::max(contentSize.x, childTotalW);
 					contentSize.y = std::max(contentSize.y, childTotalH);
 				}
 				visibleChildren++;
 			}
-			if (type == LayoutType::Vertical)
+			if (getEffectiveLayoutType() == LayoutType::Vertical)
 			{
 				if (visibleChildren > 1)
 					totalMainSize += gapY * (visibleChildren - 1);
@@ -227,21 +232,42 @@ namespace ZenitUI
 
 	void Layout::arrange(Rect space)
 	{
-		const bool positionChanged = (space.x != rect.x || space.y != rect.y);
+		const bool rectChanged = (space.x != rect.x || space.y != rect.y ||
+								  space.width != rect.width || space.height != rect.height);
 		rect = space;
 
-		if (isScrollContainer() && type != LayoutType::Stack)
+		if (isScrollContainer() && getEffectiveLayoutType() != LayoutType::Stack)
 		{
-			if (scroll_.needsFullArrange(*this, positionChanged))
+			if (scroll_.needsFullArrange(*this, rectChanged))
 			{
 				Rect arrangeSpace = scroll_.computeArrangeSpace(*this, space);
 				arrangeInto(arrangeSpace);
 				scroll_.arrangeInitialized = true;
 				scroll_.appliedOffset = {0.0f, 0.0f};
+				scroll_.applyOffsetDelta(*this);
+				scroll_.updateMaxScroll(*this, space);
 			}
+			else
+			{
+				scroll_.applyOffsetDelta(*this);
+				scroll_.updateMaxScroll(*this, space);
 
-			scroll_.applyOffsetDelta(*this);
-			scroll_.updateMaxScroll(*this, space);
+				auto syncNestedScrolls = [](auto &self, Layout &node) -> void
+				{
+					for (auto &c : node.children)
+					{
+						if (!c || c->isPortal())
+							continue;
+						if (c->isScrollContainer() && c->getEffectiveLayoutType() != LayoutType::Stack)
+						{
+							c->scroll_.applyOffsetDelta(*c);
+							c->scroll_.updateMaxScroll(*c, c->rect);
+						}
+						self(self, *c);
+					}
+				};
+				syncNestedScrolls(syncNestedScrolls, *this);
+			}
 		}
 		else
 		{
@@ -287,16 +313,16 @@ namespace ZenitUI
 
 		arrangeAbsoluteAndPortals(inner);
 
-		if (type == LayoutType::Vertical)
+		if (getEffectiveLayoutType() == LayoutType::Vertical)
 			arrangeVerticalFlow(inner, gapY);
-		else if (type == LayoutType::Horizontal)
+		else if (getEffectiveLayoutType() == LayoutType::Horizontal)
 		{
 			if (style_.currentStyle.wrap)
 				arrangeWrapFlow(inner, gapX, gapY);
 			else
 				arrangeHorizontalFlow(inner, gapX);
 		}
-		else if (type == LayoutType::Stack)
+		else if (getEffectiveLayoutType() == LayoutType::Stack)
 			arrangeStackFlow(inner);
 	}
 
@@ -865,7 +891,8 @@ namespace ZenitUI
 			float mt = cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
-			float childW = c->measuredSize.x + ml + mr;
+			float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
+			float childW = baseW + ml + mr;
 			float childH = c->measuredSize.y + mt + mb;
 
 			float spaceNeeded = childW + (curLine.items.empty() ? 0.0f : gapX);
@@ -920,7 +947,7 @@ namespace ZenitUI
 				float mt = cst.margin.top.resolveV(inner.width, inner.height);
 				float mb = cst.margin.bottom.resolveV(inner.width, inner.height);
 
-				float cw = c->measuredSize.x;
+				float cw = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
 				if (freeSpace > 0.0f && line.totalGrow > 0.0f && cst.grow > 0.0f)
 				{
 					cw += freeSpace * (cst.grow / line.totalGrow);

@@ -43,12 +43,12 @@ namespace ZenitUI
 
         Rect arranged = space;
 
-        if (node.type == LayoutType::Vertical && st.overflowY != Overflow::Visible)
+        if (node.getEffectiveLayoutType() == LayoutType::Vertical && st.overflowY != Overflow::Visible)
         {
             float contentH = contentSize.y + pt + pb;
             arranged.height = std::max(space.height, contentH);
         }
-        else if (node.type == LayoutType::Horizontal && st.overflowX != Overflow::Visible)
+        else if (node.getEffectiveLayoutType() == LayoutType::Horizontal && st.overflowX != Overflow::Visible)
         {
             float contentW = contentSize.x + pl + pr;
             arranged.width = std::max(space.width, contentW);
@@ -88,7 +88,7 @@ namespace ZenitUI
     void ScrollController::tickInput(Layout &node)
     {
         const auto &st = node.style_.currentStyle;
-        if (!acceptsAnyInput(st) || node.type == LayoutType::Stack)
+        if (!acceptsAnyInput(st) || node.getEffectiveLayoutType() == LayoutType::Stack)
             return;
 
         auto &ctx = UIContext::get();
@@ -98,16 +98,14 @@ namespace ZenitUI
         const bool canScrollY = state.maxScroll.y > 0.0f && st.overflowY != Overflow::Hidden;
         const bool canScrollX = state.maxScroll.x > 0.0f && st.overflowX != Overflow::Hidden;
 
+        // Accept click and wheel only when topmostConsumer is this scroll container
+        // or one of its descendants (respects z-index, modals, and portals).
+        const bool pointerInsideScroll =
+            (ctx.topmostConsumer == &node) ||
+            (ctx.topmostConsumer && node.isAncestorOf(ctx.topmostConsumer));
+
         if (!node.hasPointerCapture())
         {
-            // Accept the click when topmostConsumer is either this scroll container
-            // or one of its descendants. A passive child (Stack wrapper, layout
-            // container, etc.) does not block scrollbar interaction: the click
-            // bubbles to the scroll container, matching CSS behaviour.
-            const bool pointerInsideScroll =
-                (ctx.topmostConsumer == &node) ||
-                (ctx.topmostConsumer && node.isAncestorOf(ctx.topmostConsumer));
-
             if (pointer[MouseButton::Left].pressed && pointerInsideScroll)
             {
                 bool handled = false;
@@ -187,7 +185,7 @@ namespace ZenitUI
         }
 
         if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
-            !node.hasPointerCapture() && rect.contains(pointer.pos))
+            !node.hasPointerCapture() && pointerInsideScroll && rect.contains(pointer.pos))
         {
             if (pointer.wheelY != 0.0f)
             {
@@ -208,7 +206,7 @@ namespace ZenitUI
 
         scrolling = node.hasPointerCapture() || std::abs(state.velocity.x) > ScrollState::VELOCITY_MIN || std::abs(state.velocity.y) > ScrollState::VELOCITY_MIN;
     }
-
+    
     void ScrollController::drawScrollbar(const Layout &node, float parentOpacity) const
     {
         const auto &st = node.style_.currentStyle;

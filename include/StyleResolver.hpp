@@ -163,7 +163,7 @@ namespace ZenitUI
          * short-circuited. Otherwise only the properties that changed are
          * marked dirty and the timer is reset.
          */
-        void resolvePendingTransition(Layout &node);
+        void resolvePendingTransition(Layout &node, bool instant = false);
 
         /**
          * \brief Advance the state transition by \p dt seconds.

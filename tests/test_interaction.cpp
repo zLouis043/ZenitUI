@@ -312,14 +312,7 @@ TEST(Interaction_subtree, checked_propagates_to_children) {
     CHECK_NEAR(knob->getRect().x, 10.0f, 1.0f);
 
     toggle->setChecked(true);
-
     env.frame(root);
-    env.frame(root);
-    CHECK(knob->getRect().x > 10.5f);
-    CHECK(knob->getRect().x < 60.0f);
-
-    for (int i = 0; i < 30; ++i)
-        env.frame(root);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
 }
 
@@ -842,16 +835,9 @@ TEST(Interaction_subtree, class_change_propagates_to_children)
 
     env.frame(root);
     CHECK_NEAR(knob->getRect().x, 10.0f, 1.0f);
-    
+
     toggle->addClass("active");
-
     env.frame(root);
-    env.frame(root);
-    CHECK(knob->getRect().x > 10.5f);
-    CHECK(knob->getRect().x < 60.0f);
-
-    for (int i = 0; i < 30; ++i)
-        env.frame(root);
     CHECK_NEAR(knob->getRect().x, 60.0f, 1.0f);
 }
 

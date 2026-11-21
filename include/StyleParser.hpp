@@ -272,7 +272,22 @@ namespace ZenitUI::ZMarkup
                 if (tokens.empty())
                     continue;
                 TransitionSpec spec;
-                spec.prop = tokens[0];
+                std::string normProp;
+                normProp.reserve(tokens[0].size());
+                bool upperNext = false;
+                for (char c : tokens[0])
+                {
+                    if (c == '-')
+                        upperNext = true;
+                    else
+                    {
+                        normProp.push_back(upperNext
+                                               ? static_cast<char>(std::toupper(static_cast<unsigned char>(c)))
+                                               : c);
+                        upperNext = false;
+                    }
+                }
+                spec.prop = std::move(normProp);
                 for (size_t i = 1; i < tokens.size(); ++i)
                 {
                     const auto &t = tokens[i];
