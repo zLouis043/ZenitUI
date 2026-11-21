@@ -2274,6 +2274,35 @@ in `Text` / `TextInput` / `TextArea` (tracked in §6.1).
 
 - [x] Load extended codepoints in `RaylibAssetProvider`
 
+### 5.35 Named Slots & direct prefab instantiation (`ZMarkup::instantiate`)
+
+**Status:** 🟡 planned — design in
+[PROPOSALS.md, Proposal 10](architecture/PROPOSALS.md#proposal-10--named-slots-and-direct-prefab-instantiation).
+
+**Problem:** §5.19 shipped a single anonymous `Slot`, which works for
+simple wrappers (`Card`, `ModalFrame`) but breaks down on multi-zone
+components (e.g. a reader modal with distinct header, scrollable body,
+and footer actions). In addition, instantiating a prefab from C++
+currently goes through `ZMarkup::build("Tag.cls")`, invoking the
+parser on a synthetic string even though the prefab's AST is already
+cached.
+
+**Plan:**
+
+- Named slots via `Slot name="header"` in the prefab and
+  `slot="header"` on injected children (keeping the unnamed `Slot` as
+  the default slot for children without a `slot` attribute).
+- Direct C++ instantiation (`ZMarkup::instantiate` /
+  `Registry::instantiate`) cloning the cached AST without re-running
+  the markup parser.
+
+- [ ] Parse `name` on `Slot` and `slot` attribute on child elements
+- [ ] Route children to matching named slots (fallback to default
+      anonymous `Slot`; keep default fallback children per slot)
+- [ ] Add `Registry::instantiate` and `ZMarkup::instantiate`
+- [ ] Add unit tests in `tests/test_zmarkup_build.cpp`
+- [ ] Update `docs/user/04-zmarkup.md` §6 and `docs/api/ZMarkup.md`
+
 ---
 
 ## Phase 6 — Internationalization

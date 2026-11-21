@@ -44,6 +44,7 @@ implementation.
 - [Proposal 7 — Drag & Drop](#proposal-7--drag--drop)
 - [Proposal 8 — VirtualView](#proposal-8--virtualview)
 - [Proposal 9 — Filter layer pipeline performance](#proposal-9--filter-layer-pipeline-performance)
+- [Proposal 10 — Named Slots and direct prefab instantiation](#proposal-10--named-slots-and-direct-prefab-instantiation)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -2359,6 +2360,138 @@ GPU time is measured manually with the stress example.
 
 ---
 
+## Proposal 10 — Named Slots and direct prefab instantiation
+
+**Priority:** medium — completes the prefab model (§5.18 / §5.19) for
+multi-region layouts and C++-driven dynamic lists.
+
+**Complexity:** low-medium (~1 day).
+
+**Depends on:** §5.18 (`UIPrefab`) and §5.19 (`<Slot>`), both shipped.
+
+**Status:** 🟡 proposed.
+
+**Roadmap mapping:** ships as §5.35.
+
+### 10.1 Problem
+
+1. **Single anonymous slot.** Proposal 3 shipped a single anonymous
+   `Slot` as an MVP. Components with more than one customizable region
+   — such as a modal with a custom header, a scrollable body, and a
+   footer action bar — cannot be expressed cleanly as a single prefab.
+2. **Parser round-trip from C++.** Dynamic lists built in C++ have to
+   call `ZMarkup::build("RowPrefab.active")` per item, running the
+   lexer and parser on a small string just to reach a prefab whose AST
+   is already cached in the `Registry`.
+
+### 10.2 Solution
+
+1. **Named slots** using attribute syntax (`name` on `Slot`, `slot` on
+   injected children), keeping `@ref` completely orthogonal:
+   - `Slot` (no `name` attribute) remains the default slot.
+   - `Slot name="header"` declares a named slot, with optional
+     fallback children rendered when nothing targets `"header"`.
+   - Any child passed to a prefab with `slot="header"` is routed to
+     `Slot name="header"` (as flat siblings, preserving the
+     wrapper-free unwrapping shipped in Proposal 3).
+   - Children without a `slot` attribute go to the anonymous default
+     `Slot`.
+2. **Direct instantiation helper** on `Registry` (and exposed globally
+   in `ZMarkup`): clones the cached prefab AST directly without
+   invoking the parser.
+
+### 10.3 ZMarkup & C++ API
+
+**Prefab definition (`reader_modal.zm`):**
+
+~~~zmarkup
+VStack.modal-card-reader {
+    HStack.modal-reader-header {
+        Slot name="header" {
+            Text.modal-reader-title "Untitled"
+        }
+        Button.btn-small.btn-danger@close "Chiudi"
+    }
+    VStack.modal-scroll-body {
+        Slot
+    }
+    HStack.modal-footer {
+        Slot name="footer"
+    }
+}
+~~~
+
+**Prefab usage (`.zm`):**
+
+~~~zmarkup
+ReaderModal {
+    HStack slot="header" {
+        Text.modal-reader-title "Strega del Salmastro"
+        Text.sb-cr "GS 3"
+    }
+    Text.msb-line "Contenuto del corpo (va nello slot di default)"
+    Button.btn-small.btn-primary@btn_init slot="footer" "In Combattimento"
+}
+~~~
+
+**C++ direct instantiation:**
+
+~~~cpp
+UINode Registry::instantiate(
+    const std::string& tagName,
+    const std::vector<std::string>& extraClasses = {},
+    const std::string& id  = "",
+    const std::string& ref = "") const;
+
+// Global convenience wrapper (uses default registry)
+UINode ZMarkup::instantiate(
+    const std::string& tagName,
+    const std::vector<std::string>& extraClasses = {},
+    const std::string& id  = "",
+    const std::string& ref = "");
+~~~
+
+### 10.4 Semantics
+
+- **Backward compatibility:** existing prefabs with a single anonymous
+  `Slot` behave identically.
+- **Multiple children targeting the same slot:** all children with
+  `slot="footer"` are injected in declaration order into
+  `Slot name="footer"`.
+- **Unknown slot name:** if a child specifies `slot="foo"` and the
+  prefab has no `Slot name="foo"`, the child is ignored and a debug
+  warning is logged (matching Proposal 3's missing-slot behavior).
+- **Per-slot fallbacks:** if `Slot name="header"` has fallback
+  children and no child targets `"header"`, the fallback renders while
+  other populated slots still receive their injected children.
+- **`slot` attribute consumption:** the `slot` attribute is consumed
+  by prefab routing and is not forwarded to `applyStyleAttr`.
+- **Unknown prefab in `instantiate`:** logs a warning and returns an
+  empty `UINode` (null root), matching `loadMarkupFile`.
+
+### 10.5 File-by-file changes
+
+| File | Change |
+|------|--------|
+| `include/ZMarkup.hpp` / `src/ZMarkup.cpp` | Store slot buckets (`unordered_map<string, vector<Element>>`, `""` for default) in the prefab build frame; match `Slot` by `name` attr; add `Registry::instantiate` and `ZMarkup::instantiate`. |
+| `tests/test_zmarkup_build.cpp` | Tests for named slots, mixed named + default slots, per-slot fallback, multiple children per slot, unknown slot warning, and `ZMarkup::instantiate` with classes/id/ref. |
+| `docs/user/04-zmarkup.md` | Extend §6 with Named Slots and `instantiate`. |
+| `docs/api/ZMarkup.md` | Document `instantiate` and `Slot name="..."`. |
+| `docs/ROADMAP.md` | Track and close §5.35. |
+
+### 10.6 Open questions
+
+1. **Nested prefabs with slots.** When Prefab A instantiates Prefab B
+   inside its body, the slot bucket map must live on a stack per
+   prefab invocation (not a single flat map on `BuildContext`) so B's
+   slots don't shadow or leak into A's slots.
+2. **Duplicate `Slot name="x"` inside the same prefab.** Clones the
+   children into each matching slot, or warns and populates only the
+   first? Recommendation: warn and populate only the first (avoids
+   duplicate `@ref` / `#id` collisions).
+
+---
+
 ## Out of scope (future rounds)
 
 The following were discussed in the same review but are **not** part
@@ -2399,6 +2532,8 @@ re-discussing them.
    of the other proposals, so it can ship at any point. Steps 0 (instrumentation),
    a (lazy targets), b (bucketed sizes) and c (target pool) first; the
    layer cache (step g) only if the measurements justify it.
+10. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35. Small,
+    self-contained extension of §5.18 / §5.19.
 
 **Post-1.0:**
 
