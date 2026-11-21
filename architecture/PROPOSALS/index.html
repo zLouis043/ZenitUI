@@ -2716,6 +2716,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-10-named-slots-and-direct-prefab-instantiation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 10 — Named Slots and direct prefab instantiation
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2772,6 +2783,9 @@ implementation.</p>
 <li>✅ <strong>Proposal 9 — Filter layer pipeline performance</strong>: shipped as
   roadmap §4.9 (steps 0–f; step g declined). See <code>examples/07b_effects_stress</code>
   and the change log at the end of this file.</li>
+<li>✅ <strong>Proposal 10 — Named Slots and direct prefab instantiation</strong>:
+  shipped as roadmap §5.35. See <code>tests/test_zmarkup_build.cpp</code> and the
+  change log at the end of this file.</li>
 </ul>
 <hr />
 <h2 id="index">Index</h2>
@@ -5157,7 +5171,7 @@ GPU time is measured manually with the stress example.</p>
 multi-region layouts and C++-driven dynamic lists.</p>
 <p><strong>Complexity:</strong> low-medium (~1 day).</p>
 <p><strong>Depends on:</strong> §5.18 (<code>UIPrefab</code>) and §5.19 (<code>&lt;Slot&gt;</code>), both shipped.</p>
-<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §5.35.</p>
 <p><strong>Roadmap mapping:</strong> ships as §5.35.</p>
 <h3 id="101-problem">10.1 Problem</h3>
 <ol>
@@ -5320,7 +5334,7 @@ re-discussing them.</p>
 </table>
 <hr />
 <h2 id="implementation-sequence">Implementation sequence</h2>
-<p><strong>Shipped</strong> (roadmap §5.16 – §5.21):</p>
+<p><strong>Shipped</strong> (roadmap §4.9, §5.16 – §5.24, §5.35):</p>
 <ol>
 <li>Proposal 1 — <code>ref</code> → §5.16</li>
 <li>Proposal 2 — <code>Bindable&lt;T&gt;</code> → §5.17</li>
@@ -5330,17 +5344,16 @@ re-discussing them.</p>
 <li>Proposal 5 — Wrap for HStack → §5.21</li>
 <li>Proposal 8 — VirtualView → §5.24</li>
 <li>Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)</li>
+<li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35</li>
 </ol>
 <p><strong>Proposed</strong> (next, in this order):</p>
 <ol>
 <li>Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
-   Benefits: unblocks 10k+ item lists, the most-requested feature
-   after UIPrefab.</li>
+    Benefits: unblocks 10k+ item lists, the most-requested feature
+    after UIPrefab.</li>
 <li>Proposal 7 — Drag &amp; Drop → §5.22 (split into a/b/c). Benefits from
     VirtualList for the "reorderable list" example, but doesn't
     strictly depend on it.</li>
-<li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35. Small,
-    self-contained extension of §5.18 / §5.19.</li>
 </ol>
 <p><strong>Post-1.0:</strong></p>
 <ul>
@@ -5573,6 +5586,41 @@ VirtualList ships.</p>
   <code>system.frame.filtered50.scaleAnim</code>, <code>system.frame.filtered50.rotAnim</code>.</li>
 <li><code>examples/07b_effects_stress/main.cpp</code> — 50-card interactive GPU
   stress scene with live <code>RenderStats</code> HUD.</li>
+</ul>
+<h3 id="proposal-10-named-slots-and-direct-prefab-instantiation_1">Proposal 10 — Named Slots and direct prefab instantiation</h3>
+<p><strong>Shipped:</strong> roadmap §5.35.</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li><strong>Lexical <code>SlotFrame</code> stack enables deep slots and slot forwarding.</strong>
+  Replacing <code>BuildContext::currentSlotChildren</code> with
+  <code>std::vector&lt;SlotFrame&gt; slotStack</code> also fixed an existing limitation
+  from §5.19 where <code>Slot</code> nested inside a child container of a prefab
+  could not see caller children. Temporarily popping the current frame
+  while expanding caller children allows nested prefabs to forward
+  slots cleanly (<code>Outer</code> passing <code>Slot name="outer-title" slot="title"</code>
+  into <code>Inner</code>).</li>
+<li><strong>Duplicate slot names populate only the first.</strong> Open question §10.6
+  point 2 was resolved by tracking <code>seenSlots</code> per <code>SlotFrame</code>: any
+  subsequent <code>Slot</code> with the same name logs a warning and is ignored,
+  avoiding duplicate <code>#id</code> / <code>@ref</code> collisions.</li>
+<li><strong>Added <code>hasPrefab</code> helper.</strong> Exposed both <code>Registry::hasPrefab</code> and
+  <code>ZMarkup::hasPrefab</code> alongside <code>instantiate</code>.</li>
+<li><strong><code>create_impl</code> / <code>create</code> marked <code>const</code>.</strong> Allows <code>Registry::instantiate</code>
+  to be <code>const</code>-correct without mutating registry state.</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>include/ZMarkup.hpp</code> — <code>SlotFrame</code>, <code>BuildContext::slotStack</code>,
+  <code>Registry::expandPrefab</code>, <code>Registry::hasPrefab</code>,
+  <code>Registry::instantiate</code>, global <code>ZMarkup::hasPrefab</code> and
+  <code>ZMarkup::instantiate</code>, warnings for out-of-prefab / duplicate /
+  unconsumed slots, and filtering of <code>slot</code> / <code>passthrough</code> from
+  <code>applyStyleAttr</code>.</li>
+<li><code>tests/test_zmarkup_build.cpp</code> — 8 new tests covering named slot
+  routing, multiple children per slot, per-slot fallback, nested slot
+  forwarding, duplicate slot handling, unknown slot warning/ignore,
+  direct instantiation with root merging/fallback, and missing-prefab
+  handling.</li>
 </ul>
 
 

@@ -2616,7 +2616,9 @@ pending, and what's blocking.</p>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
 <p>Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.34.</p>
+shipped, step g declined) and §5.25–§5.35 (CSS flex/border/text parity,
+TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &amp;
+direct prefab instantiation).</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -4675,32 +4677,41 @@ in <code>Text</code> / <code>TextInput</code> / <code>TextArea</code> (tracked i
 <li>[x] Load extended codepoints in <code>RaylibAssetProvider</code></li>
 </ul>
 <h3 id="535-named-slots-direct-prefab-instantiation-zmarkupinstantiate">5.35 Named Slots &amp; direct prefab instantiation (<code>ZMarkup::instantiate</code>)</h3>
-<p><strong>Status:</strong> 🟡 planned — design in
+<p><strong>Status:</strong> 🟢 done — design in
 <a href="../architecture/PROPOSALS/#proposal-10--named-slots-and-direct-prefab-instantiation">PROPOSALS.md, Proposal 10</a>.</p>
-<p><strong>Problem:</strong> §5.19 shipped a single anonymous <code>Slot</code>, which works for
-simple wrappers (<code>Card</code>, <code>ModalFrame</code>) but breaks down on multi-zone
-components (e.g. a reader modal with distinct header, scrollable body,
-and footer actions). In addition, instantiating a prefab from C++
-currently goes through <code>ZMarkup::build("Tag.cls")</code>, invoking the
-parser on a synthetic string even though the prefab's AST is already
-cached.</p>
-<p><strong>Plan:</strong></p>
+<p><strong>Problem:</strong> §5.19 shipped a single anonymous <code>Slot</code> that also cleared
+slot context on non-root containers inside a prefab. Multi-zone
+components (header / scrollable body / footer) could not be modeled as
+a single prefab, and instantiating a prefab from C++ required a string
+round-trip through <code>ZMarkup::build("Tag.cls")</code>.</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>Named slots via <code>Slot name="header"</code> in the prefab and
-  <code>slot="header"</code> on injected children (keeping the unnamed <code>Slot</code> as
-  the default slot for children without a <code>slot</code> attribute).</li>
+<li>Replaced flat <code>currentSlotChildren</code> in <code>BuildContext</code> with a lexical
+  <code>std::vector&lt;SlotFrame&gt; slotStack</code>, enabling named slots
+  (<code>Slot name="..."</code> + <code>slot="..."</code> on children), slots at any depth
+  inside a prefab, per-slot default fallbacks, and nested prefab slot
+  forwarding.</li>
+<li>Duplicate slot names within the same prefab log a warning and
+  populate only the first occurrence; children targeting missing slots
+  log a warning and are ignored; <code>slot</code> and <code>passthrough</code> attributes
+  are consumed before <code>applyStyleAttr</code>.</li>
+<li>Added <code>Registry::hasPrefab</code>, <code>Registry::instantiate</code>, and global
+  wrappers <code>ZMarkup::hasPrefab</code> / <code>ZMarkup::instantiate</code> (cloning the
+  cached AST directly without invoking the parser).</li>
 <li>
-<p>Direct C++ instantiation (<code>ZMarkup::instantiate</code> /
-  <code>Registry::instantiate</code>) cloning the cached AST without re-running
-  the markup parser.</p>
+<p>Added 8 unit tests in <code>tests/test_zmarkup_build.cpp</code> covering named
+  routing, multi-child order, per-slot fallbacks, nested slot
+  forwarding, duplicate/unknown slot handling, and direct
+  instantiation.</p>
 </li>
 <li>
-<p>[ ] Parse <code>name</code> on <code>Slot</code> and <code>slot</code> attribute on child elements</p>
+<p>[x] Parse <code>name</code> on <code>Slot</code> and <code>slot</code> attribute on child elements</p>
 </li>
-<li>[ ] Route children to matching named slots (fallback to default
+<li>[x] Route children to matching named slots (fallback to default
       anonymous <code>Slot</code>; keep default fallback children per slot)</li>
-<li>[ ] Add <code>Registry::instantiate</code> and <code>ZMarkup::instantiate</code></li>
-<li>[ ] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
+<li>[x] Support nested prefabs and slot forwarding via <code>slotStack</code></li>
+<li>[x] Add <code>Registry::instantiate</code> / <code>hasPrefab</code> and <code>ZMarkup::instantiate</code> / <code>hasPrefab</code></li>
+<li>[x] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
 <li>[ ] Update <code>docs/user/04-zmarkup.md</code> §6 and <code>docs/api/ZMarkup.md</code></li>
 </ul>
 <hr />
