@@ -449,7 +449,17 @@ namespace ZenitUI::ZMarkup
                 return result;
             }
 
-            if (!isPrefabRoot)
+            bool alreadyExpanding = false;
+            for (const auto &frame : ctx.slotStack)
+            {
+                if (frame.prefabName == el.tag)
+                {
+                    alreadyExpanding = true;
+                    break;
+                }
+            }
+
+            if (!alreadyExpanding)
             {
                 auto prefabIt = prefabs.find(el.tag);
                 if (prefabIt != prefabs.end())

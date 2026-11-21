@@ -857,3 +857,30 @@ TEST(ZMarkupBuild, prefab_direct_instantiate_unknown_returns_null_root)
     CHECK(ui.root() == nullptr);
     CHECK(ui.context() != nullptr);
 }
+
+TEST(ZMarkupBuild, prefab_can_use_another_prefab_as_root)
+{
+    Env env;
+    ZMarkup::registerPrefab("BaseRow", R"(
+        VStack.base-row {
+            Slot name="body" { Text "Default" }
+            Slot name="extra"
+        }
+    )");
+    ZMarkup::registerPrefab("HpRow", R"(
+        BaseRow.with-hp {
+            Text@hp_txt slot="body" "10/10"
+            ProgressBar@hp_bar slot="extra" value="0.5"
+        }
+    )");
+
+    auto ui = ZMarkup::instantiate("HpRow", {"active-turn"});
+    auto root = ui.root();
+    CHECK(root != nullptr);
+    CHECK(root->hasClass("base-row"));
+    CHECK(root->hasClass("with-hp"));
+    CHECK(root->hasClass("active-turn"));
+    CHECK(root->children.size() == 2);
+    CHECK(ui.ref<Text>("hp_txt") != nullptr);
+    CHECK(ui.ref<ProgressBar>("hp_bar") != nullptr);
+}
