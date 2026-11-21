@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795295884310,
+  "lastUpdate": 1795300493650,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -11632,6 +11632,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 86.052,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "b274c3934711f8b9542e0bf3f4dcda612abb1006",
+          "message": "Removed if(!isPrefabRoot) that blocked prefab expansion when is the root of another prefab, put there to prevent recursion, but now with a check with ctx.slotStack we always prevent recusion but we can compose prefabs onto other prefabs. Added tests",
+          "timestamp": "2026-11-21T23:32:45+01:00",
+          "tree_id": "5533b83af91df97b01a413491359988017503715",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/b274c3934711f8b9542e0bf3f4dcda612abb1006"
+        },
+        "date": 1795300492295,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 359.16,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 6.25819,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00415386,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0287013,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0245302,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.763752,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.973689,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.922699,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.44165,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 1.0278,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 45.2791,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 45.634,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 16.0719,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 17.348,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 34.196,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00269291,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 54.8878,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 171.83,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 56.5844,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 128.11,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 106.63,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 85.4575,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 128.909,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 719.052,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 724.63,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 57.8151,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 130.533,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 104.141,
             "unit": "us"
           }
         ]
