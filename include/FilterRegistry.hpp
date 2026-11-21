@@ -85,6 +85,7 @@ struct FilterContext {
     TargetHandle     write_target{};
     Rect             region{};
     Rect             dst{};
+    Vec2             texSize{};
     float            opacity{1.0f};
     const FilterRef* ref{nullptr};
 };
@@ -102,6 +103,7 @@ struct FilterDef {
     FilterPattern              pattern{FilterPattern::SinglePass};
     std::vector<FilterParam>   params;
     FilterCustomFn             custom;
+    int                        downscale{1}; ///< 1, 2, or 4 (Separable filters only).
 };
 
 /**

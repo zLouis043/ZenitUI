@@ -42,7 +42,8 @@ namespace ZenitUI
 	enum class Feature
 	{
 		Effects,
-		NestedTargets
+		NestedTargets,
+		TargetSubRect
 	};
 
 	/**
@@ -110,6 +111,10 @@ namespace ZenitUI
 		virtual void pushTarget(TargetHandle t) = 0;
 		virtual void popTarget() = 0;
 		virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+		virtual void drawTarget(TargetHandle t, Rect /*src*/, Rect dst, Color tint)
+		{
+			drawTarget(t, dst, tint);
+		}
 
 		// ---- Effect uniform setters ----
 		virtual void setEffectFloat(EffectHandle e, const char *name, float value) = 0;
@@ -199,6 +204,153 @@ namespace ZenitUI
 	};
 
 	/**
+	 * \struct RenderStats
+	 * \brief Per-frame and live render-target / filter counters (Proposal 9, Step 0).
+	 */
+	struct RenderStats
+	{
+		uint32_t targetsCreated{0};
+		uint32_t targetsDestroyed{0};
+		uint32_t liveTargets{0};
+		uint32_t pushTargetCalls{0};
+		uint32_t filterPasses{0};
+
+		void beginFrame()
+		{
+			targetsCreated = 0;
+			targetsDestroyed = 0;
+			pushTargetCalls = 0;
+			filterPasses = 0;
+		}
+
+		void resetAll()
+		{
+			beginFrame();
+			liveTargets = 0;
+		}
+	};
+
+	/**
+	 * \class TargetPool
+	 * \brief Shared, bucket-sized render-target pool owned by `UIContext` (§4.9 Step c).
+	 */
+	class TargetPool
+	{
+	public:
+		static constexpr int BUCKET_SIZE = 64;
+		static constexpr int MAX_DIM = 4096;
+
+		static int bucketDim(int v)
+		{
+			int rounded = ((v + BUCKET_SIZE - 1) / BUCKET_SIZE) * BUCKET_SIZE;
+			return rounded < MAX_DIM ? rounded : MAX_DIM;
+		}
+
+		TargetHandle acquire(IRenderer &r, int w, int h, RenderStats *stats = nullptr)
+		{
+			if (w <= 0 || h <= 0)
+				return {};
+
+			const bool useSubRect = r.supports(Feature::TargetSubRect);
+			const int reqW = useSubRect ? bucketDim(w) : w;
+			const int reqH = useSubRect ? bucketDim(h) : h;
+
+			// Ricerca LIFO di un target libero con le dimensioni richieste/arrotondate.
+			for (auto it = entries_.rbegin(); it != entries_.rend(); ++it)
+			{
+				if (!it->inUse && it->handle.width == reqW && it->handle.height == reqH)
+				{
+					it->inUse = true;
+					it->lastUsedFrame = frameIndex_;
+					return it->handle;
+				}
+			}
+
+			TargetHandle hnd = r.createTarget(reqW, reqH);
+			if (!hnd.valid())
+				return {};
+
+			entries_.push_back({hnd, true, frameIndex_});
+			if (stats)
+			{
+				stats->targetsCreated++;
+				stats->liveTargets++;
+			}
+			return hnd;
+		}
+
+		void release(TargetHandle t)
+		{
+			if (!t.valid())
+				return;
+			for (auto it = entries_.rbegin(); it != entries_.rend(); ++it)
+			{
+				if (it->handle.id == t.id)
+				{
+					it->inUse = false;
+					it->lastUsedFrame = frameIndex_;
+					return;
+				}
+			}
+		}
+
+		void trim(IRenderer &r, RenderStats *stats = nullptr, int graceFrames = 120)
+		{
+			const uint64_t grace = graceFrames > 0 ? static_cast<uint64_t>(graceFrames) : 1u;
+			for (auto it = entries_.begin(); it != entries_.end();)
+			{
+				if (!it->inUse && (frameIndex_ - it->lastUsedFrame) >= grace)
+				{
+					r.destroyTarget(it->handle);
+					if (stats)
+					{
+						stats->targetsDestroyed++;
+						if (stats->liveTargets > 0)
+							stats->liveTargets--;
+					}
+					it = entries_.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
+			frameIndex_++;
+		}
+
+		void clear(IRenderer &r, RenderStats *stats = nullptr)
+		{
+			for (auto &e : entries_)
+			{
+				if (e.handle.valid())
+				{
+					r.destroyTarget(e.handle);
+					if (stats)
+					{
+						stats->targetsDestroyed++;
+						if (stats->liveTargets > 0)
+							stats->liveTargets--;
+					}
+				}
+			}
+			entries_.clear();
+			frameIndex_ = 0;
+		}
+
+		size_t liveCount() const { return entries_.size(); }
+
+	private:
+		struct Entry
+		{
+			TargetHandle handle{};
+			bool inUse{false};
+			uint64_t lastUsedFrame{0};
+		};
+		std::vector<Entry> entries_;
+		uint64_t frameIndex_{0};
+	};
+
+	/**
 	 * \struct UIContext
 	 * \brief Per-application singleton: backends, frame state, and routing.
 	 */
@@ -253,6 +405,10 @@ namespace ZenitUI
 
 		std::mt19937 rng;
 
+		// ---- Render instrumentation & target pool ----
+		RenderStats renderStats;
+		TargetPool targetPool;
+
 		/**
 		 * \brief Advance the frame: pull platform state and reset one-shot flags.
 		 *
@@ -271,6 +427,7 @@ namespace ZenitUI
 			topmostConsumer = nullptr;
 			hoverTarget = nullptr;
 			releaseTarget = nullptr;
+			renderStats.beginFrame();
 			activePortals = std::move(framePortals);
 			framePortals.clear();
 			if (platform)
@@ -293,6 +450,13 @@ namespace ZenitUI
 					renderer->setDpiScale(dpiScale);
 				}
 			}
+		}
+
+		/** \brief End-of-frame housekeeping (trims idle pooled render targets). */
+		void endFrame()
+		{
+			if (renderer)
+				targetPool.trim(*renderer, &renderStats);
 		}
 
 		/** \brief Set \p n as the focused node; null clears focus. */

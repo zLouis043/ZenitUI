@@ -47,6 +47,42 @@ namespace
         return root;
     }
 
+    std::shared_ptr<Layout> makeFiltered50Tree(bool withDropShadow)
+    {
+        auto root = std::make_shared<Layout>(LayoutType::Stack);
+        root->size(Percent(100), Percent(100));
+
+        std::vector<FilterRef> chain;
+        chain.push_back({"blur", {"4px"}});
+        if (withDropShadow)
+            chain.push_back({"drop-shadow", {"2px", "2px", "#000"}});
+
+        for (int i = 0; i < 50; ++i)
+        {
+            auto card = std::make_shared<Layout>(LayoutType::Stack);
+            card->size(Px(200), Px(200));
+            card->getInlineBase().translateX = Px(100.0f);
+            card->getInlineBase().translateY = Px(100.0f);
+            card->getInlineBase().filters = chain;
+            root->addChild(card);
+        }
+        return root;
+    }
+
+    void bindFilterBenchEnv(Env &env)
+    {
+        auto &ctx = UIContext::get();
+        ctx.renderer = &env.renderer;
+        ctx.platform = &env.platform;
+        ctx.assets = &env.assets;
+        env.reset();
+        env.renderer.supportsEffects = true;
+        env.renderer.supportsTargetSubRect = true;
+        env.renderer.currentClip = {0.0f, 0.0f, 800.0f, 600.0f};
+        env.assets.registerEffect("blur");
+        env.assets.registerEffect("dropShadow");
+    }
+
     // Shared state for benchmarks whose body must operate on pre-built data.
     // The setup() callback rebuilds this state before every run; the body()
     // then measures only the operation of interest, not the construction.
@@ -697,6 +733,74 @@ namespace Bench
               ++i;
               env.frame(root);
               g_sink += (float)root->children.size(); });
+            }
+
+            {
+                static Env env;
+                static std::shared_ptr<Layout> root;
+                constexpr int FRAMES = 200;
+
+                R.add("system.frame.filtered50.static", "frame", FRAMES,
+                      /*setup=*/[&]
+                      {
+                          bindFilterBenchEnv(env);
+                          root = makeFiltered50Tree(/*withDropShadow=*/true);
+                          for (int i = 0; i < 5; ++i)
+                              env.frame(root);
+                      },
+                      /*body=*/[&]
+                      {
+                          env.frame(root);
+                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
+                      });
+            }
+
+            {
+                static Env env;
+                static std::shared_ptr<Layout> root;
+                constexpr int FRAMES = 200;
+
+                R.add("system.frame.filtered50.scaleAnim", "frame", FRAMES,
+                      /*setup=*/[&]
+                      {
+                          bindFilterBenchEnv(env);
+                          root = makeFiltered50Tree(/*withDropShadow=*/true);
+                          for (int i = 0; i < 5; ++i)
+                              env.frame(root);
+                      },
+                      /*body=*/[&]
+                      {
+                          static int i = 0;
+                          float s = 1.0f + 0.15f * ((float)(i++ % 60) / 59.0f);
+                          for (auto &c : root->children)
+                              c->getInlineBase().scale = s;
+                          env.frame(root);
+                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
+                      });
+            }
+
+            {
+                static Env env;
+                static std::shared_ptr<Layout> root;
+                constexpr int FRAMES = 200;
+
+                R.add("system.frame.filtered50.rotAnim", "frame", FRAMES,
+                      /*setup=*/[&]
+                      {
+                          bindFilterBenchEnv(env);
+                          root = makeFiltered50Tree(/*withDropShadow=*/false);
+                          for (int i = 0; i < 5; ++i)
+                              env.frame(root);
+                      },
+                      /*body=*/[&]
+                      {
+                          static int i = 0;
+                          float r = (float)((i++ * 3) % 360);
+                          for (auto &c : root->children)
+                              c->getInlineBase().rotation = r;
+                          env.frame(root);
+                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
+                      });
             }
         }
     }

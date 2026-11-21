@@ -37,23 +37,30 @@ A node goes through the "layer" render path if **all** of these are true:
 - It's **not** already inside a render target, OR the backend supports nested targets
   (`!renderer->inTarget() || renderer->supports(Feature::NestedTargets)`).
 
-The reference Raylib backend supports nested render targets seamlessly, allowing filtered nodes to be safely nested inside other filtered layers.
+The reference Raylib backend supports nested render targets seamlessly,
+allowing filtered nodes to be safely nested inside other filtered layers.
 
 When the conditions are met, `Layout::drawLayer` runs:
 
-1. Computes the transformed bounding box of the node
-   (`rect` after `scale` and `translate`).
+1. Computes the transformed axis-aligned bounding box of the node
+   (`rect` after `translate`, `scale`, and `rotation`).
 2. Intersects it with the current clip rect to get the visible `region`.
-3. Ensures two render targets (`layerTarget_` and `layerScratch_`) are
-   sized to the region.
-4. Renders the subtree (chrome + content + children) into `layerTarget_`.
-5. Runs the filter chain on the target.
-6. Draws the result to the framebuffer at `region`, with the node's
-   opacity applied.
+3. Acquires a main render target from the shared `TargetPool` on
+   `UIContext` (bucketed up to a multiple of 64 px when the backend
+   supports `Feature::TargetSubRect`).
+4. Renders the subtree (chrome + content + children) into that target.
+5. Lazily acquires only the extra targets required by the chain:
+   - a **scratch** target for ping-pong only if the chain has 2+ filters;
+   - a **separable** intermediate target only if a `Separable` filter
+     (with `downscale <= 1`) or a `Custom` filter is present.
+6. Runs the filter chain and composites the final result to the
+   framebuffer at `region`, with the node's opacity applied.
+7. Releases all acquired targets back to `TargetPool` in LIFO order.
 
-The render target is cached on the node and only recreated when the
-region size changes. This matters for performance — a filtered node
-that doesn't resize doesn't reallocate its targets.
+Because targets are pooled per `UIContext` (not owned per node) and
+bucketed to 64 px steps, 50 filtered cards reuse at most 3 live targets
+instead of keeping 150 alive, and animated or clipped nodes avoid
+per-frame target reallocation.
 
 ### 1.2 Declaring a filter
 
@@ -96,11 +103,9 @@ effect. A missing shader is not an error.
   the already-transformed image. (Actually the code applies the
   transform before rendering into the target, then draws the target
   at the transformed region.)
-- **Rotation is approximated.** `drawLayer` computes the bounding box
-  after scale + translate, but ignores rotation for the region
-  computation. A rotated node with a filter will have its region
-  slightly off. This is a known limitation; rotations on filtered
-  nodes are rare.
+- **Rotation is accounted for.** `drawLayer` transforms all four corners
+  of `rect` (translate, scale, and rotation) and takes their AABB, so
+  rotated filtered nodes are not clipped at the corners
 - **Clipping is intersected, not applied.** The filter's `region` is
   the intersection of the transformed rect and the current clip. The
   parts of the subtree outside that region are still rendered into the
@@ -143,19 +148,23 @@ f2` produces `f2(f1(x))`, matching CSS's semantics.
 
 #### The ping-pong
 
-The chain alternates between two render targets:
+The chain acquires its targets from `UIContext::targetPool` and
+alternates between the main target and (when 2+ filters are present) a
+scratch target:
 
-- **Filter 0** reads `layerTarget_`, writes `layerScratch_`.
-- **Filter 1** reads `layerScratch_`, writes `layerTarget_`.
-- **Filter 2** reads `layerTarget_`, writes `layerScratch_`.
+- **Filter 0** reads `mainTarget`, writes `scratchTarget`.
+- **Filter 1** reads `scratchTarget`, writes `mainTarget`.
+- **Filter 2** reads `mainTarget`, writes `scratchTarget`.
 - ...
 - **The last filter** writes to the **framebuffer** at the node's
   region, not to a target.
 
-A third target (`layerSeparable_`) exists for `Separable` filters (like
-`blur`). The blur is implemented as two passes: horizontal into
-`layerSeparable_`, then vertical into the destination. Without a third
-target, the H-pass would overwrite the read target mid-computation.
+A third target (`separableTarget`) is acquired only when a `Separable`
+filter (with `downscale == 1`) or a `Custom` filter is in the chain.
+`Separable` filters with `downscale > 1` (2 or 4) acquire a smaller
+intermediate target directly from `TargetPool` and upscale on the
+vertical pass. All targets are released back to the pool when
+`drawLayer` finishes.
 
 #### Opacity
 
@@ -453,8 +462,13 @@ Your shader should sample along `direction` using the `radius` (or
 whatever your blur axis parameter is called). Both `texSize` and
 `direction` are set by the framework; your params define the radius.
 
-The node's `layerScratch_` target is used for the intermediate pass.
-It's allocated lazily and cached.
+`Separable` filters also support an opt-in `downscale` field on
+`FilterDef` (`1`, `2`, or `4`; default `1`). Setting `.downscale = 2`
+runs the intermediate pass on a half-resolution target from `TargetPool`
+(4× fewer pixels) and upscales on the vertical pass. The built-in `blur`
+keeps `downscale = 1` by default; register a separate preset (e.g.
+`blur-fast` with `.downscale = 2`) if you want a cheaper blur for large
+panels.
 
 #### `Silhouette`
 
@@ -507,6 +521,8 @@ The `FilterContext`:
 | `dst` | `Rect` — `{0, 0, tw, th}`, the target's coordinate space. |
 | `opacity` | `float` — the node's computed opacity. |
 | `ref` | `const FilterRef*` — the CSS filter reference (name + args). |
+| `write_target` | `TargetHandle` — intermediate destination target, or invalid if this is the last filter in the chain. |
+| `texSize` | `Vec2` — actual pixel size of the `src` texture (may be larger than `dst` when bucketed). Shaders that compute texel size must use `texSize`, not `dst.width`/`dst.height`. |
 
 `ctx.ref->args` is the raw CSS argument list, useful if you want to
 parse them yourself.
@@ -690,39 +706,47 @@ pass an explicit `vsPath`.
 
 Nested render targets are fully supported as long as the active backend implements `Feature::NestedTargets` (which the default Raylib backend does). A filtered node inside another filtered node will render correctly, maintaining its own isolated filter chain and compositing cleanly into the parent target.
 
-### 7.2 Rotation ignored
-
-`drawLayer` computes the transformed bounding box from `scale` and
-`translate`, but not `rotation`. A rotated node with a filter will have
-its region computed as if it weren't rotated. The filter will still run,
-but the region may be slightly too small or too large. In practice,
-rotating a filtered node is rare.
-
-### 7.3 No `FilterRef` interpolation
+### 7.2 No `FilterRef` interpolation
 
 `transition: filter 0.3s` has no visible effect — the `filters` list
 snaps to the target at `t > 0`. To animate filter parameters, drive a
 uniform via an imperative animation, or make the change instantaneous.
 
-### 7.4 Render target size
+### 7.3 Render target size, pooling, and performance
 
 The render target is sized to the intersection of the transformed rect
-and the current clip. For a filtered node that fills the viewport, this
-is a full-viewport target — potentially large. Memory-wise, two targets
-(`layerTarget_` + `layerScratch_`) per filtered node, allocated lazily
-and cached.
+and the current clip (`region`). When the backend supports
+`Feature::TargetSubRect` (true on Raylib), `TargetPool` rounds each
+dimension **up to a multiple of 64 px** and reads back only the active
+sub-rectangle.
 
-There's a hard limit: `MAX_TARGET_DIM = 4096`. If the region exceeds
-this in either dimension, the layer path falls back to `drawInline`:
+- **Target count per chain:**
+  - Single `drop-shadow` or `SinglePass` filter → **1** target.
+  - Single `blur` (`Separable`) → **2** targets.
+  - Chains of 2+ filters with a `Separable` filter → **3** targets.
+- **Pooling:** targets are shared across all nodes via
+  `UIContext::targetPool` and released in LIFO order at the end of each
+  `drawLayer`. Total live targets are bounded by
+  `(nesting depth × 3)` rather than `(filtered nodes × 3)`. Idle targets
+  are freed automatically by `UIContext::endFrame()` after 120 frames.
+- **Hard cap:** `TargetPool::MAX_DIM = 4096`. If the requested region
+  exceeds 4096 px in either dimension, `drawLayer` falls back to
+  `drawInline`.
+- **Blur edge behavior:** because bucketed targets are cleared to
+  transparent (`BLANK`), samples past the region edge fade into
+  transparency rather than clamping to the border pixel.
 
-```cpp
-if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM) {
-    drawInline(renderStyle, globalOp);
-    return;
-}
-```
+#### Performance tips
 
-### 7.5 `effect:` and `filter:` on the same node
+- Prefer `effect:` over `filter:` when a shader only needs per-fragment
+  operations (no neighbor sampling or subtree compositing).
+- Avoid chaining multiple `Separable` filters on full-screen containers.
+- For large blurred panels where fill rate matters, register a
+  `Separable` preset with `downscale = 2` (see `examples/07b_effects_stress`).
+- Inspect live target counts and filter passes at runtime via
+  `UIContext::get().renderStats` or `Debug::dumpRenderStats()`.
+
+### 7.4 `effect:` and `filter:` on the same node
 
 A node can have both properties at once. They operate at different
 levels of the render pipeline, and understanding which is which

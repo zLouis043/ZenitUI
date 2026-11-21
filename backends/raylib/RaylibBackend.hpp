@@ -8,9 +8,30 @@
 #include <raylib.h>
 #include <unordered_map>
 #include <string>
+#include <functional>
+#include <string_view>
 
 namespace ZenitUI
 {
+	namespace detail
+	{
+		struct TransparentStringHash
+		{
+			using is_transparent = void;
+			size_t operator()(std::string_view sv) const noexcept
+			{
+				return std::hash<std::string_view>{}(sv);
+			}
+			size_t operator()(const std::string &s) const noexcept
+			{
+				return std::hash<std::string_view>{}(s);
+			}
+			size_t operator()(const char *s) const noexcept
+			{
+				return std::hash<std::string_view>{}(s);
+			}
+		};
+	}
 
 	class RaylibPlatform : public IPlatform
 	{
@@ -59,10 +80,13 @@ namespace ZenitUI
 		void pushTarget(TargetHandle t) override;
 		void popTarget() override;
 		void drawTarget(TargetHandle t, Rect dst, Color tint) override;
+		void drawTarget(TargetHandle t, Rect src, Rect dst, Color tint) override;
 
 		bool supports(Feature f) const override
 		{
-			return f == Feature::Effects || f == Feature::NestedTargets;
+			return f == Feature::Effects ||
+				   f == Feature::NestedTargets ||
+				   f == Feature::TargetSubRect;
 		}
 
 		TextureHandle registerTexture(const ::Texture2D &t);
@@ -136,24 +160,24 @@ namespace ZenitUI
 
 		FontHandle getFont(std::string_view name) override
 		{
-			auto it = fonts.find(std::string(name));
+			auto it = fonts.find(name);
 			return it != fonts.end() ? it->second : FontHandle{};
 		}
 		TextureHandle getTexture(std::string_view name) override
 		{
-			auto it = textures.find(std::string(name));
+			auto it = textures.find(name);
 			return it != textures.end() ? it->second : TextureHandle{};
 		}
 		EffectHandle getEffect(std::string_view name) override
 		{
-			auto it = effects.find(std::string(name));
+			auto it = effects.find(name);
 			return it != effects.end() ? it->second : EffectHandle{};
 		}
 
 	private:
 		RaylibRenderer &renderer;
-		std::unordered_map<std::string, FontHandle> fonts;
-		std::unordered_map<std::string, TextureHandle> textures;
-		std::unordered_map<std::string, EffectHandle> effects;
+		std::unordered_map<std::string, FontHandle, detail::TransparentStringHash, std::equal_to<>> fonts;
+		std::unordered_map<std::string, TextureHandle, detail::TransparentStringHash, std::equal_to<>> textures;
+		std::unordered_map<std::string, EffectHandle, detail::TransparentStringHash, std::equal_to<>> effects;
 	};
 }

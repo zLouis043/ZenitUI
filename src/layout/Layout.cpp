@@ -285,11 +285,13 @@ namespace ZenitUI
 
 	void Layout::renderFrame()
 	{
-		auto *r = UIContext::get().renderer;
+		auto &ctx = UIContext::get();
+		auto *r = ctx.renderer;
 		if (!r)
 			return;
 		r->beginFrame();
 		draw();
+		ctx.endFrame();
 		r->endFrame();
 	}
 } // namespace ZenitUI

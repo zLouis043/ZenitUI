@@ -141,10 +141,14 @@ namespace ZenitUI
 
 	struct RaylibResources
 	{
+		using UniformCache = std::unordered_map<
+			std::string, int, detail::TransparentStringHash, std::equal_to<>>;
+
 		std::unordered_map<uint32_t, ::RenderTexture2D> targets;
 		std::unordered_map<uint32_t, ::Texture2D> textures;
 		std::unordered_map<uint32_t, ::Font> fonts;
 		std::unordered_map<uint32_t, ::Shader> shaders;
+		std::unordered_map<uint32_t, UniformCache> shaderUniforms;
 		uint32_t nextId{1};
 	};
 	static RaylibResources res;
@@ -404,7 +408,9 @@ namespace ZenitUI
 		if (insideTarget_)
 			EndTextureMode();
 
-		targetStates_.push_back({currentTarget_, clipActive, currentClip, clipStack, transformStack, currentTargetW_, currentTargetH_});
+		targetStates_.push_back({currentTarget_, clipActive, currentClip,
+								 std::move(clipStack), std::move(transformStack),
+								 currentTargetW_, currentTargetH_});
 
 		clipActive = false;
 		clipStack.clear();
@@ -435,13 +441,13 @@ namespace ZenitUI
 
 		if (!targetStates_.empty())
 		{
-			auto s = targetStates_.back();
+			auto s = std::move(targetStates_.back());
 			targetStates_.pop_back();
 			currentTarget_ = s.target;
 			clipActive = s.clipActive;
 			currentClip = s.currentClip;
-			clipStack = s.clipStack;
-			transformStack = s.transformStack;
+			clipStack = std::move(s.clipStack);
+			transformStack = std::move(s.transformStack);
 			currentTargetW_ = s.targetW;
 			currentTargetH_ = s.targetH;
 		}
@@ -476,6 +482,42 @@ namespace ZenitUI
 			applyScissor(currentClip);
 	}
 
+	static ::RenderTexture2D loadColorOnlyRenderTexture(int w, int h)
+	{
+		::RenderTexture2D target = {0};
+#if defined(RAYLIB_VERSION_MAJOR) && ((RAYLIB_VERSION_MAJOR > 5) || (RAYLIB_VERSION_MAJOR == 5 && RAYLIB_VERSION_MINOR >= 5))
+		target.id = rlLoadFramebuffer();
+#else
+		target.id = rlLoadFramebuffer(w, h);
+#endif
+		if (target.id > 0)
+		{
+			rlEnableFramebuffer(target.id);
+			target.texture.id = rlLoadTexture(nullptr, w, h, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
+			target.texture.width = w;
+			target.texture.height = h;
+			target.texture.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+			target.texture.mipmaps = 1;
+
+			rlFramebufferAttach(target.id, target.texture.id,
+								RL_ATTACHMENT_COLOR_CHANNEL0, RL_ATTACHMENT_TEXTURE2D, 0);
+
+			if (!rlFramebufferComplete(target.id))
+			{
+				logWarn("RaylibRenderer", "", 0, 0,
+						"color-only framebuffer incomplete, falling back to LoadRenderTexture");
+				rlDisableFramebuffer();
+				rlUnloadTexture(target.texture.id);
+				rlUnloadFramebuffer(target.id);
+				return LoadRenderTexture(w, h);
+			}
+			rlDisableFramebuffer();
+			return target;
+		}
+		return LoadRenderTexture(w, h);
+	}
+
+
 	TargetHandle RaylibRenderer::createTarget(int w, int h)
 	{
 		if (insideTarget_)
@@ -487,7 +529,7 @@ namespace ZenitUI
 		}
 
 		uint32_t id = res.nextId++;
-		res.targets[id] = LoadRenderTexture(w, h);
+		res.targets[id] = loadColorOnlyRenderTexture(w, h);
 
 		if (insideTarget_ && res.targets.count(currentTarget_.id))
 		{
@@ -540,6 +582,20 @@ namespace ZenitUI
 		}
 	}
 
+	void RaylibRenderer::drawTarget(TargetHandle t, Rect src, Rect dst, Color tint)
+	{
+		auto it = res.targets.find(t.id);
+		if (it == res.targets.end())
+			return;
+		::Texture2D tex = it->second.texture;
+		::Rectangle rlSrc = {
+			src.x,
+			(float)tex.height - src.y - src.height,
+			src.width,
+			-src.height};
+		DrawTexturePro(tex, rlSrc, rl(dst), {0, 0}, 0.0f, rl(tint));
+	}
+
 	TextureHandle RaylibRenderer::registerTexture(const ::Texture2D &t)
 	{
 		uint32_t id = res.nextId++;
@@ -586,6 +642,7 @@ namespace ZenitUI
 			return;
 		UnloadShader(it->second);
 		res.shaders.erase(it);
+		res.shaderUniforms.erase(h.id);
 	}
 
 	static int shaderLoc(EffectHandle e, const char *name)
@@ -593,7 +650,14 @@ namespace ZenitUI
 		auto it = res.shaders.find(e.id);
 		if (it == res.shaders.end())
 			return -1;
-		return GetShaderLocation(it->second, name);
+
+		auto &cache = res.shaderUniforms[e.id];
+		if (auto lit = cache.find(std::string_view(name)); lit != cache.end())
+			return lit->second;
+
+		int loc = GetShaderLocation(it->second, name);
+		cache.emplace(name, loc);
+		return loc;
 	}
 
 	void RaylibRenderer::setEffectFloat(EffectHandle e, const char *name, float value)
@@ -731,7 +795,7 @@ namespace ZenitUI
 
 	void RaylibAssetProvider::unloadFont(std::string_view name)
 	{
-		auto it = fonts.find(std::string(name));
+		auto it = fonts.find(name);
 		if (it == fonts.end())
 			return;
 		renderer.unregisterFont(it->second);

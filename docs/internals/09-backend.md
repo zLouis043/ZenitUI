@@ -274,6 +274,9 @@ public:
     virtual void pushTarget(TargetHandle t) = 0;
     virtual void popTarget() = 0;
     virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+    virtual void drawTarget(TargetHandle t, Rect /*src*/, Rect dst, Color tint) {
+        drawTarget(t, dst, tint);
+    }
     virtual void clearTarget(TargetHandle t, Color c) = 0;
     virtual bool inTarget() const = 0;
 
@@ -465,15 +468,17 @@ works entirely in logical coordinates can ignore this.
 enum class Feature {
     Effects,        // pushEffect / popEffect / setEffect*
     NestedTargets,  // pushTarget while already in a target
+    TargetSubRect,  // drawTarget(t, src, dst, tint) sub-rectangle sampling
 };
 ```
 
-Currently only `Effects` is checked by the framework. The Raylib backend
-returns `true` for it. A software renderer might return `false`, which
-would make all `filter:` and `effect:` properties no-ops.
-
-`NestedTargets` is declared but not used. It's a placeholder for a
-future extension.
+All three features are checked by the core:
+- `Effects` gates `effect:` and `filter:`.
+- `NestedTargets` allows a filtered node to render as a layer inside an
+  outer layer target.
+- `TargetSubRect` enables 64 px target bucketing in `TargetPool` and
+  sub-rectangle blitting in `drawLayer` / `FilterRegistry`. Backends
+  that return `false` fall back cleanly to exact-size pooled targets.
 
 ---
 

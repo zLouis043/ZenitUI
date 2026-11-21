@@ -81,7 +81,6 @@ namespace ZenitUI
 		}
 	}
 
-	// TODO: push this version in the main repo.
 	void Layout::drawInline(const ComputedStyle &renderStyle, float globalOp)
 	{
 		auto renderer = UIContext::get().renderer;
@@ -120,7 +119,8 @@ namespace ZenitUI
 
 	void Layout::drawLayer(const ComputedStyle &renderStyle, float globalOp)
 	{
-		auto renderer = UIContext::get().renderer;
+		auto &ctxUI = UIContext::get();
+		auto *renderer = ctxUI.renderer;
 
 		Transform2D currTr = currentTransform(renderStyle);
 
@@ -154,39 +154,24 @@ namespace ZenitUI
 		if (tw <= 0 || th <= 0)
 			return;
 
-		constexpr int MAX_TARGET_DIM = 4096;
+		constexpr int MAX_TARGET_DIM = TargetPool::MAX_DIM;
 		if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM)
 		{
 			drawInline(renderStyle, globalOp);
 			return;
 		}
 
-		if (!layerTarget_.valid() || layerTarget_.width != tw || layerTarget_.height != th)
-		{
-			if (layerTarget_.valid())
-				renderer->destroyTarget(layerTarget_);
-			layerTarget_ = renderer->createTarget(tw, th);
-			if (!layerTarget_.valid())
-				return;
-		}
-		if (!layerScratch_.valid() || layerScratch_.width != tw || layerScratch_.height != th)
-		{
-			if (layerScratch_.valid())
-				renderer->destroyTarget(layerScratch_);
-			layerScratch_ = renderer->createTarget(tw, th);
-			if (!layerScratch_.valid())
-				return;
-		}
-		if (!layerSeparable_.valid() || layerSeparable_.width != tw || layerSeparable_.height != th)
-		{
-			if (layerSeparable_.valid())
-				renderer->destroyTarget(layerSeparable_);
-			layerSeparable_ = renderer->createTarget(tw, th);
-			if (!layerSeparable_.valid())
-				return;
-		}
+		registerBuiltinFilters();
+		auto &registry = FilterRegistry::get();
+		auto &stats = ctxUI.renderStats;
+		auto &pool = ctxUI.targetPool;
 
-		renderer->pushTarget(layerTarget_);
+		TargetHandle mainTarget = pool.acquire(*renderer, tw, th, &stats);
+		if (!mainTarget.valid())
+			return;
+
+		renderer->pushTarget(mainTarget);
+		stats.pushTargetCalls++;
 
 		Transform2D offsetTr;
 		offsetTr.pivot = {0.0f, 0.0f};
@@ -219,28 +204,67 @@ namespace ZenitUI
 
 		renderer->popTarget();
 
-		registerBuiltinFilters();
-
-		FilterContext ctx;
-		ctx.renderer = renderer;
-		ctx.node = this;
-		ctx.scratch = layerSeparable_; // renamed: this is the Separable intermediate
-		ctx.region = region;
-		ctx.dst = {0, 0, (float)tw, (float)th};
-		ctx.opacity = globalOp;
-
-		auto &registry = FilterRegistry::get();
+		const Rect dstRect = {0, 0, (float)tw, (float)th};
 
 		if (renderStyle.filters.empty())
 		{
-			renderer->drawTarget(layerTarget_, region,
+			renderer->drawTarget(mainTarget, dstRect, region,
 								 Colors::White.withAlpha(globalOp));
+			pool.release(mainTarget);
 			return;
 		}
 
 		const size_t numFilters = renderStyle.filters.size();
-		TargetHandle currentRead = layerTarget_;
-		TargetHandle currentWrite = layerScratch_;
+		const bool needsScratch = (numFilters >= 2);
+		bool needsSeparable = false;
+		for (const auto &fref : renderStyle.filters)
+		{
+			if (const auto *def = registry.find(fref.name))
+			{
+				if ((def->pattern == FilterPattern::Separable && def->downscale <= 1) ||
+					def->pattern == FilterPattern::Custom)
+				{
+					needsSeparable = true;
+					break;
+				}
+			}
+		}
+
+		TargetHandle scratchTarget{};
+		TargetHandle separableTarget{};
+
+		if (needsScratch)
+		{
+			scratchTarget = pool.acquire(*renderer, tw, th, &stats);
+			if (!scratchTarget.valid())
+			{
+				pool.release(mainTarget);
+				return;
+			}
+		}
+		if (needsSeparable)
+		{
+			separableTarget = pool.acquire(*renderer, tw, th, &stats);
+			if (!separableTarget.valid())
+			{
+				if (scratchTarget.valid())
+					pool.release(scratchTarget);
+				pool.release(mainTarget);
+				return;
+			}
+		}
+
+		FilterContext ctx;
+		ctx.renderer = renderer;
+		ctx.node = this;
+		ctx.scratch = separableTarget;
+		ctx.region = region;
+		ctx.dst = dstRect;
+		ctx.texSize = {(float)mainTarget.width, (float)mainTarget.height};
+		ctx.opacity = globalOp;
+
+		TargetHandle currentRead = mainTarget;
+		TargetHandle currentWrite = scratchTarget;
 
 		for (size_t i = 0; i < numFilters; ++i)
 		{
@@ -248,6 +272,7 @@ namespace ZenitUI
 
 			ctx.ref = &renderStyle.filters[i];
 			ctx.src = currentRead;
+			ctx.texSize = {(float)currentRead.width, (float)currentRead.height};
 			ctx.write_target = isLast ? TargetHandle{} : currentWrite;
 
 			if (const auto *def = registry.find(ctx.ref->name))
@@ -258,13 +283,14 @@ namespace ZenitUI
 			{
 				if (isLast)
 				{
-					renderer->drawTarget(currentRead, region,
+					renderer->drawTarget(currentRead, ctx.dst, region,
 										 Colors::White.withAlpha(globalOp));
 				}
 				else
 				{
 					renderer->pushTarget(currentWrite);
-					renderer->drawTarget(currentRead, ctx.dst, Colors::White);
+					stats.pushTargetCalls++;
+					renderer->drawTarget(currentRead, ctx.dst, ctx.dst, Colors::White);
 					renderer->popTarget();
 				}
 			}
@@ -274,6 +300,12 @@ namespace ZenitUI
 				std::swap(currentRead, currentWrite);
 			}
 		}
+
+		if (separableTarget.valid())
+			pool.release(separableTarget);
+		if (scratchTarget.valid())
+			pool.release(scratchTarget);
+		pool.release(mainTarget);
 	}
 
 	void Layout::drawChildren(float globalOp)

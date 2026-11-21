@@ -162,16 +162,6 @@ namespace ZenitUI
 				ctx.topmostConsumer = nullptr;
 			if (ctx.hoverTarget == this)
 				ctx.hoverTarget = nullptr;
-
-			if (auto *r = ctx.renderer)
-			{
-				if (layerTarget_.valid())
-					r->destroyTarget(layerTarget_);
-				if (layerScratch_.valid())
-					r->destroyTarget(layerScratch_);
-				if (layerSeparable_.valid())
-					r->destroyTarget(layerSeparable_);
-			}
 		}
 
 		/**
@@ -944,9 +934,6 @@ namespace ZenitUI
 
 		TextureHandle bgTexture;
 		NineSlice bgPatchInfo;
-		TargetHandle layerTarget_;
-		TargetHandle layerScratch_;
-		TargetHandle layerSeparable_;
 		EffectHandle customEffect;
 		std::string effectName_;
 		EffectHandle currentEffect_;

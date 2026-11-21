@@ -65,6 +65,12 @@ namespace ZenitUI::Test
         bool supportsNestedTargets{false};
         int pushEffectCount{0};
         EffectHandle lastPushedEffect{};
+        int createTargetCount{0};
+        int destroyTargetCount{0};
+        int liveTargets{0};
+        bool supportsTargetSubRect{false};
+        Rect lastDrawTargetSrc{};
+        Rect lastDrawTargetDst{};
 
         void fillRect(Rect, Color) override { fillRectCount++; }
         void fillRoundedRect(Rect, float, Color) override {}
@@ -124,12 +130,22 @@ namespace ZenitUI::Test
 
         TargetHandle createTarget(int w, int h) override
         {
+            createTargetCount++;
+            liveTargets++;
             lastCreatedTargetW = w;
             lastCreatedTargetH = h;
             static uint32_t nextId = 1000;
             return TargetHandle{nextId++, w, h};
         }
-        void destroyTarget(TargetHandle) override {}
+        void destroyTarget(TargetHandle t) override
+        {
+            if (t.valid())
+            {
+                destroyTargetCount++;
+                if (liveTargets > 0)
+                    liveTargets--;
+            }
+        }
         void pushTarget(TargetHandle) override
         {
             pushTargetCount++;
@@ -140,7 +156,23 @@ namespace ZenitUI::Test
             if (activeTargetDepth > 0)
                 activeTargetDepth--;
         }
-        void drawTarget(TargetHandle, Rect, Color) override {}
+        void drawTarget(TargetHandle t, Rect dst, Color) override
+        {
+            lastDrawTargetSrc = {0.0f, 0.0f, (float)t.width, (float)t.height};
+            lastDrawTargetDst = dst;
+        }
+        void drawTarget(TargetHandle t, Rect src, Rect dst, Color) override
+        {
+            if (supportsTargetSubRect)
+            {
+                lastDrawTargetSrc = src;
+                lastDrawTargetDst = dst;
+            }
+            else
+            {
+                drawTarget(t, dst, Colors::White);
+            }
+        }
 
         void setEffectFloat(EffectHandle, const char *name, float value) override
         {
@@ -175,6 +207,8 @@ namespace ZenitUI::Test
                 return supportsEffects;
             if (f == Feature::NestedTargets)
                 return supportsNestedTargets;
+            if (f == Feature::TargetSubRect)
+                return supportsTargetSubRect;
             return false;
         }
     };
@@ -405,6 +439,7 @@ namespace ZenitUI::Test
         ~Env()
         {
             auto &ctx = UIContext::get();
+            ctx.targetPool.clear(renderer, &ctx.renderStats);
             ctx.renderer = nullptr;
             ctx.platform = nullptr;
             ctx.assets = nullptr;
@@ -428,6 +463,8 @@ namespace ZenitUI::Test
             ctx.time = 0.0;
             ctx.activePortals.clear();
             ctx.framePortals.clear();
+            ctx.targetPool.clear(renderer, &ctx.renderStats);
+            ctx.renderStats.resetAll();
 
             platform.viewport = {800.0f, 600.0f};
             platform.currentTime = 0.0;
@@ -458,6 +495,12 @@ namespace ZenitUI::Test
             renderer.currentClip = {0, 0, 1e9f, 1e9f};
             renderer.lastCreatedTargetW = 0;
             renderer.lastCreatedTargetH = 0;
+            renderer.createTargetCount = 0;
+            renderer.destroyTargetCount = 0;
+            renderer.liveTargets = 0;
+            renderer.supportsTargetSubRect = false;
+            renderer.lastDrawTargetSrc = {};
+            renderer.lastDrawTargetDst = {};
         }
 
         void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
@@ -468,6 +511,7 @@ namespace ZenitUI::Test
             root->measure(platform.viewport.x, platform.viewport.y);
             root->arrange({0, 0, platform.viewport.x, platform.viewport.y});
             root->draw();
+            ctx.endFrame();
         }
 
         void click(std::shared_ptr<Layout> root, Vec2 pos)

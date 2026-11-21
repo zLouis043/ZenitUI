@@ -9,9 +9,8 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after §5.25–§5.32 (CSS flex/border/text parity, TextArea,
-opt-in transitions, Raylib Latin-1 glyphs); §4.9 (filter layer pipeline
-performance) proposed in detail.
+Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
+shipped, step g declined) and §5.25–§5.34.
 
 ---
 
@@ -966,92 +965,99 @@ framework code.
 
 ### 4.9 Filter layer pipeline performance
 
-**Status:** 🟡 proposed — design in
+**Status:** 🟢 done (steps 0–f shipped; step g declined) — design in
 [PROPOSALS.md, Proposal 9](architecture/PROPOSALS.md#proposal-9--filter-layer-pipeline-performance).
 
 **Severity:** high — severe FPS drops on animated or scrolling nodes
-with `filter:`; the slowdown is much larger than the extra shader
+with `filter:`; the slowdown was much larger than the extra shader
 passes alone would explain.
 
 **Location:** `src/layout/Render.cpp` (`Layout::drawLayer`),
-`src/layout/FilterRegistry.cpp`, `backends/raylib/RaylibBackend.cpp`
-(`createTarget`, `pushTarget`, `drawTarget`), `include/Layout.hpp`
-(`layerTarget_`, `layerScratch_`, `layerSeparable_`).
+`src/layout/FilterRegistry.cpp`, `include/UIContext.hpp`
+(`RenderStats`, `TargetPool`, `Feature::TargetSubRect`),
+`backends/raylib/RaylibBackend.cpp` / `.hpp`, `include/Layout.hpp`,
+`src/layout/Layout.cpp`, `include/Debug.hpp`.
 
-**Problem (measured on the mock backend, no GPU involved, `master`
-at `b2c1046`).** The filter
-region is `transformed rect ∩ clip`. Whenever its size changes,
-`drawLayer` destroys and recreates **all three** layer targets. Over
-60 frames, with a 200×200 filtered node:
+**Problem (baseline before §4.9, mock backend, `master` at `b2c1046`).**
+The filter region is `transformed rect ∩ clip`. Whenever its size
+changed, `drawLayer` destroyed and recreated **all three** per-node
+layer targets. Over 60 frames, with a 200×200 filtered node:
 
-| Scenario | targets created |
-|----------|----------------:|
-| static, `blur` | 0 |
-| `scale` 1.0 → 1.15, `blur + drop-shadow` | 45 |
-| `rotation` +3°/frame, `blur` | 165 |
-| sliding across the viewport edge, `blur` | 177 |
+| Scenario | targets created (before) | targets created (after) |
+|----------|-------------------------:|------------------------:|
+| static, `blur` | 0 (after warm-up) | 0 (after warm-up) |
+| `scale` 1.0 → 1.15, `blur + drop-shadow` | 45 | ≤ 3 |
+| `rotation` +3°/frame, `blur` | 165 | ≤ 6 |
+| sliding across the viewport edge, `blur` | 177 | ≤ 10 |
 
-Also measured: a single `drop-shadow` allocates 3 targets (needs 1); 50
-static `blur + drop-shadow` cards keep 150 targets alive and issue 150
-`pushTarget` calls per frame. The CPU side of the filter path is
-**not** the bottleneck (~0.5–0.7 µs per filtered card).
+Also fixed: a single `drop-shadow` allocated 3 targets (now 1); a single
+`blur` allocated 3 (now 2); 50 static `blur + drop-shadow` cards kept
+150 targets alive (now ≤ 3 via `TargetPool`, trimmed to 0 after idle
+grace period).
 
-**Suspected, not yet measured on a real GPU:** each Raylib target
-includes an unused depth renderbuffer; every `pushTarget` /
-`popTarget` flushes the draw batch, switches FBO and clears the whole
-target; no filtered result is cached across frames; the blur is 9 taps
-at full resolution.
+**Results (after steps 0–f):**
 
-**Plan.** Seven independent steps, in this order. Step 0 comes first on
-purpose: it confirms or corrects the "suspected" list above on real
-hardware before the later steps are built.
+- **CPU benchmarks (Windows, MinGW GCC 15.1, mock backend, `-O3`):**
+  - `system.frame.filtered50.static`: 115.87 µs
+  - `system.frame.filtered50.scaleAnim`: 201.55 µs
+  - `system.frame.filtered50.rotAnim`: 141.17 µs
+- **Real GPU stress test (`examples/07b_effects_stress`, 50 cards):**
+  - `blur + drop-shadow + rotate` (no scrolling): 400–600 FPS
+  - `blur + drop-shadow + rotate` (active scrolling back and forth): ≥ 100 FPS
 
-- [ ] **0.** `RenderStats` (targets created / destroyed / live,
-      `pushTarget` calls, filter passes) incremented by the core, a
-      `Debug` dump, and an on-screen overlay in an example
-- [ ] **a.** Lazy per-kind allocation: scratch only for chains of 2+
-      filters, separable intermediate only when a `Separable` filter is
-      present
-- [ ] **b.** Bucketed target sizes (round up to 64 px) with
+**Completed steps:**
+
+- [x] **0.** `RenderStats` (`targetsCreated`, `targetsDestroyed`,
+      `liveTargets`, `pushTargetCalls`, `filterPasses`) on `UIContext`,
+      `Debug::renderStatsToString` / `dumpRenderStats`, and live HUD
+      overlay in `examples/07b_effects_stress`
+- [x] **a.** Lazy per-kind allocation: scratch only for chains of 2+
+      filters, separable intermediate only when a `Separable` (with
+      `downscale <= 1`) or `Custom` filter is present
+- [x] **b.** Bucketed target sizes (round up to 64 px) with
       `Feature::TargetSubRect` and `IRenderer::drawTarget(t, src, dst, tint)`;
-      exact-size fallback for backends without it
-- [ ] **c.** Shared `TargetPool` on `UIContext` (acquire / release in
-      `drawLayer`, trim after a grace period); remove the three layer
-      targets from `Layout` and from `~Layout`
-- [ ] **d.** Raylib hygiene: colour-only framebuffers, no by-value copy
-      of the clip / transform stacks in `pushTarget`, cached uniform
-      locations, no `std::string` allocation in `getEffect` on the hot
-      path
-- [ ] **e.** (Optional) `FilterDef::downscale` for separable filters;
-      opt-in, built-in `blur` stays at 1 until decided
-- [ ] **f.** Tests and benchmarks: static / scale / rotation / clip
-      sweeps, lazy-allocation counts, pool bound with 50 cards, nested
-      layers, fallback backend, `FilterContext::texSize`, Raylib readback
-      for the sub-rect Y flip; `system.frame.filtered50.*` benchmarks
-- [ ] **g.** (Optional, higher risk) opt-in layer cache with a
-      `paintDirty` bit — decided only after steps 0–c are measured; if
-      they are enough, record it as declined
+      exact-size fallback for backends without it; `FilterContext::texSize`
+- [x] **c.** Shared `TargetPool` on `UIContext` (`acquire` / `release`
+      in `drawLayer`, `trim` in `UIContext::endFrame`, `clear` on
+      shutdown); removed `layerTarget_` / `layerScratch_` /
+      `layerSeparable_` from `Layout` and `~Layout`
+- [x] **d.** Raylib hygiene: colour-only framebuffers
+      (`loadColorOnlyRenderTexture`, with fallback to `LoadRenderTexture`),
+      move semantics for `clipStack` / `transformStack` in `pushTarget`
+      / `popTarget`, cached uniform locations per shader, transparent
+      string lookup in `RaylibAssetProvider` (zero `std::string`
+      allocation on `getEffect` / `getFont` / `getTexture`)
+- [x] **e.** Opt-in `FilterDef::downscale` (1, 2 or 4; default 1) for
+      `Separable` filters; built-in `blur` stays at 1; demonstrated as
+      `blur-fast` (`downscale = 2`) in `examples/07b_effects_stress`
+- [x] **f.** Regression tests in `tests/test_filter.cpp` (`Filter_perf.*`:
+      lazy allocation, static zero-churn, scale/rotation/clip sweeps,
+      50-card pool bound + trim, nested pool layers, sub-rect fallback,
+      `texSize` vs `dst`, downscale); benchmarks
+      `system.frame.filtered50.{static,scaleAnim,rotAnim}` in
+      `benchmarks/benches.cpp`; GPU stress example
+      `examples/07b_effects_stress`
+- [x] **g.** ~~(Optional, higher risk) opt-in layer cache with a
+      `paintDirty` bit~~ — **declined**: steps 0–e already achieve
+      400–600 FPS (≥ 100 FPS worst-case scrolling) with 50 filtered
+      cards on real GPU; the invalidation surface and stale-rendering
+      risk are not justified
 
-**Contract change.** `FilterContext` gains `texSize` (the real size of
-the source texture). Custom filters that derive texel size from
-`dst.width` / `dst.height` must switch to `texSize`. The built-in
-filters and `assets/blur.fs` are updated by step b.
+**Contract change.** `FilterContext` gained `texSize` (the real size of
+the source texture). Built-in filters were updated; `assets/blur.fs`
+already normalized by `texSize` and required no changes. Custom filters
+that derive texel size from `dst.width` / `dst.height` must use
+`texSize`.
 
-**Docs to update when shipped.**
+**Docs still to update:**
 
-- [ ] `user/09-effects.md` §1.1 and §7.4 — they say **two** targets per
-      node, "allocated lazily"; the code allocates **three**, every time
-- [ ] `internals/06-render-pipeline.md` — `drawLayer` section and
-      §13.2 ("Target caching": a node does *not* only reallocate when it
-      resizes — animation and clipping resize it too)
+- [ ] `user/09-effects.md` §1.1 and §7.4 — update target count and
+      explain `TargetPool`, bucketing, and `downscale`
+- [ ] `internals/06-render-pipeline.md` — update `drawLayer` and §13.2
+      ("Target caching") for pooling and 64 px bucketing
 - [ ] `api/FilterRegistry.md`, `internals/09-backend.md`,
       `internals/10-debug.md`, `internals/11-benchmarks.md`
-
-**Open questions** (full list in Proposal 9 §9.9): bucket size, trim
-grace period, blur edge behaviour with transparent padding, whether the
-real cost is allocation churn or fill rate / FBO switches (step 0
-answers this), and whether the layer cache is opt-in only.
-
+      
 ---
 
 ## Phase 5 — Feature completion

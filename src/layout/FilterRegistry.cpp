@@ -6,18 +6,27 @@
 namespace ZenitUI
 {
 
+    static Vec2 resolveTexSize(const FilterContext &c, TargetHandle t)
+    {
+        if (t.width > 0 && t.height > 0)
+            return {(float)t.width, (float)t.height};
+        if (c.texSize.x > 0.0f && c.texSize.y > 0.0f)
+            return c.texSize;
+        return {c.dst.width, c.dst.height};
+    }
 
     static void drawUnmodified(const FilterContext &c)
     {
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+            UIContext::get().renderStats.pushTargetCalls++;
+            c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
             c.renderer->popTarget();
         }
         else
         {
-            c.renderer->drawTarget(c.src, c.region,
+            c.renderer->drawTarget(c.src, c.dst, c.region,
                                    Colors::White.withAlpha(c.opacity));
         }
     }
@@ -133,57 +142,90 @@ namespace ZenitUI
 
     static void applySinglePass(const FilterContext &c, EffectHandle fx)
     {
+        auto &stats = UIContext::get().renderStats;
         c.renderer->pushEffect(fx);
-        c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
+        c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, c.src));
 
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+            stats.pushTargetCalls++;
+            c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
             c.renderer->popTarget();
         }
         else
         {
-            c.renderer->drawTarget(c.src, c.region,
+            c.renderer->drawTarget(c.src, c.dst, c.region,
                                    Colors::White.withAlpha(c.opacity));
         }
 
+        stats.filterPasses++;
         c.renderer->popEffect();
     }
 
     static void applySeparable(const FilterContext &c, EffectHandle fx,
-                               const FilterDef & /*def*/)
+                               const FilterDef &def)
     {
-        c.renderer->pushTarget(c.scratch);
+        auto &ctxUI = UIContext::get();
+        auto &stats = ctxUI.renderStats;
+
+        const int ds = (def.downscale >= 4) ? 4 : (def.downscale >= 2 ? 2 : 1);
+
+        TargetHandle midTarget = c.scratch;
+        Rect midDst = c.dst;
+        bool acquiredMid = false;
+
+        if (ds > 1)
+        {
+            const int dw = std::max(1, (int)std::ceil(c.dst.width / (float)ds));
+            const int dh = std::max(1, (int)std::ceil(c.dst.height / (float)ds));
+            midTarget = ctxUI.targetPool.acquire(*c.renderer, dw, dh, &stats);
+            if (!midTarget.valid())
+                return;
+            midDst = {0.0f, 0.0f, (float)dw, (float)dh};
+            acquiredMid = true;
+        }
+
+        // Passata H: legge c.src (full-res) -> scrive midTarget (full o downscaled)
+        c.renderer->pushTarget(midTarget);
+        stats.pushTargetCalls++;
         c.renderer->pushEffect(fx);
-        c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
+        c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, c.src));
         c.renderer->setEffectVec2(fx, "direction", {1.0f, 0.0f});
-        c.renderer->drawTarget(c.src, c.dst, Colors::White);
+        c.renderer->drawTarget(c.src, c.dst, midDst, Colors::White);
         c.renderer->popEffect();
         c.renderer->popTarget();
+        stats.filterPasses++;
 
+        // Passata V: legge midTarget -> scrive write_target o schermo (upscale bilineare)
         c.renderer->pushEffect(fx);
-        c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
+        c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, midTarget));
         c.renderer->setEffectVec2(fx, "direction", {0.0f, 1.0f});
 
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            c.renderer->drawTarget(c.scratch, c.dst, Colors::White);
+            stats.pushTargetCalls++;
+            c.renderer->drawTarget(midTarget, midDst, c.dst, Colors::White);
             c.renderer->popTarget();
         }
         else
         {
-            c.renderer->drawTarget(c.scratch, c.region,
+            c.renderer->drawTarget(midTarget, midDst, c.region,
                                    Colors::White.withAlpha(c.opacity));
         }
 
+        stats.filterPasses++;
         c.renderer->popEffect();
+
+        if (acquiredMid)
+            ctxUI.targetPool.release(midTarget);
     }
 
     static void applySilhouette(const FilterContext &c, EffectHandle fx,
                                 const FilterDef &def)
     {
+        auto &stats = UIContext::get().renderStats;
         float dx = 2.0f, dy = 2.0f;
         for (const auto &p : def.params)
         {
@@ -193,18 +235,21 @@ namespace ZenitUI
                 dy = parseLengthArg(c.ref->args[p.argIndex]);
         }
 
+        const Vec2 ts = resolveTexSize(c, c.src);
+
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
+            stats.pushTargetCalls++;
 
             Rect shadowDst = {c.dst.x + dx, c.dst.y + dy,
                               c.dst.width, c.dst.height};
             c.renderer->pushEffect(fx);
-            c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
-            c.renderer->drawTarget(c.src, shadowDst, Colors::White);
+            c.renderer->setEffectVec2(fx, "texSize", ts);
+            c.renderer->drawTarget(c.src, c.dst, shadowDst, Colors::White);
             c.renderer->popEffect();
 
-            c.renderer->drawTarget(c.src, c.dst, Colors::White);
+            c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
 
             c.renderer->popTarget();
         }
@@ -213,14 +258,15 @@ namespace ZenitUI
             Rect shadowRegion = {c.region.x + dx, c.region.y + dy,
                                  c.region.width, c.region.height};
             c.renderer->pushEffect(fx);
-            c.renderer->setEffectVec2(fx, "texSize", {c.dst.width, c.dst.height});
-            c.renderer->drawTarget(c.src, shadowRegion,
+            c.renderer->setEffectVec2(fx, "texSize", ts);
+            c.renderer->drawTarget(c.src, c.dst, shadowRegion,
                                    Colors::White.withAlpha(c.opacity));
             c.renderer->popEffect();
 
-            c.renderer->drawTarget(c.src, c.region,
+            c.renderer->drawTarget(c.src, c.dst, c.region,
                                    Colors::White.withAlpha(c.opacity));
         }
+        stats.filterPasses++;
     }
 
     void applyFilter(const FilterDef &def, const FilterContext &ctx)
@@ -228,7 +274,10 @@ namespace ZenitUI
         if (def.pattern == FilterPattern::Custom)
         {
             if (def.custom)
+            {
                 def.custom(ctx);
+                UIContext::get().renderStats.filterPasses++;
+            }
             return;
         }
 

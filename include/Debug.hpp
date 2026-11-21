@@ -587,6 +587,28 @@ namespace ZenitUI::Debug
         }
     }
 
+    /**
+     * \brief Format `RenderStats` as a single compact line (for overlays and logs).
+     */
+    inline std::string renderStatsToString(const RenderStats &s = UIContext::get().renderStats)
+    {
+        std::ostringstream os;
+        os << "targets[created=" << s.targetsCreated
+           << " destroyed=" << s.targetsDestroyed
+           << " live=" << s.liveTargets
+           << "] pushTarget=" << s.pushTargetCalls
+           << " passes=" << s.filterPasses;
+        return os.str();
+    }
+
+    /**
+     * \brief Dump the current frame's `RenderStats` on one line.
+     */
+    inline void dumpRenderStats(std::ostream &os = std::cerr)
+    {
+        os << "[RenderStats] " << renderStatsToString() << "\n";
+    }
+
 } // namespace ZenitUI::Debug
 
 #else // !ZENITUI_DEBUG
@@ -601,6 +623,8 @@ namespace ZenitUI::Debug
     inline void dumpTree(const Layout &, std::ostream & = std::cerr, int = -1, int = 0) {}
     inline void dumpTheme(std::ostream & = std::cerr) {}
     inline void dumpParts(const Layout &, std::ostream & = std::cerr) {}
+    inline std::string renderStatsToString(const RenderStats & = UIContext::get().renderStats) { return {}; }
+    inline void dumpRenderStats(std::ostream & = std::cerr) {}
 
 } // namespace ZenitUI::Debug
 
