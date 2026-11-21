@@ -57,7 +57,7 @@ list rendering.
 
 **Depends on:** nothing.
 
-**Status:** 🟡 proposed.
+**Status:** ✅ shipped as roadmap §5.16.
 
 ### 1.1 Problem
 
@@ -351,7 +351,7 @@ Total: ~12 new tests.
 
 **Depends on:** nothing.
 
-**Status:** 🟡 proposed.
+**Status:** ✅ shipped as roadmap §5.17.
 
 ### 2.1 Problem
 
@@ -741,7 +741,7 @@ Total: ~16 new tests.
 **Priority:** high — unblocks `VirtualList` and reusable UI components.
 **Complexity:** medium (~1-2 days).
 **Depends on:** `ref` (shipped in §5.16).
-**Status:** 🟡 proposed.
+**Status:** ✅ shipped as roadmap §5.18 and §5.19.
 
 ### 3.1 Problem
 
@@ -2380,10 +2380,11 @@ re-discussing them.
 
 1. Proposal 1 — `ref` → §5.16
 2. Proposal 2 — `Bindable<T>` → §5.17
-3. UIPrefab → §5.18 (depends on `ref`)
-4. `<Slot>` → §5.19 (depends on UIPrefab)
+3. Proposal 3 — UIPrefab → §5.18 (depends on `ref`)
+4. Proposal 3 — `<Slot>` → §5.19 (depends on UIPrefab)
 5. Proposal 4 — StyleParser Diagnostics → §5.20
 6. Proposal 5 — Wrap for HStack → §5.21
+7. Proposal 8 — VirtualView → §5.24
 
 
 **Proposed** (next, in this order):
@@ -2402,12 +2403,6 @@ re-discussing them.
 **Post-1.0:**
 
 - Memory management (Phase 8 in the roadmap).
-- `GridLayout`.
-- Out-of-scope items as decided by the user.
-
-Post-1.0:
-
-- Memory management (§8 in the roadmap).
 - `GridLayout`.
 - Out-of-scope items as decided by the user.
 

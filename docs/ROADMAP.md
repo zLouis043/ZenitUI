@@ -9,9 +9,9 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after §5.24 (VirtualView) and §4.8 (Style resolution
-caching + reverse dependency); §4.9 (filter layer pipeline performance)
-expanded into a full proposal.
+Last updated: after §5.25–§5.32 (CSS flex/border/text parity, TextArea,
+opt-in transitions, Raylib Latin-1 glyphs); §4.9 (filter layer pipeline
+performance) proposed in detail.
 
 ---
 
@@ -1778,7 +1778,8 @@ applies, but UI use is fine.
 
 ### 5.22 Drag & Drop
 
-**Status:** 🟡 planned — proposal to be written.
+**Status:** 🟡 planned — design in
+[PROPOSALS.md, Proposal 7](architecture/PROPOSALS.md#proposal-7--drag--drop).
 
 Design not yet formalized. Tracked here so it doesn't fall off the
 radar. Expected to touch 6 files (`UIContext`, `InputController`,
@@ -1793,7 +1794,7 @@ into 3 PRs:
 - [ ] `5.22a` — input capture and drag state
 - [ ] `5.22b` — `draggable` / `droppable` style properties
 - [ ] `5.22c` — visual feedback and drop callbacks
-- [ ] Proposal written in `PROPOSALS.md`
+- [x] Proposal written in `PROPOSALS.md`
 
 ### 5.23 VirtualList
 
@@ -1967,8 +1968,6 @@ children stretch vertically.
 - [x] Update `.zs` files that relied on the old default
 - [x] Regression test
 - [x] Update `docs/user/05-zstyle.md` (note on the CSS default)
-
-### 5.27 `min-height: auto` / `min-width: auto` on flex items
 
 ### 5.27 `min-height: auto` / `min-width: auto` on flex items
 
@@ -2155,7 +2154,7 @@ asymmetric borders on content widgets.
 
 ### 5.31 `Text` wrapping completeness
 
-**Status:** 🟡 planned — bug fix + enhancement.
+**Status:** 🟢 done.
 
 **Problem:** `Text` already supports `wrap: true` (partial) and
 `onLayout` re-wraps on width change, but it has three bugs and one
@@ -2220,6 +2219,60 @@ shortcoming:
 - [x] Implement ellipsis in `renderContent`
 - [x] Regression test
 - [x] Update documentation
+
+### 5.32 `TextArea` (multi-line text input)
+
+**Status:** 🟢 done.
+
+**Problem:** `TextInput` covers single-line inputs only. Forms with
+descriptions, notes, or stat blocks needed a multi-line editable text
+widget with line wrapping, vertical scrolling, and standard editing
+shortcuts.
+
+**What landed:**
+
+- New `TextArea` widget supporting multi-line editing, `Enter` line
+  breaks, vertical navigation (`Up` / `Down`), wrapping, placeholder
+  rendering, and scrollable content.
+- Registered in `ZMarkup` (`TextArea` tag, `rows` / `placeholder`
+  attributes) and stylable via `.zstyle` (`TextArea`, `:focus`,
+  `::placeholder`).
+
+- [x] Implement `TextArea` widget
+- [x] Register in `ZMarkup` built-ins
+- [x] Wire placeholder and focus styling in `.zstyle`
+- [ ] Add dedicated unit test suite (`tests/test_textarea.cpp`)
+- [ ] Document in `docs/user/03-widgets.md` and `docs/api/Widgets.md`
+
+### 5.33 Opt-in CSS transitions (`transition-time: 0s` default)
+
+**Status:** 🟢 done (breaking).
+
+**Problem:** a non-zero default `transitionTime` animated every style
+change implicitly, causing unintended animations on tab switches,
+resizes, and dynamic lists.
+
+**What landed:** default `transitionTime` set to `0.0f` (matching CSS:
+state changes snap unless `transition:` or `transition-time:` is
+declared). Updated `tests/test_transitions.cpp` and
+`tests/test_interaction.cpp` to match the new default.
+
+- [x] Change default `transitionTime` to `0.0f`
+- [x] Update regression tests
+- [ ] Document the default in `docs/user/05-zstyle.md`
+
+### 5.34 Extended glyph range in `RaylibAssetProvider`
+
+**Status:** 🟢 done.
+
+`RaylibAssetProvider::loadFont` and `loadFontFromMemory` now pass an
+explicit codepoint list covering ASCII (`32..126`), Latin-1
+(`160..255`, accented European letters) and common typographic symbols
+(`–`, `—`, `‘`, `’`, `“`, `”`, `•`, `…`, `€`) instead of Raylib's
+95-glyph ASCII default. Does not replace full UTF-8 grapheme handling
+in `Text` / `TextInput` / `TextArea` (tracked in §6.1).
+
+- [x] Load extended codepoints in `RaylibAssetProvider`
 
 ---
 
@@ -2460,8 +2513,7 @@ require a bigger design decision.
 
 | Issue | Location | Notes |
 |-------|----------|-------|
-| `Text` is `char`-based, not Unicode | `Text.hpp` | Text input and rendering are ASCII-only. |
-| Font fallback chain missing | `IAssetProvider` | Missing glyphs use the default font. |
+| `Text` / `TextInput` / `TextArea` are `char`-based, not UTF-8 aware | `Text.hpp`, `TextInput.hpp` | Raylib renders Latin-1 glyphs (§5.34), but cursor movement, deletion, and word-break operate on bytes, not codepoints/graphemes (§6.1). |
 | `var()` in `transition:` / `animation:` shorthand | `StyleParser.hpp` | `unresolvedProps` doesn't apply to those. |
 | Custom props not in `ComputedStyle::operator==` | `Style.hpp` | Two styles differing only in custom props compare equal. |
 | `pointerCapture` and `focusedNode` are weak, but `topmostConsumer` etc. are raw | `UIContext.hpp` | Raw pointers can dangle in theory. |
