@@ -2952,6 +2952,9 @@ public:
     virtual void pushTarget(TargetHandle t) = 0;
     virtual void popTarget() = 0;
     virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+    virtual void drawTarget(TargetHandle t, Rect /*src*/, Rect dst, Color tint) {
+        drawTarget(t, dst, tint);
+    }
     virtual void clearTarget(TargetHandle t, Color c) = 0;
     virtual bool inTarget() const = 0;
 
@@ -3088,13 +3091,16 @@ works entirely in logical coordinates can ignore this.</p>
 <pre><code class="language-cpp">enum class Feature {
     Effects,        // pushEffect / popEffect / setEffect*
     NestedTargets,  // pushTarget while already in a target
+    TargetSubRect,  // drawTarget(t, src, dst, tint) sub-rectangle sampling
 };
 </code></pre>
-<p>Currently only <code>Effects</code> is checked by the framework. The Raylib backend
-returns <code>true</code> for it. A software renderer might return <code>false</code>, which
-would make all <code>filter:</code> and <code>effect:</code> properties no-ops.</p>
-<p><code>NestedTargets</code> is declared but not used. It's a placeholder for a
-future extension.</p>
+<p>All three features are checked by the core:
+- <code>Effects</code> gates <code>effect:</code> and <code>filter:</code>.
+- <code>NestedTargets</code> allows a filtered node to render as a layer inside an
+  outer layer target.
+- <code>TargetSubRect</code> enables 64 px target bucketing in <code>TargetPool</code> and
+  sub-rectangle blitting in <code>drawLayer</code> / <code>FilterRegistry</code>. Backends
+  that return <code>false</code> fall back cleanly to exact-size pooled targets.</p>
 <hr />
 <h2 id="4-iassetprovider">4. <code>IAssetProvider</code></h2>
 <pre><code class="language-cpp">class IAssetProvider {

@@ -1505,10 +1505,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-target-allocation" class="md-nav__link">
+  <a href="#43-target-allocation-pooled-bucketed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.3 Target allocation
+        4.3 Target allocation (pooled &amp; bucketed)
       
     </span>
   </a>
@@ -1860,10 +1860,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#123-target-stack" class="md-nav__link">
+  <a href="#123-target-stack-and-color-only-fbos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.3 Target stack
+        12.3 Target stack and color-only FBOs
       
     </span>
   </a>
@@ -1921,10 +1921,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#132-target-caching" class="md-nav__link">
+  <a href="#132-target-pooling-and-bucketing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.2 Target caching
+        13.2 Target pooling and bucketing
       
     </span>
   </a>
@@ -2368,10 +2368,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#43-target-allocation" class="md-nav__link">
+  <a href="#43-target-allocation-pooled-bucketed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.3 Target allocation
+        4.3 Target allocation (pooled &amp; bucketed)
       
     </span>
   </a>
@@ -2723,10 +2723,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#123-target-stack" class="md-nav__link">
+  <a href="#123-target-stack-and-color-only-fbos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.3 Target stack
+        12.3 Target stack and color-only FBOs
       
     </span>
   </a>
@@ -2784,10 +2784,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#132-target-caching" class="md-nav__link">
+  <a href="#132-target-pooling-and-bucketing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.2 Target caching
+        13.2 Target pooling and bucketing
       
     </span>
   </a>
@@ -2914,6 +2914,7 @@ EndDrawing();
     if (!r) return;
     r-&gt;beginFrame();
     draw();
+    ctx.endFrame();
     r-&gt;endFrame();
 }
 </code></pre>
@@ -2978,12 +2979,16 @@ if (globalOp &lt;= 0.001f) return;
 <p>Then compute the effective opacity: this node's <code>opacity</code> times the
 accumulated <code>parentOpacity</code>. If it's effectively zero, skip the whole
 subtree.</p>
+<p>When <code>anim_.css</code> is empty (the common case), <code>draw</code> skips copying
+<code>ComputedStyle</code> and calls <code>drawWithStyle(style_.currentStyle, parentOpacity)</code>
+directly. The copy + <code>Anim::overlayCssComputed</code> only runs when the node
+has active CSS keyframe animations.</p>
 <h3 id="24-path-selection">2.4 Path selection</h3>
 <pre><code class="language-cpp">const bool isLayer =
     !renderStyle.filters.empty() &amp;&amp;
     renderer-&gt;supports(Feature::Effects) &amp;&amp;
     rect.width &gt; 0.0f &amp;&amp; rect.height &gt; 0.0f &amp;&amp;
-    !renderer-&gt;inTarget();
+    (!renderer-&gt;inTarget() || renderer-&gt;supports(Feature::NestedTargets));
 
 if (isLayer) drawLayer(renderStyle, globalOp);
 else         drawInline(renderStyle, globalOp);
@@ -2995,9 +3000,6 @@ else         drawInline(renderStyle, globalOp);
 <li>The node has non-zero size.</li>
 <li>We're not already inside a render target.</li>
 </ul>
-<p>The last condition is the Raylib limitation: the backend can't nest
-targets. A filtered node inside another layer falls back to inline,
-which means the inner filter is ignored.</p>
 <h3 id="25-scrollbar">2.5 Scrollbar</h3>
 <pre><code class="language-cpp">scroll_.drawScrollbar(*this, parentOpacity);
 </code></pre>
@@ -3199,42 +3201,34 @@ clip. It's the area of the framebuffer that the filter will end up
 writing to. Everything outside is clipped away.</p>
 <p>If the intersection is degenerate, skip the layer entirely — nothing
 would be visible.</p>
-<h3 id="43-target-allocation">4.3 Target allocation</h3>
-<pre><code class="language-cpp">const int tw = (int)std::ceil(region.width);
-const int th = (int)std::ceil(region.height);
-if (tw &lt;= 0 || th &lt;= 0) return;
-
-constexpr int MAX_TARGET_DIM = 4096;
-if (tw &gt; MAX_TARGET_DIM || th &gt; MAX_TARGET_DIM) {
-    drawInline(renderStyle, globalOp);
-    return;
-}
-
-if (!layerTarget_.valid() || layerTarget_.width != tw ||
-    layerTarget_.height != th)
-{
-    if (layerTarget_.valid()) renderer-&gt;destroyTarget(layerTarget_);
-    layerTarget_ = renderer-&gt;createTarget(tw, th);
-    if (!layerTarget_.valid()) return;
-}
-if (!layerScratch_.valid() || layerScratch_.width != tw ||
-    layerScratch_.height != th)
-{
-    if (layerScratch_.valid()) renderer-&gt;destroyTarget(layerScratch_);
-    layerScratch_ = renderer-&gt;createTarget(tw, th);
-    if (!layerScratch_.valid()) return;
-}
-</code></pre>
-<p>Two targets are ensured:</p>
-<ul>
-<li><code>layerTarget_</code> — the subtree is rendered here, then filtered.</li>
-<li><code>layerScratch_</code> — for separable filters (blur), the intermediate
-  pass.</li>
-</ul>
-<p>Both are cached on the node. They're only reallocated when the region
-size changes. Targets are destroyed in <code>~Layout</code>.</p>
-<p>The <code>MAX_TARGET_DIM = 4096</code> hard limit falls back to inline rendering.
-This is a defensive check to avoid allocating pathological targets.</p>
+<h3 id="43-target-allocation-pooled-bucketed">4.3 Target allocation (pooled &amp; bucketed)</h3>
+<p><code>Layout</code> does not own render targets. All layer targets are managed by
+<code>UIContext::targetPool</code> (<code>TargetPool</code> in <code>include/UIContext.hpp</code>):</p>
+<ol>
+<li><code>tw = ceil(region.width)</code>, <code>th = ceil(region.height)</code>. If either
+   exceeds <code>TargetPool::MAX_DIM</code> (<code>4096</code>), fall back to <code>drawInline</code>.</li>
+<li><code>mainTarget = pool.acquire(*renderer, tw, th, &amp;stats)</code>.</li>
+<li>If the backend supports <code>Feature::TargetSubRect</code>, <code>TargetPool</code>
+     rounds <code>tw</code> and <code>th</code> up to a multiple of <code>BUCKET_SIZE</code> (<code>64</code> px)
+     and searches its free entries in <strong>LIFO</strong> order for an exact
+     bucket match.</li>
+<li>Otherwise, it acquires an exact <code>tw × th</code> target.</li>
+<li>The subtree is rendered into <code>mainTarget</code> first (while no extra
+   targets are held, so nested filtered children can freely reuse
+   pooled targets).</li>
+<li>Only after <code>popTarget()</code>, <code>drawLayer</code> inspects the filter chain and
+   lazily acquires what it actually needs:</li>
+<li><code>scratchTarget</code> — only if <code>renderStyle.filters.size() &gt;= 2</code>.</li>
+<li><code>separableTarget</code> — only if any filter is <code>Separable</code> with
+     <code>downscale &lt;= 1</code>, or <code>Custom</code>.</li>
+<li>After the filter loop completes, all acquired targets are released
+   back to <code>pool</code> in LIFO order (<code>separableTarget</code>, <code>scratchTarget</code>,
+   <code>mainTarget</code>).</li>
+</ol>
+<p>Every creation, destruction, <code>pushTarget</code>, and filter pass increments
+<code>UIContext::get().renderStats</code>. Idle pooled targets are destroyed by
+<code>TargetPool::trim()</code> inside <code>UIContext::endFrame()</code> after 120 unused
+frames (or immediately via <code>TargetPool::clear()</code> on shutdown).</p>
 <h3 id="44-render-the-subtree-into-the-target">4.4 Render the subtree into the target</h3>
 <pre><code class="language-cpp">renderer-&gt;pushTarget(layerTarget_);
 
@@ -3310,6 +3304,7 @@ ctx.scratch      = layerSeparable_;
 ctx.region       = region;
 ctx.dst          = {0, 0, (float)tw, (float)th};
 ctx.opacity      = globalOp;
+ctx.texSize      = {(float)currentRead.width, (float)currentRead.height}
 
 auto&amp; registry = FilterRegistry::get();
 
@@ -3848,14 +3843,17 @@ calls <code>rlPushMatrix</code> and applies the transform via <code>rlTranslatef
 <p>The <code>transformStack</code> is used by <code>transformClipToScreen</code> to compute the
 screen-space AABB of a clip rect: it applies all active transforms to
 the four corners.</p>
-<h3 id="123-target-stack">12.3 Target stack</h3>
-<p><code>pushTarget</code> saves the current matrix (<code>rlPushMatrix</code>, <code>rlLoadIdentity</code>),
-sets <code>insideTarget_ = true</code>, ends any active scissor, and calls
-<code>BeginTextureMode</code>. <code>popTarget</code> calls <code>EndTextureMode</code>, restores the
-matrix (<code>rlPopMatrix</code>), and re-issues the scissor if one was active.</p>
-<p>The "no nested targets" limitation comes from Raylib: <code>BeginTextureMode</code>
-while already in a texture mode doesn't work correctly. The pipeline
-avoids this by the <code>!renderer-&gt;inTarget()</code> check in <code>draw</code>.</p>
+<h3 id="123-target-stack-and-color-only-fbos">12.3 Target stack and color-only FBOs</h3>
+<p><code>RaylibRenderer</code> maintains a <code>targetStates_</code> stack storing the parent
+target handle, clip state, and transform stack (moved via <code>std::move</code>
+to avoid per-push vector copies). <code>pushTarget</code> flushes the active draw
+batch, ends scissor/texture mode, pushes the saved state, binds the new
+target, and clears it to <code>BLANK</code>. <code>popTarget</code> restores the parent
+target, transform matrices, and scissor — enabling full
+<code>Feature::NestedTargets</code> support.</p>
+<p><code>createTarget</code> allocates <strong>color-only</strong> framebuffers (no unused depth
+renderbuffer) via <code>rlLoadFramebuffer</code> + <code>RL_ATTACHMENT_COLOR_CHANNEL0</code>,
+falling back to <code>LoadRenderTexture</code> if the framebuffer is incomplete.</p>
 <h3 id="124-effects">12.4 Effects</h3>
 <p><code>pushEffect</code> uses <code>BeginShaderMode</code>. <code>popEffect</code> calls <code>EndShaderMode</code>
 and re-pushes the previous effect if there's one on the stack
@@ -3873,10 +3871,20 @@ divides the result by <code>dpiScale_</code> to return logical pixels.</p>
 <h3 id="131-frustum-culling">13.1 Frustum culling</h3>
 <p>The biggest win for large UIs. A 1000-child scroll view only draws the
 ~15 visible children. Each <code>draw</code> call does the AABB check cheaply.</p>
-<h3 id="132-target-caching">13.2 Target caching</h3>
-<p>Render targets are cached per node and only reallocated when the size
-changes. A filtered node that doesn't resize doesn't allocate in a
-frame.</p>
+<h3 id="132-target-pooling-and-bucketing">13.2 Target pooling and bucketing</h3>
+<p>Render targets are no longer cached per node (which previously caused
+150 live targets for 50 filtered cards and constant destroy/recreate
+churn whenever animations or clipping resized the region). Instead:</p>
+<ul>
+<li><code>TargetPool</code> shares targets across the whole frame, bounding live
+  targets to <code>(nesting depth × 3)</code>.</li>
+<li>64 px bucketing (<code>Feature::TargetSubRect</code>) absorbs scale, rotation,
+  and viewport-clip size changes without reallocating GPU FBOs.</li>
+<li>Lazy per-kind allocation allocates 1 target for <code>drop-shadow</code> /
+  <code>SinglePass</code>, 2 for <code>blur</code>, and 3 only for multi-filter chains with
+  a <code>Separable</code> pass.</li>
+<li>Idle targets are automatically trimmed after 120 frames.</li>
+</ul>
 <h3 id="133-the-three-z-vectors">13.3 The three z-vectors</h3>
 <p><code>drawNegZ_</code>, <code>drawNormal_</code>, <code>drawPosZ_</code> are members, reused across
 frames. The only allocations are when the vectors grow beyond their

@@ -1138,10 +1138,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-rotation-ignored" class="md-nav__link">
+  <a href="#72-no-filterref-interpolation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Rotation ignored
+        7.2 No FilterRef interpolation
       
     </span>
   </a>
@@ -1149,37 +1149,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-no-filterref-interpolation" class="md-nav__link">
+  <a href="#73-render-target-size-pooling-and-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 No FilterRef interpolation
+        7.3 Render target size, pooling, and performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Render target size, pooling, and performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance tips
       
     </span>
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#74-render-target-size" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7.4 Render target size
-      
-    </span>
-  </a>
+      </ul>
+    </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#75-effect-and-filter-on-the-same-node" class="md-nav__link">
+  <a href="#74-effect-and-filter-on-the-same-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.5 effect: and filter: on the same node
+        7.4 effect: and filter: on the same node
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.5 effect: and filter: on the same node">
+    <nav class="md-nav" aria-label="7.4 effect: and filter: on the same node">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2381,10 +2387,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72-rotation-ignored" class="md-nav__link">
+  <a href="#72-no-filterref-interpolation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2 Rotation ignored
+        7.2 No FilterRef interpolation
       
     </span>
   </a>
@@ -2392,37 +2398,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#73-no-filterref-interpolation" class="md-nav__link">
+  <a href="#73-render-target-size-pooling-and-performance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3 No FilterRef interpolation
+        7.3 Render target size, pooling, and performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Render target size, pooling, and performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance tips
       
     </span>
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#74-render-target-size" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7.4 Render target size
-      
-    </span>
-  </a>
+      </ul>
+    </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#75-effect-and-filter-on-the-same-node" class="md-nav__link">
+  <a href="#74-effect-and-filter-on-the-same-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.5 effect: and filter: on the same node
+        7.4 effect: and filter: on the same node
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.5 effect: and filter: on the same node">
+    <nav class="md-nav" aria-label="7.4 effect: and filter: on the same node">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2554,22 +2566,29 @@ as a styling property.</p>
 <li>It's <strong>not</strong> already inside a render target, OR the backend supports nested targets
   (<code>!renderer-&gt;inTarget() || renderer-&gt;supports(Feature::NestedTargets)</code>).</li>
 </ul>
-<p>The reference Raylib backend supports nested render targets seamlessly, allowing filtered nodes to be safely nested inside other filtered layers.</p>
+<p>The reference Raylib backend supports nested render targets seamlessly,
+allowing filtered nodes to be safely nested inside other filtered layers.</p>
 <p>When the conditions are met, <code>Layout::drawLayer</code> runs:</p>
 <ol>
-<li>Computes the transformed bounding box of the node
-   (<code>rect</code> after <code>scale</code> and <code>translate</code>).</li>
+<li>Computes the transformed axis-aligned bounding box of the node
+   (<code>rect</code> after <code>translate</code>, <code>scale</code>, and <code>rotation</code>).</li>
 <li>Intersects it with the current clip rect to get the visible <code>region</code>.</li>
-<li>Ensures two render targets (<code>layerTarget_</code> and <code>layerScratch_</code>) are
-   sized to the region.</li>
-<li>Renders the subtree (chrome + content + children) into <code>layerTarget_</code>.</li>
-<li>Runs the filter chain on the target.</li>
-<li>Draws the result to the framebuffer at <code>region</code>, with the node's
-   opacity applied.</li>
+<li>Acquires a main render target from the shared <code>TargetPool</code> on
+   <code>UIContext</code> (bucketed up to a multiple of 64 px when the backend
+   supports <code>Feature::TargetSubRect</code>).</li>
+<li>Renders the subtree (chrome + content + children) into that target.</li>
+<li>Lazily acquires only the extra targets required by the chain:</li>
+<li>a <strong>scratch</strong> target for ping-pong only if the chain has 2+ filters;</li>
+<li>a <strong>separable</strong> intermediate target only if a <code>Separable</code> filter
+     (with <code>downscale &lt;= 1</code>) or a <code>Custom</code> filter is present.</li>
+<li>Runs the filter chain and composites the final result to the
+   framebuffer at <code>region</code>, with the node's opacity applied.</li>
+<li>Releases all acquired targets back to <code>TargetPool</code> in LIFO order.</li>
 </ol>
-<p>The render target is cached on the node and only recreated when the
-region size changes. This matters for performance — a filtered node
-that doesn't resize doesn't reallocate its targets.</p>
+<p>Because targets are pooled per <code>UIContext</code> (not owned per node) and
+bucketed to 64 px steps, 50 filtered cards reuse at most 3 live targets
+instead of keeping 150 alive, and animated or clipped nodes avoid
+per-frame target reallocation.</p>
 <h3 id="12-declaring-a-filter">1.2 Declaring a filter</h3>
 <pre><code class="language-css">.card {
     filter: blur(4px);
@@ -2600,11 +2619,9 @@ effect. A missing shader is not an error.</p>
   the already-transformed image. (Actually the code applies the
   transform before rendering into the target, then draws the target
   at the transformed region.)</li>
-<li><strong>Rotation is approximated.</strong> <code>drawLayer</code> computes the bounding box
-  after scale + translate, but ignores rotation for the region
-  computation. A rotated node with a filter will have its region
-  slightly off. This is a known limitation; rotations on filtered
-  nodes are rare.</li>
+<li><strong>Rotation is accounted for.</strong> <code>drawLayer</code> transforms all four corners
+  of <code>rect</code> (translate, scale, and rotation) and takes their AABB, so
+  rotated filtered nodes are not clipped at the corners</li>
 <li><strong>Clipping is intersected, not applied.</strong> The filter's <code>region</code> is
   the intersection of the transformed rect and the current clip. The
   parts of the subtree outside that region are still rendered into the
@@ -2638,19 +2655,23 @@ visibly different: the first blurs the card, then tints it sepia; the
 second tints the card, then blurs the tinted result. In general, <code>f1,
 f2</code> produces <code>f2(f1(x))</code>, matching CSS's semantics.</p>
 <h4 id="the-ping-pong">The ping-pong</h4>
-<p>The chain alternates between two render targets:</p>
+<p>The chain acquires its targets from <code>UIContext::targetPool</code> and
+alternates between the main target and (when 2+ filters are present) a
+scratch target:</p>
 <ul>
-<li><strong>Filter 0</strong> reads <code>layerTarget_</code>, writes <code>layerScratch_</code>.</li>
-<li><strong>Filter 1</strong> reads <code>layerScratch_</code>, writes <code>layerTarget_</code>.</li>
-<li><strong>Filter 2</strong> reads <code>layerTarget_</code>, writes <code>layerScratch_</code>.</li>
+<li><strong>Filter 0</strong> reads <code>mainTarget</code>, writes <code>scratchTarget</code>.</li>
+<li><strong>Filter 1</strong> reads <code>scratchTarget</code>, writes <code>mainTarget</code>.</li>
+<li><strong>Filter 2</strong> reads <code>mainTarget</code>, writes <code>scratchTarget</code>.</li>
 <li>...</li>
 <li><strong>The last filter</strong> writes to the <strong>framebuffer</strong> at the node's
   region, not to a target.</li>
 </ul>
-<p>A third target (<code>layerSeparable_</code>) exists for <code>Separable</code> filters (like
-<code>blur</code>). The blur is implemented as two passes: horizontal into
-<code>layerSeparable_</code>, then vertical into the destination. Without a third
-target, the H-pass would overwrite the read target mid-computation.</p>
+<p>A third target (<code>separableTarget</code>) is acquired only when a <code>Separable</code>
+filter (with <code>downscale == 1</code>) or a <code>Custom</code> filter is in the chain.
+<code>Separable</code> filters with <code>downscale &gt; 1</code> (2 or 4) acquire a smaller
+intermediate target directly from <code>TargetPool</code> and upscale on the
+vertical pass. All targets are released back to the pool when
+<code>drawLayer</code> finishes.</p>
 <h4 id="opacity">Opacity</h4>
 <p>The node's <code>opacity</code> is applied only on the <strong>last</strong> filter, when the
 result is written to the framebuffer. Intermediate passes work at full
@@ -2934,8 +2955,13 @@ sets one uniform automatically: <code>texSize</code> = <code>{dst.width, dst.hei
 <p>Your shader should sample along <code>direction</code> using the <code>radius</code> (or
 whatever your blur axis parameter is called). Both <code>texSize</code> and
 <code>direction</code> are set by the framework; your params define the radius.</p>
-<p>The node's <code>layerScratch_</code> target is used for the intermediate pass.
-It's allocated lazily and cached.</p>
+<p><code>Separable</code> filters also support an opt-in <code>downscale</code> field on
+<code>FilterDef</code> (<code>1</code>, <code>2</code>, or <code>4</code>; default <code>1</code>). Setting <code>.downscale = 2</code>
+runs the intermediate pass on a half-resolution target from <code>TargetPool</code>
+(4× fewer pixels) and upscales on the vertical pass. The built-in <code>blur</code>
+keeps <code>downscale = 1</code> by default; register a separate preset (e.g.
+<code>blur-fast</code> with <code>.downscale = 2</code>) if you want a cheaper blur for large
+panels.</p>
 <h4 id="silhouette"><code>Silhouette</code></h4>
 <pre><code class="language-cpp">.pattern = FilterPattern::Silhouette
 </code></pre>
@@ -3005,6 +3031,14 @@ node's state.</p>
 <tr>
 <td><code>ref</code></td>
 <td><code>const FilterRef*</code> — the CSS filter reference (name + args).</td>
+</tr>
+<tr>
+<td><code>write_target</code></td>
+<td><code>TargetHandle</code> — intermediate destination target, or invalid if this is the last filter in the chain.</td>
+</tr>
+<tr>
+<td><code>texSize</code></td>
+<td><code>Vec2</code> — actual pixel size of the <code>src</code> texture (may be larger than <code>dst</code> when bucketed). Shaders that compute texel size must use <code>texSize</code>, not <code>dst.width</code>/<code>dst.height</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3146,30 +3180,44 @@ pass an explicit <code>vsPath</code>.</p>
 <h2 id="7-limitations-and-known-issues">7. Limitations and known issues</h2>
 <h3 id="71-nested-render-targets">7.1 Nested render targets</h3>
 <p>Nested render targets are fully supported as long as the active backend implements <code>Feature::NestedTargets</code> (which the default Raylib backend does). A filtered node inside another filtered node will render correctly, maintaining its own isolated filter chain and compositing cleanly into the parent target.</p>
-<h3 id="72-rotation-ignored">7.2 Rotation ignored</h3>
-<p><code>drawLayer</code> computes the transformed bounding box from <code>scale</code> and
-<code>translate</code>, but not <code>rotation</code>. A rotated node with a filter will have
-its region computed as if it weren't rotated. The filter will still run,
-but the region may be slightly too small or too large. In practice,
-rotating a filtered node is rare.</p>
-<h3 id="73-no-filterref-interpolation">7.3 No <code>FilterRef</code> interpolation</h3>
+<h3 id="72-no-filterref-interpolation">7.2 No <code>FilterRef</code> interpolation</h3>
 <p><code>transition: filter 0.3s</code> has no visible effect — the <code>filters</code> list
 snaps to the target at <code>t &gt; 0</code>. To animate filter parameters, drive a
 uniform via an imperative animation, or make the change instantaneous.</p>
-<h3 id="74-render-target-size">7.4 Render target size</h3>
+<h3 id="73-render-target-size-pooling-and-performance">7.3 Render target size, pooling, and performance</h3>
 <p>The render target is sized to the intersection of the transformed rect
-and the current clip. For a filtered node that fills the viewport, this
-is a full-viewport target — potentially large. Memory-wise, two targets
-(<code>layerTarget_</code> + <code>layerScratch_</code>) per filtered node, allocated lazily
-and cached.</p>
-<p>There's a hard limit: <code>MAX_TARGET_DIM = 4096</code>. If the region exceeds
-this in either dimension, the layer path falls back to <code>drawInline</code>:</p>
-<pre><code class="language-cpp">if (tw &gt; MAX_TARGET_DIM || th &gt; MAX_TARGET_DIM) {
-    drawInline(renderStyle, globalOp);
-    return;
-}
-</code></pre>
-<h3 id="75-effect-and-filter-on-the-same-node">7.5 <code>effect:</code> and <code>filter:</code> on the same node</h3>
+and the current clip (<code>region</code>). When the backend supports
+<code>Feature::TargetSubRect</code> (true on Raylib), <code>TargetPool</code> rounds each
+dimension <strong>up to a multiple of 64 px</strong> and reads back only the active
+sub-rectangle.</p>
+<ul>
+<li><strong>Target count per chain:</strong></li>
+<li>Single <code>drop-shadow</code> or <code>SinglePass</code> filter → <strong>1</strong> target.</li>
+<li>Single <code>blur</code> (<code>Separable</code>) → <strong>2</strong> targets.</li>
+<li>Chains of 2+ filters with a <code>Separable</code> filter → <strong>3</strong> targets.</li>
+<li><strong>Pooling:</strong> targets are shared across all nodes via
+  <code>UIContext::targetPool</code> and released in LIFO order at the end of each
+  <code>drawLayer</code>. Total live targets are bounded by
+  <code>(nesting depth × 3)</code> rather than <code>(filtered nodes × 3)</code>. Idle targets
+  are freed automatically by <code>UIContext::endFrame()</code> after 120 frames.</li>
+<li><strong>Hard cap:</strong> <code>TargetPool::MAX_DIM = 4096</code>. If the requested region
+  exceeds 4096 px in either dimension, <code>drawLayer</code> falls back to
+  <code>drawInline</code>.</li>
+<li><strong>Blur edge behavior:</strong> because bucketed targets are cleared to
+  transparent (<code>BLANK</code>), samples past the region edge fade into
+  transparency rather than clamping to the border pixel.</li>
+</ul>
+<h4 id="performance-tips">Performance tips</h4>
+<ul>
+<li>Prefer <code>effect:</code> over <code>filter:</code> when a shader only needs per-fragment
+  operations (no neighbor sampling or subtree compositing).</li>
+<li>Avoid chaining multiple <code>Separable</code> filters on full-screen containers.</li>
+<li>For large blurred panels where fill rate matters, register a
+  <code>Separable</code> preset with <code>downscale = 2</code> (see <code>examples/07b_effects_stress</code>).</li>
+<li>Inspect live target counts and filter passes at runtime via
+  <code>UIContext::get().renderStats</code> or <code>Debug::dumpRenderStats()</code>.</li>
+</ul>
+<h3 id="74-effect-and-filter-on-the-same-node">7.4 <code>effect:</code> and <code>filter:</code> on the same node</h3>
 <p>A node can have both properties at once. They operate at different
 levels of the render pipeline, and understanding which is which
 explains why the combination behaves the way it does.</p>

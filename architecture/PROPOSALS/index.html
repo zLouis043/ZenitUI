@@ -2705,6 +2705,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-9-filter-layer-pipeline-performance_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 9 — Filter layer pipeline performance
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2758,6 +2769,9 @@ implementation.</p>
 <li>✅ <strong>Proposal 8 — VirtualView</strong>: shipped as roadmap §5.24. See
   <code>docs/user/12-virtual_view.md</code> and <code>docs/api/Widgets.md</code> for the
   user-facing API.</li>
+<li>✅ <strong>Proposal 9 — Filter layer pipeline performance</strong>: shipped as
+  roadmap §4.9 (steps 0–f; step g declined). See <code>examples/07b_effects_stress</code>
+  and the change log at the end of this file.</li>
 </ul>
 <hr />
 <h2 id="index">Index</h2>
@@ -4762,7 +4776,7 @@ is a separate ~1 week task with real regression risk and is only
 tackled if the measurements justify it.</p>
 <p><strong>Depends on:</strong> §5.4 (filter chaining) and §5.5 (nested targets), both
 shipped. Independent of every other proposal.</p>
-<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §4.9 (steps 0–f; step g declined).</p>
 <p><strong>Roadmap mapping:</strong> ships as §4.9 (steps 0, a–g).</p>
 <h3 id="91-problem">9.1 Problem</h3>
 <p>Using <code>filter:</code> (blur, drop-shadow, custom filters) makes a scene
@@ -5315,6 +5329,7 @@ re-discussing them.</p>
 <li>Proposal 4 — StyleParser Diagnostics → §5.20</li>
 <li>Proposal 5 — Wrap for HStack → §5.21</li>
 <li>Proposal 8 — VirtualView → §5.24</li>
+<li>Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)</li>
 </ol>
 <p><strong>Proposed</strong> (next, in this order):</p>
 <ol>
@@ -5322,12 +5337,8 @@ re-discussing them.</p>
    Benefits: unblocks 10k+ item lists, the most-requested feature
    after UIPrefab.</li>
 <li>Proposal 7 — Drag &amp; Drop → §5.22 (split into a/b/c). Benefits from
-   VirtualList for the "reorderable list" example, but doesn't
-   strictly depend on it.</li>
-<li>Proposal 9 — Filter layer pipeline performance → §4.9. Independent
-   of the other proposals, so it can ship at any point. Steps 0 (instrumentation),
-   a (lazy targets), b (bucketed sizes) and c (target pool) first; the
-   layer cache (step g) only if the measurements justify it.</li>
+    VirtualList for the "reorderable list" example, but doesn't
+    strictly depend on it.</li>
 <li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35. Small,
     self-contained extension of §5.18 / §5.19.</li>
 </ol>
@@ -5502,6 +5513,67 @@ pauses. This is the exact problem VirtualList (Proposal 6 / roadmap
 VirtualList — it stays the simpler option for lists where allocation
 churn is not a concern, and it is the only large-list option until
 VirtualList ships.</p>
+<h3 id="proposal-9-filter-layer-pipeline-performance_1">Proposal 9 — Filter layer pipeline performance</h3>
+<p><strong>Shipped:</strong> roadmap §4.9 (steps 0–f; step g declined).</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li><strong><code>TargetPool</code> lives directly in <code>include/UIContext.hpp</code>.</strong> Rather
+  than adding a separate <code>include/TargetPool.hpp</code> header, <code>TargetPool</code>
+  and <code>RenderStats</code> were placed next to <code>UIContext</code> since <code>UIContext</code>
+  is their sole owner and lifecycle driver (<code>beginFrame</code> / <code>endFrame</code>).</li>
+<li><strong>Dedicated GPU stress example (<code>examples/07b_effects_stress</code>).</strong>
+  Instead of crowding <code>examples/07_effects</code>, a dedicated 50-card stress
+  bench was added with runtime toggles for filter mode (<code>Blur + Shadow</code>,
+  <code>Blur 1x</code>, <code>Blur Fast 2x</code>, <code>No Filter</code>), animation (<code>Static</code>, <code>Scale</code>,
+  <code>Rotate</code>), and an on-screen <code>RenderStats</code> + FPS HUD.</li>
+<li><strong>Step <code>e</code> (<code>FilterDef::downscale</code>) shipped as opt-in.</strong> Default stays
+  <code>1</code> (built-in <code>blur</code> unchanged); <code>Separable</code> filters with
+  <code>downscale</code> of <code>2</code> or <code>4</code> acquire a downscaled intermediate target
+  from <code>TargetPool</code> inside <code>applySeparable</code> and upscale on the vertical
+  pass.</li>
+<li><strong><code>assets/blur.fs</code> required no edits.</strong> The shader already normalized
+  tap offsets by <code>texSize</code>, so passing the bucketed texture size via
+  <code>FilterContext::texSize</code> worked out of the box.</li>
+<li><strong>Step <code>g</code> (opt-in layer cache with <code>paintDirty</code>) declined.</strong> After
+  steps 0–e landed, <code>examples/07b_effects_stress</code> measured 400–600 FPS
+  on 50 filtered rotating cards (and ≥ 100 FPS in the worst case while
+  scrolling back and forth). Given those numbers, adding a cross-widget
+  <code>paintDirty</code> invalidation mechanism and risking stale renders is not
+  justified. Revisit only if a real application hits FBO-switch limits
+  on static filtered scenes.</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>include/UIContext.hpp</code> — <code>Feature::TargetSubRect</code>, non-pure
+  <code>IRenderer::drawTarget(t, src, dst, tint)</code>, <code>RenderStats</code>,
+  <code>TargetPool</code>, <code>UIContext::endFrame()</code>.</li>
+<li><code>include/FilterRegistry.hpp</code> / <code>src/layout/FilterRegistry.cpp</code> —
+  <code>FilterContext::texSize</code>, <code>FilterDef::downscale</code>, sub-rect drawing,
+  downscaled separable intermediate pass, <code>RenderStats</code> instrumentation.</li>
+<li><code>src/layout/Render.cpp</code> — <code>Layout::drawLayer</code> rewritten around lazy
+  per-kind acquisition and LIFO release from <code>UIContext::targetPool</code>.</li>
+<li><code>include/Layout.hpp</code> / <code>src/layout/Layout.cpp</code> — removed per-node
+  <code>layerTarget_</code> / <code>layerScratch_</code> / <code>layerSeparable_</code> members and
+  destructor teardown; wired <code>UIContext::endFrame()</code> into
+  <code>Layout::renderFrame()</code>.</li>
+<li><code>include/Debug.hpp</code> — <code>renderStatsToString</code> and <code>dumpRenderStats</code>.</li>
+<li><code>backends/raylib/RaylibBackend.hpp</code> / <code>.cpp</code> — sub-rect <code>drawTarget</code>
+  with OpenGL Y-flip, <code>Feature::TargetSubRect</code>, colour-only FBOs with
+  <code>LoadRenderTexture</code> fallback, move semantics in <code>pushTarget</code> /
+  <code>popTarget</code>, cached shader uniform locations, transparent string-view
+  lookups in <code>RaylibAssetProvider</code>.</li>
+<li><code>backends/mock/MockBackend.hpp</code> — target counters, <code>TargetSubRect</code>
+  capability flag, captured <code>lastDrawTargetSrc</code> / <code>lastDrawTargetDst</code>,
+  <code>targetPool.clear</code> and <code>endFrame</code> wired into <code>Env</code>.</li>
+<li><code>tests/test_filter.cpp</code> — 8 new <code>Filter_perf</code> regression tests
+  covering lazy allocation, static zero-churn, scale/rotation/clip
+  sweeps, 50-card pool bound + trim, nested layers, sub-rect fallback,
+  <code>texSize</code> vs <code>dst</code>, and separable downscale.</li>
+<li><code>benchmarks/benches.cpp</code> — <code>system.frame.filtered50.static</code>,
+  <code>system.frame.filtered50.scaleAnim</code>, <code>system.frame.filtered50.rotAnim</code>.</li>
+<li><code>examples/07b_effects_stress/main.cpp</code> — 50-card interactive GPU
+  stress scene with live <code>RenderStats</code> HUD.</li>
+</ul>
 
 
 
