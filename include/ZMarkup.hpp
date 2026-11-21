@@ -306,6 +306,20 @@ namespace ZenitUI::ZMarkup
         return p.parseRoot();
     }
 
+    class UINode;
+
+    /**
+     * \struct SlotFrame
+     * \brief Per-prefab-invocation slot routing table.
+     */
+    struct SlotFrame
+    {
+        std::string prefabName;
+        std::unordered_map<std::string, std::vector<const Element *>> buckets;
+        std::unordered_set<std::string> seenSlots;
+        std::unordered_set<std::string> consumedSlots;
+    };
+
     /**
      * \struct BuildContext
      * \brief Per-build accumulator for `#id` and `@ref` lookups.
@@ -315,7 +329,7 @@ namespace ZenitUI::ZMarkup
         std::unordered_map<std::string, std::shared_ptr<Layout>> byId;
         std::unordered_map<std::string, std::vector<std::shared_ptr<Layout>>> byRef;
 
-        const std::vector<Element> *currentSlotChildren{nullptr};
+        std::vector<SlotFrame> slotStack;
     };
 
     /**
@@ -330,6 +344,12 @@ namespace ZenitUI::ZMarkup
 
         /** \brief Register or replace a tag factory. */
         void reg(const std::string &tag, Factory f) { factories[tag] = std::move(f); }
+
+        /** \brief `true` if a prefab is registered under \p tagName. */
+        bool hasPrefab(const std::string &tagName) const
+        {
+            return prefabs.count(tagName) > 0;
+        }
 
         /**
          * \brief Register a prefab from inline markup source.
@@ -365,33 +385,66 @@ namespace ZenitUI::ZMarkup
          * expand to multiple siblings. For non-slot tags the result always
          * has exactly one element.
          */
-        std::vector<std::shared_ptr<Layout>> create_impl(const Element &el, BuildContext &ctx, bool isPrefabRoot = false)
+        std::vector<std::shared_ptr<Layout>> create_impl(
+            const Element &el, BuildContext &ctx, bool isPrefabRoot = false) const
         {
             std::vector<std::shared_ptr<Layout>> result;
 
             if (el.tag == "Slot")
             {
-                const std::vector<Element> *childrenToBuild = nullptr;
-                if (ctx.currentSlotChildren && !ctx.currentSlotChildren->empty())
-                {
-                    childrenToBuild = ctx.currentSlotChildren;
-                }
-                else if (!el.children.empty())
-                {
-                    childrenToBuild = &el.children;
-                }
+                const std::string slotName = el.attr("name", "");
 
-                if (childrenToBuild)
+                if (ctx.slotStack.empty())
                 {
-                    auto previousSlot = ctx.currentSlotChildren;
-                    ctx.currentSlotChildren = nullptr;
-
-                    for (const auto &child : *childrenToBuild)
+                    logWarn("ZMarkup", "", 0, 0,
+                            slotName.empty()
+                                ? "default Slot used outside of a prefab; rendering fallback"
+                                : "Slot name='" + slotName + "' used outside of a prefab; rendering fallback");
+                    for (const auto &child : el.children)
                     {
                         auto childNodes = create_impl(child, ctx);
                         result.insert(result.end(), childNodes.begin(), childNodes.end());
                     }
-                    ctx.currentSlotChildren = previousSlot;
+                    return result;
+                }
+
+                auto &top = ctx.slotStack.back();
+                if (!top.seenSlots.insert(slotName).second)
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            slotName.empty()
+                                ? "duplicate default Slot in prefab '" + top.prefabName + "', ignoring duplicate"
+                                : "duplicate Slot name='" + slotName + "' in prefab '" + top.prefabName + "', ignoring duplicate");
+                    return result;
+                }
+
+                auto bucketIt = top.buckets.find(slotName);
+                const bool hasInjected = (bucketIt != top.buckets.end() && !bucketIt->second.empty());
+
+                if (hasInjected)
+                {
+                    top.consumedSlots.insert(slotName);
+
+                    // Pop current prefab frame while building caller-provided children
+                    // so they resolve against the caller's lexical slot scope.
+                    SlotFrame saved = std::move(ctx.slotStack.back());
+                    ctx.slotStack.pop_back();
+
+                    for (const Element *child : saved.buckets[slotName])
+                    {
+                        auto childNodes = create_impl(*child, ctx);
+                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                    }
+
+                    ctx.slotStack.push_back(std::move(saved));
+                }
+                else if (!el.children.empty())
+                {
+                    for (const auto &child : el.children)
+                    {
+                        auto childNodes = create_impl(child, ctx);
+                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                    }
                 }
                 return result;
             }
@@ -401,24 +454,9 @@ namespace ZenitUI::ZMarkup
                 auto prefabIt = prefabs.find(el.tag);
                 if (prefabIt != prefabs.end())
                 {
-                    Element instanceTree = prefabIt->second;
-
-                    for (const auto &c : el.classes)
-                        instanceTree.classes.push_back(c);
-                    if (!el.id.empty())
-                        instanceTree.id = el.id;
-                    if (!el.ref.empty())
-                        instanceTree.ref = el.ref;
-                    for (const auto &attr : el.attrs)
-                        instanceTree.attrs.push_back(attr);
-
-                    auto previousSlot = ctx.currentSlotChildren;
-                    ctx.currentSlotChildren = &el.children;
-
-                    auto nodes = create_impl(instanceTree, ctx, true);
-
-                    ctx.currentSlotChildren = previousSlot;
-                    return nodes; // Propaga la radice istanziata
+                    return expandPrefab(el.tag, prefabIt->second,
+                                        el.classes, el.id, el.ref,
+                                        el.attrs, el.children, ctx);
                 }
             }
 
@@ -433,7 +471,7 @@ namespace ZenitUI::ZMarkup
             if (el.has("passthrough"))
                 node->setPassThrough(el.attrBool("passthrough"));
 
-            for (auto &c : el.classes)
+            for (const auto &c : el.classes)
                 node->cls(c);
             if (!el.id.empty())
             {
@@ -446,18 +484,16 @@ namespace ZenitUI::ZMarkup
                 ctx.byRef[el.ref].push_back(node);
             }
 
-            for (auto &[k, v] : el.attrs)
+            for (const auto &[k, v] : el.attrs)
+            {
+                if (k == "slot" || k == "passthrough")
+                    continue;
                 applyStyleAttr(node->getInlineBase(), k, v);
+            }
 
             Layout *target = node->contentTarget();
 
-            auto previousSlot = ctx.currentSlotChildren;
-            if (!isPrefabRoot)
-            {
-                ctx.currentSlotChildren = nullptr;
-            }
-
-            for (auto &child : el.children)
+            for (const auto &child : el.children)
             {
                 auto childNodes = create_impl(child, ctx);
                 for (auto &c : childNodes)
@@ -465,8 +501,6 @@ namespace ZenitUI::ZMarkup
                     target->addChild(c);
                 }
             }
-
-            ctx.currentSlotChildren = previousSlot;
 
             result.push_back(node);
             return result;
@@ -476,13 +510,88 @@ namespace ZenitUI::ZMarkup
          * \brief Convenience wrapper: build exactly one root node from \p el.
          * \return `nullptr` if the element expanded to zero nodes.
          */
-        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx)
+        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx) const
         {
             auto res = create_impl(el, ctx);
             return res.empty() ? nullptr : res.front();
         }
 
+        /**
+         * \brief Directly instantiate a registered prefab without invoking the parser.
+         *
+         * Returns an empty `UINode` (null root) and logs a warning if \p tagName
+         * is not registered.
+         */
+        UINode instantiate(
+            const std::string &tagName,
+            const std::vector<std::string> &extraClasses = {},
+            const std::string &id = "",
+            const std::string &ref = "") const;
+
     private:
+        std::vector<std::shared_ptr<Layout>> expandPrefab(
+            const std::string &tagName,
+            const Element &prefabAst,
+            const std::vector<std::string> &extraClasses,
+            const std::string &id,
+            const std::string &ref,
+            const std::vector<std::pair<std::string, std::string>> &extraAttrs,
+            const std::vector<Element> &callerChildren,
+            BuildContext &ctx) const
+        {
+            Element instanceTree = prefabAst;
+
+            for (const auto &c : extraClasses)
+                instanceTree.classes.push_back(c);
+            if (!id.empty())
+                instanceTree.id = id;
+            if (!ref.empty())
+                instanceTree.ref = ref;
+            for (const auto &attr : extraAttrs)
+            {
+                if (attr.first != "slot")
+                    instanceTree.attrs.push_back(attr);
+            }
+
+            SlotFrame frame;
+            frame.prefabName = tagName;
+            for (const auto &child : callerChildren)
+            {
+                std::string targetSlot = child.attr("slot", "");
+                frame.buckets[targetSlot].push_back(&child);
+            }
+
+            ctx.slotStack.push_back(std::move(frame));
+            auto nodes = create_impl(instanceTree, ctx, true);
+
+            SlotFrame finished = std::move(ctx.slotStack.back());
+            ctx.slotStack.pop_back();
+
+            for (const auto &[slotName, elems] : finished.buckets)
+            {
+                if (!elems.empty() && !finished.consumedSlots.count(slotName))
+                {
+                    if (slotName.empty())
+                    {
+                        logWarn("ZMarkup", "", 0, 0,
+                                "prefab '" + tagName +
+                                    "' has no default Slot; ignoring " +
+                                    std::to_string(elems.size()) + " child(ren)");
+                    }
+                    else
+                    {
+                        logWarn("ZMarkup", "", 0, 0,
+                                "prefab '" + tagName +
+                                    "' has no Slot named '" + slotName +
+                                    "'; ignoring " +
+                                    std::to_string(elems.size()) + " child(ren)");
+                    }
+                }
+            }
+
+            return nodes;
+        }
+
         std::unordered_map<std::string, Factory> factories;
         std::unordered_map<std::string, Element> prefabs;
     };
@@ -771,6 +880,40 @@ namespace ZenitUI::ZMarkup
         std::stringstream ss;
         ss << f.rdbuf();
         return build(ss.str());
+    }
+
+    inline UINode Registry::instantiate(
+        const std::string &tagName,
+        const std::vector<std::string> &extraClasses,
+        const std::string &id,
+        const std::string &ref) const
+    {
+        auto ctx = std::make_shared<BuildContext>();
+        auto it = prefabs.find(tagName);
+        if (it == prefabs.end())
+        {
+            logWarn("ZMarkup", "", 0, 0,
+                    "Registry::instantiate('" + tagName + "'): no prefab registered with this name");
+            return UINode(nullptr, ctx);
+        }
+        auto nodes = expandPrefab(tagName, it->second, extraClasses, id, ref, {}, {}, *ctx);
+        return UINode(nodes.empty() ? nullptr : nodes.front(), ctx);
+    }
+
+    /** \brief Free-function wrapper around `getGlobalRegistry().hasPrefab`. */
+    inline bool hasPrefab(const std::string &tagName)
+    {
+        return getGlobalRegistry().hasPrefab(tagName);
+    }
+
+    /** \brief Free-function wrapper around `getGlobalRegistry().instantiate`. */
+    inline UINode instantiate(
+        const std::string &tagName,
+        const std::vector<std::string> &extraClasses = {},
+        const std::string &id = "",
+        const std::string &ref = "")
+    {
+        return getGlobalRegistry().instantiate(tagName, extraClasses, id, ref);
     }
 
 } // namespace ZenitUI::ZMarkup

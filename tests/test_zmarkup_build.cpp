@@ -630,3 +630,230 @@ TEST(ZMarkupBuild, prefab_slot_uses_defaults_if_no_children_passed) {
     CHECK(text != nullptr);
     CHECK(text->getText() == "Default Content");
 }
+
+TEST(ZMarkupBuild, prefab_named_slots_route_to_matching_zones)
+{
+    Env env;
+    ZMarkup::registerPrefab("ReaderModal", R"(
+        VStack.modal-card {
+            HStack.header@hdr {
+                Slot name="header" {
+                    Text "Default Header"
+                }
+                Button@close "Chiudi"
+            }
+            VStack.body@body {
+                Slot
+            }
+            HStack.footer@ftr {
+                Slot name="footer"
+            }
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        ReaderModal#rm {
+            Text@custom_hdr slot="header" "Strega del Salmastro"
+            Text@body_line "Descrizione"
+            Button@btn_act slot="footer" "In Combattimento"
+        }
+    )");
+
+    auto hdr = ui.ref<Layout>("hdr");
+    auto body = ui.ref<Layout>("body");
+    auto ftr = ui.ref<Layout>("ftr");
+    auto customHdr = ui.ref<Text>("custom_hdr");
+    auto bodyLine = ui.ref<Text>("body_line");
+    auto btnAct = ui.ref<Button>("btn_act");
+
+    CHECK(hdr != nullptr && body != nullptr && ftr != nullptr);
+    CHECK(customHdr != nullptr && bodyLine != nullptr && btnAct != nullptr);
+
+    CHECK(hdr->children.size() == 2);
+    CHECK(hdr->children[0] == customHdr);
+    CHECK(body->children.size() == 1);
+    CHECK(body->children[0] == bodyLine);
+    CHECK(ftr->children.size() == 1);
+    CHECK(ftr->children[0] == btnAct);
+}
+
+TEST(ZMarkupBuild, prefab_named_slot_multiple_children_preserve_order)
+{
+    Env env;
+    ZMarkup::registerPrefab("ActionBox", R"(
+        HStack@bar {
+            Slot name="actions"
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        ActionBox {
+            Button@a1 slot="actions" "One"
+            Button@a2 slot="actions" "Two"
+            Button@a3 slot="actions" "Three"
+        }
+    )");
+
+    auto bar = ui.ref<Layout>("bar");
+    CHECK(bar != nullptr);
+    CHECK(bar->children.size() == 3);
+    CHECK(bar->children[0] == ui.ref<Layout>("a1"));
+    CHECK(bar->children[1] == ui.ref<Layout>("a2"));
+    CHECK(bar->children[2] == ui.ref<Layout>("a3"));
+}
+
+TEST(ZMarkupBuild, prefab_named_slots_per_slot_fallback)
+{
+    Env env;
+    ZMarkup::registerPrefab("SplitFallback", R"(
+        VStack {
+            HStack@hdr {
+                Slot name="header" {
+                    Text@def_hdr "Fallback Header"
+                }
+            }
+            HStack@ftr {
+                Slot name="footer" {
+                    Text@def_ftr "Fallback Footer"
+                }
+            }
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        SplitFallback {
+            Text@my_hdr slot="header" "Custom Header"
+        }
+    )");
+
+    CHECK(ui.ref<Text>("my_hdr") != nullptr);
+    CHECK(ui.ref<Text>("def_hdr") == nullptr);
+    CHECK(ui.ref<Text>("def_ftr") != nullptr);
+    CHECK(ui.ref<Text>("def_ftr")->getText() == "Fallback Footer");
+}
+
+TEST(ZMarkupBuild, prefab_nested_slots_support_forwarding)
+{
+    Env env;
+    ZMarkup::registerPrefab("NestedInner", R"(
+        VStack.inner {
+            HStack@inner_hdr {
+                Slot name="title" {
+                    Text "Inner Default"
+                }
+            }
+            VStack@inner_body {
+                Slot
+            }
+        }
+    )");
+
+    ZMarkup::registerPrefab("NestedOuter", R"(
+        VStack.outer {
+            NestedInner {
+                Slot name="outer-title" slot="title"
+                Slot
+            }
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        NestedOuter {
+            Text@t slot="outer-title" "Forwarded Title"
+            Text@b "Forwarded Body"
+        }
+    )");
+
+    auto hdr = ui.ref<Layout>("inner_hdr");
+    auto body = ui.ref<Layout>("inner_body");
+    CHECK(hdr != nullptr && body != nullptr);
+    CHECK(hdr->children.size() == 1);
+    CHECK(hdr->children[0] == ui.ref<Layout>("t"));
+    CHECK(body->children.size() == 1);
+    CHECK(body->children[0] == ui.ref<Layout>("b"));
+}
+
+TEST(ZMarkupBuild, prefab_duplicate_slot_name_populates_only_first)
+{
+    Env env;
+    ZMarkup::registerPrefab("DupSlotBox", R"(
+        VStack {
+            HStack@first {
+                Slot name="dup"
+            }
+            HStack@second {
+                Slot name="dup"
+            }
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        DupSlotBox {
+            Text@only_once slot="dup" "Hello"
+        }
+    )");
+
+    CHECK(ui.ref<Layout>("first")->children.size() == 1);
+    CHECK(ui.ref<Layout>("second")->children.empty());
+    CHECK(ui.refAll<Text>("only_once").size() == 1);
+}
+
+TEST(ZMarkupBuild, prefab_unknown_slot_child_is_ignored)
+{
+    Env env;
+    ZMarkup::registerPrefab("UnknownSlotBox", R"(
+        VStack@body {
+            Slot
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        UnknownSlotBox {
+            Text@ok "Default"
+            Text@ghost slot="does-not-exist" "Ignored"
+        }
+    )");
+
+    auto body = ui.ref<Layout>("body");
+    CHECK(body != nullptr);
+    CHECK(body->children.size() == 1);
+    CHECK(ui.ref<Text>("ok") != nullptr);
+    CHECK(ui.ref<Text>("ghost") == nullptr);
+}
+
+TEST(ZMarkupBuild, prefab_direct_instantiate_merges_and_renders_fallback)
+{
+    Env env;
+    ZMarkup::registerPrefab("InstCard", R"(
+        VStack.card-base {
+            Text.card-title@title "Initial"
+            Slot {
+                Text@fallback "Empty"
+            }
+        }
+    )");
+
+    CHECK(ZMarkup::hasPrefab("InstCard"));
+    auto ui = ZMarkup::instantiate("InstCard", {"highlighted", "compact"}, "card1", "cardRef");
+
+    auto root = ui.root();
+    CHECK(root != nullptr);
+    CHECK(root->hasClass("card-base"));
+    CHECK(root->hasClass("highlighted"));
+    CHECK(root->hasClass("compact"));
+    CHECK(root->nodeId == "card1");
+    CHECK(root->ref == "cardRef");
+    CHECK(ui.find("card1") == root);
+    CHECK(ui.ref("cardRef") == root);
+    CHECK(ui.ref<Text>("title") != nullptr);
+    CHECK(ui.ref<Text>("fallback") != nullptr);
+}
+
+TEST(ZMarkupBuild, prefab_direct_instantiate_unknown_returns_null_root)
+{
+    Env env;
+    CHECK(!ZMarkup::hasPrefab("DefinitelyNotRegistered"));
+    auto ui = ZMarkup::instantiate("DefinitelyNotRegistered");
+    CHECK(ui.root() == nullptr);
+    CHECK(ui.context() != nullptr);
+}

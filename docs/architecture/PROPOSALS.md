@@ -33,6 +33,9 @@ implementation.
 - ✅ **Proposal 9 — Filter layer pipeline performance**: shipped as
   roadmap §4.9 (steps 0–f; step g declined). See `examples/07b_effects_stress`
   and the change log at the end of this file.
+- ✅ **Proposal 10 — Named Slots and direct prefab instantiation**:
+  shipped as roadmap §5.35. See `tests/test_zmarkup_build.cpp` and the
+  change log at the end of this file.
 
 ---
 
@@ -2372,7 +2375,7 @@ multi-region layouts and C++-driven dynamic lists.
 
 **Depends on:** §5.18 (`UIPrefab`) and §5.19 (`<Slot>`), both shipped.
 
-**Status:** 🟡 proposed.
+**Status:** ✅ shipped as roadmap §5.35.
 
 **Roadmap mapping:** ships as §5.35.
 
@@ -2512,7 +2515,7 @@ re-discussing them.
 
 ## Implementation sequence
 
-**Shipped** (roadmap §5.16 – §5.21):
+**Shipped** (roadmap §4.9, §5.16 – §5.24, §5.35):
 
 1. Proposal 1 — `ref` → §5.16
 2. Proposal 2 — `Bindable<T>` → §5.17
@@ -2522,17 +2525,16 @@ re-discussing them.
 6. Proposal 5 — Wrap for HStack → §5.21
 7. Proposal 8 — VirtualView → §5.24
 8. Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)
+9. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35
 
 **Proposed** (next, in this order):
 
-9. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
-   Benefits: unblocks 10k+ item lists, the most-requested feature
-   after UIPrefab.
-10. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c). Benefits from
+10. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
+    Benefits: unblocks 10k+ item lists, the most-requested feature
+    after UIPrefab.
+11. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c). Benefits from
     VirtualList for the "reorderable list" example, but doesn't
     strictly depend on it.
-11. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35. Small,
-    self-contained extension of §5.18 / §5.19.
 
 **Post-1.0:**
 
@@ -2787,4 +2789,41 @@ VirtualList ships.
   `system.frame.filtered50.scaleAnim`, `system.frame.filtered50.rotAnim`.
 - `examples/07b_effects_stress/main.cpp` — 50-card interactive GPU
   stress scene with live `RenderStats` HUD.
+  
+### Proposal 10 — Named Slots and direct prefab instantiation
+
+**Shipped:** roadmap §5.35.
+
+**Changes from the proposal:**
+
+- **Lexical `SlotFrame` stack enables deep slots and slot forwarding.**
+  Replacing `BuildContext::currentSlotChildren` with
+  `std::vector<SlotFrame> slotStack` also fixed an existing limitation
+  from §5.19 where `Slot` nested inside a child container of a prefab
+  could not see caller children. Temporarily popping the current frame
+  while expanding caller children allows nested prefabs to forward
+  slots cleanly (`Outer` passing `Slot name="outer-title" slot="title"`
+  into `Inner`).
+- **Duplicate slot names populate only the first.** Open question §10.6
+  point 2 was resolved by tracking `seenSlots` per `SlotFrame`: any
+  subsequent `Slot` with the same name logs a warning and is ignored,
+  avoiding duplicate `#id` / `@ref` collisions.
+- **Added `hasPrefab` helper.** Exposed both `Registry::hasPrefab` and
+  `ZMarkup::hasPrefab` alongside `instantiate`.
+- **`create_impl` / `create` marked `const`.** Allows `Registry::instantiate`
+  to be `const`-correct without mutating registry state.
+
+**What landed:**
+
+- `include/ZMarkup.hpp` — `SlotFrame`, `BuildContext::slotStack`,
+  `Registry::expandPrefab`, `Registry::hasPrefab`,
+  `Registry::instantiate`, global `ZMarkup::hasPrefab` and
+  `ZMarkup::instantiate`, warnings for out-of-prefab / duplicate /
+  unconsumed slots, and filtering of `slot` / `passthrough` from
+  `applyStyleAttr`.
+- `tests/test_zmarkup_build.cpp` — 8 new tests covering named slot
+  routing, multiple children per slot, per-slot fallback, nested slot
+  forwarding, duplicate slot handling, unknown slot warning/ignore,
+  direct instantiation with root merging/fallback, and missing-prefab
+  handling.
   

@@ -10,7 +10,9 @@ items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
 Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.34.
+shipped, step g declined) and §5.25–§5.35 (CSS flex/border/text parity,
+TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &
+direct prefab instantiation).
 
 ---
 
@@ -2282,31 +2284,40 @@ in `Text` / `TextInput` / `TextArea` (tracked in §6.1).
 
 ### 5.35 Named Slots & direct prefab instantiation (`ZMarkup::instantiate`)
 
-**Status:** 🟡 planned — design in
+**Status:** 🟢 done — design in
 [PROPOSALS.md, Proposal 10](architecture/PROPOSALS.md#proposal-10--named-slots-and-direct-prefab-instantiation).
 
-**Problem:** §5.19 shipped a single anonymous `Slot`, which works for
-simple wrappers (`Card`, `ModalFrame`) but breaks down on multi-zone
-components (e.g. a reader modal with distinct header, scrollable body,
-and footer actions). In addition, instantiating a prefab from C++
-currently goes through `ZMarkup::build("Tag.cls")`, invoking the
-parser on a synthetic string even though the prefab's AST is already
-cached.
+**Problem:** §5.19 shipped a single anonymous `Slot` that also cleared
+slot context on non-root containers inside a prefab. Multi-zone
+components (header / scrollable body / footer) could not be modeled as
+a single prefab, and instantiating a prefab from C++ required a string
+round-trip through `ZMarkup::build("Tag.cls")`.
 
-**Plan:**
+**What landed:**
 
-- Named slots via `Slot name="header"` in the prefab and
-  `slot="header"` on injected children (keeping the unnamed `Slot` as
-  the default slot for children without a `slot` attribute).
-- Direct C++ instantiation (`ZMarkup::instantiate` /
-  `Registry::instantiate`) cloning the cached AST without re-running
-  the markup parser.
+- Replaced flat `currentSlotChildren` in `BuildContext` with a lexical
+  `std::vector<SlotFrame> slotStack`, enabling named slots
+  (`Slot name="..."` + `slot="..."` on children), slots at any depth
+  inside a prefab, per-slot default fallbacks, and nested prefab slot
+  forwarding.
+- Duplicate slot names within the same prefab log a warning and
+  populate only the first occurrence; children targeting missing slots
+  log a warning and are ignored; `slot` and `passthrough` attributes
+  are consumed before `applyStyleAttr`.
+- Added `Registry::hasPrefab`, `Registry::instantiate`, and global
+  wrappers `ZMarkup::hasPrefab` / `ZMarkup::instantiate` (cloning the
+  cached AST directly without invoking the parser).
+- Added 8 unit tests in `tests/test_zmarkup_build.cpp` covering named
+  routing, multi-child order, per-slot fallbacks, nested slot
+  forwarding, duplicate/unknown slot handling, and direct
+  instantiation.
 
-- [ ] Parse `name` on `Slot` and `slot` attribute on child elements
-- [ ] Route children to matching named slots (fallback to default
+- [x] Parse `name` on `Slot` and `slot` attribute on child elements
+- [x] Route children to matching named slots (fallback to default
       anonymous `Slot`; keep default fallback children per slot)
-- [ ] Add `Registry::instantiate` and `ZMarkup::instantiate`
-- [ ] Add unit tests in `tests/test_zmarkup_build.cpp`
+- [x] Support nested prefabs and slot forwarding via `slotStack`
+- [x] Add `Registry::instantiate` / `hasPrefab` and `ZMarkup::instantiate` / `hasPrefab`
+- [x] Add unit tests in `tests/test_zmarkup_build.cpp`
 - [ ] Update `docs/user/04-zmarkup.md` §6 and `docs/api/ZMarkup.md`
 
 ---
