@@ -2523,6 +2523,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#proposal-10-named-slots-and-direct-prefab-instantiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 10 — Named Slots and direct prefab instantiation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposal 10 — Named Slots and direct prefab instantiation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-zmarkup-c-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 ZMarkup &amp; C++ API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-file-by-file-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 File-by-file changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Open questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#out-of-scope-future-rounds" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2688,6 +2771,7 @@ implementation.</p>
 <li><a href="#proposal-7--drag--drop">Proposal 7 — Drag &amp; Drop</a></li>
 <li><a href="#proposal-8--virtualview">Proposal 8 — VirtualView</a></li>
 <li><a href="#proposal-9--filter-layer-pipeline-performance">Proposal 9 — Filter layer pipeline performance</a></li>
+<li><a href="#proposal-10--named-slots-and-direct-prefab-instantiation">Proposal 10 — Named Slots and direct prefab instantiation</a></li>
 <li><a href="#out-of-scope-future-rounds">Out of scope (future rounds)</a></li>
 </ul>
 <hr />
@@ -5054,6 +5138,142 @@ GPU time is measured manually with the stress example.</p>
    and may reorder steps d and e.</li>
 </ol>
 <hr />
+<h2 id="proposal-10-named-slots-and-direct-prefab-instantiation">Proposal 10 — Named Slots and direct prefab instantiation</h2>
+<p><strong>Priority:</strong> medium — completes the prefab model (§5.18 / §5.19) for
+multi-region layouts and C++-driven dynamic lists.</p>
+<p><strong>Complexity:</strong> low-medium (~1 day).</p>
+<p><strong>Depends on:</strong> §5.18 (<code>UIPrefab</code>) and §5.19 (<code>&lt;Slot&gt;</code>), both shipped.</p>
+<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Roadmap mapping:</strong> ships as §5.35.</p>
+<h3 id="101-problem">10.1 Problem</h3>
+<ol>
+<li><strong>Single anonymous slot.</strong> Proposal 3 shipped a single anonymous
+   <code>Slot</code> as an MVP. Components with more than one customizable region
+   — such as a modal with a custom header, a scrollable body, and a
+   footer action bar — cannot be expressed cleanly as a single prefab.</li>
+<li><strong>Parser round-trip from C++.</strong> Dynamic lists built in C++ have to
+   call <code>ZMarkup::build("RowPrefab.active")</code> per item, running the
+   lexer and parser on a small string just to reach a prefab whose AST
+   is already cached in the <code>Registry</code>.</li>
+</ol>
+<h3 id="102-solution">10.2 Solution</h3>
+<ol>
+<li><strong>Named slots</strong> using attribute syntax (<code>name</code> on <code>Slot</code>, <code>slot</code> on
+   injected children), keeping <code>@ref</code> completely orthogonal:</li>
+<li><code>Slot</code> (no <code>name</code> attribute) remains the default slot.</li>
+<li><code>Slot name="header"</code> declares a named slot, with optional
+     fallback children rendered when nothing targets <code>"header"</code>.</li>
+<li>Any child passed to a prefab with <code>slot="header"</code> is routed to
+     <code>Slot name="header"</code> (as flat siblings, preserving the
+     wrapper-free unwrapping shipped in Proposal 3).</li>
+<li>Children without a <code>slot</code> attribute go to the anonymous default
+     <code>Slot</code>.</li>
+<li><strong>Direct instantiation helper</strong> on <code>Registry</code> (and exposed globally
+   in <code>ZMarkup</code>): clones the cached prefab AST directly without
+   invoking the parser.</li>
+</ol>
+<h3 id="103-zmarkup-c-api">10.3 ZMarkup &amp; C++ API</h3>
+<p><strong>Prefab definition (<code>reader_modal.zm</code>):</strong></p>
+<pre><code class="language-zmarkup">VStack.modal-card-reader {
+    HStack.modal-reader-header {
+        Slot name=&quot;header&quot; {
+            Text.modal-reader-title &quot;Untitled&quot;
+        }
+        Button.btn-small.btn-danger@close &quot;Chiudi&quot;
+    }
+    VStack.modal-scroll-body {
+        Slot
+    }
+    HStack.modal-footer {
+        Slot name=&quot;footer&quot;
+    }
+}
+</code></pre>
+<p><strong>Prefab usage (<code>.zm</code>):</strong></p>
+<pre><code class="language-zmarkup">ReaderModal {
+    HStack slot=&quot;header&quot; {
+        Text.modal-reader-title &quot;Strega del Salmastro&quot;
+        Text.sb-cr &quot;GS 3&quot;
+    }
+    Text.msb-line &quot;Contenuto del corpo (va nello slot di default)&quot;
+    Button.btn-small.btn-primary@btn_init slot=&quot;footer&quot; &quot;In Combattimento&quot;
+}
+</code></pre>
+<p><strong>C++ direct instantiation:</strong></p>
+<pre><code class="language-cpp">UINode Registry::instantiate(
+    const std::string&amp; tagName,
+    const std::vector&lt;std::string&gt;&amp; extraClasses = {},
+    const std::string&amp; id  = &quot;&quot;,
+    const std::string&amp; ref = &quot;&quot;) const;
+
+// Global convenience wrapper (uses default registry)
+UINode ZMarkup::instantiate(
+    const std::string&amp; tagName,
+    const std::vector&lt;std::string&gt;&amp; extraClasses = {},
+    const std::string&amp; id  = &quot;&quot;,
+    const std::string&amp; ref = &quot;&quot;);
+</code></pre>
+<h3 id="104-semantics">10.4 Semantics</h3>
+<ul>
+<li><strong>Backward compatibility:</strong> existing prefabs with a single anonymous
+  <code>Slot</code> behave identically.</li>
+<li><strong>Multiple children targeting the same slot:</strong> all children with
+  <code>slot="footer"</code> are injected in declaration order into
+  <code>Slot name="footer"</code>.</li>
+<li><strong>Unknown slot name:</strong> if a child specifies <code>slot="foo"</code> and the
+  prefab has no <code>Slot name="foo"</code>, the child is ignored and a debug
+  warning is logged (matching Proposal 3's missing-slot behavior).</li>
+<li><strong>Per-slot fallbacks:</strong> if <code>Slot name="header"</code> has fallback
+  children and no child targets <code>"header"</code>, the fallback renders while
+  other populated slots still receive their injected children.</li>
+<li><strong><code>slot</code> attribute consumption:</strong> the <code>slot</code> attribute is consumed
+  by prefab routing and is not forwarded to <code>applyStyleAttr</code>.</li>
+<li><strong>Unknown prefab in <code>instantiate</code>:</strong> logs a warning and returns an
+  empty <code>UINode</code> (null root), matching <code>loadMarkupFile</code>.</li>
+</ul>
+<h3 id="105-file-by-file-changes">10.5 File-by-file changes</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>include/ZMarkup.hpp</code> / <code>src/ZMarkup.cpp</code></td>
+<td>Store slot buckets (<code>unordered_map&lt;string, vector&lt;Element&gt;&gt;</code>, <code>""</code> for default) in the prefab build frame; match <code>Slot</code> by <code>name</code> attr; add <code>Registry::instantiate</code> and <code>ZMarkup::instantiate</code>.</td>
+</tr>
+<tr>
+<td><code>tests/test_zmarkup_build.cpp</code></td>
+<td>Tests for named slots, mixed named + default slots, per-slot fallback, multiple children per slot, unknown slot warning, and <code>ZMarkup::instantiate</code> with classes/id/ref.</td>
+</tr>
+<tr>
+<td><code>docs/user/04-zmarkup.md</code></td>
+<td>Extend §6 with Named Slots and <code>instantiate</code>.</td>
+</tr>
+<tr>
+<td><code>docs/api/ZMarkup.md</code></td>
+<td>Document <code>instantiate</code> and <code>Slot name="..."</code>.</td>
+</tr>
+<tr>
+<td><code>docs/ROADMAP.md</code></td>
+<td>Track and close §5.35.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="106-open-questions">10.6 Open questions</h3>
+<ol>
+<li><strong>Nested prefabs with slots.</strong> When Prefab A instantiates Prefab B
+   inside its body, the slot bucket map must live on a stack per
+   prefab invocation (not a single flat map on <code>BuildContext</code>) so B's
+   slots don't shadow or leak into A's slots.</li>
+<li><strong>Duplicate <code>Slot name="x"</code> inside the same prefab.</strong> Clones the
+   children into each matching slot, or warns and populates only the
+   first? Recommendation: warn and populate only the first (avoids
+   duplicate <code>@ref</code> / <code>#id</code> collisions).</li>
+</ol>
+<hr />
 <h2 id="out-of-scope-future-rounds">Out of scope (future rounds)</h2>
 <p>The following were discussed in the same review but are <strong>not</strong> part
 of this proposal. They are listed here for context and to avoid
@@ -5108,6 +5328,8 @@ re-discussing them.</p>
    of the other proposals, so it can ship at any point. Steps 0 (instrumentation),
    a (lazy targets), b (bucketed sizes) and c (target pool) first; the
    layer cache (step g) only if the measurements justify it.</li>
+<li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35. Small,
+    self-contained extension of §5.18 / §5.19.</li>
 </ol>
 <p><strong>Post-1.0:</strong></p>
 <ul>

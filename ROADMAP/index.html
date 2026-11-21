@@ -2372,6 +2372,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#535-named-slots-direct-prefab-instantiation-zmarkupinstantiate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.35 Named Slots &amp; direct prefab instantiation (ZMarkup::instantiate)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4649,6 +4660,35 @@ explicit codepoint list covering ASCII (<code>32..126</code>), Latin-1
 in <code>Text</code> / <code>TextInput</code> / <code>TextArea</code> (tracked in §6.1).</p>
 <ul>
 <li>[x] Load extended codepoints in <code>RaylibAssetProvider</code></li>
+</ul>
+<h3 id="535-named-slots-direct-prefab-instantiation-zmarkupinstantiate">5.35 Named Slots &amp; direct prefab instantiation (<code>ZMarkup::instantiate</code>)</h3>
+<p><strong>Status:</strong> 🟡 planned — design in
+<a href="../architecture/PROPOSALS/#proposal-10--named-slots-and-direct-prefab-instantiation">PROPOSALS.md, Proposal 10</a>.</p>
+<p><strong>Problem:</strong> §5.19 shipped a single anonymous <code>Slot</code>, which works for
+simple wrappers (<code>Card</code>, <code>ModalFrame</code>) but breaks down on multi-zone
+components (e.g. a reader modal with distinct header, scrollable body,
+and footer actions). In addition, instantiating a prefab from C++
+currently goes through <code>ZMarkup::build("Tag.cls")</code>, invoking the
+parser on a synthetic string even though the prefab's AST is already
+cached.</p>
+<p><strong>Plan:</strong></p>
+<ul>
+<li>Named slots via <code>Slot name="header"</code> in the prefab and
+  <code>slot="header"</code> on injected children (keeping the unnamed <code>Slot</code> as
+  the default slot for children without a <code>slot</code> attribute).</li>
+<li>
+<p>Direct C++ instantiation (<code>ZMarkup::instantiate</code> /
+  <code>Registry::instantiate</code>) cloning the cached AST without re-running
+  the markup parser.</p>
+</li>
+<li>
+<p>[ ] Parse <code>name</code> on <code>Slot</code> and <code>slot</code> attribute on child elements</p>
+</li>
+<li>[ ] Route children to matching named slots (fallback to default
+      anonymous <code>Slot</code>; keep default fallback children per slot)</li>
+<li>[ ] Add <code>Registry::instantiate</code> and <code>ZMarkup::instantiate</code></li>
+<li>[ ] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
+<li>[ ] Update <code>docs/user/04-zmarkup.md</code> §6 and <code>docs/api/ZMarkup.md</code></li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
