@@ -2696,7 +2696,7 @@ implementation.</p>
 list rendering.</p>
 <p><strong>Complexity:</strong> low (~1 day).</p>
 <p><strong>Depends on:</strong> nothing.</p>
-<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §5.16.</p>
 <h3 id="11-problem">1.1 Problem</h3>
 <p>Today, <code>Layout::nodeId</code> is the only way to look up a node from C++:</p>
 <pre><code class="language-cpp">auto btn = ui.find&lt;Button&gt;(&quot;save&quot;);
@@ -3008,7 +3008,7 @@ e.ref = std::move(name);
 <p><strong>Priority:</strong> medium — halves boilerplate in UI controllers.</p>
 <p><strong>Complexity:</strong> low (~half a day).</p>
 <p><strong>Depends on:</strong> nothing.</p>
-<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §5.17.</p>
 <h3 id="21-problem">2.1 Problem</h3>
 <p>Today, wiring a model value to a widget requires a <code>std::function</code>
 callback on the widget:</p>
@@ -3381,7 +3381,7 @@ job.</p>
 <p><strong>Priority:</strong> high — unblocks <code>VirtualList</code> and reusable UI components.
 <strong>Complexity:</strong> medium (~1-2 days).
 <strong>Depends on:</strong> <code>ref</code> (shipped in §5.16).
-<strong>Status:</strong> 🟡 proposed.</p>
+<strong>Status:</strong> ✅ shipped as roadmap §5.18 and §5.19.</p>
 <h3 id="31-problem">3.1 Problem</h3>
 <p>Currently, to reuse a UI component like a <code>Card</code> or a <code>SettingsRow</code>, you either have to:
 1. Copy and paste the ZMarkup definition everywhere.
@@ -5090,10 +5090,11 @@ re-discussing them.</p>
 <ol>
 <li>Proposal 1 — <code>ref</code> → §5.16</li>
 <li>Proposal 2 — <code>Bindable&lt;T&gt;</code> → §5.17</li>
-<li>UIPrefab → §5.18 (depends on <code>ref</code>)</li>
-<li><code>&lt;Slot&gt;</code> → §5.19 (depends on UIPrefab)</li>
+<li>Proposal 3 — UIPrefab → §5.18 (depends on <code>ref</code>)</li>
+<li>Proposal 3 — <code>&lt;Slot&gt;</code> → §5.19 (depends on UIPrefab)</li>
 <li>Proposal 4 — StyleParser Diagnostics → §5.20</li>
 <li>Proposal 5 — Wrap for HStack → §5.21</li>
+<li>Proposal 8 — VirtualView → §5.24</li>
 </ol>
 <p><strong>Proposed</strong> (next, in this order):</p>
 <ol>
@@ -5111,12 +5112,6 @@ re-discussing them.</p>
 <p><strong>Post-1.0:</strong></p>
 <ul>
 <li>Memory management (Phase 8 in the roadmap).</li>
-<li><code>GridLayout</code>.</li>
-<li>Out-of-scope items as decided by the user.</li>
-</ul>
-<p>Post-1.0:</p>
-<ul>
-<li>Memory management (§8 in the roadmap).</li>
 <li><code>GridLayout</code>.</li>
 <li>Out-of-scope items as decided by the user.</li>
 </ul>

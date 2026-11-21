@@ -2279,17 +2279,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#527-min-height-auto-min-width-auto-on-flex-items_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5.27 min-height: auto / min-width: auto on flex items
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#528-flex-n-shorthand" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2344,6 +2333,39 @@
     <span class="md-ellipsis">
       
         5.31 Text wrapping completeness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532-textarea-multi-line-text-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.32 TextArea (multi-line text input)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#533-opt-in-css-transitions-transition-time-0s-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.33 Opt-in CSS transitions (transition-time: 0s default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#534-extended-glyph-range-in-raylibassetprovider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.34 Extended glyph range in RaylibAssetProvider
       
     </span>
   </a>
@@ -2582,9 +2604,9 @@ pending, and what's blocking.</p>
 <p>It's derived from a full code + documentation review. The <strong>blocking</strong>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
-<p>Last updated: after §5.24 (VirtualView) and §4.8 (Style resolution
-caching + reverse dependency); §4.9 (filter layer pipeline performance)
-expanded into a full proposal.</p>
+<p>Last updated: after §5.25–§5.32 (CSS flex/border/text parity, TextArea,
+opt-in transitions, Raylib Latin-1 glyphs); §4.9 (filter layer pipeline
+performance) proposed in detail.</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -4182,7 +4204,8 @@ applies, but UI use is fine.</p>
 <li>Supports cross-axis alignment (<code>items-v</code> / <code>align-v</code>) relative to the specific height of each wrapped line.</li>
 </ul>
 <h3 id="522-drag-drop">5.22 Drag &amp; Drop</h3>
-<p><strong>Status:</strong> 🟡 planned — proposal to be written.</p>
+<p><strong>Status:</strong> 🟡 planned — design in
+<a href="../architecture/PROPOSALS/#proposal-7--drag--drop">PROPOSALS.md, Proposal 7</a>.</p>
 <p>Design not yet formalized. Tracked here so it doesn't fall off the
 radar. Expected to touch 6 files (<code>UIContext</code>, <code>InputController</code>,
 <code>Layout</code>, <code>StyleResolver</code>, <code>StyleParser</code>, <code>hitTest</code>) and to be split
@@ -4199,7 +4222,7 @@ into 3 PRs:</p>
 </li>
 <li>[ ] <code>5.22b</code> — <code>draggable</code> / <code>droppable</code> style properties</li>
 <li>[ ] <code>5.22c</code> — visual feedback and drop callbacks</li>
-<li>[ ] Proposal written in <code>PROPOSALS.md</code></li>
+<li>[x] Proposal written in <code>PROPOSALS.md</code></li>
 </ul>
 <h3 id="523-virtuallist">5.23 VirtualList</h3>
 <p><strong>Status:</strong> 🟡 planned — depends on §5.18 (UIPrefab) and §5.19 (Slot).</p>
@@ -4356,7 +4379,6 @@ children stretch vertically.</p>
 <li>[x] Update <code>docs/user/05-zstyle.md</code> (note on the CSS default)</li>
 </ul>
 <h3 id="527-min-height-auto-min-width-auto-on-flex-items">5.27 <code>min-height: auto</code> / <code>min-width: auto</code> on flex items</h3>
-<h3 id="527-min-height-auto-min-width-auto-on-flex-items_1">5.27 <code>min-height: auto</code> / <code>min-width: auto</code> on flex items</h3>
 <p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> a flex item with <code>shrink: 1</code> and no explicit <code>min-height</code>
 could shrink below its own content size. The typical symptom is a
@@ -4516,7 +4538,7 @@ asymmetric borders on content widgets.</p>
 <li>[x] Regression test</li>
 </ul>
 <h3 id="531-text-wrapping-completeness">5.31 <code>Text</code> wrapping completeness</h3>
-<p><strong>Status:</strong> 🟡 planned — bug fix + enhancement.</p>
+<p><strong>Status:</strong> 🟢 done.</p>
 <p><strong>Problem:</strong> <code>Text</code> already supports <code>wrap: true</code> (partial) and
 <code>onLayout</code> re-wraps on width change, but it has three bugs and one
 shortcoming:</p>
@@ -4578,6 +4600,55 @@ shortcoming:</p>
 <li>[x] Implement ellipsis in <code>renderContent</code></li>
 <li>[x] Regression test</li>
 <li>[x] Update documentation</li>
+</ul>
+<h3 id="532-textarea-multi-line-text-input">5.32 <code>TextArea</code> (multi-line text input)</h3>
+<p><strong>Status:</strong> 🟢 done.</p>
+<p><strong>Problem:</strong> <code>TextInput</code> covers single-line inputs only. Forms with
+descriptions, notes, or stat blocks needed a multi-line editable text
+widget with line wrapping, vertical scrolling, and standard editing
+shortcuts.</p>
+<p><strong>What landed:</strong></p>
+<ul>
+<li>New <code>TextArea</code> widget supporting multi-line editing, <code>Enter</code> line
+  breaks, vertical navigation (<code>Up</code> / <code>Down</code>), wrapping, placeholder
+  rendering, and scrollable content.</li>
+<li>
+<p>Registered in <code>ZMarkup</code> (<code>TextArea</code> tag, <code>rows</code> / <code>placeholder</code>
+  attributes) and stylable via <code>.zstyle</code> (<code>TextArea</code>, <code>:focus</code>,
+  <code>::placeholder</code>).</p>
+</li>
+<li>
+<p>[x] Implement <code>TextArea</code> widget</p>
+</li>
+<li>[x] Register in <code>ZMarkup</code> built-ins</li>
+<li>[x] Wire placeholder and focus styling in <code>.zstyle</code></li>
+<li>[ ] Add dedicated unit test suite (<code>tests/test_textarea.cpp</code>)</li>
+<li>[ ] Document in <code>docs/user/03-widgets.md</code> and <code>docs/api/Widgets.md</code></li>
+</ul>
+<h3 id="533-opt-in-css-transitions-transition-time-0s-default">5.33 Opt-in CSS transitions (<code>transition-time: 0s</code> default)</h3>
+<p><strong>Status:</strong> 🟢 done (breaking).</p>
+<p><strong>Problem:</strong> a non-zero default <code>transitionTime</code> animated every style
+change implicitly, causing unintended animations on tab switches,
+resizes, and dynamic lists.</p>
+<p><strong>What landed:</strong> default <code>transitionTime</code> set to <code>0.0f</code> (matching CSS:
+state changes snap unless <code>transition:</code> or <code>transition-time:</code> is
+declared). Updated <code>tests/test_transitions.cpp</code> and
+<code>tests/test_interaction.cpp</code> to match the new default.</p>
+<ul>
+<li>[x] Change default <code>transitionTime</code> to <code>0.0f</code></li>
+<li>[x] Update regression tests</li>
+<li>[ ] Document the default in <code>docs/user/05-zstyle.md</code></li>
+</ul>
+<h3 id="534-extended-glyph-range-in-raylibassetprovider">5.34 Extended glyph range in <code>RaylibAssetProvider</code></h3>
+<p><strong>Status:</strong> 🟢 done.</p>
+<p><code>RaylibAssetProvider::loadFont</code> and <code>loadFontFromMemory</code> now pass an
+explicit codepoint list covering ASCII (<code>32..126</code>), Latin-1
+(<code>160..255</code>, accented European letters) and common typographic symbols
+(<code>–</code>, <code>—</code>, <code>‘</code>, <code>’</code>, <code>“</code>, <code>”</code>, <code>•</code>, <code>…</code>, <code>€</code>) instead of Raylib's
+95-glyph ASCII default. Does not replace full UTF-8 grapheme handling
+in <code>Text</code> / <code>TextInput</code> / <code>TextArea</code> (tracked in §6.1).</p>
+<ul>
+<li>[x] Load extended codepoints in <code>RaylibAssetProvider</code></li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
@@ -4806,14 +4877,9 @@ require a bigger design decision.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>Text</code> is <code>char</code>-based, not Unicode</td>
-<td><code>Text.hpp</code></td>
-<td>Text input and rendering are ASCII-only.</td>
-</tr>
-<tr>
-<td>Font fallback chain missing</td>
-<td><code>IAssetProvider</code></td>
-<td>Missing glyphs use the default font.</td>
+<td><code>Text</code> / <code>TextInput</code> / <code>TextArea</code> are <code>char</code>-based, not UTF-8 aware</td>
+<td><code>Text.hpp</code>, <code>TextInput.hpp</code></td>
+<td>Raylib renders Latin-1 glyphs (§5.34), but cursor movement, deletion, and word-break operate on bytes, not codepoints/graphemes (§6.1).</td>
 </tr>
 <tr>
 <td><code>var()</code> in <code>transition:</code> / <code>animation:</code> shorthand</td>
