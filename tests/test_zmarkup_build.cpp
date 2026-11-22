@@ -973,3 +973,455 @@ TEST(ZMarkupBuild, ref_helpers_missing_or_wrong_type_are_safe_noops)
 
     CHECK(ui.ref<Text>("lbl")->getText() == "keep");
 }
+
+TEST(Widget_layout, setVisible_false_excludes_from_layout_and_gap)
+{
+    Env env;
+    auto root = std::make_shared<Layout>(LayoutType::Vertical);
+    root->size(Px(300), Px(300));
+    root->getInlineBase().gap = Px(10);
+
+    auto a = std::make_shared<Layout>(LayoutType::Stack);
+    a->size(Px(100), Px(40));
+    auto b = std::make_shared<Layout>(LayoutType::Stack);
+    b->size(Px(100), Px(40));
+    auto c = std::make_shared<Layout>(LayoutType::Stack);
+    c->size(Px(100), Px(40));
+
+    root->addChild(a);
+    root->addChild(b);
+    root->addChild(c);
+
+    env.frame(root);
+    // a: y=0..40, b: y=50..90, c: y=100..140
+    CHECK_NEAR(c->getRect().y, 100.0f, 0.5f);
+
+    b->setVisible(false);
+    env.frame(root);
+    // Senza b e senza il suo gap: a: y=0..40, c: y=50..90
+    CHECK_NEAR(b->getRect().width, 0.0f, 0.1f);
+    CHECK_NEAR(b->getRect().height, 0.0f, 0.1f);
+    CHECK_NEAR(c->getRect().y, 50.0f, 0.5f);
+
+    b->setVisible(true);
+    env.frame(root);
+    CHECK_NEAR(b->getRect().y, 50.0f, 0.5f);
+    CHECK_NEAR(c->getRect().y, 100.0f, 0.5f);
+}
+
+TEST(Widget_layout, setVisible_false_excludes_from_horizontal_grow_and_gap)
+{
+    Env env;
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+
+    auto row = std::make_shared<Layout>(LayoutType::Horizontal);
+    row->size(Px(200), Px(50));
+    row->getInlineBase().gap = Px(20);
+
+    auto a = std::make_shared<Layout>(LayoutType::Stack);
+    a->getInlineBase().grow = 1.0f;
+    a->getInlineBase().height = Px(50);
+    auto b = std::make_shared<Layout>(LayoutType::Stack);
+    b->getInlineBase().grow = 1.0f;
+    b->getInlineBase().height = Px(50);
+
+    row->addChild(a);
+    row->addChild(b);
+    root->addChild(row);
+
+    env.frame(root);
+    CHECK_NEAR(a->getRect().width, 90.0f, 0.5f);
+    CHECK_NEAR(b->getRect().width, 90.0f, 0.5f);
+
+    b->setVisible(false);
+    env.frame(root);
+    CHECK_NEAR(a->getRect().width, 200.0f, 0.5f);
+}
+
+TEST(Widget_layout, setVisible_false_skips_hitTest_draw_and_focus)
+{
+    Env env;
+    int clicks = 0;
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Px(200), Px(200));
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100), Px(50));
+    btn->getInlineBase().background = Colors::Red;
+    btn->setInteractive(true);
+    btn->setBlocksRaycast(true);
+    btn->setFocusable(true);
+    btn->onClick = [&] { ++clicks; };
+
+    root->addChild(btn);
+    env.frame(root);
+
+    UIContext::get().requestFocus(btn);
+    CHECK(UIContext::get().hasFocus(btn.get()));
+
+    btn->setVisible(false);
+    CHECK(!UIContext::get().hasFocus(btn.get()));
+
+    env.renderer.fillRectCount = 0;
+    env.click(root, {50, 25});
+    CHECK(clicks == 0);
+    CHECK(env.renderer.fillRectCount == 0);
+
+    env.platform.pressKey(Key::Tab);
+    env.frame(root);
+    CHECK(!UIContext::get().hasFocus(btn.get()));
+}
+
+TEST(Widget_layout, insertChildBefore_and_removeChild_preserve_order)
+{
+    Env env;
+    auto root = std::make_shared<Layout>(LayoutType::Vertical);
+    auto a = Label("a");
+    auto anchor = std::make_shared<Layout>(LayoutType::Stack);
+    auto tail = Label("tail");
+
+    root->addChild(a);
+    root->addChild(anchor);
+    root->addChild(tail);
+
+    auto mid = Label("mid");
+    root->insertChildBefore(anchor.get(), mid);
+
+    CHECK(root->children.size() == 4);
+    CHECK(root->children[0] == a);
+    CHECK(root->children[1] == mid);
+    CHECK(root->children[2] == anchor);
+    CHECK(root->children[3] == tail);
+    CHECK(mid->getParent() == root);
+
+    CHECK(root->removeChild(mid.get()));
+    CHECK(root->children.size() == 3);
+    CHECK(!mid->hasParent());
+    CHECK(!root->removeChild(mid.get()));
+}
+
+TEST(ZMarkupBuild, if_runtime_toggle_excludes_layout_and_preserves_state)
+{
+    Env env;
+    auto ui = ZMarkup::build(R"(
+        VStack gap="10px" width="300px" height="300px" {
+            Box@top width="100px" height="40px"
+            If@extra {
+                TextInput@extra_in width="100px" height="40px" value="saved"
+            }
+            Box@bottom width="100px" height="40px"
+        }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(ui.root());
+
+    // Default initial="false": extra_in nascosto, bottom subito dopo top (+10px gap)
+    env.frame(root);
+    CHECK(!ui.ref<TextInput>("extra_in")->isVisible());
+    CHECK_NEAR(ui.ref("bottom")->getRect().y, 50.0f, 0.5f);
+
+    // Mostra a runtime
+    ui.setCondition("extra", true);
+    env.frame(root);
+    CHECK(ui.ref<TextInput>("extra_in")->isVisible());
+    CHECK_NEAR(ui.ref("bottom")->getRect().y, 100.0f, 0.5f);
+
+    // Modifica lo stato del widget, nascondi e riapri: lo stato resta intatto
+    ui.ref<TextInput>("extra_in")->setText("edited");
+    ui.setCondition("extra", false);
+    env.frame(root);
+    CHECK_NEAR(ui.ref("bottom")->getRect().y, 50.0f, 0.5f);
+
+    ui.setCondition("extra", true);
+    env.frame(root);
+    CHECK(ui.ref<TextInput>("extra_in")->getText() == "edited");
+    CHECK_NEAR(ui.ref("bottom")->getRect().y, 100.0f, 0.5f);
+}
+
+TEST(ZMarkupBuild, if_nested_preserves_inner_own_state)
+{
+    Env env;
+    auto ui = ZMarkup::build(R"(
+        VStack {
+            If@outer initial="true" {
+                Text@outer_txt "Outer"
+                If@inner initial="true" {
+                    Text@inner_txt "Inner"
+                }
+            }
+        }
+    )");
+
+    CHECK(ui.ref("outer_txt")->isVisible());
+    CHECK(ui.ref("inner_txt")->isVisible());
+
+    // Spegnere outer nasconde anche inner senza cancellare ownState di inner
+    ui.setCondition("outer", false);
+    CHECK(!ui.ref("outer_txt")->isVisible());
+    CHECK(!ui.ref("inner_txt")->isVisible());
+
+    // Riaccendere outer ripristina inner
+    ui.setCondition("outer", true);
+    CHECK(ui.ref("outer_txt")->isVisible());
+    CHECK(ui.ref("inner_txt")->isVisible());
+
+    // Spegnere inner mentre outer e acceso lascia outer visibile
+    ui.setCondition("inner", false);
+    CHECK(ui.ref("outer_txt")->isVisible());
+    CHECK(!ui.ref("inner_txt")->isVisible());
+
+    // Ciclo outer off -> on: inner deve restare spento
+    ui.setCondition("outer", false);
+    ui.setCondition("outer", true);
+    CHECK(ui.ref("outer_txt")->isVisible());
+    CHECK(!ui.ref("inner_txt")->isVisible());
+}
+
+TEST(ZMarkupBuild, if_bindCondition_reacts_to_bindable_and_unsubscribes)
+{
+    Env env;
+    Bindable<bool> showFlag(false);
+
+    {
+        auto ui = ZMarkup::build(R"(
+            VStack {
+                If@sec {
+                    Text@lbl "Reactive"
+                }
+            }
+        )");
+        ui.bindCondition("sec", showFlag);
+        CHECK(!ui.ref("lbl")->isVisible());
+
+        showFlag.set(true);
+        CHECK(ui.ref("lbl")->isVisible());
+
+        showFlag.set(false);
+        CHECK(!ui.ref("lbl")->isVisible());
+    }
+
+    // Dopo la distruzione di ui, la subscription deve essere disconnessa senza crash
+    showFlag.set(true);
+    CHECK(showFlag.get() == true);
+}
+
+TEST(ZMarkupBuild, each_syncEach_preserves_siblings_and_fallback)
+{
+    Env env;
+    ZMarkup::registerPrefab("ChipItem", R"(
+        HStack.chip {
+            Text@lbl ""
+        }
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        HStack@row {
+            Text@head "Head"
+            Each@chips prefab="ChipItem" {
+                Text "Empty"
+            }
+            Button@tail "+ Add"
+        }
+    )");
+
+    auto row = ui.ref("row");
+    // Ordine iniziale: Head, Empty (fallback), EachAnchor (nascosto), + Add
+    CHECK(row->children.size() == 4);
+    CHECK(row->children[0] == ui.ref("head"));
+    CHECK(std::dynamic_pointer_cast<Text>(row->children[1])->getText() == "Empty");
+    CHECK(!row->children[2]->isVisible());
+    CHECK(row->children[3] == ui.ref("tail"));
+
+    std::vector<std::string> items = {"Avvelenato", "Prono"};
+    ui.syncEach("chips", items, [](ZMarkup::UINode &chip, const std::string &name) {
+        chip.setTextRef("lbl", name);
+    });
+
+    // Ordine: Head, Chip 0, Chip 1, EachAnchor, + Add
+    CHECK(row->children.size() == 5);
+    CHECK(row->children[0] == ui.ref("head"));
+    CHECK(row->children[4] == ui.ref("tail"));
+    CHECK(!row->children[3]->isVisible());
+
+    // Svuotando la lista torna il fallback prima del bottone + Add
+    items.clear();
+    ui.syncEach("chips", items, [](ZMarkup::UINode &, const std::string &) {});
+    CHECK(row->children.size() == 4);
+    CHECK(std::dynamic_pointer_cast<Text>(row->children[1])->getText() == "Empty");
+    CHECK(row->children[3] == ui.ref("tail"));
+}
+
+TEST(ZMarkupBuild, each_bindEach_reacts_to_bindable_vector)
+{
+    Env env;
+    ZMarkup::registerPrefab("TagItem", R"(Text@t "")");
+
+    Bindable<std::vector<std::string>> tags(std::vector<std::string>{"A", "B"});
+
+    auto ui = ZMarkup::build(R"(
+        VStack@list {
+            Each@items prefab="TagItem"
+        }
+    )");
+
+    ui.bindEach("items", tags, [](ZMarkup::UINode &item, const std::string &s) {
+        item.setTextRef("t", s);
+    });
+
+    auto list = ui.ref("list");
+    // 2 item + 1 anchor
+    CHECK(list->children.size() == 3);
+    CHECK(std::dynamic_pointer_cast<Text>(list->children[0])->getText() == "A");
+    CHECK(std::dynamic_pointer_cast<Text>(list->children[1])->getText() == "B");
+
+    tags.set({"X", "Y", "Z"});
+    CHECK(list->children.size() == 4);
+    CHECK(std::dynamic_pointer_cast<Text>(list->children[2])->getText() == "Z");
+}
+
+TEST(ZMarkupBuild, if_wrapping_each_propagates_visibility_without_exposing_anchor)
+{
+    Env env;
+    ZMarkup::registerPrefab("SimpleRow", R"(
+        Box width="100px" height="20px"
+    )");
+
+    auto ui = ZMarkup::build(R"(
+        VStack@root gap="10px" width="200px" height="200px" {
+            If@sec {
+                Box@hdr width="100px" height="20px"
+                Each@rows prefab="SimpleRow"
+            }
+            Box@after width="100px" height="20px"
+        }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(ui.root());
+
+    // Popola mentre sec e ancora false: devono restare nascosti
+    std::vector<int> data = {1, 2};
+    ui.syncEach("rows", data, [](ZMarkup::UINode &) {});
+
+    env.frame(root);
+    CHECK_NEAR(ui.ref("after")->getRect().y, 0.0f, 0.5f);
+
+    // Accendendo sec: hdr (0..20), row0 (30..50), row1 (60..80), after (90..110)
+    // L'anchor resta invisibile e non aggiunge gap!
+    ui.setCondition("sec", true);
+    env.frame(root);
+    CHECK_NEAR(ui.ref("after")->getRect().y, 90.0f, 0.5f);
+}
+
+TEST(ZMarkupBuild, each_syncEachKeyed_reuses_nodes_and_preserves_state_and_order)
+{
+    Env env;
+    ZMarkup::registerPrefab("KeyedRow", R"(
+        HStack {
+            TextInput@in value=""
+            Text@lbl ""
+        }
+    )");
+
+    struct RowData { int id; std::string name; };
+
+    auto ui = ZMarkup::build(R"(
+        VStack@list {
+            Each@rows prefab="KeyedRow"
+            Text@footer "End"
+        }
+    )");
+
+    auto root = std::make_shared<Layout>(LayoutType::Stack);
+    root->size(Percent(100), Percent(100));
+    root->addChild(ui.root());
+
+    int creates = 0;
+    int updates = 0;
+    auto keyFn = [](const RowData &r) { return r.id; };
+    auto onCreate = [&](ZMarkup::UINode &item, const RowData &r) {
+        ++creates;
+        item.setTextRef("in", "init_" + std::to_string(r.id));
+    };
+    auto onUpdate = [&](ZMarkup::UINode &item, const RowData &r) {
+        ++updates;
+        item.setTextRef("lbl", r.name);
+    };
+
+    std::vector<RowData> v1 = {{1, "One"}, {2, "Two"}, {3, "Three"}};
+    ui.syncEachKeyed("rows", v1, keyFn, onCreate, onUpdate);
+    CHECK(creates == 3);
+    CHECK(updates == 3);
+
+    auto list = ui.ref("list");
+    Layout *ptr1 = list->children[0].get();
+    Layout *ptr2 = list->children[1].get();
+
+    // Modifica stato utente su item 2 (testo + focus)
+    auto in2 = std::dynamic_pointer_cast<TextInput>(list->children[1]->children[0]);
+    CHECK(in2 != nullptr);
+    in2->setText("user_typed");
+    env.frame(root);
+    UIContext::get().requestFocus(in2);
+    CHECK(UIContext::get().hasFocus(in2.get()));
+
+    // Riordina e sostituisce 3 con 4: [2, 4, 1]
+    creates = 0;
+    updates = 0;
+    std::vector<RowData> v2 = {{2, "Two-Updated"}, {4, "Four"}, {1, "One"}};
+    ui.syncEachKeyed("rows", v2, keyFn, onCreate, onUpdate);
+
+    CHECK(creates == 1); // solo key 4 creato
+    CHECK(updates == 3);
+    CHECK(list->children.size() == 5); // 3 items + anchor + footer
+    CHECK(list->children[0].get() == ptr2);
+    CHECK(list->children[2].get() == ptr1);
+    CHECK(list->children[4] == ui.ref("footer"));
+
+    // Lo stato di item 2 (testo digitato + focus) e sopravvissuto al riordino
+    CHECK(in2->getText() == "user_typed");
+    CHECK(UIContext::get().hasFocus(in2.get()));
+    auto lbl2 = std::dynamic_pointer_cast<Text>(list->children[0]->children[1]);
+    CHECK(lbl2->getText() == "Two-Updated");
+}
+
+TEST(ZMarkupBuild, each_bindEachKeyed_reacts_to_bindable)
+{
+    Env env;
+    ZMarkup::registerPrefab("KItem", R"(Text@t "")");
+
+    struct Item {
+        int id;
+        std::string text;
+        bool operator==(const Item &) const = default;
+    };
+
+    Bindable<std::vector<Item>> model(std::vector<Item>{{10, "A"}, {20, "B"}});
+
+    auto ui = ZMarkup::build(R"(
+        VStack@list {
+            Each@items prefab="KItem"
+        }
+    )");
+
+    int creates = 0;
+    ui.bindEachKeyed(
+        "items", model,
+        [](const Item &x) { return x.id; },
+        [&](ZMarkup::UINode &, const Item &) { ++creates; },
+        [](ZMarkup::UINode &n, const Item &x) { n.setTextRef("t", x.text); });
+
+    CHECK(creates == 2);
+    auto list = ui.ref("list");
+    Layout *ptr10 = list->children[0].get();
+
+    model.set({{20, "B2"}, {10, "A2"}});
+    CHECK(creates == 2);
+    CHECK(list->children[1].get() == ptr10);
+    CHECK(std::dynamic_pointer_cast<Text>(list->children[1])->getText() == "A2");
+}

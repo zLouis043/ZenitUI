@@ -37,7 +37,9 @@
 #include "Layout.hpp"
 #include "ZenitUIComponents.hpp"
 #include "StyleAttr.hpp"
+#include "Bindable.hpp"
 
+#include <type_traits>
 #include <charconv>
 #include <filesystem>
 #include <fstream>
@@ -321,8 +323,49 @@ namespace ZenitUI::ZMarkup
     };
 
     /**
+     * \struct ConditionBinding
+     * \brief Runtime state for a structural `If@ref` block.
+     */
+    struct ConditionBinding
+    {
+        bool ownState{false};
+        bool effectiveVisible{false};
+        std::string parentCondition;
+        std::vector<std::weak_ptr<Layout>> directNodes;
+        std::vector<std::string> childConditions;
+        std::vector<std::string> childEaches;
+    };
+
+    /**
+     * \struct IKeyedStore
+     * \brief Type-erased storage base for keyed `Each` reconciliation.
+     */
+    struct IKeyedStore
+    {
+        virtual ~IKeyedStore() = default;
+    };
+
+    struct BuildContext;
+
+    /**
+     * \struct EachBinding
+     * \brief Runtime state for a structural `Each@ref prefab="..."` slice.
+     */
+    struct EachBinding
+    {
+        std::weak_ptr<Layout> anchor;
+        std::string prefabName;
+        std::string parentCondition;
+        std::vector<Element> fallbackAst;
+        std::vector<std::shared_ptr<Layout>> spawnedNodes;
+        std::vector<std::shared_ptr<BuildContext>> spawnedContexts;
+        std::shared_ptr<IKeyedStore> keyedStore;
+        bool showingFallback{false};
+    };
+
+    /**
      * \struct BuildContext
-     * \brief Per-build accumulator for `#id` and `@ref` lookups.
+     * \brief Per-build accumulator for `#id`, `@ref`, and runtime structural bindings.
      */
     struct BuildContext
     {
@@ -330,6 +373,22 @@ namespace ZenitUI::ZMarkup
         std::unordered_map<std::string, std::vector<std::shared_ptr<Layout>>> byRef;
 
         std::vector<SlotFrame> slotStack;
+        std::vector<std::string> conditionStack;
+
+        std::unordered_map<std::string, ConditionBinding> conditions;
+        std::unordered_map<std::string, EachBinding> eaches;
+
+        // Type-erased Bindable<T>::Subscription handles (RAII cleanup on destroy).
+        std::unordered_map<std::string, std::shared_ptr<void>> conditionSubs;
+        std::unordered_map<std::string, std::shared_ptr<void>> eachSubs;
+
+        bool isConditionVisible(const std::string &condName) const
+        {
+            if (condName.empty())
+                return true;
+            auto it = conditions.find(condName);
+            return it != conditions.end() ? it->second.effectiveVisible : true;
+        }
     };
 
     /**
@@ -380,15 +439,48 @@ namespace ZenitUI::ZMarkup
 
         /**
          * \brief Build one or more nodes from \p el.
-         *
-         * Returns a vector (rather than a single node) because `<Slot>` can
-         * expand to multiple siblings. For non-slot tags the result always
-         * has exactly one element.
          */
         std::vector<std::shared_ptr<Layout>> create_impl(
             const Element &el, BuildContext &ctx, bool isPrefabRoot = false) const
         {
-            std::vector<std::shared_ptr<Layout>> result;
+            auto created = create_nodes_impl(el, ctx, isPrefabRoot);
+            std::vector<std::shared_ptr<Layout>> out;
+            out.reserve(created.size());
+            for (auto &cn : created)
+                out.push_back(std::move(cn.node));
+            return out;
+        }
+
+        /**
+         * \brief Convenience wrapper: build exactly one root node from \p el.
+         * \return `nullptr` if the element expanded to zero nodes.
+         */
+        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx) const
+        {
+            auto res = create_impl(el, ctx);
+            return res.empty() ? nullptr : res.front();
+        }
+
+        /**
+         * \brief Directly instantiate a registered prefab without invoking the parser.
+         */
+        UINode instantiate(
+            const std::string &tagName,
+            const std::vector<std::string> &extraClasses = {},
+            const std::string &id = "",
+            const std::string &ref = "") const;
+
+    private:
+        struct CreatedNode
+        {
+            std::shared_ptr<Layout> node;
+            bool ownedByStructural{false};
+        };
+
+        std::vector<CreatedNode> create_nodes_impl(
+            const Element &el, BuildContext &ctx, bool isPrefabRoot = false) const
+        {
+            std::vector<CreatedNode> result;
 
             if (el.tag == "Slot")
             {
@@ -402,8 +494,10 @@ namespace ZenitUI::ZMarkup
                                 : "Slot name='" + slotName + "' used outside of a prefab; rendering fallback");
                     for (const auto &child : el.children)
                     {
-                        auto childNodes = create_impl(child, ctx);
-                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                        auto childNodes = create_nodes_impl(child, ctx);
+                        result.insert(result.end(),
+                                      std::make_move_iterator(childNodes.begin()),
+                                      std::make_move_iterator(childNodes.end()));
                     }
                     return result;
                 }
@@ -425,15 +519,15 @@ namespace ZenitUI::ZMarkup
                 {
                     top.consumedSlots.insert(slotName);
 
-                    // Pop current prefab frame while building caller-provided children
-                    // so they resolve against the caller's lexical slot scope.
                     SlotFrame saved = std::move(ctx.slotStack.back());
                     ctx.slotStack.pop_back();
 
                     for (const Element *child : saved.buckets[slotName])
                     {
-                        auto childNodes = create_impl(*child, ctx);
-                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                        auto childNodes = create_nodes_impl(*child, ctx);
+                        result.insert(result.end(),
+                                      std::make_move_iterator(childNodes.begin()),
+                                      std::make_move_iterator(childNodes.end()));
                     }
 
                     ctx.slotStack.push_back(std::move(saved));
@@ -442,10 +536,130 @@ namespace ZenitUI::ZMarkup
                 {
                     for (const auto &child : el.children)
                     {
-                        auto childNodes = create_impl(child, ctx);
-                        result.insert(result.end(), childNodes.begin(), childNodes.end());
+                        auto childNodes = create_nodes_impl(child, ctx);
+                        result.insert(result.end(),
+                                      std::make_move_iterator(childNodes.begin()),
+                                      std::make_move_iterator(childNodes.end()));
                     }
                 }
+                return result;
+            }
+
+            if (el.tag == "If")
+            {
+                if (el.ref.empty())
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "If block missing @ref (e.g. If@flag { ... }); skipping");
+                    return result;
+                }
+                if (ctx.conditions.count(el.ref) > 0)
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "duplicate If @" + el.ref + " in same build context; ignoring duplicate");
+                    return result;
+                }
+
+                const bool initial = el.attrBool("initial", false);
+                const std::string parentCond = ctx.conditionStack.empty() ? "" : ctx.conditionStack.back();
+                const bool parentEff = ctx.isConditionVisible(parentCond);
+                const bool effVisible = initial && parentEff;
+
+                ConditionBinding binding;
+                binding.ownState = initial;
+                binding.effectiveVisible = effVisible;
+                binding.parentCondition = parentCond;
+                ctx.conditions[el.ref] = std::move(binding);
+
+                if (!parentCond.empty())
+                    ctx.conditions[parentCond].childConditions.push_back(el.ref);
+
+                ctx.conditionStack.push_back(el.ref);
+
+                for (const auto &child : el.children)
+                {
+                    auto childNodes = create_nodes_impl(child, ctx);
+                    auto &curBinding = ctx.conditions[el.ref];
+                    for (auto &cn : childNodes)
+                    {
+                        if (!cn.ownedByStructural && cn.node)
+                        {
+                            cn.node->setVisible(effVisible);
+                            curBinding.directNodes.push_back(cn.node);
+                        }
+                        result.push_back({std::move(cn.node), true});
+                    }
+                }
+
+                ctx.conditionStack.pop_back();
+                return result;
+            }
+
+            if (el.tag == "Each")
+            {
+                if (el.ref.empty())
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "Each block missing @ref (e.g. Each@items prefab=\"Card\"); skipping");
+                    return result;
+                }
+                if (ctx.eaches.count(el.ref) > 0)
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "duplicate Each @" + el.ref + " in same build context; ignoring duplicate");
+                    return result;
+                }
+                const std::string prefabName = el.attr("prefab", "");
+                if (prefabName.empty())
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "Each @" + el.ref + " missing prefab=\"...\" attribute; skipping");
+                    return result;
+                }
+                if (!hasPrefab(prefabName))
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "Each @" + el.ref + " references unregistered prefab '" + prefabName + "'");
+                }
+
+                auto anchor = std::make_shared<Layout>(LayoutType::Stack);
+                anchor->setStyleTag("EachAnchor");
+                anchor->setVisible(false);
+
+                const std::string parentCond = ctx.conditionStack.empty() ? "" : ctx.conditionStack.back();
+                const bool effVisible = ctx.isConditionVisible(parentCond);
+
+                EachBinding binding;
+                binding.anchor = anchor;
+                binding.prefabName = prefabName;
+                binding.parentCondition = parentCond;
+                binding.fallbackAst = el.children;
+
+                if (!el.children.empty())
+                {
+                    auto fbCtx = std::make_shared<BuildContext>();
+                    binding.showingFallback = true;
+                    for (const auto &fbEl : el.children)
+                    {
+                        auto fbNodes = create_nodes_impl(fbEl, *fbCtx);
+                        for (auto &cn : fbNodes)
+                        {
+                            if (cn.node)
+                            {
+                                cn.node->setVisible(effVisible);
+                                binding.spawnedNodes.push_back(cn.node);
+                                result.push_back({cn.node, true});
+                            }
+                        }
+                    }
+                    binding.spawnedContexts.push_back(std::move(fbCtx));
+                }
+
+                ctx.eaches[el.ref] = std::move(binding);
+                if (!parentCond.empty())
+                    ctx.conditions[parentCond].childEaches.push_back(el.ref);
+
+                result.push_back({std::move(anchor), true});
                 return result;
             }
 
@@ -505,41 +719,18 @@ namespace ZenitUI::ZMarkup
 
             for (const auto &child : el.children)
             {
-                auto childNodes = create_impl(child, ctx);
-                for (auto &c : childNodes)
+                auto childNodes = create_nodes_impl(child, ctx);
+                for (auto &cn : childNodes)
                 {
-                    target->addChild(c);
+                    target->addChild(std::move(cn.node));
                 }
             }
 
-            result.push_back(node);
+            result.push_back({std::move(node), false});
             return result;
         }
 
-        /**
-         * \brief Convenience wrapper: build exactly one root node from \p el.
-         * \return `nullptr` if the element expanded to zero nodes.
-         */
-        std::shared_ptr<Layout> create(const Element &el, BuildContext &ctx) const
-        {
-            auto res = create_impl(el, ctx);
-            return res.empty() ? nullptr : res.front();
-        }
-
-        /**
-         * \brief Directly instantiate a registered prefab without invoking the parser.
-         *
-         * Returns an empty `UINode` (null root) and logs a warning if \p tagName
-         * is not registered.
-         */
-        UINode instantiate(
-            const std::string &tagName,
-            const std::vector<std::string> &extraClasses = {},
-            const std::string &id = "",
-            const std::string &ref = "") const;
-
-    private:
-        std::vector<std::shared_ptr<Layout>> expandPrefab(
+        std::vector<CreatedNode> expandPrefab(
             const std::string &tagName,
             const Element &prefabAst,
             const std::vector<std::string> &extraClasses,
@@ -572,7 +763,7 @@ namespace ZenitUI::ZMarkup
             }
 
             ctx.slotStack.push_back(std::move(frame));
-            auto nodes = create_impl(instanceTree, ctx, true);
+            auto nodes = create_nodes_impl(instanceTree, ctx, true);
 
             SlotFrame finished = std::move(ctx.slotStack.back());
             ctx.slotStack.pop_back();
@@ -989,12 +1180,427 @@ namespace ZenitUI::ZMarkup
             return *this;
         }
 
+        UINode &setVisibleRef(const std::string &refName, bool visible)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->setVisible(visible);
+            return *this;
+        }
+
+        // --- Runtime structural If & Each (§5.37) ---
+
+        /**
+         * \brief Imperatively toggle a structural `If@condRef` block at runtime.
+         */
+        UINode &setCondition(const std::string &condRef, bool value)
+        {
+            auto it = ctx_->conditions.find(condRef);
+            if (it == ctx_->conditions.end())
+            {
+                warnOnce("cond:" + condRef,
+                         "UINode::setCondition('" + condRef + "'): no If with this ref");
+                return *this;
+            }
+            it->second.ownState = value;
+            bool parentEff = ctx_->isConditionVisible(it->second.parentCondition);
+            propagateCondition_(*ctx_, condRef, parentEff);
+            return *this;
+        }
+
+        /**
+         * \brief Reactively bind a structural `If@condRef` block to a `Bindable<bool>`.
+         *
+         * The subscription lives in this `UINode`'s `BuildContext` and automatically
+         * disconnects when the `UINode` (and its context) is destroyed.
+         */
+        UINode &bindCondition(const std::string &condRef,
+                              Bindable<bool> &source,
+                              bool fireImmediately = true)
+        {
+            if (ctx_->conditions.find(condRef) == ctx_->conditions.end())
+            {
+                warnOnce("cond:" + condRef,
+                         "UINode::bindCondition('" + condRef + "'): no If with this ref");
+                return *this;
+            }
+
+            std::weak_ptr<Layout> weakRoot = root_;
+            std::weak_ptr<BuildContext> weakCtx = ctx_;
+            auto sub = source.onChanged(
+                [weakRoot, weakCtx, condRef](const bool &v)
+                {
+                    auto c = weakCtx.lock();
+                    if (!c)
+                        return;
+                    UINode ui(weakRoot.lock(), std::move(c));
+                    ui.setCondition(condRef, v);
+                },
+                fireImmediately);
+
+            ctx_->conditionSubs[condRef] =
+                std::make_shared<typename Bindable<bool>::Subscription>(std::move(sub));
+            return *this;
+        }
+
+        /**
+         * \brief Imperatively synchronize an `Each@eachRef` slice with \p items.
+         *
+         * Replaces only the nodes owned by this `Each`, preserving all sibling nodes
+         * before and after it. When \p items is empty, renders the `Each`'s fallback
+         * children (if any).
+         */
+        template <typename Range, typename Fn>
+        UINode &syncEach(const std::string &eachRef, const Range &items, Fn &&binder)
+        {
+            auto it = ctx_->eaches.find(eachRef);
+            if (it == ctx_->eaches.end())
+            {
+                warnOnce("each:" + eachRef,
+                         "UINode::syncEach('" + eachRef + "'): no Each with this ref");
+                return *this;
+            }
+
+            auto &binding = it->second;
+            auto anchor = binding.anchor.lock();
+            auto parent = anchor ? anchor->getParent() : nullptr;
+            if (!parent)
+                return *this;
+
+            binding.keyedStore.reset();
+            clearEachNodes_(binding, *parent);
+
+            const bool effVis = ctx_->isConditionVisible(binding.parentCondition);
+            const bool isEmpty = (std::begin(items) == std::end(items));
+
+            if (isEmpty)
+            {
+                mountEachFallback_(binding, *parent, anchor.get(), effVis);
+                return *this;
+            }
+
+            binding.showingFallback = false;
+            size_t idx = 0;
+            for (const auto &elem : items)
+            {
+                UINode itemUi = getGlobalRegistry().instantiate(binding.prefabName);
+                auto itemRoot = itemUi.root();
+                if (!itemRoot)
+                    break;
+
+                invokeEachCallback_(binder, itemUi, elem, idx);
+                if (!effVis)
+                    itemRoot->setVisible(false);
+
+                parent->insertChildBefore(anchor.get(), itemRoot);
+                binding.spawnedNodes.push_back(std::move(itemRoot));
+                binding.spawnedContexts.push_back(itemUi.context());
+                ++idx;
+            }
+            return *this;
+        }
+
+        /**
+         * \brief Reactively bind an `Each@eachRef` slice to a `Bindable<std::vector<T>>`.
+         */
+        template <typename T, typename Fn>
+        UINode &bindEach(const std::string &eachRef,
+                         Bindable<std::vector<T>> &source,
+                         Fn binder,
+                         bool fireImmediately = true)
+        {
+            if (ctx_->eaches.find(eachRef) == ctx_->eaches.end())
+            {
+                warnOnce("each:" + eachRef,
+                         "UINode::bindEach('" + eachRef + "'): no Each with this ref");
+                return *this;
+            }
+
+            std::weak_ptr<Layout> weakRoot = root_;
+            std::weak_ptr<BuildContext> weakCtx = ctx_;
+            auto sub = source.onChanged(
+                [weakRoot, weakCtx, eachRef, binder = std::move(binder)](const std::vector<T> &vec) mutable
+                {
+                    auto c = weakCtx.lock();
+                    if (!c)
+                        return;
+                    UINode ui(weakRoot.lock(), std::move(c));
+                    ui.syncEach(eachRef, vec, binder);
+                },
+                fireImmediately);
+
+            ctx_->eachSubs[eachRef] =
+                std::make_shared<typename Bindable<std::vector<T>>::Subscription>(std::move(sub));
+            return *this;
+        }
+
+        /**
+         * \brief Keyed reconciliation for an `Each@eachRef` slice.
+         *
+         * Existing keys reuse their previously instantiated `UINode` (preserving
+         * focus, input state, and animations) and run only \p onUpdate. New keys
+         * instantiate the prefab and run \p onCreate followed by \p onUpdate.
+         * Missing keys are detached and destroyed.
+         */
+        template <typename Range, typename KeyFn, typename OnCreateFn, typename OnUpdateFn>
+        UINode &syncEachKeyed(const std::string &eachRef,
+                              const Range &items,
+                              KeyFn &&keyFn,
+                              OnCreateFn &&onCreate,
+                              OnUpdateFn &&onUpdate)
+        {
+            auto it = ctx_->eaches.find(eachRef);
+            if (it == ctx_->eaches.end())
+            {
+                warnOnce("each:" + eachRef,
+                         "UINode::syncEachKeyed('" + eachRef + "'): no Each with this ref");
+                return *this;
+            }
+
+            auto &binding = it->second;
+            auto anchor = binding.anchor.lock();
+            auto parent = anchor ? anchor->getParent() : nullptr;
+            if (!parent)
+                return *this;
+
+            using ElemT = std::decay_t<decltype(*std::begin(items))>;
+            using KeyT = std::decay_t<std::invoke_result_t<KeyFn &, const ElemT &>>;
+
+            struct KeyedStore : IKeyedStore
+            {
+                struct Entry
+                {
+                    std::shared_ptr<Layout> root;
+                    std::shared_ptr<BuildContext> ctx;
+                };
+                std::unordered_map<KeyT, Entry> entries;
+            };
+
+            const bool effVis = ctx_->isConditionVisible(binding.parentCondition);
+            const bool isEmpty = (std::begin(items) == std::end(items));
+
+            if (isEmpty)
+            {
+                binding.keyedStore.reset();
+                clearEachNodes_(binding, *parent);
+                mountEachFallback_(binding, *parent, anchor.get(), effVis);
+                return *this;
+            }
+
+            if (binding.showingFallback)
+                clearEachNodes_(binding, *parent);
+
+            auto *store = dynamic_cast<KeyedStore *>(binding.keyedStore.get());
+            if (!store)
+            {
+                auto newStore = std::make_shared<KeyedStore>();
+                store = newStore.get();
+                binding.keyedStore = std::move(newStore);
+            }
+
+            std::unordered_map<KeyT, typename KeyedStore::Entry> nextEntries;
+            nextEntries.reserve(store->entries.size() + 4);
+            std::vector<std::shared_ptr<Layout>> nextNodes;
+            std::vector<std::shared_ptr<BuildContext>> nextContexts;
+
+            size_t idx = 0;
+            for (const auto &elem : items)
+            {
+                KeyT key = keyFn(elem);
+                if (nextEntries.count(key) > 0)
+                {
+                    logWarn("ZMarkup", "", 0, 0,
+                            "UINode::syncEachKeyed('" + eachRef + "'): duplicate key detected, skipping duplicate item");
+                    ++idx;
+                    continue;
+                }
+
+                auto existing = store->entries.find(key);
+                if (existing != store->entries.end())
+                {
+                    auto entry = std::move(existing->second);
+                    UINode itemUi(entry.root, entry.ctx);
+                    invokeEachCallback_(onUpdate, itemUi, elem, idx);
+                    if (!effVis)
+                        entry.root->setVisible(false);
+
+                    nextNodes.push_back(entry.root);
+                    nextContexts.push_back(entry.ctx);
+                    nextEntries.emplace(std::move(key), std::move(entry));
+                }
+                else
+                {
+                    UINode itemUi = getGlobalRegistry().instantiate(binding.prefabName);
+                    auto itemRoot = itemUi.root();
+                    if (!itemRoot)
+                        break;
+
+                    invokeEachCallback_(onCreate, itemUi, elem, idx);
+                    invokeEachCallback_(onUpdate, itemUi, elem, idx);
+                    if (!effVis)
+                        itemRoot->setVisible(false);
+
+                    nextNodes.push_back(itemRoot);
+                    nextContexts.push_back(itemUi.context());
+                    nextEntries.emplace(std::move(key),
+                                        typename KeyedStore::Entry{std::move(itemRoot), itemUi.context()});
+                }
+                ++idx;
+            }
+
+            bool sameOrder = (nextNodes.size() == binding.spawnedNodes.size());
+            if (sameOrder)
+            {
+                for (size_t i = 0; i < nextNodes.size(); ++i)
+                {
+                    if (nextNodes[i].get() != binding.spawnedNodes[i].get())
+                    {
+                        sameOrder = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!sameOrder)
+            {
+                for (auto &oldNode : binding.spawnedNodes)
+                {
+                    if (oldNode)
+                        parent->removeChild(oldNode.get());
+                }
+                for (auto &newNode : nextNodes)
+                {
+                    parent->insertChildBefore(anchor.get(), newNode);
+                }
+            }
+
+            store->entries = std::move(nextEntries);
+            binding.spawnedNodes = std::move(nextNodes);
+            binding.spawnedContexts = std::move(nextContexts);
+            binding.showingFallback = false;
+            return *this;
+        }
+
+        /**
+         * \brief Reactively bind a keyed `Each@eachRef` slice to a `Bindable<std::vector<T>>`.
+         */
+        template <typename T, typename KeyFn, typename OnCreateFn, typename OnUpdateFn>
+        UINode &bindEachKeyed(const std::string &eachRef,
+                              Bindable<std::vector<T>> &source,
+                              KeyFn keyFn,
+                              OnCreateFn onCreate,
+                              OnUpdateFn onUpdate,
+                              bool fireImmediately = true)
+        {
+            if (ctx_->eaches.find(eachRef) == ctx_->eaches.end())
+            {
+                warnOnce("each:" + eachRef,
+                         "UINode::bindEachKeyed('" + eachRef + "'): no Each with this ref");
+                return *this;
+            }
+
+            std::weak_ptr<Layout> weakRoot = root_;
+            std::weak_ptr<BuildContext> weakCtx = ctx_;
+            auto sub = source.onChanged(
+                [weakRoot, weakCtx, eachRef,
+                 keyFn = std::move(keyFn),
+                 onCreate = std::move(onCreate),
+                 onUpdate = std::move(onUpdate)](const std::vector<T> &vec) mutable
+                {
+                    auto c = weakCtx.lock();
+                    if (!c)
+                        return;
+                    UINode ui(weakRoot.lock(), std::move(c));
+                    ui.syncEachKeyed(eachRef, vec, keyFn, onCreate, onUpdate);
+                },
+                fireImmediately);
+
+            ctx_->eachSubs[eachRef] =
+                std::make_shared<typename Bindable<std::vector<T>>::Subscription>(std::move(sub));
+            return *this;
+        }
+
     private:
         /** \brief Log a warning for \p key only the first time it is called. */
         void warnOnce(const std::string &key, const std::string &msg) const
         {
             if (warnedKeys_.insert(key).second)
                 logWarn("ZMarkup", "", 0, 0, msg);
+        }
+
+        static void propagateCondition_(BuildContext &ctx, const std::string &condName, bool parentEffective)
+        {
+            auto it = ctx.conditions.find(condName);
+            if (it == ctx.conditions.end())
+                return;
+            auto &b = it->second;
+            const bool eff = b.ownState && parentEffective;
+            b.effectiveVisible = eff;
+
+            for (auto &wp : b.directNodes)
+            {
+                if (auto n = wp.lock())
+                    n->setVisible(eff);
+            }
+            for (const auto &eachName : b.childEaches)
+            {
+                auto eit = ctx.eaches.find(eachName);
+                if (eit == ctx.eaches.end())
+                    continue;
+                for (auto &n : eit->second.spawnedNodes)
+                {
+                    if (n)
+                        n->setVisible(eff);
+                }
+            }
+            for (const auto &childCond : b.childConditions)
+            {
+                propagateCondition_(ctx, childCond, eff);
+            }
+        }
+
+        static void clearEachNodes_(EachBinding &binding, Layout &parent)
+        {
+            for (auto &n : binding.spawnedNodes)
+            {
+                if (n)
+                    parent.removeChild(n.get());
+            }
+            binding.spawnedNodes.clear();
+            binding.spawnedContexts.clear();
+            binding.showingFallback = false;
+        }
+
+        static void mountEachFallback_(EachBinding &binding, Layout &parent, const Layout *anchor, bool effVis)
+        {
+            if (binding.fallbackAst.empty())
+                return;
+            auto fbCtx = std::make_shared<BuildContext>();
+            binding.showingFallback = true;
+            auto &reg = getGlobalRegistry();
+            for (const auto &fbEl : binding.fallbackAst)
+            {
+                auto fbNodes = reg.create_impl(fbEl, *fbCtx);
+                for (auto &n : fbNodes)
+                {
+                    if (!n)
+                        continue;
+                    n->setVisible(effVis);
+                    parent.insertChildBefore(anchor, n);
+                    binding.spawnedNodes.push_back(std::move(n));
+                }
+            }
+            binding.spawnedContexts.push_back(std::move(fbCtx));
+        }
+
+        template <typename Fn, typename Elem>
+        static void invokeEachCallback_(Fn &fn, UINode &itemUi, const Elem &elem, size_t idx)
+        {
+            if constexpr (std::is_invocable_v<Fn &, UINode &, const Elem &, size_t>)
+                fn(itemUi, elem, idx);
+            else if constexpr (std::is_invocable_v<Fn &, UINode &, const Elem &>)
+                fn(itemUi, elem);
+            else
+                fn(itemUi);
         }
 
         std::shared_ptr<Layout> root_;
@@ -1058,7 +1664,7 @@ namespace ZenitUI::ZMarkup
             return UINode(nullptr, ctx);
         }
         auto nodes = expandPrefab(tagName, it->second, extraClasses, id, ref, {}, {}, *ctx);
-        return UINode(nodes.empty() ? nullptr : nodes.front(), ctx);
+        return UINode(nodes.empty() ? nullptr : nodes.front().node, ctx);
     }
 
     /** \brief Free-function wrapper around `getGlobalRegistry().hasPrefab`. */

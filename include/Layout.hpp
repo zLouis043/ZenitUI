@@ -84,6 +84,7 @@ namespace ZenitUI
 		uint32_t interactive : 1;
 		uint32_t blocksRaycast : 1;
 		uint32_t enabled : 1;
+		uint32_t visible : 1;
 		uint32_t focusable : 1;
 		uint32_t focusScope : 1;
 		uint32_t keyboardActivates : 1;
@@ -108,6 +109,7 @@ namespace ZenitUI
 		uint32_t wantsRemoval : 1;
 		uint32_t pressedInChain : 1;
 		uint32_t hadRemovedChildren : 1;
+		uint32_t layoutDirty : 1;
 	};
 
 	/**
@@ -136,6 +138,7 @@ namespace ZenitUI
 		{
 			config.interactive = 1;
 			config.enabled = 1;
+			config.visible = 1;
 			internal_.subtreeDirty = 1;
 			internal_.pendingTransition = 1;
 		}
@@ -361,6 +364,51 @@ namespace ZenitUI
 		}
 
 		/**
+		 * \brief Insert \p child immediately before \p anchor (or append if \p anchor is not found).
+		 */
+		void insertChildBefore(const Layout *anchor, std::shared_ptr<Layout> child)
+		{
+			if (!child)
+				return;
+
+			if (weak_from_this().expired())
+			{
+				logWarn("Layout", "", 0, 0,
+						"insertChildBefore called on a node not handled with shared_ptr.");
+				return;
+			}
+
+			child->parent = weak_from_this();
+			auto it = std::find_if(children.begin(), children.end(),
+								   [anchor](const std::shared_ptr<Layout> &c)
+								   { return c.get() == anchor; });
+			children.insert(it, std::move(child));
+			internal_.pendingTransition = 1;
+			markLayoutDirtyUpward();
+		}
+
+		/**
+		 * \brief Synchronously detach a single direct child, clearing its parent pointer.
+		 * \return `true` if \p child was found and removed.
+		 */
+		bool removeChild(const Layout *child)
+		{
+			if (!child)
+				return false;
+			auto it = std::find_if(children.begin(), children.end(),
+								   [child](const std::shared_ptr<Layout> &c)
+								   { return c.get() == child; });
+			if (it == children.end())
+				return false;
+			(*it)->parent.reset();
+			children.erase(it);
+			internal_.hadRemovedChildren = 1;
+			internal_.pendingTransition = 1;
+			markLayoutDirtyUpward();
+			return true;
+		}
+
+		/**
 		 * \brief Return the node that receives children when built from markup.
 		 *
 		 * Components that wrap their content in a sub-layout (e.g. `Modal`
@@ -450,6 +498,33 @@ namespace ZenitUI
 		bool getEnabled() const { return config.enabled != 0; }
 
 		/**
+		 * \brief Show or hide the node (`display: none` semantics).
+		 *
+		 * Hidden nodes take zero space, do not contribute to parent `gap` or
+		 * flex distribution, are skipped by `draw`, `hitTest`, and Tab focus
+		 * traversal, and release focus/capture if held by this subtree.
+		 */
+		void setVisible(bool v)
+		{
+			if ((config.visible != 0) == v)
+				return;
+			config.visible = v ? 1 : 0;
+			internal_.pendingTransition = 1;
+			lastMeasureW_ = -1.0f;
+			lastMeasureH_ = -1.0f;
+
+			if (!v)
+			{
+				rect = {0.0f, 0.0f, 0.0f, 0.0f};
+				measuredSize = {0.0f, 0.0f};
+				clearSubtreeInteractionOnHide();
+			}
+
+			markLayoutDirtyUpward();
+		}
+		bool isVisible() const { return config.visible != 0; }
+
+		/**
 		 * \brief Set the `:checked` pseudo-class state.
 		 *
 		 * Used by `Checkbox`, `Toggle`, and any component that wants a
@@ -488,7 +563,10 @@ namespace ZenitUI
 		}
 
 		void setFocusable(bool f) { config.focusable = f ? 1 : 0; }
-		bool isFocusable() const { return config.focusable != 0 && config.enabled != 0; }
+		bool isFocusable() const
+		{
+			return config.focusable != 0 && config.enabled != 0 && config.visible != 0;
+		}
 		bool getFocused() const { return state.focused != 0; }
 
 		void setFocusScope(bool s) { config.focusScope = s ? 1 : 0; }
@@ -958,6 +1036,44 @@ namespace ZenitUI
 			internal_.subtreeDirty = 1;
 			for (auto &c : children)
 				c->markInheritanceDirty();
+		}
+
+		void markLayoutDirtyUpward()
+		{
+			internal_.layoutDirty = 1;
+			internal_.subtreeDirty = 1;
+			auto p = parent.lock();
+			while (p)
+			{
+				p->internal_.layoutDirty = 1;
+				p->internal_.subtreeDirty = 1;
+				p = p->parent.lock();
+			}
+		}
+
+		void clearSubtreeInteractionOnHide()
+		{
+			state.hovered = 0;
+			state.pressed = 0;
+			state.focused = 0;
+
+			auto &ctx = UIContext::get();
+			if (ctx.focusedNode.lock().get() == this)
+				ctx.focusedNode.reset();
+			if (ctx.pointerCapture.lock().get() == this)
+				ctx.pointerCapture.reset();
+			if (ctx.pressTarget == this)
+				ctx.pressTarget = nullptr;
+			if (ctx.releaseTarget == this)
+				ctx.releaseTarget = nullptr;
+			if (ctx.topmostConsumer == this)
+				ctx.topmostConsumer = nullptr;
+			if (ctx.hoverTarget == this)
+				ctx.hoverTarget = nullptr;
+
+			for (auto &c : children)
+				if (c)
+					c->clearSubtreeInteractionOnHide();
 		}
 		
 		/**

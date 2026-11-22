@@ -9,6 +9,14 @@ namespace ZenitUI
 	{
 		auto selfGuard = weak_from_this().lock();
 
+		if (!config.visible)
+		{
+			cullRemovedChildren();
+			internal_.subtreeDirty = 0;
+			internal_.layoutDirty = 0;
+			return;
+		}
+
 		bool wasPending = internal_.pendingTransition;
 		ComputedStyle styleBefore = style_.currentStyle;
 
@@ -128,8 +136,9 @@ namespace ZenitUI
 
 		internal_.subtreeDirty = wasPending || internal_.pendingTransition ||
 		                 anyChildDirty || styleChanged || inTransition ||
-		                 internal_.hadRemovedChildren;
+		                 internal_.hadRemovedChildren || internal_.layoutDirty;
 		internal_.hadRemovedChildren = 0;
+		internal_.layoutDirty = 0;
 	}
 
 	std::vector<const ThemeRule *> Layout::getMatchingRules() const
@@ -148,7 +157,7 @@ namespace ZenitUI
 
 	static void collectFocusables(Layout *node, std::vector<Layout *> &out)
 	{
-		if (!node->getEnabled())
+		if (!node->getEnabled() || !node->isVisible())
 			return;
 		if (node->isFocusable())
 			out.push_back(node);
@@ -173,7 +182,7 @@ namespace ZenitUI
 		auto &ctx = UIContext::get();
 
 		auto captured = ctx.pointerCapture.lock();
-		if (!captured || !captured->getEnabled())
+		if (!captured || !captured->getEnabled() || !captured->isVisible())
 		{
 			ctx.pointerCapture.reset();
 			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false, nullptr);

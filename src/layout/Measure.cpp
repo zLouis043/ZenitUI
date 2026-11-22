@@ -30,6 +30,14 @@ namespace ZenitUI
 
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
+		if (!config.visible)
+		{
+			measuredSize = {0.0f, 0.0f};
+			lastMeasureW_ = parent_w;
+			lastMeasureH_ = parent_h;
+			return measuredSize;
+		}
+
 		if (!internal_.subtreeDirty && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
 			return measuredSize;
 		lastMeasureW_ = parent_w;
@@ -77,6 +85,8 @@ namespace ZenitUI
 			int visibleInLine = 0;
 			for (auto &c : children)
 			{
+				if (!c->isVisible())
+					continue;
 				Vec2 cs = c->measure(innerW, innerH);
 				if (c->getStyle().position == Position::Absolute || c->isPortal())
 					continue;
@@ -117,6 +127,8 @@ namespace ZenitUI
 
 			for (auto &c : children)
 			{
+				if (!c->isVisible())
+					continue;
 				c->initStyleIfNeeded();
 				if (c->internal_.pendingTransition)
 					c->style_.currentStyle = c->style_.resolveFor(*c);
@@ -152,6 +164,8 @@ namespace ZenitUI
 			{
 				for (auto &c : children)
 				{
+					if (!c->isVisible())
+						continue;
 					const auto &cst = c->getStyle();
 					if (cst.position == Position::Absolute || c->isPortal())
 						continue;
@@ -181,6 +195,8 @@ namespace ZenitUI
 			int visibleChildren = 0;
 			for (auto &c : children)
 			{
+				if (!c->isVisible())
+					continue;
 				Vec2 cs = c->measure(innerW, innerH);
 				if (c->getStyle().position == Position::Absolute || c->isPortal())
 					continue;
@@ -232,6 +248,11 @@ namespace ZenitUI
 
 	void Layout::arrange(Rect space)
 	{
+		if (!config.visible)
+		{
+			rect = {0.0f, 0.0f, 0.0f, 0.0f};
+			return;
+		}
 		const bool rectChanged = (space.x != rect.x || space.y != rect.y ||
 								  space.width != rect.width || space.height != rect.height);
 		rect = space;
@@ -337,6 +358,8 @@ namespace ZenitUI
 	{
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (c->isPortal())
 			{
@@ -415,6 +438,8 @@ namespace ZenitUI
 
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
@@ -470,6 +495,8 @@ namespace ZenitUI
 		float curY = startY;
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
@@ -531,6 +558,8 @@ namespace ZenitUI
 
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
@@ -561,7 +590,7 @@ namespace ZenitUI
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
-			if (cst.position == Position::Absolute || c->isPortal())
+			if (!c->isVisible() || cst.position == Position::Absolute || c->isPortal())
 			{
 				finalWidths.push_back(0.0f);
 				continue;
@@ -623,7 +652,7 @@ namespace ZenitUI
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
-			if (cst.position == Position::Absolute || c->isPortal())
+			if (!c->isVisible() || cst.position == Position::Absolute || c->isPortal())
 			{
 				childIndex++;
 				continue;
@@ -670,6 +699,8 @@ namespace ZenitUI
 	{
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;
@@ -737,7 +768,7 @@ namespace ZenitUI
 
 	Layout *Layout::hitTest(Vec2 p, bool ancestorBlocked, const Rect *clipLocal)
 	{
-		if (ancestorBlocked || !config.enabled)
+		if (ancestorBlocked || !config.enabled || !config.visible)
 			return nullptr;
 
 		if (clipLocal && !clipLocal->contains(p))
@@ -882,6 +913,8 @@ namespace ZenitUI
 
 		for (auto &c : children)
 		{
+			if (!c->isVisible())
+				continue;
 			const auto &cst = c->getStyle();
 			if (cst.position == Position::Absolute || c->isPortal())
 				continue;

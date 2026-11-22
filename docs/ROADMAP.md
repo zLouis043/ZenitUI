@@ -10,9 +10,10 @@ items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
 Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.36 (CSS flex/border/text parity,
+shipped, step g declined) and §5.25–§5.37 (CSS flex/border/text parity,
 TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &
-direct prefab instantiation, `UINode` `@ref` helpers).
+direct prefab instantiation, `UINode` `@ref` helpers, runtime structural
+`If` & `Each` + `Layout::setVisible`).
 
 ---
 
@@ -2354,40 +2355,52 @@ exclusively on local `@ref` lookups.
 
 ### 5.37 Runtime structural `If` & `Each` in ZMarkup
 
-**Status:** 🟡 proposed — design in
+**Status:** 🟢 done — design in
 [PROPOSALS.md, Proposal 12](architecture/PROPOSALS.md#proposal-12--runtime-structural-if-and-each-in-zmarkup).
 
-**Problem:** ZMarkup intentionally stays logic-free (no expressions or
-scripting), but conditional sections and dynamic repeated lists inside
-prefabs currently force C++ to manually manage `removeAllChildren()`,
-wrapper containers, and child ordering — hiding the visual structure
-from the `.zm` file.
+**Problem:** Conditional sections and dynamic repeated lists inside
+prefabs forced C++ to manually manage empty wrapper containers,
+`removeAllChildren()`, and child ordering, hiding dynamic visual
+structure from `.zm` files.
 
-**Goal:** Declare conditional branches (`If`) and repeated prefab slices
-(`Each`) purely structurally in `.zm`, while driving conditions and data
-at **runtime** from C++ (imperatively or reactively via `Bindable`).
+**What landed:**
 
-- [ ] **a. `Layout::setVisible(bool)` (`display: none` semantics):**
-      hidden nodes are skipped by `measure` (zero size, excluded from
-      parent `gap` and flex distribution), `arrange`, `draw`, `hitTest`,
-      and Tab focus traversal; toggling marks parent layout dirty
-- [ ] **b. Runtime `If`:** `If@name { ... }` mounts its children flat
-      into the parent (no extra wrapper node) and registers a
-      `ConditionBinding` in `BuildContext`; add `UINode::setCondition`
-      and `UINode::bindCondition` (with `Bindable<bool>`), supporting
-      nested `If` blocks
-- [ ] **c. Runtime `Each`:** `Each@name prefab="ItemPrefab" { fallback }`
-      places an invisible anchor node inside the parent so sibling nodes
-      before/after it are preserved; add `UINode::syncEach` and
-      `UINode::bindEach` (with `Bindable<std::vector<T>>`), rendering
-      fallback children when empty
-- [ ] **d. Keyed reconciliation (optional step):** add
-      `UINode::syncEachKeyed` / `bindEachKeyed` so unchanged items reuse
-      their existing `UINode` (preserving focus, hover, input state, and
-      animations)
-- [ ] Add unit tests covering layout/gap exclusion, nested `If`,
-      `Each` with siblings and fallback, `Bindable` reactivity, and
-      `If` wrapping `Each`
+- **Step `a` (`Layout::setVisible` + child insertion helpers):**
+  added `NodeConfig::visible` (`display: none` semantics),
+  `NodeInternal::layoutDirty`, `setVisible(bool)` / `isVisible()`,
+  `insertChildBefore()`, `removeChild()`, and `UINode::setVisibleRef()`.
+  Hidden nodes take zero size, are excluded from `gap`, flex
+  distribution, `draw`, `hitTest`, `update`, and Tab focus traversal,
+  and release focus/pointer capture cleanly when hidden.
+- **Step `b` (runtime `If`):** `If@name [initial="true|false"] { ... }`
+  mounts children flat into the enclosing parent (zero wrapper node)
+  and registers a `ConditionBinding` in `BuildContext`; added
+  `UINode::setCondition` and `UINode::bindCondition` (with
+  `Bindable<bool>`), preserving nested `If` own-state across parent
+  toggles.
+- **Step `c` (runtime `Each`):** `Each@name prefab="ItemPrefab" { fallback }`
+  places a hidden `EachAnchor` inside the parent so sibling nodes
+  before and after it stay intact; added `UINode::syncEach` and
+  `UINode::bindEach` (with `Bindable<std::vector<T>>`), empty-state
+  fallback rendering, and visibility propagation from enclosing `If`
+  blocks.
+- **Step `d` (keyed reconciliation):** added `UINode::syncEachKeyed`
+  and `UINode::bindEachKeyed` with type-erased per-slice keyed storage
+  so unchanged keys reuse their existing `UINode` (preserving focus,
+  typed text, and animations) while reordering in place.
+- **Tests:** added 12 unit tests in `tests/test_zmarkup_build.cpp`
+  covering `setVisible` layout/gap/grow/hitTest/focus exclusion,
+  `insertChildBefore`/`removeChild`, flat and nested `If`, `Bindable`
+  reactivity + auto-unsubscribe, `Each` with siblings and fallback,
+  `If` wrapping `Each`, and keyed reconciliation.
+
+- [x] **a.** `Layout::setVisible(bool)` (`display: none` semantics) +
+      `insertChildBefore` / `removeChild` + `UINode::setVisibleRef`
+- [x] **b.** Runtime `If` (`If@name`, `setCondition`, `bindCondition`)
+- [x] **c.** Runtime `Each` (`Each@name prefab="..."`, `syncEach`,
+      `bindEach`, fallback, enclosing `If` propagation)
+- [x] **d.** Keyed reconciliation (`syncEachKeyed`, `bindEachKeyed`)
+- [x] Add unit tests in `tests/test_zmarkup_build.cpp`
 - [ ] Update `docs/user/04-zmarkup.md` and `docs/api/ZMarkup.md`
 
 ---

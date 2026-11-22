@@ -33,6 +33,9 @@ namespace ZenitUI
 
 	void Layout::draw(float parentOpacity)
 	{
+		if (!config.visible)
+			return;
+
 		if (config.portal)
 		{
 			UIContext::get().framePortals.push_back(weak_from_this());
@@ -316,6 +319,8 @@ namespace ZenitUI
 
 		for (auto &child : children)
 		{
+			if (!child->isVisible())
+				continue;
 			if (child->isStackingContext())
 			{
 				if (child->getZIndex() < 0)

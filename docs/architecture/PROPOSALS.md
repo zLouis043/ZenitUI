@@ -39,6 +39,9 @@ implementation.
 - ✅ **Proposal 11 — `UINode` `@ref`-based helpers**: shipped as
   roadmap §5.36. See `tests/test_zmarkup_build.cpp` and the change log
   at the end of this file.
+- ✅ **Proposal 12 — Runtime structural `If` & `Each` in ZMarkup**:
+  shipped as roadmap §5.37 (steps a–d). See `tests/test_zmarkup_build.cpp`
+  and the change log at the end of this file.
 
 ---
 
@@ -2584,7 +2587,7 @@ wrong-type safe no-op, and `toggleClassRef` add/remove behavior.
 
 ## Proposal 12 — Runtime structural `If` and `Each` in ZMarkup
 
-**Status:** 🟡 proposed — tracked as roadmap §5.37.
+**Status:** ✅ shipped as roadmap §5.37 (steps a–d).
 
 ### Motivation
 
@@ -2856,7 +2859,7 @@ re-discussing them.
 
 ---
 
-**Shipped** (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.36):
+**Shipped** (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.37):
 
 1. Proposal 1 — `ref` → §5.16
 2. Proposal 2 — `Bindable<T>` → §5.17
@@ -2868,12 +2871,12 @@ re-discussing them.
 8. Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)
 9. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35
 10. Proposal 11 — `UINode` `@ref`-based helpers → §5.36
+11. Proposal 12 — Runtime structural `If` & `Each` → §5.37 (steps a–d)
 
 **Proposed** (next, in this order):
 
-11. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
-12. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c).
-13. Proposal 12 — Runtime structural `If` & `Each` → §5.37.
+12. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
+13. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c).
 
 **Post-1.0:**
 
@@ -3184,4 +3187,43 @@ VirtualList ships.
 - `include/ZMarkup.hpp` — 15 chainable `*Ref` helper methods on `UINode`.
 - `tests/test_zmarkup_build.cpp` — 2 unit tests covering chaining across
   all widget types and safe no-op behavior on missing or mismatched refs.
+  
+### Proposal 12 — Runtime structural `If` and `Each` in ZMarkup
+
+**Shipped:** roadmap §5.37 (steps a–d).
+
+**Changes from the proposal:**
+
+- **Added `NodeInternal::layoutDirty` and `markLayoutDirtyUpward()`.**
+  Because `Layout::recomputeDirty()` overwrites `subtreeDirty` at the
+  end of `update()`, a dedicated upward `layoutDirty` bit guarantees
+  that `setVisible()`, `addChild()`, `insertChildBefore()`,
+  `removeChild()`, and `removeAllChildren()` always trigger a parent
+  re-measure even when styles did not change.
+- **Prefab-as-root recursion guard replaced `isPrefabRoot`.** Checking
+  `ctx.slotStack` for the active prefab tag allows prefabs to compose
+  another prefab as their root element while still preventing infinite
+  cycles.
+- **`EachBinding` retains item `BuildContext`s.** Keeping each spawned
+  item's `std::shared_ptr<BuildContext>` alive inside `EachBinding`
+  allows nested prefabs spawned inside an `Each` to hold their own
+  `Bindable` subscriptions (`bindCondition` / `bindEach`).
+- **Flexible callback arity.** `syncEach`, `bindEach`, `syncEachKeyed`,
+  and `bindEachKeyed` accept 1-, 2-, or 3-argument callbacks
+  (`(UINode&)`, `(UINode&, const T&)`, `(UINode&, const T&, size_t)`).
+
+**What landed:**
+
+- `include/Layout.hpp`, `src/layout/Layout.cpp`,
+  `src/layout/Measure.cpp`, `src/layout/Render.cpp` —
+  `Layout::setVisible(bool)` / `isVisible()`, `insertChildBefore()`,
+  `removeChild()`, upward `layoutDirty` propagation, and exclusion of
+  hidden nodes from measure, gap, flex, arrange, draw, hitTest, update,
+  and Tab focus traversal.
+- `include/ZMarkup.hpp` — `ConditionBinding`, `EachBinding`,
+  `IKeyedStore`, `If` / `Each` handling in `Registry`,
+  `UINode::setVisibleRef`, `setCondition`, `bindCondition`, `syncEach`,
+  `bindEach`, `syncEachKeyed`, `bindEachKeyed`.
+- `tests/test_zmarkup_build.cpp` — 12 new regression tests covering
+  Steps `a`–`d`.
   
