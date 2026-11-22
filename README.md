@@ -70,13 +70,14 @@ fully compatible with the same styling system.
 
 | Area | What you get |
 |------|--------------|
-| **Layout** | `Stack`, `Vertical`, `Horizontal` flow, `grow` / `shrink` / `gap`, absolute positioning, `overflow: scroll \| auto`, `z-index`, portals |
+| **Layout** | `Stack`, `Vertical`, `Horizontal` flow, `wrap`, `grow` / `shrink` / `gap`, `setVisible` (`display: none`), absolute positioning, `overflow: scroll \| auto`, `z-index`, portals |
+| **ZMarkup** | Declarative UI DSL (compiled in `libZenitUI`), reusable **Prefabs** with **Named `<Slot>`s** & `ZMarkup::instantiate`, chainable `@ref` helpers, runtime structural **`If` & `Each`** (with keyed reconciliation and `Bindable` reactivity), cycle-free **`WeakUINode`** |
 | **Units** | `px`, `%`, `vw`, `vh`, `pw`, `ph`, `auto`, and full `calc()` support |
 | **Styling** | CSS-like cascade, descendant selectors, `:hover` `:pressed` `:focus` `:checked` `:disabled`, `::part`, custom properties (`--x` / `var()`), media queries |
 | **Animations** | Per-property transitions, CSS `@keyframes`, imperative `UIAnimation`, per-`::part` animations |
 | **Input** | Hover / pressed / focus state machine, `Tab` navigation, pointer capture, `passThrough`, right-click, context menus |
 | **Effects** | `filter: blur(...) drop-shadow(...)`, arbitrary shaders, extensible `FilterRegistry`, `box-shadow` |
-| **Widgets** | Text, Button, Panel, Toggle, Checkbox, Slider, ProgressBar, TextInput, ScrollView, Dropdown, Modal, Tooltip, Popup, Canvas, ImageContainer |
+| **Widgets** | Text, Button, Panel, Toggle, Checkbox, Slider, ProgressBar, TextInput, TextArea, ScrollView, VirtualView, Dropdown, Modal, Tooltip, Popup, Canvas, ImageContainer |
 | **Backends** | Pluggable. Reference implementation for **Raylib**, plus a headless **mock** backend for tests and CI. The core only depends on `IRenderer` / `IPlatform` / `IAssetProvider`. |
 | **Debugging** | Optional `Debug::dumpStyle` / `dumpTree` / `dumpTheme` / `dumpParts`, structured `Logger` with source locations |
 | **Data binding** | `Bindable<T>` — observable values with RAII subscriptions, lifetime-safe, zero dependencies |

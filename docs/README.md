@@ -67,8 +67,8 @@ fully compatible with the same styling system.
 
 | Area            | What you get |
 |-----------------|--------------|
-| **Layout**      | `Stack`, `Vertical`, `Horizontal` flow, `grow` / `shrink` / `gap`, `position: absolute`, `overflow: scroll \| auto`, `z-index`, portals |
-| **ZMarkup**     | Declarative UI DSL, reusable **Prefabs** with `<Slot>` injection, inline data binding variables, zero-overhead AST cloning |
+| **Layout**      | `Stack`, `Vertical`, `Horizontal` flow, `wrap`, `grow` / `shrink` / `gap`, `setVisible` (`display: none`), `position: absolute`, `overflow: scroll \| auto`, `z-index`, portals |
+| **ZMarkup**     | Declarative UI DSL, reusable **Prefabs** with **Named `<Slot>`s** & `ZMarkup::instantiate`, chainable `@ref` helpers, runtime structural **`If` & `Each`** (imperative, `Bindable`-reactive, and keyed reconciliation), root-bound lifetime & `WeakUINode` |
 | **Units**       | `px`, `%`, `vw`, `vh`, `pw`, `ph`, `auto`, full `calc()` support |
 | **Styling**     | CSS-like cascade, descendant selectors, `:hover` `:pressed` `:focus` `:checked` `:disabled`, `::part`, custom properties (`--x` / `var()`), media queries |
 | **Animations**  | Per-property transitions (`transition: opacity 0.3s ease-out`), CSS `@keyframes`, imperative `UIAnimation`, per-`::part` animations |

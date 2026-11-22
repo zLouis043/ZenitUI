@@ -131,6 +131,13 @@ A node state (`config.enabled == 0`) that:
 
 ## E
 
+**Each (`Each@ref prefab="..."`)**
+A structural ZMarkup tag that declares a dynamic repeated slice of a
+registered prefab inside a container, preserving static siblings before
+and after it. Driven at runtime from C++ via `UINode::syncEach`,
+`bindEach`, `syncEachKeyed`, or `bindEachKeyed`. Optional children
+inside `Each { ... }` render as an empty-state fallback.
+
 **Effect**
 A shader applied to a node's own draw calls (via `pushEffect`). Set
 with `effect: <name>` in `.zstyle`. Different from a **filter**, which
@@ -198,6 +205,13 @@ flags.
 A string identifier on a `Layout` node (`#name` in ZMarkup). Matched
 by `#name` selectors with specificity `(1, 0, 0)`. Used by
 `UINode::find` for lookups. See also **Ref**.
+
+**If (`If@ref`)**
+A structural ZMarkup tag that mounts its children flat into the
+enclosing container (no wrapper node) and toggles their visibility at
+runtime via `UINode::setCondition` or `bindCondition` (`Bindable<bool>`).
+Uses `Layout::setVisible` (`display: none`) so hidden blocks take zero
+space and add no `gap`, while preserving internal widget state.
 
 **Inherited property**
 One of `font`, `fontSize`, `color`, `letterSpacing`, `textAlign`. All
@@ -333,6 +347,12 @@ A node that draws at the root's z-top and is hit-tested before the
 main tree, regardless of its logical position. Used for Dropdown,
 Popup, Tooltip.
 
+**Prefab**
+A reusable ZMarkup component registered via `ZMarkup::registerPrefab`
+or `registerPrefabFile`. Parsed once into an AST and instantiated
+either inside markup (with root attribute merging and default/named
+**Slot** injection) or directly from C++ via `ZMarkup::instantiate`.
+
 **Property**
 An entry in `Style` / `ComputedStyle` (e.g. `width`, `background`).
 Every property is defined by the `BUBBLE_STYLE_PROPS` macro.
@@ -380,7 +400,11 @@ The left-hand side of a rule. A chain of compound selectors joined by
 descendant relationships. May include states and a `::part`.
 
 **Slot**
-A special ZMarkup tag (`<Slot>`) used exclusively inside a **Prefab** definition. It acts as an injection point for children passed when the Prefab is instantiated. If left empty during instantiation, it can render fallback children defined inside the Prefab.
+A special ZMarkup tag (`Slot` or `Slot name="..."`) used inside a
+**Prefab** definition as an injection point for caller children.
+Children with `slot="name"` route to the matching named slot; unmarked
+children route to the default slot. If empty, the slot renders its own
+fallback children.
 
 **Specificity**
 The triple `(ids, classes, tags)` used to rank rules of equal origin.
@@ -467,12 +491,25 @@ Contrast with **VirtualList** (planned, `ROADMAP.md` §5.23), which
 recycles rows and depends on **Prefab** and **Slot**. See
 [VirtualView](user/12-virtual_view.md) and [API](api/Widgets.md).
 
+**Visibility (`Layout::setVisible`)**
+`display: none` semantics on a `Layout` node. Hidden nodes measure to
+`{0, 0}`, are excluded from parent `gap`, flex distribution, `draw`,
+`hitTest`, `update`, and Tab focus traversal, and release focus/pointer
+capture cleanly when hidden.
+
 **`var()`**
 A reference to a **custom property**. Substituted at cascade time.
 
 ---
 
 ## W
+
+**WeakUINode**
+Non-owning handle returned by `UINode::weak()` (`weak_ptr<Layout>` +
+`weak_ptr<BuildContext>`). Lazily attaches `BuildContext` to the root
+node's lifetime via `Layout::retainObject` so child callbacks can
+capture `WeakUINode` and call `lock()` for imperative updates without
+creating `shared_ptr` reference cycles.
 
 **Widget**
 A `Layout` subclass with specific behavior (Button, Slider, Toggle,
