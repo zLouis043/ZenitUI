@@ -264,7 +264,7 @@ namespace ZenitUI::ZMarkup
         std::ifstream f(path, std::ios::binary);
         if (!f)
         {
-            logError("ZMarkup", path.string(), 0, 0, "Impossibile aprire il file per il prefab");
+            logError("ZMarkup", path.string(), 0, 0, "cannot open prefab file");
             return false;
         }
         std::stringstream ss;
@@ -1137,7 +1137,7 @@ namespace ZenitUI::ZMarkup
         std::ifstream f(path, std::ios::binary);
         if (!f)
         {
-            logError("ZMarkup", path.string(), 0, 0, "impossibile aprire il file");
+            logError("ZMarkup", path.string(), 0, 0, "cannot open file");
             return UINode(nullptr, std::make_shared<BuildContext>());
         }
         std::stringstream ss;
