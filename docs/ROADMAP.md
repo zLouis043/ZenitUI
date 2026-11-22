@@ -2251,7 +2251,7 @@ shortcuts.
 - [x] Implement `TextArea` widget
 - [x] Register in `ZMarkup` built-ins
 - [x] Wire placeholder and focus styling in `.zstyle`
-- [ ] Add dedicated unit test suite (`tests/test_textarea.cpp`)
+- [x] Add dedicated unit test suite (`tests/test_textarea.cpp`)
 - [ ] Document in `docs/user/03-widgets.md` and `docs/api/Widgets.md`
 
 ### 5.33 Opt-in CSS transitions (`transition-time: 0s` default)
