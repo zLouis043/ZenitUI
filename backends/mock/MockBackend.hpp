@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ZenitUI.hpp"
+#include "Utf8.hpp"
 
 #include <cmath>
 #include <string>
@@ -18,6 +19,8 @@ namespace ZenitUI::Test
         int popClipCount{0};
 
         float charWidth{8.0f};
+
+        std::vector<std::string> drawnTexts;
 
         std::vector<Rect> clipStack;
         Rect currentClip{0, 0, 1e9f, 1e9f};
@@ -82,15 +85,17 @@ namespace ZenitUI::Test
         void drawTexture(TextureHandle, Rect, Rect, Color) override {}
         void drawNineSlice(TextureHandle, NineSlice, Rect, Color) override {}
 
-        void drawText(FontHandle, std::string_view, Vec2, float, float, Color) override
+        void drawText(FontHandle, std::string_view s, Vec2, float, float, Color) override
         {
             drawTextCount++;
+            drawnTexts.emplace_back(s);
         }
         Vec2 measureText(FontHandle, std::string_view s, float size, float spacing) override
         {
-            float w = charWidth * (float)s.size();
-            if (!s.empty())
-                w += spacing * (float)(s.size() - 1);
+            size_t count = Utf8::codepointCount(s);
+            float w = charWidth * static_cast<float>(count);
+            if (count > 0)
+                w += spacing * static_cast<float>(count - 1);
             return {w, size};
         }
 
@@ -492,6 +497,7 @@ namespace ZenitUI::Test
             renderer.capturedVec4f.clear();
             renderer.capturedColor.clear();
             renderer.transformHistory.clear();
+            renderer.drawnTexts.clear();
             renderer.currentClip = {0, 0, 1e9f, 1e9f};
             renderer.lastCreatedTargetW = 0;
             renderer.lastCreatedTargetH = 0;

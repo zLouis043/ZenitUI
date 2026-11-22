@@ -2,6 +2,7 @@
 
 #include "Common.hpp"
 #include "Layout.hpp"
+#include "Utf8.hpp"
 #include <cctype>
 #include <cmath>
 #include <deque>
@@ -34,7 +35,8 @@ namespace ZenitUI::UI
         void setText(std::string t)
         {
             text = std::move(t);
-            cursorPos = std::min(cursorPos, (int)text.size());
+            cursorPos = static_cast<int>(
+                Utf8::snapFloor(text, std::min<size_t>(static_cast<size_t>(std::max(0, cursorPos)), text.size())));
             selectionStart = -1;
             scrollY = 0.0f;
             text_dirty = true;
@@ -43,6 +45,18 @@ namespace ZenitUI::UI
         }
         const std::string &getText() const { return text; }
         void clear() { setText(""); }
+
+        /** \brief Current cursor position in bytes from the start. */
+        int getCursorPos() const { return cursorPos; }
+
+        /** \brief Move the cursor (clamped and snapped to a valid UTF-8 boundary); clears selection. */
+        void setCursorPos(int pos)
+        {
+            size_t clamped = static_cast<size_t>(std::clamp(pos, 0, static_cast<int>(text.size())));
+            cursorPos = static_cast<int>(Utf8::snapFloor(text, clamped));
+            selectionStart = -1;
+            internal_.pendingTransition = 1;
+        }
 
         void setPlaceholder(std::string p)
         {
@@ -246,24 +260,12 @@ namespace ZenitUI::UI
                     else if (k == Key::V)
                     {
                         deleteSelection();
-                        std::string clip = ctx.platform->getClipboardText();
-                        for (size_t i = 0; i < clip.size(); ++i)
+                        std::string clean = Utf8::sanitizeMultiLine(ctx.platform->getClipboardText());
+                        if (!clean.empty())
                         {
-                            char c = clip[i];
-                            if (c == '\r')
-                            {
-                                if (i + 1 < clip.size() && clip[i + 1] == '\n')
-                                    ++i;
-                                text.insert(text.begin() + cursorPos, '\n');
-                                cursorPos++;
-                                changed = true;
-                            }
-                            else if (c == '\n' || (c >= 32 && c <= 126))
-                            {
-                                text.insert(text.begin() + cursorPos, c);
-                                cursorPos++;
-                                changed = true;
-                            }
+                            text.insert(static_cast<size_t>(cursorPos), clean);
+                            cursorPos += static_cast<int>(clean.size());
+                            changed = true;
                         }
                         if (changed)
                         {
@@ -289,18 +291,22 @@ namespace ZenitUI::UI
             }
             else
             {
+                bool inserted = false;
                 for (int c : ev.chars)
                 {
-                    if (c < 32 || c > 126)
+                    uint32_t cp = static_cast<uint32_t>(c);
+                    if (!Utf8::isPrintable(cp))
                         continue;
                     deleteSelection();
-                    text.insert(text.begin() + cursorPos, (char)c);
-                    cursorPos++;
+                    std::string encoded = Utf8::encode(cp);
+                    text.insert(static_cast<size_t>(cursorPos), encoded);
+                    cursorPos += static_cast<int>(encoded.size());
                     text_dirty = true;
                     changed = true;
+                    inserted = true;
                     keepCursorInView = true;
                 }
-                if (!ev.chars.empty())
+                if (inserted)
                     saveHistory();
             }
 
@@ -327,6 +333,7 @@ namespace ZenitUI::UI
             auto doAction = [&](int key)
             {
                 bool actionChanged = false;
+                const bool wordJump = (ctx.modifiers.ctrl || ctx.modifiers.super);
                 switch (key)
                 {
                 case Key::Backspace:
@@ -334,17 +341,23 @@ namespace ZenitUI::UI
                         actionChanged = true;
                     else if (cursorPos > 0)
                     {
-                        text.erase(text.begin() + cursorPos - 1);
-                        cursorPos--;
+                        size_t prev = wordJump
+                                          ? Utf8::prevWordBoundary(text, static_cast<size_t>(cursorPos))
+                                          : Utf8::prevCluster(text, static_cast<size_t>(cursorPos));
+                        text.erase(prev, static_cast<size_t>(cursorPos) - prev);
+                        cursorPos = static_cast<int>(prev);
                         actionChanged = true;
                     }
                     break;
                 case Key::Delete:
                     if (deleteSelection())
                         actionChanged = true;
-                    else if (cursorPos < (int)text.size())
+                    else if (cursorPos < static_cast<int>(text.size()))
                     {
-                        text.erase(text.begin() + cursorPos);
+                        size_t next = wordJump
+                                          ? Utf8::nextWordBoundary(text, static_cast<size_t>(cursorPos))
+                                          : Utf8::nextCluster(text, static_cast<size_t>(cursorPos));
+                        text.erase(static_cast<size_t>(cursorPos), next - static_cast<size_t>(cursorPos));
                         actionChanged = true;
                     }
                     break;
@@ -358,7 +371,10 @@ namespace ZenitUI::UI
                         selectionStart = -1;
                     if (cursorPos > 0)
                     {
-                        cursorPos--;
+                        size_t prev = wordJump
+                                          ? Utf8::prevWordBoundary(text, static_cast<size_t>(cursorPos))
+                                          : Utf8::prevCluster(text, static_cast<size_t>(cursorPos));
+                        cursorPos = static_cast<int>(prev);
                         internal_.pendingTransition = 1;
                     }
                     break;
@@ -370,9 +386,12 @@ namespace ZenitUI::UI
                     }
                     else
                         selectionStart = -1;
-                    if (cursorPos < (int)text.size())
+                    if (cursorPos < static_cast<int>(text.size()))
                     {
-                        cursorPos++;
+                        size_t next = wordJump
+                                          ? Utf8::nextWordBoundary(text, static_cast<size_t>(cursorPos))
+                                          : Utf8::nextCluster(text, static_cast<size_t>(cursorPos));
+                        cursorPos = static_cast<int>(next);
                         internal_.pendingTransition = 1;
                     }
                     break;
@@ -491,9 +510,15 @@ namespace ZenitUI::UI
                     else
                         selectionStart = -1;
                     int ln = lineIndexForPos(cursorPos);
-                    cursorPos = visualLines[ln].hardBreak
-                                    ? visualLines[ln].end
-                                    : std::max(visualLines[ln].start, visualLines[ln].end - 1);
+                    if (visualLines[ln].hardBreak)
+                    {
+                        cursorPos = visualLines[ln].end;
+                    }
+                    else
+                    {
+                        size_t prev = Utf8::prevCluster(text, static_cast<size_t>(visualLines[ln].end));
+                        cursorPos = std::max(visualLines[ln].start, static_cast<int>(prev));
+                    }
                     internal_.pendingTransition = 1;
                     keepCursorInView = true;
                     break;
@@ -656,67 +681,71 @@ namespace ZenitUI::UI
         {
             std::vector<VisualLine> out;
             auto r = UIContext::get().renderer;
-            auto measure = [&](int a, int b) -> float
+            auto measure = [&](size_t a, size_t b) -> float
             {
                 if (!r || b <= a)
                     return 0.0f;
                 return r->measureText(f, std::string_view(src).substr(a, b - a), fs, sp).x;
             };
 
-            int len = (int)src.size();
-            int pStart = 0;
+            size_t len = src.size();
+            size_t pStart = 0;
             while (true)
             {
-                int pEnd = pStart;
+                size_t pEnd = pStart;
                 while (pEnd < len && src[pEnd] != '\n')
                     ++pEnd;
 
                 if (pStart == pEnd || availW <= 1.0f || !r)
                 {
-                    out.push_back({pStart, pEnd, true});
+                    out.push_back({static_cast<int>(pStart), static_cast<int>(pEnd), true});
                 }
                 else
                 {
-                    int lineStart = pStart;
-                    while (lineStart < pEnd)
+                    auto bounds = Utf8::clusterBoundaries(std::string_view(src).substr(pStart, pEnd - pStart));
+                    size_t lineStartIdx = 0;
+                    const size_t lastIdx = bounds.size() - 1;
+                    while (lineStartIdx < lastIdx)
                     {
+                        size_t lineStart = pStart + bounds[lineStartIdx];
                         if (measure(lineStart, pEnd) <= availW)
                         {
-                            out.push_back({lineStart, pEnd, true});
+                            out.push_back({static_cast<int>(lineStart), static_cast<int>(pEnd), true});
                             break;
                         }
 
-                        int lo = lineStart + 1;
-                        int hi = pEnd;
+                        size_t lo = lineStartIdx + 1;
+                        size_t hi = lastIdx;
                         while (lo < hi)
                         {
-                            int mid = lo + (hi - lo + 1) / 2;
-                            if (measure(lineStart, mid) <= availW)
+                            size_t mid = lo + (hi - lo + 1) / 2;
+                            if (measure(lineStart, pStart + bounds[mid]) <= availW)
                                 lo = mid;
                             else
                                 hi = mid - 1;
                         }
-                        int fitEnd = std::max(lineStart + 1, lo);
-                        int breakPos = fitEnd;
+                        size_t fitIdx = std::max(lineStartIdx + 1, lo);
+                        size_t breakIdx = fitIdx;
 
-                        if (fitEnd < pEnd && src[fitEnd] == ' ')
+                        if (fitIdx < lastIdx && src[pStart + bounds[fitIdx]] == ' ')
                         {
-                            breakPos = fitEnd + 1;
+                            breakIdx = fitIdx + 1;
                         }
                         else
                         {
-                            for (int k = fitEnd - 1; k > lineStart; --k)
+                            for (size_t k = fitIdx - 1; k > lineStartIdx; --k)
                             {
-                                if (src[k] == ' ')
+                                if (src[pStart + bounds[k]] == ' ')
                                 {
-                                    breakPos = k + 1;
+                                    breakIdx = k + 1;
                                     break;
                                 }
                             }
                         }
 
-                        out.push_back({lineStart, breakPos, false});
-                        lineStart = breakPos;
+                        size_t breakPos = pStart + bounds[breakIdx];
+                        out.push_back({static_cast<int>(lineStart), static_cast<int>(breakPos), false});
+                        lineStartIdx = breakIdx;
                     }
                 }
 
@@ -728,7 +757,7 @@ namespace ZenitUI::UI
             if (out.empty())
                 out.push_back({0, 0, true});
             return out;
-        }
+        }    
 
         void ensureLines(float availW, FontHandle f, float fs, float sp)
         {
@@ -769,17 +798,32 @@ namespace ZenitUI::UI
             if (!r)
                 return ln.start;
 
-            int maxIdx = ln.hardBreak ? ln.end : std::max(ln.start, ln.end - 1);
+            int maxIdx = ln.hardBreak
+                             ? ln.end
+                             : std::max(ln.start,
+                                        static_cast<int>(Utf8::prevCluster(text, static_cast<size_t>(ln.end))));
+            if (maxIdx <= ln.start)
+                return ln.start;
+
+            auto bounds = Utf8::clusterBoundaries(
+                std::string_view(text).substr(static_cast<size_t>(ln.start),
+                                              static_cast<size_t>(maxIdx - ln.start)));
+
             int best = ln.start;
             float bestDist = std::abs(targetX);
-            for (int i = ln.start + 1; i <= maxIdx; ++i)
+            for (size_t bi = 1; bi < bounds.size(); ++bi)
             {
-                float w = r->measureText(f, std::string_view(text).substr(ln.start, i - ln.start), fs, sp).x;
+                size_t bytePos = static_cast<size_t>(ln.start) + bounds[bi];
+                float w = r->measureText(
+                               f,
+                               std::string_view(text).substr(static_cast<size_t>(ln.start), bounds[bi]),
+                               fs, sp)
+                              .x;
                 float dist = std::abs(targetX - w);
                 if (dist < bestDist)
                 {
                     bestDist = dist;
-                    best = i;
+                    best = static_cast<int>(bytePos);
                 }
             }
             return best;
@@ -845,15 +889,29 @@ namespace ZenitUI::UI
         {
             if (text.empty())
                 return;
-            int s = cursorPos, e = cursorPos;
-            while (s > 0 && std::isalnum((unsigned char)text[s - 1]))
-                s--;
-            while (e < (int)text.size() && std::isalnum((unsigned char)text[e]))
-                e++;
+            size_t s = Utf8::snapFloor(text, static_cast<size_t>(std::max(0, cursorPos)));
+            size_t e = s;
+            while (s > 0)
+            {
+                size_t prev = Utf8::prevCluster(text, s);
+                uint32_t cp = 0;
+                Utf8::decode(text, prev, cp);
+                if (!Utf8::isWordChar(cp))
+                    break;
+                s = prev;
+            }
+            while (e < text.size())
+            {
+                uint32_t cp = 0;
+                Utf8::decode(text, e, cp);
+                if (!Utf8::isWordChar(cp))
+                    break;
+                e = Utf8::nextCluster(text, e);
+            }
             if (s != e)
             {
-                selectionStart = s;
-                cursorPos = e;
+                selectionStart = static_cast<int>(s);
+                cursorPos = static_cast<int>(e);
             }
         }
 

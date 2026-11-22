@@ -2479,13 +2479,37 @@ Needed for non-English UIs.
 
 ### 6.1 Unicode-aware text
 
-Currently `Text` and `TextInput` are `char`-based. Unicode support
-requires:
+**Status:** 🟢 done.
 
-- [ ] `std::u32string` or UTF-8 aware iteration in `Text`
-- [ ] Cluster-aware cursor movement (grapheme boundaries)
-- [ ] `TextInput` accepting multi-byte characters
-- [ ] Text measurement per-glyph via the backend
+**What landed:**
+
+- Added `include/Utf8.hpp`: zero-dependency UTF-8 encode/decode,
+  grapheme-cluster navigation (`nextCluster` / `prevCluster` /
+  `clusterBoundaries` handling combining marks, ZWJ sequences,
+  Regional Indicator pairs, and `\r\n`), Unicode word boundaries,
+  single/multi-line clipboard sanitization, and composable
+  `CodepointSet` presets (`defaultLatin`, `latinExtendedA`, `greek`,
+  `cyrillic`, `symbols`, `addFromUtf8`).
+- Added `IRenderer::measureCodepoint` (with default UTF-8 fallback)
+  and O(1) `RaylibRenderer::measureCodepoint` override via
+  `GetGlyphIndex`.
+- Made glyph loading configurable on `RaylibAssetProvider` via
+  `defaultCodepoints()` / `setDefaultCodepoints()` and per-font
+  `CodepointSet` overloads on `loadFont` and `loadFontFromMemory`.
+- Updated `Text` (wrap & ellipsis), `TextInput`, and `TextArea` to
+  accept multi-byte UTF-8 input/paste and perform all cursor movement,
+  deletion, word jump (`Ctrl+Arrow`/`Backspace`/`Delete`), double-click
+  selection, click-to-caret, and wrapping strictly on grapheme-cluster
+  boundaries.
+- Updated `MockRenderer::measureText` to count UTF-8 codepoints and
+  added `tests/test_utf8.cpp` (9 tests).
+
+- [x] UTF-8 / grapheme-cluster utilities (`include/Utf8.hpp`)
+- [x] Cluster-aware cursor movement, deletion, selection, and wrapping
+      in `Text`, `TextInput`, and `TextArea`
+- [x] Multi-byte UTF-8 typing and clipboard paste in `TextInput` / `TextArea`
+- [x] Per-glyph measurement (`IRenderer::measureCodepoint`) +
+      configurable `CodepointSet` atlas baking in `RaylibAssetProvider`
 
 ### 6.2 RTL layout
 
@@ -2710,7 +2734,6 @@ require a bigger design decision.
 
 | Issue | Location | Notes |
 |-------|----------|-------|
-| `Text` / `TextInput` / `TextArea` are `char`-based, not UTF-8 aware | `Text.hpp`, `TextInput.hpp` | Raylib renders Latin-1 glyphs (§5.34), but cursor movement, deletion, and word-break operate on bytes, not codepoints/graphemes (§6.1). |
 | `var()` in `transition:` / `animation:` shorthand | `StyleParser.hpp` | `unresolvedProps` doesn't apply to those. |
 | Custom props not in `ComputedStyle::operator==` | `Style.hpp` | Two styles differing only in custom props compare equal. |
 | `pointerCapture` and `focusedNode` are weak, but `topmostConsumer` etc. are raw | `UIContext.hpp` | Raw pointers can dangle in theory. |

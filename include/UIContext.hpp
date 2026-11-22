@@ -94,6 +94,48 @@ namespace ZenitUI
 		virtual void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) = 0;
 		virtual Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) = 0;
 
+		/**
+		 * \brief Measure the advance width and height of a single Unicode codepoint.
+		 *
+		 * Default implementation encodes \p codepoint as UTF-8 and delegates to
+		 * `measureText`. Backends with direct glyph tables (e.g. `RaylibRenderer`)
+		 * can override for O(1) lookup without string allocation.
+		 */
+		virtual Vec2 measureCodepoint(FontHandle f, uint32_t codepoint, float size, float spacing)
+		{
+			char buf[4];
+			size_t len = 0;
+			if (codepoint <= 0x7Fu)
+			{
+				buf[0] = static_cast<char>(codepoint);
+				len = 1;
+			}
+			else if (codepoint <= 0x7FFu)
+			{
+				buf[0] = static_cast<char>(0xC0u | (codepoint >> 6));
+				buf[1] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
+				len = 2;
+			}
+			else if (codepoint <= 0xFFFFu && !(codepoint >= 0xD800u && codepoint <= 0xDFFFu))
+			{
+				buf[0] = static_cast<char>(0xE0u | (codepoint >> 12));
+				buf[1] = static_cast<char>(0x80u | ((codepoint >> 6) & 0x3Fu));
+				buf[2] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
+				len = 3;
+			}
+			else if (codepoint <= 0x10FFFFu && !(codepoint >= 0xD800u && codepoint <= 0xDFFFu))
+			{
+				buf[0] = static_cast<char>(0xF0u | (codepoint >> 18));
+				buf[1] = static_cast<char>(0x80u | ((codepoint >> 12) & 0x3Fu));
+				buf[2] = static_cast<char>(0x80u | ((codepoint >> 6) & 0x3Fu));
+				buf[3] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
+				len = 4;
+			}
+			if (len == 0)
+				return {0.0f, size};
+			return measureText(f, std::string_view(buf, len), size, spacing);
+		}
+
 		// ---- State stacks ----
 		virtual void pushTransform(const Transform2D &t) = 0;
 		virtual void popTransform() = 0;

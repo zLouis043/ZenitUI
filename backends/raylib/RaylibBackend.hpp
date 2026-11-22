@@ -5,6 +5,7 @@
 #define NOUSER
 
 #include "UIContext.hpp"
+#include "Utf8.hpp"
 #include <raylib.h>
 #include <unordered_map>
 #include <string>
@@ -65,6 +66,7 @@ namespace ZenitUI
 
 		void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) override;
 		Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) override;
+		Vec2 measureCodepoint(FontHandle f, uint32_t codepoint, float size, float spacing) override;
 
 		void pushTransform(const Transform2D &t) override;
 		void popTransform() override;
@@ -148,7 +150,19 @@ namespace ZenitUI
 
 		explicit RaylibAssetProvider(RaylibRenderer &r) : renderer(r) {}
 
+
+		/** \brief Replace the default codepoint set used by subsequent font loads. */
+		void setDefaultCodepoints(CodepointSet set) { defaultCodepoints_ = std::move(set); }
+
+		/** \brief Mutable access to the default codepoint set (e.g. to append extra ranges/symbols). */
+		CodepointSet &defaultCodepoints() { return defaultCodepoints_; }
+		const CodepointSet &defaultCodepoints() const { return defaultCodepoints_; }
+
+		/** \brief Load a font from disk using `defaultCodepoints()`. */
 		bool loadFont(std::string name, const char *path, int baseSize = 96);
+
+		/** \brief Load a font from disk using an explicit \p codepoints set. */
+		bool loadFont(std::string name, const char *path, int baseSize, const CodepointSet &codepoints);
 
 		bool loadTexture(std::string name, const char *path);
 		bool loadEffect(std::string name, const char *fsPath, const char *vsPath = nullptr);
@@ -156,6 +170,10 @@ namespace ZenitUI
 		FontHandle loadFont(std::string_view name, std::string_view path) override;
 		FontHandle loadFontFromMemory(std::string_view name,
 									  const void *data, size_t size) override;
+		/** \brief Load a font from memory using an explicit \p baseSize and \p codepoints set. */
+		FontHandle loadFontFromMemory(std::string_view name,
+									  const void *data, size_t size,
+									  int baseSize, const CodepointSet &codepoints);
 		void unloadFont(std::string_view name) override;
 
 		FontHandle getFont(std::string_view name) override
@@ -179,5 +197,6 @@ namespace ZenitUI
 		std::unordered_map<std::string, FontHandle, detail::TransparentStringHash, std::equal_to<>> fonts;
 		std::unordered_map<std::string, TextureHandle, detail::TransparentStringHash, std::equal_to<>> textures;
 		std::unordered_map<std::string, EffectHandle, detail::TransparentStringHash, std::equal_to<>> effects;
+		CodepointSet defaultCodepoints_{CodepointSet::defaultLatin()};
 	};
 }

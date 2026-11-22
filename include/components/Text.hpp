@@ -27,6 +27,7 @@
 
 #include "Common.hpp"
 #include "Layout.hpp"
+#include "Utf8.hpp"
 
 namespace ZenitUI::UI
 {
@@ -298,20 +299,21 @@ namespace ZenitUI::UI
                     return;
                 }
 
-                // Slow path: break the word into chunks that fit.
+                // Slow path: break the word into chunks that fit (grapheme-cluster safe).
                 std::string_view remaining = word;
                 while (!remaining.empty())
                 {
-                    // Longest prefix that still fits in availW (binary search).
+                    auto bounds = Utf8::clusterBoundaries(remaining);
+                    // Longest cluster prefix that still fits in availW (binary search).
                     size_t lo = 1;
-                    size_t hi = remaining.size();
-                    size_t best = 0;
+                    size_t hi = bounds.size() - 1;
+                    size_t bestIdx = 0;
                     while (lo <= hi)
                     {
                         size_t mid = (lo + hi) / 2;
-                        if (measure(remaining.substr(0, mid)).x <= availW)
+                        if (measure(remaining.substr(0, bounds[mid])).x <= availW)
                         {
-                            best = mid;
+                            bestIdx = mid;
                             lo = mid + 1;
                         }
                         else
@@ -319,21 +321,20 @@ namespace ZenitUI::UI
                             hi = mid - 1;
                         }
                     }
-                    if (best == 0)
-                        best = 1; // always make progress
+                    if (bestIdx == 0)
+                        bestIdx = 1; // always advance by at least 1 grapheme cluster
 
-                    if (best >= remaining.size())
+                    size_t bestBytes = bounds[bestIdx];
+                    if (bestBytes >= remaining.size())
                     {
-                        // The whole remaining tail fits: park it in cur so the
-                        // next word can try to continue on this line.
                         cur.assign(remaining);
                         return;
                     }
 
-                    std::string chunk(remaining.substr(0, best));
+                    std::string chunk(remaining.substr(0, bestBytes));
                     Vec2 s = measure(chunk);
                     lines.push_back({chunk, s});
-                    remaining.remove_prefix(best);
+                    remaining.remove_prefix(bestBytes);
                 }
             };
 
@@ -409,15 +410,16 @@ namespace ZenitUI::UI
                 return "";
             }
 
-            // Longest prefix such that (prefix + "...") fits in availW.
-            size_t lo = 0, hi = src.size(), best = 0;
+            // Longest cluster prefix such that (prefix + "...") fits in availW.
+            auto bounds = Utf8::clusterBoundaries(src);
+            size_t lo = 0, hi = bounds.size() - 1, bestIdx = 0;
             while (lo <= hi)
             {
                 size_t mid = (lo + hi) / 2;
-                std::string candidate = std::string(src.substr(0, mid)) + "...";
+                std::string candidate = std::string(src.substr(0, bounds[mid])) + "...";
                 if (r->measureText(f, candidate, fs, sp).x <= availW)
                 {
-                    best = mid;
+                    bestIdx = mid;
                     lo = mid + 1;
                 }
                 else
@@ -425,7 +427,7 @@ namespace ZenitUI::UI
                     hi = mid - 1;
                 }
             }
-            return std::string(src.substr(0, best)) + "...";
+            return std::string(src.substr(0, bounds[bestIdx])) + "...";
         }
 
         /**

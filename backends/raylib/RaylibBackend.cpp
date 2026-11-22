@@ -214,6 +214,19 @@ namespace ZenitUI
 		return {v.x / dpiScale_, v.y / dpiScale_};
 	}
 
+	Vec2 RaylibRenderer::measureCodepoint(FontHandle f, uint32_t codepoint, float size, float /*spacing*/)
+	{
+		::Font font = res.fonts.count(f.id) ? res.fonts[f.id] : GetFontDefault();
+		if (font.baseSize <= 0)
+			return {0.0f, size};
+		float scale = size / static_cast<float>(font.baseSize);
+		int idx = GetGlyphIndex(font, static_cast<int>(codepoint));
+		float adv = (font.glyphs[idx].advanceX == 0)
+						? (font.recs[idx].width * scale)
+						: (static_cast<float>(font.glyphs[idx].advanceX) * scale);
+		return {adv, size};
+	}
+
 	void RaylibRenderer::pushEffect(EffectHandle e)
 	{
 		if (!res.shaders.count(e.id))
@@ -704,20 +717,13 @@ namespace ZenitUI
 		SetShaderValue(res.shaders[e.id], loc, arr, SHADER_UNIFORM_VEC4);
 	}
 
-	static std::vector<int> makeExtendedCodepoints()
+	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize)
 	{
-		std::vector<int> cps;
-		cps.reserve(210);
-		for (int cp = 32; cp <= 126; ++cp)
-			cps.push_back(cp); // ASCII base
-		for (int cp = 160; cp <= 255; ++cp)
-			cps.push_back(cp); // Latin-1 (à è é ì ò ù À È É Ì Ò Ù ° ecc.)
-		for (int cp : {0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2026, 0x20AC})
-			cps.push_back(cp); // – — ‘ ’ “ ” • … €
-		return cps;
+		return loadFont(std::move(name), path, baseSize, defaultCodepoints_);
 	}
 
-	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize)
+	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize,
+									   const CodepointSet &codepoints)
 	{
 		if (name.empty() || !path)
 			return false;
@@ -728,8 +734,11 @@ namespace ZenitUI
 			return false;
 		}
 
-		auto cps = makeExtendedCodepoints();
-		::Font f = LoadFontEx(path, baseSize, cps.data(), static_cast<int>(cps.size()));
+		auto cps = codepoints.build();
+		int *cpData = cps.empty() ? nullptr : cps.data();
+		int cpCount = static_cast<int>(cps.size());
+
+		::Font f = LoadFontEx(path, baseSize, cpData, cpCount);
 		if (f.texture.id == 0)
 		{
 			logError("Assets", "", 0, 0,
@@ -743,13 +752,21 @@ namespace ZenitUI
 
 	FontHandle RaylibAssetProvider::loadFont(std::string_view name, std::string_view path)
 	{
-		if (!loadFont(std::string(name), std::string(path).c_str(), 96))
+		if (!loadFont(std::string(name), std::string(path).c_str(), 96, defaultCodepoints_))
 			return {};
 		return fonts[std::string(name)];
 	}
 
 	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
 													   const void *data, size_t size)
+	{
+		return loadFontFromMemory(name, data, size, 96, defaultCodepoints_);
+	}
+
+	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
+													   const void *data, size_t size,
+													   int baseSize,
+													   const CodepointSet &codepoints)
 	{
 		if (name.empty() || !data || size == 0)
 			return {};
@@ -776,8 +793,11 @@ namespace ZenitUI
 					  static_cast<std::streamsize>(size));
 		}
 
-		auto cps = makeExtendedCodepoints();
-		::Font f = LoadFontEx(tmp.string().c_str(), 96, cps.data(), static_cast<int>(cps.size()));
+		auto cps = codepoints.build();
+		int *cpData = cps.empty() ? nullptr : cps.data();
+		int cpCount = static_cast<int>(cps.size());
+
+		::Font f = LoadFontEx(tmp.string().c_str(), baseSize, cpData, cpCount);
 		std::error_code ec;
 		std::filesystem::remove(tmp, ec);
 
