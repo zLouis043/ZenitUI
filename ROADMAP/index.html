@@ -2383,6 +2383,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#536-uinode-ref-based-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.36 UINode @ref-based helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#537-runtime-structural-if-each-in-zmarkup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.37 Runtime structural If &amp; Each in ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4713,6 +4735,60 @@ round-trip through <code>ZMarkup::build("Tag.cls")</code>.</p>
 <li>[x] Add <code>Registry::instantiate</code> / <code>hasPrefab</code> and <code>ZMarkup::instantiate</code> / <code>hasPrefab</code></li>
 <li>[x] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
 <li>[ ] Update <code>docs/user/04-zmarkup.md</code> §6 and <code>docs/api/ZMarkup.md</code></li>
+</ul>
+<h3 id="536-uinode-ref-based-helpers">5.36 <code>UINode</code> <code>@ref</code>-based helpers</h3>
+<p><strong>Status:</strong> 🟡 proposed — design in
+<a href="../architecture/PROPOSALS/#proposal-11--uinode-ref-based-helpers">PROPOSALS.md, Proposal 11</a>.</p>
+<p><strong>Problem:</strong> <code>UINode</code> currently exposes chainable wiring helpers
+(<code>onClick</code>, <code>onPress</code>, <code>onRelease</code>, <code>onHoverEnter</code>, <code>onHoverExit</code>,
+<code>onValueChanged</code>, <code>onToggle</code>) only for <code>#id</code> lookups via <code>find(id)</code>.
+Prefab-heavy code relies almost exclusively on local <code>@ref</code> lookups,
+resulting in repetitive <code>if (auto t = ui.ref&lt;Text&gt;("...")) t-&gt;setText(...)</code>
+boilerplate on every instantiated card and modal.</p>
+<ul>
+<li>[ ] Add chainable <code>*Ref</code> helpers on <code>UINode</code> (<code>setTextRef</code>,
+      <code>setButtonTextRef</code>, <code>addClassRef</code>, <code>removeClassRef</code>,
+      <code>toggleClassRef</code>, <code>setEnabledRef</code>, <code>setInteractiveRef</code>,
+      <code>onClickRef</code>, <code>onTextChangedRef</code>, <code>onValueChangedRef</code>,
+      <code>onToggleRef</code>)</li>
+<li>[ ] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
+<li>[ ] Update <code>docs/api/ZMarkup.md</code> and <code>docs/user/04-zmarkup.md</code></li>
+</ul>
+<hr />
+<h3 id="537-runtime-structural-if-each-in-zmarkup">5.37 Runtime structural <code>If</code> &amp; <code>Each</code> in ZMarkup</h3>
+<p><strong>Status:</strong> 🟡 proposed — design in
+<a href="../architecture/PROPOSALS/#proposal-12--runtime-structural-if-and-each-in-zmarkup">PROPOSALS.md, Proposal 12</a>.</p>
+<p><strong>Problem:</strong> ZMarkup intentionally stays logic-free (no expressions or
+scripting), but conditional sections and dynamic repeated lists inside
+prefabs currently force C++ to manually manage <code>removeAllChildren()</code>,
+wrapper containers, and child ordering — hiding the visual structure
+from the <code>.zm</code> file.</p>
+<p><strong>Goal:</strong> Declare conditional branches (<code>If</code>) and repeated prefab slices
+(<code>Each</code>) purely structurally in <code>.zm</code>, while driving conditions and data
+at <strong>runtime</strong> from C++ (imperatively or reactively via <code>Bindable</code>).</p>
+<ul>
+<li>[ ] <strong>a. <code>Layout::setVisible(bool)</code> (<code>display: none</code> semantics):</strong>
+      hidden nodes are skipped by <code>measure</code> (zero size, excluded from
+      parent <code>gap</code> and flex distribution), <code>arrange</code>, <code>draw</code>, <code>hitTest</code>,
+      and Tab focus traversal; toggling marks parent layout dirty</li>
+<li>[ ] <strong>b. Runtime <code>If</code>:</strong> <code>If@name { ... }</code> mounts its children flat
+      into the parent (no extra wrapper node) and registers a
+      <code>ConditionBinding</code> in <code>BuildContext</code>; add <code>UINode::setCondition</code>
+      and <code>UINode::bindCondition</code> (with <code>Bindable&lt;bool&gt;</code>), supporting
+      nested <code>If</code> blocks</li>
+<li>[ ] <strong>c. Runtime <code>Each</code>:</strong> <code>Each@name prefab="ItemPrefab" { fallback }</code>
+      places an invisible anchor node inside the parent so sibling nodes
+      before/after it are preserved; add <code>UINode::syncEach</code> and
+      <code>UINode::bindEach</code> (with <code>Bindable&lt;std::vector&lt;T&gt;&gt;</code>), rendering
+      fallback children when empty</li>
+<li>[ ] <strong>d. Keyed reconciliation (optional step):</strong> add
+      <code>UINode::syncEachKeyed</code> / <code>bindEachKeyed</code> so unchanged items reuse
+      their existing <code>UINode</code> (preserving focus, hover, input state, and
+      animations)</li>
+<li>[ ] Add unit tests covering layout/gap exclusion, nested <code>If</code>,
+      <code>Each</code> with siblings and fallback, <code>Bindable</code> reactivity, and
+      <code>If</code> wrapping <code>Each</code></li>
+<li>[ ] Update <code>docs/user/04-zmarkup.md</code> and <code>docs/api/ZMarkup.md</code></li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
