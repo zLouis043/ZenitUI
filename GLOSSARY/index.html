@@ -2045,6 +2045,12 @@ A node state (<code>config.enabled == 0</code>) that:
 - Matches <code>:disabled</code> selectors.</p>
 <hr />
 <h2 id="e">E</h2>
+<p><strong>Each (<code>Each@ref prefab="..."</code>)</strong>
+A structural ZMarkup tag that declares a dynamic repeated slice of a
+registered prefab inside a container, preserving static siblings before
+and after it. Driven at runtime from C++ via <code>UINode::syncEach</code>,
+<code>bindEach</code>, <code>syncEachKeyed</code>, or <code>bindEachKeyed</code>. Optional children
+inside <code>Each { ... }</code> render as an empty-state fallback.</p>
 <p><strong>Effect</strong>
 A shader applied to a node's own draw calls (via <code>pushEffect</code>). Set
 with <code>effect: &lt;name&gt;</code> in <code>.zstyle</code>. Different from a <strong>filter</strong>, which
@@ -2096,6 +2102,12 @@ flags.</p>
 A string identifier on a <code>Layout</code> node (<code>#name</code> in ZMarkup). Matched
 by <code>#name</code> selectors with specificity <code>(1, 0, 0)</code>. Used by
 <code>UINode::find</code> for lookups. See also <strong>Ref</strong>.</p>
+<p><strong>If (<code>If@ref</code>)</strong>
+A structural ZMarkup tag that mounts its children flat into the
+enclosing container (no wrapper node) and toggles their visibility at
+runtime via <code>UINode::setCondition</code> or <code>bindCondition</code> (<code>Bindable&lt;bool&gt;</code>).
+Uses <code>Layout::setVisible</code> (<code>display: none</code>) so hidden blocks take zero
+space and add no <code>gap</code>, while preserving internal widget state.</p>
 <p><strong>Inherited property</strong>
 One of <code>font</code>, <code>fontSize</code>, <code>color</code>, <code>letterSpacing</code>, <code>textAlign</code>. All
 other properties are not inherited.</p>
@@ -2192,6 +2204,11 @@ regardless of cursor position. Used for drag interactions.</p>
 A node that draws at the root's z-top and is hit-tested before the
 main tree, regardless of its logical position. Used for Dropdown,
 Popup, Tooltip.</p>
+<p><strong>Prefab</strong>
+A reusable ZMarkup component registered via <code>ZMarkup::registerPrefab</code>
+or <code>registerPrefabFile</code>. Parsed once into an AST and instantiated
+either inside markup (with root attribute merging and default/named
+<strong>Slot</strong> injection) or directly from C++ via <code>ZMarkup::instantiate</code>.</p>
 <p><strong>Property</strong>
 An entry in <code>Style</code> / <code>ComputedStyle</code> (e.g. <code>width</code>, <code>background</code>).
 Every property is defined by the <code>BUBBLE_STYLE_PROPS</code> macro.</p>
@@ -2227,7 +2244,11 @@ can exceed its size, and can be scrolled via wheel, drag, or
 The left-hand side of a rule. A chain of compound selectors joined by
 descendant relationships. May include states and a <code>::part</code>.</p>
 <p><strong>Slot</strong>
-A special ZMarkup tag (<code>&lt;Slot&gt;</code>) used exclusively inside a <strong>Prefab</strong> definition. It acts as an injection point for children passed when the Prefab is instantiated. If left empty during instantiation, it can render fallback children defined inside the Prefab.</p>
+A special ZMarkup tag (<code>Slot</code> or <code>Slot name="..."</code>) used inside a
+<strong>Prefab</strong> definition as an injection point for caller children.
+Children with <code>slot="name"</code> route to the matching named slot; unmarked
+children route to the default slot. If empty, the slot renders its own
+fallback children.</p>
 <p><strong>Specificity</strong>
 The triple <code>(ids, classes, tags)</code> used to rank rules of equal origin.
 Compared lexicographically.</p>
@@ -2291,10 +2312,21 @@ the materialization window — VirtualView does <strong>not</strong> recycle nod
 Contrast with <strong>VirtualList</strong> (planned, <code>ROADMAP.md</code> §5.23), which
 recycles rows and depends on <strong>Prefab</strong> and <strong>Slot</strong>. See
 <a href="../user/12-virtual_view/">VirtualView</a> and <a href="../api/Widgets/">API</a>.</p>
+<p><strong>Visibility (<code>Layout::setVisible</code>)</strong>
+<code>display: none</code> semantics on a <code>Layout</code> node. Hidden nodes measure to
+<code>{0, 0}</code>, are excluded from parent <code>gap</code>, flex distribution, <code>draw</code>,
+<code>hitTest</code>, <code>update</code>, and Tab focus traversal, and release focus/pointer
+capture cleanly when hidden.</p>
 <p><strong><code>var()</code></strong>
 A reference to a <strong>custom property</strong>. Substituted at cascade time.</p>
 <hr />
 <h2 id="w">W</h2>
+<p><strong>WeakUINode</strong>
+Non-owning handle returned by <code>UINode::weak()</code> (<code>weak_ptr&lt;Layout&gt;</code> +
+<code>weak_ptr&lt;BuildContext&gt;</code>). Lazily attaches <code>BuildContext</code> to the root
+node's lifetime via <code>Layout::retainObject</code> so child callbacks can
+capture <code>WeakUINode</code> and call <code>lock()</code> for imperative updates without
+creating <code>shared_ptr</code> reference cycles.</p>
 <p><strong>Widget</strong>
 A <code>Layout</code> subclass with specific behavior (Button, Slider, Toggle,
 ...). Every widget is a node; not every node is a widget.</p>
