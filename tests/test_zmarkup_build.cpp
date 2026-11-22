@@ -477,7 +477,7 @@ TEST(ZMarkupBuild, byRef_contains_single_node)
     CHECK(ctx != nullptr);
     CHECK(ctx->byRef.count("foo") == 1);
     CHECK(ctx->byRef.at("foo").size() == 1);
-    CHECK(ctx->byRef.at("foo")[0] == ui.root());
+    CHECK(ctx->byRef.at("foo")[0].lock() == ui.root());
 }
 
 TEST(ZMarkupBuild, byRef_contains_multiple_nodes_same_ref)
@@ -1424,4 +1424,177 @@ TEST(ZMarkupBuild, each_bindEachKeyed_reacts_to_bindable)
     CHECK(creates == 2);
     CHECK(list->children[1].get() == ptr10);
     CHECK(std::dynamic_pointer_cast<Text>(list->children[1])->getText() == "A2");
+}
+
+TEST(ZMarkupBuild, bindCondition_survives_local_uinode_and_releases_on_detach)
+{
+    Env env;
+    Bindable<bool> flag(false);
+
+    auto container = std::make_shared<Layout>(LayoutType::Vertical);
+    std::weak_ptr<Layout> weakRoot;
+    std::weak_ptr<ZMarkup::BuildContext> weakCtx;
+    std::weak_ptr<Layout> weakLbl;
+
+    {
+        auto ui = ZMarkup::build(R"(
+            VStack@root {
+                If@sec {
+                    Text@lbl "Mounted"
+                }
+            }
+        )");
+        ui.bindCondition("sec", flag);
+        weakRoot = ui.root();
+        weakCtx = ui.context();
+        weakLbl = ui.ref("lbl");
+        container->addChild(ui.root());
+    } // ui esce di scope qui
+
+    CHECK(!weakRoot.expired());
+    CHECK(!weakCtx.expired());
+    CHECK(!weakLbl.lock()->isVisible());
+
+    // Il binding resta attivo finché il nodo è montato nel container
+    flag.set(true);
+    CHECK(weakLbl.lock()->isVisible());
+
+    flag.set(false);
+    CHECK(!weakLbl.lock()->isVisible());
+
+    // Staccando il nodo dal container, root e BuildContext devono distruggersi (zero cicli)
+    container->removeAllChildren();
+    CHECK(weakRoot.expired());
+    CHECK(weakCtx.expired());
+    CHECK(weakLbl.expired());
+
+    // Cambiare il Bindable dopo il detach deve essere un no-op sicuro
+    flag.set(true);
+    CHECK(flag.get() == true);
+}
+
+TEST(ZMarkupBuild, bindEach_survives_local_uinode_and_releases_on_detach)
+{
+    Env env;
+    ZMarkup::registerPrefab("LifeTag", R"(Text@t "")");
+
+    Bindable<std::vector<std::string>> model(std::vector<std::string>{"One"});
+    auto container = std::make_shared<Layout>(LayoutType::Vertical);
+    std::weak_ptr<Layout> weakRoot;
+    std::weak_ptr<ZMarkup::BuildContext> weakCtx;
+
+    {
+        auto ui = ZMarkup::build(R"(
+            VStack@list {
+                Each@items prefab="LifeTag"
+            }
+        )");
+        ui.bindEach("items", model, [](ZMarkup::UINode &item, const std::string &s) {
+            item.setTextRef("t", s);
+        });
+        weakRoot = ui.root();
+        weakCtx = ui.context();
+        container->addChild(ui.root());
+    }
+
+    CHECK(!weakCtx.expired());
+    CHECK(weakRoot.lock()->children.size() == 2); // 1 item + anchor
+
+    model.set({"A", "B", "C"});
+    CHECK(weakRoot.lock()->children.size() == 4); // 3 items + anchor
+
+    container->removeAllChildren();
+    CHECK(weakRoot.expired());
+    CHECK(weakCtx.expired());
+
+    model.set({"Z"}); // no-op sicuro
+    CHECK(model.get().size() == 1);
+}
+
+TEST(ZMarkupBuild, weak_uinode_drives_imperative_updates_without_cycle)
+{
+    Env env;
+    auto container = std::make_shared<Layout>(LayoutType::Vertical);
+    std::weak_ptr<Layout> weakRoot;
+    std::weak_ptr<ZMarkup::BuildContext> weakCtx;
+    ZMarkup::WeakUINode weakUi;
+
+    {
+        auto ui = ZMarkup::build(R"(
+            VStack {
+                Button@toggle "Toggle"
+                If@extra {
+                    Text@msg "Hidden"
+                }
+            }
+        )");
+
+        weakUi = ui.weak();
+        weakRoot = ui.root();
+        weakCtx = ui.context();
+
+        ui.onClickRef("toggle", [weakUi]() {
+            if (auto locked = weakUi.lock())
+            {
+                locked->setCondition("extra", true)
+                      .setTextRef("msg", "Shown by click");
+            }
+        });
+
+        container->addChild(ui.root());
+    } // ui esce di scope qui
+
+    CHECK(!weakUi.expired());
+    auto locked1 = weakUi.lock();
+    CHECK(locked1.has_value());
+    CHECK(!locked1->ref("msg")->isVisible());
+
+    locked1->ref<Button>("toggle")->onClick();
+    CHECK(locked1->ref("msg")->isVisible());
+    CHECK(locked1->ref<Text>("msg")->getText() == "Shown by click");
+    locked1.reset();
+
+    // Detach: nessun ciclo di shared_ptr nonostante la callback del bottone catturi weakUi
+    container->removeAllChildren();
+    CHECK(weakUi.expired());
+    CHECK(!weakUi.lock().has_value());
+    CHECK(weakRoot.expired());
+    CHECK(weakCtx.expired());
+}
+
+TEST(ZMarkupBuild, syncEachKeyed_releases_removed_items_without_leaks)
+{
+    Env env;
+    ZMarkup::registerPrefab("KeyedDrop", R"(Text@t "")");
+
+    struct Row { int id; std::string name; };
+
+    auto ui = ZMarkup::build(R"(
+        VStack@list {
+            Each@rows prefab="KeyedDrop"
+        }
+    )");
+
+    std::vector<Row> v1 = {{1, "A"}, {2, "B"}};
+    ui.syncEachKeyed(
+        "rows", v1,
+        [](const Row &r) { return r.id; },
+        [](ZMarkup::UINode &, const Row &) {},
+        [](ZMarkup::UINode &n, const Row &r) { n.setTextRef("t", r.name); });
+
+    std::weak_ptr<Layout> weakItem1 = ui.ref("list")->children[0];
+    std::weak_ptr<Layout> weakItem2 = ui.ref("list")->children[1];
+    CHECK(!weakItem1.expired());
+    CHECK(!weakItem2.expired());
+
+    // Rimuove id 1, mantiene id 2
+    std::vector<Row> v2 = {{2, "B2"}};
+    ui.syncEachKeyed(
+        "rows", v2,
+        [](const Row &r) { return r.id; },
+        [](ZMarkup::UINode &, const Row &) {},
+        [](ZMarkup::UINode &n, const Row &r) { n.setTextRef("t", r.name); });
+
+    CHECK(weakItem1.expired());
+    CHECK(!weakItem2.expired());
 }

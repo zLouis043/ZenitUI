@@ -2,6 +2,7 @@
 #include "Layout.hpp"
 #include "Theme.hpp"
 #include "ZMarkup.hpp"
+#include "Button.hpp"
 
 using namespace ZenitUI;
 

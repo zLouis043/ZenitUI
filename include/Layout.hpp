@@ -441,6 +441,23 @@ namespace ZenitUI
 			children.clear();
 			internal_.pendingTransition = 1;
 		}
+
+		/**
+		 * \brief Retain an arbitrary type-erased object for the lifetime of this node.
+		 *
+		 * Lazily allocates storage on first call (zero heap overhead for nodes
+		 * that do not retain objects). Used by `ZMarkup` to tie a `BuildContext`
+		 * (and its `Bindable` subscriptions) to the root node without cycles.
+		 */
+		void retainObject(std::shared_ptr<void> obj)
+		{
+			if (!obj)
+				return;
+			if (!retainedObjects_)
+				retainedObjects_ = std::make_unique<std::vector<std::shared_ptr<void>>>();
+			retainedObjects_->push_back(std::move(obj));
+		}
+
 		std::shared_ptr<Layout> getParent() const { return parent.lock(); }
 		bool hasParent() const { return !parent.expired(); }
 
@@ -1405,6 +1422,8 @@ namespace ZenitUI
 		 * which lets the child overflow the parent rather than dropping to 0.
 		 */
 		static float clampSafe(float v, float lo, float hi);
+
+		std::unique_ptr<std::vector<std::shared_ptr<void>>> retainedObjects_;
 	};
 
 	/**
