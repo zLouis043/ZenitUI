@@ -2638,9 +2638,9 @@ pending, and what's blocking.</p>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
 <p>Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.35 (CSS flex/border/text parity,
+shipped, step g declined) and §5.25–§5.36 (CSS flex/border/text parity,
 TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &amp;
-direct prefab instantiation).</p>
+direct prefab instantiation, <code>UINode</code> <code>@ref</code> helpers).</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -4737,21 +4737,33 @@ round-trip through <code>ZMarkup::build("Tag.cls")</code>.</p>
 <li>[ ] Update <code>docs/user/04-zmarkup.md</code> §6 and <code>docs/api/ZMarkup.md</code></li>
 </ul>
 <h3 id="536-uinode-ref-based-helpers">5.36 <code>UINode</code> <code>@ref</code>-based helpers</h3>
-<p><strong>Status:</strong> 🟡 proposed — design in
+<p><strong>Status:</strong> 🟢 done — design in
 <a href="../architecture/PROPOSALS/#proposal-11--uinode-ref-based-helpers">PROPOSALS.md, Proposal 11</a>.</p>
-<p><strong>Problem:</strong> <code>UINode</code> currently exposes chainable wiring helpers
-(<code>onClick</code>, <code>onPress</code>, <code>onRelease</code>, <code>onHoverEnter</code>, <code>onHoverExit</code>,
-<code>onValueChanged</code>, <code>onToggle</code>) only for <code>#id</code> lookups via <code>find(id)</code>.
-Prefab-heavy code relies almost exclusively on local <code>@ref</code> lookups,
-resulting in repetitive <code>if (auto t = ui.ref&lt;Text&gt;("...")) t-&gt;setText(...)</code>
-boilerplate on every instantiated card and modal.</p>
+<p><strong>Problem:</strong> <code>UINode</code> previously exposed chainable wiring helpers only
+for <code>#id</code> lookups via <code>find(id)</code>, while prefab-based code relies almost
+exclusively on local <code>@ref</code> lookups.</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>[ ] Add chainable <code>*Ref</code> helpers on <code>UINode</code> (<code>setTextRef</code>,
+<li>Added chainable <code>*Ref</code> helpers on <code>UINode</code> in <code>include/ZMarkup.hpp</code>:
+  <code>setTextRef</code>, <code>setButtonTextRef</code>, <code>addClassRef</code>, <code>removeClassRef</code>,
+  <code>toggleClassRef</code>, <code>setEnabledRef</code>, <code>setInteractiveRef</code>, <code>onClickRef</code>,
+  <code>onPressRef</code>, <code>onReleaseRef</code>, <code>onHoverEnterRef</code>, <code>onHoverExitRef</code>,
+  <code>onTextChangedRef</code>, <code>onValueChangedRef</code>, <code>onToggleRef</code>.</li>
+<li>Typed helpers use <code>std::dynamic_pointer_cast</code> and log a deduplicated
+  warning via <code>warnOnce</code> on type mismatch (safe no-op, no UB).</li>
+<li>
+<p>Added unit tests in <code>tests/test_zmarkup_build.cpp</code> covering chaining,
+  missing refs, and wrong-type no-ops.</p>
+</li>
+<li>
+<p>[x] Add chainable <code>*Ref</code> helpers on <code>UINode</code> (<code>setTextRef</code>,
       <code>setButtonTextRef</code>, <code>addClassRef</code>, <code>removeClassRef</code>,
       <code>toggleClassRef</code>, <code>setEnabledRef</code>, <code>setInteractiveRef</code>,
-      <code>onClickRef</code>, <code>onTextChangedRef</code>, <code>onValueChangedRef</code>,
-      <code>onToggleRef</code>)</li>
-<li>[ ] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
+      <code>onClickRef</code>, <code>onPressRef</code>, <code>onReleaseRef</code>, <code>onHoverEnterRef</code>,
+      <code>onHoverExitRef</code>, <code>onTextChangedRef</code>, <code>onValueChangedRef</code>,
+      <code>onToggleRef</code>)</p>
+</li>
+<li>[x] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
 <li>[ ] Update <code>docs/api/ZMarkup.md</code> and <code>docs/user/04-zmarkup.md</code></li>
 </ul>
 <hr />

@@ -2861,17 +2861,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implementation sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#change-log-how-the-implementation-differs-from-the-proposal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2971,6 +2960,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-11-uinode-ref-based-helpers_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 11 — UINode @ref-based helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3030,6 +3030,9 @@ implementation.</p>
 <li>✅ <strong>Proposal 10 — Named Slots and direct prefab instantiation</strong>:
   shipped as roadmap §5.35. See <code>tests/test_zmarkup_build.cpp</code> and the
   change log at the end of this file.</li>
+<li>✅ <strong>Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers</strong>: shipped as
+  roadmap §5.36. See <code>tests/test_zmarkup_build.cpp</code> and the change log
+  at the end of this file.</li>
 </ul>
 <hr />
 <h2 id="index">Index</h2>
@@ -5546,7 +5549,7 @@ UINode ZMarkup::instantiate(
    duplicate <code>@ref</code> / <code>#id</code> collisions).</li>
 </ol>
 <h2 id="proposal-11-uinode-ref-based-helpers">Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers</h2>
-<p><strong>Status:</strong> 🟡 proposed — tracked as roadmap §5.36.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §5.36.</p>
 <h3 id="motivation">Motivation</h3>
 <p><code>UINode</code> already provides chainable event-wiring helpers (<code>onClick</code>,
 <code>onPress</code>, <code>onRelease</code>, <code>onHoverEnter</code>, <code>onHoverExit</code>, <code>onValueChanged</code>,
@@ -5878,8 +5881,7 @@ re-discussing them.</p>
 </tbody>
 </table>
 <hr />
-<h2 id="implementation-sequence">Implementation sequence</h2>
-<p><strong>Shipped</strong> (roadmap §4.9, §5.16 – §5.24, §5.35):</p>
+<p><strong>Shipped</strong> (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.36):</p>
 <ol>
 <li>Proposal 1 — <code>ref</code> → §5.16</li>
 <li>Proposal 2 — <code>Bindable&lt;T&gt;</code> → §5.17</li>
@@ -5890,22 +5892,13 @@ re-discussing them.</p>
 <li>Proposal 8 — VirtualView → §5.24</li>
 <li>Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)</li>
 <li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35</li>
+<li>Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers → §5.36</li>
 </ol>
 <p><strong>Proposed</strong> (next, in this order):</p>
 <ol>
-<li>Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers → §5.36. Tiny,
-    self-contained quality-of-life addition to <code>ZMarkup.hpp</code>.</li>
-<li>Proposal 12 — Runtime structural <code>If</code> &amp; <code>Each</code> → §5.37. Builds on
-    <code>Bindable&lt;T&gt;</code> (§5.17), UIPrefab (§5.18), and <code>ZMarkup::instantiate</code>
-    (§5.35); adds <code>Layout::setVisible(bool)</code> (<code>display: none</code>) and
-    runtime-driven structural bindings without adding scripting to
-    ZMarkup.</li>
-<li>Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
-    Benefits: unblocks 10k+ item lists, the most-requested feature
-    after UIPrefab.</li>
-<li>Proposal 7 — Drag &amp; Drop → §5.22 (split into a/b/c). Benefits from
-    VirtualList for the "reorderable list" example, but doesn't
-    strictly depend on it.</li>
+<li>Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.</li>
+<li>Proposal 7 — Drag &amp; Drop → §5.22 (split into a/b/c).</li>
+<li>Proposal 12 — Runtime structural <code>If</code> &amp; <code>Each</code> → §5.37.</li>
 </ol>
 <p><strong>Post-1.0:</strong></p>
 <ul>
@@ -6173,6 +6166,23 @@ VirtualList ships.</p>
   forwarding, duplicate slot handling, unknown slot warning/ignore,
   direct instantiation with root merging/fallback, and missing-prefab
   handling.</li>
+</ul>
+<h3 id="proposal-11-uinode-ref-based-helpers_1">Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers</h3>
+<p><strong>Shipped:</strong> roadmap §5.36.</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li>Also added <code>onPressRef</code>, <code>onReleaseRef</code>, <code>onHoverEnterRef</code>, and
+  <code>onHoverExitRef</code> for full parity with the <code>#id</code>-based event helpers.</li>
+<li><code>setTextRef</code> dispatches dynamically across <code>Text</code>, <code>Button</code>,
+  <code>TextInput</code>, and <code>TextArea</code> via <code>std::dynamic_pointer_cast</code>, logging
+  a deduplicated <code>warnOnce</code> diagnostic on unsupported node types.</li>
+<li><code>setVisibleRef</code> is deferred to §5.37 Step <code>a</code> (<code>Layout::setVisible</code>).</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>include/ZMarkup.hpp</code> — 15 chainable <code>*Ref</code> helper methods on <code>UINode</code>.</li>
+<li><code>tests/test_zmarkup_build.cpp</code> — 2 unit tests covering chaining across
+  all widget types and safe no-op behavior on missing or mismatched refs.</li>
 </ul>
 
 
