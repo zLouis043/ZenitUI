@@ -2405,6 +2405,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#538-root-bound-buildcontext-lifetime-weakuinode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.38 Root-bound BuildContext lifetime &amp; WeakUINode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#539-split-zmarkuphpp-into-header-srczmarkupcpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.39 Split ZMarkup.hpp into header + src/ZMarkup.cpp
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4817,6 +4839,66 @@ structure from <code>.zm</code> files.</p>
 <li>[x] <strong>d.</strong> Keyed reconciliation (<code>syncEachKeyed</code>, <code>bindEachKeyed</code>)</li>
 <li>[x] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
 <li>[ ] Update <code>docs/user/04-zmarkup.md</code> and <code>docs/api/ZMarkup.md</code></li>
+</ul>
+<h3 id="538-root-bound-buildcontext-lifetime-weakuinode">5.38 Root-bound <code>BuildContext</code> lifetime &amp; <code>WeakUINode</code></h3>
+<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Problem:</strong> <code>BuildContext</code> currently stores strong <code>std::shared_ptr&lt;Layout&gt;</code>
+references (<code>byId</code>, <code>byRef</code>, <code>EachBinding::spawnedNodes</code>), preventing the
+root <code>Layout</code> from owning the context without creating reference cycles.
+As a result, reactive bindings (<code>bindCondition</code>, <code>bindEach</code>, <code>bindEachKeyed</code>)
+silently disconnect if the caller lets a local <code>UINode</code> go out of scope,
+and interactive modals must store <code>UINode</code> externally (e.g. <code>activeModalUi</code>)
+to avoid callback reference cycles.</p>
+<p><strong>Goal:</strong> Eliminate strong <code>Layout</code> references from <code>BuildContext</code> so the
+root node can lazily retain it without cycles, tying reactive binding
+lifetimes to the mounted tree and providing <code>WeakUINode</code> for cycle-free
+imperative callbacks.</p>
+<ul>
+<li>[ ] Convert <code>BuildContext::byId</code>, <code>byRef</code>, <code>EachBinding::spawnedNodes</code>,
+      and keyed store entries to <code>std::weak_ptr&lt;Layout&gt;</code> (zero strong
+      back-references to <code>Layout</code> nodes)</li>
+<li>[ ] Add <code>Layout::retainObject(std::shared_ptr&lt;void&gt;)</code> backed by a lazy
+      <code>std::unique_ptr&lt;std::vector&lt;std::shared_ptr&lt;void&gt;&gt;&gt;</code> (zero heap
+      allocation for nodes that do not retain objects)</li>
+<li>[ ] Lazily attach <code>BuildContext</code> to <code>root_</code> in <code>bindCondition</code>,
+      <code>bindEach</code>, <code>bindEachKeyed</code>, and <code>UINode::weak()</code></li>
+<li>[ ] Add <code>WeakUINode</code> (<code>UINode::weak()</code>, <code>WeakUINode::lock()</code>, <code>expired()</code>)
+      for safe, cycle-free imperative updates from child callbacks</li>
+<li>[ ] Drop <code>EachBinding::spawnedContexts</code> (nested item contexts are
+      retained lazily by their own item roots when needed)</li>
+<li>[ ] Add unit tests in <code>tests/test_zmarkup_build.cpp</code> verifying:
+      bindings survive local <code>UINode</code> destruction while mounted,
+      automatic unsubscribe and zero memory leaks when detached from
+      the tree, and <code>WeakUINode::lock()</code> expiration</li>
+<li>[ ] Update <code>docs/api/ZMarkup.md</code> and <code>docs/user/04-zmarkup.md</code></li>
+</ul>
+<hr />
+<h3 id="539-split-zmarkuphpp-into-header-srczmarkupcpp">5.39 Split <code>ZMarkup.hpp</code> into header + <code>src/ZMarkup.cpp</code></h3>
+<p><strong>Status:</strong> 🟡 proposed.</p>
+<p><strong>Problem:</strong> <code>include/ZMarkup.hpp</code> is currently header-only and contains
+the full parser, <code>applyStyleAttr</code>, <code>Registry</code>, built-in widget factories,
+and all non-template <code>UINode</code> methods. Every translation unit including
+<code>ZenitUI.hpp</code> recompiles all of it, inflating build times and debug object
+sizes, and duplicating the inline <code>getGlobalRegistry()</code> singleton across TUs.</p>
+<p><strong>Goal:</strong> Move all non-template implementation out of <code>include/ZMarkup.hpp</code>
+into <code>src/ZMarkup.cpp</code> compiled into <code>libZenitUI</code>, keeping the public API
+100% backwards-compatible.</p>
+<ul>
+<li>[ ] Create <code>src/ZMarkup.cpp</code> and add it to the <code>ZenitUI</code> library target
+      in <code>CMakeLists.txt</code></li>
+<li>[ ] Move non-template definitions (<code>Parser</code>, <code>parse</code>, <code>parseFile</code>,
+      <code>applyStyleAttr</code>, <code>Registry</code> methods, <code>getGlobalRegistry()</code> and
+      built-in widget factories, non-template <code>UINode</code> / <code>WeakUINode</code>
+      methods, and <code>build</code> / <code>buildFile</code> / <code>instantiate</code> / <code>registerPrefab*</code>)
+      into <code>src/ZMarkup.cpp</code></li>
+<li>[ ] Keep only type definitions, declarations, and template methods
+      (<code>find&lt;T&gt;</code>, <code>ref&lt;T&gt;</code>, <code>refAll&lt;T&gt;</code>, <code>syncEach</code>, <code>bindEach</code>,
+      <code>syncEachKeyed</code>, <code>bindEachKeyed</code>) in <code>include/ZMarkup.hpp</code></li>
+<li>[ ] Trim unnecessary concrete widget <code>#include</code>s from <code>include/ZMarkup.hpp</code>
+      (moving them to <code>src/ZMarkup.cpp</code> while <code>ZenitUI.hpp</code> continues
+      exposing all widgets)</li>
+<li>[ ] Verify full <code>make test</code> suite and downstream build (<code>dm_companion</code>)
+      compile cleanly with zero API breakage</li>
 </ul>
 <hr />
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
