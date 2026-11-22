@@ -2971,6 +2971,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#proposal-12-runtime-structural-if-and-each-in-zmarkup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposal 12 — Runtime structural If and Each in ZMarkup
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3033,6 +3044,9 @@ implementation.</p>
 <li>✅ <strong>Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers</strong>: shipped as
   roadmap §5.36. See <code>tests/test_zmarkup_build.cpp</code> and the change log
   at the end of this file.</li>
+<li>✅ <strong>Proposal 12 — Runtime structural <code>If</code> &amp; <code>Each</code> in ZMarkup</strong>:
+  shipped as roadmap §5.37 (steps a–d). See <code>tests/test_zmarkup_build.cpp</code>
+  and the change log at the end of this file.</li>
 </ul>
 <hr />
 <h2 id="index">Index</h2>
@@ -5618,7 +5632,7 @@ wrong-type safe no-op, and <code>toggleClassRef</code> add/remove behavior.</li>
 </ul>
 <hr />
 <h2 id="proposal-12-runtime-structural-if-and-each-in-zmarkup">Proposal 12 — Runtime structural <code>If</code> and <code>Each</code> in ZMarkup</h2>
-<p><strong>Status:</strong> 🟡 proposed — tracked as roadmap §5.37.</p>
+<p><strong>Status:</strong> ✅ shipped as roadmap §5.37 (steps a–d).</p>
 <h3 id="motivation_1">Motivation</h3>
 <p>ZenitUI intentionally keeps expressions, loops, and scripting out of
 ZMarkup so <code>.zm</code> files remain fast to parse and trivial to read.
@@ -5881,7 +5895,7 @@ re-discussing them.</p>
 </tbody>
 </table>
 <hr />
-<p><strong>Shipped</strong> (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.36):</p>
+<p><strong>Shipped</strong> (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.37):</p>
 <ol>
 <li>Proposal 1 — <code>ref</code> → §5.16</li>
 <li>Proposal 2 — <code>Bindable&lt;T&gt;</code> → §5.17</li>
@@ -5893,12 +5907,12 @@ re-discussing them.</p>
 <li>Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)</li>
 <li>Proposal 10 — Named Slots &amp; <code>ZMarkup::instantiate</code> → §5.35</li>
 <li>Proposal 11 — <code>UINode</code> <code>@ref</code>-based helpers → §5.36</li>
+<li>Proposal 12 — Runtime structural <code>If</code> &amp; <code>Each</code> → §5.37 (steps a–d)</li>
 </ol>
 <p><strong>Proposed</strong> (next, in this order):</p>
 <ol>
 <li>Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.</li>
 <li>Proposal 7 — Drag &amp; Drop → §5.22 (split into a/b/c).</li>
-<li>Proposal 12 — Runtime structural <code>If</code> &amp; <code>Each</code> → §5.37.</li>
 </ol>
 <p><strong>Post-1.0:</strong></p>
 <ul>
@@ -6183,6 +6197,43 @@ VirtualList ships.</p>
 <li><code>include/ZMarkup.hpp</code> — 15 chainable <code>*Ref</code> helper methods on <code>UINode</code>.</li>
 <li><code>tests/test_zmarkup_build.cpp</code> — 2 unit tests covering chaining across
   all widget types and safe no-op behavior on missing or mismatched refs.</li>
+</ul>
+<h3 id="proposal-12-runtime-structural-if-and-each-in-zmarkup_1">Proposal 12 — Runtime structural <code>If</code> and <code>Each</code> in ZMarkup</h3>
+<p><strong>Shipped:</strong> roadmap §5.37 (steps a–d).</p>
+<p><strong>Changes from the proposal:</strong></p>
+<ul>
+<li><strong>Added <code>NodeInternal::layoutDirty</code> and <code>markLayoutDirtyUpward()</code>.</strong>
+  Because <code>Layout::recomputeDirty()</code> overwrites <code>subtreeDirty</code> at the
+  end of <code>update()</code>, a dedicated upward <code>layoutDirty</code> bit guarantees
+  that <code>setVisible()</code>, <code>addChild()</code>, <code>insertChildBefore()</code>,
+  <code>removeChild()</code>, and <code>removeAllChildren()</code> always trigger a parent
+  re-measure even when styles did not change.</li>
+<li><strong>Prefab-as-root recursion guard replaced <code>isPrefabRoot</code>.</strong> Checking
+  <code>ctx.slotStack</code> for the active prefab tag allows prefabs to compose
+  another prefab as their root element while still preventing infinite
+  cycles.</li>
+<li><strong><code>EachBinding</code> retains item <code>BuildContext</code>s.</strong> Keeping each spawned
+  item's <code>std::shared_ptr&lt;BuildContext&gt;</code> alive inside <code>EachBinding</code>
+  allows nested prefabs spawned inside an <code>Each</code> to hold their own
+  <code>Bindable</code> subscriptions (<code>bindCondition</code> / <code>bindEach</code>).</li>
+<li><strong>Flexible callback arity.</strong> <code>syncEach</code>, <code>bindEach</code>, <code>syncEachKeyed</code>,
+  and <code>bindEachKeyed</code> accept 1-, 2-, or 3-argument callbacks
+  (<code>(UINode&amp;)</code>, <code>(UINode&amp;, const T&amp;)</code>, <code>(UINode&amp;, const T&amp;, size_t)</code>).</li>
+</ul>
+<p><strong>What landed:</strong></p>
+<ul>
+<li><code>include/Layout.hpp</code>, <code>src/layout/Layout.cpp</code>,
+  <code>src/layout/Measure.cpp</code>, <code>src/layout/Render.cpp</code> —
+  <code>Layout::setVisible(bool)</code> / <code>isVisible()</code>, <code>insertChildBefore()</code>,
+  <code>removeChild()</code>, upward <code>layoutDirty</code> propagation, and exclusion of
+  hidden nodes from measure, gap, flex, arrange, draw, hitTest, update,
+  and Tab focus traversal.</li>
+<li><code>include/ZMarkup.hpp</code> — <code>ConditionBinding</code>, <code>EachBinding</code>,
+  <code>IKeyedStore</code>, <code>If</code> / <code>Each</code> handling in <code>Registry</code>,
+  <code>UINode::setVisibleRef</code>, <code>setCondition</code>, <code>bindCondition</code>, <code>syncEach</code>,
+  <code>bindEach</code>, <code>syncEachKeyed</code>, <code>bindEachKeyed</code>.</li>
+<li><code>tests/test_zmarkup_build.cpp</code> — 12 new regression tests covering
+  Steps <code>a</code>–<code>d</code>.</li>
 </ul>
 
 

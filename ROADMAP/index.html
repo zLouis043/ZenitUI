@@ -2638,9 +2638,10 @@ pending, and what's blocking.</p>
 items (bugs, missing API, critical test gaps) are prioritized. The
 <strong>nice-to-have</strong> items are collected at the end.</p>
 <p>Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.36 (CSS flex/border/text parity,
+shipped, step g declined) and §5.25–§5.37 (CSS flex/border/text parity,
 TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &amp;
-direct prefab instantiation, <code>UINode</code> <code>@ref</code> helpers).</p>
+direct prefab instantiation, <code>UINode</code> <code>@ref</code> helpers, runtime structural
+<code>If</code> &amp; <code>Each</code> + <code>Layout::setVisible</code>).</p>
 <hr />
 <h2 id="status">Status</h2>
 <p><strong>Current:</strong> 🗓️ beta — the core API is frozen, no known critical bugs,
@@ -4768,38 +4769,53 @@ exclusively on local <code>@ref</code> lookups.</p>
 </ul>
 <hr />
 <h3 id="537-runtime-structural-if-each-in-zmarkup">5.37 Runtime structural <code>If</code> &amp; <code>Each</code> in ZMarkup</h3>
-<p><strong>Status:</strong> 🟡 proposed — design in
+<p><strong>Status:</strong> 🟢 done — design in
 <a href="../architecture/PROPOSALS/#proposal-12--runtime-structural-if-and-each-in-zmarkup">PROPOSALS.md, Proposal 12</a>.</p>
-<p><strong>Problem:</strong> ZMarkup intentionally stays logic-free (no expressions or
-scripting), but conditional sections and dynamic repeated lists inside
-prefabs currently force C++ to manually manage <code>removeAllChildren()</code>,
-wrapper containers, and child ordering — hiding the visual structure
-from the <code>.zm</code> file.</p>
-<p><strong>Goal:</strong> Declare conditional branches (<code>If</code>) and repeated prefab slices
-(<code>Each</code>) purely structurally in <code>.zm</code>, while driving conditions and data
-at <strong>runtime</strong> from C++ (imperatively or reactively via <code>Bindable</code>).</p>
+<p><strong>Problem:</strong> Conditional sections and dynamic repeated lists inside
+prefabs forced C++ to manually manage empty wrapper containers,
+<code>removeAllChildren()</code>, and child ordering, hiding dynamic visual
+structure from <code>.zm</code> files.</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>[ ] <strong>a. <code>Layout::setVisible(bool)</code> (<code>display: none</code> semantics):</strong>
-      hidden nodes are skipped by <code>measure</code> (zero size, excluded from
-      parent <code>gap</code> and flex distribution), <code>arrange</code>, <code>draw</code>, <code>hitTest</code>,
-      and Tab focus traversal; toggling marks parent layout dirty</li>
-<li>[ ] <strong>b. Runtime <code>If</code>:</strong> <code>If@name { ... }</code> mounts its children flat
-      into the parent (no extra wrapper node) and registers a
-      <code>ConditionBinding</code> in <code>BuildContext</code>; add <code>UINode::setCondition</code>
-      and <code>UINode::bindCondition</code> (with <code>Bindable&lt;bool&gt;</code>), supporting
-      nested <code>If</code> blocks</li>
-<li>[ ] <strong>c. Runtime <code>Each</code>:</strong> <code>Each@name prefab="ItemPrefab" { fallback }</code>
-      places an invisible anchor node inside the parent so sibling nodes
-      before/after it are preserved; add <code>UINode::syncEach</code> and
-      <code>UINode::bindEach</code> (with <code>Bindable&lt;std::vector&lt;T&gt;&gt;</code>), rendering
-      fallback children when empty</li>
-<li>[ ] <strong>d. Keyed reconciliation (optional step):</strong> add
-      <code>UINode::syncEachKeyed</code> / <code>bindEachKeyed</code> so unchanged items reuse
-      their existing <code>UINode</code> (preserving focus, hover, input state, and
-      animations)</li>
-<li>[ ] Add unit tests covering layout/gap exclusion, nested <code>If</code>,
-      <code>Each</code> with siblings and fallback, <code>Bindable</code> reactivity, and
-      <code>If</code> wrapping <code>Each</code></li>
+<li><strong>Step <code>a</code> (<code>Layout::setVisible</code> + child insertion helpers):</strong>
+  added <code>NodeConfig::visible</code> (<code>display: none</code> semantics),
+  <code>NodeInternal::layoutDirty</code>, <code>setVisible(bool)</code> / <code>isVisible()</code>,
+  <code>insertChildBefore()</code>, <code>removeChild()</code>, and <code>UINode::setVisibleRef()</code>.
+  Hidden nodes take zero size, are excluded from <code>gap</code>, flex
+  distribution, <code>draw</code>, <code>hitTest</code>, <code>update</code>, and Tab focus traversal,
+  and release focus/pointer capture cleanly when hidden.</li>
+<li><strong>Step <code>b</code> (runtime <code>If</code>):</strong> <code>If@name [initial="true|false"] { ... }</code>
+  mounts children flat into the enclosing parent (zero wrapper node)
+  and registers a <code>ConditionBinding</code> in <code>BuildContext</code>; added
+  <code>UINode::setCondition</code> and <code>UINode::bindCondition</code> (with
+  <code>Bindable&lt;bool&gt;</code>), preserving nested <code>If</code> own-state across parent
+  toggles.</li>
+<li><strong>Step <code>c</code> (runtime <code>Each</code>):</strong> <code>Each@name prefab="ItemPrefab" { fallback }</code>
+  places a hidden <code>EachAnchor</code> inside the parent so sibling nodes
+  before and after it stay intact; added <code>UINode::syncEach</code> and
+  <code>UINode::bindEach</code> (with <code>Bindable&lt;std::vector&lt;T&gt;&gt;</code>), empty-state
+  fallback rendering, and visibility propagation from enclosing <code>If</code>
+  blocks.</li>
+<li><strong>Step <code>d</code> (keyed reconciliation):</strong> added <code>UINode::syncEachKeyed</code>
+  and <code>UINode::bindEachKeyed</code> with type-erased per-slice keyed storage
+  so unchanged keys reuse their existing <code>UINode</code> (preserving focus,
+  typed text, and animations) while reordering in place.</li>
+<li>
+<p><strong>Tests:</strong> added 12 unit tests in <code>tests/test_zmarkup_build.cpp</code>
+  covering <code>setVisible</code> layout/gap/grow/hitTest/focus exclusion,
+  <code>insertChildBefore</code>/<code>removeChild</code>, flat and nested <code>If</code>, <code>Bindable</code>
+  reactivity + auto-unsubscribe, <code>Each</code> with siblings and fallback,
+  <code>If</code> wrapping <code>Each</code>, and keyed reconciliation.</p>
+</li>
+<li>
+<p>[x] <strong>a.</strong> <code>Layout::setVisible(bool)</code> (<code>display: none</code> semantics) +
+      <code>insertChildBefore</code> / <code>removeChild</code> + <code>UINode::setVisibleRef</code></p>
+</li>
+<li>[x] <strong>b.</strong> Runtime <code>If</code> (<code>If@name</code>, <code>setCondition</code>, <code>bindCondition</code>)</li>
+<li>[x] <strong>c.</strong> Runtime <code>Each</code> (<code>Each@name prefab="..."</code>, <code>syncEach</code>,
+      <code>bindEach</code>, fallback, enclosing <code>If</code> propagation)</li>
+<li>[x] <strong>d.</strong> Keyed reconciliation (<code>syncEachKeyed</code>, <code>bindEachKeyed</code>)</li>
+<li>[x] Add unit tests in <code>tests/test_zmarkup_build.cpp</code></li>
 <li>[ ] Update <code>docs/user/04-zmarkup.md</code> and <code>docs/api/ZMarkup.md</code></li>
 </ul>
 <hr />
