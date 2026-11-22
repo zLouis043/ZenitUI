@@ -2320,6 +2320,66 @@ round-trip through `ZMarkup::build("Tag.cls")`.
 - [x] Add unit tests in `tests/test_zmarkup_build.cpp`
 - [ ] Update `docs/user/04-zmarkup.md` §6 and `docs/api/ZMarkup.md`
 
+### 5.36 `UINode` `@ref`-based helpers
+
+**Status:** 🟡 proposed — design in
+[PROPOSALS.md, Proposal 11](architecture/PROPOSALS.md#proposal-11--uinode-ref-based-helpers).
+
+**Problem:** `UINode` currently exposes chainable wiring helpers
+(`onClick`, `onPress`, `onRelease`, `onHoverEnter`, `onHoverExit`,
+`onValueChanged`, `onToggle`) only for `#id` lookups via `find(id)`.
+Prefab-heavy code relies almost exclusively on local `@ref` lookups,
+resulting in repetitive `if (auto t = ui.ref<Text>("...")) t->setText(...)`
+boilerplate on every instantiated card and modal.
+
+- [ ] Add chainable `*Ref` helpers on `UINode` (`setTextRef`,
+      `setButtonTextRef`, `addClassRef`, `removeClassRef`,
+      `toggleClassRef`, `setEnabledRef`, `setInteractiveRef`,
+      `onClickRef`, `onTextChangedRef`, `onValueChangedRef`,
+      `onToggleRef`)
+- [ ] Add unit tests in `tests/test_zmarkup_build.cpp`
+- [ ] Update `docs/api/ZMarkup.md` and `docs/user/04-zmarkup.md`
+
+---
+
+### 5.37 Runtime structural `If` & `Each` in ZMarkup
+
+**Status:** 🟡 proposed — design in
+[PROPOSALS.md, Proposal 12](architecture/PROPOSALS.md#proposal-12--runtime-structural-if-and-each-in-zmarkup).
+
+**Problem:** ZMarkup intentionally stays logic-free (no expressions or
+scripting), but conditional sections and dynamic repeated lists inside
+prefabs currently force C++ to manually manage `removeAllChildren()`,
+wrapper containers, and child ordering — hiding the visual structure
+from the `.zm` file.
+
+**Goal:** Declare conditional branches (`If`) and repeated prefab slices
+(`Each`) purely structurally in `.zm`, while driving conditions and data
+at **runtime** from C++ (imperatively or reactively via `Bindable`).
+
+- [ ] **a. `Layout::setVisible(bool)` (`display: none` semantics):**
+      hidden nodes are skipped by `measure` (zero size, excluded from
+      parent `gap` and flex distribution), `arrange`, `draw`, `hitTest`,
+      and Tab focus traversal; toggling marks parent layout dirty
+- [ ] **b. Runtime `If`:** `If@name { ... }` mounts its children flat
+      into the parent (no extra wrapper node) and registers a
+      `ConditionBinding` in `BuildContext`; add `UINode::setCondition`
+      and `UINode::bindCondition` (with `Bindable<bool>`), supporting
+      nested `If` blocks
+- [ ] **c. Runtime `Each`:** `Each@name prefab="ItemPrefab" { fallback }`
+      places an invisible anchor node inside the parent so sibling nodes
+      before/after it are preserved; add `UINode::syncEach` and
+      `UINode::bindEach` (with `Bindable<std::vector<T>>`), rendering
+      fallback children when empty
+- [ ] **d. Keyed reconciliation (optional step):** add
+      `UINode::syncEachKeyed` / `bindEachKeyed` so unchanged items reuse
+      their existing `UINode` (preserving focus, hover, input state, and
+      animations)
+- [ ] Add unit tests covering layout/gap exclusion, nested `If`,
+      `Each` with siblings and fallback, `Bindable` reactivity, and
+      `If` wrapping `Each`
+- [ ] Update `docs/user/04-zmarkup.md` and `docs/api/ZMarkup.md`
+
 ---
 
 ## Phase 6 — Internationalization

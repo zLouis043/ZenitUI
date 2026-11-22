@@ -2496,6 +2496,346 @@ UINode ZMarkup::instantiate(
    first? Recommendation: warn and populate only the first (avoids
    duplicate `@ref` / `#id` collisions).
 
+## Proposal 11 — `UINode` `@ref`-based helpers
+
+**Status:** 🟡 proposed — tracked as roadmap §5.36.
+
+### Motivation
+
+`UINode` already provides chainable event-wiring helpers (`onClick`,
+`onPress`, `onRelease`, `onHoverEnter`, `onHoverExit`, `onValueChanged`,
+`onToggle`), all backed by `find(id)` (global `#id` lookup). After
+shipping `UIPrefab` (§5.18) and `ZMarkup::instantiate` (§5.35), real
+applications instantiate reusable cards and modals using local `@ref`
+names rather than `#id`. Populating a freshly instantiated prefab turns
+into repetitive null-checked boilerplate:
+
+```cpp
+auto boxUi = ZMarkup::instantiate("DetailBox");
+if (auto l = boxUi.ref<Text>("d_lbl")) l->setText(lbl);
+if (auto v = boxUi.ref<Text>("d_val")) v->setText(val);
+```
+
+### Design
+
+Add a small, consistent set of chainable `*Ref` helper methods directly
+on `UINode` in `include/ZMarkup.hpp`, delegating to `ref<T>(name)` so
+missing or ambiguous refs keep the existing `warnOnce` diagnostics:
+
+```cpp
+// Text & classes
+UINode& setTextRef(const std::string& refName, const std::string& text);
+UINode& setButtonTextRef(const std::string& refName, const std::string& text);
+UINode& addClassRef(const std::string& refName, const std::string& cls);
+UINode& removeClassRef(const std::string& refName, const std::string& cls);
+UINode& toggleClassRef(const std::string& refName, const std::string& cls, bool active);
+
+// State & interactivity
+UINode& setEnabledRef(const std::string& refName, bool enabled);
+UINode& setInteractiveRef(const std::string& refName, bool interactive);
+UINode& setVisibleRef(const std::string& refName, bool visible); // once §5.37a lands
+
+// Events
+UINode& onClickRef(const std::string& refName, std::function<void()> cb);
+UINode& onTextChangedRef(const std::string& refName, std::function<void(const std::string&)> cb);
+UINode& onValueChangedRef(const std::string& refName, std::function<void(float)> cb);
+UINode& onToggleRef(const std::string& refName, std::function<void(bool)> cb);
+
+```
+
+Usage becomes concise without hiding any control flow:
+
+```cpp
+auto boxUi = ZMarkup::instantiate("DetailBox")
+    .setTextRef("d_lbl", lbl)
+    .setTextRef("d_val", val);
+
+auto cardUi = ZMarkup::instantiate("CompendiumCard")
+    .setTextRef("c_title", entry.name)
+    .setTextRef("c_cat", entry.category)
+    .toggleClassRef("c_cat", "comp-tag-cond", entry.category == "Condizione")
+    .setTextRef("c_desc", entry.desc);
+
+```
+
+### Design notes
+
+* **Type safety on `setTextRef` / `onTextChangedRef`:** use
+`std::dynamic_pointer_cast` (or check `Text` / `TextInput` / `TextArea`
+appropriately) instead of blind `static_pointer_cast` so a mismatched
+widget type logs a warning and degrades to a no-op instead of UB.
+(`UINode::ref<T>` itself stays unchanged for backwards compatibility,
+or can optionally share a safe cast helper internally.)
+* **Naming (`*Ref` suffix):** avoids signature clashes with the existing
+`#id`-based `onClick(id, cb)` / `onValueChanged(id, cb)` /
+`onToggle(id, cb)` methods and makes the lookup domain explicit at
+every call site.
+
+### Verification
+
+* Unit tests in `tests/test_zmarkup_build.cpp`: chaining multiple `*Ref`
+calls after `ZMarkup::instantiate`, missing-ref no-op + warning,
+wrong-type safe no-op, and `toggleClassRef` add/remove behavior.
+
+---
+
+## Proposal 12 — Runtime structural `If` and `Each` in ZMarkup
+
+**Status:** 🟡 proposed — tracked as roadmap §5.37.
+
+### Motivation
+
+ZenitUI intentionally keeps expressions, loops, and scripting out of
+ZMarkup so `.zm` files remain fast to parse and trivial to read.
+However, real UIs still have two recurring dynamic patterns:
+
+1. **Conditional blocks** toggled at runtime (e.g. showing an extra
+input field when `"Sfinimento"` is selected in a dropdown, or
+showing an `"Incantesimi e Abilita Speciali"` section only when a
+monster has abilities).
+2. **Repeated item lists** updated at runtime inside a container that
+may also hold static siblings (e.g. `ConditionChip` items followed
+by a `"+ Condizione"` button inside `.cond-row`, or a filtered list
+of cards with an empty-state placeholder).
+
+Without structural placeholders, C++ has to assemble those subtrees
+imperatively or manage ad-hoc empty `VStack@slot {}` containers, making
+the `.zm` file incomplete as a visual blueprint.
+
+### Guiding principle
+
+* **Markup declares *structure* and *identity* only** (no boolean
+expressions, no variable interpolation, no inline predicates).
+* **C++ owns all *conditions*, *data*, and *runtime updates*** (either
+imperatively or reactively via `Bindable`).
+* **Zero parser grammar changes:** `If` and `Each` use the exact same
+`Tag@ref attr="val" { children }` syntax already handled by `Parser`.
+
+---
+
+### Part A — Prerequisite: `Layout::setVisible(bool)` (`display: none`)
+
+Today, `opacity: 0` skips `draw()` but still occupies layout space,
+adds parent `gap`, and can intercept pointer/focus events. Runtime `If`
+and zero-cost `Each` anchors require true layout exclusion:
+
+* Add `bool visible{true}` (bitfield in `Layout::config`) plus
+`setVisible(bool)` / `isVisible()` on `Layout`.
+* When `!isVisible()`:
+* **Measure & Arrange (`Measure.cpp`):** skipped completely — zero
+contribution to parent size, flex distribution, and `gap` spacing.
+* **Render (`Render.cpp`):** early-return at the top of `draw()`
+(before portal registration, culling, and style overlay).
+* **Input & Focus (`Input.cpp`):** skipped by hit-testing and Tab
+focus traversal; if a node (or ancestor) becomes hidden while
+focused/captured, release focus/capture cleanly.
+
+
+* Toggling `setVisible()` marks the node and its parent layout dirty.
+
+---
+
+### Part B — Runtime `If`
+
+#### Markup syntax
+
+```zmarkup
+VStack.modal-body {
+    If@has_abilities {
+        Text.msb-section "Incantesimi e Abilita Speciali"
+        Each@abilities prefab="PowerCard"
+    }
+    If@show_exh_level initial="false" {
+        VStack gap="4px" {
+            Text.label "Livello di Sfinimento (1-6)"
+            TextInput@cond_exh_level "1"
+        }
+    }
+}
+
+```
+
+* `If@<ref>` identifies the conditional group in `BuildContext`.
+* Optional `initial="true" | "false"` sets the starting visibility
+before C++ updates it (default: `false`, so uninitialized optional
+sections do not flash on frame 1).
+
+#### Tree semantics (flat, zero wrapper node)
+
+`If` does **not** create an extra wrapper `Layout` node in the tree:
+
+1. `Registry::create_impl` builds the children of `If` directly into
+the enclosing parent `Layout`.
+2. It registers a `ConditionBinding` in `BuildContext::conditions[ref]`,
+storing:
+* `bool ownState` (from `initial`, default `false`);
+* `std::string parentCondition` (non-empty if nested inside an outer
+`If`);
+* `std::vector<std::weak_ptr<Layout>> directNodes` (the nodes built
+directly under this `If`);
+* `std::vector<std::string> childConditions` and
+`std::vector<std::string> childEaches` (for nested `If` / `Each`
+propagation).
+
+
+3. Because the children are constructed once and hidden via
+`setVisible(false)`:
+* Every `@ref` inside the `If` block is immediately available after
+`build()` / `instantiate()` for wiring callbacks and initial text.
+* Parent flex rules (`HStack`, `grow`, `gap`) and CSS selectors
+(`.header > .sb-cr`) are never disrupted by an extra wrapper.
+* Internal widget state (e.g. text typed in a `TextInput`) is
+preserved when toggling visibility at runtime.
+
+
+
+#### C++ API on `UINode`
+
+```cpp
+// Imperative runtime toggle
+ui.setCondition("show_exh_level", selected == "Sfinimento");
+
+// Reactive runtime binding (lifetime tied to BuildContext / UINode)
+ui.bindCondition("has_abilities", hasAbilitiesBindable);
+
+```
+
+Nested `If` blocks evaluate effective visibility as
+`ownState && parentEffectiveState`: turning an outer `If` off hides
+everything inside it without overwriting the inner `If`'s `ownState`,
+so turning the outer `If` back on restores the inner state accurately.
+
+---
+
+### Part C — Runtime `Each`
+
+#### Markup syntax
+
+```zmarkup
+HStack.cond-row wrap="true" {
+    Each@conds prefab="ConditionChip" {
+        Text.hint "Nessuna condizione attiva"
+    }
+    Button.chip-add@btn_add_cond "+ Condizione"
+}
+
+```
+
+* `Each@<ref> prefab="<PrefabName>"` declares a dynamic slice inside the
+enclosing parent container.
+* Optional children inside `Each { ... }` act as the **empty-state
+fallback**, rendered automatically whenever the list has 0 items
+(matching `Slot`'s fallback convention).
+
+#### Tree semantics (anchored slice, siblings preserved)
+
+1. `Registry::create_impl` inserts a lightweight hidden anchor node
+(`Layout` with `visible = false`, zero layout/draw/gap cost) at the
+exact position of `Each` inside the parent's `children`.
+2. It registers an `EachBinding` in `BuildContext::eaches[ref]`,
+storing:
+* `std::weak_ptr<Layout> parent` and `std::weak_ptr<Layout> anchor`;
+* `std::string prefabName`;
+* `std::string parentCondition` (if inside an `If`);
+* `std::vector<Element> fallbackAst` (the empty-state markup);
+* `std::vector<std::shared_ptr<Layout>> spawnedNodes` (currently
+mounted item roots or fallback nodes).
+
+
+3. On initial build, if `fallbackAst` is non-empty, the fallback nodes
+are instantiated right before `anchor`.
+4. Whenever C++ updates the list at runtime:
+* Previously mounted `spawnedNodes` belonging *only* to this `Each`
+are removed from `parent` (leaving all siblings — such as
+`+ Condizione` or another `Each` in the same parent — untouched).
+* For each element in the C++ range, `Registry::instantiate(prefabName)`
+creates an item `UINode`, invokes the user's binder callback, and
+inserts `itemUi.root()` into `parent` right before `anchor`
+(respecting the enclosing `If`'s effective visibility).
+* If the range is empty, `fallbackAst` is instantiated before
+`anchor`.
+
+
+
+*(Requires a small `Layout::insertChildBefore(Layout* anchor, std::shared_ptr<Layout> child)` helper alongside `addChild` / `removeChild`.)*
+
+#### C++ API on `UINode`
+
+```cpp
+// 1. Imperative runtime sync (rebuilds the slice on demand)
+ui.syncEach("conds", item->conditions,
+    [&](ZMarkup::UINode& chip, const ActiveCondition& c, size_t idx) {
+        chip.setTextRef("chip_lbl", c.name)
+            .toggleClassRef("chip_root", "custom", c.custom)
+            .onClickRef("chip_rm", [&, idx] { /* remove & re-sync */ });
+    });
+
+// 2. Reactive runtime binding (auto-syncs whenever Bindable changes)
+ui.bindEach("conds", item->conditionsBindable,
+    [&](ZMarkup::UINode& chip, const ActiveCondition& c, size_t idx) {
+        // ...
+    });
+
+```
+
+#### Optional Step D — Keyed reconciliation
+
+For lists with interactive inputs, CSS transitions, or animations where
+destroying and recreating unchanged rows would drop state:
+
+```cpp
+ui.syncEachKeyed("init_list", app.init.list,
+    [](const std::shared_ptr<InitiativeItem>& it) { return it->id; }, // key
+    [&](ZMarkup::UINode& row, const auto& it) { /* onCreate: wire static callbacks */ },
+    [&](ZMarkup::UINode& row, const auto& it) { /* onUpdate: update text/classes */ });
+
+```
+
+* Keys present before and after keep their existing `UINode` (and
+`Layout` pointer), running only `onUpdate` and reordering in place
+relative to `anchor`.
+* New keys instantiate the prefab and run `onCreate` + `onUpdate`.
+* Missing keys are removed from `parent` and dropped from the keyed map.
+
+---
+
+### Edge cases & open questions
+
+1. **Lifetime of `Bindable` subscriptions:** storing `Subscription`
+objects inside `BuildContext` means bindings stay active for as long
+as the caller keeps the `UINode` (or `BuildContext`) alive and
+automatically disconnect on destruction. Document clearly that
+callers using `bindCondition` / `bindEach` must keep the `UINode`
+alive (just like `app.tabMostri` / `app.tabIniziativa`).
+2. **Duplicate `@ref` on `If` or `Each`:** follow §5.35's precedent —
+log a warning and keep the first binding to avoid ambiguous updates.
+3. **`If` without `@ref`:** log a warning and skip (an anonymous `If`
+cannot be driven from C++). Same for `Each` missing `@ref` or
+`prefab="..."` (or referencing an unregistered prefab).
+4. **`Else` blocks:** intentionally omitted from v1 to keep the model
+minimal. A two-branch toggle is expressed cleanly with two `If`
+blocks or an `Each` fallback; `Else` can be added later if real usage
+shows genuine friction.
+5. **Interaction with `VirtualList` (§5.23):** `Each` is meant for
+small-to-medium lists (chips, stat-block abilities, cards up to a few
+hundred items). Multi-thousand-row virtualized lists remain the job
+of `VirtualList`.
+
+### Implementation plan
+
+1. **Step a:** `Layout::setVisible(bool)` / `isVisible()` + layout, gap,
+draw, hit-test, and focus-traversal exclusion + `insertChildBefore`
+in `Layout`.
+2. **Step b:** `ConditionBinding` in `BuildContext`, flat `If` expansion
+in `Registry::create_impl`, `UINode::setCondition` and
+`UINode::bindCondition`.
+3. **Step c:** `EachBinding` + invisible anchor node in `BuildContext` /
+`Registry::create_impl`, `UINode::syncEach` and `UINode::bindEach`
+(including empty fallback and enclosing `If` propagation).
+4. **Step d:** Keyed reconciliation (`syncEachKeyed` / `bindEachKeyed`).
+5. **Step e:** Unit tests + docs (`docs/user/04-zmarkup.md`,
+`docs/api/ZMarkup.md`).
+
 ---
 
 ## Out of scope (future rounds)
@@ -2529,6 +2869,13 @@ re-discussing them.
 
 **Proposed** (next, in this order):
 
+12. Proposal 11 — `UINode` `@ref`-based helpers → §5.36. Tiny,
+    self-contained quality-of-life addition to `ZMarkup.hpp`.
+13. Proposal 12 — Runtime structural `If` & `Each` → §5.37. Builds on
+    `Bindable<T>` (§5.17), UIPrefab (§5.18), and `ZMarkup::instantiate`
+    (§5.35); adds `Layout::setVisible(bool)` (`display: none`) and
+    runtime-driven structural bindings without adding scripting to
+    ZMarkup.
 10. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
     Benefits: unblocks 10k+ item lists, the most-requested feature
     after UIPrefab.
