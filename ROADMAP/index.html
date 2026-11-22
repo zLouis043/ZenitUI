@@ -4911,13 +4911,39 @@ inline <code>getGlobalRegistry()</code> singleton across TUs.</p>
 <h2 id="phase-6-internationalization">Phase 6 — Internationalization</h2>
 <p>Needed for non-English UIs.</p>
 <h3 id="61-unicode-aware-text">6.1 Unicode-aware text</h3>
-<p>Currently <code>Text</code> and <code>TextInput</code> are <code>char</code>-based. Unicode support
-requires:</p>
+<p><strong>Status:</strong> 🟢 done.</p>
+<p><strong>What landed:</strong></p>
 <ul>
-<li>[ ] <code>std::u32string</code> or UTF-8 aware iteration in <code>Text</code></li>
-<li>[ ] Cluster-aware cursor movement (grapheme boundaries)</li>
-<li>[ ] <code>TextInput</code> accepting multi-byte characters</li>
-<li>[ ] Text measurement per-glyph via the backend</li>
+<li>Added <code>include/Utf8.hpp</code>: zero-dependency UTF-8 encode/decode,
+  grapheme-cluster navigation (<code>nextCluster</code> / <code>prevCluster</code> /
+  <code>clusterBoundaries</code> handling combining marks, ZWJ sequences,
+  Regional Indicator pairs, and <code>\r\n</code>), Unicode word boundaries,
+  single/multi-line clipboard sanitization, and composable
+  <code>CodepointSet</code> presets (<code>defaultLatin</code>, <code>latinExtendedA</code>, <code>greek</code>,
+  <code>cyrillic</code>, <code>symbols</code>, <code>addFromUtf8</code>).</li>
+<li>Added <code>IRenderer::measureCodepoint</code> (with default UTF-8 fallback)
+  and O(1) <code>RaylibRenderer::measureCodepoint</code> override via
+  <code>GetGlyphIndex</code>.</li>
+<li>Made glyph loading configurable on <code>RaylibAssetProvider</code> via
+  <code>defaultCodepoints()</code> / <code>setDefaultCodepoints()</code> and per-font
+  <code>CodepointSet</code> overloads on <code>loadFont</code> and <code>loadFontFromMemory</code>.</li>
+<li>Updated <code>Text</code> (wrap &amp; ellipsis), <code>TextInput</code>, and <code>TextArea</code> to
+  accept multi-byte UTF-8 input/paste and perform all cursor movement,
+  deletion, word jump (<code>Ctrl+Arrow</code>/<code>Backspace</code>/<code>Delete</code>), double-click
+  selection, click-to-caret, and wrapping strictly on grapheme-cluster
+  boundaries.</li>
+<li>
+<p>Updated <code>MockRenderer::measureText</code> to count UTF-8 codepoints and
+  added <code>tests/test_utf8.cpp</code> (9 tests).</p>
+</li>
+<li>
+<p>[x] UTF-8 / grapheme-cluster utilities (<code>include/Utf8.hpp</code>)</p>
+</li>
+<li>[x] Cluster-aware cursor movement, deletion, selection, and wrapping
+      in <code>Text</code>, <code>TextInput</code>, and <code>TextArea</code></li>
+<li>[x] Multi-byte UTF-8 typing and clipboard paste in <code>TextInput</code> / <code>TextArea</code></li>
+<li>[x] Per-glyph measurement (<code>IRenderer::measureCodepoint</code>) +
+      configurable <code>CodepointSet</code> atlas baking in <code>RaylibAssetProvider</code></li>
 </ul>
 <h3 id="62-rtl-layout">6.2 RTL layout</h3>
 <ul>
@@ -5133,11 +5159,6 @@ require a bigger design decision.</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><code>Text</code> / <code>TextInput</code> / <code>TextArea</code> are <code>char</code>-based, not UTF-8 aware</td>
-<td><code>Text.hpp</code>, <code>TextInput.hpp</code></td>
-<td>Raylib renders Latin-1 glyphs (§5.34), but cursor movement, deletion, and word-break operate on bytes, not codepoints/graphemes (§6.1).</td>
-</tr>
 <tr>
 <td><code>var()</code> in <code>transition:</code> / <code>animation:</code> shorthand</td>
 <td><code>StyleParser.hpp</code></td>
