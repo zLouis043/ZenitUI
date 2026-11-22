@@ -36,6 +36,9 @@ implementation.
 - ✅ **Proposal 10 — Named Slots and direct prefab instantiation**:
   shipped as roadmap §5.35. See `tests/test_zmarkup_build.cpp` and the
   change log at the end of this file.
+- ✅ **Proposal 11 — `UINode` `@ref`-based helpers**: shipped as
+  roadmap §5.36. See `tests/test_zmarkup_build.cpp` and the change log
+  at the end of this file.
 
 ---
 
@@ -2498,7 +2501,7 @@ UINode ZMarkup::instantiate(
 
 ## Proposal 11 — `UINode` `@ref`-based helpers
 
-**Status:** 🟡 proposed — tracked as roadmap §5.36.
+**Status:** ✅ shipped as roadmap §5.36.
 
 ### Motivation
 
@@ -2853,9 +2856,7 @@ re-discussing them.
 
 ---
 
-## Implementation sequence
-
-**Shipped** (roadmap §4.9, §5.16 – §5.24, §5.35):
+**Shipped** (roadmap §4.9, §5.16 – §5.24, §5.35 – §5.36):
 
 1. Proposal 1 — `ref` → §5.16
 2. Proposal 2 — `Bindable<T>` → §5.17
@@ -2866,22 +2867,13 @@ re-discussing them.
 7. Proposal 8 — VirtualView → §5.24
 8. Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)
 9. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35
+10. Proposal 11 — `UINode` `@ref`-based helpers → §5.36
 
 **Proposed** (next, in this order):
 
-12. Proposal 11 — `UINode` `@ref`-based helpers → §5.36. Tiny,
-    self-contained quality-of-life addition to `ZMarkup.hpp`.
-13. Proposal 12 — Runtime structural `If` & `Each` → §5.37. Builds on
-    `Bindable<T>` (§5.17), UIPrefab (§5.18), and `ZMarkup::instantiate`
-    (§5.35); adds `Layout::setVisible(bool)` (`display: none`) and
-    runtime-driven structural bindings without adding scripting to
-    ZMarkup.
-10. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
-    Benefits: unblocks 10k+ item lists, the most-requested feature
-    after UIPrefab.
-11. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c). Benefits from
-    VirtualList for the "reorderable list" example, but doesn't
-    strictly depend on it.
+11. Proposal 6 — VirtualList → §5.23. Depends on UIPrefab and Slot.
+12. Proposal 7 — Drag & Drop → §5.22 (split into a/b/c).
+13. Proposal 12 — Runtime structural `If` & `Each` → §5.37.
 
 **Post-1.0:**
 
@@ -3173,4 +3165,23 @@ VirtualList ships.
   forwarding, duplicate slot handling, unknown slot warning/ignore,
   direct instantiation with root merging/fallback, and missing-prefab
   handling.
+
+### Proposal 11 — `UINode` `@ref`-based helpers
+
+**Shipped:** roadmap §5.36.
+
+**Changes from the proposal:**
+
+- Also added `onPressRef`, `onReleaseRef`, `onHoverEnterRef`, and
+  `onHoverExitRef` for full parity with the `#id`-based event helpers.
+- `setTextRef` dispatches dynamically across `Text`, `Button`,
+  `TextInput`, and `TextArea` via `std::dynamic_pointer_cast`, logging
+  a deduplicated `warnOnce` diagnostic on unsupported node types.
+- `setVisibleRef` is deferred to §5.37 Step `a` (`Layout::setVisible`).
+
+**What landed:**
+
+- `include/ZMarkup.hpp` — 15 chainable `*Ref` helper methods on `UINode`.
+- `tests/test_zmarkup_build.cpp` — 2 unit tests covering chaining across
+  all widget types and safe no-op behavior on missing or mismatched refs.
   

@@ -884,3 +884,92 @@ TEST(ZMarkupBuild, prefab_can_use_another_prefab_as_root)
     CHECK(ui.ref<Text>("hp_txt") != nullptr);
     CHECK(ui.ref<ProgressBar>("hp_bar") != nullptr);
 }
+
+TEST(ZMarkupBuild, ref_helpers_chaining_updates_widgets)
+{
+    Env env;
+    ZMarkup::registerPrefab("HelperCard", R"(
+        VStack {
+            Text.tag@title "old"
+            Button@action "Go"
+            TextInput@input value="a"
+            TextArea@notes value="b"
+            Slider@vol value="0.2"
+            Toggle@flag checked="false"
+        }
+    )");
+
+    int clicks = 0;
+    std::string lastText;
+    float lastVal = -1.0f;
+    bool lastToggle = false;
+
+    auto ui = ZMarkup::instantiate("HelperCard")
+        .setTextRef("title", "new title")
+        .setButtonTextRef("action", "Confirm")
+        .setTextRef("input", "hello")
+        .setTextRef("notes", "line1\nline2")
+        .addClassRef("title", "highlight")
+        .toggleClassRef("title", "tag", false)
+        .toggleClassRef("title", "active", true)
+        .setInteractiveRef("title", true)
+        .setEnabledRef("action", false)
+        .onClickRef("action", [&] { ++clicks; })
+        .onTextChangedRef("input", [&](const std::string &s) { lastText = s; })
+        .onValueChangedRef("vol", [&](float v) { lastVal = v; })
+        .onToggleRef("flag", [&](bool b) { lastToggle = b; });
+
+    auto title = ui.ref<Text>("title");
+    auto action = ui.ref<Button>("action");
+    auto input = ui.ref<TextInput>("input");
+    auto notes = ui.ref<TextArea>("notes");
+    auto vol = ui.ref<Slider>("vol");
+    auto flag = ui.ref<Toggle>("flag");
+
+    CHECK(title->getText() == "new title");
+    CHECK(title->hasClass("highlight"));
+    CHECK(title->hasClass("active"));
+    CHECK(!title->hasClass("tag"));
+    CHECK(action->text() == "Confirm");
+    CHECK(input->getText() == "hello");
+    CHECK(notes->getText() == "line1\nline2");
+
+    CHECK(action->onClick != nullptr);
+    action->onClick();
+    CHECK(clicks == 1);
+
+    CHECK(input->onTextChanged != nullptr);
+    input->onTextChanged("typed");
+    CHECK(lastText == "typed");
+
+    CHECK(vol->onValueChanged != nullptr);
+    vol->onValueChanged(0.75f);
+    CHECK_NEAR(lastVal, 0.75f, 1e-4f);
+
+    CHECK(flag->onToggle != nullptr);
+    flag->onToggle(true);
+    CHECK(lastToggle == true);
+}
+
+TEST(ZMarkupBuild, ref_helpers_missing_or_wrong_type_are_safe_noops)
+{
+    Env env;
+    auto ui = ZMarkup::build(R"(
+        VStack@box {
+            Text@lbl "keep"
+        }
+    )");
+
+    ui.setTextRef("missing", "x")
+      .setTextRef("box", "should not crash")
+      .setButtonTextRef("lbl", "not a button")
+      .onTextChangedRef("lbl", [](const std::string &) {})
+      .onValueChangedRef("lbl", [](float) {})
+      .onToggleRef("lbl", [](bool) {})
+      .addClassRef("missing", "c")
+      .removeClassRef("missing", "c")
+      .toggleClassRef("missing", "c", true)
+      .onClickRef("missing", [] {});
+
+    CHECK(ui.ref<Text>("lbl")->getText() == "keep");
+}

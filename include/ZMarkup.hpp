@@ -838,6 +838,157 @@ namespace ZenitUI::ZMarkup
             return *this;
         }
 
+        // --- @ref-based chainable helpers (§5.36) ---
+
+        UINode &setTextRef(const std::string &refName, const std::string &text)
+        {
+            auto n = ref<Layout>(refName);
+            if (!n)
+                return *this;
+            if (auto t = std::dynamic_pointer_cast<UI::Text>(n))
+                t->setText(text);
+            else if (auto b = std::dynamic_pointer_cast<UI::Button>(n))
+                b->setText(text);
+            else if (auto ti = std::dynamic_pointer_cast<UI::TextInput>(n))
+                ti->setText(text);
+            else if (auto ta = std::dynamic_pointer_cast<UI::TextArea>(n))
+                ta->setText(text);
+            else
+                warnOnce("setTextRef-type:" + refName,
+                         "UINode::setTextRef('" + refName + "'): node does not support setText");
+            return *this;
+        }
+
+        UINode &setButtonTextRef(const std::string &refName, const std::string &text)
+        {
+            auto n = ref<Layout>(refName);
+            if (!n)
+                return *this;
+            if (auto b = std::dynamic_pointer_cast<UI::Button>(n))
+                b->setText(text);
+            else
+                warnOnce("setButtonTextRef-type:" + refName,
+                         "UINode::setButtonTextRef('" + refName + "'): node is not a Button");
+            return *this;
+        }
+
+        UINode &addClassRef(const std::string &refName, const std::string &cls)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->addClass(cls);
+            return *this;
+        }
+
+        UINode &removeClassRef(const std::string &refName, const std::string &cls)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->removeClass(cls);
+            return *this;
+        }
+
+        UINode &toggleClassRef(const std::string &refName, const std::string &cls, bool active)
+        {
+            if (auto n = ref<Layout>(refName))
+            {
+                if (active)
+                    n->addClass(cls);
+                else
+                    n->removeClass(cls);
+            }
+            return *this;
+        }
+
+        UINode &setEnabledRef(const std::string &refName, bool enabled)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->setEnabled(enabled);
+            return *this;
+        }
+
+        UINode &setInteractiveRef(const std::string &refName, bool interactive)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->setInteractive(interactive);
+            return *this;
+        }
+
+        UINode &onClickRef(const std::string &refName, std::function<void()> cb)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->onClick = std::move(cb);
+            return *this;
+        }
+
+        UINode &onPressRef(const std::string &refName, std::function<void()> cb)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->onPress = std::move(cb);
+            return *this;
+        }
+
+        UINode &onReleaseRef(const std::string &refName, std::function<void()> cb)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->onRelease = std::move(cb);
+            return *this;
+        }
+
+        UINode &onHoverEnterRef(const std::string &refName, std::function<void()> cb)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->onHoverEnter = std::move(cb);
+            return *this;
+        }
+
+        UINode &onHoverExitRef(const std::string &refName, std::function<void()> cb)
+        {
+            if (auto n = ref<Layout>(refName))
+                n->onHoverExit = std::move(cb);
+            return *this;
+        }
+
+        UINode &onTextChangedRef(const std::string &refName,
+                                 std::function<void(const std::string &)> cb)
+        {
+            auto n = ref<Layout>(refName);
+            if (!n)
+                return *this;
+            if (auto ti = std::dynamic_pointer_cast<UI::TextInput>(n))
+                ti->onTextChanged = std::move(cb);
+            else if (auto ta = std::dynamic_pointer_cast<UI::TextArea>(n))
+                ta->onTextChanged = std::move(cb);
+            else
+                warnOnce("onTextChangedRef-type:" + refName,
+                         "UINode::onTextChangedRef('" + refName + "'): node is not a TextInput or TextArea");
+            return *this;
+        }
+
+        UINode &onValueChangedRef(const std::string &refName, std::function<void(float)> cb)
+        {
+            auto n = ref<Layout>(refName);
+            if (!n)
+                return *this;
+            if (auto s = std::dynamic_pointer_cast<UI::Slider>(n))
+                s->onValueChanged = std::move(cb);
+            else
+                warnOnce("onValueChangedRef-type:" + refName,
+                         "UINode::onValueChangedRef('" + refName + "'): node is not a Slider");
+            return *this;
+        }
+
+        UINode &onToggleRef(const std::string &refName, std::function<void(bool)> cb)
+        {
+            auto n = ref<Layout>(refName);
+            if (!n)
+                return *this;
+            if (auto t = std::dynamic_pointer_cast<UI::Toggle>(n))
+                t->onToggle = std::move(cb);
+            else
+                warnOnce("onToggleRef-type:" + refName,
+                         "UINode::onToggleRef('" + refName + "'): node is not a Toggle");
+            return *this;
+        }
+
     private:
         /** \brief Log a warning for \p key only the first time it is called. */
         void warnOnce(const std::string &key, const std::string &msg) const

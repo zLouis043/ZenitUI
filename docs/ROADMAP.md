@@ -10,9 +10,9 @@ items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
 Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.35 (CSS flex/border/text parity,
+shipped, step g declined) and §5.25–§5.36 (CSS flex/border/text parity,
 TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &
-direct prefab instantiation).
+direct prefab instantiation, `UINode` `@ref` helpers).
 
 ---
 
@@ -2322,22 +2322,32 @@ round-trip through `ZMarkup::build("Tag.cls")`.
 
 ### 5.36 `UINode` `@ref`-based helpers
 
-**Status:** 🟡 proposed — design in
+**Status:** 🟢 done — design in
 [PROPOSALS.md, Proposal 11](architecture/PROPOSALS.md#proposal-11--uinode-ref-based-helpers).
 
-**Problem:** `UINode` currently exposes chainable wiring helpers
-(`onClick`, `onPress`, `onRelease`, `onHoverEnter`, `onHoverExit`,
-`onValueChanged`, `onToggle`) only for `#id` lookups via `find(id)`.
-Prefab-heavy code relies almost exclusively on local `@ref` lookups,
-resulting in repetitive `if (auto t = ui.ref<Text>("...")) t->setText(...)`
-boilerplate on every instantiated card and modal.
+**Problem:** `UINode` previously exposed chainable wiring helpers only
+for `#id` lookups via `find(id)`, while prefab-based code relies almost
+exclusively on local `@ref` lookups.
 
-- [ ] Add chainable `*Ref` helpers on `UINode` (`setTextRef`,
+**What landed:**
+
+- Added chainable `*Ref` helpers on `UINode` in `include/ZMarkup.hpp`:
+  `setTextRef`, `setButtonTextRef`, `addClassRef`, `removeClassRef`,
+  `toggleClassRef`, `setEnabledRef`, `setInteractiveRef`, `onClickRef`,
+  `onPressRef`, `onReleaseRef`, `onHoverEnterRef`, `onHoverExitRef`,
+  `onTextChangedRef`, `onValueChangedRef`, `onToggleRef`.
+- Typed helpers use `std::dynamic_pointer_cast` and log a deduplicated
+  warning via `warnOnce` on type mismatch (safe no-op, no UB).
+- Added unit tests in `tests/test_zmarkup_build.cpp` covering chaining,
+  missing refs, and wrong-type no-ops.
+
+- [x] Add chainable `*Ref` helpers on `UINode` (`setTextRef`,
       `setButtonTextRef`, `addClassRef`, `removeClassRef`,
       `toggleClassRef`, `setEnabledRef`, `setInteractiveRef`,
-      `onClickRef`, `onTextChangedRef`, `onValueChangedRef`,
+      `onClickRef`, `onPressRef`, `onReleaseRef`, `onHoverEnterRef`,
+      `onHoverExitRef`, `onTextChangedRef`, `onValueChangedRef`,
       `onToggleRef`)
-- [ ] Add unit tests in `tests/test_zmarkup_build.cpp`
+- [x] Add unit tests in `tests/test_zmarkup_build.cpp`
 - [ ] Update `docs/api/ZMarkup.md` and `docs/user/04-zmarkup.md`
 
 ---
