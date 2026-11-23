@@ -38,6 +38,10 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
     /**
      * \class Dropdown
      * \brief A single-select dropdown.
@@ -311,7 +315,7 @@ namespace ZenitUI::UI
             listContainer->getInlineDefaults().overflowX = Overflow::Hidden;
             listContainer->getInlineDefaults().overflowY = Overflow::Auto;
 
-                        rebuildList();
+            rebuildList();
             addChild(listContainer);
             isOpen = false;
             applyOpenState();
@@ -362,6 +366,7 @@ namespace ZenitUI::UI
             TLayout<Dropdown>::translateSubtree(dx, dy);
             positionList(0.0f, 0.0f);
         }
+
     private:
         std::vector<std::string> options;
         int selected{0};
@@ -492,4 +497,5 @@ namespace ZenitUI::UI
             }
         }
     };
+    /** @} */
 }

@@ -7,6 +7,9 @@
 using namespace ZenitUI;
 using namespace ZenitUI::UI;
 
+// Multi-tab interactive showcase window covering ZenitUI's major subsystems:
+// built-in widgets, Flexbox layout, portals & absolute positioning, ZMarkup,
+// CSS animations/transitions, event bubbling/context menus, and scroll culling.
 class DemoWindow : public TLayout<DemoWindow>
 {
 public:
@@ -33,6 +36,7 @@ protected:
         sidebar->addChild(Label("ZENIT UI DEMO")->cls("title-text"));
         sidebar->addChild(std::make_shared<Layout>()->size(Auto(), VH(2.0f)));
 
+        // Helper that registers a sidebar button swapping the ScrollView contents.
         auto addTab = [&](const std::string &name, std::function<void(std::shared_ptr<Layout>)> builder)
         {
             auto btn = Btn(name, [this, builder]()
@@ -85,6 +89,7 @@ private:
         parent->addChild(d);
     }
 
+    // Tab 1: TextInput, Slider -> ProgressBar binding, Toggle, Checkbox, Buttons, and Tooltips.
     void buildBasicWidgets(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "1. Widget di Base",
@@ -97,7 +102,7 @@ private:
         card->addChild(HStack({Label("TextInput: ")->cls("normal-text")->cls("setting-label"), textInput})->cls("setting-row"));
 
         auto sfxSlider = std::make_shared<Slider>(0.5f);
-        textInput->getInlineBase().grow = 1;
+        sfxSlider->getInlineBase().grow = 1;
         sfxSlider->getInlineBase().height = VH(3.0f);
 
         auto pb = std::make_shared<ProgressBar>(0.5f);
@@ -127,6 +132,7 @@ private:
 
         card->addChild(btnRow);
 
+        // Attach portal-backed hover tooltips with a 0.3s delay.
         Tooltip::attach(btnRow->children[0], "Esegue l'azione principale", 0.3f);
         Tooltip::attach(btnRow->children[1], "Azione distruttiva, richiede conferma", 0.3f);
         Tooltip::attach(toggle, "Abilita o disabilita questa opzione", 0.3f);
@@ -135,6 +141,7 @@ private:
         parent->addChild(card);
     }
 
+    // Tab 2: Flexbox justification, proportional grow ratios, and cross-axis alignment.
     void buildFlexboxTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "2. Layout & Flexbox",
@@ -186,6 +193,7 @@ private:
         }
     }
 
+    // Tab 3: Portal-backed Dropdown escaping ScrollView clipping + absolute positioning modes.
     void buildPortalTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "3. Z-Index & Portal",
@@ -197,6 +205,7 @@ private:
         dropdown->getInlineBase().width = VW(20.0f);
         card->addChild(HStack({Label("Valore: ")->cls("normal-text")->cls("setting-label"), dropdown})->cls("setting-row"));
 
+        // Relative stage demonstrating corner pinning, percentage centering, and left+right stretching.
         auto stage = VStack()->cls("card");
         stage->getInlineBase().height = VH(30.0f);
         stage->getInlineBase().position = Position::Relative;
@@ -231,6 +240,7 @@ private:
         parent->addChild(card);
     }
 
+    // Tab 4: Declarative ZMarkup form and nested multi-column layout wired via #id handles.
     void buildMarkupTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "4. Markup Layout",
@@ -291,7 +301,7 @@ private:
             parent->addChild(Label("Errore: markup non valido.")->cls("card-desc"));
         }
 
-        static const char* markup2 = R"(
+        static const char *markup2 = R"(
             HStack.card {
                 VStack.side-panel min-width="0" {
                     Text.card-title "Annidato"
@@ -315,6 +325,7 @@ private:
             parent->addChild(r2);
     }
 
+    // Tab 5: Declarative @keyframes animations and state transitions defined in game.zstyle.
     void buildAnimationsTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "5. Animazioni",
@@ -358,6 +369,7 @@ private:
         }
     }
 
+    // Tab 6: Event bubbling, setPassThrough(true), and portal-backed ContextMenu triggers.
     void buildBubblingTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "6. Event Bubbling",
@@ -375,6 +387,7 @@ private:
                              { std::printf("CLICK: Bottone Normale\n"); })
                              ->cls("btn-primary");
 
+        // passThrough allows clicks on this button to also fire parentBox->onClick.
         auto btnPass = Btn("Bottone Passthrough", []()
                            { std::printf("CLICK: Bottone Passthrough\n"); })
                            ->cls("btn-danger");
@@ -427,10 +440,11 @@ private:
         parent->addChild(popupTest);
     }
 
+    // Tab 7: Stress test with 1000 rows inside a ScrollView to demonstrate off-screen culling.
     void buildCullingTest(std::shared_ptr<Layout> parent)
     {
         addHeader(parent, "7. Stress & Culling",
-                  "200 elementi in una ScrollView. Il culling evita di disegnare quelli fuori dal viewport.");
+                  "1000 elementi in una ScrollView. Il culling evita di disegnare quelli fuori dal viewport.");
 
         auto card = VStack()->cls("card");
         card->getInlineBase().gap = Px(4.0f);

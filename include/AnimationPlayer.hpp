@@ -29,6 +29,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_anim
+     *  @{
+     */
 
     class Layout;
 
@@ -153,5 +156,5 @@ namespace ZenitUI
             return false;
         }
     };
-
+    /** @} */
 } // namespace ZenitUI

@@ -10,6 +10,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
 
     /** \brief A single condition inside a `@media` query. */
     struct MediaCondition
@@ -85,5 +88,5 @@ namespace ZenitUI
         }
         return true;
     }
-
+    /** @} */
 } // namespace ZenitUI

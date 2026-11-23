@@ -1,3 +1,6 @@
+// @doc   Minimal Raylib setup, single Stack root layout, inline styling, and the runFrame/renderFrame loop.
+// @group grp_core grp_backends
+
 // ZenitUI — Example 01: Hello World
 //
 // The smallest working ZenitUI program: a window, a root layout, and

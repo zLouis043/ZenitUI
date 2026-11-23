@@ -30,6 +30,10 @@
 namespace ZenitUI
 {
 
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
+
     /** \brief Internal helpers; not part of the public API. */
     namespace detail
     {
@@ -611,9 +615,12 @@ namespace ZenitUI
 
     inline std::optional<Direction> parseDirectionToken(std::string_view s)
     {
-        if (s == "row") return Direction::Row;
-        if (s == "column") return Direction::Column;
-        if (s == "auto") return Direction::Auto;
+        if (s == "row")
+            return Direction::Row;
+        if (s == "column")
+            return Direction::Column;
+        if (s == "auto")
+            return Direction::Auto;
         return std::nullopt;
     }
 
@@ -1005,8 +1012,8 @@ namespace ZenitUI
             return true;
         }
         else if (key == "checked" || key == "value" ||
-                 key == "options" || key == "passthrough" || 
-                 key == "placeholder" || key == "placeholder-wrap"|| 
+                 key == "options" || key == "passthrough" ||
+                 key == "placeholder" || key == "placeholder-wrap" ||
                  key == "rows" || key == "selected")
         {
             return true;
@@ -1100,5 +1107,5 @@ namespace ZenitUI
         }
         return out;
     }
-
+    /** @} */
 } // namespace ZenitUI

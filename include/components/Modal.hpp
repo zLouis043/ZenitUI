@@ -25,6 +25,10 @@
 namespace ZenitUI::UI
 {
 
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
     /**
      * \class Modal
      * \brief A backdrop + content overlay.
@@ -130,5 +134,5 @@ namespace ZenitUI::UI
 
         std::shared_ptr<Layout> content;
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

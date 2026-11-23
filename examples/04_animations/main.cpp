@@ -1,3 +1,6 @@
+// @doc   Declarative animation channels in .zstyle: state transitions, @keyframes, and ::part animations.
+// @group grp_anim grp_zstyle
+
 // ZenitUI — Example 04: Animations
 //
 // The three animation channels, all driven from .zstyle:

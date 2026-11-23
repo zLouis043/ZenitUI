@@ -1,3 +1,6 @@
+// @doc   Reactive model-to-UI synchronization with Bindable<T>, RAII subscriptions, fireImmediately, and weak_ptr lifetime safety.
+// @group grp_zmarkup
+
 // ZenitUI — Example 12: Bindable
 //
 // A model value can be shared by many widgets without callback glue.

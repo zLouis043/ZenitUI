@@ -29,6 +29,10 @@
 namespace ZenitUI::UI
 {
 
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
     /**
      * \class Popup
      * \brief A floating, anchored panel.
@@ -106,11 +110,11 @@ namespace ZenitUI::UI
         /** \brief `true` while the popup is visible. */
         bool isOpen() const { return isOpen_; }
 
-        bool closeOnClickOutside{true};  ///< Close on any button press outside the popup.
-        bool closeOnEscape{true};        ///< Close on Escape.
-        float offsetBelow{4.0f};         ///< Gap between the anchor and the popup.
-        std::function<void()> onOpen;    ///< Fired after `open*`.
-        std::function<void()> onClose;   ///< Fired after `close`.
+        bool closeOnClickOutside{true}; ///< Close on any button press outside the popup.
+        bool closeOnEscape{true};       ///< Close on Escape.
+        float offsetBelow{4.0f};        ///< Gap between the anchor and the popup.
+        std::function<void()> onOpen;   ///< Fired after `open*`.
+        std::function<void()> onClose;  ///< Fired after `close`.
 
         /** \brief No-op: the popup owns its rect via `onUpdate`. */
         void arrange(Rect) override { /* no-op */ }
@@ -288,5 +292,5 @@ namespace ZenitUI::UI
         popup->setContent(stack);
         return popup;
     }
-
+    /** @} */
 } // namespace ZenitUI::UI

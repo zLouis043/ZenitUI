@@ -1,3 +1,6 @@
+// @doc   Interactive gallery of built-in widgets (Button, Toggle, Checkbox, Slider, ProgressBar, TextInput, Dropdown) inside a ScrollView.
+// @group grp_widgets
+
 // ZenitUI — Example 03: Widgets
 //
 // A gallery of the built-in widgets: Button, Toggle, Checkbox, Slider,

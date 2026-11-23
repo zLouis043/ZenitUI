@@ -9,6 +9,9 @@
 
 namespace ZenitUI::Test
 {
+    /** \addtogroup grp_backends
+     *  @{
+     */
 
     class MockRenderer : public IRenderer
     {
@@ -528,5 +531,5 @@ namespace ZenitUI::Test
             frame(root);
         }
     };
-
+    /** @} */
 } // namespace ZenitUI::Test

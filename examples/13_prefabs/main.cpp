@@ -1,3 +1,15 @@
+// @doc   Reusable ZMarkup prefabs with ZMarkup::registerPrefab and Slot child injection.
+// @group grp_zmarkup
+
+// ZenitUI — Example 13: UIPrefabs and Slots
+//
+// Demonstrates registering a reusable ZMarkup prefab (`SettingRow`) with a
+// `Slot` placeholder, then instantiating it multiple times inside a parent
+// markup layout while injecting caller-provided children into the slot.
+//
+// Build:   make examples
+// Run:     make run-13_prefabs
+
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 #define NOUSER
@@ -14,6 +26,7 @@ int main(void)
     InitWindow(800, 600, "ZenitUI - UIPrefabs and Slots");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
+    // Bind the Raylib backend to UIContext.
     RaylibRenderer backendRenderer;
     RaylibPlatform backendPlatform;
     RaylibAssetProvider backendAssets(backendRenderer);
@@ -24,6 +37,7 @@ int main(void)
 
     backendAssets.loadFont("calibri", "./assets/calibrib.ttf", 64);
 
+    // Inline styling for Toggle (its intrinsic size is 0x0 until styled).
     ZMarkup::loadStyleString(R"(
         Toggle {
             width: 50px;
@@ -46,16 +60,19 @@ int main(void)
         Toggle:checked .toggle-knob { left: 26px; }
     )");
 
+    // Register a reusable prefab: children passed to `SettingRow { ... }`
+    // are injected where `Slot` appears.
     ZMarkup::registerPrefab("SettingRow", R"(
         HStack width="100%" justify="space-between" items-v="center" padding="10px" background="#2A2A32" radius="6px" {
             Slot
         }
     )");
 
-    const char* layout = R"(
+    // Use the registered prefab just like a built-in tag.
+    const char *layout = R"(
         VStack width="100%" height="100%" background="#181818" padding="40px" gap="10px" {
             Text color="#FDF900" font-size="32px" "Settings Menu"
-            
+
             SettingRow {
                 Text.label-text color="#A0A0A0" "Fullscreen"
                 Toggle#toggle-fs checked=true
@@ -76,6 +93,7 @@ int main(void)
     auto ui = ZMarkup::build(layout);
     auto root = ui.root();
 
+    // Wire callbacks for controls injected inside the prefab slots.
     ui.onToggle("toggle-fs", [](bool v) { std::printf("Fullscreen set to: %d\n", v); });
     ui.onValueChanged("slider-vol", [](float v) { std::printf("Volume set to: %.2f\n", v); });
 

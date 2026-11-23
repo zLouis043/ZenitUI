@@ -1,3 +1,7 @@
+
+// @doc   GPU stress benchmark for 50 filtered cards testing TargetPool reuse, downscaled separable blur, and live RenderStats HUD.
+// @group grp_anim grp_backends
+
 #include "ZenitUI.hpp"
 #include "RaylibBackend.hpp"
 #include <raylib.h>
@@ -15,7 +19,7 @@ int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(1280, 760, "ZenitUI - 07b Effects Stress Bench");
-    // Nessun cap a 60 FPS così vedi il frame time reale sulla GPU
+    // Uncapped FPS to measure actual GPU frame time
     SetTargetFPS(0);
 
     RaylibRenderer renderer;
@@ -27,9 +31,9 @@ int main()
     ctx.platform = &platform;
     ctx.assets = &assets;
 
-    // Registra gli shader (adatta i path se nel tuo repo sono in una sottocartella diversa)
+    // Load fragment shaders used by the built-in and custom filters
     assets.loadEffect("blur", "assets/blur.fs");
-    assets.loadEffect("dropShadow", "assets/dropShadow.fs");
+    assets.loadEffect("dropShadow", "assets/drop_shadow.fs");
 
     registerBuiltinFilters();
     FilterRegistry::get().add(FilterDef{

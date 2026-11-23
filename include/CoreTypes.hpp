@@ -15,6 +15,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_core
+     *  @{
+     */
 
     /** \brief 2D vector with component-wise arithmetic. */
     struct Vec2
@@ -193,9 +196,9 @@ namespace ZenitUI
     /** \brief Per-button state snapshot for the current frame. */
     struct ButtonState
     {
-        bool down{false};      ///< Button is currently held.
-        bool pressed{false};   ///< Button transitioned from up to down this frame.
-        bool released{false};  ///< Button transitioned from down to up this frame.
+        bool down{false};     ///< Button is currently held.
+        bool pressed{false};  ///< Button transitioned from up to down this frame.
+        bool released{false}; ///< Button transitioned from down to up this frame.
     };
 
     /** \brief Pointer position, wheel delta, and per-button state for one frame. */
@@ -260,28 +263,28 @@ namespace ZenitUI
     /** \brief One frame's worth of keyboard input. */
     struct InputEvents
     {
-        std::vector<int> chars;  ///< Printable characters typed this frame.
-        std::vector<int> keys;   ///< Keys pressed this frame (edge-triggered).
-        std::vector<int> held;   ///< Keys currently held (level-triggered).
+        std::vector<int> chars; ///< Printable characters typed this frame.
+        std::vector<int> keys;  ///< Keys pressed this frame (edge-triggered).
+        std::vector<int> held;  ///< Keys currently held (level-triggered).
     };
 
     /** \brief Cross-axis alignment for flex items and content. */
     enum class Align
     {
-        Auto,     ///< Defer to the parent's `alignItems`.
-        Start,    ///< Pack at the leading edge.
-        Center,   ///< Center within the available space.
-        End,      ///< Pack at the trailing edge.
-        Stretch   ///< Stretch to fill the cross axis.
+        Auto,   ///< Defer to the parent's `alignItems`.
+        Start,  ///< Pack at the leading edge.
+        Center, ///< Center within the available space.
+        End,    ///< Pack at the trailing edge.
+        Stretch ///< Stretch to fill the cross axis.
     };
 
     /** \brief Main-axis distribution for flex containers. */
     enum class Justify
     {
-        Start,         ///< Pack at the leading edge.
-        Center,        ///< Center the whole set.
-        End,           ///< Pack at the trailing edge.
-        SpaceBetween   ///< Distribute leftover space between items.
+        Start,       ///< Pack at the leading edge.
+        Center,      ///< Center the whole set.
+        End,         ///< Pack at the trailing edge.
+        SpaceBetween ///< Distribute leftover space between items.
     };
 
     /**
@@ -326,4 +329,6 @@ namespace ZenitUI
         ry /= t.scale;
         return {rx + t.pivot.x, ry + t.pivot.y};
     }
+
+    /** @} */
 }

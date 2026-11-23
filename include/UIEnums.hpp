@@ -10,6 +10,10 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_core
+     *  @{
+     */
+
     /**
      * \enum LayoutType
      * \brief Positioning strategy applied to a Layout node's direct children.
@@ -45,4 +49,6 @@ namespace ZenitUI
         Pressed,    ///< A pointer button is held down on the node.
         Disabled    ///< The node is logically disabled (`config.enabled == 0`).
     };
+
+    /** @} */
 }

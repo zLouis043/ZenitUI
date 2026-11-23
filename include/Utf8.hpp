@@ -19,6 +19,9 @@
 
 namespace ZenitUI::Utf8
 {
+    /** \addtogroup grp_backends
+     *  @{
+     */
 
     /** \brief `true` if \p b is a UTF-8 continuation byte (`10xxxxxx`). */
     inline constexpr bool isContinuation(unsigned char b) noexcept
@@ -698,5 +701,5 @@ namespace ZenitUI
     private:
         std::vector<int> cps_;
     };
-
+    /** @} */
 } // namespace ZenitUI

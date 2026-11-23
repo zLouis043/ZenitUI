@@ -1,3 +1,6 @@
+// @doc   Portal-backed overlays (Tooltip, Popup, ContextMenu) escaping parent clipping alongside a full-screen Modal.
+// @group grp_core grp_widgets
+
 // ZenitUI — Example 08: Portals
 //
 // A portal is a node that renders and hit-tests as if it lived at the

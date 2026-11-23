@@ -27,6 +27,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
 
     /**
      * \struct Opt
@@ -315,7 +318,7 @@ namespace ZenitUI
     X(Value, translateY, Value(0.0f))                       \
     X(Value, fontSize, Value(20.0f))                        \
     X(Value, letterSpacing, Value(2.0f))                    \
-    X(float, transitionTime, 0.0f)                         \
+    X(float, transitionTime, 0.0f)                          \
     X(TransitionFunction, ease, TransitionFunction::Linear) \
     X(Overflow, overflowX, Overflow::Visible)               \
     X(Overflow, overflowY, Overflow::Visible)               \
@@ -763,4 +766,6 @@ namespace ZenitUI
             if (const T* y = std::get_if<T>(&b)) return lerpProp(x, *y, t);
             return x; }, a);
     }
+
+    /** @} */
 }

@@ -15,7 +15,7 @@
  * ZenitUI::Debug::dumpTree(root);
  * ZenitUI::Debug::dumpStyle(*someNode);
  * ZenitUI::Debug::dumpTheme();
- * \endcodeinline std::string toString(Position p)
+ * \endcode
  *
  * Output goes to a `std::ostream` (default `std::cerr`), so it can be
  * redirected to a file or captured by a test.
@@ -37,6 +37,10 @@
 
 namespace ZenitUI::Debug
 {
+
+    /** \addtogroup grp_backends
+     *  @{
+     */
 
     /** \brief Symbolic unit suffix for the given `Unit` (`"px"`, `"%"`, `"vw"`, …). */
     inline const char *unitName(Unit u)
@@ -182,9 +186,12 @@ namespace ZenitUI::Debug
     {
         switch (d)
         {
-        case Direction::Auto: return "auto";
-        case Direction::Row: return "row";
-        case Direction::Column: return "column";
+        case Direction::Auto:
+            return "auto";
+        case Direction::Row:
+            return "row";
+        case Direction::Column:
+            return "column";
         }
         return "?";
     }
@@ -608,7 +615,7 @@ namespace ZenitUI::Debug
     {
         os << "[RenderStats] " << renderStatsToString() << "\n";
     }
-
+    /** @} */
 } // namespace ZenitUI::Debug
 
 #else // !ZENITUI_DEBUG

@@ -22,6 +22,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class Checkbox
@@ -134,5 +137,5 @@ namespace ZenitUI::UI
             }
         }
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

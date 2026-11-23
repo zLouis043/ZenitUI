@@ -17,31 +17,36 @@
 #include "Common.hpp"
 #include "Layout.hpp"
 
-namespace ZenitUI::UI {
-
-/**
- * \class ScrollView
- * \brief A `Layout` with `overflow: scroll` on both axes by default.
- *
- * \note `setBlocksRaycast(true)` means that clicks in empty scroll area do
- *       not fall through to siblings. This is almost always what you want,
- *       but be aware of it when composing stacked scroll views.
- */
-class ScrollView : public TLayout<ScrollView>
+namespace ZenitUI::UI
 {
-public:
-    /**
-     * \brief Construct a scroll view with the given flow direction.
-     * \param t Layout strategy for children (default: Vertical).
-     */
-    explicit ScrollView(LayoutType t = LayoutType::Vertical) : TLayout<ScrollView>(t)
-    {
-        setInteractive(true);
-        setBlocksRaycast(true);
-        setStyleTag("ScrollView");
-        getInlineDefaults().overflowX = Overflow::Scroll;
-        getInlineDefaults().overflowY = Overflow::Scroll;
-    }
-};
 
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
+    /**
+     * \class ScrollView
+     * \brief A `Layout` with `overflow: scroll` on both axes by default.
+     *
+     * \note `setBlocksRaycast(true)` means that clicks in empty scroll area do
+     *       not fall through to siblings. This is almost always what you want,
+     *       but be aware of it when composing stacked scroll views.
+     */
+    class ScrollView : public TLayout<ScrollView>
+    {
+    public:
+        /**
+         * \brief Construct a scroll view with the given flow direction.
+         * \param t Layout strategy for children (default: Vertical).
+         */
+        explicit ScrollView(LayoutType t = LayoutType::Vertical) : TLayout<ScrollView>(t)
+        {
+            setInteractive(true);
+            setBlocksRaycast(true);
+            setStyleTag("ScrollView");
+            getInlineDefaults().overflowX = Overflow::Scroll;
+            getInlineDefaults().overflowY = Overflow::Scroll;
+        }
+    };
+    /** @} */
 } // namespace ZenitUI::UI

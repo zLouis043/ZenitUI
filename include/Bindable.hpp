@@ -29,6 +29,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_zmarkup
+     *  @{
+     */
 
     /**
      * \class Bindable
@@ -122,7 +125,6 @@ namespace ZenitUI
             uint64_t token_{0};
         };
 
-
         Bindable() = default;
 
         /** \brief Construct with an initial value. */
@@ -139,7 +141,6 @@ namespace ZenitUI
         Bindable &operator=(const Bindable &) = delete;
         Bindable(Bindable &&) = delete;
         Bindable &operator=(Bindable &&) = delete;
-
 
         /** \brief Read the current value. */
         const T &get() const { return value_; }
@@ -164,7 +165,6 @@ namespace ZenitUI
                     entry.cb(value_);
             }
         }
-
 
         /**
          * \brief Register a callback fired on value changes.
@@ -271,5 +271,5 @@ namespace ZenitUI
             return nullptr;
         }
     };
-
+    /** @} */
 } // namespace ZenitUI

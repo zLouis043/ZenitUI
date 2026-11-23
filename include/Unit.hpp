@@ -11,6 +11,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_core
+     *  @{
+     */
 
     /**
      * \enum Unit
@@ -228,7 +231,8 @@ namespace ZenitUI
                 return 0.0f;
             }
         }
-public:
+
+    public:
         /**
          * \brief Resolve the value along the horizontal axis.
          */
@@ -482,7 +486,8 @@ public:
         /** \brief Divide all terms by a scalar; `k == 0` is a no-op. */
         Value operator/(float k) const
         {
-            if (k == 0.0f) return *this;
+            if (k == 0.0f)
+                return *this;
             if (op != ValueOp::None)
             {
                 Value r;
@@ -577,4 +582,5 @@ public:
     inline Value PH(float p) { return Value::ph(p); }
     inline Value Num(float p) { return Value::number(p); }
 
+    /** @} */
 } // namespace ZenitUI

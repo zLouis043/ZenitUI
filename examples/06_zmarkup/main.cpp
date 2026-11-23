@@ -1,3 +1,6 @@
+// @doc   Declarative UI tree built with ZMarkup::build, external ui.zstyle styling, typed #id lookup, and event callbacks.
+// @group grp_zmarkup
+
 // ZenitUI — Example 06: ZMarkup
 //
 // The declarative alternative to building the tree in C++. A single

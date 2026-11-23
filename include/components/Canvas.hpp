@@ -35,6 +35,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class CanvasLayout
@@ -140,5 +143,5 @@ namespace ZenitUI::UI
     private:
         TargetHandle target;
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

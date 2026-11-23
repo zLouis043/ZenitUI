@@ -41,6 +41,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class VirtualView
@@ -440,5 +443,5 @@ namespace ZenitUI::UI
         internal_.subtreeDirty = 1;
         TLayout<VirtualView, ScrollView>::arrange(space);
     }
-
+    /** @} */
 } // namespace ZenitUI::UI

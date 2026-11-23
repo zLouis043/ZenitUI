@@ -52,6 +52,9 @@
 
 namespace ZenitUI
 {
+	/** \addtogroup grp_core
+	 *  @{
+	 */
 
 	/**
 	 * \struct NodeState
@@ -63,10 +66,10 @@ namespace ZenitUI
 	 */
 	struct NodeState
 	{
-		uint32_t hovered : 1;
-		uint32_t pressed : 1;
-		uint32_t focused : 1;
-		uint32_t checked : 1;
+		uint32_t hovered : 1; ///< Pointer is currently inside the node.
+		uint32_t pressed : 1; ///< Primary mouse button is pressed on this node.
+		uint32_t focused : 1; ///< Node currently holds keyboard focus.
+		uint32_t checked : 1; ///< Toggle / Checkbox checked state (`:checked`).
 	};
 
 	/**
@@ -81,16 +84,16 @@ namespace ZenitUI
 	 */
 	struct NodeConfig
 	{
-		uint32_t interactive : 1;
-		uint32_t blocksRaycast : 1;
-		uint32_t enabled : 1;
-		uint32_t visible : 1;
-		uint32_t focusable : 1;
-		uint32_t focusScope : 1;
-		uint32_t keyboardActivates : 1;
-		uint32_t updateWhenDisabled : 1;
-		uint32_t portal : 1;
-		uint32_t passThrough : 1;
+		uint32_t interactive : 1;        ///< Receives pointer hover/click events.
+		uint32_t blocksRaycast : 1;      ///< Stops hit-testing even when not interactive.
+		uint32_t enabled : 1;            ///< Enabled state (false triggers `:disabled`).
+		uint32_t visible : 1;            ///< Visibility (`false` behaves like `display: none`).
+		uint32_t focusable : 1;          ///< Can acquire keyboard focus and participate in Tab cycle.
+		uint32_t focusScope : 1;         ///< Traps Tab focus cycling inside this subtree.
+		uint32_t keyboardActivates : 1;  ///< Enter / Space trigger `onClick` while focused.
+		uint32_t updateWhenDisabled : 1; ///< Still runs `onUpdate` while disabled.
+		uint32_t portal : 1;             ///< Rendered at the root above clip rects.
+		uint32_t passThrough : 1;        ///< Forwards press/click events to ancestor nodes.
 	};
 
 	/**
@@ -102,14 +105,14 @@ namespace ZenitUI
 	 */
 	struct NodeInternal
 	{
-		uint32_t subtreeDirty : 1;
-		uint32_t styleInitialized : 1;
-		uint32_t pendingTransition : 1;
-		uint32_t hadLocalAnimationsLast : 1;
-		uint32_t wantsRemoval : 1;
-		uint32_t pressedInChain : 1;
-		uint32_t hadRemovedChildren : 1;
-		uint32_t layoutDirty : 1;
+		uint32_t subtreeDirty : 1;           ///< Subtree needs re-measure/re-arrange.
+		uint32_t styleInitialized : 1;       ///< Initial style resolution has run at least once.
+		uint32_t pendingTransition : 1;      ///< Style must be re-resolved on next update.
+		uint32_t hadLocalAnimationsLast : 1; ///< Active local animations in the previous frame.
+		uint32_t wantsRemoval : 1;           ///< Deferred removal requested via `removeFromParent()`.
+		uint32_t pressedInChain : 1;         ///< Reserved press-chain tracking flag.
+		uint32_t hadRemovedChildren : 1;     ///< At least one child was removed since last measure.
+		uint32_t layoutDirty : 1;            ///< Structural layout change forces re-measure.
 	};
 
 	/**
@@ -827,6 +830,7 @@ namespace ZenitUI
 		}
 		/**
 		 * \brief Start (or restart) the imperative animation named \p name.
+		 * \param name        Name previously registered via `addAnimation()`.
 		 * \param playReverse When `true`, plays from end to start.
 		 */
 		void playAnimation(const std::string &name, bool playReverse = false)
@@ -1007,6 +1011,7 @@ namespace ZenitUI
 		}
 
 	protected:
+	/// \cond INTERNAL
 		// ---- Internal state ----
 
 		LayoutType type;
@@ -1093,6 +1098,8 @@ namespace ZenitUI
 					c->clearSubtreeInteractionOnHide();
 		}
 		
+		/// \endcond
+
 		/**
 		 * \brief Propagate a class/tag change to descendants that may match it.
 		 *
@@ -1451,6 +1458,7 @@ namespace ZenitUI
 	class TLayout : public Base
 	{
 	public:
+		/** \brief Forward constructor arguments to \p Base. */
 		template <typename... Args>
 		TLayout(Args &&...args) : Base(std::forward<Args>(args)...) {}
 
@@ -1467,36 +1475,44 @@ namespace ZenitUI
 			static_cast<TLayout<Derived, Base> *>(p.get())->onBuild();
 			return p;
 		}
+
+		/** \brief Fluent `addClass`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> cls(const std::string &name)
 		{
 			this->addClass(name);
 			return self();
 		}
+		/** \brief Fluent `setId`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> id(const std::string &node_id)
 		{
 			this->setId(node_id);
 			return self();
 		}
+		/** \brief Fluent `setRef`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> withRef(const std::string &r)
 		{
 			this->setRef(r);
 			return self();
 		}
+		/** \brief Fluent `setSize`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> size(Value w, Value h)
 		{
 			this->setSize(w, h);
 			return self();
 		}
+		/** \brief Fluent `setPassThrough`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> passThrough(bool p = true)
 		{
 			this->setPassThrough(p);
 			return self();
 		}
+		/** \brief Fluent `addChild`; returns typed `shared_ptr<Derived>`. */
 		std::shared_ptr<Derived> with(std::shared_ptr<Layout> c)
 		{
 			this->addChild(std::move(c));
 			return self();
 		}
+		/** \brief Return `shared_from_this()` statically cast to `Derived`. */
 		std::shared_ptr<Derived> self()
 		{
 			return std::static_pointer_cast<Derived>(this->shared_from_this());
@@ -1588,4 +1604,6 @@ namespace ZenitUI
 		}
 		return i < 0;
 	}
+	
+	/** @} */
 }

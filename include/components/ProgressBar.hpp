@@ -14,6 +14,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class ProgressBar
@@ -113,5 +116,5 @@ namespace ZenitUI::UI
     private:
         float value;
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

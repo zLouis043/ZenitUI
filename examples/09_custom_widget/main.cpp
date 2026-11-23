@@ -1,3 +1,6 @@
+// @doc   Custom Rating widget derived from TLayout<Derived>, demonstrating computeIntrinsicSize, renderContent with ::part, pointer/keyboard input, and ZMarkup registration.
+// @group grp_core grp_widgets
+
 // ZenitUI — Example 09: Custom widget
 //
 // Walks through writing a widget from scratch. The Rating widget lives in

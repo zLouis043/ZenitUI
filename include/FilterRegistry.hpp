@@ -26,116 +26,127 @@
 
 #include <functional>
 
-namespace ZenitUI {
+namespace ZenitUI
+{
 
-class Layout;
-class IRenderer;
+    /** \addtogroup grp_anim
+     *  @{
+     */
 
-/** \brief Execution pattern for a filter definition. */
-enum class FilterPattern {
-    SinglePass,  ///< One shader, one draw.
-    Separable,   ///< Two shader passes (H then V), using the scratch target.
-    Silhouette,  ///< Offset silhouette draw + original draw, for drop-shadows.
-    Custom       ///< Invoke the `custom` callback directly.
-};
+    class Layout;
+    class IRenderer;
 
-/** \brief Type of a filter parameter. */
-enum class FilterParamType {
-    Float,
-    Vec2,
-    Vec3,
-    Vec4,
-    Color
-};
+    /** \brief Execution pattern for a filter definition. */
+    enum class FilterPattern
+    {
+        SinglePass, ///< One shader, one draw.
+        Separable,  ///< Two shader passes (H then V), using the scratch target.
+        Silhouette, ///< Offset silhouette draw + original draw, for drop-shadows.
+        Custom      ///< Invoke the `custom` callback directly.
+    };
 
-/**
- * \struct FilterParam
- * \brief One uniform exposed by a filter shader.
- *
- * `argIndex` is the index into `FilterRef::args` that supplies this
- * parameter's value; if the call site did not provide enough arguments, the
- * default (`fdef`, `vdef`, or `cdef`) is used instead.
- */
-struct FilterParam {
-    std::string     uniform;
-    FilterParamType type{FilterParamType::Float};
-    int             argIndex{0};
-    float           fdef{0.0f};
-    Vec2            vdef{};
-    Color           cdef{Colors::White};
+    /** \brief Type of a filter parameter. */
+    enum class FilterParamType
+    {
+        Float,
+        Vec2,
+        Vec3,
+        Vec4,
+        Color
+    };
 
-    FilterParam() = default;
+    /**
+     * \struct FilterParam
+     * \brief One uniform exposed by a filter shader.
+     *
+     * `argIndex` is the index into `FilterRef::args` that supplies this
+     * parameter's value; if the call site did not provide enough arguments, the
+     * default (`fdef`, `vdef`, or `cdef`) is used instead.
+     */
+    struct FilterParam
+    {
+        std::string uniform;
+        FilterParamType type{FilterParamType::Float};
+        int argIndex{0};
+        float fdef{0.0f};
+        Vec2 vdef{};
+        Color cdef{Colors::White};
 
-    FilterParam(std::string u, FilterParamType t, int ai, float fd)
-        : uniform(std::move(u)), type(t), argIndex(ai), fdef(fd) {}
+        FilterParam() = default;
 
-    FilterParam(std::string u, FilterParamType t, int ai, Color cd)
-        : uniform(std::move(u)), type(t), argIndex(ai), cdef(cd) {}
-};
+        FilterParam(std::string u, FilterParamType t, int ai, float fd)
+            : uniform(std::move(u)), type(t), argIndex(ai), fdef(fd) {}
 
-/**
- * \struct FilterContext
- * \brief Per-invocation state passed to `applyFilter` and to custom filters.
- */
-struct FilterContext {
-    IRenderer*       renderer{nullptr};
-    Layout*          node{nullptr};
-    TargetHandle     src{};
-    TargetHandle     scratch{};
-    TargetHandle     write_target{};
-    Rect             region{};
-    Rect             dst{};
-    Vec2             texSize{};
-    float            opacity{1.0f};
-    const FilterRef* ref{nullptr};
-};
+        FilterParam(std::string u, FilterParamType t, int ai, Color cd)
+            : uniform(std::move(u)), type(t), argIndex(ai), cdef(cd) {}
+    };
 
-/** \brief Callback signature for `FilterPattern::Custom` filters. */
-using FilterCustomFn = std::function<void(const FilterContext&)>;
+    /**
+     * \struct FilterContext
+     * \brief Per-invocation state passed to `applyFilter` and to custom filters.
+     */
+    struct FilterContext
+    {
+        IRenderer *renderer{nullptr};
+        Layout *node{nullptr};
+        TargetHandle src{};
+        TargetHandle scratch{};
+        TargetHandle write_target{};
+        Rect region{};
+        Rect dst{};
+        Vec2 texSize{};
+        float opacity{1.0f};
+        const FilterRef *ref{nullptr};
+    };
 
-/**
- * \struct FilterDef
- * \brief Complete description of one filter.
- */
-struct FilterDef {
-    std::string                name;
-    std::string                shader;
-    FilterPattern              pattern{FilterPattern::SinglePass};
-    std::vector<FilterParam>   params;
-    FilterCustomFn             custom;
-    int                        downscale{1}; ///< 1, 2, or 4 (Separable filters only).
-};
+    /** \brief Callback signature for `FilterPattern::Custom` filters. */
+    using FilterCustomFn = std::function<void(const FilterContext &)>;
 
-/**
- * \class FilterRegistry
- * \brief Global name → `FilterDef` map.
- */
-class FilterRegistry {
-public:
-    /** \brief Return the global singleton registry. */
-    static FilterRegistry& get();
+    /**
+     * \struct FilterDef
+     * \brief Complete description of one filter.
+     */
+    struct FilterDef
+    {
+        std::string name;
+        std::string shader;
+        FilterPattern pattern{FilterPattern::SinglePass};
+        std::vector<FilterParam> params;
+        FilterCustomFn custom;
+        int downscale{1}; ///< 1, 2, or 4 (Separable filters only).
+    };
 
-    /** \brief Register or replace a filter definition. */
-    void add(FilterDef def);
+    /**
+     * \class FilterRegistry
+     * \brief Global name → `FilterDef` map.
+     */
+    class FilterRegistry
+    {
+    public:
+        /** \brief Return the global singleton registry. */
+        static FilterRegistry &get();
 
-    /** \brief Register a custom (shader-less) filter. */
-    void addCustom(std::string name, FilterCustomFn fn);
+        /** \brief Register or replace a filter definition. */
+        void add(FilterDef def);
 
-    /** \brief Look up a filter by name. */
-    const FilterDef* find(const std::string& name) const;
+        /** \brief Register a custom (shader-less) filter. */
+        void addCustom(std::string name, FilterCustomFn fn);
 
-private:
-    std::unordered_map<std::string, FilterDef> defs_;
-};
+        /** \brief Look up a filter by name. */
+        const FilterDef *find(const std::string &name) const;
 
-/**
- * \brief Ensure the builtin filters (`blur`, `drop-shadow`) are registered.
- */
-void registerBuiltinFilters();
+    private:
+        std::unordered_map<std::string, FilterDef> defs_;
+    };
 
-/**
- * \brief Execute one filter against the given context.
- */
-void applyFilter(const FilterDef& def, const FilterContext& ctx);
+    /**
+     * \brief Ensure the builtin filters (`blur`, `drop-shadow`) are registered.
+     */
+    void registerBuiltinFilters();
 
+    /**
+     * \brief Execute one filter against the given context.
+     */
+    void applyFilter(const FilterDef &def, const FilterContext &ctx);
+    /** @} */
 } // namespace ZenitUI

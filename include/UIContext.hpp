@@ -32,6 +32,9 @@
 
 namespace ZenitUI
 {
+	/** \addtogroup grp_core
+	 *  @{
+	 */
 
 	class Layout;
 
@@ -519,4 +522,6 @@ namespace ZenitUI
 			return instance;
 		}
 	};
+
+	/** @} */
 }

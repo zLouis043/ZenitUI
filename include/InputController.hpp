@@ -31,43 +31,48 @@
 namespace ZenitUI
 {
 
-class Layout;
-
-/**
- * \struct InputController
- * \brief Stateless per-node input dispatcher.
- */
-struct InputController
-{
-    /**
-     * \brief Recompute the node's `hovered` / `pressed` / `focused` flags.
-     *
-     * \param node        Node whose flags are updated.
-     * \param selfBlocked `true` when input to this node should be suppressed.
-     * \param scrolling   `true` while any ancestor is scrolling or the node
-     *                    itself is scrolling. In this mode, only focus is
-     *                    updated: hover / press are frozen so that a drag
-     *                    does not flicker buttons under the pointer.
+    /** \addtogroup grp_core
+     *  @{
      */
-    void updateFlags(Layout& node, bool selfBlocked, bool scrolling);
+
+    class Layout;
 
     /**
-     * \brief Derive the `UIState` enum from the node's current state flags.
-     *
-     * Order of precedence: `Disabled` > `Pressed` > `Hover` > `Idle`.
+     * \struct InputController
+     * \brief Stateless per-node input dispatcher.
      */
-    UIState computeNextState(const Layout& node) const;
+    struct InputController
+    {
+        /**
+         * \brief Recompute the node's `hovered` / `pressed` / `focused` flags.
+         *
+         * \param node        Node whose flags are updated.
+         * \param selfBlocked `true` when input to this node should be suppressed.
+         * \param scrolling   `true` while any ancestor is scrolling or the node
+         *                    itself is scrolling. In this mode, only focus is
+         *                    updated: hover / press are frozen so that a drag
+         *                    does not flicker buttons under the pointer.
+         */
+        void updateFlags(Layout &node, bool selfBlocked, bool scrolling);
 
-    /**
-     * \brief Fire callbacks for state transitions and pointer events.
-     */
-    void fireCallbacks(Layout& node, UIState prev, UIState next, bool changed);
+        /**
+         * \brief Derive the `UIState` enum from the node's current state flags.
+         *
+         * Order of precedence: `Disabled` > `Pressed` > `Hover` > `Idle`.
+         */
+        UIState computeNextState(const Layout &node) const;
 
-    /**
-     * \brief Fire `onClick` on Enter or Space for the focused, keyboard-
-     *        activatable node.
-     */
-    void handleKeyInput(Layout& node);
-};
+        /**
+         * \brief Fire callbacks for state transitions and pointer events.
+         */
+        void fireCallbacks(Layout &node, UIState prev, UIState next, bool changed);
 
+        /**
+         * \brief Fire `onClick` on Enter or Space for the focused, keyboard-
+         *        activatable node.
+         */
+        void handleKeyInput(Layout &node);
+    };
+
+    /** @} */
 } // namespace ZenitUI

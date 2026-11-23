@@ -20,6 +20,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class Slider
@@ -203,5 +206,5 @@ namespace ZenitUI::UI
     private:
         float value;
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

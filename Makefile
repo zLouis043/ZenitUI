@@ -121,7 +121,7 @@ dist:
 	@$(CMAKE) --install $(BUILD_DIR) --prefix $(CURDIR)/dist
 
 docs:
-	@mkdir -p build/docs
+	cmake -P docs/gen_examples.cmake
 	doxygen Doxyfile
 
 .PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist docs

@@ -23,6 +23,10 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
+
     /**
      * \brief CSS-style specificity triple used to sort matching rules.
      */
@@ -186,4 +190,6 @@ namespace ZenitUI
             ++version;
         }
     };
+
+    /** @} */
 }

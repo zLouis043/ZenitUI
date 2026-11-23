@@ -1,3 +1,6 @@
+// @doc   Post-processing with CSS filter chains (blur, drop-shadow, custom sepia via FilterRegistry) vs single-pass shader effects.
+// @group grp_anim grp_zstyle
+
 // ZenitUI — Example 07: Effects
 //
 // Two ways to post-process a node:

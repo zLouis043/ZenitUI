@@ -27,7 +27,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          mkdir -p build/docs
+          cmake -P docs/gen_examples.cmake
           doxygen Doxyfile
 
       - name: Deploy to GitHub Pages

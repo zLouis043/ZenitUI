@@ -1,3 +1,6 @@
+// @doc   Logic-only @ref handles and refAll<T>() for wiring repeated elements in dynamic lists without unique #ids.
+// @group grp_zmarkup
+
 // ZenitUI — Example 11: ref and refAll
 //
 // @ref is a logic-only identifier. Unlike #id, it does NOT
@@ -64,7 +67,7 @@ static const char *kInitialMarkup = R"(
 // Tiny wrapper that keeps the @counter label in sync with the
 // number of rows in #list. A subclass is required because onUpdate
 // is a virtual method, not an assignable field. In a real app this
-// could be replaced by Bindable<T> (Proposal 2), which would make
+// could be replaced by Bindable<T>, which would make
 // the whole wrapper unnecessary.
 class CounterSync : public TLayout<CounterSync>
 {

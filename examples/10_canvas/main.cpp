@@ -1,3 +1,6 @@
+// @doc   Explicit offscreen composition with CanvasLayout, comparing an unshaded target against a whole-canvas shader via setShader().
+// @group grp_widgets grp_anim
+
 // ZenitUI — Example 10: Canvas
 //
 // CanvasLayout renders its subtree into an offscreen render target, then

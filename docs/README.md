@@ -23,8 +23,8 @@ You write your UI in one of two ways (or both, mixed):
 ```cpp
 auto root = std::make_shared<Layout>(LayoutType::Stack);
 root->size(Percent(100), Percent(100));
-root->getInlineBase().itemsH = Align::Center;
-root->getInlineBase().itemsV = Align::Center;
+root->getInlineBase().alignItems = Align::Center;
+root->getInlineBase().justify = Justify::Center;
 
 auto btn = Btn("Click me", []{
     std::printf("hello!\n");
@@ -178,23 +178,6 @@ make libzenit      # → build/libzenit.a
 g++ main.cpp -Idist/include -Ldist/lib -lzenit -std=c++20
 ```
 
-## Repository layout
-
-```
-ZenitUI/
-├── include/              # public headers (installed)
-│   └── components/       # widget headers
-├── src/
-│   ├── layout/           # layout engine, style resolver, measure/arrange
-│   └── internal/         # animation, input, scroll, z-markup parser, …
-├── backends/raylib/      # reference backend (optional, fetched Raylib)
-├── examples/             # one folder per example (each has main.cpp)
-├── tests/                # unit tests
-├── benchmarks/           # benchmark harness
-├── build/                # CMake build tree (gitignored)
-└── dist/                 # installed artifacts via `make dist` (gitignored)
-```
-
 ---
 
 ## Quick start
@@ -234,53 +217,17 @@ int main() {
 }
 ```
 
-See **[Getting Started](user/01-getting-started.md)** for a full walkthrough.
+Full guides and API reference are available in the **[online documentation](https://zlouis043.github.io/ZenitUI/)**.
 
 ---
 
-## Documentation map
+## Documentation
 
-### For users (writing UI)
+The API reference and developer guides are generated automatically with **Doxygen** directly from the headers and `docs/Guides.dox`:
 
-- [Getting Started](user/01-getting-started.md) — set up the backend, first layout, first widget
-- [Layout](user/02-layout.md) — Stack / Vertical / Horizontal, flexbox, units
-- [Widgets](user/03-widgets.md) — reference for every built-in widget
-- [ZMarkup](user/04-zmarkup.md) — the declarative DSL
-- [ZStyle](user/05-zstyle.md) — the `.zstyle` styling language
-- [Events](user/06-events.md) — click, hover, focus, bubbling, pointer capture
-- [Animations](user/07-animations.md) — transitions and keyframes
-- [Portals](user/08-portals.md) — Popup, Tooltip, Dropdown, Modal
-- [Effects](user/09-effects.md) — filters, shaders, `FilterRegistry`
-- [Custom Widgets](user/10-custom-widgets.md) — build your own component
-- [Data Binding](user/11-bindable.md) — `Bindable<T>` for model ↔ UI
-- [VirtualView](user/12-virtual_view.md) — virtualized lists for 10k+ rows
-
-### For contributors (extending the core)
-
-- [Architecture](internals/01-architecture.md) — high-level view, the frame pipeline
-- [Lifecycle](internals/02-lifecycle.md) — `update` / `measure` / `arrange` / `draw`
-- [Style System](internals/03-style-system.md) — cascade, specificity, inheritance
-- [Animation System](internals/04-animation-system.md) — imperative vs CSS vs `::part`
-- [Layout Engine](internals/05-layout-engine.md) — intrinsic size, flow, dirty tracking
-- [Render Pipeline](internals/06-render-pipeline.md) — inline vs layer, filters, portals
-- [Input System](internals/07-input-system.md) — FSM, focus, pointer capture
-- [Scroll System](internals/08-scroll-system.md) — `ScrollState`, arrange, inertia
-- [Backend](internals/09-backend.md) — implementing `IRenderer` / `IPlatform`
-- [Debugging](internals/10-debug.md) — dumps, logging, headless tests
-- [Benchmarks](internals/11-benchmarks.md) — performance tracking and the CI chart
-
-### API reference
-
-- [`Layout`](api/Layout.md)
-- [`Widgets`](api/Widgets.md)
-- [`Unit`](api/Unit.md)
-- [`Style`](api/Style.md)
-- [`Theme`](api/Theme.md)
-- [`ZMarkup`](api/ZMarkup.md)
-- [`ZStyle`](api/ZStyle.md)
-- [`FilterRegistry`](api/FilterRegistry.md)
-- [`UIContext`](api/UIContext.md)
-- [`Bindable`](api/Bindable.md)
+- **Online:** [https://zlouis043.github.io/ZenitUI/](https://zlouis043.github.io/ZenitUI/)
+- **Local build:** run `make docs` (requires `doxygen` and `graphviz`), then open `build/docs/html/index.html`.
+- **Roadmap:** see [docs/ROADMAP.md](docs/ROADMAP.md) for project status and planned work.
 
 ---
 

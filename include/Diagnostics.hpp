@@ -24,7 +24,12 @@
 #include <string_view>
 #include <vector>
 
-namespace ZenitUI {
+namespace ZenitUI
+{
+
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
 
     /**
      * \brief Source location for a diagnostic.
@@ -32,9 +37,10 @@ namespace ZenitUI {
      * `line` and `column` are 1-based. `length` is 0 when unknown (e.g. for
      * diagnostics that point at a whole rule).
      */
-    struct SourceSpan {
+    struct SourceSpan
+    {
         std::string file;
-        std::uint32_t line   = 0;
+        std::uint32_t line = 0;
         std::uint32_t column = 0;
         std::uint32_t length = 0;
 
@@ -42,7 +48,12 @@ namespace ZenitUI {
     };
 
     /** \brief Diagnostic severity level. */
-    enum class DiagnosticSeverity { Info, Warning, Error };
+    enum class DiagnosticSeverity
+    {
+        Info,
+        Warning,
+        Error
+    };
 
     /**
      * \brief Machine-readable diagnostic identifier.
@@ -55,7 +66,8 @@ namespace ZenitUI {
      *
      * Tools can switch on `code` without matching localized message strings.
      */
-    enum class DiagnosticCode {
+    enum class DiagnosticCode
+    {
         UnterminatedString,
         UnbalancedBrace,
         UnexpectedToken,
@@ -72,16 +84,17 @@ namespace ZenitUI {
         DuplicateRule,
     };
 
-    [[nodiscard]] const char* toString(DiagnosticSeverity s) noexcept;
-    [[nodiscard]] const char* toString(DiagnosticCode c) noexcept;
+    [[nodiscard]] const char *toString(DiagnosticSeverity s) noexcept;
+    [[nodiscard]] const char *toString(DiagnosticCode c) noexcept;
 
     /** \brief A fully-formed diagnostic record. */
-    struct ZStyleDiagnostic {
-        DiagnosticCode     code{};
+    struct ZStyleDiagnostic
+    {
+        DiagnosticCode code{};
         DiagnosticSeverity severity{DiagnosticSeverity::Error};
-        SourceSpan         span{};
-        std::string        message;
-        std::string        hint;
+        SourceSpan span{};
+        std::string message;
+        std::string hint;
         std::optional<SourceSpan> related;
     };
 
@@ -107,7 +120,8 @@ namespace ZenitUI {
      * Implementations must be safe to call from any point in parsing; the
      * `CollectingDiagnosticSink` is the canonical in-memory implementation.
      */
-    class DiagnosticSink {
+    class DiagnosticSink
+    {
     public:
         virtual ~DiagnosticSink() = default;
         virtual void report(ZStyleDiagnostic d) = 0;
@@ -116,7 +130,8 @@ namespace ZenitUI {
     };
 
     /** \brief Sink that discards every diagnostic. */
-    class NullDiagnosticSink final : public DiagnosticSink {
+    class NullDiagnosticSink final : public DiagnosticSink
+    {
     public:
         void report(ZStyleDiagnostic) override {}
         [[nodiscard]] bool hasErrors() const override { return false; }
@@ -129,18 +144,23 @@ namespace ZenitUI {
      * `sorted()` returns a copy sorted by (file, line, column), useful for
      * stable test output. `hasErrors()` checks for any `Error` severity.
      */
-    class CollectingDiagnosticSink final : public DiagnosticSink {
+    class CollectingDiagnosticSink final : public DiagnosticSink
+    {
     public:
-        void report(ZStyleDiagnostic d) override {
+        void report(ZStyleDiagnostic d) override
+        {
             diagnostics_.push_back(std::move(d));
         }
-        [[nodiscard]] bool hasErrors() const override {
-            for (const auto& d : diagnostics_)
-                if (d.severity == DiagnosticSeverity::Error) return true;
+        [[nodiscard]] bool hasErrors() const override
+        {
+            for (const auto &d : diagnostics_)
+                if (d.severity == DiagnosticSeverity::Error)
+                    return true;
             return false;
         }
         [[nodiscard]] std::vector<ZStyleDiagnostic> sorted() const override;
-        [[nodiscard]] const std::vector<ZStyleDiagnostic>& diagnostics() const noexcept {
+        [[nodiscard]] const std::vector<ZStyleDiagnostic> &diagnostics() const noexcept
+        {
             return diagnostics_;
         }
         void clear() { diagnostics_.clear(); }
@@ -167,8 +187,8 @@ namespace ZenitUI {
      */
     [[nodiscard]] std::vector<std::string>
     suggestSimilar(std::string_view unknown,
-                   const std::vector<std::string_view>& candidates,
-                   std::size_t maxDistance   = 2,
+                   const std::vector<std::string_view> &candidates,
+                   std::size_t maxDistance = 2,
                    std::size_t maxSuggestions = 3);
 
     /**
@@ -178,13 +198,13 @@ namespace ZenitUI {
      * Appends the `hint:` line when non-empty, and the `note: see …` line
      * when `related` is set.
      */
-    void formatDiagnostic(const ZStyleDiagnostic& d, std::ostream& os);
+    void formatDiagnostic(const ZStyleDiagnostic &d, std::ostream &os);
 
     /**
      * \brief Return the list of style property names known to the parser.
      *
      * Used by `suggestSimilar` when producing `UnknownProperty` hints.
      */
-    [[nodiscard]] const std::vector<std::string_view>& getKnownStyleProperties();
-
+    [[nodiscard]] const std::vector<std::string_view> &getKnownStyleProperties();
+        /** @} */
 } // namespace ZenitUI

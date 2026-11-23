@@ -15,6 +15,10 @@
 namespace ZenitUI
 {
 
+    /** \addtogroup grp_core
+     *  @{
+     */
+
     /**
      * \struct ScrollState
      * \brief Offset, bounds, velocity and drag anchors for one scroll container.
@@ -90,4 +94,5 @@ namespace ZenitUI
         }
     };
 
+    /** @} */
 } // namespace ZenitUI

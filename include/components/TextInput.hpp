@@ -40,6 +40,10 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
     /**
      * \class TextInput
      * \brief A single-line text editor.
@@ -103,12 +107,15 @@ namespace ZenitUI::UI
             placeholder = std::move(p);
             internal_.pendingTransition = 1;
         }
+        /** \brief Current placeholder text. */
         const std::string &getPlaceholder() const { return placeholder; }
+        /** \brief Enable or disable multi-line wrapping for the placeholder. */
         void setPlaceholderWrap(bool w)
         {
             placeholderWrap = w;
             internal_.pendingTransition = 1;
         }
+        /** \brief `true` if placeholder wrapping is enabled. */
         bool getPlaceholderWrap() const { return placeholderWrap; }
 
         /** \brief Current cursor position in bytes from the start. */
@@ -187,19 +194,19 @@ namespace ZenitUI::UI
          * \brief The main per-frame edit loop.
          *
          * Sequence:
-         *  1. Refresh `hasFocusCache` and advance the cursor blink timer.
-         *  2. Handle pointer down: capture pointer, request focus, detect
+         *  -# Refresh `hasFocusCache` and advance the cursor blink timer.
+         *  -# Handle pointer down: capture pointer, request focus, detect
          *     double/triple click, set cursor from x position, start
          *     selection.
-         *  3. Handle pointer drag while captured (clickCount == 1): move
+         *  -# Handle pointer drag while captured (`clickCount == 1`): move
          *     cursor to follow pointer.
-         *  4. If not focused, clear repeat state and return.
-         *  5. Handle Ctrl/Cmd chords (A, C, X, V, Z, Y).
-         *  6. Handle typed characters (filter 32..126).
-         *  7. Handle key repeat for Backspace, Delete, Left, Right.
-         *  8. Handle Enter (submit + blur) and Escape (blur), Home, End.
-         *  9. If content changed, fire `onTextChanged`.
-         * 10. Update horizontal scroll so the cursor stays visible.
+         *  -# If not focused, clear repeat state and return.
+         *  -# Handle Ctrl/Cmd chords (A, C, X, V, Z, Y).
+         *  -# Handle typed UTF-8 codepoints (`Utf8::isPrintable`).
+         *  -# Handle key repeat for Backspace, Delete, Left, Right (plus Ctrl word jumps).
+         *  -# Handle Enter (submit + blur) and Escape (blur), Home, End.
+         *  -# If content changed, fire `onTextChanged`.
+         *  -# Update horizontal scroll so the cursor stays visible.
          */
         void onUpdate(float dt) override
         {
@@ -915,4 +922,5 @@ namespace ZenitUI::UI
         };
         std::unordered_map<int, RepeatState> repeatStates;
     };
+    /** @} */
 }

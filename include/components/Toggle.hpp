@@ -17,65 +17,70 @@
 #include "Common.hpp"
 #include "Layout.hpp"
 
-namespace ZenitUI::UI {
-
-/**
- * \class Toggle
- * \brief A toggle switch.
- *
- * Style tag: `"Toggle"`. Emitted checked state: `:checked` when `isChecked`.
- * Keyboard: activated by Enter/Space (`setKeyboardActivates(true)`).
- */
-class Toggle : public TLayout<Toggle>
+namespace ZenitUI::UI
 {
-public:
-    /**
-     * \brief Construct with an initial state.
-     * \param state Initial checked state.
+
+    /** \addtogroup grp_widgets
+     *  @{
      */
-    Toggle(bool state = false)
-        : TLayout<Toggle>(LayoutType::Stack), isChecked(state)
-    {
-        setInteractive(true);
-        setFocusable(true);
-        setKeyboardActivates(true);
-        setStyleTag("Toggle");
 
-        setChecked(state);
-
-        onClick = [this]()
-        {
-            isChecked = !isChecked;
-            setChecked(isChecked);
-            if (onToggle)
-                onToggle(isChecked);
-        };
-    }
-
-    /** \brief Fired after the checked state changes, with the new value. */
-    std::function<void(bool)> onToggle = nullptr;
-    /** \brief Current checked state. Prefer `getChecked()` for consistency. */
-    bool isChecked;
-
-protected:
     /**
-     * \brief Create the knob child.
+     * \class Toggle
+     * \brief A toggle switch.
      *
-     * The knob is not interactive and does not block raycasts, so clicks on
-     * the knob reach the Toggle and toggle it. This is what allows
-     * `Toggle:checked .toggle-knob` to be a pure CSS effect.
+     * Style tag: `"Toggle"`. Emitted checked state: `:checked` when `isChecked`.
+     * Keyboard: activated by Enter/Space (`setKeyboardActivates(true)`).
      */
-    void onBuild() override
+    class Toggle : public TLayout<Toggle>
     {
-        knob = std::make_shared<Layout>(LayoutType::Stack);
-        knob->cls("toggle-knob");
-        knob->setInteractive(false);
-        knob->setBlocksRaycast(false);
-        addChild(knob);
-    }
+    public:
+        /**
+         * \brief Construct with an initial state.
+         * \param state Initial checked state.
+         */
+        Toggle(bool state = false)
+            : TLayout<Toggle>(LayoutType::Stack), isChecked(state)
+        {
+            setInteractive(true);
+            setFocusable(true);
+            setKeyboardActivates(true);
+            setStyleTag("Toggle");
 
-private:
-    std::shared_ptr<Layout> knob;
-};
+            setChecked(state);
 
+            onClick = [this]()
+            {
+                isChecked = !isChecked;
+                setChecked(isChecked);
+                if (onToggle)
+                    onToggle(isChecked);
+            };
+        }
+
+        /** \brief Fired after the checked state changes, with the new value. */
+        std::function<void(bool)> onToggle = nullptr;
+        /** \brief Current checked state. Prefer `getChecked()` for consistency. */
+        bool isChecked;
+
+    protected:
+        /**
+         * \brief Create the knob child.
+         *
+         * The knob is not interactive and does not block raycasts, so clicks on
+         * the knob reach the Toggle and toggle it. This is what allows
+         * `Toggle:checked .toggle-knob` to be a pure CSS effect.
+         */
+        void onBuild() override
+        {
+            knob = std::make_shared<Layout>(LayoutType::Stack);
+            knob->cls("toggle-knob");
+            knob->setInteractive(false);
+            knob->setBlocksRaycast(false);
+            addChild(knob);
+        }
+
+    private:
+        std::shared_ptr<Layout> knob;
+    };
+    /** @} */
 } // namespace ZenitUI::UI

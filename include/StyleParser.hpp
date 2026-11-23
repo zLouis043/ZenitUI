@@ -67,6 +67,9 @@
 
 namespace ZenitUI::ZMarkup
 {
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
 
     /** \brief Trim leading and trailing ASCII whitespace. */
     std::string_view trim(std::string_view s);
@@ -275,5 +278,5 @@ namespace ZenitUI::ZMarkup
                        Theme &theme = Theme::get(),
                        DiagnosticSink *sink = nullptr,
                        bool strict = false);
-
+        /** @} */
 } // namespace ZenitUI::ZMarkup

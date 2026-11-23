@@ -28,6 +28,9 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
 
     /**
      * \class Tooltip
@@ -201,5 +204,5 @@ namespace ZenitUI::UI
             beginTransition();
         }
     };
-
+    /** @} */
 } // namespace ZenitUI::UI

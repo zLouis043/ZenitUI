@@ -31,6 +31,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_zstyle
+     *  @{
+     */
 
     class Layout;
 
@@ -207,5 +210,5 @@ namespace ZenitUI
                                 Align styleItemsH, Align styleItemsV,
                                 ComputedStyle &result);
     };
-
+    /** @} */
 } // namespace ZenitUI

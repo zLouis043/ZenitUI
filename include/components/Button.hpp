@@ -23,92 +23,97 @@
 #include "Text.hpp"
 #include "Layouts.hpp"
 
-namespace ZenitUI::UI {
-
-/**
- * \class Button
- * \brief A push button.
- *
- * Style tag: `"Button"`. Inherits from `Panel` so it shares its raycast and
- * chrome behaviour. Emitted `:pressed` / `:hover` / `:focused` states match
- * the underlying `InputController` lifecycle.
- *
- * The button is keyboard-activatable: `Enter` and `Space` fire `onClick`
- * when the button has focus.
- */
-class Button : public TLayout<Button, Panel>
+namespace ZenitUI::UI
 {
-public:
-    /**
-     * \brief Construct a button with the given click handler.
-     * \param cb Handler fired on click. May be empty; `setText` can still be
-     *           used to add a label later.
+
+    /** \addtogroup grp_widgets
+     *  @{
      */
-    Button(std::function<void()> cb)
-    {
-        onClick = std::move(cb);
-        setInteractive(true);
-        setFocusable(true);
-        setKeyboardActivates(true);
-        setStyleTag("Button");
-        getInlineDefaults().alignItems = Align::Center;
-    }
 
     /**
-     * \brief Return the current label text, or `""` if there is none.
+     * \class Button
+     * \brief A push button.
      *
-     * Looks at the first child only. Returns empty when the first child is
-     * not a `Text` (e.g. after `setText` was blocked by a non-Text child).
-     */
-    std::string text() const
-    {
-        auto t = labelChild();
-        return t ? t->getText() : std::string{};
-    }
-
-    /**
-     * \brief Update the label text.
+     * Style tag: `"Button"`. Inherits from `Panel` so it shares its raycast and
+     * chrome behaviour. Emitted `:pressed` / `:hover` / `:focused` states match
+     * the underlying `InputController` lifecycle.
      *
-     * If the first child is a `Text`, replaces its content. Otherwise, adds a
-     * new `Text` labeled with the given string as the last child. Note that
-     * adding a label after a non-Text child will make `text()` (which only
-     * inspects the first child) return empty — this is a known wart of the
-     * current implementation; `Btn` sets the label first so it is not
-     * usually a problem in practice.
+     * The button is keyboard-activatable: `Enter` and `Space` fire `onClick`
+     * when the button has focus.
      */
-    void setText(const std::string& s)
+    class Button : public TLayout<Button, Panel>
     {
-        if (auto t = labelChild())
+    public:
+        /**
+         * \brief Construct a button with the given click handler.
+         * \param cb Handler fired on click. May be empty; `setText` can still be
+         *           used to add a label later.
+         */
+        Button(std::function<void()> cb)
         {
-            t->setText(s);
-            return;
+            onClick = std::move(cb);
+            setInteractive(true);
+            setFocusable(true);
+            setKeyboardActivates(true);
+            setStyleTag("Button");
+            getInlineDefaults().alignItems = Align::Center;
         }
-        addChild(Label(s)->cls("btn-text"));
-    }
 
-private:
-    /** \brief The first child, if it is a `Text`; `nullptr` otherwise. */
-    std::shared_ptr<Text> labelChild() const
+        /**
+         * \brief Return the current label text, or `""` if there is none.
+         *
+         * Looks at the first child only. Returns empty when the first child is
+         * not a `Text` (e.g. after `setText` was blocked by a non-Text child).
+         */
+        std::string text() const
+        {
+            auto t = labelChild();
+            return t ? t->getText() : std::string{};
+        }
+
+        /**
+         * \brief Update the label text.
+         *
+         * If the first child is a `Text`, replaces its content. Otherwise, adds a
+         * new `Text` labeled with the given string as the last child. Note that
+         * adding a label after a non-Text child will make `text()` (which only
+         * inspects the first child) return empty — this is a known wart of the
+         * current implementation; `Btn` sets the label first so it is not
+         * usually a problem in practice.
+         */
+        void setText(const std::string &s)
+        {
+            if (auto t = labelChild())
+            {
+                t->setText(s);
+                return;
+            }
+            addChild(Label(s)->cls("btn-text"));
+        }
+
+    private:
+        /** \brief The first child, if it is a `Text`; `nullptr` otherwise. */
+        std::shared_ptr<Text> labelChild() const
+        {
+            if (children.empty())
+                return nullptr;
+            return std::dynamic_pointer_cast<Text>(children.front());
+        }
+    };
+
+    /**
+     * \brief Convenience factory: a `Button` with a `Text` label and a click handler.
+     *
+     * \param text Label to display. Stored as the first child with class
+     *             `"btn-text"` so theme rules can target it.
+     * \param cb   Optional click handler.
+     * \return The constructed button.
+     */
+    inline std::shared_ptr<Button> Btn(std::string text, std::function<void()> cb = nullptr)
     {
-        if (children.empty())
-            return nullptr;
-        return std::dynamic_pointer_cast<Text>(children.front());
+        auto b = Button::create(std::move(cb));
+        b->addChild(Label(text)->cls("btn-text"));
+        return b;
     }
-};
-
-/**
- * \brief Convenience factory: a `Button` with a `Text` label and a click handler.
- *
- * \param text Label to display. Stored as the first child with class
- *             `"btn-text"` so theme rules can target it.
- * \param cb   Optional click handler.
- * \return The constructed button.
- */
-inline std::shared_ptr<Button> Btn(std::string text, std::function<void()> cb = nullptr)
-{
-    auto b = Button::create(std::move(cb));
-    b->addChild(Label(text)->cls("btn-text"));
-    return b;
-}
 
 } // namespace ZenitUI::UI

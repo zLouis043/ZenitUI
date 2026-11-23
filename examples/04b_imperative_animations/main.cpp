@@ -1,3 +1,6 @@
+// @doc   Event-driven imperative UIAnimation timelines: play/reverse, custom math tracks, and weak_ptr-safe chaining via onFinished.
+// @group grp_anim
+
 // ZenitUI — Example 04b: Imperative Animations
 //
 // UIAnimation gives you programmatic, event-driven animations: played by

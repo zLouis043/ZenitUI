@@ -1,5 +1,24 @@
 #pragma once
 
+/**
+ * \file TextArea.hpp
+ * \brief A multi-line UTF-8 editable text area with word wrapping and vertical scrolling.
+ *
+ * `TextArea` is a single `Stack` node that renders its own wrapped visual
+ * lines, selection highlights, blinking caret, placeholder, and internal
+ * scrollbar.
+ *
+ * Editing model:
+ *  - Text is stored as UTF-8 (`std::string`); cursor movement, deletion,
+ *    word jumps (`Ctrl+Arrow`/`Backspace`/`Delete`), double-click selection,
+ *    click-to-caret, and soft word-wrapping all operate on grapheme-cluster
+ *    boundaries via `ZenitUI::Utf8`.
+ *  - `Enter` inserts a `\n` newline while keeping focus; `Escape` releases focus.
+ *  - Supports `Ctrl+A/C/X/V` clipboard operations (normalizing `\r\n` / `\r`
+ *    to `\n`), `Ctrl+Z/Y` (and `Ctrl+Shift+Z`) 50-step undo/redo history, and
+ *    mouse-wheel scrolling that yields to parent scroll containers at bounds.
+ */
+
 #include "Common.hpp"
 #include "Layout.hpp"
 #include "Utf8.hpp"
@@ -9,9 +28,29 @@
 
 namespace ZenitUI::UI
 {
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
+    /**
+     * \class TextArea
+     * \ingroup grp_widgets
+     * \brief A multi-line UTF-8 text editor.
+     *
+     * Style tag: `"TextArea"`. Interactive and focusable.
+     * Styleable parts:
+     *  - `::placeholder` — placeholder text colour when empty.
+     *  - `::selection` — selection highlight background.
+     *  - `::cursor` — caret colour and width (`borderWidth.left`).
+     */
     class TextArea : public TLayout<TextArea>
     {
     public:
+        /**
+         * \brief Construct with optional initial text and visible row count.
+         * \param initial Initial UTF-8 content; cursor starts at the end.
+         * \param rows    Minimum visible rows used for intrinsic height (clamped to `>= 1`).
+         */
         TextArea(std::string initial = "", int rows = 3)
             : TLayout<TextArea>(LayoutType::Stack),
               text(std::move(initial)),
@@ -32,6 +71,7 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Replace the content, snap the cursor to a valid UTF-8 boundary, clear selection, and record undo history. */
         void setText(std::string t)
         {
             text = std::move(t);
@@ -43,6 +83,7 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
             saveHistory();
         }
+        /** \brief Current UTF-8 content. */
         const std::string &getText() const { return text; }
         void clear() { setText(""); }
 
@@ -58,27 +99,36 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
+        /** \brief Set placeholder text displayed when the field is empty. */
         void setPlaceholder(std::string p)
         {
             placeholder = std::move(p);
             internal_.pendingTransition = 1;
         }
+        /** \brief Current placeholder text. */
         const std::string &getPlaceholder() const { return placeholder; }
+
+        /** \brief Enable or disable soft wrapping for the placeholder (default: `true`). */
         void setPlaceholderWrap(bool w)
         {
             placeholderWrap_ = w;
             placeholder_dirty = true;
             internal_.pendingTransition = 1;
         }
+        /** \brief `true` if placeholder wrapping is enabled. */
         bool getPlaceholderWrap() const { return placeholderWrap_; }
 
+        /** \brief Set the row count used to compute intrinsic height (clamped to `>= 1`). */
         void setRows(int r)
         {
             rows_ = std::max(1, r);
             internal_.pendingTransition = 1;
         }
+
+        /** \brief Configured row count. */
         int getRows() const { return rows_; }
 
+        /** \brief Override the font used for measurement and rendering. */
         void setFont(FontHandle f)
         {
             defaultFont = f;
@@ -96,6 +146,7 @@ namespace ZenitUI::UI
             bool hardBreak{true};
         };
 
+        /** \brief Compute intrinsic size from roughly 16 "M" glyphs and rows_ line heights. */
         Vec2 computeIntrinsicSize(float, float) override
         {
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
@@ -109,6 +160,7 @@ namespace ZenitUI::UI
             return {std::max(180.0f, charW * 16.0f), std::max(40.0f, lineH * (float)rows_)};
         }
 
+        /** \brief Reset focus, selection, and key-repeat state when disabled. */
         void onEnabledChanged(bool nowEnabled) override
         {
             if (!nowEnabled)
@@ -120,6 +172,7 @@ namespace ZenitUI::UI
             }
         }
 
+        /** \brief Handle pointer selection, wheel scrolling, keyboard editing, and auto-scroll. */
         void onUpdate(float dt) override
         {
             hasFocusCache = UIContext::get().hasFocus(this);
@@ -549,6 +602,7 @@ namespace ZenitUI::UI
             }
         }
 
+        /** \brief Render placeholder or wrapped lines, selection rects, caret, and internal scrollbar. */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;
@@ -757,7 +811,7 @@ namespace ZenitUI::UI
             if (out.empty())
                 out.push_back({0, 0, true});
             return out;
-        }    
+        }
 
         void ensureLines(float availW, FontHandle f, float fs, float sp)
         {
@@ -944,4 +998,5 @@ namespace ZenitUI::UI
         };
         std::unordered_map<int, RepeatState> repeatStates;
     };
+    /** @} */
 } // namespace ZenitUI::UI

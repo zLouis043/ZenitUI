@@ -1,3 +1,6 @@
+// @doc   Visual tour of Vertical, Horizontal, and Stack containers with grow, gap, justify, absolute overlay, and wrap flow.
+// @group grp_core
+
 // ZenitUI — Example 02: Layouts
 //
 // A visual tour of the three container types (Vertical, Horizontal,
@@ -160,7 +163,7 @@ int main()
         root->addChild(DemoRow("Stack overlay", content));
     }
 
-    // --- 6. Wrap flow (Tag Cloud Reale) ---
+    // --- 6. Wrap flow (Tag Cloud) ---
     {
         auto title = Label("Wrap flow (Tag Cloud natively working)");
         title->getInlineBase().color = ZenitUI::Color{180, 180, 190, 255};

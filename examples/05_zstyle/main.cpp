@@ -1,3 +1,6 @@
+// @doc   External .zstyle stylesheet demonstrating :root custom properties, var(), calc(), @media queries, pseudo-classes, ::part, and transitions.
+// @group grp_zstyle
+
 // ZenitUI — Example 05: ZStyle
 //
 // Demonstrates a stylesheet living in an external file. The theme.zstyle

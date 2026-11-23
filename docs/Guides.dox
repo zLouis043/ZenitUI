@@ -1,0 +1,158 @@
+/**
+ * \mainpage ZenitUI — Guide & API Reference
+ *
+ * **ZenitUI** is a retained-mode C++20 UI framework with a Flexbox-inspired
+ * layout engine, a CSS-like styling language (**ZStyle**), a declarative UI DSL
+ * (**ZMarkup**), and pluggable rendering/platform backends.
+ *
+ * \section sec_mental_model Mental Model
+ *
+ * 1. **One node type:** every container and widget derives from
+ *    ZenitUI::Layout (typically via the CRTP helper ZenitUI::TLayout).
+ * 2. **Global frame state in UIContext:** attach your `IRenderer`, `IPlatform`,
+ *    and `IAssetProvider` once to ZenitUI::UIContext::get().
+ * 3. **Four-pass frame cycle:**
+ *    - `root->runFrame(dt)` runs `update` (input, style transitions,
+ *      animations), `measure` (bottom-up), and `arrange` (top-down).
+ *    - `root->renderFrame()` runs `beginFrame`, `draw` (clips, layers,
+ *      portals), and `endFrame`.
+ * 4. **Imperative or declarative — same tree:** build nodes with the fluent C++
+ *    API or with ZMarkup (`ZMarkup::build`, `ZMarkup::instantiate`), and style
+ *    both with `.zstyle` stylesheets.
+ *
+ * \section sec_quickstart Quick Start (Hello World)
+ *
+ * Directly from \ref 01_hello_world/main.cpp "examples/01_hello_world/main.cpp"
+ * (compiled by CI on every build):
+ *
+ * \include 01_hello_world/main.cpp
+ *
+ * \section sec_modules Browse by Topic
+ *
+ * | Module | Contents | Recommended Examples |
+ * |--------|----------|----------------------|
+ * | \ref grp_core | `Layout`, `TLayout`, frame lifecycle, `UIContext`, units, scroll | \ref 02_layouts/main.cpp "02_layouts", \ref 08_portals/main.cpp "08_portals", \ref 09_custom_widget/main.cpp "09_custom_widget" |
+ * | \ref grp_widgets | Built-in widgets (`Text`, `Button`, `TextInput`, `TextArea`, `Dropdown`, `Modal`, `VirtualView`, …) | \ref 03_widgets/main.cpp "03_widgets", \ref 10_canvas/main.cpp "10_canvas" |
+ * | \ref grp_zmarkup | ZMarkup DSL, `UINode` / `WeakUINode`, Prefabs & `<Slot>`, `If` / `Each`, `Bindable<T>` | \ref 06_zmarkup/main.cpp "06_zmarkup", \ref 11_ref_list/main.cpp "11_ref_list", \ref 12_bindable/main.cpp "12_bindable", \ref 13_prefabs/main.cpp "13_prefabs" |
+ * | \ref grp_zstyle | `.zstyle` cascade, `Theme`, `Style`, `StyleParser`, `@media`, diagnostics | \ref 05_zstyle/main.cpp "05_zstyle" |
+ * | \ref grp_anim | Transitions, `@keyframes`, imperative animations, `FilterRegistry` & shaders | \ref 04_animations/main.cpp "04_animations", \ref 04b_imperative_animations/main.cpp "04b_imperative_animations", \ref 07_effects/main.cpp "07_effects" |
+ * | \ref grp_backends | Raylib backend, `IRenderer`/`IPlatform`/`IAssetProvider`, `Utf8`/`CodepointSet`, `Debug` | \ref 01_hello_world/main.cpp "01_hello_world", \ref 00_demo/main.cpp "00_demo" |
+ *
+ * \section sec_learning_path Suggested Reading Order
+ *
+ * New to ZenitUI? Walk through the **Examples** tab in order:
+ * 1. \ref 01_hello_world/main.cpp "01_hello_world" — minimal Raylib setup and frame loop.
+ * 2. \ref 02_layouts/main.cpp "02_layouts" & \ref 03_widgets/main.cpp "03_widgets" — Flexbox containers, units, and built-in widgets.
+ * 3. \ref 05_zstyle/main.cpp "05_zstyle" & \ref 06_zmarkup/main.cpp "06_zmarkup" — declarative markup and stylesheets.
+ * 4. \ref 12_bindable/main.cpp "12_bindable" & \ref 13_prefabs/main.cpp "13_prefabs" — reactive state and reusable prefabs with slots.
+ * 5. \ref 00_demo/main.cpp "00_demo" — complete end-to-end showcase.
+ */
+
+/**
+ * \defgroup grp_core Core, Layout & Lifecycle
+ * \brief Base node types (`Layout`, `TLayout`), global context (`UIContext`), units, input, and scrolling.
+ *
+ * Every UI element is a `std::shared_ptr<ZenitUI::Layout>`. Always allocate
+ * nodes through `TLayout<Derived>::create()` or `std::make_shared<Layout>` so
+ * `shared_from_this()` is valid.
+ *
+ * Key concepts:
+ * - **Layout strategies:** `LayoutType::Stack`, `LayoutType::Vertical`, and
+ *   `LayoutType::Horizontal` with `gap`, `grow`, `shrink`, `wrap`,
+ *   `align-items`, `justify-content`, `margin: auto`, and `setVisible(false)`
+ *   (`display: none`).
+ * - **Units:** `px`, `%`, `vw`, `vh`, `pw`, `ph`, `auto`, and `calc()` expressions.
+ * - **Portals & stacking:** `setPortal(true)` renders and hit-tests above
+ *   ancestor clip rects; `position` + `z-index` create stacking contexts.
+ * - **Custom components:** inherit from `TLayout<Derived>` and override
+ *   `onBuild()`, `computeIntrinsicSize()`, `onUpdate()`, or `renderContent()`.
+ *
+ * **Live examples:** \ref 02_layouts/main.cpp "02_layouts" ·
+ * \ref 08_portals/main.cpp "08_portals" ·
+ * \ref 09_custom_widget/main.cpp "09_custom_widget"
+ */
+
+/**
+ * \defgroup grp_widgets Built-in Widgets
+ * \brief Ready-to-use UI components in `ZenitUI::UI`.
+ *
+ * Built-in widgets expose a style tag matching their class name (`Button`,
+ * `TextInput`, `TextArea`, `Slider`, `Dropdown`, …) and optional pseudo-element
+ * parts (`::track`, `::fill`, `::knob`, `::cursor`, `::selection`,
+ * `::placeholder`) that can be themed from `.zstyle` without subclassing.
+ *
+ * **Live examples:** \ref 03_widgets/main.cpp "03_widgets" ·
+ * \ref 08_portals/main.cpp "08_portals" ·
+ * \ref 10_canvas/main.cpp "10_canvas"
+ */
+
+/**
+ * \defgroup grp_zmarkup ZMarkup, Prefabs & Data Binding
+ * \brief Declarative UI construction, reusable components, and reactive bindings.
+ *
+ * Key concepts:
+ * - **Building trees:** parse inline strings with `ZMarkup::build` or files
+ *   with `ZMarkup::loadMarkupFile`.
+ * - **Addressing nodes:** use `#id` for global CSS/lookup IDs (`UINode::find`)
+ *   and `@ref` for local template handles (`UINode::ref`, `UINode::refAll`).
+ * - **Prefabs & slots:** register reusable templates with
+ *   `ZMarkup::registerPrefab` and inject caller children via anonymous or named
+ *   `<Slot>` elements.
+ * - **Structural & reactive UI:** use `If` / `Each` (with keyed reconciliation)
+ *   together with `Bindable<T>` and `WeakUINode` for cycle-free updates.
+ *
+ * **Live examples:** \ref 06_zmarkup/main.cpp "06_zmarkup" ·
+ * \ref 11_ref_list/main.cpp "11_ref_list" ·
+ * \ref 12_bindable/main.cpp "12_bindable" ·
+ * \ref 13_prefabs/main.cpp "13_prefabs"
+ */
+
+/**
+ * \defgroup grp_zstyle ZStyle, Theme & Diagnostics
+ * \brief CSS-like style cascade, `.zstyle` parser, custom properties, and media queries.
+ *
+ * Load stylesheets into `Theme::get()` via `ZMarkup::loadStyleFile` or
+ * `ZMarkup::loadStyleString`. Resolution follows specificity (`#id` > `.class`
+ * > `Tag`), supports descendant combinators (`A B`), interaction pseudo-classes
+ * (`:hover`, `:pressed`, `:focus`, `:checked`, `:disabled`), custom properties
+ * (`--token` / `var(--token)`), `@media` queries, and structured diagnostics
+ * with typo suggestions.
+ *
+ * **Live examples:** \ref 05_zstyle/main.cpp "05_zstyle"
+ */
+
+/**
+ * \defgroup grp_anim Animations, Transitions & Filters
+ * \brief Property transitions, `@keyframes`, imperative animations, and post-processing filters.
+ *
+ * Key concepts:
+ * - **Transitions:** opt-in per node (`transition-time: 0s` by default); set
+ *   `transition` in `.zstyle` to smoothly interpolate across state changes.
+ * - **Keyframe & imperative animations:** declare `@keyframes` in `.zstyle` or
+ *   register a `UIAnimation` via `Layout::addAnimation` / `playAnimation`.
+ * - **Filters & shaders:** apply `filter: blur(...) drop-shadow(...)` or
+ *   register custom post-processing passes in `FilterRegistry`. Off-screen
+ *   targets are automatically pooled by `UIContext::targetPool`.
+ *
+ * **Live examples:** \ref 04_animations/main.cpp "04_animations" ·
+ * \ref 04b_imperative_animations/main.cpp "04b_imperative_animations" ·
+ * \ref 07_effects/main.cpp "07_effects" ·
+ * \ref 07b_effects_stress/main.cpp "07b_effects_stress"
+ */
+
+/**
+ * \defgroup grp_backends Backends, UTF-8 & Debugging
+ * \brief Backend implementations (Raylib), Unicode utilities (`Utf8`, `CodepointSet`), logging, and debug dumps.
+ *
+ * The core library depends solely on `IRenderer`, `IPlatform`, and
+ * `IAssetProvider`. Attach the reference Raylib backend (`RaylibRenderer`,
+ * `RaylibPlatform`, `RaylibAssetProvider`) for desktop apps, or implement the
+ * three interfaces to integrate ZenitUI with any custom engine.
+ *
+ * Use `CodepointSet` on `RaylibAssetProvider::defaultCodepoints()` to control
+ * which UTF-8 glyph ranges are baked into font atlases, and `ZenitUI::Debug`
+ * (`ZENITUI_DEBUG`) to inspect live layout trees, styles, and render stats.
+ *
+ * **Live examples:** \ref 01_hello_world/main.cpp "01_hello_world" ·
+ * \ref 00_demo/main.cpp "00_demo"
+ */

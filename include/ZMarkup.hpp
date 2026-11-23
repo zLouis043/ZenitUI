@@ -21,6 +21,9 @@
 
 namespace ZenitUI::ZMarkup
 {
+    /** \addtogroup grp_zmarkup
+     *  @{
+     */
 
     /**
      * \struct Element
@@ -682,5 +685,5 @@ namespace ZenitUI::ZMarkup
         const std::vector<std::string> &extraClasses = {},
         const std::string &id = "",
         const std::string &ref = "");
-
+        /** @} */
 } // namespace ZenitUI::ZMarkup

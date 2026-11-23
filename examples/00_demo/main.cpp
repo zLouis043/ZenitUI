@@ -1,3 +1,6 @@
+// @doc   End-to-end showcase combining Raylib setup, custom FilterRegistry shaders, ZStyle, ZMarkup, widgets, portals, and animations.
+// @group grp_core grp_backends
+
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 #define NOUSER
@@ -19,11 +22,10 @@ using namespace ZenitUI;
 
 int main(void)
 {
-
     InitWindow(800, 600, "TestUI");
-
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
+    // 1. Bind the Raylib backend implementations to the global UIContext.
     RaylibRenderer backendRenderer;
     RaylibPlatform backendPlatform;
     RaylibAssetProvider backendAssets(backendRenderer);
@@ -32,6 +34,7 @@ int main(void)
     UIContext::get().platform = &backendPlatform;
     UIContext::get().assets = &backendAssets;
 
+    // 2. Register fonts, textures, and fragment shaders referenced by .zstyle rules.
     backendAssets.loadFont("calibri", "assets/calibrib.ttf", 64);
     backendAssets.loadFont("mont", "assets/mont.otf", 64);
     backendAssets.loadFont("congose", "assets/congose.ttf", 64);
@@ -42,17 +45,20 @@ int main(void)
     backendAssets.loadEffect("hueShift", "assets/hue_shift.fs");
     backendAssets.loadEffect("blur", "assets/blur.fs");
     backendAssets.loadEffect("dropShadow", "assets/drop_shadow.fs");
-
     backendAssets.loadEffect("sepia", "assets/sepia.fs");
 
-    ZenitUI::FilterRegistry::get().add(ZenitUI::FilterDef{.name = "sepia",
-                                        .shader = "sepia",
-                                        .pattern = ZenitUI::FilterPattern::SinglePass,
-                                        .params = {
-                                            {"amount", ZenitUI::FilterParamType::Float, 0, 0.7f}}});
+    // 3. Register a custom single-pass post-processing filter usable via `filter: sepia(...)`.
+    ZenitUI::FilterRegistry::get().add(ZenitUI::FilterDef{
+        .name = "sepia",
+        .shader = "sepia",
+        .pattern = ZenitUI::FilterPattern::SinglePass,
+        .params = {
+            {"amount", ZenitUI::FilterParamType::Float, 0, 0.7f}}});
 
+    // 4. Load the application's .zstyle stylesheets into the global Theme.
     InitializeGameTheme();
 
+    // 5. Create a full-viewport Stack root and center the launcher buttons.
     auto rootLayer = std::make_shared<Layout>(LayoutType::Stack);
     rootLayer->getInlineBase().itemsH = Align::Center;
     rootLayer->getInlineBase().itemsV = Align::Center;
@@ -61,6 +67,7 @@ int main(void)
 
     auto launchRow = HStack({})->cls("launch-row");
 
+    // Clicking either button spawns a self-contained TLayout overlay as a child of rootLayer.
     auto openDemoBtn = UI::Btn("APRI DEMO", [rootLayer]()
                                { rootLayer->addChild(DemoWindow::create()); });
     openDemoBtn->cls("btn-primary");
@@ -73,6 +80,7 @@ int main(void)
     launchRow->addChild(openSettingsBtn);
     rootLayer->addChild(launchRow);
 
+    // 6. Standard ZenitUI frame loop: runFrame() updates/measures/arranges, renderFrame() draws.
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();

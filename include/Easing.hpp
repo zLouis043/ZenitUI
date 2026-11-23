@@ -10,6 +10,9 @@
 
 namespace ZenitUI
 {
+    /** \addtogroup grp_anim
+     *  @{
+     */
 
     /**
      * \enum TransitionFunction
@@ -160,4 +163,6 @@ namespace ZenitUI
         }
         return false;
     }
+
+    /** @} */
 }

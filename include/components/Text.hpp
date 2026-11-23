@@ -32,6 +32,10 @@
 namespace ZenitUI::UI
 {
 
+    /** \addtogroup grp_widgets
+     *  @{
+     */
+
     /**
      * \class Text
      * \brief A read-only text node.
@@ -532,5 +536,5 @@ namespace ZenitUI::UI
 
     /** \brief Convenience factory: a `Text` node. */
     inline std::shared_ptr<Text> Label(std::string t) { return Text::create(std::move(t)); }
-
+    /** @} */
 } // namespace ZenitUI::UI

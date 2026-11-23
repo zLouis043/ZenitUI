@@ -5,6 +5,9 @@
 using namespace ZenitUI;
 using namespace ZenitUI::UI;
 
+// Full-screen modal settings overlay built as a custom TLayout component.
+// Demonstrates focus scoping, backdrop/Escape dismissal, and mixing imperative
+// containers with declarative ZMarkup sections.
 class SettingsScreen : public TLayout<SettingsScreen>
 {
 public:
@@ -12,6 +15,7 @@ public:
         : TLayout<SettingsScreen>(LayoutType::Stack),
           onCloseCb(std::move(onCloseCb)) {}
 
+    // Defers removal until the parent's next culling pass (safe during input callbacks).
     void close()
     {
         if (onCloseCb)
@@ -20,18 +24,21 @@ public:
     }
 
 protected:
+    // Called automatically by SettingsScreen::create() once shared_from_this() is valid.
     void onBuild() override
     {
         addClass("settings-overlay");
-        setFocusScope(true);
+        setFocusScope(true); // Trap Tab navigation inside this overlay.
         setInteractive(true);
         setBlocksRaycast(true);
 
+        // Inner panel stops clicks from bubbling out to the backdrop.
         auto panel = VStack()->cls("settings-panel");
         panel->setInteractive(true);
         panel->setBlocksRaycast(true);
         panel->onClick = []() { /* consume click */ };
 
+        // Header bar with title, flexible spacer, and close button.
         auto header = HStack()->cls("settings-header");
         header->addChild(Label("Impostazioni")->cls("settings-title"));
         header->addChild(std::make_shared<Layout>()->cls("spacer-grow"));
@@ -42,12 +49,14 @@ protected:
         header->addChild(closeBtn);
         panel->addChild(header);
 
+        // Scrollable content area populated with ZMarkup-built sections.
         auto body = ScrollView::create(LayoutType::Vertical)->cls("settings-body");
         buildAudioSection(body);
         buildVideoSection(body);
         buildGameplaySection(body);
         panel->addChild(body);
 
+        // Footer action bar.
         auto footer = HStack()->cls("settings-footer");
 
         auto resetBtn = Btn("Ripristina default", [this]()
@@ -60,8 +69,7 @@ protected:
                              ->cls("btn-secondary");
 
         auto saveBtn = Btn("Salva", [this]()
-                           {
-            close(); })
+                           { close(); })
                            ->cls("btn-primary");
         saveBtn->setEnabled(false);
 
@@ -74,7 +82,8 @@ protected:
         addChild(panel);
     }
 
-        void onUpdate(float) override
+    // Dismiss when clicking directly on the dimmed backdrop or pressing Escape.
+    void onUpdate(float) override
     {
         auto &ctx = UIContext::get();
         if (ctx.pointer[ZenitUI::MouseButton::Left].pressed && ctx.topmostConsumer == this)
@@ -219,6 +228,7 @@ private:
         }
     }
 
+    // Wire a Slider's [0..1] value to a percentage Text label via #id lookup.
     static void bindPercent(ZMarkup::UINode &ui,
                             const char *sliderId,
                             const char *labelId)
