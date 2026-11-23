@@ -1,0 +1,9 @@
+<map id="ZenitUI::UI::Modal" name="ZenitUI::UI::Modal">
+<area shape="rect" id="Node000001" title="A backdrop + content overlay." alt="" coords="35,249,175,277"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="5,174,205,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,215,107,250,103,248,103,219"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render." alt="" coords="44,98,166,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,139,108,174,102,173,104,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="23,5,187,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,63,108,98,102,97,104,68"/>
+</map>

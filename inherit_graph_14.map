@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classZenitUI_1_1DiagnosticSink.html" title="Abstract destination for diagnostics." alt="" coords="5,32,180,60"/>
+<area shape="rect" id="Node000001" href="$classZenitUI_1_1CollectingDiagnosticSink.html" title="Sink that accumulates diagnostics in insertion order." alt="" coords="228,5,467,33"/>
+<area shape="poly" id="edge37_Node000000_Node000001" title=" " alt="" coords="195,32,230,31,225,32,196,38"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1NullDiagnosticSink.html" title="Sink that discards every diagnostic." alt="" coords="247,57,448,85"/>
+<area shape="poly" id="edge38_Node000000_Node000002" title=" " alt="" coords="195,53,249,61,244,61,195,59"/>
+</map>

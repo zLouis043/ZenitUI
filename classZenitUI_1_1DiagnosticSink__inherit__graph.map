@@ -1,0 +1,7 @@
+<map id="ZenitUI::DiagnosticSink" name="ZenitUI::DiagnosticSink">
+<area shape="rect" id="Node000001" title="Abstract destination for diagnostics." alt="" coords="159,5,334,33"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1CollectingDiagnosticSink.html" title="Sink that accumulates diagnostics in insertion order." alt="" coords="5,81,245,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,41,148,83,145,78,209,42"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1NullDiagnosticSink.html" title="Sink that discards every diagnostic." alt="" coords="269,81,469,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="282,39,350,81,345,80,281,44"/>
+</map>

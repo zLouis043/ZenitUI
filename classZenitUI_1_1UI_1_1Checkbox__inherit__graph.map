@@ -1,0 +1,9 @@
+<map id="ZenitUI::UI::Checkbox" name="ZenitUI::UI::Checkbox">
+<area shape="rect" id="Node000001" title="A checkbox with a custom&#45;painted check mark." alt="" coords="35,249,199,277"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="5,174,229,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,215,119,250,115,248,115,219"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render." alt="" coords="56,98,178,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,139,120,174,114,172,116,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="35,5,199,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,63,120,98,114,97,116,68"/>
+</map>

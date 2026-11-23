@@ -1,0 +1,5 @@
+<map id="ZenitUI::UIAnimation::TrackBase" name="ZenitUI::UIAnimation::TrackBase">
+<area shape="rect" id="Node000001" title="Type&#45;erased track interface." alt="" coords="5,5,164,50"/>
+<area shape="rect" id="Node000002" href="$structZenitUI_1_1UIAnimation_1_1Track.html" title="Concrete typed track: start/end pair plus a setter." alt="" coords="5,98,164,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,64,87,99,82,97,83,68"/>
+</map>

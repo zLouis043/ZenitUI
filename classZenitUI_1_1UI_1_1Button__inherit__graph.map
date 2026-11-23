@@ -1,0 +1,7 @@
+<map id="ZenitUI::UI::Button" name="ZenitUI::UI::Button">
+<area shape="rect" id="Node000001" title="A push button." alt="" coords="30,174,172,201"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="5,81,197,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,140,103,174,99,172,99,143"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="73,5,129,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,46,104,81,98,80,100,51"/>
+</map>

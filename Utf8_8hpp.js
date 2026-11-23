@@ -1,0 +1,26 @@
+var Utf8_8hpp =
+[
+    [ "ZenitUI::CodepointSet", "classZenitUI_1_1CodepointSet.html", "classZenitUI_1_1CodepointSet" ],
+    [ "ZenitUI::Utf8::clusterBoundaries", "namespaceZenitUI_1_1Utf8.html#ac25a60a5464e36b9a20fd03e5f762476", null ],
+    [ "ZenitUI::Utf8::codepointCount", "namespaceZenitUI_1_1Utf8.html#a0491f2b3d2f8c95a72db4ccf26164bfe", null ],
+    [ "ZenitUI::Utf8::decode", "namespaceZenitUI_1_1Utf8.html#aa245d34e67c2fefd727066b7677db67a", null ],
+    [ "ZenitUI::Utf8::encode", "namespaceZenitUI_1_1Utf8.html#a3d8d611ca62ead5cfc396eb733698fe6", null ],
+    [ "ZenitUI::Utf8::encode", "namespaceZenitUI_1_1Utf8.html#a9947128365e1e347f0429ff763ec6de4", null ],
+    [ "ZenitUI::Utf8::isClusterExtend", "namespaceZenitUI_1_1Utf8.html#a1e82dde26fb4c62a1e1c67c5f2f4120f", null ],
+    [ "ZenitUI::Utf8::isContinuation", "namespaceZenitUI_1_1Utf8.html#a096d41652456b959967f3a741b56f7ad", null ],
+    [ "ZenitUI::Utf8::isPrintable", "namespaceZenitUI_1_1Utf8.html#a34c1cd69883f294c0919a1e276c2c4d8", null ],
+    [ "ZenitUI::Utf8::isRegionalIndicator", "namespaceZenitUI_1_1Utf8.html#a44d44e5a8676d95ce62cf53580bf3eb9", null ],
+    [ "ZenitUI::Utf8::isValidCodepoint", "namespaceZenitUI_1_1Utf8.html#a0da4297aad7dd24abbe31122461b114a", null ],
+    [ "ZenitUI::Utf8::isWordChar", "namespaceZenitUI_1_1Utf8.html#a3402c4dd831fa041e44906585680f754", null ],
+    [ "ZenitUI::Utf8::nextCluster", "namespaceZenitUI_1_1Utf8.html#a8fa23c9532b872e7c7d37a553e96a6d2", null ],
+    [ "ZenitUI::Utf8::nextCodepoint", "namespaceZenitUI_1_1Utf8.html#a3eff068bb97d90377fad60fd9bd84269", null ],
+    [ "ZenitUI::Utf8::nextWordBoundary", "namespaceZenitUI_1_1Utf8.html#a42cba58c90d805e2bbd12e6352144eb4", null ],
+    [ "ZenitUI::Utf8::prevCluster", "namespaceZenitUI_1_1Utf8.html#a5885488e603177aa50165d266c2827bc", null ],
+    [ "ZenitUI::Utf8::prevCodepoint", "namespaceZenitUI_1_1Utf8.html#acebc6e7f14050ed7c7f769f12db60c56", null ],
+    [ "ZenitUI::Utf8::prevWordBoundary", "namespaceZenitUI_1_1Utf8.html#a7678b2b6f35c33697479f75156cb7176", null ],
+    [ "ZenitUI::Utf8::sanitizeMultiLine", "namespaceZenitUI_1_1Utf8.html#a08a993cafc55aad633f28e5b6756c8cd", null ],
+    [ "ZenitUI::Utf8::sanitizeSingleLine", "namespaceZenitUI_1_1Utf8.html#a62b510f5a4d9495ccd9edbf67411b05a", null ],
+    [ "ZenitUI::Utf8::seqLenFromLead", "namespaceZenitUI_1_1Utf8.html#ab66ced9cb278814fcca0c4f221ac03da", null ],
+    [ "ZenitUI::Utf8::snapCeil", "namespaceZenitUI_1_1Utf8.html#a9e4af68a60b69aadcb98336eaae19c52", null ],
+    [ "ZenitUI::Utf8::snapFloor", "namespaceZenitUI_1_1Utf8.html#aa78769040d4b8987f6f72375dcc0b07c", null ]
+];

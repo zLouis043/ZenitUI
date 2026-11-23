@@ -1,0 +1,15 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,83,62,111"/>
+<area shape="rect" id="Node000001" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="110,5,301,50"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="74,75,109,60,141,49,137,52,111,65,77,79"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="111,75,300,119"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="76,94,113,96,108,98,78,100"/>
+<area shape="rect" id="Node000005" href="$classZenitUI_1_1TLayout.html" title=" " alt="" coords="110,144,301,189"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="76,114,111,129,142,143,137,144,109,134,76,119"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1UI_1_1Button.html" title="A push button." alt="" coords="349,14,491,42"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="316,25,351,27,346,28,317,30"/>
+<area shape="rect" id="Node000004" href="$classZenitUI_1_1UI_1_1Popup.html" title="A floating, anchored panel." alt="" coords="350,83,490,111"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="315,94,353,97,347,97,315,100"/>
+<area shape="rect" id="Node000006" href="$classZenitUI_1_1UI_1_1Tooltip.html" title="A portal&#45;based hover label." alt="" coords="349,152,491,180"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="317,164,351,166,346,166,317,169"/>
+</map>
