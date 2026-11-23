@@ -121,6 +121,7 @@ dist:
 	@$(CMAKE) --install $(BUILD_DIR) --prefix $(CURDIR)/dist
 
 docs:
+	@mkdir -p build/docs
 	doxygen Doxyfile
 
 .PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist docs
