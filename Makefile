@@ -120,4 +120,7 @@ dist:
 	@$(BUILD_CMD)
 	@$(CMAKE) --install $(BUILD_DIR) --prefix $(CURDIR)/dist
 
-.PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist
+docs:
+	doxygen Doxyfile
+
+.PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist docs
