@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -92,6 +95,9 @@ $(function(){initNavTree('RaylibBackend_8hpp.html','',''); });
   <div class="headertitle"><div class="title">RaylibBackend.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Reference Raylib implementation of <span class="tt">IPlatform</span>, <span class="tt">IRenderer</span>, and <span class="tt">IAssetProvider</span>.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="UIContext_8hpp_source.html">UIContext.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Utf8_8hpp_source.html">Utf8.hpp</a>&quot;</code><br />
 <code>#include &lt;raylib.h&gt;</code><br />
@@ -105,8 +111,11 @@ $(function(){initNavTree('RaylibBackend_8hpp.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibPlatform" id="r_ZenitUI_3A_3ARaylibPlatform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend.">IPlatform</a></span> (window metrics, pointer, keyboard, clipboard).  <a href="classZenitUI_1_1RaylibPlatform.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibRenderer" id="r_ZenitUI_3A_3ARaylibRenderer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> with transform/clip/target/shader stacks.  <a href="classZenitUI_1_1RaylibRenderer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibAssetProvider" id="r_ZenitUI_3A_3ARaylibAssetProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract font / texture / effect lookup.">IAssetProvider</a></span> for fonts, textures, and shaders.  <a href="classZenitUI_1_1RaylibAssetProvider.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -118,7 +127,10 @@ Macros</h2></td></tr>
 <tr class="memitem:a2bedaca1c6ca66de2397772910fbe140" id="r_a2bedaca1c6ca66de2397772910fbe140"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bedaca1c6ca66de2397772910fbe140">NOGDI</a></td></tr>
 <tr class="memitem:a73886ff6a915a4a92e3ade13eba71f6d" id="r_a73886ff6a915a4a92e3ade13eba71f6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73886ff6a915a4a92e3ade13eba71f6d">NOUSER</a></td></tr>
 </table>
-<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Reference Raylib implementation of <span class="tt">IPlatform</span>, <span class="tt">IRenderer</span>, and <span class="tt">IAssetProvider</span>. </p>
+<p>Links against Raylib via the <span class="tt">ZenitUI::RaylibBackend</span> CMake target. Supports shaders (<span class="tt">Feature::Effects</span>), nested render targets (<span class="tt">Feature::NestedTargets</span>), sub-rect target blits (<span class="tt">Feature::TargetSubRect</span>), per-glyph <span class="tt">measureCodepoint</span>, and configurable <span class="tt">CodepointSet</span> font-atlas baking. </p>
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a2bedaca1c6ca66de2397772910fbe140" name="a2bedaca1c6ca66de2397772910fbe140"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bedaca1c6ca66de2397772910fbe140">&#9670;&#160;</a></span>NOGDI</h2>
 

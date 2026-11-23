@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20start_0',['Quick start',['../index.html#autotoc_md6',1,'']]]
+  ['ui_20zstyle_0',['ui.zstyle',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md6',1,'']]]
 ];

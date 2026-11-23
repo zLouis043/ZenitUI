@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['bubble_5fstyle_5fprops_0',['BUBBLE_STYLE_PROPS',['../Style_8hpp.html#a7b6f5554fdada5477c0581b9ea317530',1,'Style.hpp']]]
+  ['nogdi_0',['NOGDI',['../RaylibBackend_8hpp.html#a2bedaca1c6ca66de2397772910fbe140',1,'RaylibBackend.hpp']]],
+  ['nouser_1',['NOUSER',['../RaylibBackend_8hpp.html#a73886ff6a915a4a92e3ade13eba71f6d',1,'RaylibBackend.hpp']]]
 ];

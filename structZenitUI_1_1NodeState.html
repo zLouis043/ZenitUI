@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('structZenitUI_1_1NodeState.html','','structZenitUI_1_1
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::NodeState Struct Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::NodeState Struct Reference<div class="ingroups"><a class="el" href="group__grp__core.html">Core, Layout &amp; Lifecycle</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -101,9 +104,13 @@ $(function(){initNavTree('structZenitUI_1_1NodeState.html','','structZenitUI_1_1
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:acc94539b88d16d76ba24fe7a98c54d3a" id="r_acc94539b88d16d76ba24fe7a98c54d3a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc94539b88d16d76ba24fe7a98c54d3a">hovered</a>: 1</td></tr>
+<tr class="memdesc:acc94539b88d16d76ba24fe7a98c54d3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer is currently inside the node.  <br /></td></tr>
 <tr class="memitem:a735c311106016a32c766f30772c2603e" id="r_a735c311106016a32c766f30772c2603e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a735c311106016a32c766f30772c2603e">pressed</a>: 1</td></tr>
+<tr class="memdesc:a735c311106016a32c766f30772c2603e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary mouse button is pressed on this node.  <br /></td></tr>
 <tr class="memitem:ad7b90a7cdea9ce6864283982fa01a620" id="r_ad7b90a7cdea9ce6864283982fa01a620"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7b90a7cdea9ce6864283982fa01a620">focused</a>: 1</td></tr>
+<tr class="memdesc:ad7b90a7cdea9ce6864283982fa01a620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node currently holds keyboard focus.  <br /></td></tr>
 <tr class="memitem:ae3fe7918290fbba57b3ce7b6801ee380" id="r_ae3fe7918290fbba57b3ce7b6801ee380"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380">checked</a>: 1</td></tr>
+<tr class="memdesc:ae3fe7918290fbba57b3ce7b6801ee380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle / Checkbox checked state (<span class="tt">:<a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380" title="Toggle / Checkbox checked state (:checked).">checked</a></span>).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-frame interaction flags derived from pointer / keyboard state. </p>
@@ -121,6 +128,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Toggle / Checkbox checked state (<span class="tt">:<a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380" title="Toggle / Checkbox checked state (:checked).">checked</a></span>). </p>
+
 </div>
 </div>
 <a id="ad7b90a7cdea9ce6864283982fa01a620" name="ad7b90a7cdea9ce6864283982fa01a620"></a>
@@ -134,6 +143,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Node currently holds keyboard focus. </p>
 
 </div>
 </div>
@@ -149,6 +160,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Pointer is currently inside the node. </p>
+
 </div>
 </div>
 <a id="a735c311106016a32c766f30772c2603e" name="a735c311106016a32c766f30772c2603e"></a>
@@ -162,6 +175,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Primary mouse button is pressed on this node. </p>
 
 </div>
 </div>

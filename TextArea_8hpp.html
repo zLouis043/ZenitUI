@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -92,6 +95,9 @@ $(function(){initNavTree('TextArea_8hpp.html','',''); });
   <div class="headertitle"><div class="title">TextArea.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A multi-line UTF-8 editable text area with word wrapping and vertical scrolling.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="Common_8hpp_source.html">Common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Utf8_8hpp_source.html">Utf8.hpp</a>&quot;</code><br />
@@ -104,6 +110,7 @@ $(function(){initNavTree('TextArea_8hpp.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AUI_3A_3ATextArea" id="r_ZenitUI_3A_3AUI_3A_3ATextArea"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1UI_1_1TextArea.html">ZenitUI::UI::TextArea</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A multi-line UTF-8 text editor.  <a href="classZenitUI_1_1UI_1_1TextArea.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AUI_3A_3ATextArea_3A_3AVisualLine" id="r_ZenitUI_3A_3AUI_3A_3ATextArea_3A_3AVisualLine"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html">ZenitUI::UI::TextArea::VisualLine</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -111,7 +118,15 @@ Namespaces</h2></td></tr>
 <tr class="memitem:ZenitUI" id="r_ZenitUI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html">ZenitUI</a></td></tr>
 <tr class="memitem:ZenitUI_3A_3AUI" id="r_ZenitUI_3A_3AUI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A multi-line UTF-8 editable text area with word wrapping and vertical scrolling. </p>
+<p><span class="tt">TextArea</span> is a single <span class="tt">Stack</span> node that renders its own wrapped visual lines, selection highlights, blinking caret, placeholder, and internal scrollbar.</p>
+<p>Editing model:</p><ul>
+<li>Text is stored as UTF-8 (<span class="tt">std::string</span>); cursor movement, deletion, word jumps (<span class="tt">Ctrl+Arrow</span>/<span class="tt">Backspace</span>/<span class="tt">Delete</span>), double-click selection, click-to-caret, and soft word-wrapping all operate on grapheme-cluster boundaries via <span class="tt"><a class="el" href="namespaceZenitUI_1_1Utf8.html">ZenitUI::Utf8</a></span>.</li>
+<li><span class="tt">Enter</span> inserts a <span class="tt">\n</span> newline while keeping focus; <span class="tt">Escape</span> releases focus.</li>
+<li>Supports <span class="tt">Ctrl+A/C/X/V</span> clipboard operations (normalizing <span class="tt">\r\n</span> / <span class="tt">\r</span> to <span class="tt">\n</span>), <span class="tt">Ctrl+Z/Y</span> (and <span class="tt">Ctrl+Shift+Z</span>) 50-step undo/redo history, and mouse-wheel scrolling that yields to parent scroll containers at bounds. </li>
+</ul>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

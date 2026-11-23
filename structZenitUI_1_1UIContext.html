@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('structZenitUI_1_1UIContext.html','','structZenitUI_1_1
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::UIContext Struct Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::UIContext Struct Reference<div class="ingroups"><a class="el" href="group__grp__core.html">Core, Layout &amp; Lifecycle</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -100,9 +103,9 @@ $(function(){initNavTree('structZenitUI_1_1UIContext.html','','structZenitUI_1_1
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a214e0406e09b6432835da164d5032635" id="r_a214e0406e09b6432835da164d5032635"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a214e0406e09b6432835da164d5032635">consumeClick</a> (<a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b)</td></tr>
+<tr class="memitem:a214e0406e09b6432835da164d5032635" id="r_a214e0406e09b6432835da164d5032635"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a214e0406e09b6432835da164d5032635">consumeClick</a> (<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b)</td></tr>
 <tr class="memdesc:a214e0406e09b6432835da164d5032635"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark <code class="param">b</code> as consumed; subsequent handlers in the same frame will skip it.  <br /></td></tr>
-<tr class="memitem:a03704ff1e8843dc3b4ee0f7c13030d09" id="r_a03704ff1e8843dc3b4ee0f7c13030d09"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03704ff1e8843dc3b4ee0f7c13030d09">wasConsumed</a> (<a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b) const</td></tr>
+<tr class="memitem:a03704ff1e8843dc3b4ee0f7c13030d09" id="r_a03704ff1e8843dc3b4ee0f7c13030d09"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03704ff1e8843dc3b4ee0f7c13030d09">wasConsumed</a> (<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b) const</td></tr>
 <tr class="memdesc:a03704ff1e8843dc3b4ee0f7c13030d09"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">b</code> was already consumed this frame.  <br /></td></tr>
 <tr class="memitem:a5de7e7bb4e67c89f789afec6350bc8b4" id="r_a5de7e7bb4e67c89f789afec6350bc8b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5de7e7bb4e67c89f789afec6350bc8b4">invalidateStyles</a> ()</td></tr>
 <tr class="memdesc:a5de7e7bb4e67c89f789afec6350bc8b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force style-cache invalidation across the tree.  <br /></td></tr>
@@ -138,7 +141,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afb8532d917da8018163caf4bd496042d" id="r_afb8532d917da8018163caf4bd496042d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb8532d917da8018163caf4bd496042d">safeArea</a></td></tr>
 <tr class="memitem:ac695f9cc9ee9d094b1f8d054e12896cb" id="r_ac695f9cc9ee9d094b1f8d054e12896cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ModifierState.html">ModifierState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac695f9cc9ee9d094b1f8d054e12896cb">modifiers</a></td></tr>
 <tr class="memitem:a6bf97a7e853de93fa61bf916f02bbbad" id="r_a6bf97a7e853de93fa61bf916f02bbbad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bf97a7e853de93fa61bf916f02bbbad">wheelConsumedThisFrame</a> {false}</td></tr>
-<tr class="memitem:a0e508a89ffd8ea81b7bc8a779557a63d" id="r_a0e508a89ffd8ea81b7bc8a779557a63d"><td class="memItemLeft" align="right" valign="top">std::array&lt; bool,(size_t) <a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9">MouseButton::Count</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e508a89ffd8ea81b7bc8a779557a63d">buttonConsumed</a> {}</td></tr>
+<tr class="memitem:a0e508a89ffd8ea81b7bc8a779557a63d" id="r_a0e508a89ffd8ea81b7bc8a779557a63d"><td class="memItemLeft" align="right" valign="top">std::array&lt; bool,(size_t) <a class="el" href="group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9">MouseButton::Count</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e508a89ffd8ea81b7bc8a779557a63d">buttonConsumed</a> {}</td></tr>
 <tr class="memitem:acc594917d36c1e26af2809599fbf4578" id="r_acc594917d36c1e26af2809599fbf4578"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1InputEvents.html">InputEvents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc594917d36c1e26af2809599fbf4578">inputEvents</a></td></tr>
 <tr class="memitem:a9d526c77ba8299610183541aa2fa0f56" id="r_a9d526c77ba8299610183541aa2fa0f56"><td class="memItemLeft" align="right" valign="top">std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d526c77ba8299610183541aa2fa0f56">focusedNode</a></td></tr>
 <tr class="memitem:ab095515bca37c6a9a9a29db972fd14c7" id="r_ab095515bca37c6a9a9a29db972fd14c7"><td class="memItemLeft" align="right" valign="top">std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab095515bca37c6a9a9a29db972fd14c7">pointerCapture</a></td></tr>
@@ -202,7 +205,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ZenitUI::UIContext::consumeClick </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75">MouseButton</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -268,6 +271,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the global singleton context. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a29">00_demo/main.cpp</a>, <a class="el" href="01_hello_world_2main_8cpp-example.html#_a3">01_hello_world/main.cpp</a>, <a class="el" href="02_layouts_2main_8cpp-example.html#_a13">02_layouts/main.cpp</a>, <a class="el" href="03_widgets_2main_8cpp-example.html#_a11">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a12">04_animations/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a14">04b_imperative_animations/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a5">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a3">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a6">07_effects/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a3">07b_effects_stress/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a6">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a5">09_custom_widget/main.cpp</a>, <a class="el" href="10_canvas_2main_8cpp-example.html#_a9">10_canvas/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a6">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a3">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a3">13_prefabs/main.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -437,7 +442,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool ZenitUI::UIContext::wasConsumed </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75">MouseButton</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -488,7 +493,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt;bool, (size_t)<a class="el" href="namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9">MouseButton::Count</a>&gt; ZenitUI::UIContext::buttonConsumed {}</td>
+          <td class="memname">std::array&lt;bool, (size_t)<a class="el" href="group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9">MouseButton::Count</a>&gt; ZenitUI::UIContext::buttonConsumed {}</td>
         </tr>
       </table>
 </div><div class="memdoc">

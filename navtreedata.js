@@ -25,31 +25,8 @@
 var NAVTREE =
 [
   [ "ZenitUI", "index.html", [
-    [ "What is ZenitUI?", "index.html#autotoc_md2", null ],
-    [ "Feature highlights", "index.html#autotoc_md4", null ],
-    [ "Quick start", "index.html#autotoc_md6", null ],
-    [ "Building", "index.html#autotoc_md8", [
-      [ "Requirements", "index.html#autotoc_md9", null ],
-      [ "From source", "index.html#autotoc_md10", null ],
-      [ "Without the Makefile", "index.html#autotoc_md11", null ],
-      [ "<span class=\"tt\">dist/</span> — consumable artifacts", "index.html#autotoc_md12", null ]
-    ] ],
-    [ "Integration with CMake", "index.html#autotoc_md14", [
-      [ "As a subdirectory (source tree)", "index.html#autotoc_md15", null ],
-      [ "As an installed package", "index.html#autotoc_md16", null ],
-      [ "Backends", "index.html#autotoc_md17", null ],
-      [ "Without CMake", "index.html#autotoc_md18", null ]
-    ] ],
-    [ "Repository layout", "index.html#autotoc_md20", null ],
-    [ "Documentation", "index.html#autotoc_md22", [
-      [ "New here?", "index.html#autotoc_md23", null ],
-      [ "User guide", "index.html#autotoc_md24", null ],
-      [ "Internals (for contributors)", "index.html#autotoc_md25", null ],
-      [ "API reference", "index.html#autotoc_md26", null ]
-    ] ],
-    [ "Contributing", "index.html#autotoc_md28", null ],
-    [ "Status and roadmap", "index.html#autotoc_md30", null ],
-    [ "License", "index.html#autotoc_md32", null ],
+    [ "ZenitUI — Guide &amp; API Reference", "index.html", "index" ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -79,24 +56,20 @@ var NAVTREE =
         [ "All", "globals.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"AnimPrimitives_8hpp.html",
-"classZenitUI_1_1ILogger.html",
-"classZenitUI_1_1Layout.html#a70668bb95f85640de98e72a7e5045cf0",
-"classZenitUI_1_1RaylibRenderer.html#a00bf88895d36ebf01e205cd19087f441",
-"classZenitUI_1_1UI_1_1Dropdown.html#a702cfe9ffbb494c8e5e7f113042fec93",
-"classZenitUI_1_1UI_1_1VirtualView.html#a13f42c7a4fc1882d77e7f82802e4ae72",
-"index.html#autotoc_md4",
-"namespaceZenitUI_1_1Utf8.html#a1e82dde26fb4c62a1e1c67c5f2f4120f",
-"structZenitUI_1_1FilterParam.html#a769565160007b1079facae9b19520e2f",
-"structZenitUI_1_1RenderStats.html#aa8957ad78d9da53d0651225236acc6b7",
-"structZenitUI_1_1StyleResolver_1_1PartTransition.html#a662c42340f142015fd87c9be22714cfc",
-"structZenitUI_1_1Value.html#af3dacbe1a5c839975dcaae1802f681fb"
+"00_demo_2main_8cpp-example.html",
+"classZenitUI_1_1Layout.html#a05f2c67cd1f32b028def4668ff011427",
+"classZenitUI_1_1TargetPool.html#aac5c5e2a23c9f1c45afeae6686488d9c",
+"functions_func_e.html",
+"group__grp__zstyle.html#ga51d4311fabf99dfe01cad5d571f6591b",
+"structZenitUI_1_1FilterRef.html#add8e556a319da346507afe7bcac2eb64",
+"structZenitUI_1_1TargetHandle.html#ac0253549cac0ea9e6fdea6bf4f3b57a2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

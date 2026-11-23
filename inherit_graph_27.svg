@@ -20,7 +20,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:href="classZenitUI_1_1RaylibPlatform.html" target="_top" xlink:title=" ">
+<g id="a_Node000001"><a xlink:href="classZenitUI_1_1RaylibPlatform.html" target="_top" xlink:title="Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).">
 <polygon fill="white" stroke="#666666" points="269.75,-20.75 139,-20.75 139,0 269.75,0 269.75,-20.75"/>
 <text xml:space="preserve" text-anchor="middle" x="204.38" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::RaylibPlatform</text>
 </a>

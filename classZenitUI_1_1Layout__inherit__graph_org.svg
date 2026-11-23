@@ -475,7 +475,7 @@
 <!-- Node24 -->
 <g id="Node000024" class="node">
 <title>Node24</title>
-<g id="a_Node000024"><a xlink:href="classZenitUI_1_1UI_1_1TextArea.html" target="_top" xlink:title=" ">
+<g id="a_Node000024"><a xlink:href="classZenitUI_1_1UI_1_1TextArea.html" target="_top" xlink:title="A multi&#45;line UTF&#45;8 text editor.">
 <polygon fill="white" stroke="#666666" points="654.62,-150.12 537.38,-150.12 537.38,-129.38 654.62,-129.38 654.62,-150.12"/>
 <text xml:space="preserve" text-anchor="middle" x="596" y="-136.62" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::UI::TextArea</text>
 </a>

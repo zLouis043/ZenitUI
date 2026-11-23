@@ -22,7 +22,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="A multi&#45;line UTF&#45;8 text editor.">
 <polygon fill="#999999" stroke="#666666" points="139.75,-20.75 22.5,-20.75 22.5,0 139.75,0 139.75,-20.75"/>
 <text xml:space="preserve" text-anchor="middle" x="81.12" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::UI::TextArea</text>
 </a>

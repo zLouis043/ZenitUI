@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['layout_0',['Repository layout',['../index.html#autotoc_md20',1,'']]],
-  ['license_1',['License',['../index.html#autotoc_md32',1,'']]]
+  ['quick_20start_20hello_20world_0',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]]
 ];

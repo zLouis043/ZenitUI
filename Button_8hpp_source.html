@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -101,79 +104,81 @@ $(function(){initNavTree('Button_8hpp_source.html','',''); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="Layouts_8hpp.html">Layouts.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="foldopen" id="foldopen00026" data-start="{" data-end="}">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="namespaceZenitUI_1_1UI.html">   26</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classZenitUI_1_1UI_1_1Button.html">   39</a></span><span class="keyword">class </span><a class="code hl_function" href="classZenitUI_1_1UI_1_1Button.html#a0a956aa7442e0c791e6051c5cecbd8c8">Button</a> : <span class="keyword">public</span> <a class="code hl_function" href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">TLayout</a>&lt;Button, Panel&gt;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classZenitUI_1_1UI_1_1Button.html#a0a956aa7442e0c791e6051c5cecbd8c8">   47</a></span>    <a class="code hl_function" href="classZenitUI_1_1UI_1_1Button.html#a0a956aa7442e0c791e6051c5cecbd8c8">Button</a>(std::function&lt;<span class="keywordtype">void</span>()&gt; cb)</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        onClick = std::move(cb);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        setInteractive(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        setFocusable(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        setKeyboardActivates(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        setStyleTag(<span class="stringliteral">&quot;Button&quot;</span>);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        getInlineDefaults().alignItems = <a class="code hl_enumvalue" href="namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="namespaceZenitUI_1_1UI.html">   26</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="};">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classZenitUI_1_1UI_1_1Button.html">   44</a></span>    <span class="keyword">class </span><a class="code hl_function" href="group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8">Button</a> : <span class="keyword">public</span> <a class="code hl_function" href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">TLayout</a>&lt;Button, Panel&gt;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00052" data-start="{" data-end="}">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8">   52</a></span>        <a class="code hl_function" href="group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8">Button</a>(std::function&lt;<span class="keywordtype">void</span>()&gt; cb)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            onClick = std::move(cb);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            setInteractive(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            setFocusable(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            setKeyboardActivates(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            setStyleTag(<span class="stringliteral">&quot;Button&quot;</span>);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            getInlineDefaults().alignItems = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        }</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classZenitUI_1_1UI_1_1Button.html#a787b7c23ff1620ff67edb3096eaebe92">   63</a></span>    std::string <a class="code hl_function" href="classZenitUI_1_1UI_1_1Button.html#a787b7c23ff1620ff67edb3096eaebe92">text</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">auto</span> t = labelChild();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">return</span> t ? t-&gt;getText() : std::string{};</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
+<div class="foldopen" id="foldopen00068" data-start="{" data-end="}">
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#ga787b7c23ff1620ff67edb3096eaebe92">   68</a></span>        std::string <a class="code hl_function" href="group__grp__widgets.html#ga787b7c23ff1620ff67edb3096eaebe92">text</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            <span class="keyword">auto</span> t = labelChild();</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="keywordflow">return</span> t ? t-&gt;getText() : std::string{};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        }</div>
 </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
-<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classZenitUI_1_1UI_1_1Button.html#a663a186b8a315fb48ca7b59eb4fb3a60">   79</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classZenitUI_1_1UI_1_1Button.html#a663a186b8a315fb48ca7b59eb4fb3a60">setText</a>(<span class="keyword">const</span> std::string&amp; s)</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">if</span> (<span class="keyword">auto</span> t = labelChild())</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            t-&gt;setText(s);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        addChild(<a class="code hl_function" href="namespaceZenitUI_1_1UI.html#a78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(s)-&gt;<a class="code hl_function" href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">cls</a>(<span class="stringliteral">&quot;btn-text&quot;</span>));</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
+<div class="foldopen" id="foldopen00084" data-start="{" data-end="}">
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#ga663a186b8a315fb48ca7b59eb4fb3a60">   84</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="group__grp__widgets.html#ga663a186b8a315fb48ca7b59eb4fb3a60">setText</a>(<span class="keyword">const</span> std::string &amp;s)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keywordflow">if</span> (<span class="keyword">auto</span> t = labelChild())</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                t-&gt;setText(s);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(s)-&gt;<a class="code hl_function" href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">cls</a>(<span class="stringliteral">&quot;btn-text&quot;</span>));</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        }</div>
 </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    std::shared_ptr&lt;Text&gt; labelChild()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">if</span> (children.empty())</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keywordflow">return</span> std::dynamic_pointer_cast&lt;Text&gt;(children.front());</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>};</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        std::shared_ptr&lt;Text&gt; labelChild()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <span class="keywordflow">if</span> (children.empty())</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">return</span> std::dynamic_pointer_cast&lt;Text&gt;(children.front());</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    };</div>
 </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
-<div class="foldopen" id="foldopen00107" data-start="{" data-end="}">
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="namespaceZenitUI_1_1UI.html#aec8576d8da5dee1119f06d87271e3ccd">  107</a></span><span class="keyword">inline</span> std::shared_ptr&lt;Button&gt; <a class="code hl_function" href="namespaceZenitUI_1_1UI.html#aec8576d8da5dee1119f06d87271e3ccd">Btn</a>(std::string text, std::function&lt;<span class="keywordtype">void</span>()&gt; cb = <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>{</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">auto</span> b = <a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Button::create</a>(std::move(cb));</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    b-&gt;addChild(<a class="code hl_function" href="namespaceZenitUI_1_1UI.html#a78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(text)-&gt;cls(<span class="stringliteral">&quot;btn-text&quot;</span>));</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordflow">return</span> b;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">  112</a></span>    <span class="keyword">inline</span> std::shared_ptr&lt;Button&gt; <a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(std::string text, std::function&lt;<span class="keywordtype">void</span>()&gt; cb = <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keyword">auto</span> b = <a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Button::create</a>(std::move(cb));</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        b-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(text)-&gt;cls(<span class="stringliteral">&quot;btn-text&quot;</span>));</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> b;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
 </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>} <span class="comment">// namespace ZenitUI::UI</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <span class="comment">// namespace ZenitUI::UI</span></div>
 </div>
 <div class="ttc" id="aCommon_8hpp_html"><div class="ttname"><a href="Common_8hpp.html">Common.hpp</a></div><div class="ttdoc">Centralized standard library includes used throughout ZenitUI.</div></div>
 <div class="ttc" id="aLayout_8hpp_html"><div class="ttname"><a href="Layout_8hpp.html">Layout.hpp</a></div><div class="ttdoc">The node class: tree structure, layout pass, style resolution, input dispatch, render orchestration,...</div></div>
 <div class="ttc" id="aLayouts_8hpp_html"><div class="ttname"><a href="Layouts_8hpp.html">Layouts.hpp</a></div><div class="ttdoc">Basic layout containers: VStack, HStack, Panel.</div></div>
 <div class="ttc" id="aText_8hpp_html"><div class="ttname"><a href="Text_8hpp.html">Text.hpp</a></div><div class="ttdoc">A text-rendering node with optional wrapping and ellipsis.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1TLayout_html_a4225e5714ee6a1e6f804daae8d0fa319"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">ZenitUI::TLayout&lt; Button, Panel &gt;::TLayout</a></div><div class="ttdeci">TLayout(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1455</div></div>
-<div class="ttc" id="aclassZenitUI_1_1TLayout_html_a761c138f6036050628d7d754b6689c2a"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">ZenitUI::TLayout&lt; Button, Panel &gt;::cls</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; cls(const std::string &amp;name)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1470</div></div>
-<div class="ttc" id="aclassZenitUI_1_1TLayout_html_ab3bf0250bf5a974c4ba752ad95bc7ba0"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">ZenitUI::TLayout&lt; Button, Panel &gt;::create</a></div><div class="ttdeci">static std::shared_ptr&lt; Button &gt; create(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1464</div></div>
-<div class="ttc" id="aclassZenitUI_1_1UI_1_1Button_html_a0a956aa7442e0c791e6051c5cecbd8c8"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Button.html#a0a956aa7442e0c791e6051c5cecbd8c8">ZenitUI::UI::Button::Button</a></div><div class="ttdeci">Button(std::function&lt; void()&gt; cb)</div><div class="ttdoc">Construct a button with the given click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:47</div></div>
-<div class="ttc" id="aclassZenitUI_1_1UI_1_1Button_html_a663a186b8a315fb48ca7b59eb4fb3a60"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Button.html#a663a186b8a315fb48ca7b59eb4fb3a60">ZenitUI::UI::Button::setText</a></div><div class="ttdeci">void setText(const std::string &amp;s)</div><div class="ttdoc">Update the label text.</div><div class="ttdef"><b>Definition</b> Button.hpp:79</div></div>
-<div class="ttc" id="aclassZenitUI_1_1UI_1_1Button_html_a787b7c23ff1620ff67edb3096eaebe92"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Button.html#a787b7c23ff1620ff67edb3096eaebe92">ZenitUI::UI::Button::text</a></div><div class="ttdeci">std::string text() const</div><div class="ttdoc">Return the current label text, or &quot;&quot; if there is none.</div><div class="ttdef"><b>Definition</b> Button.hpp:63</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:26</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html_a78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html#a78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:534</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html_aec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html#aec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:107</div></div>
-<div class="ttc" id="anamespaceZenitUI_html_a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:273</div></div>
+<div class="ttc" id="aclassZenitUI_1_1TLayout_html_a4225e5714ee6a1e6f804daae8d0fa319"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">ZenitUI::TLayout&lt; Button, Panel &gt;::TLayout</a></div><div class="ttdeci">TLayout(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1463</div></div>
+<div class="ttc" id="aclassZenitUI_1_1TLayout_html_a761c138f6036050628d7d754b6689c2a"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">ZenitUI::TLayout&lt; Button, Panel &gt;::cls</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; cls(const std::string &amp;name)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1480</div></div>
+<div class="ttc" id="aclassZenitUI_1_1TLayout_html_ab3bf0250bf5a974c4ba752ad95bc7ba0"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">ZenitUI::TLayout&lt; Button, Panel &gt;::create</a></div><div class="ttdeci">static std::shared_ptr&lt; Button &gt; create(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1472</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:276</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_ga0a956aa7442e0c791e6051c5cecbd8c8"><div class="ttname"><a href="group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8">ZenitUI::UI::Button::Button</a></div><div class="ttdeci">Button(std::function&lt; void()&gt; cb)</div><div class="ttdoc">Construct a button with the given click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:52</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_ga663a186b8a315fb48ca7b59eb4fb3a60"><div class="ttname"><a href="group__grp__widgets.html#ga663a186b8a315fb48ca7b59eb4fb3a60">ZenitUI::UI::Button::setText</a></div><div class="ttdeci">void setText(const std::string &amp;s)</div><div class="ttdoc">Update the label text.</div><div class="ttdef"><b>Definition</b> Button.hpp:84</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_ga787b7c23ff1620ff67edb3096eaebe92"><div class="ttname"><a href="group__grp__widgets.html#ga787b7c23ff1620ff67edb3096eaebe92">ZenitUI::UI::Button::text</a></div><div class="ttdeci">std::string text() const</div><div class="ttdoc">Return the current label text, or &quot;&quot; if there is none.</div><div class="ttdef"><b>Definition</b> Button.hpp:68</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_ga78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:538</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

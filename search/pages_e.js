@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['source_0',['From source',['../index.html#autotoc_md10',1,'']]],
-  ['source_20tree_1',['As a subdirectory (source tree)',['../index.html#autotoc_md15',1,'']]],
-  ['start_2',['Quick start',['../index.html#autotoc_md6',1,'']]],
-  ['status_20and_20roadmap_3',['Status and roadmap',['../index.html#autotoc_md30',1,'']]],
-  ['subdirectory_20source_20tree_4',['As a subdirectory (source tree)',['../index.html#autotoc_md15',1,'']]]
+  ['zenitui_20—_20guide_20api_20reference_0',['ZenitUI — Guide &amp;amp; API Reference',['../index.html',1,'']]],
+  ['zstyle_1',['zstyle',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md4',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md8',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md10',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md13',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md15',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md6',1,'ui.zstyle']]]
 ];

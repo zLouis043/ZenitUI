@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,11 +92,11 @@ $(function(){initNavTree('classZenitUI_1_1ZMarkup_1_1UINode.html','','classZenit
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::ZMarkup::UINode Class Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::ZMarkup::UINode Class Reference<div class="ingroups"><a class="el" href="group__grp__zmarkup.html">ZMarkup, Prefabs &amp; Data Binding</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Root handle returned by <span class="tt"><a class="el" href="namespaceZenitUI_1_1ZMarkup.html#a4aa385688630fa29d4aaaf1807368bd4">build</a></span> / <span class="tt"><a class="el" href="namespaceZenitUI_1_1ZMarkup.html#ad8f4d32b36a5dde7c63169a68581276b">instantiate</a></span>: root node + build context + wiring helpers.  
+<p>Root handle returned by <span class="tt"><a class="el" href="group__grp__zmarkup.html#ga4aa385688630fa29d4aaaf1807368bd4">build</a></span> / <span class="tt"><a class="el" href="group__grp__zmarkup.html#gad8f4d32b36a5dde7c63169a68581276b">instantiate</a></span>: root node + build context + wiring helpers.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ZMarkup_8hpp_source.html">ZMarkup.hpp</a>&gt;</code></p>
@@ -151,7 +154,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b41b9b5c53c68d3e6710a3282da1d9e template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a6fa634ab35e90989951da81541203190">UINode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b41b9b5c53c68d3e6710a3282da1d9e">bindEachKeyed</a> (const std::string &amp;eachRef, <a class="el" href="classZenitUI_1_1Bindable.html">Bindable</a>&lt; std::vector&lt; T &gt; &gt; &amp;source, KeyFn keyFn, OnCreateFn onCreate, OnUpdateFn onUpdate, bool fireImmediately=true)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Root handle returned by <span class="tt"><a class="el" href="namespaceZenitUI_1_1ZMarkup.html#a4aa385688630fa29d4aaaf1807368bd4">build</a></span> / <span class="tt"><a class="el" href="namespaceZenitUI_1_1ZMarkup.html#ad8f4d32b36a5dde7c63169a68581276b">instantiate</a></span>: root node + build context + wiring helpers. </p>
+<div class="textblock"><p>Root handle returned by <span class="tt"><a class="el" href="group__grp__zmarkup.html#ga4aa385688630fa29d4aaaf1807368bd4">build</a></span> / <span class="tt"><a class="el" href="group__grp__zmarkup.html#gad8f4d32b36a5dde7c63169a68581276b">instantiate</a></span>: root node + build context + wiring helpers. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a36">00_demo/main.cpp</a>.</dd>
+</dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6fa634ab35e90989951da81541203190" name="a6fa634ab35e90989951da81541203190"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6fa634ab35e90989951da81541203190">&#9670;&#160;</a></span>UINode()</h2>
@@ -393,6 +398,8 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Look up a node by its <span class="tt">#id</span>. </p>
 <dl class="section return"><dt>Returns</dt><dd>The node, or <span class="tt">nullptr</span> if not found or expired (warns once per id). </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a37">00_demo/main.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>

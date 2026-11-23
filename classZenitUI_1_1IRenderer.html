@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('classZenitUI_1_1IRenderer.html','','classZenitUI_1_1IR
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::IRenderer Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">ZenitUI::IRenderer Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span><div class="ingroups"><a class="el" href="group__grp__core.html">Core, Layout &amp; Lifecycle</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -142,8 +145,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a39809c7484f01987360e6297afbf3abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear a render target to <code class="param">c</code>.  <br /></td></tr>
 <tr class="memitem:a303122b1a9eb61b07cbf0a7de2fe7e32" id="r_a303122b1a9eb61b07cbf0a7de2fe7e32"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a303122b1a9eb61b07cbf0a7de2fe7e32">inTarget</a> () const =0</td></tr>
 <tr class="memdesc:a303122b1a9eb61b07cbf0a7de2fe7e32"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> while a <span class="tt"><a class="el" href="#acc46deb233eeebcbd37bc891ce9c74e7">pushTarget</a></span> is active without a matching <span class="tt"><a class="el" href="#a124e6678b735c4b3e7b5553e644531db">popTarget</a></span>.  <br /></td></tr>
-<tr class="memitem:a2f516b76d539008019ed2838f54ebff6" id="r_a2f516b76d539008019ed2838f54ebff6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f516b76d539008019ed2838f54ebff6">supports</a> (<a class="el" href="namespaceZenitUI.html#ada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const =0</td></tr>
-<tr class="memdesc:a2f516b76d539008019ed2838f54ebff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether the backend supports a <span class="tt"><a class="el" href="namespaceZenitUI.html#ada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities.">Feature</a></span>.  <br /></td></tr>
+<tr class="memitem:a2f516b76d539008019ed2838f54ebff6" id="r_a2f516b76d539008019ed2838f54ebff6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f516b76d539008019ed2838f54ebff6">supports</a> (<a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const =0</td></tr>
+<tr class="memdesc:a2f516b76d539008019ed2838f54ebff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether the backend supports a <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities.">Feature</a></span>.  <br /></td></tr>
 <tr class="memitem:a7877e2c0869b8d61ed144cfca069e2bd" id="r_a7877e2c0869b8d61ed144cfca069e2bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7877e2c0869b8d61ed144cfca069e2bd">beginFrame</a> ()=0</td></tr>
 <tr class="memitem:a1da05d78179fcd7112c9ea63f1d3808d" id="r_a1da05d78179fcd7112c9ea63f1d3808d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da05d78179fcd7112c9ea63f1d3808d">endFrame</a> ()=0</td></tr>
 <tr class="memitem:ad7b21e23e97176e1a0586f6e035941f7" id="r_ad7b21e23e97176e1a0586f6e035941f7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7b21e23e97176e1a0586f6e035941f7">setDpiScale</a> (float scale)=0</td></tr>
@@ -768,7 +771,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Measure the advance width and height of a single Unicode codepoint. </p>
-<p>Default implementation encodes <code class="param">codepoint</code> as UTF-8 and delegates to <span class="tt"><a class="el" href="#a56fc660402893d6885e92e82efd59a14">measureText</a></span>. Backends with direct glyph tables (e.g. <span class="tt"><a class="el" href="classZenitUI_1_1RaylibRenderer.html">RaylibRenderer</a></span>) can override for O(1) lookup without string allocation. </p>
+<p>Default implementation encodes <code class="param">codepoint</code> as UTF-8 and delegates to <span class="tt"><a class="el" href="#a56fc660402893d6885e92e82efd59a14">measureText</a></span>. Backends with direct glyph tables (e.g. <span class="tt"><a class="el" href="classZenitUI_1_1RaylibRenderer.html" title="Raylib implementation of IRenderer with transform/clip/target/shader stacks.">RaylibRenderer</a></span>) can override for O(1) lookup without string allocation. </p>
 
 <p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#ac1014eccbfa8803736d2cef914b34156">ZenitUI::RaylibRenderer</a>.</p>
 
@@ -1327,7 +1330,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual bool ZenitUI::IRenderer::supports </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceZenitUI.html#ada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1338,7 +1341,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Query whether the backend supports a <span class="tt"><a class="el" href="namespaceZenitUI.html#ada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities.">Feature</a></span>. </p>
+<p>Query whether the backend supports a <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities.">Feature</a></span>. </p>
 
 <p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a6544a78d6b4036f4061a7373d992b172">ZenitUI::RaylibRenderer</a>.</p>
 

@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -119,6 +122,8 @@ Friends</h2></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 class ZenitUI::Bindable&lt; T &gt;::Subscription</div><p>RAII handle to an <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html#aa3a38e540a078ff4c08c5f3d8169abb8" title="Register a callback fired on value changes.">onChanged</a></span> registration. </p>
 <p>Move-only. Destruction (or explicit <span class="tt"><a class="el" href="#ad5e208867a20c3859fd6a5fda21b2756" title="Remove the callback from the owning Bindable.">unsubscribe</a></span>) removes the callback from the owning <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a></span>. Safe to destroy after the <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a></span> has already been destroyed: the shared <span class="tt">ControlBlock</span> outlives both. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="12_bindable_2main_8cpp-example.html#_a16">12_bindable/main.cpp</a>.</dd>
+</dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adf3f3cbdf11a634f2c8c1d0be2ec00c9" name="adf3f3cbdf11a634f2c8c1d0be2ec00c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adf3f3cbdf11a634f2c8c1d0be2ec00c9">&#9670;&#160;</a></span>Subscription() <span class="overload">[1/3]</span></h2>

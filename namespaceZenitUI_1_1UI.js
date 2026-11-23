@@ -17,11 +17,11 @@ var namespaceZenitUI_1_1UI =
     [ "Toggle", "classZenitUI_1_1UI_1_1Toggle.html", "classZenitUI_1_1UI_1_1Toggle" ],
     [ "Tooltip", "classZenitUI_1_1UI_1_1Tooltip.html", "classZenitUI_1_1UI_1_1Tooltip" ],
     [ "VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html", "classZenitUI_1_1UI_1_1VirtualView" ],
-    [ "Box", "namespaceZenitUI_1_1UI.html#ae0c53a867aed43cff14c742574f493de", null ],
-    [ "Btn", "namespaceZenitUI_1_1UI.html#aec8576d8da5dee1119f06d87271e3ccd", null ],
-    [ "ContextMenu", "namespaceZenitUI_1_1UI.html#a052bbb115558b16a7ab5b2174d83f41d", null ],
-    [ "HStack", "namespaceZenitUI_1_1UI.html#ab7c2e63fd323f4eaa177e7066f415db8", null ],
-    [ "Label", "namespaceZenitUI_1_1UI.html#a78ec9788f5e751cb9d9ef38e5a694f67", null ],
-    [ "Pan", "namespaceZenitUI_1_1UI.html#ade891996e631c54421125e8266398f5c", null ],
-    [ "VStack", "namespaceZenitUI_1_1UI.html#aac4e85376513ca6e4bf89008d4385e79", null ]
+    [ "Box", "group__grp__widgets.html#gae0c53a867aed43cff14c742574f493de", null ],
+    [ "Btn", "group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd", null ],
+    [ "ContextMenu", "group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d", null ],
+    [ "HStack", "group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8", null ],
+    [ "Label", "group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67", null ],
+    [ "Pan", "group__grp__widgets.html#gade891996e631c54421125e8266398f5c", null ],
+    [ "VStack", "group__grp__widgets.html#gaac4e85376513ca6e4bf89008d4385e79", null ]
 ];

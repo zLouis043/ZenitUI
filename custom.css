@@ -1,0 +1,14 @@
+/* Custom accent colors for ZenitUI */
+html {
+    --primary-color: #6c5ce7;
+    --primary-dark-color: #5344c7;
+    --primary-light-color: #a29bfe;
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        --primary-color: #8b7cf6;
+        --primary-dark-color: #a29bfe;
+        --primary-light-color: #6c5ce7;
+    }
+}

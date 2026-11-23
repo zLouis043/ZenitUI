@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('structZenitUI_1_1StyleResolver.html','','structZenitUI
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::StyleResolver Struct Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::StyleResolver Struct Reference<div class="ingroups"><a class="el" href="group__grp__zstyle.html">ZStyle, Theme &amp; Diagnostics</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -111,7 +114,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3c2aa9709f8eae36cb105f0476bb13a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the fully resolved <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span> for <code class="param">node</code>.  <br /></td></tr>
 <tr class="memitem:a280de842b378ae5994f9f59a2a969da2" id="r_a280de842b378ae5994f9f59a2a969da2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a280de842b378ae5994f9f59a2a969da2">partFor</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, const std::string &amp;partName)</td></tr>
 <tr class="memdesc:a280de842b378ae5994f9f59a2a969da2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the style for pseudo-element <code class="param">partName</code> on <code class="param">node</code>.  <br /></td></tr>
-<tr class="memitem:a3c2ef98dd15805ea83998e4dd338ca19" id="r_a3c2ef98dd15805ea83998e4dd338ca19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c2ef98dd15805ea83998e4dd338ca19">beginStateTransition</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, <a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665">UIState</a> newState)</td></tr>
+<tr class="memitem:a3c2ef98dd15805ea83998e4dd338ca19" id="r_a3c2ef98dd15805ea83998e4dd338ca19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c2ef98dd15805ea83998e4dd338ca19">beginStateTransition</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, <a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> newState)</td></tr>
 <tr class="memdesc:a3c2ef98dd15805ea83998e4dd338ca19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a transition from the current style to <code class="param">newState's</code> style.  <br /></td></tr>
 <tr class="memitem:ad1c52be1e4bc73c56b45331a62519867" id="r_ad1c52be1e4bc73c56b45331a62519867"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1c52be1e4bc73c56b45331a62519867">resolvePendingTransition</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, bool instant=false)</td></tr>
 <tr class="memdesc:ad1c52be1e4bc73c56b45331a62519867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-resolve the target style after a theme or ancestor change.  <br /></td></tr>
@@ -144,7 +147,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a17902630a3515233aac592761f33d1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value the transition is heading toward.  <br /></td></tr>
 <tr class="memitem:a67706481e2c2c3638d116cc99cd70efd" id="r_a67706481e2c2c3638d116cc99cd70efd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67706481e2c2c3638d116cc99cd70efd">transitionStartStyle</a></td></tr>
 <tr class="memdesc:a67706481e2c2c3638d116cc99cd70efd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value at <span class="tt"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1" title="Normalized [0, 1]; 1 means &quot;settled&quot;.">transitionTimer</a> == 0</span>.  <br /></td></tr>
-<tr class="memitem:a9ab34e0367289d8c5cf6132557cac246" id="r_a9ab34e0367289d8c5cf6132557cac246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665">UIState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ab34e0367289d8c5cf6132557cac246">currentState</a> {<a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td></tr>
+<tr class="memitem:a9ab34e0367289d8c5cf6132557cac246" id="r_a9ab34e0367289d8c5cf6132557cac246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ab34e0367289d8c5cf6132557cac246">currentState</a> {<a class="el" href="group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td></tr>
 <tr class="memdesc:a9ab34e0367289d8c5cf6132557cac246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last observed interaction state.  <br /></td></tr>
 <tr class="memitem:afe378f63cfe4c2c111cd478a7308fdd1" id="r_afe378f63cfe4c2c111cd478a7308fdd1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1">transitionTimer</a> {1.0f}</td></tr>
 <tr class="memdesc:afe378f63cfe4c2c111cd478a7308fdd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized <span class="tt">[0, 1]</span>; 1 means "settled".  <br /></td></tr>
@@ -180,7 +183,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665">UIState</a></td>          <td class="paramname"><span class="paramname"><em>newState</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a></td>          <td class="paramname"><span class="paramname"><em>newState</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -438,7 +441,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665">UIState</a> ZenitUI::StyleResolver::currentState {<a class="el" href="namespaceZenitUI.html#a84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td>
+          <td class="memname"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> ZenitUI::StyleResolver::currentState {<a class="el" href="group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">

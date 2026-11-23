@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('classZenitUI_1_1FilterRegistry.html','','classZenitUI_
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::FilterRegistry Class Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::FilterRegistry Class Reference<div class="ingroups"><a class="el" href="group__grp__anim.html">Animations, Transitions &amp; Filters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -102,7 +105,7 @@ $(function(){initNavTree('classZenitUI_1_1FilterRegistry.html','','classZenitUI_
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a66e06412925ee82065b68e01499d0cb3" id="r_a66e06412925ee82065b68e01499d0cb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66e06412925ee82065b68e01499d0cb3">add</a> (<a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> def)</td></tr>
 <tr class="memdesc:a66e06412925ee82065b68e01499d0cb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register or replace a filter definition.  <br /></td></tr>
-<tr class="memitem:af48215bf1d9a2155ab8d0cd874343bea" id="r_af48215bf1d9a2155ab8d0cd874343bea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af48215bf1d9a2155ab8d0cd874343bea">addCustom</a> (std::string name, <a class="el" href="namespaceZenitUI.html#a3089deef73907930feb7fce6da67505f">FilterCustomFn</a> fn)</td></tr>
+<tr class="memitem:af48215bf1d9a2155ab8d0cd874343bea" id="r_af48215bf1d9a2155ab8d0cd874343bea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af48215bf1d9a2155ab8d0cd874343bea">addCustom</a> (std::string name, <a class="el" href="group__grp__anim.html#ga6570fbd7db66e40ff381990a1c46e318">FilterCustomFn</a> fn)</td></tr>
 <tr class="memdesc:af48215bf1d9a2155ab8d0cd874343bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a custom (shader-less) filter.  <br /></td></tr>
 <tr class="memitem:afcb92b95979164c621df176e30fe1872" id="r_afcb92b95979164c621df176e30fe1872"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb92b95979164c621df176e30fe1872">find</a> (const std::string &amp;name) const</td></tr>
 <tr class="memdesc:afcb92b95979164c621df176e30fe1872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a filter by name.  <br /></td></tr>
@@ -131,6 +134,8 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Register or replace a filter definition. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a7">00_demo/main.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -148,7 +153,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceZenitUI.html#a3089deef73907930feb7fce6da67505f">FilterCustomFn</a></td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="group__grp__anim.html#ga6570fbd7db66e40ff381990a1c46e318">FilterCustomFn</a></td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -200,6 +205,8 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the global singleton registry. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a6">00_demo/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a7">07_effects/main.cpp</a>, and <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a6">07b_effects_stress/main.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>

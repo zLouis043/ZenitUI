@@ -50,7 +50,7 @@
 <area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="632,482,734,484,729,486,633,488"/>
 <area shape="rect" id="Node000022" href="$classZenitUI_1_1UI_1_1Text.html" title="A read&#45;only text node." alt="" coords="737,523,863,551"/>
 <area shape="poly" id="edge21_Node000021_Node000022" title=" " alt="" coords="627,534,739,536,734,538,628,540"/>
-<area shape="rect" id="Node000024" href="$classZenitUI_1_1UI_1_1TextArea.html" title=" " alt="" coords="722,575,878,603"/>
+<area shape="rect" id="Node000024" href="$classZenitUI_1_1UI_1_1TextArea.html" title="A multi&#45;line UTF&#45;8 text editor." alt="" coords="722,575,878,603"/>
 <area shape="poly" id="edge23_Node000023_Node000024" title=" " alt="" coords="642,586,724,589,719,589,643,592"/>
 <area shape="rect" id="Node000026" href="$classZenitUI_1_1UI_1_1TextInput.html" title="A single&#45;line text editor." alt="" coords="720,627,880,655"/>
 <area shape="poly" id="edge25_Node000025_Node000026" title=" " alt="" coords="644,638,723,641,717,641,644,644"/>

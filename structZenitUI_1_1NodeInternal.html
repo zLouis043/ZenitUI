@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('structZenitUI_1_1NodeInternal.html','','structZenitUI_
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::NodeInternal Struct Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::NodeInternal Struct Reference<div class="ingroups"><a class="el" href="group__grp__core.html">Core, Layout &amp; Lifecycle</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -101,13 +104,21 @@ $(function(){initNavTree('structZenitUI_1_1NodeInternal.html','','structZenitUI_
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae0ac64a2cd20c10b5a008e954dfa7dbe" id="r_ae0ac64a2cd20c10b5a008e954dfa7dbe"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0ac64a2cd20c10b5a008e954dfa7dbe">subtreeDirty</a>: 1</td></tr>
+<tr class="memdesc:ae0ac64a2cd20c10b5a008e954dfa7dbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtree needs re-measure/re-arrange.  <br /></td></tr>
 <tr class="memitem:ad009c285770e19d29c12455412a2b20a" id="r_ad009c285770e19d29c12455412a2b20a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad009c285770e19d29c12455412a2b20a">styleInitialized</a>: 1</td></tr>
+<tr class="memdesc:ad009c285770e19d29c12455412a2b20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial style resolution has run at least once.  <br /></td></tr>
 <tr class="memitem:abf4ff9aa5b6b7c5c24541b518d74add4" id="r_abf4ff9aa5b6b7c5c24541b518d74add4"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf4ff9aa5b6b7c5c24541b518d74add4">pendingTransition</a>: 1</td></tr>
+<tr class="memdesc:abf4ff9aa5b6b7c5c24541b518d74add4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a> must be re-resolved on next update.  <br /></td></tr>
 <tr class="memitem:a2e8358b96bcae8073ec6ce8703dddd03" id="r_a2e8358b96bcae8073ec6ce8703dddd03"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e8358b96bcae8073ec6ce8703dddd03">hadLocalAnimationsLast</a>: 1</td></tr>
+<tr class="memdesc:a2e8358b96bcae8073ec6ce8703dddd03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active local animations in the previous frame.  <br /></td></tr>
 <tr class="memitem:a216495f5cde210ceb0e6d9f53d28ff3c" id="r_a216495f5cde210ceb0e6d9f53d28ff3c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a216495f5cde210ceb0e6d9f53d28ff3c">wantsRemoval</a>: 1</td></tr>
+<tr class="memdesc:a216495f5cde210ceb0e6d9f53d28ff3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deferred removal requested via <span class="tt">removeFromParent()</span>.  <br /></td></tr>
 <tr class="memitem:a2affff2ddbb6b6db1ee65a402ca074f8" id="r_a2affff2ddbb6b6db1ee65a402ca074f8"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2affff2ddbb6b6db1ee65a402ca074f8">pressedInChain</a>: 1</td></tr>
+<tr class="memdesc:a2affff2ddbb6b6db1ee65a402ca074f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserved press-chain tracking flag.  <br /></td></tr>
 <tr class="memitem:ab48b4f41110153669a31dd84369ad286" id="r_ab48b4f41110153669a31dd84369ad286"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab48b4f41110153669a31dd84369ad286">hadRemovedChildren</a>: 1</td></tr>
+<tr class="memdesc:ab48b4f41110153669a31dd84369ad286"><td class="mdescLeft">&#160;</td><td class="mdescRight">At least one child was removed since last measure.  <br /></td></tr>
 <tr class="memitem:a962bbf247b43ca614557c21ede601ea4" id="r_a962bbf247b43ca614557c21ede601ea4"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a962bbf247b43ca614557c21ede601ea4">layoutDirty</a>: 1</td></tr>
+<tr class="memdesc:a962bbf247b43ca614557c21ede601ea4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structural layout change forces re-measure.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Transient bookkeeping bits used by the layout / style / culling passes. </p>
@@ -125,6 +136,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Active local animations in the previous frame. </p>
+
 </div>
 </div>
 <a id="ab48b4f41110153669a31dd84369ad286" name="ab48b4f41110153669a31dd84369ad286"></a>
@@ -138,6 +151,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>At least one child was removed since last measure. </p>
 
 </div>
 </div>
@@ -153,6 +168,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Structural layout change forces re-measure. </p>
+
 </div>
 </div>
 <a id="abf4ff9aa5b6b7c5c24541b518d74add4" name="abf4ff9aa5b6b7c5c24541b518d74add4"></a>
@@ -166,6 +183,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a> must be re-resolved on next update. </p>
 
 </div>
 </div>
@@ -181,6 +200,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Reserved press-chain tracking flag. </p>
+
 </div>
 </div>
 <a id="ad009c285770e19d29c12455412a2b20a" name="ad009c285770e19d29c12455412a2b20a"></a>
@@ -194,6 +215,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initial style resolution has run at least once. </p>
 
 </div>
 </div>
@@ -209,6 +232,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Subtree needs re-measure/re-arrange. </p>
+
 </div>
 </div>
 <a id="a216495f5cde210ceb0e6d9f53d28ff3c" name="a216495f5cde210ceb0e6d9f53d28ff3c"></a>
@@ -222,6 +247,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Deferred removal requested via <span class="tt">removeFromParent()</span>. </p>
 
 </div>
 </div>

@@ -1,47 +1,29 @@
 var CoreTypes_8hpp =
 [
-    [ "ZenitUI::Vec2", "structZenitUI_1_1Vec2.html", "structZenitUI_1_1Vec2" ],
-    [ "ZenitUI::Vec3", "structZenitUI_1_1Vec3.html", "structZenitUI_1_1Vec3" ],
-    [ "ZenitUI::Vec4", "structZenitUI_1_1Vec4.html", "structZenitUI_1_1Vec4" ],
-    [ "ZenitUI::Rect", "structZenitUI_1_1Rect.html", "structZenitUI_1_1Rect" ],
-    [ "ZenitUI::EdgeInsets", "structZenitUI_1_1EdgeInsets.html", "structZenitUI_1_1EdgeInsets" ],
-    [ "ZenitUI::Color", "structZenitUI_1_1Color.html", "structZenitUI_1_1Color" ],
-    [ "ZenitUI::TextureHandle", "structZenitUI_1_1TextureHandle.html", "structZenitUI_1_1TextureHandle" ],
-    [ "ZenitUI::FontHandle", "structZenitUI_1_1FontHandle.html", "structZenitUI_1_1FontHandle" ],
-    [ "ZenitUI::EffectHandle", "structZenitUI_1_1EffectHandle.html", "structZenitUI_1_1EffectHandle" ],
-    [ "ZenitUI::TargetHandle", "structZenitUI_1_1TargetHandle.html", "structZenitUI_1_1TargetHandle" ],
-    [ "ZenitUI::NineSlice", "structZenitUI_1_1NineSlice.html", "structZenitUI_1_1NineSlice" ],
-    [ "ZenitUI::Transform2D", "structZenitUI_1_1Transform2D.html", "structZenitUI_1_1Transform2D" ],
-    [ "ZenitUI::FontStack", "structZenitUI_1_1FontStack.html", "structZenitUI_1_1FontStack" ],
-    [ "ZenitUI::ButtonState", "structZenitUI_1_1ButtonState.html", "structZenitUI_1_1ButtonState" ],
-    [ "ZenitUI::PointerState", "structZenitUI_1_1PointerState.html", "structZenitUI_1_1PointerState" ],
-    [ "ZenitUI::ModifierState", "structZenitUI_1_1ModifierState.html", "structZenitUI_1_1ModifierState" ],
-    [ "ZenitUI::Metrics", "structZenitUI_1_1Metrics.html", "structZenitUI_1_1Metrics" ],
-    [ "ZenitUI::InputEvents", "structZenitUI_1_1InputEvents.html", "structZenitUI_1_1InputEvents" ],
-    [ "ZenitUI::Align", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5", [
-      [ "ZenitUI::Align::Auto", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb", null ],
-      [ "ZenitUI::Align::Start", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37", null ],
-      [ "ZenitUI::Align::Center", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
-      [ "ZenitUI::Align::End", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e", null ],
-      [ "ZenitUI::Align::Stretch", "namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560", null ]
+    [ "ZenitUI::Align", "group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5", [
+      [ "ZenitUI::Align::Auto", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb", null ],
+      [ "ZenitUI::Align::Start", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37", null ],
+      [ "ZenitUI::Align::Center", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
+      [ "ZenitUI::Align::End", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e", null ],
+      [ "ZenitUI::Align::Stretch", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560", null ]
     ] ],
-    [ "ZenitUI::Justify", "namespaceZenitUI.html#a89eb7866ba43696b07adaac980a2a5b0", [
-      [ "ZenitUI::Justify::Start", "namespaceZenitUI.html#a89eb7866ba43696b07adaac980a2a5b0aa6122a65eaa676f700ae68d393054a37", null ],
-      [ "ZenitUI::Justify::Center", "namespaceZenitUI.html#a89eb7866ba43696b07adaac980a2a5b0a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
-      [ "ZenitUI::Justify::End", "namespaceZenitUI.html#a89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e", null ],
-      [ "ZenitUI::Justify::SpaceBetween", "namespaceZenitUI.html#a89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119", null ]
+    [ "ZenitUI::Justify", "group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0", [
+      [ "ZenitUI::Justify::Start", "group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0aa6122a65eaa676f700ae68d393054a37", null ],
+      [ "ZenitUI::Justify::Center", "group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
+      [ "ZenitUI::Justify::End", "group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e", null ],
+      [ "ZenitUI::Justify::SpaceBetween", "group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119", null ]
     ] ],
-    [ "ZenitUI::MouseButton", "namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75", [
-      [ "ZenitUI::MouseButton::Left", "namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75a945d5e233cf7d6240f6b783b36a374ff", null ],
-      [ "ZenitUI::MouseButton::Right", "namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75a92b09c7c48c520c3c55e497875da437c", null ],
-      [ "ZenitUI::MouseButton::Middle", "namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75ab1ca34f82e83c52b010f86955f264e05", null ],
-      [ "ZenitUI::MouseButton::Count", "namespaceZenitUI.html#a83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9", null ]
+    [ "ZenitUI::MouseButton", "group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75", [
+      [ "ZenitUI::MouseButton::Left", "group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75a945d5e233cf7d6240f6b783b36a374ff", null ],
+      [ "ZenitUI::MouseButton::Right", "group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75a92b09c7c48c520c3c55e497875da437c", null ],
+      [ "ZenitUI::MouseButton::Middle", "group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75ab1ca34f82e83c52b010f86955f264e05", null ],
+      [ "ZenitUI::MouseButton::Count", "group__grp__core.html#gga83c77986199d7a5f4201d6a3d1482b75ae93f994f01c537c4e2f7d8528c3eb5e9", null ]
     ] ],
-    [ "ZenitUI::applyInverseTransform", "namespaceZenitUI.html#aa0a5aa40122e6e04d83da4ba6adadb31", null ],
-    [ "ZenitUI::applyTransform", "namespaceZenitUI.html#aed05b39d9355d400bb04a40e87845ccf", null ],
-    [ "ZenitUI::operator*", "namespaceZenitUI.html#a0a239634c6aed8b1646a18bb40149774", null ],
-    [ "ZenitUI::operator+", "namespaceZenitUI.html#ab6c61b30da3c5999aa9ca09c58a393af", null ],
-    [ "ZenitUI::operator-", "namespaceZenitUI.html#a2ac783571655519444d335ff0da34006", null ],
+    [ "ZenitUI::applyInverseTransform", "group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31", null ],
+    [ "ZenitUI::applyTransform", "group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf", null ],
+    [ "ZenitUI::operator*", "group__grp__core.html#ga0a239634c6aed8b1646a18bb40149774", null ],
+    [ "ZenitUI::operator+", "group__grp__core.html#gab6c61b30da3c5999aa9ca09c58a393af", null ],
+    [ "ZenitUI::operator-", "group__grp__core.html#ga2ac783571655519444d335ff0da34006", null ],
     [ "ZenitUI::Key::A", "namespaceZenitUI_1_1Key.html#a4dc840d40fec5e7666590bae7513add3", null ],
     [ "ZenitUI::Key::Backspace", "namespaceZenitUI_1_1Key.html#a7d24330bcefbeba252b6b6ef64d2da70", null ],
     [ "ZenitUI::Colors::Black", "namespaceZenitUI_1_1Colors.html#ab2add77d306a254cf0a1b764e1df616c", null ],

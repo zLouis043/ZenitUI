@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -117,21 +120,21 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ab65de980c193bb23cf24aa29c1881402" id="r_ab65de980c193bb23cf24aa29c1881402"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402">ZenitUI::LogLevel</a> { <a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba">ZenitUI::Debug</a>
-, <a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875">ZenitUI::Info</a>
-, <a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa">ZenitUI::Warning</a>
-, <a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd">ZenitUI::Error</a>
+<tr class="memitem:gab65de980c193bb23cf24aa29c1881402" id="r_gab65de980c193bb23cf24aa29c1881402"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">ZenitUI::LogLevel</a> { <a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba">ZenitUI::LogLevel::Debug</a>
+, <a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875">ZenitUI::LogLevel::Info</a>
+, <a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa">ZenitUI::LogLevel::Warning</a>
+, <a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd">ZenitUI::LogLevel::Error</a>
  }</td></tr>
-<tr class="memdesc:ab65de980c193bb23cf24aa29c1881402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity level attached to a <span class="tt">LogMessage</span>.  <a href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402">More...</a><br /></td></tr>
+<tr class="memdesc:gab65de980c193bb23cf24aa29c1881402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity level attached to a <span class="tt">LogMessage</span>.  <a href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aac8a43c1768528d08df39b70de5465d6" id="r_aac8a43c1768528d08df39b70de5465d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#aac8a43c1768528d08df39b70de5465d6">ZenitUI::logImpl</a> (<a class="el" href="namespaceZenitUI.html#ab65de980c193bb23cf24aa29c1881402">LogLevel</a> level, const std::string &amp;cat, const std::string &amp;file, int line, int col, const std::string &amp;text)</td></tr>
-<tr class="memdesc:aac8a43c1768528d08df39b70de5465d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger.  <br /></td></tr>
-<tr class="memitem:a0eaeac78ff222eaedcf4c83770d78e10" id="r_a0eaeac78ff222eaedcf4c83770d78e10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#a0eaeac78ff222eaedcf4c83770d78e10">ZenitUI::logDebug</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:a7dedcabd2a6c4d138a2c882599a88a06" id="r_a7dedcabd2a6c4d138a2c882599a88a06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#a7dedcabd2a6c4d138a2c882599a88a06">ZenitUI::logInfo</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:a561ae5709ec6a8804eaa416cf7d5a7b5" id="r_a561ae5709ec6a8804eaa416cf7d5a7b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#a561ae5709ec6a8804eaa416cf7d5a7b5">ZenitUI::logWarn</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:a7285bb440d639eddcaa8aa6835dbf2d5" id="r_a7285bb440d639eddcaa8aa6835dbf2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html#a7285bb440d639eddcaa8aa6835dbf2d5">ZenitUI::logError</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:gaac8a43c1768528d08df39b70de5465d6" id="r_gaac8a43c1768528d08df39b70de5465d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#gaac8a43c1768528d08df39b70de5465d6">ZenitUI::logImpl</a> (<a class="el" href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">LogLevel</a> level, const std::string &amp;cat, const std::string &amp;file, int line, int col, const std::string &amp;text)</td></tr>
+<tr class="memdesc:gaac8a43c1768528d08df39b70de5465d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger.  <br /></td></tr>
+<tr class="memitem:ga0eaeac78ff222eaedcf4c83770d78e10" id="r_ga0eaeac78ff222eaedcf4c83770d78e10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#ga0eaeac78ff222eaedcf4c83770d78e10">ZenitUI::logDebug</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga7dedcabd2a6c4d138a2c882599a88a06" id="r_ga7dedcabd2a6c4d138a2c882599a88a06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#ga7dedcabd2a6c4d138a2c882599a88a06">ZenitUI::logInfo</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga561ae5709ec6a8804eaa416cf7d5a7b5" id="r_ga561ae5709ec6a8804eaa416cf7d5a7b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#ga561ae5709ec6a8804eaa416cf7d5a7b5">ZenitUI::logWarn</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga7285bb440d639eddcaa8aa6835dbf2d5" id="r_ga7285bb440d639eddcaa8aa6835dbf2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#ga7285bb440d639eddcaa8aa6835dbf2d5">ZenitUI::logError</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Lightweight, replaceable logging facility used across <a class="el" href="namespaceZenitUI.html">ZenitUI</a>. </p>

@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,7 +92,7 @@ $(function(){initNavTree('classZenitUI_1_1UI_1_1VirtualView.html','','classZenit
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::UI::VirtualView Class Reference</div></div>
+  <div class="headertitle"><div class="title">ZenitUI::UI::VirtualView Class Reference<div class="ingroups"><a class="el" href="group__grp__widgets.html">Built-in Widgets</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -114,29 +117,37 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a13f42c7a4fc1882d77e7f82802e4ae72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with a factory and an item count.  <br /></td></tr>
 <tr class="memitem:aa67808d00c5618f698330b6a70446e71" id="r_aa67808d00c5618f698330b6a70446e71"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa67808d00c5618f698330b6a70446e71">getItemCount</a> () const noexcept</td></tr>
 <tr class="memdesc:aa67808d00c5618f698330b6a70446e71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of items in the list.  <br /></td></tr>
-<tr class="memitem:a88cf6ec84b3cea2aa1530f1c36d84324" id="r_a88cf6ec84b3cea2aa1530f1c36d84324"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88cf6ec84b3cea2aa1530f1c36d84324">setItemCount</a> (int count)</td></tr>
-<tr class="memdesc:a88cf6ec84b3cea2aa1530f1c36d84324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the item count.  <br /></td></tr>
+<tr class="memitem:ga88cf6ec84b3cea2aa1530f1c36d84324" id="r_ga88cf6ec84b3cea2aa1530f1c36d84324"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga88cf6ec84b3cea2aa1530f1c36d84324">setItemCount</a> (int count)</td></tr>
+<tr class="memdesc:ga88cf6ec84b3cea2aa1530f1c36d84324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the item count.  <br /></td></tr>
 <tr class="memitem:a9154756c314c5f157799b36422a02146" id="r_a9154756c314c5f157799b36422a02146"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9154756c314c5f157799b36422a02146">getUniformHeight</a> () const noexcept</td></tr>
 <tr class="memdesc:a9154756c314c5f157799b36422a02146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the uniform height, or <span class="tt">0</span> if variable heights are being measured.  <br /></td></tr>
-<tr class="memitem:a9c04bb2f6f12faf81ed4cf0947ddd6d5" id="r_a9c04bb2f6f12faf81ed4cf0947ddd6d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c04bb2f6f12faf81ed4cf0947ddd6d5">setUniformHeight</a> (float px)</td></tr>
-<tr class="memdesc:a9c04bb2f6f12faf81ed4cf0947ddd6d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a uniform height for all items.  <br /></td></tr>
-<tr class="memitem:a26c1db115e5bb00e67513d0e8ce5c256" id="r_a26c1db115e5bb00e67513d0e8ce5c256"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26c1db115e5bb00e67513d0e8ce5c256">getFirstVisibleItem</a> () const</td></tr>
-<tr class="memdesc:a26c1db115e5bb00e67513d0e8ce5c256"><td class="mdescLeft">&#160;</td><td class="mdescRight">First item whose range overlaps <span class="tt">[scrollY, scrollY+height)</span>.  <br /></td></tr>
-<tr class="memitem:ad4a5f2c43e4beb127af536eea39d4a4b" id="r_ad4a5f2c43e4beb127af536eea39d4a4b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4a5f2c43e4beb127af536eea39d4a4b">getLastVisibleItem</a> () const</td></tr>
-<tr class="memdesc:ad4a5f2c43e4beb127af536eea39d4a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last visible item, inclusive.  <br /></td></tr>
-<tr class="memitem:ad8aea759d477623a1d7a06dce1130a30" id="r_ad8aea759d477623a1d7a06dce1130a30"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8aea759d477623a1d7a06dce1130a30">scrollToItem</a> (int index)</td></tr>
-<tr class="memdesc:ad8aea759d477623a1d7a06dce1130a30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scroll so that the given item is the first visible.  <br /></td></tr>
-<tr class="memitem:a8ab94fa368d20648ccba1a6edef8fcaf" id="r_a8ab94fa368d20648ccba1a6edef8fcaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ab94fa368d20648ccba1a6edef8fcaf">removeAllChildren</a> () override</td></tr>
-<tr class="memdesc:a8ab94fa368d20648ccba1a6edef8fcaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the materialized children <em>and</em> the materialization bookkeeping.  <br /></td></tr>
+<tr class="memitem:ga9c04bb2f6f12faf81ed4cf0947ddd6d5" id="r_ga9c04bb2f6f12faf81ed4cf0947ddd6d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga9c04bb2f6f12faf81ed4cf0947ddd6d5">setUniformHeight</a> (float px)</td></tr>
+<tr class="memdesc:ga9c04bb2f6f12faf81ed4cf0947ddd6d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a uniform height for all items.  <br /></td></tr>
+<tr class="memitem:ga26c1db115e5bb00e67513d0e8ce5c256" id="r_ga26c1db115e5bb00e67513d0e8ce5c256"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga26c1db115e5bb00e67513d0e8ce5c256">getFirstVisibleItem</a> () const</td></tr>
+<tr class="memdesc:ga26c1db115e5bb00e67513d0e8ce5c256"><td class="mdescLeft">&#160;</td><td class="mdescRight">First item whose range overlaps <span class="tt">[scrollY, scrollY+height)</span>.  <br /></td></tr>
+<tr class="memitem:gad4a5f2c43e4beb127af536eea39d4a4b" id="r_gad4a5f2c43e4beb127af536eea39d4a4b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#gad4a5f2c43e4beb127af536eea39d4a4b">getLastVisibleItem</a> () const</td></tr>
+<tr class="memdesc:gad4a5f2c43e4beb127af536eea39d4a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last visible item, inclusive.  <br /></td></tr>
+<tr class="memitem:gad8aea759d477623a1d7a06dce1130a30" id="r_gad8aea759d477623a1d7a06dce1130a30"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#gad8aea759d477623a1d7a06dce1130a30">scrollToItem</a> (int index)</td></tr>
+<tr class="memdesc:gad8aea759d477623a1d7a06dce1130a30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scroll so that the given item is the first visible.  <br /></td></tr>
+<tr class="memitem:ga8ab94fa368d20648ccba1a6edef8fcaf" id="r_ga8ab94fa368d20648ccba1a6edef8fcaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga8ab94fa368d20648ccba1a6edef8fcaf">removeAllChildren</a> () override</td></tr>
+<tr class="memdesc:ga8ab94fa368d20648ccba1a6edef8fcaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the materialized children <em>and</em> the materialization bookkeeping.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classZenitUI_1_1TLayout"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classZenitUI_1_1TLayout')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout&lt; VirtualView, ScrollView &gt;</a></td></tr>
 <tr class="memitem:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a4225e5714ee6a1e6f804daae8d0fa319"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">TLayout</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward constructor arguments to <code class="param">Base</code>.  <br /></td></tr>
 <tr class="memitem:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a761c138f6036050628d7d754b6689c2a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">cls</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addClass</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a28669d2339e792209576303c9cf3d0e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a28669d2339e792209576303c9cf3d0e3">id</a> (const std::string &amp;node_id)</td></tr>
+<tr class="memdesc:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setId</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout" id="r_a472c4fbd714c621910c723fb6b8310ad"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a472c4fbd714c621910c723fb6b8310ad">withRef</a> (const std::string &amp;r)</td></tr>
+<tr class="memdesc:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setRef</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a3eee4e557450f8c80bfdb8009ee3f334"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a3eee4e557450f8c80bfdb8009ee3f334">size</a> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
+<tr class="memdesc:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setSize</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout" id="r_a42e869aa691c66abc74a2ff8e6b7978c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a42e869aa691c66abc74a2ff8e6b7978c">passThrough</a> (bool p=true)</td></tr>
+<tr class="memdesc:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setPassThrough</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout" id="r_ae9181188f4cc34fbcf0d1a48b179b695"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#ae9181188f4cc34fbcf0d1a48b179b695">with</a> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; c)</td></tr>
+<tr class="memdesc:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addChild</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
 <tr class="memitem:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a1239e1317f23df8d06cb3cb814a10a7a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; VirtualView &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a1239e1317f23df8d06cb3cb814a10a7a">self</a> ()</td></tr>
+<tr class="memdesc:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <span class="tt">shared_from_this()</span> statically cast to <span class="tt">Derived</span>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -155,11 +166,11 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a2440ae63bb1b4f6fb2d2910e684de679" id="r_a2440ae63bb1b4f6fb2d2910e684de679"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2440ae63bb1b4f6fb2d2910e684de679">onBuild</a> () override</td></tr>
-<tr class="memdesc:a2440ae63bb1b4f6fb2d2910e684de679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hook: called once after <span class="tt"><a class="el" href="#a00141b4bd568ade745ad342adcfcaf9d" title="Construct with an indexed factory.">create()</a></span> finishes constructing the object.  <br /></td></tr>
-<tr class="memitem:a0c520c07d2a975893a42d20633012dea" id="r_a0c520c07d2a975893a42d20633012dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c520c07d2a975893a42d20633012dea">arrange</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> space) override</td></tr>
-<tr class="memdesc:a0c520c07d2a975893a42d20633012dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arrange: update the materialized set, then delegate to base.  <br /></td></tr>
-<tr class="memitem:a0012e1c6cd2b90e6354b8c497098477f" id="r_a0012e1c6cd2b90e6354b8c497098477f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0012e1c6cd2b90e6354b8c497098477f">computeIntrinsicSize</a> (float availW, float availH) override</td></tr>
+<tr class="memitem:ga2440ae63bb1b4f6fb2d2910e684de679" id="r_ga2440ae63bb1b4f6fb2d2910e684de679"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga2440ae63bb1b4f6fb2d2910e684de679">onBuild</a> () override</td></tr>
+<tr class="memdesc:ga2440ae63bb1b4f6fb2d2910e684de679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hook: called once after <span class="tt"><a class="el" href="#a00141b4bd568ade745ad342adcfcaf9d" title="Construct with an indexed factory.">create()</a></span> finishes constructing the object.  <br /></td></tr>
+<tr class="memitem:ga0c520c07d2a975893a42d20633012dea" id="r_ga0c520c07d2a975893a42d20633012dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea">arrange</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> space) override</td></tr>
+<tr class="memdesc:ga0c520c07d2a975893a42d20633012dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arrange: update the materialized set, then delegate to base.  <br /></td></tr>
+<tr class="memitem:ga0012e1c6cd2b90e6354b8c497098477f" id="r_ga0012e1c6cd2b90e6354b8c497098477f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f">computeIntrinsicSize</a> (float availW, float availH) override</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A virtualized list. </p>
@@ -221,63 +232,6 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a0c520c07d2a975893a42d20633012dea" name="a0c520c07d2a975893a42d20633012dea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c520c07d2a975893a42d20633012dea">&#9670;&#160;</a></span>arrange()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::arrange </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a></td>          <td class="paramname"><span class="paramname"><em>space</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Arrange: update the materialized set, then delegate to base. </p>
-<p>Note that <span class="tt">internal_.subtreeDirty = 1</span> is set unconditionally — this forces a re-measure next frame even when nothing changed. It is a known wart (measure is cheap when nothing changed, but still) and could be made conditional on <span class="tt">updateMaterialization</span> actually adding or removing items. </p>
-
-</div>
-</div>
-<a id="a0012e1c6cd2b90e6354b8c497098477f" name="a0012e1c6cd2b90e6354b8c497098477f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0012e1c6cd2b90e6354b8c497098477f">&#9670;&#160;</a></span>computeIntrinsicSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::UI::VirtualView::computeIntrinsicSize </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>availW</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>availH</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a00141b4bd568ade745ad342adcfcaf9d" name="a00141b4bd568ade745ad342adcfcaf9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a00141b4bd568ade745ad342adcfcaf9d">&#9670;&#160;</a></span>create() <span class="overload">[1/2]</span></h2>
 
@@ -342,34 +296,6 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a26c1db115e5bb00e67513d0e8ce5c256" name="a26c1db115e5bb00e67513d0e8ce5c256"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26c1db115e5bb00e67513d0e8ce5c256">&#9670;&#160;</a></span>getFirstVisibleItem()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ZenitUI::UI::VirtualView::getFirstVisibleItem </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>First item whose range overlaps <span class="tt">[scrollY, scrollY+height)</span>. </p>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">-1</span> if there are no items or the heights are not built. </dd></dl>
-
-</div>
-</div>
 <a id="aa67808d00c5618f698330b6a70446e71" name="aa67808d00c5618f698330b6a70446e71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa67808d00c5618f698330b6a70446e71">&#9670;&#160;</a></span>getItemCount()</h2>
 
@@ -397,34 +323,6 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad4a5f2c43e4beb127af536eea39d4a4b" name="ad4a5f2c43e4beb127af536eea39d4a4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4a5f2c43e4beb127af536eea39d4a4b">&#9670;&#160;</a></span>getLastVisibleItem()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ZenitUI::UI::VirtualView::getLastVisibleItem </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Last visible item, inclusive. </p>
-<p><span class="tt">-1</span> if none. </p>
-
-</div>
-</div>
 <a id="a9154756c314c5f157799b36422a02146" name="a9154756c314c5f157799b36422a02146"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9154756c314c5f157799b36422a02146">&#9670;&#160;</a></span>getUniformHeight()</h2>
 
@@ -449,147 +347,6 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return the uniform height, or <span class="tt">0</span> if variable heights are being measured. </p>
-
-</div>
-</div>
-<a id="a2440ae63bb1b4f6fb2d2910e684de679" name="a2440ae63bb1b4f6fb2d2910e684de679"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2440ae63bb1b4f6fb2d2910e684de679">&#9670;&#160;</a></span>onBuild()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::onBuild </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Hook: called once after <span class="tt"><a class="el" href="#a00141b4bd568ade745ad342adcfcaf9d" title="Construct with an indexed factory.">create()</a></span> finishes constructing the object. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1TLayout.html#a2c2d04d1bcdf383f75e355dc2b3f2730">ZenitUI::TLayout&lt; VirtualView, ScrollView &gt;</a>.</p>
-
-</div>
-</div>
-<a id="a8ab94fa368d20648ccba1a6edef8fcaf" name="a8ab94fa368d20648ccba1a6edef8fcaf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ab94fa368d20648ccba1a6edef8fcaf">&#9670;&#160;</a></span>removeAllChildren()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::removeAllChildren </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Clear the materialized children <em>and</em> the materialization bookkeeping. </p>
-<p>Called automatically by <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a98c0c39310be798050f8ef5320c037f4" title="Detach every child immediately, clearing their parent pointers.">Layout::removeAllChildren</a></span>. </p>
-
-</div>
-</div>
-<a id="ad8aea759d477623a1d7a06dce1130a30" name="ad8aea759d477623a1d7a06dce1130a30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8aea759d477623a1d7a06dce1130a30">&#9670;&#160;</a></span>scrollToItem()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::scrollToItem </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>index</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Scroll so that the given item is the first visible. </p>
-<p>Does not account for the item's height: item <code class="param">index</code> is placed at the top of the viewport. <span class="tt">-1</span> and out-of-range indices are clamped to the nearest valid value. </p>
-
-</div>
-</div>
-<a id="a88cf6ec84b3cea2aa1530f1c36d84324" name="a88cf6ec84b3cea2aa1530f1c36d84324"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88cf6ec84b3cea2aa1530f1c36d84324">&#9670;&#160;</a></span>setItemCount()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::setItemCount </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Replace the item count. </p>
-<p>Invalidates the cumulative heights; they are rebuilt on the next <span class="tt">measure</span>. If the count is unchanged, no-op. </p>
-
-</div>
-</div>
-<a id="a9c04bb2f6f12faf81ed4cf0947ddd6d5" name="a9c04bb2f6f12faf81ed4cf0947ddd6d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c04bb2f6f12faf81ed4cf0947ddd6d5">&#9670;&#160;</a></span>setUniformHeight()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::VirtualView::setUniformHeight </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>px</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set a uniform height for all items. </p>
-<p>When positive, disables measurement — this makes huge lists cheap (O(1) height computation), at the cost of assuming all items have the same height. <span class="tt">0</span> restores measurement mode. </p>
 
 </div>
 </div>

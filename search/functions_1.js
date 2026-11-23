@@ -9,9 +9,9 @@ var searchData=
   ['bindeach_6',['bindEach',['../classZenitUI_1_1ZMarkup_1_1UINode.html#af0013cded057fb522b2cd95a6510df77',1,'ZenitUI::ZMarkup::UINode']]],
   ['bindeachkeyed_7',['bindEachKeyed',['../classZenitUI_1_1ZMarkup_1_1UINode.html#a7b41b9b5c53c68d3e6710a3282da1d9e',1,'ZenitUI::ZMarkup::UINode']]],
   ['bindto_8',['bindTo',['../classZenitUI_1_1Bindable.html#ac31f0825f52c01c1c761c2d3bd957b0f',1,'ZenitUI::Bindable::bindTo(std::weak_ptr&lt; W &gt; widget, void(W::*method)(Arg), bool fireImmediately=false)'],['../classZenitUI_1_1Bindable.html#a2dacfc76534df1506a09d4f866f2c7dd',1,'ZenitUI::Bindable::bindTo(std::shared_ptr&lt; W &gt; widget, void(W::*method)(Arg), bool fireImmediately=false)']]],
-  ['box_9',['Box',['../namespaceZenitUI_1_1UI.html#ae0c53a867aed43cff14c742574f493de',1,'ZenitUI::UI']]],
-  ['btn_10',['Btn',['../namespaceZenitUI_1_1UI.html#aec8576d8da5dee1119f06d87271e3ccd',1,'ZenitUI::UI']]],
+  ['box_9',['Box',['../group__grp__widgets.html#gae0c53a867aed43cff14c742574f493de',1,'ZenitUI::UI']]],
+  ['btn_10',['Btn',['../group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd',1,'ZenitUI::UI']]],
   ['bucketdim_11',['bucketDim',['../classZenitUI_1_1TargetPool.html#aac5c5e2a23c9f1c45afeae6686488d9c',1,'ZenitUI::TargetPool']]],
-  ['build_12',['build',['../classZenitUI_1_1CodepointSet.html#a23e36e629f9b35695b81454435706fdb',1,'ZenitUI::CodepointSet::build()'],['../namespaceZenitUI_1_1ZMarkup.html#a4aa385688630fa29d4aaaf1807368bd4',1,'ZenitUI::ZMarkup::build()']]],
-  ['button_13',['Button',['../classZenitUI_1_1UI_1_1Button.html#a0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button']]]
+  ['build_12',['build',['../classZenitUI_1_1CodepointSet.html#a23e36e629f9b35695b81454435706fdb',1,'ZenitUI::CodepointSet::build()'],['../group__grp__zmarkup.html#ga4aa385688630fa29d4aaaf1807368bd4',1,'ZenitUI::ZMarkup::build()']]],
+  ['button_13',['Button',['../group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button']]]
 ];

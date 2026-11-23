@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ZenitUI: ZenitUI</title>
+<title>ZenitUI: ZenitUI — Guide &amp; API Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -89,92 +92,56 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title"><a class="el" href="namespaceZenitUI.html">ZenitUI</a> </div></div>
+  <div class="headertitle"><div class="title"><a class="el" href="namespaceZenitUI.html">ZenitUI</a> — Guide &amp; API Reference </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<blockquote class="doxtable">
-<p>A retained-mode UI framework for C++ with a CSS-like styling system, a Flexbox-inspired layout engine, and a declarative DSL (<b>ZMarkup</b> + <b>ZStyle</b>) for building interfaces without writing boilerplate. </p>
-</blockquote>
-<p><b>Status:</b> 🗓️ <em>beta</em> — the core API is frozen. See docs/ROADMAP.md for what's still planned.</p>
-<p><a href="https://en.cppreference.com/w/cpp/20"><img src="https://img.shields.io/badge/C%2B%2B-20-blue.svg" alt="C++20" style="pointer-events: none;" class="inline"/></a> [<img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT" style="pointer-events: none;" class="inline"/>](LICENSE) ![Status](https://img.shields.io/badge/status-beta-blue.svg)</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
-What is ZenitUI?</h1>
-<p><a class="el" href="namespaceZenitUI.html">ZenitUI</a> is a <b>retained-mode</b> UI framework written in modern C++. It gives you the ergonomics of a web-like styling and layout system (Flexbox, CSS transitions, <span class="tt">@keyframes</span>, <span class="tt">::part</span>, <span class="tt">var()</span>, <span class="tt">calc()</span>) without pulling in a browser engine or a scripting runtime.</p>
-<p>You write your UI in one of two ways, or both, mixed freely:</p>
-<p><b>1. Imperative C++ — with a fluent API</b></p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> root = std::make_shared&lt;Layout&gt;(LayoutType::Stack);</div>
-<div class="line">root-&gt;size(Percent(100), Percent(100));</div>
-<div class="line">root-&gt;getInlineBase().itemsH = Align::Center;</div>
-<div class="line">root-&gt;getInlineBase().itemsV = Align::Center;</div>
+<div class="textblock"><p><b><a class="el" href="namespaceZenitUI.html">ZenitUI</a></b> is a retained-mode C++20 UI framework with a Flexbox-inspired layout engine, a CSS-like styling language (<b>ZStyle</b>), a declarative UI DSL (<b>ZMarkup</b>), and pluggable rendering/platform backends.</p>
+<h1 class="doxsection"><a class="anchor" id="sec_mental_model"></a>
+Mental Model</h1>
+<ol type="1">
+<li><b>One node type:</b> every container and widget derives from <a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">ZenitUI::Layout</a> (typically via the CRTP helper <a class="el" href="classZenitUI_1_1TLayout.html" title="CRTP base for components that want fluent builders and a static create() factory.">ZenitUI::TLayout</a>).</li>
+<li><b>Global frame state in UIContext:</b> attach your <span class="tt">IRenderer</span>, <span class="tt">IPlatform</span>, and <span class="tt">IAssetProvider</span> once to <a class="el" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0" title="Return the global singleton context.">ZenitUI::UIContext::get()</a>.</li>
+<li><b>Four-pass frame cycle:</b><ul>
+<li><span class="tt">root-&gt;runFrame(dt)</span> runs <span class="tt">update</span> (input, style transitions, animations), <span class="tt">measure</span> (bottom-up), and <span class="tt">arrange</span> (top-down).</li>
+<li><span class="tt">root-&gt;renderFrame()</span> runs <span class="tt">beginFrame</span>, <span class="tt">draw</span> (clips, layers, portals), and <span class="tt">endFrame</span>.</li>
+</ul>
+</li>
+<li><b>Imperative or declarative — same tree:</b> build nodes with the fluent C++ API or with ZMarkup (<span class="tt">ZMarkup::build</span>, <span class="tt">ZMarkup::instantiate</span>), and style both with <span class="tt">.zstyle</span> stylesheets.</li>
+</ol>
+<h1 class="doxsection"><a class="anchor" id="sec_quickstart"></a>
+Quick Start (Hello World)</h1>
+<p>Directly from <a class="el" href="01_hello_world_2main_8cpp-example.html">examples/01_hello_world/main.cpp</a> (compiled by CI on every build):</p>
+<div class="fragment"><div class="line"><span class="comment">// @doc   Minimal Raylib setup, single Stack root layout, inline styling, and the runFrame/renderFrame loop.</span></div>
+<div class="line"><span class="comment">// @group grp_core grp_backends</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> btn = Btn(<span class="stringliteral">&quot;Click me&quot;</span>, []{</div>
-<div class="line">    std::printf(<span class="stringliteral">&quot;hello!\n&quot;</span>);</div>
-<div class="line">});</div>
-<div class="line">btn-&gt;cls(<span class="stringliteral">&quot;btn-primary&quot;</span>);</div>
+<div class="line"><span class="comment">// ZenitUI — Example 01: Hello World</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// The smallest working ZenitUI program: a window, a root layout, and</span></div>
+<div class="line"><span class="comment">// a clickable button.</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// Build:   make examples         (from the repository root)</span></div>
+<div class="line"><span class="comment">// Run:     make run-01_hello_world</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// All styling is applied inline via getInlineBase(). See the later</span></div>
+<div class="line"><span class="comment">// examples for .zstyle files, ZMarkup, and custom widgets.</span></div>
 <div class="line"> </div>
-<div class="line">root-&gt;addChild(btn);</div>
-</div><!-- fragment --><p><b>2. Declarative — with ZMarkup + ZStyle</b></p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> ui = ZMarkup::build(R<span class="stringliteral">&quot;(</span></div>
-<div class="line"><span class="stringliteral">    VStack#root {</span></div>
-<div class="line"><span class="stringliteral">        Button.btn-primary#ok &quot;Click me&quot;</span></div>
-<div class="line"><span class="stringliteral">    }</span></div>
-<div class="line"><span class="stringliteral">)&quot;);</span></div>
-<div class="line"><span class="stringliteral">ui.onClick(</span><span class="stringliteral">&quot;ok&quot;</span>, []{ std::printf(<span class="stringliteral">&quot;hello!\n&quot;</span>); });</div>
-</div><!-- fragment --><div class="fragment"><div class="line">/* assets/game.zstyle */</div>
-<div class="line">.btn-primary {</div>
-<div class="line">    background: #0079F1;</div>
-<div class="line">    radius: 8px;</div>
-<div class="line">    padding: 1.5vh 2vw;</div>
-<div class="line">    transition: background 0.25s ease-out, scale 0.12s ease-out-back;</div>
-<div class="line">}</div>
-<div class="line">.btn-primary:hover   { background: #3296FF; scale: 1.15; }</div>
-<div class="line">.btn-primary:pressed { background: #505050; scale: 0.90; }</div>
-</div><!-- fragment --><p>Both approaches produce the same tree of <span class="tt">Layout</span> nodes, and both are fully compatible with the same styling system.</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
-Feature highlights</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Area  </th><th class="markdownTableHeadNone">What you get  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Layout</b>  </td><td class="markdownTableBodyNone"><span class="tt">Stack</span>, <span class="tt">Vertical</span>, <span class="tt">Horizontal</span> flow, <span class="tt">wrap</span>, <span class="tt">grow</span> / <span class="tt">shrink</span> / <span class="tt">gap</span>, <span class="tt">setVisible</span> (<span class="tt">display: none</span>), absolute positioning, <span class="tt">overflow: scroll \| auto</span>, <span class="tt">z-index</span>, portals  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>ZMarkup</b>  </td><td class="markdownTableBodyNone">Declarative UI DSL (compiled in <span class="tt">libZenitUI</span>), reusable <b>Prefabs</b> with <b>Named <span class="tt">&lt;Slot&gt;</span>s</b> &amp; <span class="tt">ZMarkup::instantiate</span>, chainable <span class="tt">@ref</span> helpers, runtime structural <b><span class="tt">If</span> &amp; <span class="tt">Each</span></b> (with keyed reconciliation and <span class="tt">Bindable</span> reactivity), cycle-free <b><span class="tt">WeakUINode</span></b>  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Units</b>  </td><td class="markdownTableBodyNone"><span class="tt">px</span>, <span class="tt">%</span>, <span class="tt">vw</span>, <span class="tt">vh</span>, <span class="tt">pw</span>, <span class="tt">ph</span>, <span class="tt">auto</span>, and full <span class="tt">calc()</span> support  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Styling</b>  </td><td class="markdownTableBodyNone">CSS-like cascade, descendant selectors, <span class="tt">:hover</span> <span class="tt">:pressed</span> <span class="tt">:focus</span> <span class="tt">:checked</span> <span class="tt">:disabled</span>, <span class="tt">::part</span>, custom properties (<span class="tt">--x</span> / <span class="tt">var()</span>), media queries  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Animations</b>  </td><td class="markdownTableBodyNone">Per-property transitions, CSS <span class="tt">@keyframes</span>, imperative <span class="tt">UIAnimation</span>, per-<span class="tt">::part</span> animations  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Input</b>  </td><td class="markdownTableBodyNone">Hover / pressed / focus state machine, <span class="tt">Tab</span> navigation, pointer capture, <span class="tt">passThrough</span>, right-click, context menus  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Effects</b>  </td><td class="markdownTableBodyNone"><span class="tt">filter: blur(...) drop-shadow(...)</span>, arbitrary shaders, extensible <span class="tt">FilterRegistry</span>, <span class="tt">box-shadow</span>  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Widgets</b>  </td><td class="markdownTableBodyNone">Text, Button, Panel, Toggle, Checkbox, Slider, ProgressBar, TextInput, TextArea, ScrollView, VirtualView, Dropdown, Modal, Tooltip, Popup, Canvas, ImageContainer  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Backends</b>  </td><td class="markdownTableBodyNone">Pluggable. Reference implementation for <b>Raylib</b>, plus a headless <b>mock</b> backend for tests and CI. The core only depends on <span class="tt">IRenderer</span> / <span class="tt">IPlatform</span> / <span class="tt">IAssetProvider</span>.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Debugging</b>  </td><td class="markdownTableBodyNone">Optional <span class="tt">Debug::dumpStyle</span> / <span class="tt">dumpTree</span> / <span class="tt">dumpTheme</span> / <span class="tt">dumpParts</span>, structured <span class="tt">Logger</span> with source locations  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Data binding</b>  </td><td class="markdownTableBodyNone"><span class="tt">Bindable&lt;T&gt;</span> — observable values with RAII subscriptions, lifetime-safe, zero dependencies  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Testing</b>  </td><td class="markdownTableBodyNone">The <span class="tt">ZenitUI::MockBackend</span> target provides <span class="tt">MockRenderer</span>, <span class="tt">MockPlatform</span>, and <span class="tt">MockAssetProvider</span> for full headless interaction tests.  </td></tr>
-</table>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
-Quick start</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;raylib.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;raylib.h&gt;</span></div>
+<div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="ZenitUI_8hpp.html">ZenitUI.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI.html">ZenitUI</a>;</div>
+<div class="line"><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">    InitWindow(800, 600, <span class="stringliteral">&quot;ZenitUI&quot;</span>);</div>
-<div class="line">    SetWindowState(FLAG_WINDOW_RESIZABLE);</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI.html">ZenitUI</a>;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main()</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="comment">//  Window + backend setup</span></div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    InitWindow(640, 360, <span class="stringliteral">&quot;ZenitUI — 01 Hello World&quot;</span>);</div>
+<div class="line">    SetTargetFPS(60);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibRenderer.html">RaylibRenderer</a>      renderer;</div>
 <div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a>      platform;</div>
@@ -184,190 +151,88 @@ Quick start</h1>
 <div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform = &amp;platform;</div>
 <div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets   = &amp;assets;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">auto</span> root = std::make_shared&lt;Layout&gt;(<a class="code hl_enumvalue" href="namespaceZenitUI.html#aa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
-<div class="line">    root-&gt;size(<a class="code hl_function" href="namespaceZenitUI.html#af72b1ff456f88154b5b928f3540fe74a">Percent</a>(100), <a class="code hl_function" href="namespaceZenitUI.html#af72b1ff456f88154b5b928f3540fe74a">Percent</a>(100));</div>
-<div class="line">    root-&gt;getInlineBase().itemsH = <a class="code hl_enumvalue" href="namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
-<div class="line">    root-&gt;getInlineBase().itemsV = <a class="code hl_enumvalue" href="namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="comment">//  Root layout: fills the viewport, centers its children</span></div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="keyword">auto</span> root = std::make_shared&lt;Layout&gt;(<a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
+<div class="line">    root-&gt;size(<a class="code hl_function" href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">Percent</a>(100), <a class="code hl_function" href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">Percent</a>(100));</div>
+<div class="line">    root-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{24, 24, 28, 255};</div>
+<div class="line">    root-&gt;getInlineBase().itemsH     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line">    root-&gt;getInlineBase().itemsV     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
 <div class="line"> </div>
-<div class="line">    root-&gt;addChild(Btn(<span class="stringliteral">&quot;Hello!&quot;</span>, []{ std::printf(<span class="stringliteral">&quot;hi\n&quot;</span>); }));</div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="comment">//  The button</span></div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="keyword">auto</span> button = <a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Click me&quot;</span>, []{</div>
+<div class="line">        std::printf(<span class="stringliteral">&quot;clicked!\n&quot;</span>);</div>
+<div class="line">    });</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose()) {</div>
-<div class="line">        root-&gt;runFrame(GetFrameTime());</div>
+<div class="line">    button-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{60, 120, 220, 255};</div>
+<div class="line">    button-&gt;getInlineBase().radius     = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(8);</div>
+<div class="line">    button-&gt;getInlineBase().padding    = <a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(<a class="code hl_function" href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">VH</a>(1.5f), <a class="code hl_function" href="group__grp__core.html#ga69d2a7a7af7294ea20ba113c62667a7d">VW</a>(3.0f));</div>
+<div class="line"> </div>
+<div class="line">    root-&gt;addChild(button);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="comment">//  Main loop</span></div>
+<div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
+<div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose())</div>
+<div class="line">    {</div>
+<div class="line">        root-&gt;runFrame(GetFrameTime());    <span class="comment">// logic</span></div>
 <div class="line"> </div>
 <div class="line">        BeginDrawing();</div>
-<div class="line">        ClearBackground(BLACK);</div>
-<div class="line">        root-&gt;renderFrame();</div>
+<div class="line">        ClearBackground(::BLACK);</div>
+<div class="line">        root-&gt;renderFrame();               <span class="comment">// draw</span></div>
 <div class="line">        EndDrawing();</div>
 <div class="line">    }</div>
-<div class="line">    CloseWindow();</div>
-<div class="line">}</div>
-<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div></div>
-<div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:144</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:38</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:52</div></div>
-<div class="ttc" id="anamespaceZenitUI_html"><div class="ttname"><a href="namespaceZenitUI.html">ZenitUI</a></div><div class="ttdef"><b>Definition</b> AnimationPlayer.hpp:31</div></div>
-<div class="ttc" id="anamespaceZenitUI_html_a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="namespaceZenitUI.html#a0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:273</div></div>
-<div class="ttc" id="anamespaceZenitUI_html_aa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="namespaceZenitUI.html#aa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:24</div></div>
-<div class="ttc" id="anamespaceZenitUI_html_af72b1ff456f88154b5b928f3540fe74a"><div class="ttname"><a href="namespaceZenitUI.html#af72b1ff456f88154b5b928f3540fe74a">ZenitUI::Percent</a></div><div class="ttdeci">Value Percent(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:573</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:516</div></div>
-</div><!-- fragment --><p>A full walkthrough is in <b>Getting Started</b>.</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
-Building</h1>
-<p><a class="el" href="namespaceZenitUI.html">ZenitUI</a> uses <b>CMake</b> as its primary build system. A thin <span class="tt">Makefile</span> at the repository root preserves the classic developer workflow and delegates every step to CMake — there is no drift between the two.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
-Requirements</h2>
-<ul>
-<li>CMake ≥ 3.20</li>
-<li>A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)</li>
-<li>Ninja (recommended; falls back to the default generator if absent)</li>
-<li>Git (used by <span class="tt">FetchContent</span> to pull Raylib for the examples)</li>
-</ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
-From source</h2>
-<div class="fragment"><div class="line">git clone https://github.com/zLouis043/ZenitUI</div>
-<div class="line">cd ZenitUI</div>
 <div class="line"> </div>
-<div class="line">make               # build libzenit.a + unit tests</div>
-<div class="line">make test          # run the test suite</div>
-<div class="line">make examples      # build all examples (fetches Raylib automatically)</div>
-<div class="line">make run-00_demo   # build + run a specific example</div>
-<div class="line">make bench         # build the benchmark harness</div>
-<div class="line">make dist          # install into dist/ for downstream consumption</div>
-</div><!-- fragment --><p>The <span class="tt">examples</span> and <span class="tt">run-*</span> targets fetch and build Raylib on demand. There is <b>no <span class="tt">deps/raylib/</span></b> folder in the repo — the build is self-contained.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
-Without the Makefile</h2>
-<p>The Makefile is purely a convenience. The same workflow works with plain CMake:</p>
-<div class="fragment"><div class="line">cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release</div>
-<div class="line">cmake --build build</div>
-<div class="line">ctest --test-dir build --output-on-failure</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
-<span class="tt">dist/</span> — consumable artifacts</h2>
-<div class="fragment"><div class="line">make dist          # → dist/ with headers, libzenit.a, and CMake config</div>
-</div><!-- fragment --><p><span class="tt">dist/</span> contains everything a consumer project needs, in a stable layout:</p>
-<div class="fragment"><div class="line">dist/</div>
-<div class="line">├── include/...                   # public headers</div>
-<div class="line">├── lib/libzenit.a                # static library</div>
-<div class="line">└── lib/cmake/ZenitUI/...         # CMake package files</div>
-</div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
-Integration with CMake</h1>
-<p>The target is always <span class="tt">ZenitUI::ZenitUI</span>, whether you consume the library from source or from an install. Your <span class="tt">CMakeLists.txt</span> doesn't change.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
-As a subdirectory (source tree)</h2>
-<div class="fragment"><div class="line">add_subdirectory(third_party/ZenitUI)</div>
-<div class="line">target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
-As an installed package</h2>
-<div class="fragment"><div class="line">find_package(ZenitUI REQUIRED)</div>
-<div class="line">target_link_libraries(my_app PRIVATE ZenitUI::ZenitUI)</div>
-</div><!-- fragment --><div class="fragment"><div class="line">cmake -B build -DCMAKE_PREFIX_PATH=/path/to/ZenitUI/dist</div>
-</div><!-- fragment --><p>The public interface (include dirs, C++20, warning flags) is propagated automatically.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
-Backends</h2>
-<p>The core is backend-agnostic; backends are opt-in. Currently available:</p>
+<div class="line">    CloseWindow();</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of IPlatform, IRenderer, and IAssetProvider.</div></div>
+<div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Raylib implementation of IAssetProvider for fonts, textures, and shaders.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:194</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:58</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Raylib implementation of IRenderer with transform/clip/target/shader stacks.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:77</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga06d16ddb9f5f1573c7da7f9a886890c2"><div class="ttname"><a href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">ZenitUI::Px</a></div><div class="ttdeci">Value Px(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:577</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga69d2a7a7af7294ea20ba113c62667a7d"><div class="ttname"><a href="group__grp__core.html#ga69d2a7a7af7294ea20ba113c62667a7d">ZenitUI::VW</a></div><div class="ttdeci">Value VW(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:579</div></div>
+<div class="ttc" id="agroup__grp__core_html_gab0693da6b66407115c9e193dc4fb5ec0"><div class="ttname"><a href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">ZenitUI::VH</a></div><div class="ttdeci">Value VH(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:580</div></div>
+<div class="ttc" id="agroup__grp__core_html_gaf72b1ff456f88154b5b928f3540fe74a"><div class="ttname"><a href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">ZenitUI::Percent</a></div><div class="ttdeci">Value Percent(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:578</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:276</div></div>
+<div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:28</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
+<div class="ttc" id="anamespaceZenitUI_html"><div class="ttname"><a href="namespaceZenitUI.html">ZenitUI</a></div><div class="ttdef"><b>Definition</b> AnimationPlayer.hpp:31</div></div>
+<div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
+<div class="ttc" id="astructZenitUI_1_1Spacing_html"><div class="ttname"><a href="structZenitUI_1_1Spacing.html">ZenitUI::Spacing</a></div><div class="ttdoc">Four-sided Value tuple used for padding, margin and border-width.</div><div class="ttdef"><b>Definition</b> Style.hpp:69</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:519</div></div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="sec_modules"></a>
+Browse by Topic</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Backend  </th><th class="markdownTableHeadNone">CMake target  </th><th class="markdownTableHeadNone">Purpose  </th></tr>
+<th class="markdownTableHeadNone">Module  </th><th class="markdownTableHeadNone">Contents  </th><th class="markdownTableHeadNone">Recommended Examples  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">raylib</span>  </td><td class="markdownTableBodyNone"><span class="tt">ZenitUI::RaylibBackend</span>  </td><td class="markdownTableBodyNone">Reference implementation  </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__core.html">Core, Layout &amp; Lifecycle</a>  </td><td class="markdownTableBodyNone"><span class="tt">Layout</span>, <span class="tt">TLayout</span>, frame lifecycle, <span class="tt">UIContext</span>, units, scroll  </td><td class="markdownTableBodyNone"><a class="el" href="02_layouts_2main_8cpp-example.html">02_layouts</a>, <a class="el" href="08_portals_2main_8cpp-example.html">08_portals</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html">09_custom_widget</a>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">mock</span>  </td><td class="markdownTableBodyNone"><span class="tt">ZenitUI::MockBackend</span>  </td><td class="markdownTableBodyNone">Headless testing (no GPU, no window)  </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__widgets.html">Built-in Widgets</a>  </td><td class="markdownTableBodyNone">Built-in widgets (<span class="tt">Text</span>, <span class="tt">Button</span>, <span class="tt">TextInput</span>, <span class="tt">TextArea</span>, <span class="tt">Dropdown</span>, <span class="tt">Modal</span>, <span class="tt">VirtualView</span>, …)  </td><td class="markdownTableBodyNone"><a class="el" href="03_widgets_2main_8cpp-example.html">03_widgets</a>, <a class="el" href="10_canvas_2main_8cpp-example.html">10_canvas</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__zmarkup.html">ZMarkup, Prefabs &amp; Data Binding</a>  </td><td class="markdownTableBodyNone">ZMarkup DSL, <span class="tt">UINode</span> / <span class="tt">WeakUINode</span>, Prefabs &amp; <span class="tt">&lt;Slot&gt;</span>, <span class="tt">If</span> / <span class="tt">Each</span>, <span class="tt">Bindable&lt;T&gt;</span>  </td><td class="markdownTableBodyNone"><a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html">11_ref_list</a>, <a class="el" href="12_bindable_2main_8cpp-example.html">12_bindable</a>, <a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__zstyle.html">ZStyle, Theme &amp; Diagnostics</a>  </td><td class="markdownTableBodyNone"><span class="tt">.zstyle</span> cascade, <span class="tt">Theme</span>, <span class="tt">Style</span>, <span class="tt">StyleParser</span>, <span class="tt">@media</span>, diagnostics  </td><td class="markdownTableBodyNone"><a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__anim.html">Animations, Transitions &amp; Filters</a>  </td><td class="markdownTableBodyNone">Transitions, <span class="tt">@keyframes</span>, imperative animations, <span class="tt">FilterRegistry</span> &amp; shaders  </td><td class="markdownTableBodyNone"><a class="el" href="04_animations_2main_8cpp-example.html">04_animations</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html">04b_imperative_animations</a>, <a class="el" href="07_effects_2main_8cpp-example.html">07_effects</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a>  </td><td class="markdownTableBodyNone">Raylib backend, <span class="tt">IRenderer</span>/<span class="tt">IPlatform</span>/<span class="tt">IAssetProvider</span>, <span class="tt">Utf8</span>/<span class="tt">CodepointSet</span>, <span class="tt">Debug</span>  </td><td class="markdownTableBodyNone"><a class="el" href="01_hello_world_2main_8cpp-example.html">01_hello_world</a>, <a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a>  </td></tr>
 </table>
-<p>Enable them with <span class="tt">-DZENITUI_BACKENDS="raylib;mock"</span> (semicolon-separated). Tests automatically pull in <span class="tt">mock</span>; examples default to <span class="tt">raylib</span>.</p>
-<div class="fragment"><div class="line">target_link_libraries(my_app PRIVATE</div>
-<div class="line">    ZenitUI::ZenitUI</div>
-<div class="line">    ZenitUI::RaylibBackend</div>
-<div class="line">)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
-Without CMake</h2>
-<div class="fragment"><div class="line">make libzenit    # → build/libzenit.a</div>
-<div class="line">g++ main.cpp -I/path/to/ZenitUI/include -L/path/to/ZenitUI/build -lzenit -std=c++20</div>
-</div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
-Repository layout</h1>
-<div class="fragment"><div class="line">ZenitUI/</div>
-<div class="line">├── include/              # public headers (installed)</div>
-<div class="line">│   └── components/       # widget headers</div>
-<div class="line">├── src/</div>
-<div class="line">│   ├── layout/           # layout engine, style resolver, measure/arrange</div>
-<div class="line">│   └── internal/         # animation, input, scroll, ZMarkup parser, …</div>
-<div class="line">├── backends/</div>
-<div class="line">│   ├── raylib/           # reference backend (fetches Raylib)</div>
-<div class="line">│   └── mock/             # headless mock backend for tests</div>
-<div class="line">├── examples/             # one folder per example (each has main.cpp)</div>
-<div class="line">├── tests/                # unit tests</div>
-<div class="line">├── benchmarks/           # benchmark harness</div>
-<div class="line">├── docs/                 # user, internals, api</div>
-<div class="line">├── build/                # CMake build tree (gitignored)</div>
-<div class="line">└── dist/                 # installed artifacts via `make dist` (gitignored)</div>
-</div><!-- fragment --><hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
-Documentation</h1>
-<p>The full documentation lives in <a href="docs/"><span class="tt">docs/</span></a>:</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
-New here?</h2>
-<ul>
-<li><b>Getting Started</b> — setup, first layout, first widget</li>
-<li><b>Cheatsheet</b> — one-page reference for day-to-day work</li>
-<li><b>Glossary</b> — terminology used across the framework</li>
-</ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
-User guide</h2>
-<ul>
-<li>Layout — Stack / Vertical / Horizontal, flexbox, units</li>
-<li>Widgets — reference for every built-in widget</li>
-<li>ZMarkup — the declarative DSL</li>
-<li>ZStyle — the <span class="tt">.zstyle</span> styling language</li>
-<li>Events — click, hover, focus, bubbling, pointer capture</li>
-<li>Animations — transitions and keyframes</li>
-<li>Portals — Popup, Tooltip, Dropdown, Modal</li>
-<li>Effects — filters, shaders, <span class="tt">FilterRegistry</span></li>
-<li>Custom Widgets — build your own component</li>
-<li>Data Binding — <span class="tt">Bindable&lt;T&gt;</span> for model ↔ UI</li>
-</ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
-Internals (for contributors)</h2>
-<ul>
-<li>Architecture — high-level view, the frame pipeline</li>
-<li>Lifecycle — <span class="tt">update</span> / <span class="tt">measure</span> / <span class="tt">arrange</span> / <span class="tt">draw</span></li>
-<li>Style System — cascade, specificity, inheritance</li>
-<li>Animation System — imperative vs CSS vs <span class="tt">::part</span></li>
-<li>Layout Engine — intrinsic size, flow, dirty tracking</li>
-<li>Render Pipeline — inline vs layer, filters, portals</li>
-<li>Input System — FSM, focus, pointer capture</li>
-<li>Scroll System — <span class="tt">ScrollState</span>, arrange, inertia</li>
-<li>Backend — implementing <span class="tt">IRenderer</span> / <span class="tt">IPlatform</span></li>
-<li>Debugging — dumps, logging, headless tests</li>
-</ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
-API reference</h2>
-<ul>
-<li><span class="tt">Layout</span> ·</li>
-<li><span class="tt">Widgets</span> ·</li>
-<li><span class="tt">Unit</span> ·</li>
-<li><span class="tt">Style</span> ·</li>
-<li><span class="tt">Theme</span> ·</li>
-<li><span class="tt">ZMarkup</span> ·</li>
-<li><span class="tt">ZStyle</span> ·</li>
-<li><span class="tt">FilterRegistry</span> ·</li>
-<li><span class="tt">UIContext</span> ·</li>
-<li><span class="tt">Bindable</span></li>
-</ul>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
-Contributing</h1>
-<p>See CONTRIBUTING.md.</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
-Status and roadmap</h1>
-<p><a class="el" href="namespaceZenitUI.html">ZenitUI</a> is in <b>beta</b>. The core API is frozen: widgets, styling, layout, animations, events, and the backend interfaces described in the user guide and API reference are stable. Breaking changes are still possible for work that lands in Phases 4–8 of the roadmap (performance, feature completion, tooling), but the surface described in Phases 1–3 will not change.</p>
-<p>See docs/ROADMAP.md for the detailed plan from alpha to beta to 1.0, including known issues and planned features.</p>
-<hr  />
-<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
-License</h1>
-<p>[MIT](LICENSE) © 2026 zLouis043 </p>
+<h1 class="doxsection"><a class="anchor" id="sec_learning_path"></a>
+Suggested Reading Order</h1>
+<p>New to <a class="el" href="namespaceZenitUI.html">ZenitUI</a>? Walk through the <b>Examples</b> tab in order:</p><ol type="1">
+<li><a class="el" href="01_hello_world_2main_8cpp-example.html">01_hello_world</a> — minimal Raylib setup and frame loop.</li>
+<li><a class="el" href="02_layouts_2main_8cpp-example.html">02_layouts</a> &amp; <a class="el" href="03_widgets_2main_8cpp-example.html">03_widgets</a> — Flexbox containers, units, and built-in widgets.</li>
+<li><a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a> &amp; <a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a> — declarative markup and stylesheets.</li>
+<li><a class="el" href="12_bindable_2main_8cpp-example.html">12_bindable</a> &amp; <a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a> — reactive state and reusable prefabs with slots.</li>
+<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — complete end-to-end showcase. </li>
+</ol>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

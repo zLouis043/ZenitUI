@@ -18,6 +18,9 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -92,6 +95,9 @@ $(function(){initNavTree('Debug_8hpp.html','',''); });
   <div class="headertitle"><div class="title">Debug.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Debug-only inspection helpers (tree dump, style dump, theme dump).  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Theme_8hpp_source.html">Theme.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Unit_8hpp_source.html">Unit.hpp</a>&quot;</code><br />
@@ -99,7 +105,35 @@ $(function(){initNavTree('Debug_8hpp.html','',''); });
 <code>#include &lt;iostream&gt;</code><br />
 </div>
 <p><a href="Debug_8hpp_source.html">Go to the source code of this file.</a></p>
-</div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:ZenitUI" id="r_ZenitUI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html">ZenitUI</a></td></tr>
+<tr class="memitem:ZenitUI_3A_3ADebug" id="r_ZenitUI_3A_3ADebug"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html">ZenitUI::Debug</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a80f6eedf0e22c1bf3ac1728f75833caa" id="r_a80f6eedf0e22c1bf3ac1728f75833caa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#a80f6eedf0e22c1bf3ac1728f75833caa">ZenitUI::Debug::dumpStyle</a> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;, std::ostream &amp;=std::cerr)</td></tr>
+<tr class="memitem:afa5dce37f473f577ea503a26727f7d22" id="r_afa5dce37f473f577ea503a26727f7d22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#afa5dce37f473f577ea503a26727f7d22">ZenitUI::Debug::dumpTree</a> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;, std::ostream &amp;=std::cerr, int=-1, int=0)</td></tr>
+<tr class="memitem:a5a827c1871088f0e7bad55bfa9b5a881" id="r_a5a827c1871088f0e7bad55bfa9b5a881"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#a5a827c1871088f0e7bad55bfa9b5a881">ZenitUI::Debug::dumpTheme</a> (std::ostream &amp;=std::cerr)</td></tr>
+<tr class="memitem:a88c3ecce6425a2a551eaf2b702a366f8" id="r_a88c3ecce6425a2a551eaf2b702a366f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#a88c3ecce6425a2a551eaf2b702a366f8">ZenitUI::Debug::dumpParts</a> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;, std::ostream &amp;=std::cerr)</td></tr>
+<tr class="memitem:ab7651fe905ec909eee0db1eb326866fb" id="r_ab7651fe905ec909eee0db1eb326866fb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#ab7651fe905ec909eee0db1eb326866fb">ZenitUI::Debug::renderStatsToString</a> (const <a class="el" href="structZenitUI_1_1RenderStats.html">RenderStats</a> &amp;=<a class="el" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderStats)</td></tr>
+<tr class="memitem:acc0a1a7753b855f7ef0ed16d60cc6b2d" id="r_acc0a1a7753b855f7ef0ed16d60cc6b2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI_1_1Debug.html#acc0a1a7753b855f7ef0ed16d60cc6b2d">ZenitUI::Debug::dumpRenderStats</a> (std::ostream &amp;=std::cerr)</td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Debug-only inspection helpers (tree dump, style dump, theme dump). </p>
+<p>When <span class="tt">ZENITUI_DEBUG</span> is defined, this header provides real implementations of the dump functions. When it is not defined, the same symbols exist but are no-ops, so calling code does not need <span class="tt">#ifdef</span>s.</p>
+<p>Typical use: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Debug_8hpp.html">Debug.hpp</a>&quot;</span></div>
+<div class="line"><span class="comment">// In a key handler:</span></div>
+<div class="line"><a class="code hl_function" href="namespaceZenitUI_1_1Debug.html#afa5dce37f473f577ea503a26727f7d22">ZenitUI::Debug::dumpTree</a>(root);</div>
+<div class="line"><a class="code hl_function" href="namespaceZenitUI_1_1Debug.html#a80f6eedf0e22c1bf3ac1728f75833caa">ZenitUI::Debug::dumpStyle</a>(*someNode);</div>
+<div class="line"><a class="code hl_function" href="namespaceZenitUI_1_1Debug.html#a5a827c1871088f0e7bad55bfa9b5a881">ZenitUI::Debug::dumpTheme</a>();</div>
+<div class="ttc" id="aDebug_8hpp_html"><div class="ttname"><a href="Debug_8hpp.html">Debug.hpp</a></div><div class="ttdoc">Debug-only inspection helpers (tree dump, style dump, theme dump).</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1Debug_html_a5a827c1871088f0e7bad55bfa9b5a881"><div class="ttname"><a href="namespaceZenitUI_1_1Debug.html#a5a827c1871088f0e7bad55bfa9b5a881">ZenitUI::Debug::dumpTheme</a></div><div class="ttdeci">void dumpTheme(std::ostream &amp;=std::cerr)</div><div class="ttdef"><b>Definition</b> Debug.hpp:631</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1Debug_html_a80f6eedf0e22c1bf3ac1728f75833caa"><div class="ttname"><a href="namespaceZenitUI_1_1Debug.html#a80f6eedf0e22c1bf3ac1728f75833caa">ZenitUI::Debug::dumpStyle</a></div><div class="ttdeci">void dumpStyle(const Layout &amp;, std::ostream &amp;=std::cerr)</div><div class="ttdef"><b>Definition</b> Debug.hpp:629</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1Debug_html_afa5dce37f473f577ea503a26727f7d22"><div class="ttname"><a href="namespaceZenitUI_1_1Debug.html#afa5dce37f473f577ea503a26727f7d22">ZenitUI::Debug::dumpTree</a></div><div class="ttdeci">void dumpTree(const Layout &amp;, std::ostream &amp;=std::cerr, int=-1, int=0)</div><div class="ttdef"><b>Definition</b> Debug.hpp:630</div></div>
+</div><!-- fragment --><p>Output goes to a <span class="tt">std::ostream</span> (default <span class="tt">std::cerr</span>), so it can be redirected to a file or captured by a test. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
