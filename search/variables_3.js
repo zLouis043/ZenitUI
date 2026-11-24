@@ -13,11 +13,12 @@ var searchData=
   ['down_10',['down',['../structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341',1,'ZenitUI::ButtonState']]],
   ['downscale_11',['downscale',['../structZenitUI_1_1FilterDef.html#a7975b9e5a4790813f14091bb6073773b',1,'ZenitUI::FilterDef']]],
   ['dpiscale_12',['dpiScale',['../structZenitUI_1_1UIContext.html#a62a5decc698a38c025cf871d8aba1d85',1,'ZenitUI::UIContext']]],
-  ['dragstartmousex_13',['dragStartMouseX',['../structZenitUI_1_1ScrollState.html#a7c92bc5b5a31ae5cfe047f72acc1ebb5',1,'ZenitUI::ScrollState']]],
-  ['dragstartmousey_14',['dragStartMouseY',['../structZenitUI_1_1ScrollState.html#a86276e7969ac3eb18d90c079ac9b0e85',1,'ZenitUI::ScrollState']]],
-  ['dragstartoffsetx_15',['dragStartOffsetX',['../structZenitUI_1_1ScrollState.html#a475a1969b32f2b339c0632d8cf3aa042',1,'ZenitUI::ScrollState']]],
-  ['dragstartoffsety_16',['dragStartOffsetY',['../structZenitUI_1_1ScrollState.html#a338d811f1721c46a8a8e43fe3431a906',1,'ZenitUI::ScrollState']]],
-  ['dst_17',['dst',['../structZenitUI_1_1FilterContext.html#ae778b172a000931977d35ece7eee9add',1,'ZenitUI::FilterContext']]],
-  ['dt_18',['dt',['../structZenitUI_1_1UIContext.html#aef7f2453b3f6f87041c5042826edac49',1,'ZenitUI::UIContext']]],
-  ['duration_19',['duration',['../classZenitUI_1_1UIAnimation.html#a325bc214b6eb5d0c3bf2f32660bad71d',1,'ZenitUI::UIAnimation::duration'],['../structZenitUI_1_1ActiveCssAnimation.html#a17ee8698da9dbe992d5b595fc37d8c91',1,'ZenitUI::ActiveCssAnimation::duration'],['../structZenitUI_1_1TransitionSpec.html#afc6905cd03d2f3d701977c7f4272b721',1,'ZenitUI::TransitionSpec::duration'],['../structZenitUI_1_1AnimationRef.html#ae8b2b8b363df9c21dfc5a554b90f697a',1,'ZenitUI::AnimationRef::duration'],['../structZenitUI_1_1StyleResolver_1_1PartTransition.html#aeedc55abee30b93aa79454490b20655d',1,'ZenitUI::StyleResolver::PartTransition::duration']]]
+  ['dragaxis_13',['dragAxis',['../structZenitUI_1_1ScrollController.html#a0608ee0a8c1ae6f9cc727112618c6905',1,'ZenitUI::ScrollController']]],
+  ['dragstartmousex_14',['dragStartMouseX',['../structZenitUI_1_1ScrollState.html#a7c92bc5b5a31ae5cfe047f72acc1ebb5',1,'ZenitUI::ScrollState']]],
+  ['dragstartmousey_15',['dragStartMouseY',['../structZenitUI_1_1ScrollState.html#a86276e7969ac3eb18d90c079ac9b0e85',1,'ZenitUI::ScrollState']]],
+  ['dragstartoffsetx_16',['dragStartOffsetX',['../structZenitUI_1_1ScrollState.html#a475a1969b32f2b339c0632d8cf3aa042',1,'ZenitUI::ScrollState']]],
+  ['dragstartoffsety_17',['dragStartOffsetY',['../structZenitUI_1_1ScrollState.html#a338d811f1721c46a8a8e43fe3431a906',1,'ZenitUI::ScrollState']]],
+  ['dst_18',['dst',['../structZenitUI_1_1FilterContext.html#ae778b172a000931977d35ece7eee9add',1,'ZenitUI::FilterContext']]],
+  ['dt_19',['dt',['../structZenitUI_1_1UIContext.html#aef7f2453b3f6f87041c5042826edac49',1,'ZenitUI::UIContext']]],
+  ['duration_20',['duration',['../classZenitUI_1_1UIAnimation.html#a325bc214b6eb5d0c3bf2f32660bad71d',1,'ZenitUI::UIAnimation::duration'],['../structZenitUI_1_1ActiveCssAnimation.html#a17ee8698da9dbe992d5b595fc37d8c91',1,'ZenitUI::ActiveCssAnimation::duration'],['../structZenitUI_1_1TransitionSpec.html#afc6905cd03d2f3d701977c7f4272b721',1,'ZenitUI::TransitionSpec::duration'],['../structZenitUI_1_1AnimationRef.html#ae8b2b8b363df9c21dfc5a554b90f697a',1,'ZenitUI::AnimationRef::duration'],['../structZenitUI_1_1StyleResolver_1_1PartTransition.html#aeedc55abee30b93aa79454490b20655d',1,'ZenitUI::StyleResolver::PartTransition::duration']]]
 ];

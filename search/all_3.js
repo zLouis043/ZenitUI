@@ -84,6 +84,6 @@ var searchData=
   ['currenttransform_81',['currentTransform',['../classZenitUI_1_1Layout.html#a4b1c60a74a96ccb800f9d55c1fd2f1c3',1,'ZenitUI::Layout']]],
   ['custom_82',['Custom',['../group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faa90589c47f06eb971d548591f23c285af',1,'ZenitUI']]],
   ['custom_83',['custom',['../structZenitUI_1_1FilterDef.html#a70fa90cf6c07cab99085ee54c6696bcc',1,'ZenitUI::FilterDef']]],
-  ['customprops_84',['customProps',['../structZenitUI_1_1Style.html#a8c25f857f50e4e1bdc8787dac3ea101c',1,'ZenitUI::Style::customProps'],['../structZenitUI_1_1ComputedStyle.html#ae4b1867de2ab787d4e198b39b75316d0',1,'ZenitUI::ComputedStyle::customProps']]],
+  ['customprops_84',['customProps',['../structZenitUI_1_1Style.html#a8c25f857f50e4e1bdc8787dac3ea101c',1,'ZenitUI::Style::customProps'],['../structZenitUI_1_1ComputedStyle.html#ae4b1867de2ab787d4e198b39b75316d0',1,'ZenitUI::ComputedStyle::customProps'],['../structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a09b4f3ca7df8a98a3cd9e2a3a38637f3',1,'ZenitUI::StyleResolver::InheritedSnapshot::customProps']]],
   ['cyrillic_85',['cyrillic',['../classZenitUI_1_1CodepointSet.html#ad67da8af924dc359021b005463e94f0f',1,'ZenitUI::CodepointSet']]]
 ];

@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"structZenitUI_1_1TargetHandle.html":[1,0,11],
+"structZenitUI_1_1TargetHandle.html#a4b372d9c08c27c97c0db9feb474c65e3":[1,0,11,0],
 "structZenitUI_1_1TargetHandle.html#ac0253549cac0ea9e6fdea6bf4f3b57a2":[1,0,11,1],
 "structZenitUI_1_1TargetHandle.html#ac652b5efc5e724d828f5e1b938f121d4":[1,0,11,3],
 "structZenitUI_1_1TargetHandle.html#ad9fcb106c6c0947edfa6974211b1c2c5":[1,0,11,2],

@@ -38,5 +38,5 @@ var searchData=
   ['currentstate_35',['currentState',['../structZenitUI_1_1StyleResolver.html#a9ab34e0367289d8c5cf6132557cac246',1,'ZenitUI::StyleResolver']]],
   ['currentstyle_36',['currentStyle',['../structZenitUI_1_1StyleResolver.html#a25e820af891eab5be02707dc07b4362b',1,'ZenitUI::StyleResolver']]],
   ['custom_37',['custom',['../structZenitUI_1_1FilterDef.html#a70fa90cf6c07cab99085ee54c6696bcc',1,'ZenitUI::FilterDef']]],
-  ['customprops_38',['customProps',['../structZenitUI_1_1Style.html#a8c25f857f50e4e1bdc8787dac3ea101c',1,'ZenitUI::Style::customProps'],['../structZenitUI_1_1ComputedStyle.html#ae4b1867de2ab787d4e198b39b75316d0',1,'ZenitUI::ComputedStyle::customProps']]]
+  ['customprops_38',['customProps',['../structZenitUI_1_1Style.html#a8c25f857f50e4e1bdc8787dac3ea101c',1,'ZenitUI::Style::customProps'],['../structZenitUI_1_1ComputedStyle.html#ae4b1867de2ab787d4e198b39b75316d0',1,'ZenitUI::ComputedStyle::customProps'],['../structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a09b4f3ca7df8a98a3cd9e2a3a38637f3',1,'ZenitUI::StyleResolver::InheritedSnapshot::customProps']]]
 ];

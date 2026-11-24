@@ -204,6 +204,7 @@ var group__grp__zstyle =
       [ "InheritedSnapshot", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html", [
         [ "checked", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a7144fab4b3a69f07e29d58a067d10553", null ],
         [ "color", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a33c5ac72defcd6280c7c8c0544f27b4d", null ],
+        [ "customProps", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a09b4f3ca7df8a98a3cd9e2a3a38637f3", null ],
         [ "enabled", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#ae38950d33ee05c7cb8742dbbf35ca98f", null ],
         [ "focused", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a3c8368a7853acb3914920f7e454c85a7", null ],
         [ "font", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#a01706049afbd3cd0a140f113cb8fcdc3", null ],

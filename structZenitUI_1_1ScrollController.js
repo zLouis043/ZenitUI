@@ -13,6 +13,7 @@ var structZenitUI_1_1ScrollController =
     [ "appliedOffset", "structZenitUI_1_1ScrollController.html#ab03914063bca6e22316bf1774c573b50", null ],
     [ "arrangeInitialized", "structZenitUI_1_1ScrollController.html#aa63338692b4e39a78a6457ce03b0b366", null ],
     [ "contentSize", "structZenitUI_1_1ScrollController.html#a2a6f3df08258a9e3276b2096ef186679", null ],
+    [ "dragAxis", "structZenitUI_1_1ScrollController.html#a0608ee0a8c1ae6f9cc727112618c6905", null ],
     [ "lastOverflowX", "structZenitUI_1_1ScrollController.html#a5bc8e9b508f586ee7c1975d7bf49f9df", null ],
     [ "lastOverflowY", "structZenitUI_1_1ScrollController.html#afc8240dfcb5c610beaf172a374dea042", null ],
     [ "overflowInitialized", "structZenitUI_1_1ScrollController.html#af56d150d99b05f9fd35ae95607d7fcc1", null ],
