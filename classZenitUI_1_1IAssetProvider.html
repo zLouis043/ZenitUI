@@ -103,7 +103,7 @@ $(function(){initNavTree('classZenitUI_1_1IAssetProvider.html','','classZenitUI_
 <div class="dynheader">
 Inheritance diagram for ZenitUI::IAssetProvider:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IAssetProvider__inherit__graph.svg" width="427" height="131"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IAssetProvider__inherit__graph.svg" width="439" height="159"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -125,12 +125,57 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a4ae98181a71a2ad9416f82d0a79c9712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a font from an in-memory TTF/OTF buffer.  <br /></td></tr>
 <tr class="memitem:a51d960d059f0aa47df2a5e7a15e5593c" id="r_a51d960d059f0aa47df2a5e7a15e5593c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51d960d059f0aa47df2a5e7a15e5593c">unloadFont</a> (std::string_view)</td></tr>
 <tr class="memdesc:a51d960d059f0aa47df2a5e7a15e5593c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to unload and unregister a font by logical name.  <br /></td></tr>
+<tr class="memitem:ad03e2d8012ec333075caa920b096a7a3" id="r_ad03e2d8012ec333075caa920b096a7a3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad03e2d8012ec333075caa920b096a7a3">setDefaultFontSize</a> (int)</td></tr>
+<tr class="memdesc:ad03e2d8012ec333075caa920b096a7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional hint setting the default rasterization pixel size used by <span class="tt"><a class="el" href="#a39e172a9fee5064ed6bafdbac1023161" title="Optional runtime hook to load a font from disk under the given logical name.">loadFont</a></span>.  <br /></td></tr>
+<tr class="memitem:a155777286fc3ff8705c1710bb32e39d0" id="r_a155777286fc3ff8705c1710bb32e39d0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a155777286fc3ff8705c1710bb32e39d0">addDefaultCodepointRange</a> (uint32_t, uint32_t)</td></tr>
+<tr class="memdesc:a155777286fc3ff8705c1710bb32e39d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional hook to include an extra Unicode codepoint range <span class="tt">[first, last]</span> in subsequent font bakes.  <br /></td></tr>
+<tr class="memitem:a0b279ae7e528c6fbf3ac60fe7a503ba9" id="r_a0b279ae7e528c6fbf3ac60fe7a503ba9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b279ae7e528c6fbf3ac60fe7a503ba9">loadTexture</a> (std::string_view, std::string_view)</td></tr>
+<tr class="memdesc:a0b279ae7e528c6fbf3ac60fe7a503ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a 2D texture from disk under <span class="tt">name</span>.  <br /></td></tr>
+<tr class="memitem:a92c2ac07d4ba4656fb3f3abd08fa1f13" id="r_a92c2ac07d4ba4656fb3f3abd08fa1f13"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92c2ac07d4ba4656fb3f3abd08fa1f13">unloadTexture</a> (std::string_view)</td></tr>
+<tr class="memdesc:a92c2ac07d4ba4656fb3f3abd08fa1f13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to unload a texture by logical name.  <br /></td></tr>
+<tr class="memitem:a410385e978ea07cebfe3983abf787563" id="r_a410385e978ea07cebfe3983abf787563"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a410385e978ea07cebfe3983abf787563">loadEffect</a> (std::string_view, std::string_view, std::string_view={})</td></tr>
+<tr class="memdesc:a410385e978ea07cebfe3983abf787563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a fragment (and optional vertex) shader from disk under <span class="tt">name</span>.  <br /></td></tr>
+<tr class="memitem:a2c1a8337a23b157719e4804d9a744158" id="r_a2c1a8337a23b157719e4804d9a744158"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c1a8337a23b157719e4804d9a744158">unloadEffect</a> (std::string_view)</td></tr>
+<tr class="memdesc:a2c1a8337a23b157719e4804d9a744158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to unload a shader effect by logical name.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders. </p>
 <p>Lookup methods (<span class="tt"><a class="el" href="#aed151b0118daf7352b037a4c04f010d4" title="Look up a loaded font by logical name; returns {0} if not found.">getFont</a></span>, <span class="tt"><a class="el" href="#a44c65cac87cb8bdc6d2d3a6548bfda69" title="Look up a loaded 2D texture by logical name; returns {0} if not found.">getTexture</a></span>, <span class="tt"><a class="el" href="#a53e3acb2f4fe7bf80761cf728900b427" title="Look up a loaded shader effect by logical name; returns {0} if not found.">getEffect</a></span>) are called frequently during layout and draw; implementations should avoid heap allocations (e.g. via transparent <span class="tt">std::string_view</span> hashing). Return a default-constructed invalid handle (<span class="tt">id == 0</span>) when a requested asset is not registered.</p>
 <p>See <a class="el" href="page_custom_backends.html">Writing a Custom Backend</a> and <a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a> (<span class="tt"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html" title="Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.">RaylibAssetProvider</a></span>, <span class="tt">MockAssetProvider</span>). </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a155777286fc3ff8705c1710bb32e39d0" name="a155777286fc3ff8705c1710bb32e39d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a155777286fc3ff8705c1710bb32e39d0">&#9670;&#160;</a></span>addDefaultCodepointRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IAssetProvider::addDefaultCodepointRange </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional hook to include an extra Unicode codepoint range <span class="tt">[first, last]</span> in subsequent font bakes. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#aab024160bf52d856b42c233199a05eff">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a7c8e074b6ee26e64837fbfec5b6345d6">ZenitUI::SDL3AssetProvider</a>.</p>
+
+</div>
+</div>
 <a id="a53e3acb2f4fe7bf80761cf728900b427" name="a53e3acb2f4fe7bf80761cf728900b427"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a53e3acb2f4fe7bf80761cf728900b427">&#9670;&#160;</a></span>getEffect()</h2>
 
@@ -156,7 +201,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Look up a loaded shader effect by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#af25b76ef189ce8bef55a58a63359af66">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a4d4b1fd707388ddfe54b7d8258597e6a">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#af25b76ef189ce8bef55a58a63359af66">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#aa7f95d8777a8ea36dfe9eeffcc9511ed">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a4d4b1fd707388ddfe54b7d8258597e6a">ZenitUI::Test::MockAssetProvider</a>.</p>
 
 </div>
 </div>
@@ -185,7 +230,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Walk fallback font names in <span class="tt">stack</span> and return the first valid <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>. </p>
 
-<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::Test::MockAssetProvider</a>.</p>
 
 </div>
 </div>
@@ -214,7 +259,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Look up a loaded font by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a12c93ca4eb8d249bb6d22d755c43d2b5">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#aa78867435cd588c733ed912eef9453d6">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a12c93ca4eb8d249bb6d22d755c43d2b5">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a13f291016549d037f9756f5fc0b18e2c">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#aa78867435cd588c733ed912eef9453d6">ZenitUI::Test::MockAssetProvider</a>.</p>
 
 </div>
 </div>
@@ -243,7 +288,45 @@ Public Member Functions</h2></td></tr>
 
 <p>Look up a loaded 2D texture by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a099562cc8db0523d40a9d1f47f0ccdfb">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a78ecc928119b067a924c9174e5731b40">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a099562cc8db0523d40a9d1f47f0ccdfb">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a3bec4c7d07062d34a0ac07b79a479503">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a78ecc928119b067a924c9174e5731b40">ZenitUI::Test::MockAssetProvider</a>.</p>
+
+</div>
+</div>
+<a id="a410385e978ea07cebfe3983abf787563" name="a410385e978ea07cebfe3983abf787563"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a410385e978ea07cebfe3983abf787563">&#9670;&#160;</a></span>loadEffect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> ZenitUI::IAssetProvider::loadEffect </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional runtime hook to load a fragment (and optional vertex) shader from disk under <span class="tt">name</span>. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#adcf811c2e5f000bc034188e09fdee14e">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a335de7727f47183209d0888f26e40d35">ZenitUI::SDL3AssetProvider</a>.</p>
 
 </div>
 </div>
@@ -277,7 +360,7 @@ Public Member Functions</h2></td></tr>
 <p>Optional runtime hook to load a font from disk under the given logical name. </p>
 <dl class="section return"><dt>Returns</dt><dd>Registered <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>, or <span class="tt">{0}</span> if unsupported or loading failed. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a13dd3e2de8eb07fed08a89f28bd5c424">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a6853e3071b664500eaec9008b6251dc7">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a13dd3e2de8eb07fed08a89f28bd5c424">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a0321ba9e98109aed72e211bbf57b4709">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a6853e3071b664500eaec9008b6251dc7">ZenitUI::Test::MockAssetProvider</a>.</p>
 
 </div>
 </div>
@@ -316,7 +399,98 @@ Public Member Functions</h2></td></tr>
 <p>Optional runtime hook to load a font from an in-memory TTF/OTF buffer. </p>
 <dl class="section return"><dt>Returns</dt><dd>Registered <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>, or <span class="tt">{0}</span> if unsupported or loading failed. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a5ce028c7aa365009e4ec4d38fe797376">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a701de763f84f7b2de5d229decc4edf1d">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a5ce028c7aa365009e4ec4d38fe797376">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a85f775c4b64a5e90a0ff9a61c60bae93">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a701de763f84f7b2de5d229decc4edf1d">ZenitUI::Test::MockAssetProvider</a>.</p>
+
+</div>
+</div>
+<a id="a0b279ae7e528c6fbf3ac60fe7a503ba9" name="a0b279ae7e528c6fbf3ac60fe7a503ba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b279ae7e528c6fbf3ac60fe7a503ba9">&#9670;&#160;</a></span>loadTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> ZenitUI::IAssetProvider::loadTexture </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional runtime hook to load a 2D texture from disk under <span class="tt">name</span>. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#af91c82c87183b74598516f0f058409f2">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#abb6c6d50ab0e7e81514275f3b77bfcc8">ZenitUI::SDL3AssetProvider</a>.</p>
+
+</div>
+</div>
+<a id="ad03e2d8012ec333075caa920b096a7a3" name="ad03e2d8012ec333075caa920b096a7a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad03e2d8012ec333075caa920b096a7a3">&#9670;&#160;</a></span>setDefaultFontSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IAssetProvider::setDefaultFontSize </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional hint setting the default rasterization pixel size used by <span class="tt"><a class="el" href="#a39e172a9fee5064ed6bafdbac1023161" title="Optional runtime hook to load a font from disk under the given logical name.">loadFont</a></span>. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a8f54449cc652e0cf71063a9a6fa9909f">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a4af99705e8aa23ead53f136e1878ebcc">ZenitUI::SDL3AssetProvider</a>.</p>
+
+</div>
+</div>
+<a id="a2c1a8337a23b157719e4804d9a744158" name="a2c1a8337a23b157719e4804d9a744158"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c1a8337a23b157719e4804d9a744158">&#9670;&#160;</a></span>unloadEffect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IAssetProvider::unloadEffect </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional runtime hook to unload a shader effect by logical name. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#af62bfb1120d8930ec1062c1f5456d8bf">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a20375e5029fc422b5d3faf6d621f5f35">ZenitUI::SDL3AssetProvider</a>.</p>
 
 </div>
 </div>
@@ -345,7 +519,36 @@ Public Member Functions</h2></td></tr>
 
 <p>Optional runtime hook to unload and unregister a font by logical name. </p>
 
-<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a5787223c624a75040039d8f8b32d433c">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a687c9ca510810f8c660f6a21a9be5671">ZenitUI::Test::MockAssetProvider</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a5787223c624a75040039d8f8b32d433c">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#a2eb99b1bbf96c95cf2b72d0584ceffb7">ZenitUI::SDL3AssetProvider</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html#a687c9ca510810f8c660f6a21a9be5671">ZenitUI::Test::MockAssetProvider</a>.</p>
+
+</div>
+</div>
+<a id="a92c2ac07d4ba4656fb3f3abd08fa1f13" name="a92c2ac07d4ba4656fb3f3abd08fa1f13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92c2ac07d4ba4656fb3f3abd08fa1f13">&#9670;&#160;</a></span>unloadTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IAssetProvider::unloadTexture </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional runtime hook to unload a texture by logical name. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a91b7c4a4ee04476bfa7559204c7cd222">ZenitUI::RaylibAssetProvider</a>, and <a class="el" href="classZenitUI_1_1SDL3AssetProvider.html#aac44764811f5f5f2cd6a2d09622387fc">ZenitUI::SDL3AssetProvider</a>.</p>
 
 </div>
 </div>

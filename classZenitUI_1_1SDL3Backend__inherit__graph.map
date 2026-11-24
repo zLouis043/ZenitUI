@@ -1,0 +1,5 @@
+<map id="ZenitUI::SDL3Backend" name="ZenitUI::SDL3Backend">
+<area shape="rect" id="Node000001" title="Unified IBackend host managing an SDL3 window, OpenGL 3.3 Core context, and SDL3Platform / SDL3Render..." alt="" coords="5,81,171,109"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1IBackend.html" title="Unified window, frame&#45;loop, and subsystem host for interchangeable backends." alt="" coords="20,5,156,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,47,90,82,86,80,86,51"/>
+</map>

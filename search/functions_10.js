@@ -11,7 +11,7 @@ var searchData=
   ['tickincremental_8',['tickIncremental',['../namespaceZenitUI_1_1Anim.html#a82d9800df4eeab1bbba738127e8b1402',1,'ZenitUI::Anim']]],
   ['tickinertia_9',['tickInertia',['../structZenitUI_1_1ScrollState.html#a67440d4d60a81885e396ca54bcf999a3',1,'ZenitUI::ScrollState']]],
   ['tickinput_10',['tickInput',['../structZenitUI_1_1ScrollController.html#acbdbe9473b24f729c91fb4a17974d0da',1,'ZenitUI::ScrollController']]],
-  ['time_11',['time',['../classZenitUI_1_1IPlatform.html#aaf9c903d4b0b70e742c06bfc8095339d',1,'ZenitUI::IPlatform::time()'],['../classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a',1,'ZenitUI::RaylibPlatform::time()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644',1,'ZenitUI::Test::MockPlatform::time()']]],
+  ['time_11',['time',['../classZenitUI_1_1IPlatform.html#aaf9c903d4b0b70e742c06bfc8095339d',1,'ZenitUI::IPlatform::time()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644',1,'ZenitUI::Test::MockPlatform::time()'],['../classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a',1,'ZenitUI::RaylibPlatform::time()'],['../classZenitUI_1_1SDL3Platform.html#a57416f2b1010a28999cdcdddeba3ef09',1,'ZenitUI::SDL3Platform::time()']]],
   ['tlayout_12',['TLayout',['../classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319',1,'ZenitUI::TLayout']]],
   ['toggle_13',['Toggle',['../classZenitUI_1_1UI_1_1Toggle.html#aeeffc5fe0771b56a3635a999248ce5f8',1,'ZenitUI::UI::Toggle']]],
   ['tooltip_14',['Tooltip',['../classZenitUI_1_1UI_1_1Tooltip.html#a5bbc7888e10be08a0cdd078fbf9811bf',1,'ZenitUI::UI::Tooltip']]],

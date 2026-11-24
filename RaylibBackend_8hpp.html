@@ -99,6 +99,7 @@ $(function(){initNavTree('RaylibBackend_8hpp.html','',''); });
 <p>Reference Raylib implementation of ZenitUI's three backend interfaces: <span class="tt">IPlatform</span>, <span class="tt">IRenderer</span>, and <span class="tt">IAssetProvider</span>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="UIContext_8hpp_source.html">UIContext.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Backend_8hpp_source.html">Backend.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Utf8_8hpp_source.html">Utf8.hpp</a>&quot;</code><br />
 <code>#include &lt;raylib.h&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
@@ -118,6 +119,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> backed by Raylib / <span class="tt">rlgl</span>.  <a href="classZenitUI_1_1RaylibRenderer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibAssetProvider" id="r_ZenitUI_3A_3ARaylibAssetProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> for loading and caching Raylib fonts, textures, and shaders by logical name.  <a href="classZenitUI_1_1RaylibAssetProvider.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ARaylibBackend" id="r_ZenitUI_3A_3ARaylibBackend"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibBackend.html">ZenitUI::RaylibBackend</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unified <span class="tt"><a class="el" href="classZenitUI_1_1IBackend.html" title="Unified window, frame-loop, and subsystem host for interchangeable backends.">IBackend</a></span> host wrapping Raylib windowing, rendering, and assets.  <a href="classZenitUI_1_1RaylibBackend.html#details">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Reference Raylib implementation of ZenitUI's three backend interfaces: <span class="tt">IPlatform</span>, <span class="tt">IRenderer</span>, and <span class="tt">IAssetProvider</span>. </p>
@@ -127,7 +130,7 @@ Classes</h2></td></tr>
 <li><b>Renderer (<span class="tt">IRenderer</span>)</b> — 2D primitives, textures/nine-slice, text drawing &amp; measurement, transform/clip/shader stacks, and optional off-screen render targets for post-processing filters.</li>
 <li><b>Asset Provider (<span class="tt">IAssetProvider</span>)</b> — loading, caching, name-based lookup, and unloading of fonts, textures, and shaders.</li>
 </ol>
-<p>Links against Raylib via the <span class="tt">ZenitUI::RaylibBackend</span> CMake target. Advertises <span class="tt">Feature::Effects</span>, <span class="tt">Feature::NestedTargets</span>, and <span class="tt">Feature::TargetSubRect</span>. </p>
+<p>Links against Raylib via the <span class="tt"><a class="el" href="classZenitUI_1_1RaylibBackend.html" title="Unified IBackend host wrapping Raylib windowing, rendering, and assets.">ZenitUI::RaylibBackend</a></span> CMake target. Advertises <span class="tt">Feature::Effects</span>, <span class="tt">Feature::NestedTargets</span>, and <span class="tt">Feature::TargetSubRect</span>. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

@@ -1131,7 +1131,7 @@ ShowcaseApp.hpp</h3>
 <div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1EffectHandle_html"><div class="ttname"><a href="structZenitUI_1_1EffectHandle.html">ZenitUI::EffectHandle</a></div><div class="ttdoc">Opaque handle to a shader/effect owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:126</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:683</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:709</div></div>
 <div class="ttc" id="astructZenitUI_1_1Value_html"><div class="ttname"><a href="structZenitUI_1_1Value.html">ZenitUI::Value</a></div><div class="ttdoc">A length expression: either a sum of unit terms or an AST node.</div><div class="ttdef"><b>Definition</b> Unit.hpp:71</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 theme.zstyle</h3>
@@ -1772,101 +1772,120 @@ main.cpp</h3>
 <div class="fragment"><div class="line"><span class="comment">// @doc   Flagship ZenitUI showcase: live Dark/Light theming, ZMarkup prefabs &amp; keyed Each, Bindable&lt;T&gt;, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</span></div>
 <div class="line"><span class="comment">// @group grp_core grp_widgets grp_zmarkup grp_zstyle grp_anim grp_backends</span></div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
-<div class="line"><span class="preprocessor">#define NOGDI</span></div>
-<div class="line"><span class="preprocessor">#define NOUSER</span></div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &lt;raylib.h&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Backend_8hpp.html">Backend.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="ZenitUI_8hpp.html">ZenitUI.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#if defined(ZENITUI_DEMO_BACKEND_SDL3)</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="SDL3Backend_8hpp.html">SDL3Backend.hpp</a>&quot;</span></div>
+<div class="line"><span class="keyword">static</span> std::unique_ptr&lt;ZenitUI::IBackend&gt; createDemoBackend()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> std::make_unique&lt;ZenitUI::SDL3Backend&gt;();</div>
+<div class="line">}</div>
+<div class="line"><span class="preprocessor">#else</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a>&quot;</span></div>
+<div class="line"><span class="keyword">static</span> std::unique_ptr&lt;ZenitUI::IBackend&gt; createDemoBackend()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> std::make_unique&lt;ZenitUI::RaylibBackend&gt;();</div>
+<div class="line">}</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &quot;ShowcaseApp.hpp&quot;</span></div>
 <div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span>ZenitUI;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
-<div class="line">    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);</div>
-<div class="line">    InitWindow(1180, 740, <span class="stringliteral">&quot;ZenitUI — Showcase&quot;</span>);</div>
-<div class="line">    SetTargetFPS(60);</div>
-<div class="line">    SetWindowMinSize(640, 480);</div>
+<div class="line">    <span class="keyword">auto</span> backend = createDemoBackend();</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// 1. Bind the Raylib backend to the global UIContext.</span></div>
-<div class="line">    <a id="_a0" name="_a0"></a><a class="code hl_class" href="classZenitUI_1_1RaylibRenderer.html">RaylibRenderer</a> renderer;</div>
-<div class="line">    <a id="_a1" name="_a1"></a><a class="code hl_class" href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a> platform;</div>
-<div class="line">    <a id="_a2" name="_a2"></a><a class="code hl_class" href="classZenitUI_1_1RaylibAssetProvider.html">RaylibAssetProvider</a> assets(renderer);</div>
+<div class="line">    <a id="_a0" name="_a0"></a><a class="code hl_struct" href="structZenitUI_1_1WindowConfig.html">WindowConfig</a> cfg;</div>
+<div class="line">    cfg.<a id="a1" name="a1"></a>title = <span class="stringliteral">&quot;ZenitUI — Showcase (&quot;</span> + std::string(backend-&gt;name()) + <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line">    cfg.<a id="a2" name="a2"></a>width = 1180;</div>
+<div class="line">    cfg.<a id="a3" name="a3"></a>height = 740;</div>
+<div class="line">    cfg.<a id="a4" name="a4"></a>minWidth = 640;</div>
+<div class="line">    cfg.<a id="a5" name="a5"></a>minHeight = 480;</div>
+<div class="line">    cfg.<a id="a6" name="a6"></a><a class="code hl_variable" href="structZenitUI_1_1WindowConfig.html#af32baae03f4c0382eea0abd3c763fe6a">targetFps</a> = 60;</div>
+<div class="line">    cfg.<a id="a7" name="a7"></a>resizable = <span class="keyword">true</span>;</div>
+<div class="line">    cfg.<a id="a8" name="a8"></a>vsync = <span class="keyword">true</span>;</div>
+<div class="line">    cfg.<a id="a9" name="a9"></a>msaa = <span class="keyword">true</span>;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">auto</span> &amp;ctx = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>();</div>
-<div class="line">    ctx.renderer = &amp;renderer;</div>
-<div class="line">    ctx.platform = &amp;platform;</div>
-<div class="line">    ctx.assets = &amp;assets;</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// 2. Load SIL OFL Inter font weights (baked with Latin + common symbols).</span></div>
-<div class="line">    assets.<a id="a3" name="a3"></a><a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39">defaultCodepoints</a>().<a id="a4" name="a4"></a><a class="code hl_function" href="classZenitUI_1_1CodepointSet.html#af05d80a12d27c064e76f2d569584d17e">addRange</a>(0x2000, 0x206F); <span class="comment">// General punctuation (• — …)</span></div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39">defaultCodepoints</a>().<a class="code hl_function" href="classZenitUI_1_1CodepointSet.html#af05d80a12d27c064e76f2d569584d17e">addRange</a>(0x2190, 0x21FF); <span class="comment">// Arrows (→ ← ↑ ↓)</span></div>
-<div class="line">    assets.<a id="a5" name="a5"></a><a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#ad7d3d708acaf0816f96ce3c8753cf639">loadFont</a>(<span class="stringliteral">&quot;inter&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-Regular.ttf&quot;</span>, 48);</div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#ad7d3d708acaf0816f96ce3c8753cf639">loadFont</a>(<span class="stringliteral">&quot;inter-semibold&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-SemiBold.ttf&quot;</span>, 48);</div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#ad7d3d708acaf0816f96ce3c8753cf639">loadFont</a>(<span class="stringliteral">&quot;inter-bold&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-Bold.ttf&quot;</span>, 48);</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// 3. Load shared nine-slice texture and post-processing shaders.</span></div>
-<div class="line">    assets.<a id="a6" name="a6"></a><a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#abd2a88512817b84c704f4d7e32751ba0">loadTexture</a>(<span class="stringliteral">&quot;npatches&quot;</span>, <span class="stringliteral">&quot;assets/images/npatches_y.png&quot;</span>);</div>
-<div class="line">    assets.<a id="a7" name="a7"></a><a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a69dbc203fd633da3483f498b4dad7d8f">loadEffect</a>(<span class="stringliteral">&quot;blur&quot;</span>, <span class="stringliteral">&quot;assets/shaders/blur.fs&quot;</span>);</div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a69dbc203fd633da3483f498b4dad7d8f">loadEffect</a>(<span class="stringliteral">&quot;dropShadow&quot;</span>, <span class="stringliteral">&quot;assets/shaders/drop_shadow.fs&quot;</span>);</div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a69dbc203fd633da3483f498b4dad7d8f">loadEffect</a>(<span class="stringliteral">&quot;hueShift&quot;</span>, <span class="stringliteral">&quot;assets/shaders/hue_shift.fs&quot;</span>);</div>
-<div class="line">    assets.<a class="code hl_function" href="classZenitUI_1_1RaylibAssetProvider.html#a69dbc203fd633da3483f498b4dad7d8f">loadEffect</a>(<span class="stringliteral">&quot;sepia&quot;</span>, <span class="stringliteral">&quot;assets/shaders/sepia.fs&quot;</span>);</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// 4. Register the custom `sepia` filter in FilterRegistry.</span></div>
-<div class="line">    <a id="_a8" name="_a8"></a><a class="code hl_function" href="classZenitUI_1_1FilterRegistry.html#ac64a20eba4183766cb9d8c549e20cb65">FilterRegistry::get</a>().add(<a id="_a9" name="_a9"></a><a class="code hl_struct" href="structZenitUI_1_1FilterDef.html">FilterDef</a>{</div>
-<div class="line">        .name = <span class="stringliteral">&quot;sepia&quot;</span>,</div>
-<div class="line">        .shader = <span class="stringliteral">&quot;sepia&quot;</span>,</div>
-<div class="line">        .pattern = <a id="_a10" name="_a10"></a><a class="code hl_enumvalue" href="group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faafb4c9649ec491b503777cb90a6c37975">FilterPattern::SinglePass</a>,</div>
-<div class="line">        .params = {{<span class="stringliteral">&quot;amount&quot;</span>, FilterParamType::Float, 0, 0.85f}},</div>
-<div class="line">    });</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// 5. Load the showcase stylesheet (co-located with the example).</span></div>
-<div class="line">    <span class="keywordflow">if</span> (!<a id="_a11" name="_a11"></a><a class="code hl_function" href="group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0">ZMarkup::loadStyleFile</a>(<span class="stringliteral">&quot;examples/00_demo/theme.zstyle&quot;</span>))</div>
+<div class="line">    <span class="keywordflow">if</span> (!backend-&gt;init(cfg))</div>
 <div class="line">    {</div>
-<div class="line">        std::fprintf(stderr, <span class="stringliteral">&quot;[00_demo] Failed to load examples/00_demo/theme.zstyle\n&quot;</span>);</div>
-<div class="line">        CloseWindow();</div>
+<div class="line">        std::fprintf(stderr, <span class="stringliteral">&quot;[00_demo] Failed to initialize backend &#39;%.*s&#39;\n&quot;</span>,</div>
+<div class="line">                     <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(backend-&gt;name().size()), backend-&gt;name().data());</div>
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// 6. Build the multi-view showcase app and run the standard frame loop.</span></div>
+<div class="line">    <span class="comment">// 1. Load SIL OFL Inter font weights (baked with Latin + common symbols).</span></div>
+<div class="line">    <span class="keyword">auto</span> &amp;assets = backend-&gt;assets();</div>
+<div class="line">    assets.setDefaultFontSize(48);</div>
+<div class="line">    assets.addDefaultCodepointRange(0x2000, 0x206F); <span class="comment">// General punctuation (• — …)</span></div>
+<div class="line">    assets.addDefaultCodepointRange(0x2190, 0x21FF); <span class="comment">// Arrows (→ ← ↑ ↓)</span></div>
+<div class="line">    assets.loadFont(<span class="stringliteral">&quot;inter&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-Regular.ttf&quot;</span>);</div>
+<div class="line">    assets.loadFont(<span class="stringliteral">&quot;inter-semibold&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-SemiBold.ttf&quot;</span>);</div>
+<div class="line">    assets.loadFont(<span class="stringliteral">&quot;inter-bold&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-Bold.ttf&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 2. Load shared nine-slice texture and post-processing shaders.</span></div>
+<div class="line">    assets.loadTexture(<span class="stringliteral">&quot;npatches&quot;</span>, <span class="stringliteral">&quot;assets/images/npatches_y.png&quot;</span>);</div>
+<div class="line">    assets.loadEffect(<span class="stringliteral">&quot;blur&quot;</span>, <span class="stringliteral">&quot;assets/shaders/blur.fs&quot;</span>);</div>
+<div class="line">    assets.loadEffect(<span class="stringliteral">&quot;dropShadow&quot;</span>, <span class="stringliteral">&quot;assets/shaders/drop_shadow.fs&quot;</span>);</div>
+<div class="line">    assets.loadEffect(<span class="stringliteral">&quot;hueShift&quot;</span>, <span class="stringliteral">&quot;assets/shaders/hue_shift.fs&quot;</span>);</div>
+<div class="line">    assets.loadEffect(<span class="stringliteral">&quot;sepia&quot;</span>, <span class="stringliteral">&quot;assets/shaders/sepia.fs&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 3. Register the custom `sepia` filter in FilterRegistry.</span></div>
+<div class="line">    <a id="_a10" name="_a10"></a><a class="code hl_function" href="classZenitUI_1_1FilterRegistry.html#ac64a20eba4183766cb9d8c549e20cb65">FilterRegistry::get</a>().add(<a id="_a11" name="_a11"></a><a class="code hl_struct" href="structZenitUI_1_1FilterDef.html">FilterDef</a>{</div>
+<div class="line">        .name = <span class="stringliteral">&quot;sepia&quot;</span>,</div>
+<div class="line">        .shader = <span class="stringliteral">&quot;sepia&quot;</span>,</div>
+<div class="line">        .pattern = <a id="_a12" name="_a12"></a><a class="code hl_enumvalue" href="group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faafb4c9649ec491b503777cb90a6c37975">FilterPattern::SinglePass</a>,</div>
+<div class="line">        .params = {{<span class="stringliteral">&quot;amount&quot;</span>, FilterParamType::Float, 0, 0.85f}},</div>
+<div class="line">    });</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 4. Load the showcase stylesheet (co-located with the example).</span></div>
+<div class="line">    <span class="keywordflow">if</span> (!<a id="_a13" name="_a13"></a><a class="code hl_function" href="group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0">ZMarkup::loadStyleFile</a>(<span class="stringliteral">&quot;examples/00_demo/theme.zstyle&quot;</span>))</div>
+<div class="line">    {</div>
+<div class="line">        std::fprintf(stderr, <span class="stringliteral">&quot;[00_demo] Failed to load examples/00_demo/theme.zstyle\n&quot;</span>);</div>
+<div class="line">        backend-&gt;shutdown();</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// 5. Build the multi-view showcase app and run the backend-agnostic loop.</span></div>
 <div class="line">    ShowcaseApp app;</div>
 <div class="line">    <span class="keyword">auto</span> root = app.root();</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose())</div>
+<div class="line">    <span class="keyword">constexpr</span> <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a> kClearColor{0x11, 0x12, 0x17, 0xFF};</div>
+<div class="line">    <span class="keywordtype">float</span> smoothedDt = 1.0f / 60.0f;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">while</span> (backend-&gt;pollFrame())</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordtype">float</span> dt = GetFrameTime();</div>
+<div class="line">        <span class="keyword">const</span> <span class="keywordtype">float</span> dt = backend-&gt;deltaTime();</div>
+<div class="line">        smoothedDt = smoothedDt * 0.9f + dt * 0.1f;</div>
+<div class="line">        <span class="keyword">const</span> <span class="keywordtype">int</span> fps = (smoothedDt &gt; 0.0001f) ? <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(std::lround(1.0f / smoothedDt)) : 0;</div>
+<div class="line"> </div>
 <div class="line">        root-&gt;runFrame(dt);</div>
 <div class="line"> </div>
-<div class="line">        BeginDrawing();</div>
-<div class="line">        ClearBackground(GetColor(0x111217FF));</div>
+<div class="line">        backend-&gt;beginDraw(kClearColor);</div>
 <div class="line">        root-&gt;renderFrame();</div>
-<div class="line">        EndDrawing();</div>
+<div class="line">        backend-&gt;endDraw();</div>
 <div class="line"> </div>
-<div class="line">        app.tickStats(GetFPS(), dt * 1000.0f);</div>
+<div class="line">        app.tickStats(fps, dt * 1000.0f);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    ctx.targetPool.clear(renderer, &amp;ctx.renderStats);</div>
-<div class="line">    CloseWindow();</div>
+<div class="line">    backend-&gt;shutdown();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
+<div class="ttc" id="aBackend_8hpp_html"><div class="ttname"><a href="Backend_8hpp.html">Backend.hpp</a></div><div class="ttdoc">Unified host interface (IBackend) for backend-agnostic ZenitUI apps.</div></div>
 <div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...</div></div>
-<div class="ttc" id="aclassZenitUI_1_1CodepointSet_html_af05d80a12d27c064e76f2d569584d17e"><div class="ttname"><a href="classZenitUI_1_1CodepointSet.html#af05d80a12d27c064e76f2d569584d17e">ZenitUI::CodepointSet::addRange</a></div><div class="ttdeci">CodepointSet &amp; addRange(uint32_t first, uint32_t last)</div><div class="ttdoc">Add an inclusive range [first, last], skipping UTF-16 surrogates.</div><div class="ttdef"><b>Definition</b> Utf8.hpp:568</div></div>
+<div class="ttc" id="aSDL3Backend_8hpp_html"><div class="ttname"><a href="SDL3Backend_8hpp.html">SDL3Backend.hpp</a></div><div class="ttdoc">Reference SDL3 + OpenGL 3.3 Core implementation of IPlatform, IRenderer, IAssetProvider,...</div></div>
 <div class="ttc" id="aclassZenitUI_1_1FilterRegistry_html_ac64a20eba4183766cb9d8c549e20cb65"><div class="ttname"><a href="classZenitUI_1_1FilterRegistry.html#ac64a20eba4183766cb9d8c549e20cb65">ZenitUI::FilterRegistry::get</a></div><div class="ttdeci">static FilterRegistry &amp; get()</div><div class="ttdoc">Return the global singleton registry.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:294</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html_a14ede4b179f7a3892e632f8d300e5a39"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39">ZenitUI::RaylibAssetProvider::defaultCodepoints</a></div><div class="ttdeci">CodepointSet &amp; defaultCodepoints()</div><div class="ttdoc">Mutable access to the default codepoint set (e.g.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:309</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html_a69dbc203fd633da3483f498b4dad7d8f"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html#a69dbc203fd633da3483f498b4dad7d8f">ZenitUI::RaylibAssetProvider::loadEffect</a></div><div class="ttdeci">bool loadEffect(std::string name, const char *fsPath, const char *vsPath=nullptr)</div><div class="ttdoc">Load a fragment (and optional vertex) shader from disk under name.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html_abd2a88512817b84c704f4d7e32751ba0"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html#abd2a88512817b84c704f4d7e32751ba0">ZenitUI::RaylibAssetProvider::loadTexture</a></div><div class="ttdeci">bool loadTexture(std::string name, const char *path)</div><div class="ttdoc">Load a 2D texture from disk and register it under name.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html_ad7d3d708acaf0816f96ce3c8753cf639"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html#ad7d3d708acaf0816f96ce3c8753cf639">ZenitUI::RaylibAssetProvider::loadFont</a></div><div class="ttdeci">bool loadFont(std::string name, const char *path, int baseSize=96)</div><div class="ttdoc">Load a font from disk using defaultCodepoints().</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:95</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:137</div></div>
 <div class="ttc" id="agroup__grp__anim_html_ggaef504487c3a2b15a5acb476bbacba4faafb4c9649ec491b503777cb90a6c37975"><div class="ttname"><a href="group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faafb4c9649ec491b503777cb90a6c37975">ZenitUI::FilterPattern::SinglePass</a></div><div class="ttdeci">@ SinglePass</div><div class="ttdoc">One shader, one draw.</div><div class="ttdef"><b>Definition</b> FilterRegistry.hpp:42</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gae718ac5f540d56ab4777e5f9f563f7a0"><div class="ttname"><a href="group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0">ZenitUI::ZMarkup::loadStyleFile</a></div><div class="ttdeci">bool loadStyleFile(const std::filesystem::path &amp;path, Theme &amp;theme=Theme::get(), DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Load a stylesheet from a file and apply it to theme.</div></div>
 <div class="ttc" id="astructZenitUI_1_1FilterDef_html"><div class="ttname"><a href="structZenitUI_1_1FilterDef.html">ZenitUI::FilterDef</a></div><div class="ttdoc">Complete description of one filter.</div><div class="ttdef"><b>Definition</b> FilterRegistry.hpp:110</div></div>
+<div class="ttc" id="astructZenitUI_1_1WindowConfig_html"><div class="ttname"><a href="structZenitUI_1_1WindowConfig.html">ZenitUI::WindowConfig</a></div><div class="ttdoc">Backend-agnostic window and graphics-context creation parameters.</div><div class="ttdef"><b>Definition</b> Backend.hpp:31</div></div>
+<div class="ttc" id="astructZenitUI_1_1WindowConfig_html_af32baae03f4c0382eea0abd3c763fe6a"><div class="ttname"><a href="structZenitUI_1_1WindowConfig.html#af32baae03f4c0382eea0abd3c763fe6a">ZenitUI::WindowConfig::targetFps</a></div><div class="ttdeci">int targetFps</div><div class="ttdoc">Hint for backends with built-in frame pacing (0 = uncapped/vsync).</div><div class="ttdef"><b>Definition</b> Backend.hpp:37</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

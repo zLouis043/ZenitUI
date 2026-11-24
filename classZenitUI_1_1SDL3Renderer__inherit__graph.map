@@ -1,0 +1,5 @@
+<map id="ZenitUI::SDL3Renderer" name="ZenitUI::SDL3Renderer">
+<area shape="rect" id="Node000001" title="Reference IRenderer backed by a batched OpenGL 3.3 Core 2D pipeline." alt="" coords="5,81,175,109"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend." alt="" coords="20,5,160,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,47,92,82,88,80,88,51"/>
+</map>

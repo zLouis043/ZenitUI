@@ -76,7 +76,12 @@ var hierarchy =
     [ "ZenitUI::FontHandle", "structZenitUI_1_1FontHandle.html", null ],
     [ "ZenitUI::IAssetProvider", "classZenitUI_1_1IAssetProvider.html", [
       [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", null ],
+      [ "ZenitUI::SDL3AssetProvider", "classZenitUI_1_1SDL3AssetProvider.html", null ],
       [ "ZenitUI::Test::MockAssetProvider", "classZenitUI_1_1Test_1_1MockAssetProvider.html", null ]
+    ] ],
+    [ "ZenitUI::IBackend", "classZenitUI_1_1IBackend.html", [
+      [ "ZenitUI::RaylibBackend", "classZenitUI_1_1RaylibBackend.html", null ],
+      [ "ZenitUI::SDL3Backend", "classZenitUI_1_1SDL3Backend.html", null ]
     ] ],
     [ "ZenitUI::ZMarkup::IKeyedStore", "structZenitUI_1_1ZMarkup_1_1IKeyedStore.html", [
       [ "ZenitUI::ZMarkup::KeyedStore< KeyT >", "structZenitUI_1_1ZMarkup_1_1KeyedStore.html", null ]
@@ -89,10 +94,12 @@ var hierarchy =
     [ "ZenitUI::InputEvents", "structZenitUI_1_1InputEvents.html", null ],
     [ "ZenitUI::IPlatform", "classZenitUI_1_1IPlatform.html", [
       [ "ZenitUI::RaylibPlatform", "classZenitUI_1_1RaylibPlatform.html", null ],
+      [ "ZenitUI::SDL3Platform", "classZenitUI_1_1SDL3Platform.html", null ],
       [ "ZenitUI::Test::MockPlatform", "classZenitUI_1_1Test_1_1MockPlatform.html", null ]
     ] ],
     [ "ZenitUI::IRenderer", "classZenitUI_1_1IRenderer.html", [
       [ "ZenitUI::RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html", null ],
+      [ "ZenitUI::SDL3Renderer", "classZenitUI_1_1SDL3Renderer.html", null ],
       [ "ZenitUI::Test::MockRenderer", "classZenitUI_1_1Test_1_1MockRenderer.html", null ]
     ] ],
     [ "ZenitUI::Keyframe", "structZenitUI_1_1Keyframe.html", null ],
@@ -174,6 +181,7 @@ var hierarchy =
     [ "ZenitUI::Vec4", "structZenitUI_1_1Vec4.html", null ],
     [ "ZenitUI::UI::TextArea::VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", null ],
     [ "ZenitUI::ZMarkup::WeakUINode", "classZenitUI_1_1ZMarkup_1_1WeakUINode.html", null ],
+    [ "ZenitUI::WindowConfig", "structZenitUI_1_1WindowConfig.html", null ],
     [ "ZenitUI::ZIndex", "structZenitUI_1_1ZIndex.html", null ],
     [ "ZenitUI::ZStyleDiagnostic", "structZenitUI_1_1ZStyleDiagnostic.html", null ]
 ];

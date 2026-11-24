@@ -6,10 +6,11 @@ var searchData=
   ['weakuinode_3',['WeakUINode',['../classZenitUI_1_1ZMarkup_1_1WeakUINode.html',1,'ZenitUI::ZMarkup']]],
   ['whitespace_4',['WhiteSpace',['../group__grp__zstyle.html#gaa130abd7bfd76fae4452d5c8acd586de',1,'ZenitUI']]],
   ['widgets_5',['Built-in Widgets',['../group__grp__widgets.html',1,'']]],
-  ['wiring_20a_20backend_20into_20uicontext_6',['1. Wiring a Backend into UIContext',['../page_custom_backends.html#sec_backend_wiring',1,'']]],
-  ['with_7',['with',['../classZenitUI_1_1Layout.html#a6d457c84747e2a521ecda3e7b98e85c0',1,'ZenitUI::Layout::with()'],['../classZenitUI_1_1TLayout.html#ae9181188f4cc34fbcf0d1a48b179b695',1,'ZenitUI::TLayout::with()']]],
-  ['withalpha_8',['withAlpha',['../structZenitUI_1_1Color.html#a123f6dae1f352d31f6c3923e9a5c8796',1,'ZenitUI::Color']]],
-  ['withref_9',['withRef',['../classZenitUI_1_1TLayout.html#a472c4fbd714c621910c723fb6b8310ad',1,'ZenitUI::TLayout']]],
-  ['world_10',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]],
-  ['writing_20a_20custom_20backend_11',['Writing a Custom Backend',['../page_custom_backends.html',1,'index']]]
+  ['windowconfig_6',['WindowConfig',['../structZenitUI_1_1WindowConfig.html',1,'ZenitUI']]],
+  ['wiring_20a_20backend_20into_20uicontext_7',['1. Wiring a Backend into UIContext',['../page_custom_backends.html#sec_backend_wiring',1,'']]],
+  ['with_8',['with',['../classZenitUI_1_1Layout.html#a6d457c84747e2a521ecda3e7b98e85c0',1,'ZenitUI::Layout::with()'],['../classZenitUI_1_1TLayout.html#ae9181188f4cc34fbcf0d1a48b179b695',1,'ZenitUI::TLayout::with()']]],
+  ['withalpha_9',['withAlpha',['../structZenitUI_1_1Color.html#a123f6dae1f352d31f6c3923e9a5c8796',1,'ZenitUI::Color']]],
+  ['withref_10',['withRef',['../classZenitUI_1_1TLayout.html#a472c4fbd714c621910c723fb6b8310ad',1,'ZenitUI::TLayout']]],
+  ['world_11',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]],
+  ['writing_20a_20custom_20backend_12',['Writing a Custom Backend',['../page_custom_backends.html',1,'index']]]
 ];

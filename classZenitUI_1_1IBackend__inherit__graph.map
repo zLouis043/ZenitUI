@@ -1,0 +1,7 @@
+<map id="ZenitUI::IBackend" name="ZenitUI::IBackend">
+<area shape="rect" id="Node000001" title="Unified window, frame&#45;loop, and subsystem host for interchangeable backends." alt="" coords="120,5,256,33"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1RaylibBackend.html" title="Unified IBackend host wrapping Raylib windowing, rendering, and assets." alt="" coords="5,81,179,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,42,110,83,108,78,156,43"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1SDL3Backend.html" title="Unified IBackend host managing an SDL3 window, OpenGL 3.3 Core context, and SDL3Platform / SDL3Render..." alt="" coords="203,81,368,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,40,271,81,265,80,216,45"/>
+</map>

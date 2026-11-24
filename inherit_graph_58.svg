@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structZenitUI_1_1StyleResolver_1_1PartTransition.html" target="_top" xlink:title="Independent transition state for one pseudo&#45;element (part).">
+<g id="a_Node000000"><a xlink:href="structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html" target="_top" xlink:title="Last&#45;seen inherited values, used to detect changes worth propagating.">
 <polygon fill="white" stroke="#666666" points="125.5,-33.5 0,-33.5 0,0 125.5,0 125.5,-33.5"/>
 <text xml:space="preserve" text-anchor="start" x="8" y="-20" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::StyleResolver</text>
-<text xml:space="preserve" text-anchor="middle" x="62.75" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">::PartTransition</text>
+<text xml:space="preserve" text-anchor="middle" x="62.75" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">::InheritedSnapshot</text>
 </a>
 </g>
 </g>

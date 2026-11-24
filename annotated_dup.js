@@ -48,6 +48,8 @@ var annotated_dup =
       [ "Keyframe", "structZenitUI_1_1Keyframe.html", null ],
       [ "KeyframeAnimation", "structZenitUI_1_1KeyframeAnimation.html", null ],
       [ "ActiveCssAnimation", "structZenitUI_1_1ActiveCssAnimation.html", null ],
+      [ "WindowConfig", "structZenitUI_1_1WindowConfig.html", "structZenitUI_1_1WindowConfig" ],
+      [ "IBackend", "classZenitUI_1_1IBackend.html", "classZenitUI_1_1IBackend" ],
       [ "Bindable", "classZenitUI_1_1Bindable.html", "classZenitUI_1_1Bindable" ],
       [ "Vec2", "structZenitUI_1_1Vec2.html", null ],
       [ "Vec3", "structZenitUI_1_1Vec3.html", null ],
@@ -117,6 +119,11 @@ var annotated_dup =
       [ "CodepointSet", "classZenitUI_1_1CodepointSet.html", "classZenitUI_1_1CodepointSet" ],
       [ "RaylibPlatform", "classZenitUI_1_1RaylibPlatform.html", "classZenitUI_1_1RaylibPlatform" ],
       [ "RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html", "classZenitUI_1_1RaylibRenderer" ],
-      [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", "classZenitUI_1_1RaylibAssetProvider" ]
+      [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", "classZenitUI_1_1RaylibAssetProvider" ],
+      [ "RaylibBackend", "classZenitUI_1_1RaylibBackend.html", "classZenitUI_1_1RaylibBackend" ],
+      [ "SDL3Platform", "classZenitUI_1_1SDL3Platform.html", "classZenitUI_1_1SDL3Platform" ],
+      [ "SDL3Renderer", "classZenitUI_1_1SDL3Renderer.html", "classZenitUI_1_1SDL3Renderer" ],
+      [ "SDL3AssetProvider", "classZenitUI_1_1SDL3AssetProvider.html", "classZenitUI_1_1SDL3AssetProvider" ],
+      [ "SDL3Backend", "classZenitUI_1_1SDL3Backend.html", "classZenitUI_1_1SDL3Backend" ]
     ] ]
 ];

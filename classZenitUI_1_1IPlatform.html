@@ -103,7 +103,7 @@ $(function(){initNavTree('classZenitUI_1_1IPlatform.html','','classZenitUI_1_1IP
 <div class="dynheader">
 Inheritance diagram for ZenitUI::IPlatform:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IPlatform__inherit__graph.svg" width="411" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IPlatform__inherit__graph.svg" width="602" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -157,7 +157,7 @@ Public Member Functions</h2></td></tr>
 <p>Return the physical-to-logical DPI scale factor (e.g. </p>
 <p><span class="tt">1.0f</span> on standard displays, <span class="tt">2.0f</span> on Retina). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aead674a29004e10bdeb87d2e46815930">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aec06acd97244e663d3cbb5ad7a278e9b">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aead674a29004e10bdeb87d2e46815930">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a585b43cd7f0cf8d488a54c65f650bd20">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aec06acd97244e663d3cbb5ad7a278e9b">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -186,7 +186,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Read UTF-8 text from the operating system clipboard (empty string if unavailable). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aa7e18c9c3453416f208a504a51ab8abe">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ada2549d7121e4217290dd15caf6d230e">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aa7e18c9c3453416f208a504a51ab8abe">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a65cbe815fcf4a8fb47c56e538c8da8a9">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ada2549d7121e4217290dd15caf6d230e">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -215,7 +215,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Return the current state of modifier keys (<span class="tt">shift</span>, <span class="tt">ctrl</span>, <span class="tt">alt</span>, <span class="tt">super</span>). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#af77fd4454f19d4f1505c6cbf0c94f770">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -245,7 +245,7 @@ Public Member Functions</h2></td></tr>
 <p>Return the current pointer position (logical pixels), scroll wheel delta, and button states. </p>
 <p>Edge-triggered fields (<span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a" title="Button transitioned from up to down this frame.">ButtonState::pressed</a></span>, <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665" title="Button transitioned from down to up this frame.">ButtonState::released</a></span>, <span class="tt">PointerState::wheelY</span>) must fire for <b>one frame only</b>; <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341" title="Button is currently held.">ButtonState::down</a></span> stays <span class="tt">true</span> while held. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ac0650a504a4d58ddb434cd5cffc72258">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a40af875c58211b52919407a1c94dfc75">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ac0650a504a4d58ddb434cd5cffc72258">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a2fbde03e4f0cc317fc67fa7d77b0b9a2">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a40af875c58211b52919407a1c94dfc75">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -275,7 +275,7 @@ Public Member Functions</h2></td></tr>
 <p>Drain and return keyboard events queued since the previous frame. </p>
 <p><span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa" title="Printable characters typed this frame.">InputEvents::chars</a></span> and <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af" title="Keys pressed this frame (edge-triggered).">InputEvents::keys</a></span> are edge-triggered (one frame); <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70" title="Keys currently held (level-triggered).">InputEvents::held</a></span> lists keys currently held down for repeat handling. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0ed9f3a35646a75390ba1df05f3bf37f">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ae830ecbcb3186d1cb63e284372725446">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0ed9f3a35646a75390ba1df05f3bf37f">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a775eb4b6b70bcbdeab096046e252177a">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ae830ecbcb3186d1cb63e284372725446">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -304,7 +304,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Return screen safe-area insets in logical pixels (notches, rounded corners, system bars). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a34972fda73d0fa24ef64b47d62f7f26c">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a348b5e820eb4d894ed7271ceb3b25e24">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a34972fda73d0fa24ef64b47d62f7f26c">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#aee1b3b08fb6be1932c4f526a32f0157f">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a348b5e820eb4d894ed7271ceb3b25e24">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -333,7 +333,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Copy UTF-8 <span class="tt">text</span> to the operating system clipboard. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ad476e496e61d6c76511170817cf870bb">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#abc0f22408c408972797a8d7bcad2e0ec">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ad476e496e61d6c76511170817cf870bb">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a755a669fa86f8210aa013792072a53d1">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#abc0f22408c408972797a8d7bcad2e0ec">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -362,7 +362,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Return a monotonic clock timestamp in seconds. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a57416f2b1010a28999cdcdddeba3ef09">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -391,7 +391,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Return the current window/surface dimensions in <b>logical pixels</b>. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a2e17dcec506b3211000091c260e7c681">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aea80f6c3aef0aa13001a400809dcf466">ZenitUI::Test::MockPlatform</a>.</p>
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a2e17dcec506b3211000091c260e7c681">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1SDL3Platform.html#a71cec4fa5357432ca2e608b1f75b6804">ZenitUI::SDL3Platform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aea80f6c3aef0aa13001a400809dcf466">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>

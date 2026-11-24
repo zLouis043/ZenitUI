@@ -99,13 +99,13 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 <p>To integrate it into a custom engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan, DirectX, etc.), implement three lightweight interfaces and bind them to <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a></span>:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadLeft">Interface  </th><th class="markdownTableHeadLeft">Responsibility  </th><th class="markdownTableHeadLeft">Reference  </th></tr>
+<th class="markdownTableHeadLeft">Interface  </th><th class="markdownTableHeadLeft">Responsibility  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><span class="tt">IPlatform</span>  </td><td class="markdownTableBodyLeft">Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard  </td><td class="markdownTableBodyLeft"><a class="el" href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a>, <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html">ZenitUI::Test::MockPlatform</a>  </td></tr>
+<td class="markdownTableBodyLeft"><span class="tt">IPlatform</span>  </td><td class="markdownTableBodyLeft">Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><span class="tt">IRenderer</span>  </td><td class="markdownTableBodyLeft">2D vector primitives, textures/nine-slice, text metrics &amp; draw, clip/transform/shader stacks, optional off-screen targets  </td><td class="markdownTableBodyLeft"><a class="el" href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html">ZenitUI::Test::MockRenderer</a>  </td></tr>
+<td class="markdownTableBodyLeft"><span class="tt">IRenderer</span>  </td><td class="markdownTableBodyLeft">2D vector primitives, textures/nine-slice, text metrics &amp; draw, clip/transform/shader stacks, optional off-screen targets  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><span class="tt">IAssetProvider</span>  </td><td class="markdownTableBodyLeft">Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders  </td><td class="markdownTableBodyLeft"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a>, <a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html">ZenitUI::Test::MockAssetProvider</a>  </td></tr>
+<td class="markdownTableBodyLeft"><span class="tt">IAssetProvider</span>  </td><td class="markdownTableBodyLeft">Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders  </td></tr>
 </table>
 <p>All reference classes are grouped under <a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a>.</p>
 <hr  />
@@ -137,7 +137,7 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 <div class="line"> </div>
 <div class="line">    ctx.endFrame();</div>
 <div class="line">}</div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:683</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:709</div></div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_minimum"></a>
 2. Minimum Viable Backend vs Optional Features</h1>
@@ -162,21 +162,11 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 </ol>
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_refs"></a>
-4. Reference Implementations</h1>
+4. Built-in Reference Implementations</h1>
+<p>Every backend shipped under <span class="tt">backends/</span> is indexed automatically with its CMake target, supported optional features, and class references:</p>
 <ul>
-<li><b>Production GPU backend (Raylib / rlgl)</b>:<ul>
-<li><a class="el" href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></li>
-<li><a class="el" href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></li>
-<li><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></li>
-</ul>
-</li>
-<li><b>Headless / testing backend (no GPU required)</b>:<ul>
-<li><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html">ZenitUI::Test::MockPlatform</a></li>
-<li><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html">ZenitUI::Test::MockRenderer</a></li>
-<li><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html">ZenitUI::Test::MockAssetProvider</a></li>
-<li><a class="el" href="structZenitUI_1_1Test_1_1Env.html">ZenitUI::Test::Env</a> </li>
-</ul>
-</li>
+<li>page_available_backends — full auto-generated catalog of all built-in backends.</li>
+<li><a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a> — complete module API reference. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
