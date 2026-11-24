@@ -104,6 +104,6 @@
  * Every backend shipped under `backends/` is indexed automatically with its
  * CMake target, supported optional features, and class references:
  *
- * - \subpage page_available_backends — full auto-generated catalog of all built-in backends.
+ * - \subpage page_available_backends "Available Backends" — full auto-generated catalog of all built-in backends.
  * - \ref grp_backends — complete module API reference.
  */

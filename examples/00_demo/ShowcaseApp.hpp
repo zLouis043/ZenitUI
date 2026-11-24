@@ -312,7 +312,7 @@ private:
 
                     If@overload-warn {
                         HStack.alert-banner {
-                            Text.alert-text "High workload (> 80%) — structural If block automatically mounted!"
+                            Text.alert-text wrap="true" grow="1" min-width="0" "High workload (> 80%) — structural If block automatically mounted!"
                         }
                     }
                 }
