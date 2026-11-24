@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <fstream>
 #include <system_error>
+#include <cmath>
 
 namespace ZenitUI
 {
@@ -156,12 +157,14 @@ namespace ZenitUI
 	RaylibRenderer::RaylibRenderer() {}
 	RaylibRenderer::~RaylibRenderer() {}
 
+	static constexpr int kRoundedCornerSegments = 12;
+
 	void RaylibRenderer::fillRect(Rect r, Color c) { DrawRectangleRec(rl(r), rl(c)); }
 	void RaylibRenderer::fillRoundedRect(Rect r, float radiusPx, Color c)
 	{
 		float maxR = std::min(r.width, r.height) * 0.5f;
-		if (maxR > 0)
-			DrawRectangleRounded(rl(r), std::clamp(radiusPx / maxR, 0.0f, 1.0f), 8, rl(c));
+		if (maxR > 0.0f)
+			DrawRectangleRounded(rl(r), std::clamp(radiusPx / maxR, 0.0f, 1.0f), kRoundedCornerSegments, rl(c));
 	}
 	void RaylibRenderer::fillCircle(Vec2 center, float radius, Color c) { DrawCircleV(rl(center), radius, rl(c)); }
 
@@ -174,13 +177,85 @@ namespace ZenitUI
 
 	void RaylibRenderer::strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
 	{
-		if (thickness <= 0.0f || r.width <= 0 || r.height <= 0)
+		if (thickness <= 0.0f || r.width <= 0.0f || r.height <= 0.0f || c.a == 0)
 			return;
+
 		float maxR = std::min(r.width, r.height) * 0.5f;
 		if (maxR <= 0.0f)
 			return;
-		float roundness = std::clamp(radiusPx / maxR, 0.0f, 1.0f);
-		DrawRectangleRoundedLinesEx(rl(r), roundness, 8, thickness, rl(c));
+
+		float t = std::min(thickness, maxR);
+		if (t >= maxR - 0.01f)
+		{
+			fillRoundedRect(r, radiusPx, c);
+			return;
+		}
+
+		float outerR = std::clamp(radiusPx, 0.0f, maxR);
+		float innerR = std::max(0.0f, outerR - t);
+
+		constexpr int segs = kRoundedCornerSegments;
+		constexpr float kHalfPi = 1.5707963267948966f;
+		constexpr float kStep = kHalfPi / static_cast<float>(segs);
+
+		// 4 corners in clockwise screen order: TR, BR, BL, TL
+		const Vec2 outerCenters[4] = {
+			{r.x + r.width - outerR, r.y + outerR},
+			{r.x + r.width - outerR, r.y + r.height - outerR},
+			{r.x + outerR,           r.y + r.height - outerR},
+			{r.x + outerR,           r.y + outerR}};
+
+		const Vec2 innerCenters[4] = {
+			{r.x + r.width - t - innerR, r.y + t + innerR},
+			{r.x + r.width - t - innerR, r.y + r.height - t - innerR},
+			{r.x + t + innerR,           r.y + r.height - t - innerR},
+			{r.x + t + innerR,           r.y + t + innerR}};
+
+		const float startAngles[4] = {-kHalfPi, 0.0f, kHalfPi, 2.0f * kHalfPi};
+
+		constexpr int kRingPts = 4 * (segs + 1);
+		Vec2 outerPts[kRingPts];
+		Vec2 innerPts[kRingPts];
+
+		int idx = 0;
+		for (int corner = 0; corner < 4; ++corner)
+		{
+			for (int s = 0; s <= segs; ++s)
+			{
+				float a = startAngles[corner] + kStep * static_cast<float>(s);
+				float ca = std::cos(a);
+				float sa = std::sin(a);
+				outerPts[idx] = {outerCenters[corner].x + ca * outerR,
+								 outerCenters[corner].y + sa * outerR};
+				innerPts[idx] = {innerCenters[corner].x + ca * innerR,
+								 innerCenters[corner].y + sa * innerR};
+				++idx;
+			}
+		}
+
+		rlCheckRenderBatchLimit(kRingPts * 6);
+		rlSetTexture(0);
+		rlBegin(RL_TRIANGLES);
+		rlColor4ub(c.r, c.g, c.b, c.a);
+
+		for (int i = 0; i < kRingPts; ++i)
+		{
+			int next = (i + 1) % kRingPts;
+			const Vec2 &o0 = outerPts[i];
+			const Vec2 &o1 = outerPts[next];
+			const Vec2 &i0 = innerPts[i];
+			const Vec2 &i1 = innerPts[next];
+
+			rlVertex2f(o0.x, o0.y);
+			rlVertex2f(i1.x, i1.y);
+			rlVertex2f(o1.x, o1.y);
+
+			rlVertex2f(o0.x, o0.y);
+			rlVertex2f(i0.x, i0.y);
+			rlVertex2f(i1.x, i1.y);
+		}
+
+		rlEnd();
 	}
 
 	void RaylibRenderer::drawTexture(TextureHandle t, Rect src, Rect dst, Color tint)
