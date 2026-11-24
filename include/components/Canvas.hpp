@@ -70,7 +70,11 @@ namespace ZenitUI::UI
         ~CanvasLayout()
         {
             if (target.valid())
-                UIContext::get().renderer->destroyTarget(target);
+            {
+                if (auto *r = UIContext::get().renderer)
+                    r->destroyTarget(target);
+                target = {};
+            }
         }
 
         /**
