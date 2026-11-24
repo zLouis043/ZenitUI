@@ -173,6 +173,10 @@ namespace ZenitUI
 				   f == Feature::NestedTargets ||
 				   f == Feature::TargetSubRect;
 		}
+
+		/** \brief Reports support for `GLSL330` shader language. */
+		ShaderLanguage shaderLanguage() const override { return ShaderLanguage::GLSL330; }
+
 		/// @}
 
 		/// \name 2D Vector Primitives

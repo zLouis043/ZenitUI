@@ -8,6 +8,8 @@
 #endif
 
 #include "SDL3Backend.hpp"
+#include "Geometry2D.hpp"
+#include "InputAccumulator.hpp"
 #include "Logger.hpp"
 
 #include <SDL3/SDL.h>
@@ -237,44 +239,6 @@ void main() {
 			return static_cast<bool>(in.read(reinterpret_cast<char *>(out.data()), sz));
 		}
 
-		uint32_t decodeUtf8(std::string_view s, size_t &i)
-		{
-			if (i >= s.size())
-				return 0;
-			const uint8_t b0 = static_cast<uint8_t>(s[i++]);
-			if (b0 < 0x80u)
-				return b0;
-
-			auto nextCont = [&](uint32_t &cp) -> bool
-			{
-				if (i >= s.size())
-					return false;
-				const uint8_t b = static_cast<uint8_t>(s[i]);
-				if ((b & 0xC0u) != 0x80u)
-					return false;
-				++i;
-				cp = (cp << 6) | (b & 0x3Fu);
-				return true;
-			};
-
-			if ((b0 & 0xE0u) == 0xC0u)
-			{
-				uint32_t cp = b0 & 0x1Fu;
-				return nextCont(cp) ? cp : 0xFFFDu;
-			}
-			if ((b0 & 0xF0u) == 0xE0u)
-			{
-				uint32_t cp = b0 & 0x0Fu;
-				return (nextCont(cp) && nextCont(cp)) ? cp : 0xFFFDu;
-			}
-			if ((b0 & 0xF8u) == 0xF0u)
-			{
-				uint32_t cp = b0 & 0x07u;
-				return (nextCont(cp) && nextCont(cp) && nextCont(cp)) ? cp : 0xFFFDu;
-			}
-			return 0xFFFDu;
-		}
-
 		struct ScancodeBinding
 		{
 			SDL_Scancode sdl;
@@ -336,13 +300,7 @@ void main() {
 	struct SDL3Platform::Impl
 	{
 		SDL_Window *window{nullptr};
-		std::mutex mtx;
-
-		float pendingWheelY{0.0f};
-		std::array<bool, static_cast<size_t>(MouseButton::Count)> pendingPressed{};
-		std::array<bool, static_cast<size_t>(MouseButton::Count)> pendingReleased{};
-		std::vector<int> pendingKeys;
-		std::vector<int> pendingChars;
+		InputAccumulator input;
 		bool watchInstalled{false};
 
 		static bool SDLCALL onSdlEvent(void *userdata, SDL_Event *ev)
@@ -351,47 +309,30 @@ void main() {
 			if (!self || !ev)
 				return true;
 
-			std::lock_guard<std::mutex> lock(self->mtx);
 			switch (ev->type)
 			{
 			case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			{
-				const int idx = mapMouseButtonIndex(ev->button.button);
-				if (idx >= 0)
-					self->pendingPressed[static_cast<size_t>(idx)] = true;
-				break;
-			}
 			case SDL_EVENT_MOUSE_BUTTON_UP:
 			{
 				const int idx = mapMouseButtonIndex(ev->button.button);
 				if (idx >= 0)
-					self->pendingReleased[static_cast<size_t>(idx)] = true;
+					self->input.pushMouseButton(static_cast<MouseButton>(idx),
+												ev->type == SDL_EVENT_MOUSE_BUTTON_DOWN);
 				break;
 			}
 			case SDL_EVENT_MOUSE_WHEEL:
-				self->pendingWheelY += ev->wheel.y;
+				self->input.pushMouseWheel(ev->wheel.y);
 				break;
 			case SDL_EVENT_KEY_DOWN:
-			{
-				if (const int mapped = mapScancode(ev->key.scancode); mapped != 0)
-					self->pendingKeys.push_back(mapped);
+				self->input.pushKey(mapScancode(ev->key.scancode), true);
 				break;
-			}
+			case SDL_EVENT_KEY_UP:
+				self->input.pushKey(mapScancode(ev->key.scancode), false);
+				break;
 			case SDL_EVENT_TEXT_INPUT:
-			{
 				if (ev->text.text)
-				{
-					const std::string_view sv(ev->text.text);
-					size_t i = 0;
-					while (i < sv.size())
-					{
-						const uint32_t cp = decodeUtf8(sv, i);
-						if (cp > 0)
-							self->pendingChars.push_back(static_cast<int>(cp));
-					}
-				}
+					self->input.pushTextUtf8(ev->text.text);
 				break;
-			}
 			default:
 				break;
 			}
@@ -449,30 +390,12 @@ void main() {
 		float mx = 0.0f, my = 0.0f;
 		const SDL_MouseButtonFlags mask = SDL_GetMouseState(&mx, &my);
 
-		PointerState state;
-		state.pos = {mx, my};
+		InputAccumulator::ButtonDownArray liveDown{};
+		liveDown[static_cast<size_t>(MouseButton::Left)] = (mask & SDL_BUTTON_LMASK) != 0;
+		liveDown[static_cast<size_t>(MouseButton::Right)] = (mask & SDL_BUTTON_RMASK) != 0;
+		liveDown[static_cast<size_t>(MouseButton::Middle)] = (mask & SDL_BUTTON_MMASK) != 0;
 
-		{
-			std::lock_guard<std::mutex> lock(impl_->mtx);
-			state.wheelY = impl_->pendingWheelY;
-			impl_->pendingWheelY = 0.0f;
-
-			auto fillBtn = [&](MouseButton btn, Uint32 sdlMask)
-			{
-				const size_t idx = static_cast<size_t>(btn);
-				state[btn].down = (mask & sdlMask) != 0;
-				state[btn].pressed = impl_->pendingPressed[idx];
-				state[btn].released = impl_->pendingReleased[idx];
-				impl_->pendingPressed[idx] = false;
-				impl_->pendingReleased[idx] = false;
-			};
-
-			fillBtn(MouseButton::Left, SDL_BUTTON_LMASK);
-			fillBtn(MouseButton::Right, SDL_BUTTON_RMASK);
-			fillBtn(MouseButton::Middle, SDL_BUTTON_MMASK);
-		}
-
-		return state;
+		return impl_->input.drainPointer({mx, my}, liveDown);
 	}
 
 	ModifierState SDL3Platform::modifiers()
@@ -488,15 +411,7 @@ void main() {
 
 	InputEvents SDL3Platform::pollInputEvents()
 	{
-		InputEvents ev;
-		{
-			std::lock_guard<std::mutex> lock(impl_->mtx);
-			ev.keys = std::move(impl_->pendingKeys);
-			ev.chars = std::move(impl_->pendingChars);
-			impl_->pendingKeys.clear();
-			impl_->pendingChars.clear();
-		}
-
+		std::vector<int> held;
 		int numKeys = 0;
 		const bool *kb = SDL_GetKeyboardState(&numKeys);
 		if (kb && numKeys > 0)
@@ -504,12 +419,12 @@ void main() {
 			for (const auto &entry : kScancodeMap)
 			{
 				if (entry.sdl < numKeys && kb[entry.sdl])
-					ev.held.push_back(entry.zenit);
+					held.push_back(entry.zenit);
 			}
 		}
-
-		return ev;
+		return impl_->input.drainEvents(std::move(held));
 	}
+
 
 	void SDL3Platform::setClipboardText(const std::string &text)
 	{
@@ -1050,71 +965,30 @@ void main() {
 
 	void SDL3Renderer::strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
 	{
-		if (thickness <= 0.0f || r.width <= 0.0f || r.height <= 0.0f || c.a == 0)
+		if (c.a == 0)
 			return;
 
-		const float maxR = std::min(r.width, r.height) * 0.5f;
-		if (maxR <= 0.0f)
+		const auto ring = Geometry2D::buildRoundedBorderRing(r, radiusPx, thickness);
+		if (ring.empty)
 			return;
-
-		const float t = std::min(thickness, maxR);
-		if (t >= maxR - 0.01f)
+		if (ring.isSolidFill)
 		{
 			fillRoundedRect(r, radiusPx, c);
 			return;
 		}
 
-		const float outerR = std::clamp(radiusPx, 0.0f, maxR);
-		const float innerR = std::max(0.0f, outerR - t);
-
-		constexpr int segs = kRoundedCornerSegments;
-		constexpr float kHalfPi = 1.5707963267948966f;
-		constexpr float kStep = kHalfPi / static_cast<float>(segs);
-		constexpr float kStartAngles[4] = {-kHalfPi, 0.0f, kHalfPi, 2.0f * kHalfPi};
-		constexpr int kRingPts = 4 * (segs + 1);
-
-		const Vec2 outerCenters[4] = {
-			{r.x + r.width - outerR, r.y + outerR},
-			{r.x + r.width - outerR, r.y + r.height - outerR},
-			{r.x + outerR,           r.y + r.height - outerR},
-			{r.x + outerR,           r.y + outerR}};
-
-		const Vec2 innerCenters[4] = {
-			{r.x + r.width - t - innerR, r.y + t + innerR},
-			{r.x + r.width - t - innerR, r.y + r.height - t - innerR},
-			{r.x + t + innerR,           r.y + r.height - t - innerR},
-			{r.x + t + innerR,           r.y + t + innerR}};
-
-		Vec2 outerPts[kRingPts];
-		Vec2 innerPts[kRingPts];
-
-		int idx = 0;
-		for (int corner = 0; corner < 4; ++corner)
-		{
-			for (int s = 0; s <= segs; ++s)
-			{
-				const float a = kStartAngles[corner] + kStep * static_cast<float>(s);
-				const float ca = std::cos(a);
-				const float sa = std::sin(a);
-				outerPts[idx] = {outerCenters[corner].x + ca * outerR,
-								 outerCenters[corner].y + sa * outerR};
-				innerPts[idx] = {innerCenters[corner].x + ca * innerR,
-								 innerCenters[corner].y + sa * innerR};
-				++idx;
-			}
-		}
-
+		constexpr int kRingPts = Geometry2D::kRoundedRingPoints;
 		impl_->ensureBatch(impl_->whiteTex, static_cast<size_t>(kRingPts) * 6);
 		for (int i = 0; i < kRingPts; ++i)
 		{
 			const int next = (i + 1) % kRingPts;
-			impl_->pushVertex(outerPts[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(innerPts[next], 0.5f, 0.5f, c);
-			impl_->pushVertex(outerPts[next], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.outer[i], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.inner[next], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.outer[next], 0.5f, 0.5f, c);
 
-			impl_->pushVertex(outerPts[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(innerPts[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(innerPts[next], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.outer[i], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.inner[i], 0.5f, 0.5f, c);
+			impl_->pushVertex(ring.inner[next], 0.5f, 0.5f, c);
 		}
 	}
 
@@ -1194,7 +1068,7 @@ void main() {
 		size_t i = 0;
 		while (i < s.size())
 		{
-			const uint32_t cp = decodeUtf8(s, i);
+			const uint32_t cp = Utf8::next(s, i);
 			if (cp == '\n')
 			{
 				cursorX = startX;
@@ -1249,7 +1123,7 @@ void main() {
 		size_t i = 0;
 		while (i < s.size())
 		{
-			const uint32_t cp = decodeUtf8(s, i);
+			const uint32_t cp = Utf8::next(s, i);
 			if (cp == '\n')
 			{
 				maxW = std::max(maxW, lineW);

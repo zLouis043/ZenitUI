@@ -29,6 +29,7 @@
 
 #include "ZenitUI.hpp"
 #include "Utf8.hpp"
+#include "Backend.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -389,21 +390,21 @@ namespace ZenitUI::Test
 				b = {};
 		}
 
-		void pressLeft(Vec2 pos)    { setButton(MouseButton::Left,   pos, true,  true,  false); }
-		void holdLeft(Vec2 pos)     { setButton(MouseButton::Left,   pos, true,  false, false); }
-		void releaseLeft(Vec2 pos)  { setButton(MouseButton::Left,   pos, false, false, true);  }
+		void pressLeft(Vec2 pos) { setButton(MouseButton::Left, pos, true, true, false); }
+		void holdLeft(Vec2 pos) { setButton(MouseButton::Left, pos, true, false, false); }
+		void releaseLeft(Vec2 pos) { setButton(MouseButton::Left, pos, false, false, true); }
 
-		void pressRight(Vec2 pos)   { setButton(MouseButton::Right,  pos, true,  true,  false); }
-		void releaseRight(Vec2 pos) { setButton(MouseButton::Right,  pos, false, false, true);  }
+		void pressRight(Vec2 pos) { setButton(MouseButton::Right, pos, true, true, false); }
+		void releaseRight(Vec2 pos) { setButton(MouseButton::Right, pos, false, false, true); }
 
-		void pressMiddle(Vec2 pos)  { setButton(MouseButton::Middle, pos, true,  true,  false); }
-		void holdMiddle(Vec2 pos)   { setButton(MouseButton::Middle, pos, true,  false, false); }
-		void releaseMiddle(Vec2 pos){ setButton(MouseButton::Middle, pos, false, false, true);  }
+		void pressMiddle(Vec2 pos) { setButton(MouseButton::Middle, pos, true, true, false); }
+		void holdMiddle(Vec2 pos) { setButton(MouseButton::Middle, pos, true, false, false); }
+		void releaseMiddle(Vec2 pos) { setButton(MouseButton::Middle, pos, false, false, true); }
 
 		void scrollWheel(float delta) { nextPointer.wheelY = delta; }
-		void pressKey(int key)        { nextEvents.keys.push_back(key); }
-		void holdKey(int key)         { nextEvents.held.push_back(key); }
-		void typeChar(int codepoint)  { nextEvents.chars.push_back(codepoint); }
+		void pressKey(int key) { nextEvents.keys.push_back(key); }
+		void holdKey(int key) { nextEvents.held.push_back(key); }
+		void typeChar(int codepoint) { nextEvents.chars.push_back(codepoint); }
 		/// @}
 
 	private:
@@ -444,7 +445,6 @@ namespace ZenitUI::Test
 
 		/// \name IAssetProvider Overrides
 		/// @{
-		TextureHandle getTexture(std::string_view) override { return {}; }
 
 		EffectHandle getEffect(std::string_view name) override
 		{
@@ -477,13 +477,56 @@ namespace ZenitUI::Test
 		{
 			fonts_.erase(std::string(name));
 		}
+
+		void setDefaultFontSize(int baseSize) override { defaultFontSize_ = baseSize; }
+		void addDefaultCodepointRange(uint32_t, uint32_t) override {}
+
+		TextureHandle loadTexture(std::string_view name, std::string_view /*path*/) override
+		{
+			if (name.empty())
+				return {};
+			const TextureHandle h{nextTextureId_++, 64, 64};
+			textures_[std::string(name)] = h;
+			return h;
+		}
+
+		void unloadTexture(std::string_view name) override
+		{
+			textures_.erase(std::string(name));
+		}
+
+		TextureHandle getTexture(std::string_view name) override
+		{
+			auto it = textures_.find(std::string(name));
+			return it != textures_.end() ? it->second : TextureHandle{};
+		}
+
+		EffectHandle loadEffect(std::string_view name,
+								std::string_view /*fsPath*/,
+								std::string_view /*vsPath*/ = {}) override
+		{
+			if (name.empty())
+				return {};
+			const EffectHandle h{nextEffectId_++};
+			effects_[std::string(name)] = h;
+			return h;
+		}
+
+		void unloadEffect(std::string_view name) override
+		{
+			effects_.erase(std::string(name));
+		}
+
 		/// @}
 
 	private:
 		std::unordered_map<std::string, EffectHandle> effects_;
 		std::unordered_map<std::string, FontHandle> fonts_;
+		std::unordered_map<std::string, TextureHandle> textures_;
+		int defaultFontSize_{96};
 		uint32_t nextEffectId_{100};
 		uint32_t nextFontId_{500};
+		uint32_t nextTextureId_{300};
 	};
 
 	// =========================================================================
@@ -541,6 +584,7 @@ namespace ZenitUI::Test
 			ctx.time = 0.0;
 			ctx.activePortals.clear();
 			ctx.framePortals.clear();
+			ctx.cullingClipStack.clear();
 			ctx.targetPool.clear(renderer, &ctx.renderStats);
 			ctx.renderStats.resetAll();
 
@@ -570,6 +614,59 @@ namespace ZenitUI::Test
 			platform.releaseLeft(pos);
 			frame(root);
 		}
+	};
+
+	/**
+	 * \class MockBackend
+	 * \ingroup grp_backends
+	 * \brief Headless `IBackend` host wrapping `MockPlatform`, `MockRenderer`, and `MockAssetProvider`.
+	 */
+	class MockBackend : public IBackend
+	{
+	public:
+		MockPlatform mockPlatform;
+		MockRenderer mockRenderer;
+		MockAssetProvider mockAssets;
+		float fixedDt{1.0f / 60.0f};
+		int maxFrames{1};
+
+		bool init(const WindowConfig &config) override
+		{
+			mockPlatform.viewport = {static_cast<float>(config.width), static_cast<float>(config.height)};
+			framesPolled_ = 0;
+			running_ = true;
+			bindToContext();
+			return true;
+		}
+
+		void shutdown() override
+		{
+			auto &ctx = UIContext::get();
+			ctx.targetPool.clear(mockRenderer, &ctx.renderStats);
+			unbindFromContext();
+			running_ = false;
+		}
+
+		bool pollFrame() override
+		{
+			if (!running_ || (maxFrames >= 0 && framesPolled_ >= maxFrames))
+				return false;
+			++framesPolled_;
+			return true;
+		}
+
+		float deltaTime() const override { return fixedDt; }
+		void beginDraw(Color) override {}
+		void endDraw() override {}
+		std::string_view name() const override { return "Mock (Headless)"; }
+
+		IPlatform &platform() override { return mockPlatform; }
+		IRenderer &renderer() override { return mockRenderer; }
+		IAssetProvider &assets() override { return mockAssets; }
+
+	private:
+		int framesPolled_{0};
+		bool running_{false};
 	};
 
 	/** @} */

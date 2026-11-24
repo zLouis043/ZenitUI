@@ -1,4 +1,5 @@
 #include "RaylibBackend.hpp"
+#include "Geometry2D.hpp"
 #include "Logger.hpp"
 
 #include <rlgl.h>
@@ -299,68 +300,20 @@ namespace ZenitUI
 
 	void RaylibRenderer::strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
 	{
-		// ZenitUI follows CSS border-box semantics: borders are drawn strictly
-		// *inside* `r` so they stay flush against `fillRoundedRect(r, ...)`
-		// without anti-aliasing seams. Raylib's `DrawRectangleRoundedLinesEx`
-		// expands outward and leaves a ~1px gap under MSAA, so we emit an
-		// inward-extruded rounded ring directly via rlgl.
-		if (thickness <= 0.0f || r.width <= 0.0f || r.height <= 0.0f || c.a == 0)
+		if (c.a == 0)
 			return;
 
-		const float maxR = std::min(r.width, r.height) * 0.5f;
-		if (maxR <= 0.0f)
+		const auto ring = Geometry2D::buildRoundedBorderRing(r, radiusPx, thickness);
+		if (ring.empty)
 			return;
-
-		const float t = std::min(thickness, maxR);
-		if (t >= maxR - 0.01f)
+		if (ring.isSolidFill)
 		{
 			fillRoundedRect(r, radiusPx, c);
 			return;
 		}
 
-		const float outerR = std::clamp(radiusPx, 0.0f, maxR);
-		const float innerR = std::max(0.0f, outerR - t);
-
-		constexpr int segs = kRoundedCornerSegments;
-		constexpr float kHalfPi = 1.5707963267948966f;
-		constexpr float kStep = kHalfPi / static_cast<float>(segs);
-
-		// Corners in clockwise screen order: top-right, bottom-right, bottom-left, top-left.
-		const Vec2 outerCenters[4] = {
-			{r.x + r.width - outerR, r.y + outerR},
-			{r.x + r.width - outerR, r.y + r.height - outerR},
-			{r.x + outerR,           r.y + r.height - outerR},
-			{r.x + outerR,           r.y + outerR}};
-
-		const Vec2 innerCenters[4] = {
-			{r.x + r.width - t - innerR, r.y + t + innerR},
-			{r.x + r.width - t - innerR, r.y + r.height - t - innerR},
-			{r.x + t + innerR,           r.y + r.height - t - innerR},
-			{r.x + t + innerR,           r.y + t + innerR}};
-
-		constexpr float kStartAngles[4] = {-kHalfPi, 0.0f, kHalfPi, 2.0f * kHalfPi};
-		constexpr int kRingPts = 4 * (segs + 1);
-
-		Vec2 outerPts[kRingPts];
-		Vec2 innerPts[kRingPts];
-
-		int idx = 0;
-		for (int corner = 0; corner < 4; ++corner)
-		{
-			for (int s = 0; s <= segs; ++s)
-			{
-				const float a = kStartAngles[corner] + kStep * static_cast<float>(s);
-				const float ca = std::cos(a);
-				const float sa = std::sin(a);
-				outerPts[idx] = {outerCenters[corner].x + ca * outerR,
-								 outerCenters[corner].y + sa * outerR};
-				innerPts[idx] = {innerCenters[corner].x + ca * innerR,
-								 innerCenters[corner].y + sa * innerR};
-				++idx;
-			}
-		}
-
 		// Emit counter-clockwise triangles in screen space (Y-down) for OpenGL back-face culling.
+		constexpr int kRingPts = Geometry2D::kRoundedRingPoints;
 		rlCheckRenderBatchLimit(kRingPts * 6);
 		rlSetTexture(0);
 		rlBegin(RL_TRIANGLES);
@@ -369,10 +322,10 @@ namespace ZenitUI
 		for (int i = 0; i < kRingPts; ++i)
 		{
 			const int next = (i + 1) % kRingPts;
-			const Vec2 &o0 = outerPts[i];
-			const Vec2 &o1 = outerPts[next];
-			const Vec2 &i0 = innerPts[i];
-			const Vec2 &i1 = innerPts[next];
+			const Vec2 &o0 = ring.outer[i];
+			const Vec2 &o1 = ring.outer[next];
+			const Vec2 &i0 = ring.inner[i];
+			const Vec2 &i1 = ring.inner[next];
 
 			rlVertex2f(o0.x, o0.y);
 			rlVertex2f(i1.x, i1.y);

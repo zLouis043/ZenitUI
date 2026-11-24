@@ -148,6 +148,9 @@ namespace ZenitUI
 				   f == Feature::NestedTargets ||
 				   f == Feature::TargetSubRect;
 		}
+
+		ShaderLanguage shaderLanguage() const override { return ShaderLanguage::GLSL330; }
+
 		/// @}
 
 		/// \name 2D Vector Primitives
