@@ -1,0 +1,113 @@
+/**
+ * \page page_custom_backends Writing a Custom Backend
+ *
+ * ZenitUI is rendering- and windowing-agnostic. To integrate it into a custom
+ * engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan,
+ * DirectX, etc.), implement three lightweight interfaces and bind them to
+ * `ZenitUI::UIContext`:
+ *
+ * | Interface | Responsibility | Reference |
+ * | :--- | :--- | :--- |
+ * | `IPlatform` | Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard | \ref ZenitUI::RaylibPlatform, \ref ZenitUI::Test::MockPlatform |
+ * | `IRenderer` | 2D vector primitives, textures/nine-slice, text metrics & draw, clip/transform/shader stacks, optional off-screen targets | \ref ZenitUI::RaylibRenderer, \ref ZenitUI::Test::MockRenderer |
+ * | `IAssetProvider` | Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders | \ref ZenitUI::RaylibAssetProvider, \ref ZenitUI::Test::MockAssetProvider |
+ *
+ * All reference classes are grouped under \ref grp_backends.
+ *
+ * ---
+ *
+ * \section sec_backend_wiring 1. Wiring a Backend into UIContext
+ *
+ * Bind your three instances once after creating your window/graphics context,
+ * then drive the per-frame cycle inside your main loop:
+ *
+ * \code{.cpp}
+ * MyPlatform      platform;
+ * MyRenderer      renderer;
+ * MyAssetProvider assets(renderer);
+ *
+ * auto &ctx = ZenitUI::UIContext::get();
+ * ctx.platform = &platform;
+ * ctx.renderer = &renderer;
+ * ctx.assets   = &assets;
+ *
+ * // Main loop
+ * while (running) {
+ *     float dt = computeDeltaTime();
+ *     ctx.beginFrame(dt);
+ *
+ *     root->updateTree(dt);
+ *     auto vp = platform.viewportSize();
+ *     root->measure(vp.x, vp.y);
+ *     root->arrange({0.0f, 0.0f, vp.x, vp.y});
+ *
+ *     renderer.beginFrame();
+ *     root->draw();
+ *     renderer.endFrame();
+ *
+ *     ctx.endFrame();
+ * }
+ * \endcode
+ *
+ * ---
+ *
+ * \section sec_backend_minimum 2. Minimum Viable Backend vs Optional Features
+ *
+ * You do **not** need shaders or off-screen framebuffers to get a complete UI
+ * running. `IRenderer::supports(Feature)` lets a backend opt into advanced
+ * capabilities incrementally:
+ *
+ * - **`Feature::Effects`**: fragment shaders (`pushEffect`, `popEffect`, `setEffect*`).
+ * - **`Feature::NestedTargets`**: off-screen render targets for post-processing filters (`createTarget`, `pushTarget`, `popTarget`, `drawTarget`).
+ * - **`Feature::TargetSubRect`**: sub-rectangle blitting from pooled render targets.
+ *
+ * Returning `false` from `supports()` causes ZenitUI to skip shader/filter passes
+ * gracefully while keeping layout, widgets, animations, and clipping functional.
+ * Start from \ref ZenitUI::Test::MockRenderer to see the smallest valid skeleton,
+ * then consult \ref ZenitUI::RaylibRenderer for a full GPU implementation.
+ *
+ * ---
+ *
+ * \section sec_backend_invariants 3. Critical Behavioral Invariants
+ *
+ * Keep these rules in mind when porting to avoid subtle layout or rendering bugs:
+ *
+ * 1. **Logical vs physical coordinates (`IPlatform` & `IRenderer`)**:
+ *    `viewportSize()`, `pointer().pos`, layout rects, and `measureText()` all
+ *    operate in **logical pixels**. Apply `dpiScale()` only when configuring the
+ *    GPU transform/scissor or sampling the physical framebuffer.
+ * 2. **Edge-triggered input (`IPlatform`)**:
+ *    `ButtonState::pressed`, `ButtonState::released`, `PointerState::wheelY`,
+ *    `InputEvents::keys`, and `InputEvents::chars` must fire for **one frame only**,
+ *    whereas `ButtonState::down` and `InputEvents::held` remain true while held.
+ * 3. **Intersected clip stack (`IRenderer`)**:
+ *    `pushClip(r)` must transform `r` through the active transform stack,
+ *    intersect it with the current clip rectangle, and expose the resulting
+ *    screen-space clip via `getClipRect()` so off-screen culling stays accurate.
+ * 4. **CSS border-box strokes (`IRenderer`)**:
+ *    `strokeRect()` and `strokeRoundedRect()` should draw strictly **inside**
+ *    the target rectangle so borders sit flush against `fillRect()` /
+ *    `fillRoundedRect()` without anti-aliasing gaps.
+ * 5. **Zero-allocation asset lookup (`IAssetProvider`)**:
+ *    `getFont()`, `getTexture()`, and `getEffect()` are called during layout and
+ *    draw; prefer transparent `std::string_view` map lookups (see
+ *    `detail::TransparentStringHash` in `RaylibBackend.hpp`).
+ * 6. **Safe GPU shutdown**:
+ *    If your renderer owns native handles, ensure GPU resources are released
+ *    before the graphics context is destroyed (or release them explicitly on
+ *    teardown rather than assuming the context is still alive at destructor time).
+ *
+ * ---
+ *
+ * \section sec_backend_refs 4. Reference Implementations
+ *
+ * - **Production GPU backend (Raylib / rlgl)**:
+ *   - \ref ZenitUI::RaylibPlatform
+ *   - \ref ZenitUI::RaylibRenderer
+ *   - \ref ZenitUI::RaylibAssetProvider
+ * - **Headless / testing backend (no GPU required)**:
+ *   - \ref ZenitUI::Test::MockPlatform
+ *   - \ref ZenitUI::Test::MockRenderer
+ *   - \ref ZenitUI::Test::MockAssetProvider
+ *   - \ref ZenitUI::Test::Env
+ */

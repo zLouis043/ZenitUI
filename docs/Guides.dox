@@ -46,6 +46,12 @@
  * 3. \ref 05_zstyle/main.cpp "05_zstyle" & \ref 06_zmarkup/main.cpp "06_zmarkup" — declarative markup and stylesheets.
  * 4. \ref 12_bindable/main.cpp "12_bindable" & \ref 13_prefabs/main.cpp "13_prefabs" — reactive state and reusable prefabs with slots.
  * 5. \ref 00_demo/main.cpp "00_demo" — complete end-to-end showcase.
+ *
+ * \section sec_guides Topic Guides
+ *
+ * - \subpage page_custom_backends — Implement `IPlatform`, `IRenderer`, and
+ *   `IAssetProvider` for your own engine or graphics API.
+ */
  */
 
 /**
@@ -142,12 +148,14 @@
 
 /**
  * \defgroup grp_backends Backends, UTF-8 & Debugging
- * \brief Backend implementations (Raylib), Unicode utilities (`Utf8`, `CodepointSet`), logging, and debug dumps.
+ * \brief Reference backends (Raylib, headless Mock), Unicode utilities (`Utf8`, `CodepointSet`), logging, and debug dumps.
  *
  * The core library depends solely on `IRenderer`, `IPlatform`, and
  * `IAssetProvider`. Attach the reference Raylib backend (`RaylibRenderer`,
- * `RaylibPlatform`, `RaylibAssetProvider`) for desktop apps, or implement the
- * three interfaces to integrate ZenitUI with any custom engine.
+ * `RaylibPlatform`, `RaylibAssetProvider`) for desktop apps, use the headless
+ * Mock backend (`MockRenderer`, `MockPlatform`, `MockAssetProvider`) for unit
+ * tests, or follow \ref page_custom_backends to integrate ZenitUI with any
+ * custom engine.
  *
  * Use `CodepointSet` on `RaylibAssetProvider::defaultCodepoints()` to control
  * which UTF-8 glyph ranges are baked into font atlases, and `ZenitUI::Debug`

@@ -4,7 +4,11 @@ PROJECT_BRIEF          = "Retained-mode C++20 UI framework"
 OUTPUT_DIRECTORY       = build/docs
 
 # ---- Input ----
-INPUT                  = docs/Guides.dox build/docs/generated_examples.dox include backends/raylib
+INPUT                  = include \
+                         docs \
+                         build/docs/generated_examples.dox \
+                         backends/raylib/RaylibBackend.hpp \
+                         backends/mock/MockBackend.hpp
 FILE_PATTERNS          = *.hpp *.h *.dox
 RECURSIVE              = YES
 EXAMPLE_PATH           = examples
@@ -13,7 +17,7 @@ EXAMPLE_RECURSIVE      = NO
 EXCLUDE_SYMBOLS        = detail *::detail
 
 # ---- Extraction ----
-EXTRACT_ALL            = YES
+EXTRACT_ALL            = NO
 EXTRACT_PRIVATE        = NO
 EXTRACT_STATIC         = YES
 JAVADOC_AUTOBRIEF      = YES
@@ -27,6 +31,7 @@ QUIET                  = YES
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = NO
 WARN_IF_DOC_ERROR      = YES
+WARN_AS_ERROR          = NO
 
 # ---- HTML Output ----
 GENERATE_HTML          = YES

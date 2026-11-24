@@ -515,7 +515,7 @@ Dropdown {
 }
 
 .nineslice-box {
-    background-texture: npatches 8 8 8 8;
+    background-texture: npatches 16 16 16 16;
     padding: 10px 16px;
     color: #181c26;
     font: inter-semibold;

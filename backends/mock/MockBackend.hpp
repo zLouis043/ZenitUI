@@ -1,535 +1,570 @@
 #pragma once
 
+/**
+ * \file MockBackend.hpp
+ * \brief Headless mock backend (`MockRenderer`, `MockPlatform`, `MockAssetProvider`)
+ *        and RAII test harness (`ZenitUI::Test::Env`).
+ *
+ * Serves a dual purpose:
+ *  1. **Unit-test harness:** drives ZenitUI's full frame cycle (`updateTree`,
+ *     `measure`, `arrange`, `draw`) deterministically without opening a window
+ *     or GPU context, recording draw calls, clip rects, transforms, and shader
+ *     uniforms for assertions.
+ *  2. **Minimal backend skeleton:** demonstrates the smallest contract an
+ *     `IPlatform` / `IRenderer` / `IAssetProvider` triplet must satisfy.
+ *     Notice in particular:
+ *       - `IRenderer::supports(Feature)` lets a minimal backend opt out of
+ *         shaders and off-screen targets simply by returning `false`.
+ *       - `IPlatform::pointer()` and `pollInputEvents()` must clear edge-triggered
+ *         fields (`pressed`, `released`, `wheelY`, `keys`, `chars`) once polled.
+ *       - `IRenderer::pushClip()` / `popClip()` must maintain an intersected
+ *         clip stack so `getClipRect()` remains accurate for culling.
+ */
+
 #include "ZenitUI.hpp"
 #include "Utf8.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <string>
+#include <string_view>
+#include <unordered_map>
 #include <vector>
 
 namespace ZenitUI::Test
 {
-    /** \addtogroup grp_backends
-     *  @{
-     */
+	/** \addtogroup grp_backends
+	 *  @{
+	 */
 
-    class MockRenderer : public IRenderer
-    {
-    public:
-        int fillRectCount{0};
-        int drawTextCount{0};
-        int pushClipCount{0};
-        int popClipCount{0};
+	// =========================================================================
+	// 1. Headless Renderer (IRenderer)
+	// =========================================================================
 
-        float charWidth{8.0f};
+	/**
+	 * \class MockRenderer
+	 * \ingroup grp_backends
+	 * \brief Recording `IRenderer` that tracks draw counts, text metrics, clip
+	 *        stacks, render targets, and shader uniforms without a GPU.
+	 */
+	class MockRenderer : public IRenderer
+	{
+	public:
+		/** \brief Recorded shader uniform assignment captured by `setEffect*`. */
+		template <typename T>
+		struct CapturedUniform
+		{
+			std::string name;
+			T value;
+		};
 
-        std::vector<std::string> drawnTexts;
+		using CapturedFloat = CapturedUniform<float>;
+		using CapturedVec2 = CapturedUniform<Vec2>;
+		using CapturedVec3 = CapturedUniform<Vec3>;
+		using CapturedVec4 = CapturedUniform<Vec4>;
+		using CapturedColor = CapturedUniform<Color>;
 
-        std::vector<Rect> clipStack;
-        Rect currentClip{0, 0, 1e9f, 1e9f};
+		/// \name Configuration & Feature Flags
+		/// @{
+		float charWidth{8.0f}; ///< Fixed monospace advance used by `measureText`.
+		bool supportsEffects{false};
+		bool supportsNestedTargets{false};
+		bool supportsTargetSubRect{false};
+		/// @}
 
-        int lastCreatedTargetW{0};
-        int lastCreatedTargetH{0};
+		/// \name Recorded Inspection State
+		/// @{
+		int fillRectCount{0};
+		int drawTextCount{0};
+		int pushClipCount{0};
+		int popClipCount{0};
+		int pushEffectCount{0};
+		int createTargetCount{0};
+		int destroyTargetCount{0};
+		int pushTargetCount{0};
+		int liveTargets{0};
+		int activeTargetDepth{0};
+		int lastCreatedTargetW{0};
+		int lastCreatedTargetH{0};
 
-        struct CapturedFloat
-        {
-            std::string name;
-            float value;
-        };
-        struct CapturedVec2
-        {
-            std::string name;
-            Vec2 value;
-        };
-        struct CapturedVec3
-        {
-            std::string name;
-            Vec3 value;
-        };
-        struct CapturedVec4
-        {
-            std::string name;
-            Vec4 value;
-        };
-        struct CapturedColor
-        {
-            std::string name;
-            Color value;
-        };
+		EffectHandle lastPushedEffect{};
+		Rect lastDrawTargetSrc{};
+		Rect lastDrawTargetDst{};
 
-        std::vector<CapturedFloat> capturedFloat;
-        std::vector<CapturedVec2> capturedVec2;
-        std::vector<CapturedVec3> capturedVec3;
-        std::vector<CapturedVec4> capturedVec4f;
-        std::vector<CapturedColor> capturedColor;
+		std::vector<std::string> drawnTexts;
+		std::vector<Rect> clipStack;
+		Rect currentClip{0, 0, 1e9f, 1e9f};
+		std::vector<Transform2D> transformHistory;
 
-        std::vector<Transform2D> transformHistory;
+		std::vector<CapturedFloat> capturedFloat;
+		std::vector<CapturedVec2> capturedVec2;
+		std::vector<CapturedVec3> capturedVec3;
+		std::vector<CapturedVec4> capturedVec4f;
+		std::vector<CapturedColor> capturedColor;
+		/// @}
 
-        int pushTargetCount{0};
-        int activeTargetDepth{0};
-        bool supportsEffects{false};
-        bool supportsNestedTargets{false};
-        int pushEffectCount{0};
-        EffectHandle lastPushedEffect{};
-        int createTargetCount{0};
-        int destroyTargetCount{0};
-        int liveTargets{0};
-        bool supportsTargetSubRect{false};
-        Rect lastDrawTargetSrc{};
-        Rect lastDrawTargetDst{};
+		/** \brief Clear all counters, histories, and feature flags to defaults. */
+		void reset()
+		{
+			fillRectCount = 0;
+			drawTextCount = 0;
+			pushClipCount = 0;
+			popClipCount = 0;
+			pushEffectCount = 0;
+			createTargetCount = 0;
+			destroyTargetCount = 0;
+			pushTargetCount = 0;
+			liveTargets = 0;
+			activeTargetDepth = 0;
+			lastCreatedTargetW = 0;
+			lastCreatedTargetH = 0;
 
-        void fillRect(Rect, Color) override { fillRectCount++; }
-        void fillRoundedRect(Rect, float, Color) override {}
-        void fillCircle(Vec2, float, Color) override {}
+			lastPushedEffect = {};
+			lastDrawTargetSrc = {};
+			lastDrawTargetDst = {};
 
-        void strokeRect(Rect, float, Color) override {}
-        void strokeRoundedRect(Rect, float, float, Color) override {}
+			supportsEffects = false;
+			supportsNestedTargets = false;
+			supportsTargetSubRect = false;
 
-        void drawTexture(TextureHandle, Rect, Rect, Color) override {}
-        void drawNineSlice(TextureHandle, NineSlice, Rect, Color) override {}
+			drawnTexts.clear();
+			clipStack.clear();
+			currentClip = {0, 0, 1e9f, 1e9f};
+			transformHistory.clear();
 
-        void drawText(FontHandle, std::string_view s, Vec2, float, float, Color) override
-        {
-            drawTextCount++;
-            drawnTexts.emplace_back(s);
-        }
-        Vec2 measureText(FontHandle, std::string_view s, float size, float spacing) override
-        {
-            size_t count = Utf8::codepointCount(s);
-            float w = charWidth * static_cast<float>(count);
-            if (count > 0)
-                w += spacing * static_cast<float>(count - 1);
-            return {w, size};
-        }
+			capturedFloat.clear();
+			capturedVec2.clear();
+			capturedVec3.clear();
+			capturedVec4f.clear();
+			capturedColor.clear();
+		}
 
-        void pushTransform(const Transform2D &t) override
-        {
-            transformHistory.push_back(t);
-        }
-        void popTransform() override {}
-        void pushEffect(EffectHandle e) override
-        {
-            pushEffectCount++;
-            lastPushedEffect = e;
-        }
-        void popEffect() override {}
+		/// \name Frame Lifecycle & Capabilities
+		/// @{
+		void beginFrame() override {}
+		void endFrame() override {}
+		void setDpiScale(float) override {}
 
-        void pushClip(Rect r) override
-        {
-            pushClipCount++;
-            clipStack.push_back(currentClip);
-            float x1 = std::max(currentClip.x, r.x);
-            float y1 = std::max(currentClip.y, r.y);
-            float x2 = std::min(currentClip.x + currentClip.width, r.x + r.width);
-            float y2 = std::min(currentClip.y + currentClip.height, r.y + r.height);
-            currentClip = {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
-        }
-        void popClip() override
-        {
-            popClipCount++;
-            if (!clipStack.empty())
-            {
-                currentClip = clipStack.back();
-                clipStack.pop_back();
-            }
-        }
+		bool supports(Feature f) const override
+		{
+			switch (f)
+			{
+			case Feature::Effects:
+				return supportsEffects;
+			case Feature::NestedTargets:
+				return supportsNestedTargets;
+			case Feature::TargetSubRect:
+				return supportsTargetSubRect;
+			default:
+				return false;
+			}
+		}
+		/// @}
 
-        Rect getClipRect() const override { return currentClip; }
+		/// \name 2D Primitives & Textures
+		/// @{
+		void fillRect(Rect, Color) override { ++fillRectCount; }
+		void fillRoundedRect(Rect, float, Color) override {}
+		void fillCircle(Vec2, float, Color) override {}
+		void strokeRect(Rect, float, Color) override {}
+		void strokeRoundedRect(Rect, float, float, Color) override {}
+		void drawTexture(TextureHandle, Rect, Rect, Color) override {}
+		void drawNineSlice(TextureHandle, NineSlice, Rect, Color) override {}
+		/// @}
 
-        TargetHandle createTarget(int w, int h) override
-        {
-            createTargetCount++;
-            liveTargets++;
-            lastCreatedTargetW = w;
-            lastCreatedTargetH = h;
-            static uint32_t nextId = 1000;
-            return TargetHandle{nextId++, w, h};
-        }
-        void destroyTarget(TargetHandle t) override
-        {
-            if (t.valid())
-            {
-                destroyTargetCount++;
-                if (liveTargets > 0)
-                    liveTargets--;
-            }
-        }
-        void pushTarget(TargetHandle) override
-        {
-            pushTargetCount++;
-            activeTargetDepth++;
-        }
-        void popTarget() override
-        {
-            if (activeTargetDepth > 0)
-                activeTargetDepth--;
-        }
-        void drawTarget(TargetHandle t, Rect dst, Color) override
-        {
-            lastDrawTargetSrc = {0.0f, 0.0f, (float)t.width, (float)t.height};
-            lastDrawTargetDst = dst;
-        }
-        void drawTarget(TargetHandle t, Rect src, Rect dst, Color) override
-        {
-            if (supportsTargetSubRect)
-            {
-                lastDrawTargetSrc = src;
-                lastDrawTargetDst = dst;
-            }
-            else
-            {
-                drawTarget(t, dst, Colors::White);
-            }
-        }
+		/// \name Text Rendering & Metrics
+		/// @{
+		void drawText(FontHandle, std::string_view s, Vec2, float, float, Color) override
+		{
+			++drawTextCount;
+			drawnTexts.emplace_back(s);
+		}
 
-        void setEffectFloat(EffectHandle, const char *name, float value) override
-        {
-            capturedFloat.push_back({name, value});
-        }
-        void setEffectVec2(EffectHandle, const char *name, Vec2 value) override
-        {
-            capturedVec2.push_back({name, value});
-        }
-        void setEffectVec3(EffectHandle, const char *name, Vec3 value) override
-        {
-            capturedVec3.push_back({name, value});
-        }
-        void setEffectVec4f(EffectHandle, const char *name, Vec4 value) override
-        {
-            capturedVec4f.push_back({name, value});
-        }
-        void setEffectVec4(EffectHandle, const char *name, Color value) override
-        {
-            capturedColor.push_back({name, value});
-        }
-        bool inTarget() const override { return activeTargetDepth > 0; }
-        void clearTarget(TargetHandle, Color) override {}
+		Vec2 measureText(FontHandle, std::string_view s, float size, float spacing) override
+		{
+			const size_t count = Utf8::codepointCount(s);
+			float w = charWidth * static_cast<float>(count);
+			if (count > 0)
+				w += spacing * static_cast<float>(count - 1);
+			return {w, size};
+		}
+		/// @}
 
-        void beginFrame() override {}
-        void endFrame() override {}
-        void setDpiScale(float) override {}
+		/// \name Transform, Clip & Effect Stacks
+		/// @{
+		void pushTransform(const Transform2D &t) override { transformHistory.push_back(t); }
+		void popTransform() override {}
 
-        bool supports(Feature f) const override
-        {
-            if (f == Feature::Effects)
-                return supportsEffects;
-            if (f == Feature::NestedTargets)
-                return supportsNestedTargets;
-            if (f == Feature::TargetSubRect)
-                return supportsTargetSubRect;
-            return false;
-        }
-    };
+		void pushEffect(EffectHandle e) override
+		{
+			++pushEffectCount;
+			lastPushedEffect = e;
+		}
+		void popEffect() override {}
 
-    class MockPlatform : public IPlatform
-    {
-    public:
-        Vec2 viewport{800.0f, 600.0f};
-        double currentTime{0.0};
-        ModifierState mods;
+		void pushClip(Rect r) override
+		{
+			++pushClipCount;
+			clipStack.push_back(currentClip);
+			const float x1 = std::max(currentClip.x, r.x);
+			const float y1 = std::max(currentClip.y, r.y);
+			const float x2 = std::min(currentClip.x + currentClip.width, r.x + r.width);
+			const float y2 = std::min(currentClip.y + currentClip.height, r.y + r.height);
+			currentClip = {x1, y1, std::max(0.0f, x2 - x1), std::max(0.0f, y2 - y1)};
+		}
 
-        PointerState nextPointer;
-        InputEvents nextEvents;
+		void popClip() override
+		{
+			++popClipCount;
+			if (!clipStack.empty())
+			{
+				currentClip = clipStack.back();
+				clipStack.pop_back();
+			}
+		}
 
-        std::string clipboardData = "";
+		Rect getClipRect() const override { return currentClip; }
+		/// @}
 
-        Vec2 viewportSize() override { return viewport; }
-        double time() override { return currentTime; }
-        ModifierState modifiers() override { return mods; }
+		/// \name Off-Screen Render Targets
+		/// @{
+		TargetHandle createTarget(int w, int h) override
+		{
+			++createTargetCount;
+			++liveTargets;
+			lastCreatedTargetW = w;
+			lastCreatedTargetH = h;
+			return TargetHandle{nextTargetId_++, w, h};
+		}
 
-        PointerState pointer() override
-        {
-            PointerState p = nextPointer;
-            nextPointer.wheelY = 0.0f;
+		void destroyTarget(TargetHandle t) override
+		{
+			if (t.valid())
+			{
+				++destroyTargetCount;
+				if (liveTargets > 0)
+					--liveTargets;
+			}
+		}
 
-            for (auto &b : nextPointer.buttons)
-            {
-                b.pressed = false;
-                b.released = false;
-            }
+		void pushTarget(TargetHandle) override
+		{
+			++pushTargetCount;
+			++activeTargetDepth;
+		}
 
-            return p;
-        }
+		void popTarget() override
+		{
+			if (activeTargetDepth > 0)
+				--activeTargetDepth;
+		}
 
-        InputEvents pollInputEvents() override
-        {
-            InputEvents e = nextEvents;
-            nextEvents = {};
-            return e;
-        }
+		void drawTarget(TargetHandle t, Rect dst, Color) override
+		{
+			lastDrawTargetSrc = {0.0f, 0.0f, static_cast<float>(t.width), static_cast<float>(t.height)};
+			lastDrawTargetDst = dst;
+		}
 
-        float dpiScale() override
-        {
-            return 1.0f;
-        }
+		void drawTarget(TargetHandle t, Rect src, Rect dst, Color) override
+		{
+			if (supportsTargetSubRect)
+			{
+				lastDrawTargetSrc = src;
+				lastDrawTargetDst = dst;
+			}
+			else
+			{
+				drawTarget(t, dst, Colors::White);
+			}
+		}
 
-        void moveMouse(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            for (auto &b : nextPointer.buttons)
-            {
-                b.down = false;
-                b.pressed = false;
-                b.released = false;
-            }
-        }
-        void pressLeft(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Left];
-            b.down = true;
-            b.pressed = true;
-            b.released = false;
-        }
+		bool inTarget() const override { return activeTargetDepth > 0; }
+		void clearTarget(TargetHandle, Color) override {}
+		/// @}
 
-        void releaseLeft(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Left];
-            b.down = false;
-            b.pressed = false;
-            b.released = true;
-        }
+		/// \name Shader Uniforms
+		/// @{
+		void setEffectFloat(EffectHandle, const char *name, float value) override
+		{
+			capturedFloat.push_back({name, value});
+		}
+		void setEffectVec2(EffectHandle, const char *name, Vec2 value) override
+		{
+			capturedVec2.push_back({name, value});
+		}
+		void setEffectVec3(EffectHandle, const char *name, Vec3 value) override
+		{
+			capturedVec3.push_back({name, value});
+		}
+		void setEffectVec4f(EffectHandle, const char *name, Vec4 value) override
+		{
+			capturedVec4f.push_back({name, value});
+		}
+		void setEffectVec4(EffectHandle, const char *name, Color value) override
+		{
+			capturedColor.push_back({name, value});
+		}
+		/// @}
 
-        void holdLeft(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Left];
-            b.down = true;
-            b.pressed = false;
-            b.released = false;
-        }
+	private:
+		uint32_t nextTargetId_{1000};
+	};
 
-        void pressRight(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Right];
-            b.down = true;
-            b.pressed = true;
-            b.released = false;
-        }
+	// =========================================================================
+	// 2. Headless Platform (IPlatform)
+	// =========================================================================
 
-        void releaseRight(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Right];
-            b.down = false;
-            b.pressed = false;
-            b.released = true;
-        }
+	/**
+	 * \class MockPlatform
+	 * \ingroup grp_backends
+	 * \brief Programmable `IPlatform` for injecting deterministic pointer,
+	 *        keyboard, viewport, and clipboard state in tests.
+	 */
+	class MockPlatform : public IPlatform
+	{
+	public:
+		Vec2 viewport{800.0f, 600.0f};
+		double currentTime{0.0};
+		ModifierState mods{};
+		PointerState nextPointer{};
+		InputEvents nextEvents{};
+		EdgeInsets safe{};
+		std::string clipboardData;
 
-        void pressMiddle(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Middle];
-            b.down = true;
-            b.pressed = true;
-            b.released = false;
-        }
+		/** \brief Restore viewport, clock, and queued input events to defaults. */
+		void reset()
+		{
+			viewport = {800.0f, 600.0f};
+			currentTime = 0.0;
+			mods = {};
+			nextPointer = {};
+			nextEvents = {};
+			safe = {};
+		}
 
-        void releaseMiddle(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Middle];
-            b.down = false;
-            b.pressed = false;
-            b.released = true;
-        }
+		/// \name IPlatform Overrides
+		/// @{
+		Vec2 viewportSize() override { return viewport; }
+		double time() override { return currentTime; }
+		float dpiScale() override { return 1.0f; }
+		EdgeInsets safeArea() override { return safe; }
+		ModifierState modifiers() override { return mods; }
 
-        void holdMiddle(Vec2 pos)
-        {
-            nextPointer.pos = pos;
-            auto &b = nextPointer[MouseButton::Middle];
-            b.down = true;
-            b.pressed = false;
-            b.released = false;
-        }
-        void pressKey(int key)
-        {
-            nextEvents.keys.push_back(key);
-        }
-        void holdKey(int key)
-        {
-            nextEvents.held.push_back(key);
-        }
-        void scrollWheel(float delta)
-        {
-            nextPointer.wheelY = delta;
-        }
-        void typeChar(int c)
-        {
-            nextEvents.chars.push_back(c);
-        }
+		PointerState pointer() override
+		{
+			PointerState polled = nextPointer;
+			// Edge-triggered states last for a single frame only.
+			nextPointer.wheelY = 0.0f;
+			for (auto &b : nextPointer.buttons)
+			{
+				b.pressed = false;
+				b.released = false;
+			}
+			return polled;
+		}
 
-        EdgeInsets safe{};
-        EdgeInsets safeArea() override { return safe; }
+		InputEvents pollInputEvents() override
+		{
+			InputEvents polled = std::move(nextEvents);
+			nextEvents = {};
+			return polled;
+		}
 
-        void setClipboardText(const std::string &text) override
-        {
-            clipboardData = text;
-        }
-        std::string getClipboardText() override
-        {
-            return clipboardData;
-        }
-    };
+		void setClipboardText(const std::string &text) override { clipboardData = text; }
+		std::string getClipboardText() override { return clipboardData; }
+		/// @}
 
-    class MockAssetProvider : public IAssetProvider
-    {
-    public:
-        using IAssetProvider::getFont;
+		/// \name Test Input Injection Helpers
+		/// @{
+		void moveMouse(Vec2 pos)
+		{
+			nextPointer.pos = pos;
+			for (auto &b : nextPointer.buttons)
+				b = {};
+		}
 
-        TextureHandle getTexture(std::string_view) override { return {}; }
-        EffectHandle getEffect(std::string_view name) override
-        {
-            auto it = registeredEffects.find(std::string(name));
-            return it != registeredEffects.end() ? it->second : EffectHandle{};
-        }
+		void pressLeft(Vec2 pos)    { setButton(MouseButton::Left,   pos, true,  true,  false); }
+		void holdLeft(Vec2 pos)     { setButton(MouseButton::Left,   pos, true,  false, false); }
+		void releaseLeft(Vec2 pos)  { setButton(MouseButton::Left,   pos, false, false, true);  }
 
-        void registerEffect(std::string name)
-        {
-            static uint32_t nextId = 100;
-            registeredEffects[name] = EffectHandle{nextId++};
-        }
+		void pressRight(Vec2 pos)   { setButton(MouseButton::Right,  pos, true,  true,  false); }
+		void releaseRight(Vec2 pos) { setButton(MouseButton::Right,  pos, false, false, true);  }
 
-        void registerFont(const std::string &name, FontHandle h)
-        {
-            fonts_[name] = h;
-        }
+		void pressMiddle(Vec2 pos)  { setButton(MouseButton::Middle, pos, true,  true,  false); }
+		void holdMiddle(Vec2 pos)   { setButton(MouseButton::Middle, pos, true,  false, false); }
+		void releaseMiddle(Vec2 pos){ setButton(MouseButton::Middle, pos, false, false, true);  }
 
-        FontHandle getFont(std::string_view name) override
-        {
-            auto it = fonts_.find(std::string(name));
-            return it != fonts_.end() ? it->second : FontHandle{};
-        }
+		void scrollWheel(float delta) { nextPointer.wheelY = delta; }
+		void pressKey(int key)        { nextEvents.keys.push_back(key); }
+		void holdKey(int key)         { nextEvents.held.push_back(key); }
+		void typeChar(int codepoint)  { nextEvents.chars.push_back(codepoint); }
+		/// @}
 
-        FontHandle loadFont(std::string_view name, std::string_view /*path*/) override
-        {
-            if (name.empty())
-                return {};
-            static uint32_t nextId = 500;
-            FontHandle h{nextId++};
-            fonts_[std::string(name)] = h;
-            return h;
-        }
+	private:
+		void setButton(MouseButton btn, Vec2 pos, bool down, bool pressed, bool released)
+		{
+			nextPointer.pos = pos;
+			nextPointer[btn] = {down, pressed, released};
+		}
+	};
 
-        FontHandle loadFontFromMemory(std::string_view name,
-                                      const void * /*data*/, size_t /*size*/) override
-        {
-            return loadFont(name, "");
-        }
+	// =========================================================================
+	// 3. Headless Asset Provider (IAssetProvider)
+	// =========================================================================
 
-        void unloadFont(std::string_view name) override
-        {
-            fonts_.erase(std::string(name));
-        }
+	/**
+	 * \class MockAssetProvider
+	 * \ingroup grp_backends
+	 * \brief In-memory `IAssetProvider` that mints synthetic font and shader
+	 *        handles without touching the filesystem or GPU.
+	 */
+	class MockAssetProvider : public IAssetProvider
+	{
+	public:
+		using IAssetProvider::getFont;
 
-    private:
-        std::unordered_map<std::string, EffectHandle> registeredEffects;
-        std::unordered_map<std::string, FontHandle> fonts_;
-    };
+		/// \name Test Registration Helpers
+		/// @{
+		void registerEffect(std::string name)
+		{
+			effects_[std::move(name)] = EffectHandle{nextEffectId_++};
+		}
 
-    struct Env
-    {
-        MockRenderer renderer;
-        MockPlatform platform;
-        MockAssetProvider assets;
+		void registerFont(const std::string &name, FontHandle h)
+		{
+			fonts_[name] = h;
+		}
+		/// @}
 
-        Env()
-        {
-            auto &ctx = UIContext::get();
-            ctx.renderer = &renderer;
-            ctx.platform = &platform;
-            ctx.assets = &assets;
-            reset();
-        }
+		/// \name IAssetProvider Overrides
+		/// @{
+		TextureHandle getTexture(std::string_view) override { return {}; }
 
-        ~Env()
-        {
-            auto &ctx = UIContext::get();
-            ctx.targetPool.clear(renderer, &ctx.renderStats);
-            ctx.renderer = nullptr;
-            ctx.platform = nullptr;
-            ctx.assets = nullptr;
-            Metrics::viewport = {1920.0f, 1080.0f};
-        }
+		EffectHandle getEffect(std::string_view name) override
+		{
+			auto it = effects_.find(std::string(name));
+			return it != effects_.end() ? it->second : EffectHandle{};
+		}
 
-        void reset()
-        {
-            Theme::get().clear();
-            auto &ctx = UIContext::get();
-            ctx.focusedNode.reset();
-            ctx.pointerCapture.reset();
-            ctx.topmostConsumer = nullptr;
-            ctx.pressTarget = nullptr;
-            ctx.releaseTarget = nullptr;
-            ctx.buttonConsumed.fill(false);
-            ctx.wheelConsumedThisFrame = false;
-            ctx.pointer = {};
-            ctx.inputEvents = {};
-            ctx.dt = 0.0f;
-            ctx.time = 0.0;
-            ctx.activePortals.clear();
-            ctx.framePortals.clear();
-            ctx.targetPool.clear(renderer, &ctx.renderStats);
-            ctx.renderStats.resetAll();
+		FontHandle getFont(std::string_view name) override
+		{
+			auto it = fonts_.find(std::string(name));
+			return it != fonts_.end() ? it->second : FontHandle{};
+		}
 
-            platform.viewport = {800.0f, 600.0f};
-            platform.currentTime = 0.0;
-            platform.mods = {};
-            platform.nextPointer = {};
-            platform.nextEvents = {};
-            platform.safe = {};
+		FontHandle loadFont(std::string_view name, std::string_view /*path*/) override
+		{
+			if (name.empty())
+				return {};
+			const FontHandle h{nextFontId_++};
+			fonts_[std::string(name)] = h;
+			return h;
+		}
 
-            Metrics::viewport = {1920.0f, 1080.0f};
+		FontHandle loadFontFromMemory(std::string_view name,
+									  const void * /*data*/, size_t /*size*/) override
+		{
+			return loadFont(name, "");
+		}
 
-            renderer.fillRectCount = 0;
-            renderer.drawTextCount = 0;
-            renderer.pushClipCount = 0;
-            renderer.popClipCount = 0;
-            renderer.pushTargetCount = 0;
-            renderer.activeTargetDepth = 0;
-            renderer.pushEffectCount = 0;
-            renderer.lastPushedEffect = {};
-            renderer.supportsEffects = false;
-            renderer.supportsNestedTargets = false;
-            renderer.clipStack.clear();
-            renderer.capturedFloat.clear();
-            renderer.capturedVec2.clear();
-            renderer.capturedVec3.clear();
-            renderer.capturedVec4f.clear();
-            renderer.capturedColor.clear();
-            renderer.transformHistory.clear();
-            renderer.drawnTexts.clear();
-            renderer.currentClip = {0, 0, 1e9f, 1e9f};
-            renderer.lastCreatedTargetW = 0;
-            renderer.lastCreatedTargetH = 0;
-            renderer.createTargetCount = 0;
-            renderer.destroyTargetCount = 0;
-            renderer.liveTargets = 0;
-            renderer.supportsTargetSubRect = false;
-            renderer.lastDrawTargetSrc = {};
-            renderer.lastDrawTargetDst = {};
-        }
+		void unloadFont(std::string_view name) override
+		{
+			fonts_.erase(std::string(name));
+		}
+		/// @}
 
-        void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
-        {
-            auto &ctx = UIContext::get();
-            ctx.beginFrame(dt);
-            root->updateTree(dt);
-            root->measure(platform.viewport.x, platform.viewport.y);
-            root->arrange({0, 0, platform.viewport.x, platform.viewport.y});
-            root->draw();
-            ctx.endFrame();
-        }
+	private:
+		std::unordered_map<std::string, EffectHandle> effects_;
+		std::unordered_map<std::string, FontHandle> fonts_;
+		uint32_t nextEffectId_{100};
+		uint32_t nextFontId_{500};
+	};
 
-        void click(std::shared_ptr<Layout> root, Vec2 pos)
-        {
-            platform.pressLeft(pos);
-            frame(root);
-            platform.releaseLeft(pos);
-            frame(root);
-        }
-    };
-    /** @} */
+	// =========================================================================
+	// 4. RAII Headless Test Environment
+	// =========================================================================
+
+	/**
+	 * \struct Env
+	 * \ingroup grp_backends
+	 * \brief Scoped test fixture that binds `MockRenderer`, `MockPlatform`,
+	 *        and `MockAssetProvider` into `UIContext` and restores clean state
+	 *        on destruction.
+	 */
+	struct Env
+	{
+		MockRenderer renderer;
+		MockPlatform platform;
+		MockAssetProvider assets;
+
+		Env()
+		{
+			auto &ctx = UIContext::get();
+			ctx.renderer = &renderer;
+			ctx.platform = &platform;
+			ctx.assets = &assets;
+			reset();
+		}
+
+		~Env()
+		{
+			auto &ctx = UIContext::get();
+			ctx.targetPool.clear(renderer, &ctx.renderStats);
+			ctx.renderer = nullptr;
+			ctx.platform = nullptr;
+			ctx.assets = nullptr;
+			Metrics::viewport = {1920.0f, 1080.0f};
+		}
+
+		/** \brief Reset global `UIContext`, `Theme`, and mock backend state. */
+		void reset()
+		{
+			Theme::get().clear();
+
+			auto &ctx = UIContext::get();
+			ctx.focusedNode.reset();
+			ctx.pointerCapture.reset();
+			ctx.topmostConsumer = nullptr;
+			ctx.pressTarget = nullptr;
+			ctx.releaseTarget = nullptr;
+			ctx.buttonConsumed.fill(false);
+			ctx.wheelConsumedThisFrame = false;
+			ctx.pointer = {};
+			ctx.inputEvents = {};
+			ctx.dt = 0.0f;
+			ctx.time = 0.0;
+			ctx.activePortals.clear();
+			ctx.framePortals.clear();
+			ctx.targetPool.clear(renderer, &ctx.renderStats);
+			ctx.renderStats.resetAll();
+
+			Metrics::viewport = {1920.0f, 1080.0f};
+
+			platform.reset();
+			renderer.reset();
+		}
+
+		/** \brief Advance \p root through one complete update/layout/draw frame. */
+		void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
+		{
+			auto &ctx = UIContext::get();
+			ctx.beginFrame(dt);
+			root->updateTree(dt);
+			root->measure(platform.viewport.x, platform.viewport.y);
+			root->arrange({0.0f, 0.0f, platform.viewport.x, platform.viewport.y});
+			root->draw();
+			ctx.endFrame();
+		}
+
+		/** \brief Simulate a complete left-button press and release at \p pos. */
+		void click(std::shared_ptr<Layout> root, Vec2 pos)
+		{
+			platform.pressLeft(pos);
+			frame(root);
+			platform.releaseLeft(pos);
+			frame(root);
+		}
+	};
+
+	/** @} */
 } // namespace ZenitUI::Test

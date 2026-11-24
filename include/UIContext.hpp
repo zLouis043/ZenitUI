@@ -40,38 +40,68 @@ namespace ZenitUI
 
 	/**
 	 * \enum Feature
-	 * \brief Optional renderer capabilities.
+	 * \brief Optional renderer capabilities queried via `IRenderer::supports`.
+	 *
+	 * Backends that only implement core 2D drawing can return `false` for all
+	 * features; ZenitUI will skip shader and off-screen layer passes gracefully.
+	 * See \ref page_custom_backends for details.
 	 */
 	enum class Feature
 	{
-		Effects,
-		NestedTargets,
-		TargetSubRect
+		Effects,       ///< Supports fragment shaders (`pushEffect`, `popEffect`, `setEffect*`).
+		NestedTargets, ///< Supports off-screen render targets (`createTarget`, `pushTarget`, `popTarget`, `drawTarget`).
+		TargetSubRect  ///< Supports sub-rectangle blitting via `drawTarget(t, src, dst, tint)` for pooled targets.
 	};
 
 	/**
 	 * \class IRenderer
 	 * \brief Abstract 2D rendering backend.
+	 *
+	 * All coordinates, rectangles, radii, and font sizes are expressed in
+	 * **logical pixels** (post-DPI). Backends apply `dpiScale` internally when
+	 * configuring the GPU transform or physical scissor rect.
+	 *
+	 * See \ref page_custom_backends for the full porting guide and
+	 * \ref grp_backends for reference implementations (`RaylibRenderer`, `MockRenderer`).
 	 */
 	class IRenderer
 	{
 	public:
 		virtual ~IRenderer() = default;
 
-		// ---- Shape primitives ----
+		/// \name Shape Primitives
+		/// @{
+
+		/** \brief Fill an axis-aligned rectangle `r` with solid color `c`. */
 		virtual void fillRect(Rect r, Color c) = 0;
+
+		/** \brief Fill a rectangle `r` with corner radius `radiusPx` (clamped to half the shorter side). */
 		virtual void fillRoundedRect(Rect r, float radiusPx, Color c) = 0;
+
+		/** \brief Fill a circle centered at `center` with the given logical `radius`. */
 		virtual void fillCircle(Vec2 center, float radius, Color c) = 0;
 
+		/**
+		 * \brief Stroke a rectangular border strictly **inside** `r` (CSS border-box).
+		 *
+		 * Drawing inward keeps the border flush against `fillRect(r, ...)` without
+		 * anti-aliasing seams or layout overflow.
+		 */
 		virtual void strokeRect(Rect r, float thickness, Color c) = 0;
+
+		/**
+		 * \brief Stroke a rounded border strictly **inside** `r` (CSS border-box).
+		 *
+		 * Outer radius is `radiusPx`; inner radius should shrink by `thickness`
+		 * (clamped at 0) so the border stays flush against `fillRoundedRect(r, ...)`.
+		 */
 		virtual void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) = 0;
 
 		/**
-		 * \brief Draw a rectangular ring by filling the four edges.
+		 * \brief Draw a rectangular ring with per-edge widths by filling the four edges.
 		 *
 		 * Default implementation issues up to four `fillRect` calls. Backends
-		 * that can draw true borders (e.g. via a single shader) should
-		 * override.
+		 * that can draw per-edge borders in a single draw call may override.
 		 */
 		virtual void fillBorder(Rect r, EdgeInsets sides, Color c)
 		{
@@ -88,19 +118,34 @@ namespace ZenitUI
 					fillRect({r.x + r.width - sides.right, r.y + sides.top, sides.right, innerH}, c);
 			}
 		}
+		/// @}
 
-		// ---- Textures ----
+		/// \name Textures & Nine-Slice
+		/// @{
+
+		/** \brief Draw sub-rectangle `src` (texture pixels) of texture `t` into logical rect `dst`, multiplied by `tint`. */
 		virtual void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) = 0;
-		virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) = 0;
 
-		// ---- Text ----
+		/** \brief Draw texture `t` stretched into `dst` using the 9-slice insets `s` (fixed corners, stretched edges/center). */
+		virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) = 0;
+		/// @}
+
+		/// \name Text Rendering & Metrics
+		/// @{
+
+		/**
+		 * \brief Draw UTF-8 text `s` at logical top-left `pos` using font `f`, font size `size`, and letter spacing `spacing`.
+		 * \note If `f.id == 0` or unknown, backends should fall back to a default built-in font.
+		 */
 		virtual void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) = 0;
+
+		/** \brief Measure the logical `{width, height}` of UTF-8 text `s` rendered with `f`, `size`, and `spacing`. */
 		virtual Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) = 0;
 
 		/**
 		 * \brief Measure the advance width and height of a single Unicode codepoint.
 		 *
-		 * Default implementation encodes \p codepoint as UTF-8 and delegates to
+		 * Default implementation encodes `codepoint` as UTF-8 and delegates to
 		 * `measureText`. Backends with direct glyph tables (e.g. `RaylibRenderer`)
 		 * can override for O(1) lookup without string allocation.
 		 */
@@ -138,83 +183,193 @@ namespace ZenitUI
 				return {0.0f, size};
 			return measureText(f, std::string_view(buf, len), size, spacing);
 		}
+		/// @}
 
-		// ---- State stacks ----
+		/// \name State Stacks
+		/// @{
+
+		/** \brief Push a 2D pivot-based transform onto the transform stack. */
 		virtual void pushTransform(const Transform2D &t) = 0;
+
+		/** \brief Pop the most recently pushed transform from the stack. */
 		virtual void popTransform() = 0;
+
+		/** \brief Bind shader effect `e` and push it onto the effect stack (used when `Feature::Effects` is supported). */
 		virtual void pushEffect(EffectHandle e) = 0;
+
+		/** \brief Pop the active shader effect and restore the previous one (if any). */
 		virtual void popEffect() = 0;
+
+		/**
+		 * \brief Push a local-space clip rectangle `r`, intersecting it with the current clip.
+		 *
+		 * Implementations must transform `r` through the active transform stack
+		 * before intersecting so scissoring matches rotated/scaled subtrees.
+		 */
 		virtual void pushClip(Rect r) = 0;
+
+		/** \brief Pop the current clip rectangle and restore the previous scissor region. */
 		virtual void popClip() = 0;
 
-		/** \brief Current clip rectangle in logical pixels. */
+		/** \brief Return the active screen-space clip rectangle in logical pixels (used for culling). */
 		virtual Rect getClipRect() const = 0;
+		/// @}
 
-		// ---- Render targets ----
+		/// \name Off-Screen Render Targets
+		/// @{
+
+		/** \brief Allocate an off-screen RGBA render target of `w x h` pixels (used when `Feature::NestedTargets` is supported). */
 		virtual TargetHandle createTarget(int w, int h) = 0;
+
+		/** \brief Release a render target previously allocated by `createTarget`. */
 		virtual void destroyTarget(TargetHandle t) = 0;
+
+		/**
+		 * \brief Redirect subsequent draw calls to target `t` and clear it to transparent black.
+		 *
+		 * Must save and reset the current clip and transform stacks so rendering
+		 * inside `t` starts cleanly, then restore them on `popTarget`.
+		 */
 		virtual void pushTarget(TargetHandle t) = 0;
+
+		/** \brief Finish drawing into the active target and restore the previous target (or main framebuffer) and stacks. */
 		virtual void popTarget() = 0;
+
+		/** \brief Composite the entire render target `t` into logical destination rect `dst`, multiplied by `tint`. */
 		virtual void drawTarget(TargetHandle t, Rect dst, Color tint) = 0;
+
+		/**
+		 * \brief Composite sub-rectangle `src` (target pixels) of `t` into logical rect `dst`.
+		 *
+		 * Used by `TargetPool` when `supports(Feature::TargetSubRect)` is `true`.
+		 * Default falls back to full-target `drawTarget(t, dst, tint)`.
+		 */
 		virtual void drawTarget(TargetHandle t, Rect /*src*/, Rect dst, Color tint)
 		{
 			drawTarget(t, dst, tint);
 		}
 
-		// ---- Effect uniform setters ----
-		virtual void setEffectFloat(EffectHandle e, const char *name, float value) = 0;
-		virtual void setEffectVec2(EffectHandle e, const char *name, Vec2 value) = 0;
-		virtual void setEffectVec3(EffectHandle e, const char *name, Vec3 value) = 0;
-		virtual void setEffectVec4f(EffectHandle e, const char *name, Vec4 value) = 0;
-		virtual void setEffectVec4(EffectHandle e, const char *name, Color value) = 0;
-
-		/** \brief Clear a render target to \p c. */
+		/** \brief Clear render target `t` to solid color `c`. */
 		virtual void clearTarget(TargetHandle t, Color c) = 0;
 
-		/** \brief `true` while a `pushTarget` is active without a matching `popTarget`. */
+		/** \brief Return `true` while a `pushTarget` is active without a matching `popTarget`. */
 		virtual bool inTarget() const = 0;
+		/// @}
 
-		/** \brief Query whether the backend supports a `Feature`. */
+		/// \name Shader Uniforms
+		/// @{
+
+		/** \brief Set a `float` uniform named `name` on effect `e`. */
+		virtual void setEffectFloat(EffectHandle e, const char *name, float value) = 0;
+
+		/** \brief Set a `vec2` uniform named `name` on effect `e`. */
+		virtual void setEffectVec2(EffectHandle e, const char *name, Vec2 value) = 0;
+
+		/** \brief Set a `vec3` uniform named `name` on effect `e`. */
+		virtual void setEffectVec3(EffectHandle e, const char *name, Vec3 value) = 0;
+
+		/** \brief Set a `vec4` uniform named `name` on effect `e`. */
+		virtual void setEffectVec4f(EffectHandle e, const char *name, Vec4 value) = 0;
+
+		/** \brief Set a normalized RGBA `vec4` uniform (0..1 per channel) named `name` on effect `e`. */
+		virtual void setEffectVec4(EffectHandle e, const char *name, Color value) = 0;
+		/// @}
+
+		/// \name Capabilities & Frame Lifecycle
+		/// @{
+
+		/** \brief Query whether this backend implements an optional `Feature`. */
 		virtual bool supports(Feature f) const = 0;
 
-		// ---- Frame lifecycle ----
+		/** \brief Called at the start of `Layout::renderFrame` before any draw calls (e.g. to push a DPI scale matrix). */
 		virtual void beginFrame() = 0;
+
+		/** \brief Called at the end of `Layout::renderFrame` after all draw calls and portals have rendered. */
 		virtual void endFrame() = 0;
+
+		/** \brief Notify the renderer of the active logical-to-physical DPI scale factor for the current frame. */
 		virtual void setDpiScale(float scale) = 0;
+		/// @}
 	};
 
 	/**
 	 * \class IPlatform
-	 * \brief Abstract windowing and input backend.
+	 * \brief Abstract windowing, timing, input, and clipboard backend.
+	 *
+	 * Polled once per frame by `UIContext::beginFrame()`. See
+	 * \ref page_custom_backends for invariants and \ref grp_backends for
+	 * reference implementations (`RaylibPlatform`, `MockPlatform`).
 	 */
 	class IPlatform
 	{
 	public:
 		virtual ~IPlatform() = default;
+
+		/** \brief Return the current window/surface dimensions in **logical pixels**. */
 		virtual Vec2 viewportSize() = 0;
+
+		/**
+		 * \brief Return the current pointer position (logical pixels), scroll wheel delta, and button states.
+		 *
+		 * Edge-triggered fields (`ButtonState::pressed`, `ButtonState::released`,
+		 * `PointerState::wheelY`) must fire for **one frame only**; `ButtonState::down`
+		 * stays `true` while held.
+		 */
 		virtual PointerState pointer() = 0;
+
+		/** \brief Return a monotonic clock timestamp in seconds. */
 		virtual double time() = 0;
+
+		/** \brief Return the current state of modifier keys (`shift`, `ctrl`, `alt`, `super`). */
 		virtual ModifierState modifiers() = 0;
+
+		/**
+		 * \brief Drain and return keyboard events queued since the previous frame.
+		 *
+		 * `InputEvents::chars` and `InputEvents::keys` are edge-triggered (one frame);
+		 * `InputEvents::held` lists keys currently held down for repeat handling.
+		 */
 		virtual InputEvents pollInputEvents() = 0;
+
+		/** \brief Return the physical-to-logical DPI scale factor (e.g. `1.0f` on standard displays, `2.0f` on Retina). */
 		virtual float dpiScale() = 0;
+
+		/** \brief Return screen safe-area insets in logical pixels (notches, rounded corners, system bars). */
 		virtual EdgeInsets safeArea() = 0;
+
+		/** \brief Copy UTF-8 `text` to the operating system clipboard. */
 		virtual void setClipboardText(const std::string &text) = 0;
+
+		/** \brief Read UTF-8 text from the operating system clipboard (empty string if unavailable). */
 		virtual std::string getClipboardText() = 0;
 	};
 
 	/**
 	 * \class IAssetProvider
-	 * \brief Abstract font / texture / effect lookup.
+	 * \brief Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.
+	 *
+	 * Lookup methods (`getFont`, `getTexture`, `getEffect`) are called frequently
+	 * during layout and draw; implementations should avoid heap allocations
+	 * (e.g. via transparent `std::string_view` hashing). Return a default-constructed
+	 * invalid handle (`id == 0`) when a requested asset is not registered.
+	 *
+	 * See \ref page_custom_backends and \ref grp_backends (`RaylibAssetProvider`, `MockAssetProvider`).
 	 */
 	class IAssetProvider
 	{
 	public:
 		virtual ~IAssetProvider() = default;
+
+		/** \brief Look up a loaded font by logical `name`; returns `{0}` if not found. */
 		virtual FontHandle getFont(std::string_view name) = 0;
+
+		/** \brief Look up a loaded 2D texture by logical `name`; returns `{0}` if not found. */
 		virtual TextureHandle getTexture(std::string_view name) = 0;
+
+		/** \brief Look up a loaded shader effect by logical `name`; returns `{0}` if not found. */
 		virtual EffectHandle getEffect(std::string_view name) = 0;
 
-		/** \brief Try every name in \p stack; return the first valid `FontHandle`. */
+		/** \brief Walk fallback font names in `stack` and return the first valid `FontHandle`. */
 		virtual FontHandle getFont(const FontStack &stack)
 		{
 			for (const auto &name : stack)
@@ -226,18 +381,26 @@ namespace ZenitUI
 			return {};
 		}
 
-		/** \brief Convenience overload for C strings. */
+		/** \brief Convenience overload forwarding C strings to `getFont(std::string_view)`. */
 		FontHandle getFont(const char *name)
 		{
 			return getFont(std::string_view(name));
 		}
 
+		/**
+		 * \brief Optional runtime hook to load a font from disk under the given logical name.
+		 * \return Registered `FontHandle`, or `{0}` if unsupported or loading failed.
+		 */
 		virtual FontHandle loadFont(std::string_view /*name*/,
 									std::string_view /*path*/)
 		{
 			return {};
 		}
 
+		/**
+		 * \brief Optional runtime hook to load a font from an in-memory TTF/OTF buffer.
+		 * \return Registered `FontHandle`, or `{0}` if unsupported or loading failed.
+		 */
 		virtual FontHandle loadFontFromMemory(std::string_view /*name*/,
 											  const void * /*data*/,
 											  size_t /*size*/)
@@ -245,6 +408,7 @@ namespace ZenitUI
 			return {};
 		}
 
+		/** \brief Optional runtime hook to unload and unregister a font by logical name. */
 		virtual void unloadFont(std::string_view /*name*/) {}
 	};
 
