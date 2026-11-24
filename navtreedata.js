@@ -58,7 +58,7 @@ var NAVTREEINDEX =
 "classZenitUI_1_1Layout.html#a401f00952548d2945f13edd53630a357",
 "classZenitUI_1_1Test_1_1MockPlatform.html",
 "functions_func_v.html",
-"structZenitUI_1_1NodeInternal.html#ab48b4f41110153669a31dd84369ad286"
+"structZenitUI_1_1NodeInternal.html#a216495f5cde210ceb0e6d9f53d28ff3c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

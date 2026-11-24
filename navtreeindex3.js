@@ -173,6 +173,10 @@ var NAVTREEINDEX3 =
 "namespacemembers.html":[2,1,0],
 "namespacemembers_func.html":[2,1,1],
 "namespaces.html":[2,0],
+"page_available_backends.html":[0,5,4],
+"page_available_backends.html#sec_backend_mock":[0,5,4,0],
+"page_available_backends.html#sec_backend_raylib":[0,5,4,1],
+"page_available_backends.html#sec_backend_sdl3":[0,5,4,2],
 "page_custom_backends.html":[0,5],
 "page_custom_backends.html#sec_backend_invariants":[0,5,2],
 "page_custom_backends.html#sec_backend_minimum":[0,5,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "structZenitUI_1_1NodeConfig.html#aaac3414f82138fe9ce5661e90d0a5afb":[1,0,22,1],
 "structZenitUI_1_1NodeConfig.html#adfc21bc48c1b1d20a6520c02c18e2453":[1,0,22,6],
 "structZenitUI_1_1NodeConfig.html#aff2e94cde9a727442db367a3e29259dd":[1,0,22,5],
-"structZenitUI_1_1NodeInternal.html":[1,0,23],
-"structZenitUI_1_1NodeInternal.html#a216495f5cde210ceb0e6d9f53d28ff3c":[1,0,23,7],
-"structZenitUI_1_1NodeInternal.html#a2affff2ddbb6b6db1ee65a402ca074f8":[1,0,23,4],
-"structZenitUI_1_1NodeInternal.html#a2e8358b96bcae8073ec6ce8703dddd03":[1,0,23,0],
-"structZenitUI_1_1NodeInternal.html#a962bbf247b43ca614557c21ede601ea4":[1,0,23,2]
+"structZenitUI_1_1NodeInternal.html":[1,0,23]
 };
