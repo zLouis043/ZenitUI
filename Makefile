@@ -9,6 +9,7 @@
 BUILD_DIR  ?= build
 BUILD_TYPE ?= Release
 CMAKE      ?= cmake
+BACKEND    ?= raylib
 
 ifeq ($(OS),Windows_NT)
   EXE   := .exe
@@ -92,11 +93,11 @@ test-verbose: tests
 	@ctest --test-dir $(BUILD_DIR) $(CTEST_FLAGS) -j$(CTEST_JOBS)
 
 examples:
-	$(call configure,-DZENITUI_BUILD_EXAMPLES=ON -DZENITUI_BUILD_TESTS=OFF)
+	$(call configure,-DZENITUI_BUILD_EXAMPLES=ON -DZENITUI_BUILD_TESTS=OFF -DZENITUI_DEMO_BACKEND=$(BACKEND))
 	@$(BUILD_CMD)
 
 run-%:
-	$(call configure,-DZENITUI_BUILD_EXAMPLES=ON -DZENITUI_BUILD_TESTS=OFF)
+	$(call configure,-DZENITUI_BUILD_EXAMPLES=ON -DZENITUI_BUILD_TESTS=OFF -DZENITUI_DEMO_BACKEND=$(BACKEND))
 	@$(BUILD_CMD) --target $*
 	@./$(BUILD_DIR)/examples/bin/$*/main$(EXE)
 
@@ -122,6 +123,7 @@ dist:
 
 docs:
 	cmake -P docs/gen_examples.cmake
+	cmake -P docs/gen_backends.cmake
 	doxygen Doxyfile
 
 .PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist docs

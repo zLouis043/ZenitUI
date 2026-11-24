@@ -81,15 +81,24 @@ if(ZENITUI_BUILD_TESTS)
     )
 endif()
 
-if(ZENITUI_BUILD_EXAMPLES AND ZENITUI_BACKENDS STREQUAL "")
-    set(ZENITUI_BACKENDS "raylib" CACHE STRING "" FORCE)
+set(ZENITUI_DEMO_BACKEND "raylib" CACHE STRING
+    "Backend used by 00_demo (raylib, sdl3, ...).")
+
+if(ZENITUI_BUILD_EXAMPLES)
+    foreach(_needed IN ITEMS raylib "${ZENITUI_DEMO_BACKEND}")
+        if(NOT _needed IN_LIST ZENITUI_BACKENDS)
+            list(APPEND ZENITUI_BACKENDS "${_needed}")
+        endif()
+    endforeach()
+    list(REMOVE_DUPLICATES ZENITUI_BACKENDS)
+    set(ZENITUI_BACKENDS "${ZENITUI_BACKENDS}" CACHE STRING "" FORCE)
 endif()
 
 foreach(_backend IN LISTS ZENITUI_BACKENDS)
     if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/backends/${_backend}")
         message(FATAL_ERROR
             "Unknown backend '${_backend}'. "
-            "Available: raylib, mock.")
+            "Available: raylib, sdl3, mock.")
     endif()
     add_subdirectory("backends/${_backend}")
 endforeach()
