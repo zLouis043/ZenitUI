@@ -137,7 +137,6 @@ TEST(VirtualView, auto_height_measure_variable)
     root->addChild(v);
     env.frame(root);
 
-    // 50 righe da 24 + 50 da 48 = 1200 + 2400 = 3600
     CHECK_NEAR(v->getMaxScrollY(), 3600.0f - 240.0f, 1.0f);
 }
 
@@ -153,8 +152,6 @@ TEST(VirtualView, auto_first_visible_at_top)
     env.frame(root);
 
     CHECK(v->getFirstVisibleItem() == 0);
-    // Con 24/48 alternati, cumulative = [0, 24, 72, 96, 144, 168, 216, 240, ...]
-    // itemAtY(239.999) = 6 (item 7 parte a 240)
     CHECK(v->getLastVisibleItem() == 6);
 }
 
@@ -170,7 +167,6 @@ TEST(VirtualView, materialized_count_bounded)
     root->addChild(v);
     env.frame(root);
 
-    // 10 visibili (0..9) + 0 buffer sopra + 2 buffer sotto = 12
     CHECK(v->children.size() == 12);
 }
 

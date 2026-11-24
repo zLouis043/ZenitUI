@@ -188,9 +188,6 @@ TEST(Text_wrap, preserves_explicit_newlines)
     Env env2;
     auto withSpaces = makeWrappedText(env2, "foo bar baz", 400.0f, true);
 
-    // Three logical lines vs one.
-    // Without the '\n' fix, both render as a single line and the
-    // heights are equal (within a pixel).
     CHECK(withNewlines.text->getRect().height >
           withSpaces.text->getRect().height * 1.5f);
 }
@@ -203,8 +200,6 @@ TEST(Text_wrap, breaks_long_word_without_spaces)
     Env env2;
     auto shortWord = makeWrappedText(env2, "hello", 80.0f, true);
 
-    // Without word-break the long word stays on one line (very tall, one
-    // line height). With word-break it spans multiple lines.
     CHECK(longWord.text->getRect().height >
           shortWord.text->getRect().height * 2.0f);
 }
@@ -217,8 +212,6 @@ TEST(Text_wrap, consecutive_newlines_preserve_empty_lines)
     Env env2;
     auto flat = makeWrappedText(env2, "ab", 400.0f, true);
 
-    // "a\n\nb" = 3 line heights (the middle line is empty but still
-    // occupies vertical space); "ab" = 1 line height.
     CHECK(withEmpty.text->getRect().height >
           flat.text->getRect().height * 2.0f);
 }
@@ -233,9 +226,7 @@ TEST(Text_wrap, ellipsis_truncates_overflowing_single_line)
     env1.frame(s.root);
     env1.frame(s.root);
 
-    // With ellipsis the Text must not overflow its parent.
     CHECK(s.text->getRect().width <= 80.0f + 0.5f);
-    // And it must be a single line tall.
     CHECK(s.text->getRect().height <= 40.0f);
 }
 
@@ -254,9 +245,6 @@ TEST(Text_wrap, ellipsis_does_not_change_layout_box)
     env2.frame(b.root);
     env2.frame(b.root);
 
-    // Ellipsis is a render-time transformation only; it must not change
-    // the layout box. Both nodes should size to the natural text width,
-    // which for "short" is well under 400.
     CHECK_NEAR(a.text->getRect().width, b.text->getRect().width, 1.0f);
     CHECK(a.text->getRect().width < 400.0f);
 }
@@ -271,8 +259,6 @@ TEST(Text_wrap, white_space_nowrap_disables_wrapping)
     for (int i = 0; i < 20; ++i)
         env1.frame(s.root);
 
-    // Without nowrap the text would wrap to multiple lines and be tall.
-    // With nowrap it stays a single line.
     CHECK(s.text->getRect().height <= 40.0f);
 }
 
@@ -284,7 +270,6 @@ TEST(Text_wrap, newlines_work_without_wrap)
     Env env2;
     auto singleLine = makeWrappedText(env2, "foobarbaz", 400.0f, false);
 
-    // Three logical lines vs one, even without wrapping.
     CHECK(withNewlines.text->getRect().height >
           singleLine.text->getRect().height * 1.5f);
 }
@@ -321,9 +306,5 @@ TEST(Text_wrap, ellipsis_not_applied_to_multiline_text)
     for (int i = 0; i < 5; ++i)
         env.frame(s.root);
 
-    // Two logical lines: text-overflow is a single-line feature, so
-    // both lines must be laid out without truncation. If ellipsis were
-    // wrongly applied, the second line would be empty or the height
-    // would collapse to one line.
     CHECK(s.text->getRect().height > 20.0f);
 }

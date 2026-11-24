@@ -205,7 +205,7 @@ TEST(Anim_imperative, drives_current_style_without_transition)
     CHECK_NEAR(node->getStyle().opacity, 0.0f, 1e-3);
 
     node->playAnimation("fade");
-    for (int i = 0; i < 6; ++i)   // ~0.1s a 60fps, metà di 0.2s
+    for (int i = 0; i < 6; ++i)
         env.frame(root);
 
     float mid = node->getStyle().opacity;

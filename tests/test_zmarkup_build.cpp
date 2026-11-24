@@ -993,12 +993,10 @@ TEST(Widget_layout, setVisible_false_excludes_from_layout_and_gap)
     root->addChild(c);
 
     env.frame(root);
-    // a: y=0..40, b: y=50..90, c: y=100..140
     CHECK_NEAR(c->getRect().y, 100.0f, 0.5f);
 
     b->setVisible(false);
     env.frame(root);
-    // Senza b e senza il suo gap: a: y=0..40, c: y=50..90
     CHECK_NEAR(b->getRect().width, 0.0f, 0.1f);
     CHECK_NEAR(b->getRect().height, 0.0f, 0.1f);
     CHECK_NEAR(c->getRect().y, 50.0f, 0.5f);
@@ -1119,18 +1117,15 @@ TEST(ZMarkupBuild, if_runtime_toggle_excludes_layout_and_preserves_state)
     root->size(Percent(100), Percent(100));
     root->addChild(ui.root());
 
-    // Default initial="false": extra_in nascosto, bottom subito dopo top (+10px gap)
     env.frame(root);
     CHECK(!ui.ref<TextInput>("extra_in")->isVisible());
     CHECK_NEAR(ui.ref("bottom")->getRect().y, 50.0f, 0.5f);
 
-    // Mostra a runtime
     ui.setCondition("extra", true);
     env.frame(root);
     CHECK(ui.ref<TextInput>("extra_in")->isVisible());
     CHECK_NEAR(ui.ref("bottom")->getRect().y, 100.0f, 0.5f);
 
-    // Modifica lo stato del widget, nascondi e riapri: lo stato resta intatto
     ui.ref<TextInput>("extra_in")->setText("edited");
     ui.setCondition("extra", false);
     env.frame(root);
@@ -1159,22 +1154,18 @@ TEST(ZMarkupBuild, if_nested_preserves_inner_own_state)
     CHECK(ui.ref("outer_txt")->isVisible());
     CHECK(ui.ref("inner_txt")->isVisible());
 
-    // Spegnere outer nasconde anche inner senza cancellare ownState di inner
     ui.setCondition("outer", false);
     CHECK(!ui.ref("outer_txt")->isVisible());
     CHECK(!ui.ref("inner_txt")->isVisible());
 
-    // Riaccendere outer ripristina inner
     ui.setCondition("outer", true);
     CHECK(ui.ref("outer_txt")->isVisible());
     CHECK(ui.ref("inner_txt")->isVisible());
 
-    // Spegnere inner mentre outer e acceso lascia outer visibile
     ui.setCondition("inner", false);
     CHECK(ui.ref("outer_txt")->isVisible());
     CHECK(!ui.ref("inner_txt")->isVisible());
 
-    // Ciclo outer off -> on: inner deve restare spento
     ui.setCondition("outer", false);
     ui.setCondition("outer", true);
     CHECK(ui.ref("outer_txt")->isVisible());
@@ -1204,7 +1195,6 @@ TEST(ZMarkupBuild, if_bindCondition_reacts_to_bindable_and_unsubscribes)
         CHECK(!ui.ref("lbl")->isVisible());
     }
 
-    // Dopo la distruzione di ui, la subscription deve essere disconnessa senza crash
     showFlag.set(true);
     CHECK(showFlag.get() == true);
 }
@@ -1229,7 +1219,6 @@ TEST(ZMarkupBuild, each_syncEach_preserves_siblings_and_fallback)
     )");
 
     auto row = ui.ref("row");
-    // Ordine iniziale: Head, Empty (fallback), EachAnchor (nascosto), + Add
     CHECK(row->children.size() == 4);
     CHECK(row->children[0] == ui.ref("head"));
     CHECK(std::dynamic_pointer_cast<Text>(row->children[1])->getText() == "Empty");
@@ -1241,13 +1230,11 @@ TEST(ZMarkupBuild, each_syncEach_preserves_siblings_and_fallback)
         chip.setTextRef("lbl", name);
     });
 
-    // Ordine: Head, Chip 0, Chip 1, EachAnchor, + Add
     CHECK(row->children.size() == 5);
     CHECK(row->children[0] == ui.ref("head"));
     CHECK(row->children[4] == ui.ref("tail"));
     CHECK(!row->children[3]->isVisible());
 
-    // Svuotando la lista torna il fallback prima del bottone + Add
     items.clear();
     ui.syncEach("chips", items, [](ZMarkup::UINode &, const std::string &) {});
     CHECK(row->children.size() == 4);
@@ -1273,7 +1260,6 @@ TEST(ZMarkupBuild, each_bindEach_reacts_to_bindable_vector)
     });
 
     auto list = ui.ref("list");
-    // 2 item + 1 anchor
     CHECK(list->children.size() == 3);
     CHECK(std::dynamic_pointer_cast<Text>(list->children[0])->getText() == "A");
     CHECK(std::dynamic_pointer_cast<Text>(list->children[1])->getText() == "B");
@@ -1304,15 +1290,12 @@ TEST(ZMarkupBuild, if_wrapping_each_propagates_visibility_without_exposing_ancho
     root->size(Percent(100), Percent(100));
     root->addChild(ui.root());
 
-    // Popola mentre sec e ancora false: devono restare nascosti
     std::vector<int> data = {1, 2};
     ui.syncEach("rows", data, [](ZMarkup::UINode &) {});
 
     env.frame(root);
     CHECK_NEAR(ui.ref("after")->getRect().y, 0.0f, 0.5f);
 
-    // Accendendo sec: hdr (0..20), row0 (30..50), row1 (60..80), after (90..110)
-    // L'anchor resta invisibile e non aggiunge gap!
     ui.setCondition("sec", true);
     env.frame(root);
     CHECK_NEAR(ui.ref("after")->getRect().y, 90.0f, 0.5f);
@@ -1362,7 +1345,6 @@ TEST(ZMarkupBuild, each_syncEachKeyed_reuses_nodes_and_preserves_state_and_order
     Layout *ptr1 = list->children[0].get();
     Layout *ptr2 = list->children[1].get();
 
-    // Modifica stato utente su item 2 (testo + focus)
     auto in2 = std::dynamic_pointer_cast<TextInput>(list->children[1]->children[0]);
     CHECK(in2 != nullptr);
     in2->setText("user_typed");
@@ -1370,20 +1352,18 @@ TEST(ZMarkupBuild, each_syncEachKeyed_reuses_nodes_and_preserves_state_and_order
     UIContext::get().requestFocus(in2);
     CHECK(UIContext::get().hasFocus(in2.get()));
 
-    // Riordina e sostituisce 3 con 4: [2, 4, 1]
     creates = 0;
     updates = 0;
     std::vector<RowData> v2 = {{2, "Two-Updated"}, {4, "Four"}, {1, "One"}};
     ui.syncEachKeyed("rows", v2, keyFn, onCreate, onUpdate);
 
-    CHECK(creates == 1); // solo key 4 creato
+    CHECK(creates == 1);
     CHECK(updates == 3);
-    CHECK(list->children.size() == 5); // 3 items + anchor + footer
+    CHECK(list->children.size() == 5);
     CHECK(list->children[0].get() == ptr2);
     CHECK(list->children[2].get() == ptr1);
     CHECK(list->children[4] == ui.ref("footer"));
 
-    // Lo stato di item 2 (testo digitato + focus) e sopravvissuto al riordino
     CHECK(in2->getText() == "user_typed");
     CHECK(UIContext::get().hasFocus(in2.get()));
     auto lbl2 = std::dynamic_pointer_cast<Text>(list->children[0]->children[1]);
@@ -1449,26 +1429,22 @@ TEST(ZMarkupBuild, bindCondition_survives_local_uinode_and_releases_on_detach)
         weakCtx = ui.context();
         weakLbl = ui.ref("lbl");
         container->addChild(ui.root());
-    } // ui esce di scope qui
+    }
 
     CHECK(!weakRoot.expired());
     CHECK(!weakCtx.expired());
     CHECK(!weakLbl.lock()->isVisible());
 
-    // Il binding resta attivo finché il nodo è montato nel container
     flag.set(true);
     CHECK(weakLbl.lock()->isVisible());
 
     flag.set(false);
     CHECK(!weakLbl.lock()->isVisible());
-
-    // Staccando il nodo dal container, root e BuildContext devono distruggersi (zero cicli)
     container->removeAllChildren();
     CHECK(weakRoot.expired());
     CHECK(weakCtx.expired());
     CHECK(weakLbl.expired());
 
-    // Cambiare il Bindable dopo il detach deve essere un no-op sicuro
     flag.set(true);
     CHECK(flag.get() == true);
 }
@@ -1498,16 +1474,16 @@ TEST(ZMarkupBuild, bindEach_survives_local_uinode_and_releases_on_detach)
     }
 
     CHECK(!weakCtx.expired());
-    CHECK(weakRoot.lock()->children.size() == 2); // 1 item + anchor
+    CHECK(weakRoot.lock()->children.size() == 2);
 
     model.set({"A", "B", "C"});
-    CHECK(weakRoot.lock()->children.size() == 4); // 3 items + anchor
+    CHECK(weakRoot.lock()->children.size() == 4);
 
     container->removeAllChildren();
     CHECK(weakRoot.expired());
     CHECK(weakCtx.expired());
 
-    model.set({"Z"}); // no-op sicuro
+    model.set({"Z"});
     CHECK(model.get().size() == 1);
 }
 
@@ -1542,7 +1518,7 @@ TEST(ZMarkupBuild, weak_uinode_drives_imperative_updates_without_cycle)
         });
 
         container->addChild(ui.root());
-    } // ui esce di scope qui
+    }
 
     CHECK(!weakUi.expired());
     auto locked1 = weakUi.lock();
@@ -1554,7 +1530,6 @@ TEST(ZMarkupBuild, weak_uinode_drives_imperative_updates_without_cycle)
     CHECK(locked1->ref<Text>("msg")->getText() == "Shown by click");
     locked1.reset();
 
-    // Detach: nessun ciclo di shared_ptr nonostante la callback del bottone catturi weakUi
     container->removeAllChildren();
     CHECK(weakUi.expired());
     CHECK(!weakUi.lock().has_value());
@@ -1587,7 +1562,6 @@ TEST(ZMarkupBuild, syncEachKeyed_releases_removed_items_without_leaks)
     CHECK(!weakItem1.expired());
     CHECK(!weakItem2.expired());
 
-    // Rimuove id 1, mantiene id 2
     std::vector<Row> v2 = {{2, "B2"}};
     ui.syncEachKeyed(
         "rows", v2,

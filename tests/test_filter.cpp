@@ -259,7 +259,6 @@ TEST(Filter_perf, static_node_zero_churn_after_warmup)
 
 TEST(Filter_perf, scale_rotation_clip_sweeps_bounded_by_buckets)
 {
-    // 1) Scale sweep 1.0 -> 1.15 su 200x200 con blur + drop-shadow (prima: 45)
     {
         Env env;
         env.renderer.supportsEffects = true;
@@ -286,7 +285,6 @@ TEST(Filter_perf, scale_rotation_clip_sweeps_bounded_by_buckets)
         CHECK(env.renderer.createTargetCount <= 3);
     }
 
-    // 2) Rotation sweep +3 deg/frame su 200x200 con blur (prima: 165)
     {
         Env env;
         env.renderer.supportsEffects = true;
@@ -311,7 +309,6 @@ TEST(Filter_perf, scale_rotation_clip_sweeps_bounded_by_buckets)
         CHECK(env.renderer.createTargetCount <= 6);
     }
 
-    // 3) Clip sweep oltre il bordo viewport su 200x200 con blur (prima: 177)
     {
         Env env;
         env.renderer.supportsEffects = true;
@@ -362,7 +359,6 @@ TEST(Filter_perf, pool_bounds_50_cards_and_trims_after_grace)
     CHECK(UIContext::get().targetPool.liveCount() <= 3);
     CHECK(UIContext::get().renderStats.liveTargets == (uint32_t)env.renderer.liveTargets);
 
-    // Rimuove le card e lascia passare il grace period (120 frame)
     root->removeAllChildren();
     for (int i = 0; i < 121; ++i)
         env.frame(root);
@@ -484,7 +480,6 @@ TEST(Filter_perf, separable_downscale_allocates_half_res_intermediate)
 
     env.frame(root);
 
-    // Main target = 256x256 (bucket di 200), intermediate = 128x128 (bucket di 100)
     CHECK(env.renderer.createTargetCount == 2);
     CHECK(env.renderer.lastCreatedTargetW == 128);
     CHECK(env.renderer.lastCreatedTargetH == 128);

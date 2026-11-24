@@ -348,7 +348,6 @@ TEST(Layout_arrange, border_subtracted_from_content_box)
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // inner = 200 - 5 - 5 - 10 - 10 = 170, offset 5 + 10 = 15
     CHECK_NEAR(child->getRect().x, 15.0f, 1e-4);
     CHECK_NEAR(child->getRect().y, 15.0f, 1e-4);
 }
@@ -367,7 +366,6 @@ TEST(Layout_measure, border_added_to_auto_width)
 
     Vec2 sz = parent->measure(1000, 1000);
 
-    // content = 100, padding 10, border 20 → 130
     CHECK_NEAR(sz.x, 130.0f, 1e-4);
     CHECK_NEAR(sz.y, 130.0f, 1e-4);
 }
@@ -404,7 +402,6 @@ TEST(Layout_align, align_items_center_on_vstack)
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // Child 50 wide, parent 200: centered at x = 75.
     CHECK_NEAR(child->getRect().x, 75.0f, 0.5f);
 }
 
@@ -413,18 +410,16 @@ TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
     parent->size(Px(200), Px(200));
-    parent->getInlineBase().alignItems = Align::Start;   // explicit
+    parent->getInlineBase().alignItems = Align::Start;
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
     child->size(Px(50), Px(50));
-    child->getInlineBase().itemsH = Align::Center;   // wrong parent type
+    child->getInlineBase().itemsH = Align::Center;
     parent->addChild(child);
 
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // items-h on child of HStack: no derivation, no-op. With explicit
-    // Start, child stays at its natural size.
     CHECK_NEAR(child->getRect().y, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().height, 50.0f, 0.5f);
 }
@@ -436,7 +431,6 @@ TEST(Layout_align, default_is_stretch_on_vstack)
     parent->size(Px(200), Px(200));
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
-    // No explicit width: expect stretch to 200.
     child->size(Auto(), Px(50));
     parent->addChild(child);
 
@@ -454,7 +448,6 @@ TEST(Layout_align, default_is_stretch_on_hstack)
     parent->size(Px(200), Px(200));
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
-    // No explicit height: expect stretch to 200.
     child->size(Px(50), Auto());
     parent->addChild(child);
 
@@ -468,9 +461,6 @@ TEST(Layout_align, default_is_stretch_on_hstack)
 TEST(Layout_align, default_is_start_on_stack)
 {
     freshTheme();
-    // Stack children do NOT stretch: Stack is a free-positioning
-    // container, not a flex container. CSS analogy: a position: relative
-    // div does not stretch its children.
     auto parent = std::make_shared<Layout>(LayoutType::Stack);
     parent->size(Px(200), Px(200));
 
@@ -513,7 +503,7 @@ TEST(Layout_border, per_side_borders)
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().borderWidth =
-        Spacing(Px(5), Px(10), Px(15), Px(20));  // top, right, bottom, left
+        Spacing(Px(5), Px(10), Px(15), Px(20)); 
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
     child->size(Px(50), Px(50));
@@ -522,7 +512,6 @@ TEST(Layout_border, per_side_borders)
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // inner = {left=20, top=5, w=170, h=180}, child at (20, 5)
     CHECK_NEAR(child->getRect().x, 20.0f, 0.5f);
     CHECK_NEAR(child->getRect().y, 5.0f, 0.5f);
 }
@@ -541,16 +530,12 @@ TEST(Layout_border, measure_with_per_side_borders)
 
     Vec2 sz = parent->measure(1000, 1000);
 
-    // w = 100 + (left 20 + right 10) = 130
-    // h = 100 + (top 5 + bottom 15)   = 120
     CHECK_NEAR(sz.x, 130.0f, 1e-4);
     CHECK_NEAR(sz.y, 120.0f, 1e-4);
 }
 
 TEST(Layout_border, uniform_border_renders_rounded)
 {
-    // Smoke test: no crash, no assert. Corner rounding is verified
-    // visually in examples/07_effects.
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(100), Px(100));
@@ -579,9 +564,6 @@ TEST(Layout_flex, min_height_auto_prevents_collapse)
     parent->measure(200, 100);
     parent->arrange({0, 0, 200, 100});
 
-    // Total children = 250, parent = 100, freeSpace = -150.
-    // Both items have shrink: 1, but overflow: visible floors each at
-    // its content size, so neither collapses to 0.
     CHECK(title->getRect().height >= 50.0f - 0.5f);
     CHECK(content->getRect().height >= 200.0f - 0.5f);
 }
@@ -604,8 +586,6 @@ TEST(Layout_flex, min_height_auto_respects_overflow_hidden)
     parent->measure(200, 100);
     parent->arrange({0, 0, 200, 100});
 
-    // header: overflow hidden -> floor at 0, can shrink freely.
-    // body: overflow visible -> floor at 200, does not collapse.
     CHECK(header->getRect().height < 50.0f - 0.5f);
     CHECK(body->getRect().height >= 200.0f - 0.5f);
 }
@@ -627,9 +607,6 @@ TEST(Layout_flex, min_width_auto_prevents_collapse)
     parent->measure(100, 200);
     parent->arrange({0, 0, 100, 200});
 
-    // Total children = 280, parent = 100, freeSpace = -180.
-    // Both items have overflow: visible -> floored at their content
-    // width, neither collapses.
     CHECK(left->getRect().width >= 80.0f - 0.5f);
     CHECK(right->getRect().width >= 200.0f - 0.5f);
 }
@@ -648,9 +625,6 @@ TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
 
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
-
-    // Parent has no explicit align-items -> Stretch default.
-    // Child does not derive alignH from itemsH -> stretched.
     CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
 }
@@ -674,21 +648,18 @@ TEST(Layout_align, stretch_respects_explicit_cross_size)
 
 TEST(Layout_align, explicit_align_h_on_child_overrides_parent_stretch)
 {
-    // The correct way to align a single child is align-h / align-v
-    // (align-self), not align-items / items-h on the child.
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
     child->size(Px(50), Px(50));
-    child->getInlineBase().alignH = Align::End;   // align-self
+    child->getInlineBase().alignH = Align::End;
     parent->addChild(child);
 
     parent->measure(200, 200);
     parent->arrange({0, 0, 200, 200});
 
-    // Child at x = 150 (200 - 50), End-aligned.
     CHECK_NEAR(child->getRect().x, 150.0f, 0.5f);
 }
 
@@ -743,7 +714,6 @@ TEST(Layout_flex, horizontal_shrink_remeasures_child_height)
 {
     freshTheme();
 
-    // Aspect-like leaf: taller when narrower (simulates wrapped text).
     struct WrappingBox : public Layout
     {
         WrappingBox() : Layout(LayoutType::Stack) {}
