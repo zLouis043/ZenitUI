@@ -48,7 +48,7 @@ namespace ZenitUI
 
 		if (rect.width > 0.0f && rect.height > 0.0f)
 		{
-			Rect clip = renderer->getClipRect();
+			Rect clip = UIContext::get().getCullingClip();
 			float m = 40.0f;
 			if (rect.x > clip.x + clip.width + m ||
 				rect.x + rect.width < clip.x - m ||
@@ -139,7 +139,7 @@ namespace ZenitUI
 
 		Rect transformedRect = {minX, minY, maxX - minX, maxY - minY};
 
-		Rect clip = renderer->getClipRect();
+		Rect clip = ctxUI.getCullingClip();
 
 		Rect region;
 		region.x = std::max(transformedRect.x, clip.x);
@@ -173,8 +173,7 @@ namespace ZenitUI
 		if (!mainTarget.valid())
 			return;
 
-		renderer->pushTarget(mainTarget);
-		stats.pushTargetCalls++;
+		ctxUI.pushLayerTarget(mainTarget);
 
 		Transform2D offsetTr;
 		offsetTr.pivot = {0.0f, 0.0f};
@@ -205,7 +204,7 @@ namespace ZenitUI
 		if (!identity)
 			renderer->popTransform();
 
-		renderer->popTarget();
+		ctxUI.popLayerTarget();
 
 		const Rect dstRect = {0, 0, (float)tw, (float)th};
 

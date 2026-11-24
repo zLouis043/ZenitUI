@@ -48,9 +48,24 @@ namespace ZenitUI
 	 */
 	enum class Feature
 	{
-		Effects,       ///< Supports fragment shaders (`pushEffect`, `popEffect`, `setEffect*`).
+		Effects,	   ///< Supports fragment shaders (`pushEffect`, `popEffect`, `setEffect*`).
 		NestedTargets, ///< Supports off-screen render targets (`createTarget`, `pushTarget`, `popTarget`, `drawTarget`).
 		TargetSubRect  ///< Supports sub-rectangle blitting via `drawTarget(t, src, dst, tint)` for pooled targets.
+	};
+
+	/**
+	 * \enum ShaderLanguage
+	 * \brief Shading language consumed by an `IRenderer` that supports `Feature::Effects`.
+	 */
+	enum class ShaderLanguage
+	{
+		None,	   ///< Backend does not execute custom shaders.
+		GLSL330,   ///< OpenGL 3.3 Core GLSL (`.fs` / `.vs`, Raylib & SDL3 GL convention).
+		GLSL300ES, ///< OpenGL ES 3.0 / WebGL 2 GLSL.
+		SPIRV,	   ///< Precompiled Vulkan / SDL_GPU SPIR-V binaries (`.frag.spv`).
+		HLSL,	   ///< Direct3D HLSL (`.hlsl`).
+		MSL,	   ///< Apple Metal Shading Language (`.metal`).
+		WGSL	   ///< WebGPU Shading Language (`.wgsl`).
 	};
 
 	/**
@@ -281,6 +296,9 @@ namespace ZenitUI
 		/** \brief Query whether this backend implements an optional `Feature`. */
 		virtual bool supports(Feature f) const = 0;
 
+		/** \brief Return the shading language expected by `IAssetProvider::loadEffect` on this renderer. */
+		virtual ShaderLanguage shaderLanguage() const { return ShaderLanguage::None; }
+
 		/** \brief Called at the start of `Layout::renderFrame` before any draw calls (e.g. to push a DPI scale matrix). */
 		virtual void beginFrame() = 0;
 
@@ -432,6 +450,48 @@ namespace ZenitUI
 										std::string_view /*vsPath*/ = {})
 		{
 			return {};
+		}
+
+		/**
+		 * \brief Load a shader effect by stem \p fileStem under \p baseDir, resolving
+		 *        the file extension from \p lang (e.g. `baseDir/blur.fs` for `GLSL330`,
+		 *        `baseDir/spv/blur.frag.spv` for `SPIRV`, `baseDir/wgsl/blur.wgsl` for `WGSL`).
+		 */
+		EffectHandle loadEffectAsset(std::string_view name,
+									 std::string_view baseDir,
+									 std::string_view fileStem,
+									 ShaderLanguage lang)
+		{
+			std::string dir(baseDir);
+			if (!dir.empty() && dir.back() != '/' && dir.back() != '\\')
+				dir.push_back('/');
+
+			std::string path;
+			switch (lang)
+			{
+			case ShaderLanguage::GLSL330:
+				path = dir + std::string(fileStem) + ".fs";
+				break;
+			case ShaderLanguage::GLSL300ES:
+				path = dir + "es300/" + std::string(fileStem) + ".fs";
+				break;
+			case ShaderLanguage::SPIRV:
+				path = dir + "spv/" + std::string(fileStem) + ".frag.spv";
+				break;
+			case ShaderLanguage::HLSL:
+				path = dir + "hlsl/" + std::string(fileStem) + ".hlsl";
+				break;
+			case ShaderLanguage::MSL:
+				path = dir + "msl/" + std::string(fileStem) + ".metal";
+				break;
+			case ShaderLanguage::WGSL:
+				path = dir + "wgsl/" + std::string(fileStem) + ".wgsl";
+				break;
+			case ShaderLanguage::None:
+			default:
+				return {};
+			}
+			return loadEffect(name, path);
 		}
 
 		/** \brief Optional runtime hook to unload a shader effect by logical name. */
@@ -644,6 +704,38 @@ namespace ZenitUI
 		RenderStats renderStats;
 		TargetPool targetPool;
 
+		// ---- Screen-space culling clip stack across off-screen targets ----
+		std::vector<Rect> cullingClipStack;
+
+		/** \brief Active screen-space clip rect used by `Layout::draw()` for off-screen culling. */
+		Rect getCullingClip() const
+		{
+			if (!cullingClipStack.empty())
+				return cullingClipStack.front();
+			return renderer ? renderer->getClipRect()
+							: Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+		}
+
+		/** \brief Push an off-screen target while preserving the root screen-space culling clip. */
+		void pushLayerTarget(TargetHandle t)
+		{
+			if (!renderer)
+				return;
+			cullingClipStack.push_back(getCullingClip());
+			renderer->pushTarget(t);
+			renderStats.pushTargetCalls++;
+		}
+
+		/** \brief Pop an off-screen target pushed via `pushLayerTarget`. */
+		void popLayerTarget()
+		{
+			if (!renderer)
+				return;
+			renderer->popTarget();
+			if (!cullingClipStack.empty())
+				cullingClipStack.pop_back();
+		}
+		
 		/**
 		 * \brief Advance the frame: pull platform state and reset one-shot flags.
 		 *
@@ -662,6 +754,7 @@ namespace ZenitUI
 			topmostConsumer = nullptr;
 			hoverTarget = nullptr;
 			releaseTarget = nullptr;
+			cullingClipStack.clear();
 			renderStats.beginFrame();
 			activePortals = std::move(framePortals);
 			framePortals.clear();

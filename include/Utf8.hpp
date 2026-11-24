@@ -168,6 +168,17 @@ namespace ZenitUI::Utf8
         return pos + 1;
     }
 
+    /**
+     * \brief Decode one UTF-8 codepoint at \p pos and advance \p pos past it.
+     * \return Decoded Unicode scalar value (`0` at end-of-string, `U+FFFD` on malformed bytes).
+     */
+    inline uint32_t next(std::string_view s, size_t &pos) noexcept
+    {
+        uint32_t cp = 0;
+        pos = decode(s, pos, cp);
+        return cp;
+    }
+
     /** \brief Clamp \p pos to `s.size()` and snap down to the nearest codepoint boundary. */
     inline size_t snapFloor(std::string_view s, size_t pos) noexcept
     {
