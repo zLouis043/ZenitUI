@@ -1,28 +1,4 @@
 var searchData=
 [
-  ['name_0',['name',['../structZenitUI_1_1KeyframeAnimation.html#a24db8b90c11d1af16f001dd26eaffc12',1,'ZenitUI::KeyframeAnimation::name'],['../structZenitUI_1_1ActiveCssAnimation.html#aead9782dcddf645b8e4e0a062bc0f69e',1,'ZenitUI::ActiveCssAnimation::name'],['../structZenitUI_1_1FilterDef.html#a01eddf71513824b3b215f56d5cbc4280',1,'ZenitUI::FilterDef::name'],['../structZenitUI_1_1AnimationRef.html#ab375323fcad184414ca4950fde93aea7',1,'ZenitUI::AnimationRef::name'],['../structZenitUI_1_1TextureRef.html#a52340bb74e25ae7f302bb6db1b3cb7bd',1,'ZenitUI::TextureRef::name'],['../structZenitUI_1_1SimpleSelector.html#a4b5a8d2dafa4dc223d8fd598efb80220',1,'ZenitUI::SimpleSelector::name'],['../structZenitUI_1_1FilterRef.html#a23de7139e8870a5638de70461043e67f',1,'ZenitUI::FilterRef::name'],['../structZenitUI_1_1PropDesc.html#a0f932bb218b32f9cf6d13940df733a3b',1,'ZenitUI::PropDesc::name'],['../structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule.html#a1a4247ae9ed7a94465f0dcb1a47ec0ff',1,'ZenitUI::ZMarkup::StyleSheet::KfRule::name'],['../structZenitUI_1_1Theme_1_1SymbolKey.html#a26e743d5f1f45a70e42cc9cc7d9a374b',1,'ZenitUI::Theme::SymbolKey::name']]],
-  ['needsfullarrange_1',['needsFullArrange',['../structZenitUI_1_1ScrollController.html#afa201b517d3bc353fd00b86273ce2778',1,'ZenitUI::ScrollController']]],
-  ['nestedtargets_2',['NestedTargets',['../group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688',1,'ZenitUI']]],
-  ['nextcluster_3',['nextCluster',['../group__grp__backends.html#ga8fa23c9532b872e7c7d37a553e96a6d2',1,'ZenitUI::Utf8']]],
-  ['nextcodepoint_4',['nextCodepoint',['../group__grp__backends.html#ga3eff068bb97d90377fad60fd9bd84269',1,'ZenitUI::Utf8']]],
-  ['nextwordboundary_5',['nextWordBoundary',['../group__grp__backends.html#ga42cba58c90d805e2bbd12e6352144eb4',1,'ZenitUI::Utf8']]],
-  ['nineslice_6',['NineSlice',['../structZenitUI_1_1NineSlice.html',1,'ZenitUI']]],
-  ['node_7',['node',['../structZenitUI_1_1FilterContext.html#abfc5294e0488f2c73d739881ad4f7789',1,'ZenitUI::FilterContext']]],
-  ['nodeconfig_8',['NodeConfig',['../structZenitUI_1_1NodeConfig.html',1,'ZenitUI']]],
-  ['nodeid_9',['nodeId',['../classZenitUI_1_1Layout.html#a4aa89657fd5cc6063d01533a539a56ff',1,'ZenitUI::Layout']]],
-  ['nodeinternal_10',['NodeInternal',['../structZenitUI_1_1NodeInternal.html',1,'ZenitUI']]],
-  ['nodematchessimple_11',['nodeMatchesSimple',['../group__grp__core.html#ga2589cc2fb5af6f324e0567ede1affa4e',1,'ZenitUI']]],
-  ['nodestate_12',['NodeState',['../structZenitUI_1_1NodeState.html',1,'ZenitUI']]],
-  ['nogdi_13',['NOGDI',['../RaylibBackend_8hpp.html#a2bedaca1c6ca66de2397772910fbe140',1,'RaylibBackend.hpp']]],
-  ['none_14',['None',['../group__grp__core.html#gga405a3e22553f11067934c401d608e4b9a6adf97f83acf6453d4a6a4b1070f3754',1,'ZenitUI']]],
-  ['normal_15',['Normal',['../group__grp__zstyle.html#ggaa130abd7bfd76fae4452d5c8acd586dea960b44c579bc2f6818d2daaf9e4c16f0',1,'ZenitUI']]],
-  ['normalize_16',['normalize',['../structZenitUI_1_1Value.html#a2edf2bdf6939fc31e78c1371123db93c',1,'ZenitUI::Value']]],
-  ['normalizekeyframes_17',['normalizeKeyframes',['../group__grp__zstyle.html#ga77d30165c1ff680d89b64166035db1c1',1,'ZenitUI::ZMarkup']]],
-  ['notifydescendantfocused_18',['notifyDescendantFocused',['../classZenitUI_1_1Layout.html#a1db2fe0c0851859b2f054d8fbe6d124d',1,'ZenitUI::Layout']]],
-  ['nouser_19',['NOUSER',['../RaylibBackend_8hpp.html#a73886ff6a915a4a92e3ade13eba71f6d',1,'RaylibBackend.hpp']]],
-  ['nowrap_20',['Nowrap',['../group__grp__zstyle.html#ggaa130abd7bfd76fae4452d5c8acd586dea2e00ab205ddfaf2c1228d907772debc4',1,'ZenitUI']]],
-  ['nulldiagnosticsink_21',['NullDiagnosticSink',['../classZenitUI_1_1NullDiagnosticSink.html',1,'ZenitUI']]],
-  ['num_22',['Num',['../group__grp__core.html#gadd60b969623ae76e75266186a08b7b84',1,'ZenitUI']]],
-  ['number_23',['Number',['../group__grp__core.html#ggab8695df1b5ab8660d25da4046f1b1262ab2ee912b91d69b435159c7c3f6df7f5f',1,'ZenitUI']]],
-  ['number_24',['number',['../structZenitUI_1_1Value.html#a2b472f02d8d7d8af7acea6292b889490',1,'ZenitUI::Value']]]
+  ['justify_0',['Justify',['../group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0',1,'ZenitUI']]]
 ];

@@ -1,6 +1,5 @@
 var classZenitUI_1_1IRenderer =
 [
-    [ "~IRenderer", "classZenitUI_1_1IRenderer.html#a5fd2f105a4f8e1955274b453d6f5a7ad", null ],
     [ "beginFrame", "classZenitUI_1_1IRenderer.html#a7877e2c0869b8d61ed144cfca069e2bd", null ],
     [ "clearTarget", "classZenitUI_1_1IRenderer.html#a39809c7484f01987360e6297afbf3abc", null ],
     [ "createTarget", "classZenitUI_1_1IRenderer.html#ad9854c7ce0e7c8d937e5c1047ef7cf36", null ],

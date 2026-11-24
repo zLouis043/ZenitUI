@@ -1,6 +1,5 @@
 var classZenitUI_1_1CodepointSet =
 [
-    [ "CodepointSet", "classZenitUI_1_1CodepointSet.html#ab878f335d5d11c7f6d9406ddb022217a", null ],
     [ "addCodepoint", "classZenitUI_1_1CodepointSet.html#a249191f6531c19330f1fa6aacc95fae2", null ],
     [ "addFromUtf8", "classZenitUI_1_1CodepointSet.html#a946008c9bedb313cb9c375e053a907b6", null ],
     [ "addRange", "classZenitUI_1_1CodepointSet.html#af05d80a12d27c064e76f2d569584d17e", null ],

@@ -96,13 +96,13 @@ $(function(){initNavTree('group__grp__backends.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Backend implementations (Raylib), Unicode utilities (<span class="tt"><a class="el" href="namespaceZenitUI_1_1Utf8.html">Utf8</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span>), logging, and debug dumps.  
+<p>Reference backends (Raylib, headless Mock), Unicode utilities (<span class="tt">Utf8</span>, <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span>), logging, and debug dumps.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3ALogMessage" id="r_ZenitUI_3A_3ALogMessage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1LogMessage.html">ZenitUI::LogMessage</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single log record passed to <span class="tt"><a class="el" href="classZenitUI_1_1ILogger.html#a8179767a719fa1149ec8a454fd78bb39">ILogger::log</a></span>.  <a href="structZenitUI_1_1LogMessage.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single log record passed to <span class="tt">ILogger::log</span>.  <a href="structZenitUI_1_1LogMessage.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AILogger" id="r_ZenitUI_3A_3AILogger"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ILogger.html">ZenitUI::ILogger</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract sink for <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> records.  <a href="classZenitUI_1_1ILogger.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AConsoleLogger" id="r_ZenitUI_3A_3AConsoleLogger"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ConsoleLogger.html">ZenitUI::ConsoleLogger</a></td></tr>
@@ -112,55 +112,77 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3ACodepointSet" id="r_ZenitUI_3A_3ACodepointSet"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1CodepointSet.html">ZenitUI::CodepointSet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composable set of Unicode codepoints for static font-atlas baking.  <a href="classZenitUI_1_1CodepointSet.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibPlatform" id="r_ZenitUI_3A_3ARaylibPlatform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend.">IPlatform</a></span> (window metrics, pointer, keyboard, clipboard).  <a href="classZenitUI_1_1RaylibPlatform.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span> backed by Raylib window, input, and clipboard APIs.  <a href="classZenitUI_1_1RaylibPlatform.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibRenderer" id="r_ZenitUI_3A_3ARaylibRenderer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> with transform/clip/target/shader stacks.  <a href="classZenitUI_1_1RaylibRenderer.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> backed by Raylib / <span class="tt">rlgl</span>.  <a href="classZenitUI_1_1RaylibRenderer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibAssetProvider" id="r_ZenitUI_3A_3ARaylibAssetProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract font / texture / effect lookup.">IAssetProvider</a></span> for fonts, textures, and shaders.  <a href="classZenitUI_1_1RaylibAssetProvider.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> for loading and caching Raylib fonts, textures, and shaders by logical name.  <a href="classZenitUI_1_1RaylibAssetProvider.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ATest_3A_3AMockRenderer" id="r_ZenitUI_3A_3ATest_3A_3AMockRenderer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html">ZenitUI::Test::MockRenderer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recording <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> that tracks draw counts, text metrics, clip stacks, render targets, and shader uniforms without a GPU.  <a href="classZenitUI_1_1Test_1_1MockRenderer.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ATest_3A_3AMockPlatform" id="r_ZenitUI_3A_3ATest_3A_3AMockPlatform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html">ZenitUI::Test::MockPlatform</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmable <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span> for injecting deterministic pointer, keyboard, viewport, and clipboard state in tests.  <a href="classZenitUI_1_1Test_1_1MockPlatform.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ATest_3A_3AMockAssetProvider" id="r_ZenitUI_3A_3ATest_3A_3AMockAssetProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html">ZenitUI::Test::MockAssetProvider</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">In-memory <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> that mints synthetic font and shader handles without touching the filesystem or GPU.  <a href="classZenitUI_1_1Test_1_1MockAssetProvider.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ATest_3A_3AEnv" id="r_ZenitUI_3A_3ATest_3A_3AEnv"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Test_1_1Env.html">ZenitUI::Test::Env</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scoped test fixture that binds <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html" title="Recording IRenderer that tracks draw counts, text metrics, clip stacks, render targets,...">MockRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html" title="Programmable IPlatform for injecting deterministic pointer, keyboard, viewport, and clipboard state i...">MockPlatform</a></span>, and <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In-memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem...">MockAssetProvider</a></span> into <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">UIContext</a></span> and restores clean state on destruction.  <a href="structZenitUI_1_1Test_1_1Env.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gab65de980c193bb23cf24aa29c1881402" id="r_gab65de980c193bb23cf24aa29c1881402"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab65de980c193bb23cf24aa29c1881402">ZenitUI::LogLevel</a> { <a class="el" href="#ggab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba">ZenitUI::LogLevel::Debug</a>
-, <a class="el" href="#ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875">ZenitUI::LogLevel::Info</a>
-, <a class="el" href="#ggab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa">ZenitUI::LogLevel::Warning</a>
-, <a class="el" href="#ggab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd">ZenitUI::LogLevel::Error</a>
+<tr class="memitem:gab65de980c193bb23cf24aa29c1881402" id="r_gab65de980c193bb23cf24aa29c1881402"><td class="memItemLeft" align="right" valign="top"><a id="gab65de980c193bb23cf24aa29c1881402" name="gab65de980c193bb23cf24aa29c1881402"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab65de980c193bb23cf24aa29c1881402">ZenitUI::LogLevel</a> { <b>Debug</b>
+, <b>Info</b>
+, <b>Warning</b>
+, <b>Error</b>
  }</td></tr>
-<tr class="memdesc:gab65de980c193bb23cf24aa29c1881402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity level attached to a <span class="tt">LogMessage</span>.  <a href="#gab65de980c193bb23cf24aa29c1881402">More...</a><br /></td></tr>
+<tr class="memdesc:gab65de980c193bb23cf24aa29c1881402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity level attached to a <span class="tt">LogMessage</span>. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaac8a43c1768528d08df39b70de5465d6" id="r_gaac8a43c1768528d08df39b70de5465d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaac8a43c1768528d08df39b70de5465d6">ZenitUI::logImpl</a> (<a class="el" href="#gab65de980c193bb23cf24aa29c1881402">LogLevel</a> level, const std::string &amp;cat, const std::string &amp;file, int line, int col, const std::string &amp;text)</td></tr>
-<tr class="memdesc:gaac8a43c1768528d08df39b70de5465d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger.  <br /></td></tr>
-<tr class="memitem:ga0eaeac78ff222eaedcf4c83770d78e10" id="r_ga0eaeac78ff222eaedcf4c83770d78e10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0eaeac78ff222eaedcf4c83770d78e10">ZenitUI::logDebug</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:ga7dedcabd2a6c4d138a2c882599a88a06" id="r_ga7dedcabd2a6c4d138a2c882599a88a06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7dedcabd2a6c4d138a2c882599a88a06">ZenitUI::logInfo</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:ga561ae5709ec6a8804eaa416cf7d5a7b5" id="r_ga561ae5709ec6a8804eaa416cf7d5a7b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga561ae5709ec6a8804eaa416cf7d5a7b5">ZenitUI::logWarn</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:ga7285bb440d639eddcaa8aa6835dbf2d5" id="r_ga7285bb440d639eddcaa8aa6835dbf2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7285bb440d639eddcaa8aa6835dbf2d5">ZenitUI::logError</a> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
-<tr class="memitem:ga096d41652456b959967f3a741b56f7ad" id="r_ga096d41652456b959967f3a741b56f7ad"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga096d41652456b959967f3a741b56f7ad">ZenitUI::Utf8::isContinuation</a> (unsigned char b) noexcept</td></tr>
-<tr class="memdesc:ga096d41652456b959967f3a741b56f7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">b</code> is a UTF-8 continuation byte (<span class="tt">10xxxxxx</span>).  <br /></td></tr>
-<tr class="memitem:ga0da4297aad7dd24abbe31122461b114a" id="r_ga0da4297aad7dd24abbe31122461b114a"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0da4297aad7dd24abbe31122461b114a">ZenitUI::Utf8::isValidCodepoint</a> (uint32_t cp) noexcept</td></tr>
-<tr class="memdesc:ga0da4297aad7dd24abbe31122461b114a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> is a valid Unicode scalar value (excludes UTF-16 surrogates).  <br /></td></tr>
+<tr class="memitem:gaac8a43c1768528d08df39b70de5465d6" id="r_gaac8a43c1768528d08df39b70de5465d6"><td class="memItemLeft" align="right" valign="top"><a id="gaac8a43c1768528d08df39b70de5465d6" name="gaac8a43c1768528d08df39b70de5465d6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logImpl</b> (<a class="el" href="#gab65de980c193bb23cf24aa29c1881402">LogLevel</a> level, const std::string &amp;cat, const std::string &amp;file, int line, int col, const std::string &amp;text)</td></tr>
+<tr class="memdesc:gaac8a43c1768528d08df39b70de5465d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger. <br /></td></tr>
+<tr class="memitem:ga0eaeac78ff222eaedcf4c83770d78e10" id="r_ga0eaeac78ff222eaedcf4c83770d78e10"><td class="memItemLeft" align="right" valign="top"><a id="ga0eaeac78ff222eaedcf4c83770d78e10" name="ga0eaeac78ff222eaedcf4c83770d78e10"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logDebug</b> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga7dedcabd2a6c4d138a2c882599a88a06" id="r_ga7dedcabd2a6c4d138a2c882599a88a06"><td class="memItemLeft" align="right" valign="top"><a id="ga7dedcabd2a6c4d138a2c882599a88a06" name="ga7dedcabd2a6c4d138a2c882599a88a06"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logInfo</b> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga561ae5709ec6a8804eaa416cf7d5a7b5" id="r_ga561ae5709ec6a8804eaa416cf7d5a7b5"><td class="memItemLeft" align="right" valign="top"><a id="ga561ae5709ec6a8804eaa416cf7d5a7b5" name="ga561ae5709ec6a8804eaa416cf7d5a7b5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logWarn</b> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga7285bb440d639eddcaa8aa6835dbf2d5" id="r_ga7285bb440d639eddcaa8aa6835dbf2d5"><td class="memItemLeft" align="right" valign="top"><a id="ga7285bb440d639eddcaa8aa6835dbf2d5" name="ga7285bb440d639eddcaa8aa6835dbf2d5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logError</b> (const std::string &amp;c, const std::string &amp;f, int l, int col, const std::string &amp;t)</td></tr>
+<tr class="memitem:ga096d41652456b959967f3a741b56f7ad" id="r_ga096d41652456b959967f3a741b56f7ad"><td class="memItemLeft" align="right" valign="top"><a id="ga096d41652456b959967f3a741b56f7ad" name="ga096d41652456b959967f3a741b56f7ad"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::isContinuation</b> (unsigned char b) noexcept</td></tr>
+<tr class="memdesc:ga096d41652456b959967f3a741b56f7ad"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">b</code> is a UTF-8 continuation byte (<span class="tt">10xxxxxx</span>). <br /></td></tr>
+<tr class="memitem:ga0da4297aad7dd24abbe31122461b114a" id="r_ga0da4297aad7dd24abbe31122461b114a"><td class="memItemLeft" align="right" valign="top"><a id="ga0da4297aad7dd24abbe31122461b114a" name="ga0da4297aad7dd24abbe31122461b114a"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::isValidCodepoint</b> (uint32_t cp) noexcept</td></tr>
+<tr class="memdesc:ga0da4297aad7dd24abbe31122461b114a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> is a valid Unicode scalar value (excludes UTF-16 surrogates). <br /></td></tr>
 <tr class="memitem:gab66ced9cb278814fcca0c4f221ac03da" id="r_gab66ced9cb278814fcca0c4f221ac03da"><td class="memItemLeft" align="right" valign="top">constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab66ced9cb278814fcca0c4f221ac03da">ZenitUI::Utf8::seqLenFromLead</a> (unsigned char b) noexcept</td></tr>
 <tr class="memdesc:gab66ced9cb278814fcca0c4f221ac03da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expected UTF-8 byte length from a leading byte (<span class="tt">1..4</span>).  <br /></td></tr>
 <tr class="memitem:ga9947128365e1e347f0429ff763ec6de4" id="r_ga9947128365e1e347f0429ff763ec6de4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9947128365e1e347f0429ff763ec6de4">ZenitUI::Utf8::encode</a> (uint32_t cp, std::string &amp;out)</td></tr>
 <tr class="memdesc:ga9947128365e1e347f0429ff763ec6de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append the UTF-8 encoding of <code class="param">cp</code> to <code class="param">out</code>.  <br /></td></tr>
-<tr class="memitem:ga3d8d611ca62ead5cfc396eb733698fe6" id="r_ga3d8d611ca62ead5cfc396eb733698fe6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3d8d611ca62ead5cfc396eb733698fe6">ZenitUI::Utf8::encode</a> (uint32_t cp)</td></tr>
-<tr class="memdesc:ga3d8d611ca62ead5cfc396eb733698fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encode <code class="param">cp</code> into a new UTF-8 <span class="tt">std::string</span> (empty if invalid).  <br /></td></tr>
+<tr class="memitem:ga3d8d611ca62ead5cfc396eb733698fe6" id="r_ga3d8d611ca62ead5cfc396eb733698fe6"><td class="memItemLeft" align="right" valign="top"><a id="ga3d8d611ca62ead5cfc396eb733698fe6" name="ga3d8d611ca62ead5cfc396eb733698fe6"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::encode</b> (uint32_t cp)</td></tr>
+<tr class="memdesc:ga3d8d611ca62ead5cfc396eb733698fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encode <code class="param">cp</code> into a new UTF-8 <span class="tt">std::string</span> (empty if invalid). <br /></td></tr>
 <tr class="memitem:gaa245d34e67c2fefd727066b7677db67a" id="r_gaa245d34e67c2fefd727066b7677db67a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa245d34e67c2fefd727066b7677db67a">ZenitUI::Utf8::decode</a> (std::string_view s, size_t pos, uint32_t &amp;outCp) noexcept</td></tr>
 <tr class="memdesc:gaa245d34e67c2fefd727066b7677db67a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode one UTF-8 codepoint starting at byte offset <code class="param">pos</code>.  <br /></td></tr>
-<tr class="memitem:gaa78769040d4b8987f6f72375dcc0b07c" id="r_gaa78769040d4b8987f6f72375dcc0b07c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa78769040d4b8987f6f72375dcc0b07c">ZenitUI::Utf8::snapFloor</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:gaa78769040d4b8987f6f72375dcc0b07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap down to the nearest codepoint boundary.  <br /></td></tr>
-<tr class="memitem:ga9e4af68a60b69aadcb98336eaae19c52" id="r_ga9e4af68a60b69aadcb98336eaae19c52"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9e4af68a60b69aadcb98336eaae19c52">ZenitUI::Utf8::snapCeil</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:ga9e4af68a60b69aadcb98336eaae19c52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap up to the nearest codepoint boundary.  <br /></td></tr>
-<tr class="memitem:ga3eff068bb97d90377fad60fd9bd84269" id="r_ga3eff068bb97d90377fad60fd9bd84269"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3eff068bb97d90377fad60fd9bd84269">ZenitUI::Utf8::nextCodepoint</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:ga3eff068bb97d90377fad60fd9bd84269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance <code class="param">pos</code> by one UTF-8 codepoint.  <br /></td></tr>
-<tr class="memitem:gacebc6e7f14050ed7c7f769f12db60c56" id="r_gacebc6e7f14050ed7c7f769f12db60c56"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacebc6e7f14050ed7c7f769f12db60c56">ZenitUI::Utf8::prevCodepoint</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:gacebc6e7f14050ed7c7f769f12db60c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move <code class="param">pos</code> back by one UTF-8 codepoint.  <br /></td></tr>
-<tr class="memitem:ga0491f2b3d2f8c95a72db4ccf26164bfe" id="r_ga0491f2b3d2f8c95a72db4ccf26164bfe"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0491f2b3d2f8c95a72db4ccf26164bfe">ZenitUI::Utf8::codepointCount</a> (std::string_view s) noexcept</td></tr>
-<tr class="memdesc:ga0491f2b3d2f8c95a72db4ccf26164bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of UTF-8 codepoints in <code class="param">s</code>.  <br /></td></tr>
+<tr class="memitem:gaa78769040d4b8987f6f72375dcc0b07c" id="r_gaa78769040d4b8987f6f72375dcc0b07c"><td class="memItemLeft" align="right" valign="top"><a id="gaa78769040d4b8987f6f72375dcc0b07c" name="gaa78769040d4b8987f6f72375dcc0b07c"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::snapFloor</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:gaa78769040d4b8987f6f72375dcc0b07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap down to the nearest codepoint boundary. <br /></td></tr>
+<tr class="memitem:ga9e4af68a60b69aadcb98336eaae19c52" id="r_ga9e4af68a60b69aadcb98336eaae19c52"><td class="memItemLeft" align="right" valign="top"><a id="ga9e4af68a60b69aadcb98336eaae19c52" name="ga9e4af68a60b69aadcb98336eaae19c52"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::snapCeil</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:ga9e4af68a60b69aadcb98336eaae19c52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap up to the nearest codepoint boundary. <br /></td></tr>
+<tr class="memitem:ga3eff068bb97d90377fad60fd9bd84269" id="r_ga3eff068bb97d90377fad60fd9bd84269"><td class="memItemLeft" align="right" valign="top"><a id="ga3eff068bb97d90377fad60fd9bd84269" name="ga3eff068bb97d90377fad60fd9bd84269"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::nextCodepoint</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:ga3eff068bb97d90377fad60fd9bd84269"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance <code class="param">pos</code> by one UTF-8 codepoint. <br /></td></tr>
+<tr class="memitem:gacebc6e7f14050ed7c7f769f12db60c56" id="r_gacebc6e7f14050ed7c7f769f12db60c56"><td class="memItemLeft" align="right" valign="top"><a id="gacebc6e7f14050ed7c7f769f12db60c56" name="gacebc6e7f14050ed7c7f769f12db60c56"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::prevCodepoint</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:gacebc6e7f14050ed7c7f769f12db60c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move <code class="param">pos</code> back by one UTF-8 codepoint. <br /></td></tr>
+<tr class="memitem:ga0491f2b3d2f8c95a72db4ccf26164bfe" id="r_ga0491f2b3d2f8c95a72db4ccf26164bfe"><td class="memItemLeft" align="right" valign="top"><a id="ga0491f2b3d2f8c95a72db4ccf26164bfe" name="ga0491f2b3d2f8c95a72db4ccf26164bfe"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::codepointCount</b> (std::string_view s) noexcept</td></tr>
+<tr class="memdesc:ga0491f2b3d2f8c95a72db4ccf26164bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of UTF-8 codepoints in <code class="param">s</code>. <br /></td></tr>
 <tr class="memitem:ga1e82dde26fb4c62a1e1c67c5f2f4120f" id="r_ga1e82dde26fb4c62a1e1c67c5f2f4120f"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e82dde26fb4c62a1e1c67c5f2f4120f">ZenitUI::Utf8::isClusterExtend</a> (uint32_t cp) noexcept</td></tr>
 <tr class="memdesc:ga1e82dde26fb4c62a1e1c67c5f2f4120f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> extends the preceding grapheme cluster.  <br /></td></tr>
-<tr class="memitem:ga44d44e5a8676d95ce62cf53580bf3eb9" id="r_ga44d44e5a8676d95ce62cf53580bf3eb9"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga44d44e5a8676d95ce62cf53580bf3eb9">ZenitUI::Utf8::isRegionalIndicator</a> (uint32_t cp) noexcept</td></tr>
-<tr class="memdesc:ga44d44e5a8676d95ce62cf53580bf3eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> is a Regional Indicator symbol (<span class="tt">U+1F1E6..U+1F1FF</span>).  <br /></td></tr>
+<tr class="memitem:ga44d44e5a8676d95ce62cf53580bf3eb9" id="r_ga44d44e5a8676d95ce62cf53580bf3eb9"><td class="memItemLeft" align="right" valign="top"><a id="ga44d44e5a8676d95ce62cf53580bf3eb9" name="ga44d44e5a8676d95ce62cf53580bf3eb9"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::isRegionalIndicator</b> (uint32_t cp) noexcept</td></tr>
+<tr class="memdesc:ga44d44e5a8676d95ce62cf53580bf3eb9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> is a Regional Indicator symbol (<span class="tt">U+1F1E6..U+1F1FF</span>). <br /></td></tr>
 <tr class="memitem:ga8fa23c9532b872e7c7d37a553e96a6d2" id="r_ga8fa23c9532b872e7c7d37a553e96a6d2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8fa23c9532b872e7c7d37a553e96a6d2">ZenitUI::Utf8::nextCluster</a> (std::string_view s, size_t pos) noexcept</td></tr>
 <tr class="memdesc:ga8fa23c9532b872e7c7d37a553e96a6d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance <code class="param">pos</code> by one grapheme cluster.  <br /></td></tr>
 <tr class="memitem:ga5885488e603177aa50165d266c2827bc" id="r_ga5885488e603177aa50165d266c2827bc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5885488e603177aa50165d266c2827bc">ZenitUI::Utf8::prevCluster</a> (std::string_view s, size_t pos) noexcept</td></tr>
@@ -171,57 +193,28 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga34c1cd69883f294c0919a1e276c2c4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> is a printable Unicode scalar value accepted by text inputs.  <br /></td></tr>
 <tr class="memitem:ga3402c4dd831fa041e44906585680f754" id="r_ga3402c4dd831fa041e44906585680f754"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3402c4dd831fa041e44906585680f754">ZenitUI::Utf8::isWordChar</a> (uint32_t cp) noexcept</td></tr>
 <tr class="memdesc:ga3402c4dd831fa041e44906585680f754"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">cp</code> belongs to a word (for double-click selection and Ctrl+Arrow).  <br /></td></tr>
-<tr class="memitem:ga7678b2b6f35c33697479f75156cb7176" id="r_ga7678b2b6f35c33697479f75156cb7176"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7678b2b6f35c33697479f75156cb7176">ZenitUI::Utf8::prevWordBoundary</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:ga7678b2b6f35c33697479f75156cb7176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move backward to the start of the previous word (Ctrl+Left / Ctrl+Backspace).  <br /></td></tr>
-<tr class="memitem:ga42cba58c90d805e2bbd12e6352144eb4" id="r_ga42cba58c90d805e2bbd12e6352144eb4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga42cba58c90d805e2bbd12e6352144eb4">ZenitUI::Utf8::nextWordBoundary</a> (std::string_view s, size_t pos) noexcept</td></tr>
-<tr class="memdesc:ga42cba58c90d805e2bbd12e6352144eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move forward past the current/next word (Ctrl+Right / Ctrl+Delete).  <br /></td></tr>
+<tr class="memitem:ga7678b2b6f35c33697479f75156cb7176" id="r_ga7678b2b6f35c33697479f75156cb7176"><td class="memItemLeft" align="right" valign="top"><a id="ga7678b2b6f35c33697479f75156cb7176" name="ga7678b2b6f35c33697479f75156cb7176"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::prevWordBoundary</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:ga7678b2b6f35c33697479f75156cb7176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move backward to the start of the previous word (Ctrl+Left / Ctrl+Backspace). <br /></td></tr>
+<tr class="memitem:ga42cba58c90d805e2bbd12e6352144eb4" id="r_ga42cba58c90d805e2bbd12e6352144eb4"><td class="memItemLeft" align="right" valign="top"><a id="ga42cba58c90d805e2bbd12e6352144eb4" name="ga42cba58c90d805e2bbd12e6352144eb4"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::nextWordBoundary</b> (std::string_view s, size_t pos) noexcept</td></tr>
+<tr class="memdesc:ga42cba58c90d805e2bbd12e6352144eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move forward past the current/next word (Ctrl+Right / Ctrl+Delete). <br /></td></tr>
 <tr class="memitem:ga62b510f5a4d9495ccd9edbf67411b05a" id="r_ga62b510f5a4d9495ccd9edbf67411b05a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga62b510f5a4d9495ccd9edbf67411b05a">ZenitUI::Utf8::sanitizeSingleLine</a> (std::string_view src)</td></tr>
 <tr class="memdesc:ga62b510f5a4d9495ccd9edbf67411b05a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sanitize a pasted string for single-line text fields.  <br /></td></tr>
 <tr class="memitem:ga08a993cafc55aad633f28e5b6756c8cd" id="r_ga08a993cafc55aad633f28e5b6756c8cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08a993cafc55aad633f28e5b6756c8cd">ZenitUI::Utf8::sanitizeMultiLine</a> (std::string_view src)</td></tr>
 <tr class="memdesc:ga08a993cafc55aad633f28e5b6756c8cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sanitize a pasted string for multi-line text fields.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<p>Backend implementations (Raylib), Unicode utilities (<span class="tt"><a class="el" href="namespaceZenitUI_1_1Utf8.html">Utf8</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span>), logging, and debug dumps. </p>
-<p>The core library depends solely on <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend.">IPlatform</a></span>, and <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract font / texture / effect lookup.">IAssetProvider</a></span>. Attach the reference Raylib backend (<span class="tt"><a class="el" href="classZenitUI_1_1RaylibRenderer.html" title="Raylib implementation of IRenderer with transform/clip/target/shader stacks.">RaylibRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1RaylibPlatform.html" title="Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).">RaylibPlatform</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html" title="Raylib implementation of IAssetProvider for fonts, textures, and shaders.">RaylibAssetProvider</a></span>) for desktop apps, or implement the three interfaces to integrate <a class="el" href="namespaceZenitUI.html">ZenitUI</a> with any custom engine.</p>
-<p>Use <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span> on <span class="tt"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39" title="Mutable access to the default codepoint set (e.g.">RaylibAssetProvider::defaultCodepoints()</a></span> to control which UTF-8 glyph ranges are baked into font atlases, and <span class="tt"><a class="el" href="namespaceZenitUI_1_1Debug.html">ZenitUI::Debug</a></span> (<span class="tt">ZENITUI_DEBUG</span>) to inspect live layout trees, styles, and render stats.</p>
+<p>Reference backends (Raylib, headless Mock), Unicode utilities (<span class="tt">Utf8</span>, <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span>), logging, and debug dumps. </p>
+<p>The core library depends solely on <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span>, and <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span>. Attach the reference Raylib backend (<span class="tt"><a class="el" href="classZenitUI_1_1RaylibRenderer.html" title="Reference IRenderer backed by Raylib / rlgl.">RaylibRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1RaylibPlatform.html" title="Reference IPlatform backed by Raylib window, input, and clipboard APIs.">RaylibPlatform</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html" title="Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.">RaylibAssetProvider</a></span>) for desktop apps, use the headless Mock backend (<span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html" title="Recording IRenderer that tracks draw counts, text metrics, clip stacks, render targets,...">MockRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html" title="Programmable IPlatform for injecting deterministic pointer, keyboard, viewport, and clipboard state i...">MockPlatform</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In-memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem...">MockAssetProvider</a></span>) for unit tests, or follow <a class="el" href="page_custom_backends.html">Writing a Custom Backend</a> to integrate ZenitUI with any custom engine.</p>
+<p>Use <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span> on <span class="tt"><a class="el" href="classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39" title="Mutable access to the default codepoint set (e.g.">RaylibAssetProvider::defaultCodepoints()</a></span> to control which UTF-8 glyph ranges are baked into font atlases, and <span class="tt">ZenitUI::Debug</span> (<span class="tt">ZENITUI_DEBUG</span>) to inspect live layout trees, styles, and render stats.</p>
 <p><b>Live examples:</b> <a class="el" href="01_hello_world_2main_8cpp-example.html">01_hello_world</a> · <a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a></p>
 <dl class="section user"><dt>Live examples</dt><dd><ul>
-<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship <a class="el" href="namespaceZenitUI.html">ZenitUI</a> showcase: live Dark/Light theming, <a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a> prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
+<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship ZenitUI showcase: live Dark/Light theming, ZMarkup prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
 <li><a class="el" href="01_hello_world_2main_8cpp-example.html">01_hello_world</a> — Minimal Raylib setup, single Stack root layout, inline styling, and the runFrame/renderFrame loop.</li>
 <li><a class="el" href="07b_effects_stress_2main_8cpp-example.html">07b_effects_stress</a> — GPU stress benchmark for 50 filtered cards testing <a class="el" href="classZenitUI_1_1TargetPool.html" title="Shared, bucket-sized render-target pool owned by UIContext (§4.9 Step c).">TargetPool</a> reuse, downscaled separable blur, and live <a class="el" href="structZenitUI_1_1RenderStats.html" title="Per-frame and live render-target / filter counters (Proposal 9, Step 0).">RenderStats</a> HUD. </li>
 </ul>
 </dd></dl>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
-<a id="gab65de980c193bb23cf24aa29c1881402" name="gab65de980c193bb23cf24aa29c1881402"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab65de980c193bb23cf24aa29c1881402">&#9670;&#160;</a></span>LogLevel</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#gab65de980c193bb23cf24aa29c1881402">ZenitUI::LogLevel</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Severity level attached to a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span>. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba" name="ggab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba"></a>Debug&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875" name="ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875"></a>Info&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa" name="ggab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa"></a>Warning&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd" name="ggab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="gac25a60a5464e36b9a20fd03e5f762476" name="gac25a60a5464e36b9a20fd03e5f762476"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac25a60a5464e36b9a20fd03e5f762476">&#9670;&#160;</a></span>clusterBoundaries()</h2>
@@ -248,33 +241,6 @@ Functions</h2></td></tr>
 
 <p>Return all grapheme-cluster byte boundaries in <code class="param">s</code>, starting at <span class="tt">0</span> and ending at <span class="tt">s.size()</span>. </p>
 <p>Ideal for binary searching prefix lengths (wrapping, ellipsis, hit-testing) without ever splitting a UTF-8 codepoint or grapheme cluster. </p>
-
-</div>
-</div>
-<a id="ga0491f2b3d2f8c95a72db4ccf26164bfe" name="ga0491f2b3d2f8c95a72db4ccf26164bfe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0491f2b3d2f8c95a72db4ccf26164bfe">&#9670;&#160;</a></span>codepointCount()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::codepointCount </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Count the number of UTF-8 codepoints in <code class="param">s</code>. </p>
 
 </div>
 </div>
@@ -324,35 +290,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga3d8d611ca62ead5cfc396eb733698fe6" name="ga3d8d611ca62ead5cfc396eb733698fe6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3d8d611ca62ead5cfc396eb733698fe6">&#9670;&#160;</a></span>encode() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::Utf8::encode </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>cp</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Encode <code class="param">cp</code> into a new UTF-8 <span class="tt">std::string</span> (empty if invalid). </p>
-
-</div>
-</div>
 <a id="ga9947128365e1e347f0429ff763ec6de4" name="ga9947128365e1e347f0429ff763ec6de4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9947128365e1e347f0429ff763ec6de4">&#9670;&#160;</a></span>encode() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9947128365e1e347f0429ff763ec6de4">&#9670;&#160;</a></span>encode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -411,33 +350,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga096d41652456b959967f3a741b56f7ad" name="ga096d41652456b959967f3a741b56f7ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga096d41652456b959967f3a741b56f7ad">&#9670;&#160;</a></span>isContinuation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Utf8::isContinuation </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char</td>          <td class="paramname"><span class="paramname"><em>b</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if <code class="param">b</code> is a UTF-8 continuation byte (<span class="tt">10xxxxxx</span>). </p>
-
-</div>
-</div>
 <a id="ga34c1cd69883f294c0919a1e276c2c4d8" name="ga34c1cd69883f294c0919a1e276c2c4d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga34c1cd69883f294c0919a1e276c2c4d8">&#9670;&#160;</a></span>isPrintable()</h2>
 
@@ -466,60 +378,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga44d44e5a8676d95ce62cf53580bf3eb9" name="ga44d44e5a8676d95ce62cf53580bf3eb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga44d44e5a8676d95ce62cf53580bf3eb9">&#9670;&#160;</a></span>isRegionalIndicator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Utf8::isRegionalIndicator </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>cp</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if <code class="param">cp</code> is a Regional Indicator symbol (<span class="tt">U+1F1E6..U+1F1FF</span>). </p>
-
-</div>
-</div>
-<a id="ga0da4297aad7dd24abbe31122461b114a" name="ga0da4297aad7dd24abbe31122461b114a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0da4297aad7dd24abbe31122461b114a">&#9670;&#160;</a></span>isValidCodepoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Utf8::isValidCodepoint </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>cp</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if <code class="param">cp</code> is a valid Unicode scalar value (excludes UTF-16 surrogates). </p>
-
-</div>
-</div>
 <a id="ga3402c4dd831fa041e44906585680f754" name="ga3402c4dd831fa041e44906585680f754"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga3402c4dd831fa041e44906585680f754">&#9670;&#160;</a></span>isWordChar()</h2>
 
@@ -545,233 +403,6 @@ Functions</h2></td></tr>
 
 <p><span class="tt">true</span> if <code class="param">cp</code> belongs to a word (for double-click selection and Ctrl+Arrow). </p>
 <p>Covers ASCII alphanumerics + <span class="tt">_</span>, accented Latin-1 / Latin Extended letters, combining marks, Greek, Cyrillic, and CJK / Hangul blocks. </p>
-
-</div>
-</div>
-<a id="ga0eaeac78ff222eaedcf4c83770d78e10" name="ga0eaeac78ff222eaedcf4c83770d78e10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0eaeac78ff222eaedcf4c83770d78e10">&#9670;&#160;</a></span>logDebug()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::logDebug </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga7285bb440d639eddcaa8aa6835dbf2d5" name="ga7285bb440d639eddcaa8aa6835dbf2d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7285bb440d639eddcaa8aa6835dbf2d5">&#9670;&#160;</a></span>logError()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::logError </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gaac8a43c1768528d08df39b70de5465d6" name="gaac8a43c1768528d08df39b70de5465d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaac8a43c1768528d08df39b70de5465d6">&#9670;&#160;</a></span>logImpl()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::logImpl </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#gab65de980c193bb23cf24aa29c1881402">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>cat</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>file</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>line</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger. </p>
-
-</div>
-</div>
-<a id="ga7dedcabd2a6c4d138a2c882599a88a06" name="ga7dedcabd2a6c4d138a2c882599a88a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7dedcabd2a6c4d138a2c882599a88a06">&#9670;&#160;</a></span>logInfo()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::logInfo </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga561ae5709ec6a8804eaa416cf7d5a7b5" name="ga561ae5709ec6a8804eaa416cf7d5a7b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga561ae5709ec6a8804eaa416cf7d5a7b5">&#9670;&#160;</a></span>logWarn()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::logWarn </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>col</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -807,68 +438,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga3eff068bb97d90377fad60fd9bd84269" name="ga3eff068bb97d90377fad60fd9bd84269"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3eff068bb97d90377fad60fd9bd84269">&#9670;&#160;</a></span>nextCodepoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::nextCodepoint </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Advance <code class="param">pos</code> by one UTF-8 codepoint. </p>
-
-</div>
-</div>
-<a id="ga42cba58c90d805e2bbd12e6352144eb4" name="ga42cba58c90d805e2bbd12e6352144eb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga42cba58c90d805e2bbd12e6352144eb4">&#9670;&#160;</a></span>nextWordBoundary()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::nextWordBoundary </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move forward past the current/next word (Ctrl+Right / Ctrl+Delete). </p>
-
-</div>
-</div>
 <a id="ga5885488e603177aa50165d266c2827bc" name="ga5885488e603177aa50165d266c2827bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5885488e603177aa50165d266c2827bc">&#9670;&#160;</a></span>prevCluster()</h2>
 
@@ -898,68 +467,6 @@ Functions</h2></td></tr>
 
 <p>Move <code class="param">pos</code> back by one grapheme cluster. </p>
 <p>Mirror of <span class="tt"><a class="el" href="#ga8fa23c9532b872e7c7d37a553e96a6d2" title="Advance pos by one grapheme cluster.">nextCluster</a></span>: never lands inside a multi-byte UTF-8 sequence, combining mark sequence, ZWJ emoji sequence, Regional Indicator pair, or <span class="tt">\r\n</span>. </p>
-
-</div>
-</div>
-<a id="gacebc6e7f14050ed7c7f769f12db60c56" name="gacebc6e7f14050ed7c7f769f12db60c56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacebc6e7f14050ed7c7f769f12db60c56">&#9670;&#160;</a></span>prevCodepoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::prevCodepoint </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move <code class="param">pos</code> back by one UTF-8 codepoint. </p>
-
-</div>
-</div>
-<a id="ga7678b2b6f35c33697479f75156cb7176" name="ga7678b2b6f35c33697479f75156cb7176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7678b2b6f35c33697479f75156cb7176">&#9670;&#160;</a></span>prevWordBoundary()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::prevWordBoundary </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Move backward to the start of the previous word (Ctrl+Left / Ctrl+Backspace). </p>
 
 </div>
 </div>
@@ -1044,68 +551,6 @@ Functions</h2></td></tr>
 
 <p>Expected UTF-8 byte length from a leading byte (<span class="tt">1..4</span>). </p>
 <p>Invalid leading bytes return <span class="tt">1</span> so callers always make forward progress. </p>
-
-</div>
-</div>
-<a id="ga9e4af68a60b69aadcb98336eaae19c52" name="ga9e4af68a60b69aadcb98336eaae19c52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9e4af68a60b69aadcb98336eaae19c52">&#9670;&#160;</a></span>snapCeil()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::snapCeil </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap up to the nearest codepoint boundary. </p>
-
-</div>
-</div>
-<a id="gaa78769040d4b8987f6f72375dcc0b07c" name="gaa78769040d4b8987f6f72375dcc0b07c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa78769040d4b8987f6f72375dcc0b07c">&#9670;&#160;</a></span>snapFloor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t ZenitUI::Utf8::snapFloor </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap down to the nearest codepoint boundary. </p>
 
 </div>
 </div>

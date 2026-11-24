@@ -8,19 +8,13 @@ var group__grp__backends =
       [ "line", "structZenitUI_1_1LogMessage.html#adad38a597ebce602a499042849e2f530", null ],
       [ "text", "structZenitUI_1_1LogMessage.html#ae2e41a57bff391be1b421e948aea73a9", null ]
     ] ],
-    [ "ZenitUI::ILogger", "classZenitUI_1_1ILogger.html", [
-      [ "~ILogger", "classZenitUI_1_1ILogger.html#a8de8aa2897236f86f99ba9f88ec8b3c8", null ],
-      [ "log", "classZenitUI_1_1ILogger.html#a8179767a719fa1149ec8a454fd78bb39", null ]
-    ] ],
-    [ "ZenitUI::ConsoleLogger", "classZenitUI_1_1ConsoleLogger.html", [
-      [ "log", "classZenitUI_1_1ConsoleLogger.html#a6e0a5c1b6a87a5cdc81e90cede77aea4", null ]
-    ] ],
+    [ "ZenitUI::ILogger", "classZenitUI_1_1ILogger.html", null ],
+    [ "ZenitUI::ConsoleLogger", "classZenitUI_1_1ConsoleLogger.html", null ],
     [ "ZenitUI::Logger", "classZenitUI_1_1Logger.html", [
       [ "get", "classZenitUI_1_1Logger.html#adc7a9c7a5cb05e32423a77f447201a94", null ],
       [ "set", "classZenitUI_1_1Logger.html#ad93f379475d8329f3bef7b95944b1ae2", null ]
     ] ],
     [ "ZenitUI::CodepointSet", "classZenitUI_1_1CodepointSet.html", [
-      [ "CodepointSet", "classZenitUI_1_1CodepointSet.html#ab878f335d5d11c7f6d9406ddb022217a", null ],
       [ "addCodepoint", "classZenitUI_1_1CodepointSet.html#a249191f6531c19330f1fa6aacc95fae2", null ],
       [ "addFromUtf8", "classZenitUI_1_1CodepointSet.html#a946008c9bedb313cb9c375e053a907b6", null ],
       [ "addRange", "classZenitUI_1_1CodepointSet.html#af05d80a12d27c064e76f2d569584d17e", null ],
@@ -50,7 +44,7 @@ var group__grp__backends =
     ] ],
     [ "ZenitUI::RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html", [
       [ "RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#a79a47245d790d8749841ca73d8d6e376", null ],
-      [ "~RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#a3dcc97c09f0a549ccf026fa9b5dff3d1", null ],
+      [ "~RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#aa6a19b3459aa3bc8aacab2a317b73a31", null ],
       [ "beginFrame", "classZenitUI_1_1RaylibRenderer.html#a8e331b34807b2d21aff503adc4ee4a47", null ],
       [ "clearTarget", "classZenitUI_1_1RaylibRenderer.html#ad77c756e63c5b37b79e681531df57eaa", null ],
       [ "createTarget", "classZenitUI_1_1RaylibRenderer.html#a2b44ced5665e4aaa36b78f6c3cfb0c22", null ],
@@ -94,7 +88,7 @@ var group__grp__backends =
       [ "unregisterTexture", "classZenitUI_1_1RaylibRenderer.html#a81741735820f2783d3d918050ec1b62f", null ]
     ] ],
     [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", [
-      [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html#a11ee26ac9277d53d57435224ee8107c1", null ],
+      [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html#a67d0d38aa4752ddacd1bdc46534911ac", null ],
       [ "defaultCodepoints", "classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39", null ],
       [ "defaultCodepoints", "classZenitUI_1_1RaylibAssetProvider.html#aea7abb853e8df59290117a7bdbfc014a", null ],
       [ "getEffect", "classZenitUI_1_1RaylibAssetProvider.html#af25b76ef189ce8bef55a58a63359af66", null ],
@@ -112,12 +106,72 @@ var group__grp__backends =
       [ "setDefaultCodepoints", "classZenitUI_1_1RaylibAssetProvider.html#a6d744de303847531cf0dbee7c75da893", null ],
       [ "unloadFont", "classZenitUI_1_1RaylibAssetProvider.html#a5787223c624a75040039d8f8b32d433c", null ]
     ] ],
-    [ "ZenitUI::LogLevel", "group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402", [
-      [ "ZenitUI::LogLevel::Debug", "group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402aa603905470e2a5b8c13e96b579ef0dba", null ],
-      [ "ZenitUI::LogLevel::Info", "group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875", null ],
-      [ "ZenitUI::LogLevel::Warning", "group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a0eaadb4fcb48a0a0ed7bc9868be9fbaa", null ],
-      [ "ZenitUI::LogLevel::Error", "group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a902b0d55fddef6f8d651fe1035b7d4bd", null ]
+    [ "ZenitUI::Test::MockRenderer", "classZenitUI_1_1Test_1_1MockRenderer.html", [
+      [ "CapturedUniform", "structZenitUI_1_1Test_1_1MockRenderer_1_1CapturedUniform.html", null ],
+      [ "beginFrame", "classZenitUI_1_1Test_1_1MockRenderer.html#ae4530a873fd9ac9a2439aa910534cc56", null ],
+      [ "clearTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a34ef8c31cadad2b9f0d6c0781b5e0aff", null ],
+      [ "createTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#aadd29413b6b2ea4e3e3827a9962bb7d1", null ],
+      [ "destroyTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ab18dbad3f320f40e7614bc0c980e4c5b", null ],
+      [ "drawNineSlice", "classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b", null ],
+      [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a80f3cf4c9c97de19ab69d1d1bb957bde", null ],
+      [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ae0cc438e52f973dec62fd3a8e30d3ded", null ],
+      [ "drawText", "classZenitUI_1_1Test_1_1MockRenderer.html#aa6ae99653974d9f26d0d2c0ce74190bf", null ],
+      [ "drawTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a2ba1e6e732a973f12536beb718cca24b", null ],
+      [ "endFrame", "classZenitUI_1_1Test_1_1MockRenderer.html#a4a7ee5b33a57c09f7247cb681f6f1370", null ],
+      [ "fillCircle", "classZenitUI_1_1Test_1_1MockRenderer.html#ae8e31fa9bbf816087b31d8d32f7f454b", null ],
+      [ "fillRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a0bef83b9b8d0b2959c56ccc3b7145160", null ],
+      [ "fillRoundedRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a5fb39f5b46e0546c57e340a300a75786", null ],
+      [ "getClipRect", "classZenitUI_1_1Test_1_1MockRenderer.html#ac822987dc1bf9c5aeba616fb436af11c", null ],
+      [ "inTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a9efdfdb1fed3fb832831b4f473cced53", null ],
+      [ "measureText", "classZenitUI_1_1Test_1_1MockRenderer.html#ae106a467fb5bc0f2444ee474ad783e45", null ],
+      [ "popClip", "classZenitUI_1_1Test_1_1MockRenderer.html#a0a04acb36e51e3e8392b16ecd07944cd", null ],
+      [ "popEffect", "classZenitUI_1_1Test_1_1MockRenderer.html#ab465ee2b6920cb9eff70f5aabe355937", null ],
+      [ "popTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#aa44720575b9540968485cc073e7cae33", null ],
+      [ "popTransform", "classZenitUI_1_1Test_1_1MockRenderer.html#a771cfab67ca7595c4d9bab91d739df6f", null ],
+      [ "pushClip", "classZenitUI_1_1Test_1_1MockRenderer.html#a9d09ec6316ccd44855f800ad0f4170a9", null ],
+      [ "pushEffect", "classZenitUI_1_1Test_1_1MockRenderer.html#aaf3238214f66bc80df9287cab9d28a51", null ],
+      [ "pushTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ae00a6065ceab8225bcd1c55f8d378e32", null ],
+      [ "pushTransform", "classZenitUI_1_1Test_1_1MockRenderer.html#ae0f19825cde4aff8a6786a195dcd4834", null ],
+      [ "reset", "classZenitUI_1_1Test_1_1MockRenderer.html#aaf44246d7568ee21a0927a614d6ea8a6", null ],
+      [ "setDpiScale", "classZenitUI_1_1Test_1_1MockRenderer.html#aff6e848595983ec4b910ad74b097779b", null ],
+      [ "setEffectFloat", "classZenitUI_1_1Test_1_1MockRenderer.html#a8301fd4353891c2d8e856de3edc1da80", null ],
+      [ "setEffectVec2", "classZenitUI_1_1Test_1_1MockRenderer.html#a12123b0cf498f3b472c8b794ce520c6b", null ],
+      [ "setEffectVec3", "classZenitUI_1_1Test_1_1MockRenderer.html#a3a4b45b7248e3bfcea6895c6da4d7dc7", null ],
+      [ "setEffectVec4", "classZenitUI_1_1Test_1_1MockRenderer.html#addd72910f60240255cd9312ae84b9f97", null ],
+      [ "setEffectVec4f", "classZenitUI_1_1Test_1_1MockRenderer.html#acf549b2627d43bb662bf91640b78571f", null ],
+      [ "strokeRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a3f4ad26579a7e69b4416da5c15f9b33c", null ],
+      [ "strokeRoundedRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a45d2d5adec1be66b113fbc7301dfcf29", null ],
+      [ "supports", "classZenitUI_1_1Test_1_1MockRenderer.html#a6b51ab6cbed41273428962566156dfcc", null ],
+      [ "charWidth", "classZenitUI_1_1Test_1_1MockRenderer.html#afa55e4aeb4af61bf4d4476fdf0e88726", null ]
     ] ],
+    [ "ZenitUI::Test::MockPlatform", "classZenitUI_1_1Test_1_1MockPlatform.html", [
+      [ "dpiScale", "classZenitUI_1_1Test_1_1MockPlatform.html#aec06acd97244e663d3cbb5ad7a278e9b", null ],
+      [ "getClipboardText", "classZenitUI_1_1Test_1_1MockPlatform.html#ada2549d7121e4217290dd15caf6d230e", null ],
+      [ "modifiers", "classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d", null ],
+      [ "pointer", "classZenitUI_1_1Test_1_1MockPlatform.html#a40af875c58211b52919407a1c94dfc75", null ],
+      [ "pollInputEvents", "classZenitUI_1_1Test_1_1MockPlatform.html#ae830ecbcb3186d1cb63e284372725446", null ],
+      [ "reset", "classZenitUI_1_1Test_1_1MockPlatform.html#adb4fa40e172f604b32a01010604cd67b", null ],
+      [ "safeArea", "classZenitUI_1_1Test_1_1MockPlatform.html#a348b5e820eb4d894ed7271ceb3b25e24", null ],
+      [ "setClipboardText", "classZenitUI_1_1Test_1_1MockPlatform.html#abc0f22408c408972797a8d7bcad2e0ec", null ],
+      [ "time", "classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644", null ],
+      [ "viewportSize", "classZenitUI_1_1Test_1_1MockPlatform.html#aea80f6c3aef0aa13001a400809dcf466", null ]
+    ] ],
+    [ "ZenitUI::Test::MockAssetProvider", "classZenitUI_1_1Test_1_1MockAssetProvider.html", [
+      [ "getEffect", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a4d4b1fd707388ddfe54b7d8258597e6a", null ],
+      [ "getFont", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a38308be482389a9c4e4646b9527b5654", null ],
+      [ "getFont", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a4378453450aebf4ddd7d07a42653c249", null ],
+      [ "getFont", "classZenitUI_1_1Test_1_1MockAssetProvider.html#aa78867435cd588c733ed912eef9453d6", null ],
+      [ "getTexture", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a78ecc928119b067a924c9174e5731b40", null ],
+      [ "loadFont", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a6853e3071b664500eaec9008b6251dc7", null ],
+      [ "loadFontFromMemory", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a701de763f84f7b2de5d229decc4edf1d", null ],
+      [ "unloadFont", "classZenitUI_1_1Test_1_1MockAssetProvider.html#a687c9ca510810f8c660f6a21a9be5671", null ]
+    ] ],
+    [ "ZenitUI::Test::Env", "structZenitUI_1_1Test_1_1Env.html", [
+      [ "click", "structZenitUI_1_1Test_1_1Env.html#afe54ce9257b4b19ad21c9da30a5581b2", null ],
+      [ "frame", "structZenitUI_1_1Test_1_1Env.html#a0bc8add604f47e2e17edffec5923088b", null ],
+      [ "reset", "structZenitUI_1_1Test_1_1Env.html#a3710824a21e2bd3078676c9fa3db2e75", null ]
+    ] ],
+    [ "ZenitUI::LogLevel", "group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402", null ],
     [ "ZenitUI::Utf8::clusterBoundaries", "group__grp__backends.html#gac25a60a5464e36b9a20fd03e5f762476", null ],
     [ "ZenitUI::Utf8::codepointCount", "group__grp__backends.html#ga0491f2b3d2f8c95a72db4ccf26164bfe", null ],
     [ "ZenitUI::Utf8::decode", "group__grp__backends.html#gaa245d34e67c2fefd727066b7677db67a", null ],
@@ -129,11 +183,7 @@ var group__grp__backends =
     [ "ZenitUI::Utf8::isRegionalIndicator", "group__grp__backends.html#ga44d44e5a8676d95ce62cf53580bf3eb9", null ],
     [ "ZenitUI::Utf8::isValidCodepoint", "group__grp__backends.html#ga0da4297aad7dd24abbe31122461b114a", null ],
     [ "ZenitUI::Utf8::isWordChar", "group__grp__backends.html#ga3402c4dd831fa041e44906585680f754", null ],
-    [ "ZenitUI::logDebug", "group__grp__backends.html#ga0eaeac78ff222eaedcf4c83770d78e10", null ],
-    [ "ZenitUI::logError", "group__grp__backends.html#ga7285bb440d639eddcaa8aa6835dbf2d5", null ],
     [ "ZenitUI::logImpl", "group__grp__backends.html#gaac8a43c1768528d08df39b70de5465d6", null ],
-    [ "ZenitUI::logInfo", "group__grp__backends.html#ga7dedcabd2a6c4d138a2c882599a88a06", null ],
-    [ "ZenitUI::logWarn", "group__grp__backends.html#ga561ae5709ec6a8804eaa416cf7d5a7b5", null ],
     [ "ZenitUI::Utf8::nextCluster", "group__grp__backends.html#ga8fa23c9532b872e7c7d37a553e96a6d2", null ],
     [ "ZenitUI::Utf8::nextCodepoint", "group__grp__backends.html#ga3eff068bb97d90377fad60fd9bd84269", null ],
     [ "ZenitUI::Utf8::nextWordBoundary", "group__grp__backends.html#ga42cba58c90d805e2bbd12e6352144eb4", null ],

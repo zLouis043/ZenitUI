@@ -111,65 +111,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6fd6adfc0215830c1adf653fb41629e2" id="r_a6fd6adfc0215830c1adf653fb41629e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fd6adfc0215830c1adf653fb41629e2">report</a> (<a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a> d) override</td></tr>
 <tr class="memitem:acbc254ac8c460da447841f051bae3d44" id="r_acbc254ac8c460da447841f051bae3d44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbc254ac8c460da447841f051bae3d44">hasErrors</a> () const override</td></tr>
 <tr class="memitem:a4a41031c6362faec32975b19504a47c4" id="r_a4a41031c6362faec32975b19504a47c4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a41031c6362faec32975b19504a47c4">sorted</a> () const override</td></tr>
-<tr class="memitem:a703f685fcfd1478d3ec2c037701b6a20" id="r_a703f685fcfd1478d3ec2c037701b6a20"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a703f685fcfd1478d3ec2c037701b6a20">diagnostics</a> () const noexcept</td></tr>
-<tr class="memitem:a4eccb11c8afdfce1777608cc6021cc11" id="r_a4eccb11c8afdfce1777608cc6021cc11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4eccb11c8afdfce1777608cc6021cc11">clear</a> ()</td></tr>
-<tr class="inherit_header pub_methods_classZenitUI_1_1DiagnosticSink"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classZenitUI_1_1DiagnosticSink')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classZenitUI_1_1DiagnosticSink.html">ZenitUI::DiagnosticSink</a></td></tr>
-<tr class="memitem:a792c558e2cc8201f1dd99e61f76ffdb9 inherit pub_methods_classZenitUI_1_1DiagnosticSink" id="r_a792c558e2cc8201f1dd99e61f76ffdb9"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1DiagnosticSink.html#a792c558e2cc8201f1dd99e61f76ffdb9">~DiagnosticSink</a> ()=default</td></tr>
+<tr class="memitem:a703f685fcfd1478d3ec2c037701b6a20" id="r_a703f685fcfd1478d3ec2c037701b6a20"><td class="memItemLeft" align="right" valign="top"><a id="a703f685fcfd1478d3ec2c037701b6a20" name="a703f685fcfd1478d3ec2c037701b6a20"></a>
+const std::vector&lt; <a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>diagnostics</b> () const noexcept</td></tr>
+<tr class="memitem:a4eccb11c8afdfce1777608cc6021cc11" id="r_a4eccb11c8afdfce1777608cc6021cc11"><td class="memItemLeft" align="right" valign="top"><a id="a4eccb11c8afdfce1777608cc6021cc11" name="a4eccb11c8afdfce1777608cc6021cc11"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Sink that accumulates diagnostics in insertion order. </p>
-<p><span class="tt"><a class="el" href="#a4a41031c6362faec32975b19504a47c4">sorted()</a></span> returns a copy sorted by (file, line, column), useful for stable test output. <span class="tt"><a class="el" href="#acbc254ac8c460da447841f051bae3d44">hasErrors()</a></span> checks for any <span class="tt">Error</span> severity. </p>
+<p><span class="tt">sorted()</span> returns a copy sorted by (file, line, column), useful for stable test output. <span class="tt">hasErrors()</span> checks for any <span class="tt">Error</span> severity. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a4eccb11c8afdfce1777608cc6021cc11" name="a4eccb11c8afdfce1777608cc6021cc11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4eccb11c8afdfce1777608cc6021cc11">&#9670;&#160;</a></span>clear()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::CollectingDiagnosticSink::clear </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a703f685fcfd1478d3ec2c037701b6a20" name="a703f685fcfd1478d3ec2c037701b6a20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a703f685fcfd1478d3ec2c037701b6a20">&#9670;&#160;</a></span>diagnostics()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt; <a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a> &gt; &amp; ZenitUI::CollectingDiagnosticSink::diagnostics </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="acbc254ac8c460da447841f051bae3d44" name="acbc254ac8c460da447841f051bae3d44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbc254ac8c460da447841f051bae3d44">&#9670;&#160;</a></span>hasErrors()</h2>
 
@@ -193,7 +143,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html#a1990d6f65c80da1e559a83c7b1f092aa">ZenitUI::DiagnosticSink</a>.</p>
+<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html">ZenitUI::DiagnosticSink</a>.</p>
 
 </div>
 </div>
@@ -220,7 +170,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html#a504948cc22ad10116a8bc26066885878">ZenitUI::DiagnosticSink</a>.</p>
+<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html">ZenitUI::DiagnosticSink</a>.</p>
 
 </div>
 </div>
@@ -247,7 +197,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html#a97118ee50c1b2a2e1d8ad7b5b84204c4">ZenitUI::DiagnosticSink</a>.</p>
+<p>Implements <a class="el" href="classZenitUI_1_1DiagnosticSink.html">ZenitUI::DiagnosticSink</a>.</p>
 
 </div>
 </div>
@@ -267,7 +217,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="classZenitUI_1_1CollectingDiagnosticSink.html">CollectingDiagnosticSink</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="classZenitUI_1_1CollectingDiagnosticSink.html">CollectingDiagnosticSink</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

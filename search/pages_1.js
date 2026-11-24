@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['browse_20by_20topic_0',['Browse by Topic',['../index.html#sec_modules',1,'']]],
-  ['by_20topic_1',['Browse by Topic',['../index.html#sec_modules',1,'']]]
+  ['2_20minimum_20viable_20backend_20vs_20optional_20features_0',['2. Minimum Viable Backend vs Optional Features',['../page_custom_backends.html#sec_backend_minimum',1,'']]]
 ];

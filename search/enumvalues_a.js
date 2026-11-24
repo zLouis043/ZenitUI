@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['orientationlandscape_0',['OrientationLandscape',['../structZenitUI_1_1MediaCondition.html#aee5898bef9e22147f0b1ee68704be3cdac08588a2d45b8616bfa5c962b237f607',1,'ZenitUI::MediaCondition']]],
-  ['orientationportrait_1',['OrientationPortrait',['../structZenitUI_1_1MediaCondition.html#aee5898bef9e22147f0b1ee68704be3cdabda27cedd98538431232c39c76ae11a8',1,'ZenitUI::MediaCondition']]]
+  ['vertical_0',['Vertical',['../group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012',1,'ZenitUI']]]
 ];

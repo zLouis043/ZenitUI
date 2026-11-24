@@ -1,29 +1,4 @@
 var searchData=
 [
-  ['t_0',['t',['../structZenitUI_1_1Keyframe.html#a3b860e4f21c52c1dadeba724bcbeda8b',1,'ZenitUI::Keyframe']]],
-  ['tab_1',['Tab',['../namespaceZenitUI_1_1Key.html#a9296fa3f6393eacfe6709784fcb198be',1,'ZenitUI::Key']]],
-  ['tag_2',['tag',['../structZenitUI_1_1ZMarkup_1_1Element.html#a24c91309c38462def8f229d3af390350',1,'ZenitUI::ZMarkup::Element']]],
-  ['tags_3',['tags',['../structZenitUI_1_1Specificity.html#a01d5d3a7aa61700aee4a05ec0a30b37a',1,'ZenitUI::Specificity']]],
-  ['target_4',['target',['../structZenitUI_1_1StyleResolver_1_1PartTransition.html#af8dbe7f5ace0d70dcb6c3c5a646895b0',1,'ZenitUI::StyleResolver::PartTransition']]],
-  ['targetpool_5',['targetPool',['../structZenitUI_1_1UIContext.html#ac78a3ce75516f86ac411b170ad6a429f',1,'ZenitUI::UIContext']]],
-  ['targetscreated_6',['targetsCreated',['../structZenitUI_1_1RenderStats.html#aa8957ad78d9da53d0651225236acc6b7',1,'ZenitUI::RenderStats']]],
-  ['targetsdestroyed_7',['targetsDestroyed',['../structZenitUI_1_1RenderStats.html#a7f26a498f00640efd9615b08b7a9e335',1,'ZenitUI::RenderStats']]],
-  ['targetstyle_8',['targetStyle',['../structZenitUI_1_1StyleResolver.html#a17902630a3515233aac592761f33d1c0',1,'ZenitUI::StyleResolver']]],
-  ['terms_9',['terms',['../structZenitUI_1_1Value.html#a8cf2ade58a567bb15ff07a20e63dfb24',1,'ZenitUI::Value']]],
-  ['tex_10',['tex',['../structZenitUI_1_1Layout_1_1ResolvedBgTexture.html#ae5ac86754f8f19cb7ef13dc32e57a9e1',1,'ZenitUI::Layout::ResolvedBgTexture']]],
-  ['texsize_11',['texSize',['../structZenitUI_1_1FilterContext.html#a4a1e85fa2c8467cc8c6ccd79801c7711',1,'ZenitUI::FilterContext']]],
-  ['text_12',['text',['../structZenitUI_1_1LogMessage.html#ae2e41a57bff391be1b421e948aea73a9',1,'ZenitUI::LogMessage::text'],['../structZenitUI_1_1ZMarkup_1_1Element.html#aac9752d5955a4281625ca0df4262597f',1,'ZenitUI::ZMarkup::Element::text']]],
-  ['textalign_13',['textAlign',['../structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html#ab317d1c6cb8bca34babc009b80b0b7de',1,'ZenitUI::StyleResolver::InheritedSnapshot']]],
-  ['time_14',['time',['../structZenitUI_1_1UIContext.html#a76635e4e3ee889b6e214e4c3eb64590f',1,'ZenitUI::UIContext']]],
-  ['top_15',['top',['../structZenitUI_1_1EdgeInsets.html#a4dce279c8728d312727c37b8075770c8',1,'ZenitUI::EdgeInsets::top'],['../structZenitUI_1_1NineSlice.html#a7169cdc9b0887921312bdd53b45a43e4',1,'ZenitUI::NineSlice::top'],['../structZenitUI_1_1Spacing.html#abe4cb3e2d27d19e2cd0d5f5448b7fcf2',1,'ZenitUI::Spacing::top'],['../structZenitUI_1_1TextureRef.html#a467e181102c29f08610aaa26ad0078ff',1,'ZenitUI::TextureRef::top']]],
-  ['topmostconsumer_16',['topmostConsumer',['../structZenitUI_1_1UIContext.html#a2914098fda89a1c4b7b018e5dd7ded8f',1,'ZenitUI::UIContext']]],
-  ['tracks_17',['tracks',['../classZenitUI_1_1UIAnimation.html#a37bb4e1be46574b88bc51198af430885',1,'ZenitUI::UIAnimation']]],
-  ['transition_18',['transition',['../structZenitUI_1_1UIAnimation_1_1Track.html#a3fb51f6fa55dca52ed688abe4e71d26a',1,'ZenitUI::UIAnimation::Track']]],
-  ['transitiondirtymask_5f_19',['transitionDirtyMask_',['../structZenitUI_1_1StyleResolver.html#a9cd9295481167cb9decd98e33352b5fc',1,'ZenitUI::StyleResolver']]],
-  ['transitions_20',['transitions',['../structZenitUI_1_1Style.html#aef783e4cdf902e6706a193fde5639013',1,'ZenitUI::Style::transitions'],['../structZenitUI_1_1ComputedStyle.html#a6b51139fd816062723b762c248376d91',1,'ZenitUI::ComputedStyle::transitions']]],
-  ['transitionstartstyle_21',['transitionStartStyle',['../structZenitUI_1_1StyleResolver.html#a67706481e2c2c3638d116cc99cd70efd',1,'ZenitUI::StyleResolver']]],
-  ['transitiontimer_22',['transitionTimer',['../structZenitUI_1_1StyleResolver.html#afe378f63cfe4c2c111cd478a7308fdd1',1,'ZenitUI::StyleResolver']]],
-  ['translate_23',['translate',['../structZenitUI_1_1Transform2D.html#abc04667bf428476f8c189ddc1b1f6202',1,'ZenitUI::Transform2D']]],
-  ['ts_24',['ts',['../structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfFrame.html#a5c08e448475db609fa9f6972e65a5bc1',1,'ZenitUI::ZMarkup::StyleSheet::KfFrame']]],
-  ['type_25',['type',['../structZenitUI_1_1FilterParam.html#add5ee8eb197807cf3118f4fcb9985067',1,'ZenitUI::FilterParam']]]
+  ['wantsremoval_0',['wantsRemoval',['../structZenitUI_1_1NodeInternal.html#a216495f5cde210ceb0e6d9f53d28ff3c',1,'ZenitUI::NodeInternal']]]
 ];

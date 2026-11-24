@@ -92,10 +92,10 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title"><a class="el" href="namespaceZenitUI.html">ZenitUI</a> — Guide &amp; API Reference </div></div>
+  <div class="headertitle"><div class="title">ZenitUI — Guide &amp; API Reference </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><b><a class="el" href="namespaceZenitUI.html">ZenitUI</a></b> is a retained-mode C++20 UI framework with a Flexbox-inspired layout engine, a CSS-like styling language (<b>ZStyle</b>), a declarative UI DSL (<b>ZMarkup</b>), and pluggable rendering/platform backends.</p>
+<div class="textblock"><p><b>ZenitUI</b> is a retained-mode C++20 UI framework with a Flexbox-inspired layout engine, a CSS-like styling language (<b>ZStyle</b>), a declarative UI DSL (<b>ZMarkup</b>), and pluggable rendering/platform backends.</p>
 <h1 class="doxsection"><a class="anchor" id="sec_mental_model"></a>
 Mental Model</h1>
 <ol type="1">
@@ -132,8 +132,8 @@ Quick Start (Hello World)</h1>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI.html">ZenitUI</a>;</div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a>;</div>
+<div class="line"><span class="keyword">using namespace </span>ZenitUI;</div>
+<div class="line"><span class="keyword">using namespace </span>ZenitUI::UI;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
@@ -155,7 +155,7 @@ Quick Start (Hello World)</h1>
 <div class="line">    <span class="comment">//  Root layout: fills the viewport, centers its children</span></div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="keyword">auto</span> root = std::make_shared&lt;Layout&gt;(<a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
-<div class="line">    root-&gt;size(<a class="code hl_function" href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">Percent</a>(100), <a class="code hl_function" href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">Percent</a>(100));</div>
+<div class="line">    root-&gt;size(Percent(100), Percent(100));</div>
 <div class="line">    root-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{24, 24, 28, 255};</div>
 <div class="line">    root-&gt;getInlineBase().itemsH     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
 <div class="line">    root-&gt;getInlineBase().itemsV     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
@@ -168,8 +168,8 @@ Quick Start (Hello World)</h1>
 <div class="line">    });</div>
 <div class="line"> </div>
 <div class="line">    button-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{60, 120, 220, 255};</div>
-<div class="line">    button-&gt;getInlineBase().radius     = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(8);</div>
-<div class="line">    button-&gt;getInlineBase().padding    = <a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(<a class="code hl_function" href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">VH</a>(1.5f), <a class="code hl_function" href="group__grp__core.html#ga69d2a7a7af7294ea20ba113c62667a7d">VW</a>(3.0f));</div>
+<div class="line">    button-&gt;getInlineBase().radius     = Px(8);</div>
+<div class="line">    button-&gt;getInlineBase().padding    = <a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(VH(1.5f), VW(3.0f));</div>
 <div class="line"> </div>
 <div class="line">    root-&gt;addChild(button);</div>
 <div class="line"> </div>
@@ -189,23 +189,17 @@ Quick Start (Hello World)</h1>
 <div class="line">    CloseWindow();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of IPlatform, IRenderer, and IAssetProvider.</div></div>
+<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...</div></div>
 <div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Raylib implementation of IAssetProvider for fonts, textures, and shaders.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:194</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:58</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Raylib implementation of IRenderer with transform/clip/target/shader stacks.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:77</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga06d16ddb9f5f1573c7da7f9a886890c2"><div class="ttname"><a href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">ZenitUI::Px</a></div><div class="ttdeci">Value Px(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:577</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga69d2a7a7af7294ea20ba113c62667a7d"><div class="ttname"><a href="group__grp__core.html#ga69d2a7a7af7294ea20ba113c62667a7d">ZenitUI::VW</a></div><div class="ttdeci">Value VW(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:579</div></div>
-<div class="ttc" id="agroup__grp__core_html_gab0693da6b66407115c9e193dc4fb5ec0"><div class="ttname"><a href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">ZenitUI::VH</a></div><div class="ttdeci">Value VH(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:580</div></div>
-<div class="ttc" id="agroup__grp__core_html_gaf72b1ff456f88154b5b928f3540fe74a"><div class="ttname"><a href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">ZenitUI::Percent</a></div><div class="ttdeci">Value Percent(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:578</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:294</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:95</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:137</div></div>
 <div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:276</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:28</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
-<div class="ttc" id="anamespaceZenitUI_html"><div class="ttname"><a href="namespaceZenitUI.html">ZenitUI</a></div><div class="ttdef"><b>Definition</b> AnimationPlayer.hpp:31</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1Spacing_html"><div class="ttname"><a href="structZenitUI_1_1Spacing.html">ZenitUI::Spacing</a></div><div class="ttdoc">Four-sided Value tuple used for padding, margin and border-width.</div><div class="ttdef"><b>Definition</b> Style.hpp:69</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:519</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:683</div></div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="sec_modules"></a>
 Browse by Topic</h1>
 <table class="markdownTable">
@@ -226,13 +220,18 @@ Browse by Topic</h1>
 </table>
 <h1 class="doxsection"><a class="anchor" id="sec_learning_path"></a>
 Suggested Reading Order</h1>
-<p>New to <a class="el" href="namespaceZenitUI.html">ZenitUI</a>? Walk through the <b>Examples</b> tab in order:</p><ol type="1">
+<p>New to ZenitUI? Walk through the <b>Examples</b> tab in order:</p><ol type="1">
 <li><a class="el" href="01_hello_world_2main_8cpp-example.html">01_hello_world</a> — minimal Raylib setup and frame loop.</li>
 <li><a class="el" href="02_layouts_2main_8cpp-example.html">02_layouts</a> &amp; <a class="el" href="03_widgets_2main_8cpp-example.html">03_widgets</a> — Flexbox containers, units, and built-in widgets.</li>
 <li><a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a> &amp; <a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a> — declarative markup and stylesheets.</li>
 <li><a class="el" href="12_bindable_2main_8cpp-example.html">12_bindable</a> &amp; <a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a> — reactive state and reusable prefabs with slots.</li>
-<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — complete end-to-end showcase. </li>
+<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — complete end-to-end showcase.</li>
 </ol>
+<h1 class="doxsection"><a class="anchor" id="sec_guides"></a>
+Topic Guides</h1>
+<ul>
+<li><a class="el" href="page_custom_backends.html">Writing a Custom Backend</a> — Implement <span class="tt">IPlatform</span>, <span class="tt">IRenderer</span>, and <span class="tt">IAssetProvider</span> for your own engine or graphics API. </li>
+</ul>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

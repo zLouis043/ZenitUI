@@ -1,5 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structZenitUI_1_1UIAnimation_1_1TrackBase.html" title="Type&#45;erased track interface." alt="" coords="5,5,164,50"/>
-<area shape="rect" id="Node000001" href="$structZenitUI_1_1UIAnimation_1_1Track.html" title="Concrete typed track: start/end pair plus a setter." alt="" coords="212,5,370,50"/>
-<area shape="poly" id="edge44_Node000000_Node000001" title=" " alt="" coords="179,25,214,27,209,28,179,30"/>
+<area shape="rect" id="Node000000" href="$structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html" title=" " alt="" coords="5,5,162,50"/>
 </map>

@@ -7,7 +7,5 @@ var searchData=
   ['nodematchessimple_4',['nodeMatchesSimple',['../group__grp__core.html#ga2589cc2fb5af6f324e0567ede1affa4e',1,'ZenitUI']]],
   ['normalize_5',['normalize',['../structZenitUI_1_1Value.html#a2edf2bdf6939fc31e78c1371123db93c',1,'ZenitUI::Value']]],
   ['normalizekeyframes_6',['normalizeKeyframes',['../group__grp__zstyle.html#ga77d30165c1ff680d89b64166035db1c1',1,'ZenitUI::ZMarkup']]],
-  ['notifydescendantfocused_7',['notifyDescendantFocused',['../classZenitUI_1_1Layout.html#a1db2fe0c0851859b2f054d8fbe6d124d',1,'ZenitUI::Layout']]],
-  ['num_8',['Num',['../group__grp__core.html#gadd60b969623ae76e75266186a08b7b84',1,'ZenitUI']]],
-  ['number_9',['number',['../structZenitUI_1_1Value.html#a2b472f02d8d7d8af7acea6292b889490',1,'ZenitUI::Value']]]
+  ['notifydescendantfocused_7',['notifyDescendantFocused',['../classZenitUI_1_1Layout.html#a1db2fe0c0851859b2f054d8fbe6d124d',1,'ZenitUI::Layout']]]
 ];

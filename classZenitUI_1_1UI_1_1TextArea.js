@@ -1,8 +1,7 @@
 var classZenitUI_1_1UI_1_1TextArea =
 [
-    [ "VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine" ],
+    [ "VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", null ],
     [ "TextArea", "classZenitUI_1_1UI_1_1TextArea.html#a1c92948f2a4cf54e6fdc900923dc9e8c", null ],
-    [ "clear", "classZenitUI_1_1UI_1_1TextArea.html#a1cb4bb72b36273b64cac993530194138", null ],
     [ "computeIntrinsicSize", "classZenitUI_1_1UI_1_1TextArea.html#a39001e8a56b2e498874aeb2bf4a53c47", null ],
     [ "getCursorPos", "classZenitUI_1_1UI_1_1TextArea.html#afd58c2ef8a4cd18c24ff6ced4e914051", null ],
     [ "getPlaceholder", "classZenitUI_1_1UI_1_1TextArea.html#ae31eec63c4f88db71d33ce92f55bef60", null ],
@@ -17,6 +16,5 @@ var classZenitUI_1_1UI_1_1TextArea =
     [ "setPlaceholder", "classZenitUI_1_1UI_1_1TextArea.html#aac2ababeeb8b79ef53222eaade7f16f0", null ],
     [ "setPlaceholderWrap", "classZenitUI_1_1UI_1_1TextArea.html#a3ea840827283ad1994c69317d3d2a9d9", null ],
     [ "setRows", "classZenitUI_1_1UI_1_1TextArea.html#a13ceb265175b3043ea6de163bccc6bf8", null ],
-    [ "setText", "classZenitUI_1_1UI_1_1TextArea.html#a4fb1c265692e7a7aae225683f4ee41b3", null ],
-    [ "onTextChanged", "classZenitUI_1_1UI_1_1TextArea.html#adee9880124d418eb61653cc1c747bafb", null ]
+    [ "setText", "classZenitUI_1_1UI_1_1TextArea.html#a4fb1c265692e7a7aae225683f4ee41b3", null ]
 ];

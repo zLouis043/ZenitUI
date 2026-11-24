@@ -3,7 +3,6 @@ var classZenitUI_1_1UI_1_1VirtualView =
     [ "ItemFactory", "classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39", null ],
     [ "VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html#a13f42c7a4fc1882d77e7f82802e4ae72", null ],
     [ "arrange", "group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea", null ],
-    [ "computeIntrinsicSize", "group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f", null ],
     [ "create", "classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d", null ],
     [ "create", "classZenitUI_1_1UI_1_1VirtualView.html#aa797f5142b05b9d0dd909e8d71e1f863", null ],
     [ "getFirstVisibleItem", "group__grp__widgets.html#ga26c1db115e5bb00e67513d0e8ce5c256", null ],

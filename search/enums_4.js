@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['kind_0',['Kind',['../structZenitUI_1_1MediaCondition.html#aee5898bef9e22147f0b1ee68704be3cd',1,'ZenitUI::MediaCondition::Kind'],['../structZenitUI_1_1SimpleSelector.html#a32a6fc6da798b9ad87f285add3249940',1,'ZenitUI::SimpleSelector::Kind']]]
+  ['layouttype_0',['LayoutType',['../group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32',1,'ZenitUI']]],
+  ['loglevel_1',['LogLevel',['../group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402',1,'ZenitUI']]]
 ];

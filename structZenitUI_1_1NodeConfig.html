@@ -103,192 +103,41 @@ $(function(){initNavTree('structZenitUI_1_1NodeConfig.html','','structZenitUI_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0db0e5affe88e2697dd8350aa0ed6656" id="r_a0db0e5affe88e2697dd8350aa0ed6656"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0db0e5affe88e2697dd8350aa0ed6656">interactive</a>: 1</td></tr>
-<tr class="memdesc:a0db0e5affe88e2697dd8350aa0ed6656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives pointer hover/click events.  <br /></td></tr>
-<tr class="memitem:a0b7a4dda34b4c66e3db96f2a2f1e25d5" id="r_a0b7a4dda34b4c66e3db96f2a2f1e25d5"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b7a4dda34b4c66e3db96f2a2f1e25d5">blocksRaycast</a>: 1</td></tr>
-<tr class="memdesc:a0b7a4dda34b4c66e3db96f2a2f1e25d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops hit-testing even when not interactive.  <br /></td></tr>
-<tr class="memitem:aaac3414f82138fe9ce5661e90d0a5afb" id="r_aaac3414f82138fe9ce5661e90d0a5afb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaac3414f82138fe9ce5661e90d0a5afb">enabled</a>: 1</td></tr>
-<tr class="memdesc:aaac3414f82138fe9ce5661e90d0a5afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled state (false triggers <span class="tt">:disabled</span>).  <br /></td></tr>
-<tr class="memitem:a291de93b8ac0afaab6fae6f84d73573c" id="r_a291de93b8ac0afaab6fae6f84d73573c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a291de93b8ac0afaab6fae6f84d73573c">visible</a>: 1</td></tr>
-<tr class="memdesc:a291de93b8ac0afaab6fae6f84d73573c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visibility (<span class="tt">false</span> behaves like <span class="tt">display: none</span>).  <br /></td></tr>
-<tr class="memitem:a3be90b4e8d1ff6a5a04a444777d9e924" id="r_a3be90b4e8d1ff6a5a04a444777d9e924"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3be90b4e8d1ff6a5a04a444777d9e924">focusable</a>: 1</td></tr>
-<tr class="memdesc:a3be90b4e8d1ff6a5a04a444777d9e924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can acquire keyboard focus and participate in Tab cycle.  <br /></td></tr>
-<tr class="memitem:a9fd2ed37ee4bcda325df82fb782c6781" id="r_a9fd2ed37ee4bcda325df82fb782c6781"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fd2ed37ee4bcda325df82fb782c6781">focusScope</a>: 1</td></tr>
-<tr class="memdesc:a9fd2ed37ee4bcda325df82fb782c6781"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traps Tab focus cycling inside this subtree.  <br /></td></tr>
-<tr class="memitem:aff2e94cde9a727442db367a3e29259dd" id="r_aff2e94cde9a727442db367a3e29259dd"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff2e94cde9a727442db367a3e29259dd">keyboardActivates</a>: 1</td></tr>
-<tr class="memdesc:aff2e94cde9a727442db367a3e29259dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter / Space trigger <span class="tt">onClick</span> while focused.  <br /></td></tr>
-<tr class="memitem:a7e9c2bb719c4a2371cbc44da14ad9022" id="r_a7e9c2bb719c4a2371cbc44da14ad9022"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e9c2bb719c4a2371cbc44da14ad9022">updateWhenDisabled</a>: 1</td></tr>
-<tr class="memdesc:a7e9c2bb719c4a2371cbc44da14ad9022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Still runs <span class="tt">onUpdate</span> while disabled.  <br /></td></tr>
-<tr class="memitem:a1d2c505cd7b772a6e9c21d1b1f716631" id="r_a1d2c505cd7b772a6e9c21d1b1f716631"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d2c505cd7b772a6e9c21d1b1f716631">portal</a>: 1</td></tr>
-<tr class="memdesc:a1d2c505cd7b772a6e9c21d1b1f716631"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rendered at the root above clip rects.  <br /></td></tr>
-<tr class="memitem:adfc21bc48c1b1d20a6520c02c18e2453" id="r_adfc21bc48c1b1d20a6520c02c18e2453"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfc21bc48c1b1d20a6520c02c18e2453">passThrough</a>: 1</td></tr>
-<tr class="memdesc:adfc21bc48c1b1d20a6520c02c18e2453"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards press/click events to ancestor nodes.  <br /></td></tr>
+<tr class="memitem:a0db0e5affe88e2697dd8350aa0ed6656" id="r_a0db0e5affe88e2697dd8350aa0ed6656"><td class="memItemLeft" align="right" valign="top"><a id="a0db0e5affe88e2697dd8350aa0ed6656" name="a0db0e5affe88e2697dd8350aa0ed6656"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>interactive</b>: 1</td></tr>
+<tr class="memdesc:a0db0e5affe88e2697dd8350aa0ed6656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives pointer hover/click events. <br /></td></tr>
+<tr class="memitem:a0b7a4dda34b4c66e3db96f2a2f1e25d5" id="r_a0b7a4dda34b4c66e3db96f2a2f1e25d5"><td class="memItemLeft" align="right" valign="top"><a id="a0b7a4dda34b4c66e3db96f2a2f1e25d5" name="a0b7a4dda34b4c66e3db96f2a2f1e25d5"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>blocksRaycast</b>: 1</td></tr>
+<tr class="memdesc:a0b7a4dda34b4c66e3db96f2a2f1e25d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops hit-testing even when not interactive. <br /></td></tr>
+<tr class="memitem:aaac3414f82138fe9ce5661e90d0a5afb" id="r_aaac3414f82138fe9ce5661e90d0a5afb"><td class="memItemLeft" align="right" valign="top"><a id="aaac3414f82138fe9ce5661e90d0a5afb" name="aaac3414f82138fe9ce5661e90d0a5afb"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>enabled</b>: 1</td></tr>
+<tr class="memdesc:aaac3414f82138fe9ce5661e90d0a5afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled state (false triggers <span class="tt">:disabled</span>). <br /></td></tr>
+<tr class="memitem:a291de93b8ac0afaab6fae6f84d73573c" id="r_a291de93b8ac0afaab6fae6f84d73573c"><td class="memItemLeft" align="right" valign="top"><a id="a291de93b8ac0afaab6fae6f84d73573c" name="a291de93b8ac0afaab6fae6f84d73573c"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>visible</b>: 1</td></tr>
+<tr class="memdesc:a291de93b8ac0afaab6fae6f84d73573c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Visibility (<span class="tt">false</span> behaves like <span class="tt">display: none</span>). <br /></td></tr>
+<tr class="memitem:a3be90b4e8d1ff6a5a04a444777d9e924" id="r_a3be90b4e8d1ff6a5a04a444777d9e924"><td class="memItemLeft" align="right" valign="top"><a id="a3be90b4e8d1ff6a5a04a444777d9e924" name="a3be90b4e8d1ff6a5a04a444777d9e924"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>focusable</b>: 1</td></tr>
+<tr class="memdesc:a3be90b4e8d1ff6a5a04a444777d9e924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can acquire keyboard focus and participate in Tab cycle. <br /></td></tr>
+<tr class="memitem:a9fd2ed37ee4bcda325df82fb782c6781" id="r_a9fd2ed37ee4bcda325df82fb782c6781"><td class="memItemLeft" align="right" valign="top"><a id="a9fd2ed37ee4bcda325df82fb782c6781" name="a9fd2ed37ee4bcda325df82fb782c6781"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>focusScope</b>: 1</td></tr>
+<tr class="memdesc:a9fd2ed37ee4bcda325df82fb782c6781"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traps Tab focus cycling inside this subtree. <br /></td></tr>
+<tr class="memitem:aff2e94cde9a727442db367a3e29259dd" id="r_aff2e94cde9a727442db367a3e29259dd"><td class="memItemLeft" align="right" valign="top"><a id="aff2e94cde9a727442db367a3e29259dd" name="aff2e94cde9a727442db367a3e29259dd"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>keyboardActivates</b>: 1</td></tr>
+<tr class="memdesc:aff2e94cde9a727442db367a3e29259dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter / Space trigger <span class="tt">onClick</span> while focused. <br /></td></tr>
+<tr class="memitem:a7e9c2bb719c4a2371cbc44da14ad9022" id="r_a7e9c2bb719c4a2371cbc44da14ad9022"><td class="memItemLeft" align="right" valign="top"><a id="a7e9c2bb719c4a2371cbc44da14ad9022" name="a7e9c2bb719c4a2371cbc44da14ad9022"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>updateWhenDisabled</b>: 1</td></tr>
+<tr class="memdesc:a7e9c2bb719c4a2371cbc44da14ad9022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Still runs <span class="tt">onUpdate</span> while disabled. <br /></td></tr>
+<tr class="memitem:a1d2c505cd7b772a6e9c21d1b1f716631" id="r_a1d2c505cd7b772a6e9c21d1b1f716631"><td class="memItemLeft" align="right" valign="top"><a id="a1d2c505cd7b772a6e9c21d1b1f716631" name="a1d2c505cd7b772a6e9c21d1b1f716631"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>portal</b>: 1</td></tr>
+<tr class="memdesc:a1d2c505cd7b772a6e9c21d1b1f716631"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rendered at the root above clip rects. <br /></td></tr>
+<tr class="memitem:adfc21bc48c1b1d20a6520c02c18e2453" id="r_adfc21bc48c1b1d20a6520c02c18e2453"><td class="memItemLeft" align="right" valign="top"><a id="adfc21bc48c1b1d20a6520c02c18e2453" name="adfc21bc48c1b1d20a6520c02c18e2453"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>passThrough</b>: 1</td></tr>
+<tr class="memdesc:adfc21bc48c1b1d20a6520c02c18e2453"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards press/click events to ancestor nodes. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Static configuration bits: interaction behaviour, render behaviour. </p>
 <p>Set by subclass constructors (or by inline setters) and read on every frame. Changing any of these fields is safe at runtime, but should be done through the setter methods rather than by writing the bitfields directly, so that bookkeeping (dirty flags, focus cleanup) stays consistent. </p>
-</div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a0b7a4dda34b4c66e3db96f2a2f1e25d5" name="a0b7a4dda34b4c66e3db96f2a2f1e25d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b7a4dda34b4c66e3db96f2a2f1e25d5">&#9670;&#160;</a></span>blocksRaycast</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::blocksRaycast</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Stops hit-testing even when not interactive. </p>
-
-</div>
-</div>
-<a id="aaac3414f82138fe9ce5661e90d0a5afb" name="aaac3414f82138fe9ce5661e90d0a5afb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaac3414f82138fe9ce5661e90d0a5afb">&#9670;&#160;</a></span>enabled</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::enabled</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enabled state (false triggers <span class="tt">:disabled</span>). </p>
-
-</div>
-</div>
-<a id="a3be90b4e8d1ff6a5a04a444777d9e924" name="a3be90b4e8d1ff6a5a04a444777d9e924"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3be90b4e8d1ff6a5a04a444777d9e924">&#9670;&#160;</a></span>focusable</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::focusable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Can acquire keyboard focus and participate in Tab cycle. </p>
-
-</div>
-</div>
-<a id="a9fd2ed37ee4bcda325df82fb782c6781" name="a9fd2ed37ee4bcda325df82fb782c6781"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fd2ed37ee4bcda325df82fb782c6781">&#9670;&#160;</a></span>focusScope</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::focusScope</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Traps Tab focus cycling inside this subtree. </p>
-
-</div>
-</div>
-<a id="a0db0e5affe88e2697dd8350aa0ed6656" name="a0db0e5affe88e2697dd8350aa0ed6656"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0db0e5affe88e2697dd8350aa0ed6656">&#9670;&#160;</a></span>interactive</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::interactive</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Receives pointer hover/click events. </p>
-
-</div>
-</div>
-<a id="aff2e94cde9a727442db367a3e29259dd" name="aff2e94cde9a727442db367a3e29259dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff2e94cde9a727442db367a3e29259dd">&#9670;&#160;</a></span>keyboardActivates</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::keyboardActivates</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enter / Space trigger <span class="tt">onClick</span> while focused. </p>
-
-</div>
-</div>
-<a id="adfc21bc48c1b1d20a6520c02c18e2453" name="adfc21bc48c1b1d20a6520c02c18e2453"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfc21bc48c1b1d20a6520c02c18e2453">&#9670;&#160;</a></span>passThrough</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::passThrough</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Forwards press/click events to ancestor nodes. </p>
-
-</div>
-</div>
-<a id="a1d2c505cd7b772a6e9c21d1b1f716631" name="a1d2c505cd7b772a6e9c21d1b1f716631"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d2c505cd7b772a6e9c21d1b1f716631">&#9670;&#160;</a></span>portal</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::portal</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Rendered at the root above clip rects. </p>
-
-</div>
-</div>
-<a id="a7e9c2bb719c4a2371cbc44da14ad9022" name="a7e9c2bb719c4a2371cbc44da14ad9022"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e9c2bb719c4a2371cbc44da14ad9022">&#9670;&#160;</a></span>updateWhenDisabled</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::updateWhenDisabled</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Still runs <span class="tt">onUpdate</span> while disabled. </p>
-
-</div>
-</div>
-<a id="a291de93b8ac0afaab6fae6f84d73573c" name="a291de93b8ac0afaab6fae6f84d73573c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a291de93b8ac0afaab6fae6f84d73573c">&#9670;&#160;</a></span>visible</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeConfig::visible</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Visibility (<span class="tt">false</span> behaves like <span class="tt">display: none</span>). </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -304,7 +153,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1NodeConfig.html">NodeConfig</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1NodeConfig.html">NodeConfig</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

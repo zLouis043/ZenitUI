@@ -1,6 +1,5 @@
 var classZenitUI_1_1UI_1_1Popup =
 [
-    [ "Popup", "classZenitUI_1_1UI_1_1Popup.html#a7327a097e3c01dfe9584d72b9daa48e3", null ],
     [ "arrange", "classZenitUI_1_1UI_1_1Popup.html#a946a967ea6ee7609e6a013da3bcf5548", null ],
     [ "close", "classZenitUI_1_1UI_1_1Popup.html#ade83e23bcdaa5ec496e4cf93cc532033", null ],
     [ "isOpen", "classZenitUI_1_1UI_1_1Popup.html#a887151502baa1fe56318bf59d6bc5020", null ],

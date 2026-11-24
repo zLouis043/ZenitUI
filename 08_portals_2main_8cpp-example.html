@@ -97,7 +97,7 @@ $(function(){initNavTree('08_portals_2main_8cpp-example.html','',''); });
 <div class="contents">
 <p>Portal-backed overlays (Tooltip, Popup, ContextMenu) escaping parent clipping alongside a full-screen Modal.</p>
 <p>Portal-backed overlays (Tooltip, Popup, ContextMenu) escaping parent clipping alongside a full-screen Modal.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 theme.zstyle</h3>
 <pre class="fragment">/* =========================================================================
    ZenitUI — Example 08: Portals
@@ -238,7 +238,7 @@ Modal {
     justify: end;
     width: 100%;
 }
-</pre><h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+</pre><h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 main.cpp</h3>
 <div class="fragment"><div class="line"><span class="comment">// @doc   Portal-backed overlays (Tooltip, Popup, ContextMenu) escaping parent clipping alongside a full-screen Modal.</span></div>
 <div class="line"><span class="comment">// @group grp_core grp_widgets</span></div>
@@ -267,8 +267,8 @@ main.cpp</h3>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI.html">ZenitUI</a>;</div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a>;</div>
+<div class="line"><span class="keyword">using namespace </span>ZenitUI;</div>
+<div class="line"><span class="keyword">using namespace </span>ZenitUI::UI;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ---------------------------------------------------------------------------</span></div>
 <div class="line"><span class="comment">//  Helpers</span></div>
@@ -343,7 +343,7 @@ main.cpp</h3>
 <div class="line">    {</div>
 <div class="line">        <span class="keyword">auto</span> btn = ActionButton(<span class="stringliteral">&quot;Hover me&quot;</span>, [] {});</div>
 <div class="line">        <a id="_a10" name="_a10"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(btn, <span class="stringliteral">&quot;This tooltip is a portal — it&#39;s not clipped by anything.&quot;</span>, 0.3f);</div>
-<div class="line">        panel-&gt;addChild(<a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">Row</a>(<span class="stringliteral">&quot;1. Tooltip&quot;</span>, btn));</div>
+<div class="line">        panel-&gt;addChild(Row(<span class="stringliteral">&quot;1. Tooltip&quot;</span>, btn));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// =======================================================================</span></div>
@@ -355,8 +355,8 @@ main.cpp</h3>
 <div class="line">        <span class="keyword">auto</span> popup = <a id="_a11" name="_a11"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Popup::create</a>();</div>
 <div class="line"> </div>
 <div class="line">        <span class="keyword">auto</span> content = std::make_shared&lt;Layout&gt;(<a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">LayoutType::Vertical</a>);</div>
-<div class="line">        content-&gt;getInlineBase().padding = <a id="_a12" name="_a12"></a><a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(<a id="_a13" name="_a13"></a><a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(4));</div>
-<div class="line">        content-&gt;getInlineBase().gap = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(4);</div>
+<div class="line">        content-&gt;getInlineBase().padding = <a id="_a12" name="_a12"></a><a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(Px(4));</div>
+<div class="line">        content-&gt;getInlineBase().gap = Px(4);</div>
 <div class="line">        content-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;This is a Popup&quot;</span>));</div>
 <div class="line">        content-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;It positions itself below the trigger.&quot;</span>));</div>
 <div class="line">        content-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;Click outside or press Esc to close.&quot;</span>));</div>
@@ -369,7 +369,7 @@ main.cpp</h3>
 <div class="line">            popup-&gt;openBelow(trigger);</div>
 <div class="line">        };</div>
 <div class="line"> </div>
-<div class="line">        panel-&gt;addChild(<a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">Row</a>(<span class="stringliteral">&quot;2. Popup&quot;</span>, trigger));</div>
+<div class="line">        panel-&gt;addChild(Row(<span class="stringliteral">&quot;2. Popup&quot;</span>, trigger));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// =======================================================================</span></div>
@@ -382,7 +382,7 @@ main.cpp</h3>
 <div class="line">        target-&gt;setBlocksRaycast(<span class="keyword">true</span>);</div>
 <div class="line">        target-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;Right-click anywhere in this box&quot;</span>));</div>
 <div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> menu = <a id="_a14" name="_a14"></a><a class="code hl_function" href="group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d">ContextMenu</a>({</div>
+<div class="line">        <span class="keyword">auto</span> menu = <a id="_a13" name="_a13"></a><a class="code hl_function" href="group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d">ContextMenu</a>({</div>
 <div class="line">            {<span class="stringliteral">&quot;Action A&quot;</span>, []</div>
 <div class="line">             { std::printf(<span class="stringliteral">&quot;menu: action A\n&quot;</span>); }},</div>
 <div class="line">            {<span class="stringliteral">&quot;Action B&quot;</span>, []</div>
@@ -394,11 +394,11 @@ main.cpp</h3>
 <div class="line">        target-&gt;addChild(menu);</div>
 <div class="line">        target-&gt;onRightClick = [menu]</div>
 <div class="line">        {</div>
-<div class="line">            <a id="_a15" name="_a15"></a><a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pos = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().pointer.pos;</div>
+<div class="line">            <a id="_a14" name="_a14"></a><a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pos = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().pointer.pos;</div>
 <div class="line">            menu-&gt;openAt(pos);</div>
 <div class="line">        };</div>
 <div class="line"> </div>
-<div class="line">        panel-&gt;addChild(<a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">Row</a>(<span class="stringliteral">&quot;3. ContextMenu&quot;</span>, target));</div>
+<div class="line">        panel-&gt;addChild(Row(<span class="stringliteral">&quot;3. ContextMenu&quot;</span>, target));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// =======================================================================</span></div>
@@ -409,7 +409,7 @@ main.cpp</h3>
 <div class="line">    {</div>
 <div class="line">        <span class="keyword">auto</span> trigger = ActionButton(<span class="stringliteral">&quot;Open modal&quot;</span>, <span class="keyword">nullptr</span>);</div>
 <div class="line"> </div>
-<div class="line">        modal = <a id="_a16" name="_a16"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Modal::create</a>();</div>
+<div class="line">        modal = <a id="_a15" name="_a15"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Modal::create</a>();</div>
 <div class="line"> </div>
 <div class="line">        <span class="keyword">auto</span> content = modal-&gt;children[0];</div>
 <div class="line">        content-&gt;cls(<span class="stringliteral">&quot;modal-content&quot;</span>);</div>
@@ -435,7 +435,7 @@ main.cpp</h3>
 <div class="line">            std::printf(<span class="stringliteral">&quot;modal trigger clicked\n&quot;</span>);</div>
 <div class="line">            modal-&gt;show();</div>
 <div class="line">        };</div>
-<div class="line">        panel-&gt;addChild(<a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">Row</a>(<span class="stringliteral">&quot;4. Modal&quot;</span>, trigger));</div>
+<div class="line">        panel-&gt;addChild(Row(<span class="stringliteral">&quot;4. Modal&quot;</span>, trigger));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    page-&gt;addChild(panel);</div>
@@ -462,14 +462,13 @@ main.cpp</h3>
 <div class="line">    CloseWindow();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of IPlatform, IRenderer, and IAssetProvider.</div></div>
+<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...</div></div>
 <div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Raylib implementation of IAssetProvider for fonts, textures, and shaders.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:194</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:58</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Raylib implementation of IRenderer with transform/clip/target/shader stacks.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:77</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:294</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:95</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:137</div></div>
 <div class="ttc" id="aclassZenitUI_1_1TLayout_html_ab3bf0250bf5a974c4ba752ad95bc7ba0"><div class="ttname"><a href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">ZenitUI::TLayout&lt; Popup, Panel &gt;::create</a></div><div class="ttdeci">static std::shared_ptr&lt; Popup &gt; create(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> Layout.hpp:1475</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Tooltip_html_a24c527c7f0d69ac9823dc43524e09378"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">ZenitUI::UI::Tooltip::attach</a></div><div class="ttdeci">static std::shared_ptr&lt; Tooltip &gt; attach(std::shared_ptr&lt; Layout &gt; owner, std::string text, float showDelay=0.4f)</div><div class="ttdoc">Attach a tooltip to owner.</div><div class="ttdef"><b>Definition</b> Tooltip.hpp:70</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga06d16ddb9f5f1573c7da7f9a886890c2"><div class="ttname"><a href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">ZenitUI::Px</a></div><div class="ttdeci">Value Px(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:577</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">ZenitUI::LayoutType::Vertical</a></div><div class="ttdeci">@ Vertical</div><div class="ttdoc">Children flow top-to-bottom (column flex semantics).</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:29</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:28</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f">ZenitUI::LayoutType::Horizontal</a></div><div class="ttdeci">@ Horizontal</div><div class="ttdoc">Children flow left-to-right (row flex semantics).</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:30</div></div>
@@ -477,11 +476,8 @@ main.cpp</h3>
 <div class="ttc" id="agroup__grp__widgets_html_ga78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:538</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gae718ac5f540d56ab4777e5f9f563f7a0"><div class="ttname"><a href="group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0">ZenitUI::ZMarkup::loadStyleFile</a></div><div class="ttdeci">bool loadStyleFile(const std::filesystem::path &amp;path, Theme &amp;theme=Theme::get(), DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Load a stylesheet from a file and apply it to theme.</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3"><div class="ttname"><a href="group__grp__zstyle.html#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">ZenitUI::Direction::Row</a></div><div class="ttdeci">@ Row</div><div class="ttdef"><b>Definition</b> Style.hpp:271</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
-<div class="ttc" id="anamespaceZenitUI_html"><div class="ttname"><a href="namespaceZenitUI.html">ZenitUI</a></div><div class="ttdef"><b>Definition</b> AnimationPlayer.hpp:31</div></div>
 <div class="ttc" id="astructZenitUI_1_1Spacing_html"><div class="ttname"><a href="structZenitUI_1_1Spacing.html">ZenitUI::Spacing</a></div><div class="ttdoc">Four-sided Value tuple used for padding, margin and border-width.</div><div class="ttdef"><b>Definition</b> Style.hpp:69</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:519</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:683</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec2_html"><div class="ttname"><a href="structZenitUI_1_1Vec2.html">ZenitUI::Vec2</a></div><div class="ttdoc">2D vector with component-wise arithmetic.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:24</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->

@@ -103,46 +103,35 @@ $(function(){initNavTree('classZenitUI_1_1ZMarkup_1_1Registry.html','','classZen
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a13bf232f0125020865e07a227aad5aeb" id="r_a13bf232f0125020865e07a227aad5aeb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13bf232f0125020865e07a227aad5aeb">Factory</a> = std::function&lt;std::shared_ptr&lt;<a class="el" href="classZenitUI_1_1Layout.html">Layout</a>&gt;(const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;)&gt;</td></tr>
-<tr class="memdesc:a13bf232f0125020865e07a227aad5aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signature for tag factories: <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span> → node.  <br /></td></tr>
+<tr class="memitem:a13bf232f0125020865e07a227aad5aeb" id="r_a13bf232f0125020865e07a227aad5aeb"><td class="memItemLeft" align="right" valign="top"><a id="a13bf232f0125020865e07a227aad5aeb" name="a13bf232f0125020865e07a227aad5aeb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Factory</b> = std::function&lt;std::shared_ptr&lt;<a class="el" href="classZenitUI_1_1Layout.html">Layout</a>&gt;(const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;)&gt;</td></tr>
+<tr class="memdesc:a13bf232f0125020865e07a227aad5aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signature for tag factories: <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span> → node. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac21b3fd27f876aa788e14c4b4fc7edb4" id="r_ac21b3fd27f876aa788e14c4b4fc7edb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac21b3fd27f876aa788e14c4b4fc7edb4">reg</a> (const std::string &amp;tag, <a class="el" href="#a13bf232f0125020865e07a227aad5aeb">Factory</a> f)</td></tr>
-<tr class="memdesc:ac21b3fd27f876aa788e14c4b4fc7edb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register or replace a tag factory.  <br /></td></tr>
-<tr class="memitem:a4dda9c70f7cff1d6ad70976676fdac21" id="r_a4dda9c70f7cff1d6ad70976676fdac21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4dda9c70f7cff1d6ad70976676fdac21">hasPrefab</a> (const std::string &amp;tagName) const</td></tr>
-<tr class="memdesc:a4dda9c70f7cff1d6ad70976676fdac21"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if a prefab is registered under <code class="param">tagName</code>.  <br /></td></tr>
-<tr class="memitem:a013a54a40f7c104c58cfe2c962df5d62" id="r_a013a54a40f7c104c58cfe2c962df5d62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a013a54a40f7c104c58cfe2c962df5d62">registerPrefab</a> (const std::string &amp;tagName, const std::string &amp;markupSource)</td></tr>
-<tr class="memdesc:a013a54a40f7c104c58cfe2c962df5d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a prefab from inline markup source.  <br /></td></tr>
+<tr class="memitem:ac21b3fd27f876aa788e14c4b4fc7edb4" id="r_ac21b3fd27f876aa788e14c4b4fc7edb4"><td class="memItemLeft" align="right" valign="top"><a id="ac21b3fd27f876aa788e14c4b4fc7edb4" name="ac21b3fd27f876aa788e14c4b4fc7edb4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reg</b> (const std::string &amp;tag, <a class="el" href="#a13bf232f0125020865e07a227aad5aeb">Factory</a> f)</td></tr>
+<tr class="memdesc:ac21b3fd27f876aa788e14c4b4fc7edb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register or replace a tag factory. <br /></td></tr>
+<tr class="memitem:a4dda9c70f7cff1d6ad70976676fdac21" id="r_a4dda9c70f7cff1d6ad70976676fdac21"><td class="memItemLeft" align="right" valign="top"><a id="a4dda9c70f7cff1d6ad70976676fdac21" name="a4dda9c70f7cff1d6ad70976676fdac21"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasPrefab</b> (const std::string &amp;tagName) const</td></tr>
+<tr class="memdesc:a4dda9c70f7cff1d6ad70976676fdac21"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if a prefab is registered under <code class="param">tagName</code>. <br /></td></tr>
+<tr class="memitem:a013a54a40f7c104c58cfe2c962df5d62" id="r_a013a54a40f7c104c58cfe2c962df5d62"><td class="memItemLeft" align="right" valign="top"><a id="a013a54a40f7c104c58cfe2c962df5d62" name="a013a54a40f7c104c58cfe2c962df5d62"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerPrefab</b> (const std::string &amp;tagName, const std::string &amp;markupSource)</td></tr>
+<tr class="memdesc:a013a54a40f7c104c58cfe2c962df5d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a prefab from inline markup source. <br /></td></tr>
 <tr class="memitem:a3336c5d336c97ba427b8277e09a7c3cf" id="r_a3336c5d336c97ba427b8277e09a7c3cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3336c5d336c97ba427b8277e09a7c3cf">registerPrefabFile</a> (const std::string &amp;tagName, const std::filesystem::path &amp;path)</td></tr>
 <tr class="memdesc:a3336c5d336c97ba427b8277e09a7c3cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a prefab from a file.  <br /></td></tr>
-<tr class="memitem:a07ef31339ca0718244dc5f87cb52b664" id="r_a07ef31339ca0718244dc5f87cb52b664"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07ef31339ca0718244dc5f87cb52b664">create_impl</a> (const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;el, <a class="el" href="structZenitUI_1_1ZMarkup_1_1BuildContext.html">BuildContext</a> &amp;ctx, bool isPrefabRoot=false) const</td></tr>
-<tr class="memdesc:a07ef31339ca0718244dc5f87cb52b664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build one or more nodes from <code class="param">el</code>.  <br /></td></tr>
+<tr class="memitem:a07ef31339ca0718244dc5f87cb52b664" id="r_a07ef31339ca0718244dc5f87cb52b664"><td class="memItemLeft" align="right" valign="top"><a id="a07ef31339ca0718244dc5f87cb52b664" name="a07ef31339ca0718244dc5f87cb52b664"></a>
+std::vector&lt; std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>create_impl</b> (const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;el, <a class="el" href="structZenitUI_1_1ZMarkup_1_1BuildContext.html">BuildContext</a> &amp;ctx, bool isPrefabRoot=false) const</td></tr>
+<tr class="memdesc:a07ef31339ca0718244dc5f87cb52b664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build one or more nodes from <code class="param">el</code>. <br /></td></tr>
 <tr class="memitem:a0ff5034e849978c2e91ce39a7e89451d" id="r_a0ff5034e849978c2e91ce39a7e89451d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ff5034e849978c2e91ce39a7e89451d">create</a> (const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;el, <a class="el" href="structZenitUI_1_1ZMarkup_1_1BuildContext.html">BuildContext</a> &amp;ctx) const</td></tr>
 <tr class="memdesc:a0ff5034e849978c2e91ce39a7e89451d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience wrapper: build exactly one root node from <code class="param">el</code>.  <br /></td></tr>
-<tr class="memitem:ac633f7dec3d0a142d4de7347447fa844" id="r_ac633f7dec3d0a142d4de7347447fa844"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac633f7dec3d0a142d4de7347447fa844">instantiate</a> (const std::string &amp;tagName, const std::vector&lt; std::string &gt; &amp;extraClasses={}, const std::string &amp;id=&quot;&quot;, const std::string &amp;ref=&quot;&quot;) const</td></tr>
-<tr class="memdesc:ac633f7dec3d0a142d4de7347447fa844"><td class="mdescLeft">&#160;</td><td class="mdescRight">Directly instantiate a registered prefab without invoking the parser.  <br /></td></tr>
+<tr class="memitem:ac633f7dec3d0a142d4de7347447fa844" id="r_ac633f7dec3d0a142d4de7347447fa844"><td class="memItemLeft" align="right" valign="top"><a id="ac633f7dec3d0a142d4de7347447fa844" name="ac633f7dec3d0a142d4de7347447fa844"></a>
+<a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>instantiate</b> (const std::string &amp;tagName, const std::vector&lt; std::string &gt; &amp;extraClasses={}, const std::string &amp;id=&quot;&quot;, const std::string &amp;ref=&quot;&quot;) const</td></tr>
+<tr class="memdesc:ac633f7dec3d0a142d4de7347447fa844"><td class="mdescLeft">&#160;</td><td class="mdescRight">Directly instantiate a registered prefab without invoking the parser. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Global tag → factory map plus the prefab table. </p>
-</div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a13bf232f0125020865e07a227aad5aeb" name="a13bf232f0125020865e07a227aad5aeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13bf232f0125020865e07a227aad5aeb">&#9670;&#160;</a></span>Factory</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a13bf232f0125020865e07a227aad5aeb">ZenitUI::ZMarkup::Registry::Factory</a> = std::function&lt;std::shared_ptr&lt;<a class="el" href="classZenitUI_1_1Layout.html">Layout</a>&gt;(const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;)&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Signature for tag factories: <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span> → node. </p>
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a0ff5034e849978c2e91ce39a7e89451d" name="a0ff5034e849978c2e91ce39a7e89451d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ff5034e849978c2e91ce39a7e89451d">&#9670;&#160;</a></span>create()</h2>
 
@@ -164,132 +153,6 @@ Public Member Functions</h2></td></tr>
 
 <p>Convenience wrapper: build exactly one root node from <code class="param">el</code>. </p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">nullptr</span> if the element expanded to zero nodes. </dd></dl>
-
-</div>
-</div>
-<a id="a07ef31339ca0718244dc5f87cb52b664" name="a07ef31339ca0718244dc5f87cb52b664"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07ef31339ca0718244dc5f87cb52b664">&#9670;&#160;</a></span>create_impl()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; &gt; ZenitUI::ZMarkup::Registry::create_impl </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>el</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1ZMarkup_1_1BuildContext.html">BuildContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ctx</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>isPrefabRoot</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Build one or more nodes from <code class="param">el</code>. </p>
-
-</div>
-</div>
-<a id="a4dda9c70f7cff1d6ad70976676fdac21" name="a4dda9c70f7cff1d6ad70976676fdac21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dda9c70f7cff1d6ad70976676fdac21">&#9670;&#160;</a></span>hasPrefab()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::ZMarkup::Registry::hasPrefab </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if a prefab is registered under <code class="param">tagName</code>. </p>
-
-</div>
-</div>
-<a id="ac633f7dec3d0a142d4de7347447fa844" name="ac633f7dec3d0a142d4de7347447fa844"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac633f7dec3d0a142d4de7347447fa844">&#9670;&#160;</a></span>instantiate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a> ZenitUI::ZMarkup::Registry::instantiate </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>extraClasses</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>id</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>ref</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Directly instantiate a registered prefab without invoking the parser. </p>
-
-</div>
-</div>
-<a id="ac21b3fd27f876aa788e14c4b4fc7edb4" name="ac21b3fd27f876aa788e14c4b4fc7edb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac21b3fd27f876aa788e14c4b4fc7edb4">&#9670;&#160;</a></span>reg()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::ZMarkup::Registry::reg </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tag</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="#a13bf232f0125020865e07a227aad5aeb">Factory</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Register or replace a tag factory. </p>
-
-</div>
-</div>
-<a id="a013a54a40f7c104c58cfe2c962df5d62" name="a013a54a40f7c104c58cfe2c962df5d62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a013a54a40f7c104c58cfe2c962df5d62">&#9670;&#160;</a></span>registerPrefab()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::ZMarkup::Registry::registerPrefab </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>markupSource</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Register a prefab from inline markup source. </p>
 
 </div>
 </div>
@@ -333,7 +196,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a></li><li class="navelem"><a href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><b>ZMarkup</b></li><li class="navelem"><a href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

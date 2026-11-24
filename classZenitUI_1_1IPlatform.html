@@ -96,58 +96,41 @@ $(function(){initNavTree('classZenitUI_1_1IPlatform.html','','classZenitUI_1_1IP
 </div><!--header-->
 <div class="contents">
 
-<p>Abstract windowing and input backend.  
+<p>Abstract windowing, timing, input, and clipboard backend.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="UIContext_8hpp_source.html">UIContext.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for ZenitUI::IPlatform:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IPlatform__inherit__graph.svg" width="186" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classZenitUI_1_1IPlatform__inherit__graph.svg" width="411" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a377342ff72909ecc9e56c86037f56b6a" id="r_a377342ff72909ecc9e56c86037f56b6a"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a377342ff72909ecc9e56c86037f56b6a">~IPlatform</a> ()=default</td></tr>
 <tr class="memitem:af37fc1ef2e86c6907164d7402ae0f0ba" id="r_af37fc1ef2e86c6907164d7402ae0f0ba"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af37fc1ef2e86c6907164d7402ae0f0ba">viewportSize</a> ()=0</td></tr>
+<tr class="memdesc:af37fc1ef2e86c6907164d7402ae0f0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current window/surface dimensions in <b>logical pixels</b>.  <br /></td></tr>
 <tr class="memitem:a4c9c7af2e10e19fa71d0eb520bf6e550" id="r_a4c9c7af2e10e19fa71d0eb520bf6e550"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1PointerState.html">PointerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c9c7af2e10e19fa71d0eb520bf6e550">pointer</a> ()=0</td></tr>
+<tr class="memdesc:a4c9c7af2e10e19fa71d0eb520bf6e550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current pointer position (logical pixels), scroll wheel delta, and button states.  <br /></td></tr>
 <tr class="memitem:aaf9c903d4b0b70e742c06bfc8095339d" id="r_aaf9c903d4b0b70e742c06bfc8095339d"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf9c903d4b0b70e742c06bfc8095339d">time</a> ()=0</td></tr>
+<tr class="memdesc:aaf9c903d4b0b70e742c06bfc8095339d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a monotonic clock timestamp in seconds.  <br /></td></tr>
 <tr class="memitem:a1ac863a3b940b2f9f5e1eacf22496711" id="r_a1ac863a3b940b2f9f5e1eacf22496711"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1ModifierState.html">ModifierState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ac863a3b940b2f9f5e1eacf22496711">modifiers</a> ()=0</td></tr>
+<tr class="memdesc:a1ac863a3b940b2f9f5e1eacf22496711"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current state of modifier keys (<span class="tt">shift</span>, <span class="tt">ctrl</span>, <span class="tt">alt</span>, <span class="tt">super</span>).  <br /></td></tr>
 <tr class="memitem:ab48407bd3932d669980e4c3693d5b317" id="r_ab48407bd3932d669980e4c3693d5b317"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1InputEvents.html">InputEvents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab48407bd3932d669980e4c3693d5b317">pollInputEvents</a> ()=0</td></tr>
+<tr class="memdesc:ab48407bd3932d669980e4c3693d5b317"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drain and return keyboard events queued since the previous frame.  <br /></td></tr>
 <tr class="memitem:a673ab78b2798ee1e3de741a83f66acc4" id="r_a673ab78b2798ee1e3de741a83f66acc4"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a673ab78b2798ee1e3de741a83f66acc4">dpiScale</a> ()=0</td></tr>
+<tr class="memdesc:a673ab78b2798ee1e3de741a83f66acc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the physical-to-logical DPI scale factor (e.g.  <br /></td></tr>
 <tr class="memitem:a17419a963cbe4d5de9a85a5153bcfd09" id="r_a17419a963cbe4d5de9a85a5153bcfd09"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17419a963cbe4d5de9a85a5153bcfd09">safeArea</a> ()=0</td></tr>
+<tr class="memdesc:a17419a963cbe4d5de9a85a5153bcfd09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return screen safe-area insets in logical pixels (notches, rounded corners, system bars).  <br /></td></tr>
 <tr class="memitem:a531c1e8b33d017f33fbd6470f0f6c449" id="r_a531c1e8b33d017f33fbd6470f0f6c449"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a531c1e8b33d017f33fbd6470f0f6c449">setClipboardText</a> (const std::string &amp;text)=0</td></tr>
+<tr class="memdesc:a531c1e8b33d017f33fbd6470f0f6c449"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy UTF-8 <span class="tt">text</span> to the operating system clipboard.  <br /></td></tr>
 <tr class="memitem:a6780ffc6f400eb052db184399b802876" id="r_a6780ffc6f400eb052db184399b802876"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6780ffc6f400eb052db184399b802876">getClipboardText</a> ()=0</td></tr>
+<tr class="memdesc:a6780ffc6f400eb052db184399b802876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read UTF-8 text from the operating system clipboard (empty string if unavailable).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Abstract windowing and input backend. </p>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a377342ff72909ecc9e56c86037f56b6a" name="a377342ff72909ecc9e56c86037f56b6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a377342ff72909ecc9e56c86037f56b6a">&#9670;&#160;</a></span>~IPlatform()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual ZenitUI::IPlatform::~IPlatform </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Abstract windowing, timing, input, and clipboard backend. </p>
+<p>Polled once per frame by <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html#ac65b879662445e21ba0c08c1ff693422" title="Advance the frame: pull platform state and reset one-shot flags.">UIContext::beginFrame()</a></span>. See <a class="el" href="page_custom_backends.html">Writing a Custom Backend</a> for invariants and <a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a> for reference implementations (<span class="tt"><a class="el" href="classZenitUI_1_1RaylibPlatform.html" title="Reference IPlatform backed by Raylib window, input, and clipboard APIs.">RaylibPlatform</a></span>, <span class="tt">MockPlatform</span>). </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a673ab78b2798ee1e3de741a83f66acc4" name="a673ab78b2798ee1e3de741a83f66acc4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a673ab78b2798ee1e3de741a83f66acc4">&#9670;&#160;</a></span>dpiScale()</h2>
 
@@ -171,7 +154,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aead674a29004e10bdeb87d2e46815930">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return the physical-to-logical DPI scale factor (e.g. </p>
+<p><span class="tt">1.0f</span> on standard displays, <span class="tt">2.0f</span> on Retina). </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aead674a29004e10bdeb87d2e46815930">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aec06acd97244e663d3cbb5ad7a278e9b">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -198,7 +184,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aa7e18c9c3453416f208a504a51ab8abe">ZenitUI::RaylibPlatform</a>.</p>
+<p>Read UTF-8 text from the operating system clipboard (empty string if unavailable). </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#aa7e18c9c3453416f208a504a51ab8abe">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ada2549d7121e4217290dd15caf6d230e">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -225,7 +213,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return the current state of modifier keys (<span class="tt">shift</span>, <span class="tt">ctrl</span>, <span class="tt">alt</span>, <span class="tt">super</span>). </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -252,7 +242,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ac0650a504a4d58ddb434cd5cffc72258">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return the current pointer position (logical pixels), scroll wheel delta, and button states. </p>
+<p>Edge-triggered fields (<span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a" title="Button transitioned from up to down this frame.">ButtonState::pressed</a></span>, <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665" title="Button transitioned from down to up this frame.">ButtonState::released</a></span>, <span class="tt">PointerState::wheelY</span>) must fire for <b>one frame only</b>; <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341" title="Button is currently held.">ButtonState::down</a></span> stays <span class="tt">true</span> while held. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ac0650a504a4d58ddb434cd5cffc72258">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a40af875c58211b52919407a1c94dfc75">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -279,7 +272,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0ed9f3a35646a75390ba1df05f3bf37f">ZenitUI::RaylibPlatform</a>.</p>
+<p>Drain and return keyboard events queued since the previous frame. </p>
+<p><span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa" title="Printable characters typed this frame.">InputEvents::chars</a></span> and <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af" title="Keys pressed this frame (edge-triggered).">InputEvents::keys</a></span> are edge-triggered (one frame); <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70" title="Keys currently held (level-triggered).">InputEvents::held</a></span> lists keys currently held down for repeat handling. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a0ed9f3a35646a75390ba1df05f3bf37f">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#ae830ecbcb3186d1cb63e284372725446">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -306,7 +302,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a34972fda73d0fa24ef64b47d62f7f26c">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return screen safe-area insets in logical pixels (notches, rounded corners, system bars). </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a34972fda73d0fa24ef64b47d62f7f26c">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a348b5e820eb4d894ed7271ceb3b25e24">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -333,7 +331,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ad476e496e61d6c76511170817cf870bb">ZenitUI::RaylibPlatform</a>.</p>
+<p>Copy UTF-8 <span class="tt">text</span> to the operating system clipboard. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#ad476e496e61d6c76511170817cf870bb">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#abc0f22408c408972797a8d7bcad2e0ec">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -360,7 +360,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return a monotonic clock timestamp in seconds. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -387,7 +389,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a2e17dcec506b3211000091c260e7c681">ZenitUI::RaylibPlatform</a>.</p>
+<p>Return the current window/surface dimensions in <b>logical pixels</b>. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibPlatform.html#a2e17dcec506b3211000091c260e7c681">ZenitUI::RaylibPlatform</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html#aea80f6c3aef0aa13001a400809dcf466">ZenitUI::Test::MockPlatform</a>.</p>
 
 </div>
 </div>
@@ -407,7 +411,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="classZenitUI_1_1IPlatform.html">IPlatform</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="classZenitUI_1_1IPlatform.html">IPlatform</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

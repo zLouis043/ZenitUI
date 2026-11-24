@@ -118,7 +118,7 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="ZenitUI_8hpp.html">ZenitUI.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespaceZenitUI.html">ZenitUI</a>;</div>
+<div class="line"><span class="keyword">using namespace </span>ZenitUI;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
@@ -159,7 +159,7 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">    </span><span class="comment">// Register a reusable prefab: children passed to `SettingRow { ... }`</span></div>
 <div class="line">    <span class="comment">// are injected where `Slot` appears.</span></div>
-<div class="line">    <a id="_a5" name="_a5"></a><a class="code hl_function" href="group__grp__zmarkup.html#gaea7eb0baf6d6afd81a02ba575c04adcb">ZMarkup::registerPrefab</a>(<span class="stringliteral">&quot;SettingRow&quot;</span>, R<span class="stringliteral">&quot;(</span></div>
+<div class="line">    ZMarkup::registerPrefab(<span class="stringliteral">&quot;SettingRow&quot;</span>, R<span class="stringliteral">&quot;(</span></div>
 <div class="line"><span class="stringliteral">        HStack width=&quot;100%&quot; justify=&quot;space-between&quot; items-v=&quot;center&quot; padding=&quot;10px&quot; background=&quot;#2A2A32&quot; radius=&quot;6px&quot; {</span></div>
 <div class="line"><span class="stringliteral">            Slot</span></div>
 <div class="line"><span class="stringliteral">        }</span></div>
@@ -187,7 +187,7 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">        }</span></div>
 <div class="line"><span class="stringliteral">    )&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">    </span><span class="keyword">auto</span> ui = <a id="_a6" name="_a6"></a><a class="code hl_function" href="group__grp__zmarkup.html#ga4aa385688630fa29d4aaaf1807368bd4">ZMarkup::build</a>(layout);</div>
+<div class="line"><span class="stringliteral">    </span><span class="keyword">auto</span> ui = ZMarkup::build(layout);</div>
 <div class="line">    <span class="keyword">auto</span> root = ui.root();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Wire callbacks for controls injected inside the prefab slots.</span></div>
@@ -208,16 +208,13 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line">    CloseWindow();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of IPlatform, IRenderer, and IAssetProvider.</div></div>
+<div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...</div></div>
 <div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Raylib implementation of IAssetProvider for fonts, textures, and shaders.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:194</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard).</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:58</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Raylib implementation of IRenderer with transform/clip/target/shader stacks.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:77</div></div>
-<div class="ttc" id="agroup__grp__zmarkup_html_ga4aa385688630fa29d4aaaf1807368bd4"><div class="ttname"><a href="group__grp__zmarkup.html#ga4aa385688630fa29d4aaaf1807368bd4">ZenitUI::ZMarkup::build</a></div><div class="ttdeci">UINode build(std::string_view source)</div></div>
-<div class="ttc" id="agroup__grp__zmarkup_html_gaea7eb0baf6d6afd81a02ba575c04adcb"><div class="ttname"><a href="group__grp__zmarkup.html#gaea7eb0baf6d6afd81a02ba575c04adcb">ZenitUI::ZMarkup::registerPrefab</a></div><div class="ttdeci">void registerPrefab(const std::string &amp;tagName, const std::string &amp;markupSource)</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:294</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:95</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:137</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_ga7637d632d654e44425b626f2b940cf6c"><div class="ttname"><a href="group__grp__zstyle.html#ga7637d632d654e44425b626f2b940cf6c">ZenitUI::ZMarkup::loadStyleString</a></div><div class="ttdeci">bool loadStyleString(std::string_view src, Theme &amp;theme=Theme::get(), const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Parse src and apply it to theme.</div></div>
-<div class="ttc" id="anamespaceZenitUI_html"><div class="ttname"><a href="namespaceZenitUI.html">ZenitUI</a></div><div class="ttdef"><b>Definition</b> AnimationPlayer.hpp:31</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:519</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:683</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

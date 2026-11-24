@@ -1,8 +1,8 @@
 var StyleParser_8hpp =
 [
-    [ "ZenitUI::ZMarkup::StyleSheet::Rule", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule.html", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule" ],
-    [ "ZenitUI::ZMarkup::StyleSheet::KfFrame", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfFrame.html", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfFrame" ],
-    [ "ZenitUI::ZMarkup::StyleSheet::KfRule", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule.html", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule" ],
+    [ "ZenitUI::ZMarkup::StyleSheet::Rule", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule.html", null ],
+    [ "ZenitUI::ZMarkup::StyleSheet::KfFrame", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfFrame.html", null ],
+    [ "ZenitUI::ZMarkup::StyleSheet::KfRule", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule.html", null ],
     [ "ZenitUI::ZMarkup::applyStyleDeclaration", "group__grp__zstyle.html#gadfd7f10051f78e5245c78adb0000d355", null ],
     [ "ZenitUI::ZMarkup::applyStyleSheet", "group__grp__zstyle.html#ga31e7bcce043b4e53143199100a15eeb3", null ],
     [ "ZenitUI::ZMarkup::loadStyleFile", "group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0", null ],

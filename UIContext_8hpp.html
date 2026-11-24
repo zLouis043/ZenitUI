@@ -108,9 +108,9 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AIRenderer" id="r_ZenitUI_3A_3AIRenderer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IRenderer.html">ZenitUI::IRenderer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract 2D rendering backend.  <a href="classZenitUI_1_1IRenderer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AIPlatform" id="r_ZenitUI_3A_3AIPlatform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IPlatform.html">ZenitUI::IPlatform</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract windowing and input backend.  <a href="classZenitUI_1_1IPlatform.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract windowing, timing, input, and clipboard backend.  <a href="classZenitUI_1_1IPlatform.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AIAssetProvider" id="r_ZenitUI_3A_3AIAssetProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IAssetProvider.html">ZenitUI::IAssetProvider</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract font / texture / effect lookup.  <a href="classZenitUI_1_1IAssetProvider.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.  <a href="classZenitUI_1_1IAssetProvider.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARenderStats" id="r_ZenitUI_3A_3ARenderStats"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1RenderStats.html">ZenitUI::RenderStats</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-frame and live render-target / filter counters (Proposal 9, Step 0).  <a href="structZenitUI_1_1RenderStats.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ATargetPool" id="r_ZenitUI_3A_3ATargetPool"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TargetPool.html">ZenitUI::TargetPool</a></td></tr>
@@ -118,17 +118,13 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AUIContext" id="r_ZenitUI_3A_3AUIContext"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-application singleton: backends, frame state, and routing.  <a href="structZenitUI_1_1UIContext.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:ZenitUI" id="r_ZenitUI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html">ZenitUI</a></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gada7f34c1ace3e7a57e6c0b00b86505ce" id="r_gada7f34c1ace3e7a57e6c0b00b86505ce"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">ZenitUI::Feature</a> { <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916">ZenitUI::Feature::Effects</a>
-, <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688">ZenitUI::Feature::NestedTargets</a>
-, <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea480459aab8fdf1febfb3ab869480a7cf">ZenitUI::Feature::TargetSubRect</a>
+<tr class="memitem:gada7f34c1ace3e7a57e6c0b00b86505ce" id="r_gada7f34c1ace3e7a57e6c0b00b86505ce"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">ZenitUI::Feature</a> { <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916">Feature::Effects</a>
+, <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688">Feature::NestedTargets</a>
+, <a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea480459aab8fdf1febfb3ab869480a7cf">Feature::TargetSubRect</a>
  }</td></tr>
-<tr class="memdesc:gada7f34c1ace3e7a57e6c0b00b86505ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional renderer capabilities.  <a href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">More...</a><br /></td></tr>
+<tr class="memdesc:gada7f34c1ace3e7a57e6c0b00b86505ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional renderer capabilities queried via <span class="tt">IRenderer::supports</span>.  <a href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-application state: renderer, platform, pointer, focus, portals. </p>
@@ -159,7 +155,7 @@ Enumerations</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a href="UIContext_8hpp.html">UIContext.hpp</a></li>
+    <li class="navelem"><b>include</b></li><li class="navelem"><a href="UIContext_8hpp.html">UIContext.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

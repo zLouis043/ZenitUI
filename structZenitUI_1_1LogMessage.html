@@ -96,126 +96,35 @@ $(function(){initNavTree('structZenitUI_1_1LogMessage.html','','structZenitUI_1_
 </div><!--header-->
 <div class="contents">
 
-<p>A single log record passed to <span class="tt"><a class="el" href="classZenitUI_1_1ILogger.html#a8179767a719fa1149ec8a454fd78bb39">ILogger::log</a></span>.  
+<p>A single log record passed to <span class="tt">ILogger::log</span>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aab9afb4ed88c9cfc038d42d6cc7f7550" id="r_aab9afb4ed88c9cfc038d42d6cc7f7550"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">LogLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9afb4ed88c9cfc038d42d6cc7f7550">level</a> {<a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875">LogLevel::Info</a>}</td></tr>
-<tr class="memdesc:aab9afb4ed88c9cfc038d42d6cc7f7550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity.  <br /></td></tr>
-<tr class="memitem:a05efc023098b6f453ea54d6361ceb8d7" id="r_a05efc023098b6f453ea54d6361ceb8d7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05efc023098b6f453ea54d6361ceb8d7">category</a></td></tr>
-<tr class="memdesc:a05efc023098b6f453ea54d6361ceb8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subsystem tag, e.g. "ZMarkup".  <br /></td></tr>
-<tr class="memitem:a37a5ed9d14f4a4820abd7ea3d8278840" id="r_a37a5ed9d14f4a4820abd7ea3d8278840"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37a5ed9d14f4a4820abd7ea3d8278840">file</a></td></tr>
-<tr class="memdesc:a37a5ed9d14f4a4820abd7ea3d8278840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source file (may be empty).  <br /></td></tr>
-<tr class="memitem:adad38a597ebce602a499042849e2f530" id="r_adad38a597ebce602a499042849e2f530"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adad38a597ebce602a499042849e2f530">line</a> {0}</td></tr>
-<tr class="memdesc:adad38a597ebce602a499042849e2f530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source line (0 if unknown).  <br /></td></tr>
-<tr class="memitem:aef091af546daa252f9dc293d9ccaec7f" id="r_aef091af546daa252f9dc293d9ccaec7f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef091af546daa252f9dc293d9ccaec7f">column</a> {0}</td></tr>
-<tr class="memdesc:aef091af546daa252f9dc293d9ccaec7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source column (0 if unknown).  <br /></td></tr>
-<tr class="memitem:ae2e41a57bff391be1b421e948aea73a9" id="r_ae2e41a57bff391be1b421e948aea73a9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2e41a57bff391be1b421e948aea73a9">text</a></td></tr>
-<tr class="memdesc:ae2e41a57bff391be1b421e948aea73a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The message body.  <br /></td></tr>
+<tr class="memitem:aab9afb4ed88c9cfc038d42d6cc7f7550" id="r_aab9afb4ed88c9cfc038d42d6cc7f7550"><td class="memItemLeft" align="right" valign="top"><a id="aab9afb4ed88c9cfc038d42d6cc7f7550" name="aab9afb4ed88c9cfc038d42d6cc7f7550"></a>
+<a class="el" href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">LogLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><b>level</b> {LogLevel::Info}</td></tr>
+<tr class="memdesc:aab9afb4ed88c9cfc038d42d6cc7f7550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity. <br /></td></tr>
+<tr class="memitem:a05efc023098b6f453ea54d6361ceb8d7" id="r_a05efc023098b6f453ea54d6361ceb8d7"><td class="memItemLeft" align="right" valign="top"><a id="a05efc023098b6f453ea54d6361ceb8d7" name="a05efc023098b6f453ea54d6361ceb8d7"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>category</b></td></tr>
+<tr class="memdesc:a05efc023098b6f453ea54d6361ceb8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subsystem tag, e.g. "ZMarkup". <br /></td></tr>
+<tr class="memitem:a37a5ed9d14f4a4820abd7ea3d8278840" id="r_a37a5ed9d14f4a4820abd7ea3d8278840"><td class="memItemLeft" align="right" valign="top"><a id="a37a5ed9d14f4a4820abd7ea3d8278840" name="a37a5ed9d14f4a4820abd7ea3d8278840"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>file</b></td></tr>
+<tr class="memdesc:a37a5ed9d14f4a4820abd7ea3d8278840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source file (may be empty). <br /></td></tr>
+<tr class="memitem:adad38a597ebce602a499042849e2f530" id="r_adad38a597ebce602a499042849e2f530"><td class="memItemLeft" align="right" valign="top"><a id="adad38a597ebce602a499042849e2f530" name="adad38a597ebce602a499042849e2f530"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>line</b> {0}</td></tr>
+<tr class="memdesc:adad38a597ebce602a499042849e2f530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source line (0 if unknown). <br /></td></tr>
+<tr class="memitem:aef091af546daa252f9dc293d9ccaec7f" id="r_aef091af546daa252f9dc293d9ccaec7f"><td class="memItemLeft" align="right" valign="top"><a id="aef091af546daa252f9dc293d9ccaec7f" name="aef091af546daa252f9dc293d9ccaec7f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>column</b> {0}</td></tr>
+<tr class="memdesc:aef091af546daa252f9dc293d9ccaec7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source column (0 if unknown). <br /></td></tr>
+<tr class="memitem:ae2e41a57bff391be1b421e948aea73a9" id="r_ae2e41a57bff391be1b421e948aea73a9"><td class="memItemLeft" align="right" valign="top"><a id="ae2e41a57bff391be1b421e948aea73a9" name="ae2e41a57bff391be1b421e948aea73a9"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>text</b></td></tr>
+<tr class="memdesc:ae2e41a57bff391be1b421e948aea73a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The message body. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A single log record passed to <span class="tt"><a class="el" href="classZenitUI_1_1ILogger.html#a8179767a719fa1149ec8a454fd78bb39">ILogger::log</a></span>. </p>
-</div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a05efc023098b6f453ea54d6361ceb8d7" name="a05efc023098b6f453ea54d6361ceb8d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05efc023098b6f453ea54d6361ceb8d7">&#9670;&#160;</a></span>category</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::LogMessage::category</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Subsystem tag, e.g. "ZMarkup". </p>
-
-</div>
-</div>
-<a id="aef091af546daa252f9dc293d9ccaec7f" name="aef091af546daa252f9dc293d9ccaec7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef091af546daa252f9dc293d9ccaec7f">&#9670;&#160;</a></span>column</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ZenitUI::LogMessage::column {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Source column (0 if unknown). </p>
-
-</div>
-</div>
-<a id="a37a5ed9d14f4a4820abd7ea3d8278840" name="a37a5ed9d14f4a4820abd7ea3d8278840"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37a5ed9d14f4a4820abd7ea3d8278840">&#9670;&#160;</a></span>file</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::LogMessage::file</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Source file (may be empty). </p>
-
-</div>
-</div>
-<a id="aab9afb4ed88c9cfc038d42d6cc7f7550" name="aab9afb4ed88c9cfc038d42d6cc7f7550"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab9afb4ed88c9cfc038d42d6cc7f7550">&#9670;&#160;</a></span>level</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__grp__backends.html#gab65de980c193bb23cf24aa29c1881402">LogLevel</a> ZenitUI::LogMessage::level {<a class="el" href="group__grp__backends.html#ggab65de980c193bb23cf24aa29c1881402a4059b0251f66a18cb56f544728796875">LogLevel::Info</a>}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Severity. </p>
-
-</div>
-</div>
-<a id="adad38a597ebce602a499042849e2f530" name="adad38a597ebce602a499042849e2f530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adad38a597ebce602a499042849e2f530">&#9670;&#160;</a></span>line</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ZenitUI::LogMessage::line {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Source line (0 if unknown). </p>
-
-</div>
-</div>
-<a id="ae2e41a57bff391be1b421e948aea73a9" name="ae2e41a57bff391be1b421e948aea73a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2e41a57bff391be1b421e948aea73a9">&#9670;&#160;</a></span>text</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::LogMessage::text</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The message body. </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<div class="textblock"><p>A single log record passed to <span class="tt">ILogger::log</span>. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="Logger_8hpp_source.html">Logger.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -231,7 +140,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1LogMessage.html">LogMessage</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1LogMessage.html">LogMessage</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

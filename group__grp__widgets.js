@@ -6,7 +6,6 @@ var group__grp__widgets =
       [ "text", "group__grp__widgets.html#ga787b7c23ff1620ff67edb3096eaebe92", null ]
     ] ],
     [ "ZenitUI::UI::CanvasLayout", "classZenitUI_1_1UI_1_1CanvasLayout.html", [
-      [ "CanvasLayout", "classZenitUI_1_1UI_1_1CanvasLayout.html#a2933c0f1ec3404d2c7e9af3b007c6dfc", null ],
       [ "~CanvasLayout", "classZenitUI_1_1UI_1_1CanvasLayout.html#a5c62ae85c573b5a1e53827ee3598adb9", null ],
       [ "draw", "classZenitUI_1_1UI_1_1CanvasLayout.html#a115c7729c7748fd6796c205add7e9bee", null ]
     ] ],
@@ -40,21 +39,16 @@ var group__grp__widgets =
       [ "renderContent", "classZenitUI_1_1UI_1_1ImageContainer.html#acea21c9f51f4aa83e753ea378a4803bb", null ],
       [ "setTexture", "classZenitUI_1_1UI_1_1ImageContainer.html#ac61ea476ad62a16a66884523a83de813", null ]
     ] ],
-    [ "ZenitUI::UI::Panel", "classZenitUI_1_1UI_1_1Panel.html", [
-      [ "Panel", "classZenitUI_1_1UI_1_1Panel.html#ae9ef59c24de1c4613d37c21a9b402421", null ]
-    ] ],
+    [ "ZenitUI::UI::Panel", "classZenitUI_1_1UI_1_1Panel.html", null ],
     [ "ZenitUI::UI::Modal", "classZenitUI_1_1UI_1_1Modal.html", [
-      [ "Modal", "classZenitUI_1_1UI_1_1Modal.html#aa371de557c10c23e6c831968171e3734", null ],
       [ "contentTarget", "classZenitUI_1_1UI_1_1Modal.html#ad8a27ca52b3c5485e6220d0edb3c8c23", null ],
       [ "hide", "classZenitUI_1_1UI_1_1Modal.html#a508b9522d9aff9be7bc4ad8ff78e9d70", null ],
       [ "onBuild", "classZenitUI_1_1UI_1_1Modal.html#aadacac65b032e5c6e11c0f3ce85ca3b5", null ],
       [ "show", "classZenitUI_1_1UI_1_1Modal.html#aacca1a8cad6433ec42c78e0d82cd5732", null ],
-      [ "content", "classZenitUI_1_1UI_1_1Modal.html#a6ff08e84000dd0a6407fb62f0acde194", null ],
       [ "onHide", "classZenitUI_1_1UI_1_1Modal.html#aecbefe6b7e3f4b5b5725d558586815c6", null ],
       [ "onShow", "classZenitUI_1_1UI_1_1Modal.html#a84da9c6440d80a01a41228227e501b17", null ]
     ] ],
     [ "ZenitUI::UI::Popup", "classZenitUI_1_1UI_1_1Popup.html", [
-      [ "Popup", "classZenitUI_1_1UI_1_1Popup.html#a7327a097e3c01dfe9584d72b9daa48e3", null ],
       [ "arrange", "classZenitUI_1_1UI_1_1Popup.html#a946a967ea6ee7609e6a013da3bcf5548", null ],
       [ "close", "classZenitUI_1_1UI_1_1Popup.html#ade83e23bcdaa5ec496e4cf93cc532033", null ],
       [ "isOpen", "classZenitUI_1_1UI_1_1Popup.html#a887151502baa1fe56318bf59d6bc5020", null ],
@@ -101,13 +95,8 @@ var group__grp__widgets =
       [ "setWrap", "classZenitUI_1_1UI_1_1Text.html#aa2bbdeb6aff39c138a75f9310d53aee2", null ]
     ] ],
     [ "ZenitUI::UI::TextArea", "classZenitUI_1_1UI_1_1TextArea.html", [
-      [ "VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", [
-        [ "end", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html#a88222305813b489ee8197fc25c4612f8", null ],
-        [ "hardBreak", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html#a7cf54ef37f40e6048e76cbd72f972f53", null ],
-        [ "start", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html#a16a98855cbb799580f686ae54a6a3bb8", null ]
-      ] ],
+      [ "VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", null ],
       [ "TextArea", "classZenitUI_1_1UI_1_1TextArea.html#a1c92948f2a4cf54e6fdc900923dc9e8c", null ],
-      [ "clear", "classZenitUI_1_1UI_1_1TextArea.html#a1cb4bb72b36273b64cac993530194138", null ],
       [ "computeIntrinsicSize", "classZenitUI_1_1UI_1_1TextArea.html#a39001e8a56b2e498874aeb2bf4a53c47", null ],
       [ "getCursorPos", "classZenitUI_1_1UI_1_1TextArea.html#afd58c2ef8a4cd18c24ff6ced4e914051", null ],
       [ "getPlaceholder", "classZenitUI_1_1UI_1_1TextArea.html#ae31eec63c4f88db71d33ce92f55bef60", null ],
@@ -122,8 +111,7 @@ var group__grp__widgets =
       [ "setPlaceholder", "classZenitUI_1_1UI_1_1TextArea.html#aac2ababeeb8b79ef53222eaade7f16f0", null ],
       [ "setPlaceholderWrap", "classZenitUI_1_1UI_1_1TextArea.html#a3ea840827283ad1994c69317d3d2a9d9", null ],
       [ "setRows", "classZenitUI_1_1UI_1_1TextArea.html#a13ceb265175b3043ea6de163bccc6bf8", null ],
-      [ "setText", "classZenitUI_1_1UI_1_1TextArea.html#a4fb1c265692e7a7aae225683f4ee41b3", null ],
-      [ "onTextChanged", "classZenitUI_1_1UI_1_1TextArea.html#adee9880124d418eb61653cc1c747bafb", null ]
+      [ "setText", "classZenitUI_1_1UI_1_1TextArea.html#a4fb1c265692e7a7aae225683f4ee41b3", null ]
     ] ],
     [ "ZenitUI::UI::TextInput", "classZenitUI_1_1UI_1_1TextInput.html", [
       [ "TextInput", "classZenitUI_1_1UI_1_1TextInput.html#a3f7f752aa08cc4418961e1b1e483274e", null ],
@@ -165,7 +153,6 @@ var group__grp__widgets =
       [ "ItemFactory", "classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39", null ],
       [ "VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html#a13f42c7a4fc1882d77e7f82802e4ae72", null ],
       [ "arrange", "group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea", null ],
-      [ "computeIntrinsicSize", "group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f", null ],
       [ "create", "classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d", null ],
       [ "create", "classZenitUI_1_1UI_1_1VirtualView.html#aa797f5142b05b9d0dd909e8d71e1f863", null ],
       [ "getFirstVisibleItem", "group__grp__widgets.html#ga26c1db115e5bb00e67513d0e8ce5c256", null ],
@@ -183,7 +170,6 @@ var group__grp__widgets =
     [ "ZenitUI::UI::Box", "group__grp__widgets.html#gae0c53a867aed43cff14c742574f493de", null ],
     [ "ZenitUI::UI::Btn", "group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd", null ],
     [ "ZenitUI::UI::Button::Button", "group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8", null ],
-    [ "ZenitUI::UI::VirtualView::computeIntrinsicSize", "group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f", null ],
     [ "ZenitUI::UI::ContextMenu", "group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d", null ],
     [ "ZenitUI::UI::VirtualView::getFirstVisibleItem", "group__grp__widgets.html#ga26c1db115e5bb00e67513d0e8ce5c256", null ],
     [ "ZenitUI::UI::VirtualView::getLastVisibleItem", "group__grp__widgets.html#gad4a5f2c43e4beb127af536eea39d4a4b", null ],

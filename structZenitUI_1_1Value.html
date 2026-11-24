@@ -108,210 +108,103 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab12e972c4aaaaac2ef36e4fa6f19cc62" id="r_ab12e972c4aaaaac2ef36e4fa6f19cc62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ()=default</td></tr>
-<tr class="memitem:ab69c87c152265ca76209294aee7feccc" id="r_ab69c87c152265ca76209294aee7feccc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab69c87c152265ca76209294aee7feccc">Value</a> (float pixels)</td></tr>
-<tr class="memdesc:ab69c87c152265ca76209294aee7feccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pixel value.  <br /></td></tr>
-<tr class="memitem:a5ef79e170eb759993d0a035139f61ccf" id="r_a5ef79e170eb759993d0a035139f61ccf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ef79e170eb759993d0a035139f61ccf">Value</a> (float amount, <a class="el" href="group__grp__core.html#gab8695df1b5ab8660d25da4046f1b1262">Unit</a> u)</td></tr>
-<tr class="memdesc:a5ef79e170eb759993d0a035139f61ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from an amount and a unit.  <br /></td></tr>
-<tr class="memitem:aec750522ddc3b88469bfca4da23b06fb" id="r_aec750522ddc3b88469bfca4da23b06fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec750522ddc3b88469bfca4da23b06fb">isAuto</a> () const</td></tr>
-<tr class="memdesc:aec750522ddc3b88469bfca4da23b06fb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value has no terms and no AST node (CSS <span class="tt">auto</span>).  <br /></td></tr>
-<tr class="memitem:ab8f151538a7dbe0f69ad0be41d6608a3" id="r_ab8f151538a7dbe0f69ad0be41d6608a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8f151538a7dbe0f69ad0be41d6608a3">isSimple</a> () const</td></tr>
-<tr class="memdesc:ab8f151538a7dbe0f69ad0be41d6608a3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value is a single term.  <br /></td></tr>
-<tr class="memitem:a869e1fa558dfedf2952c289d6f6329b4" id="r_a869e1fa558dfedf2952c289d6f6329b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a869e1fa558dfedf2952c289d6f6329b4">isNumber</a> () const</td></tr>
-<tr class="memdesc:a869e1fa558dfedf2952c289d6f6329b4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value is a unitless number.  <br /></td></tr>
-<tr class="memitem:af0270fbcf6f336cb3597c9064db1a931" id="r_af0270fbcf6f336cb3597c9064db1a931"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0270fbcf6f336cb3597c9064db1a931">asNumber</a> () const</td></tr>
-<tr class="memdesc:af0270fbcf6f336cb3597c9064db1a931"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the scalar coefficient, or 0 if not a number.  <br /></td></tr>
-<tr class="memitem:a95465b127ef0785073c50729b55f5486" id="r_a95465b127ef0785073c50729b55f5486"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95465b127ef0785073c50729b55f5486">resolveH</a> (float parentW, float parentH, float autoValue=0.0f) const</td></tr>
-<tr class="memdesc:a95465b127ef0785073c50729b55f5486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value along the horizontal axis.  <br /></td></tr>
-<tr class="memitem:af512ec6504bb415fc314db744e1c9747" id="r_af512ec6504bb415fc314db744e1c9747"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af512ec6504bb415fc314db744e1c9747">resolveV</a> (float parentW, float parentH, float autoValue=0.0f) const</td></tr>
-<tr class="memdesc:af512ec6504bb415fc314db744e1c9747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value along the vertical axis.  <br /></td></tr>
-<tr class="memitem:a4425b72385b68bf55a60b8d60d367e47" id="r_a4425b72385b68bf55a60b8d60d367e47"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4425b72385b68bf55a60b8d60d367e47">resolveSelfH</a> (float selfW, float selfH) const</td></tr>
-<tr class="memdesc:a4425b72385b68bf55a60b8d60d367e47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value against the node's own size (horizontal axis).  <br /></td></tr>
-<tr class="memitem:a3f86f8d5948f8d37290ddb22906e5368" id="r_a3f86f8d5948f8d37290ddb22906e5368"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f86f8d5948f8d37290ddb22906e5368">resolveSelfV</a> (float selfW, float selfH) const</td></tr>
-<tr class="memdesc:a3f86f8d5948f8d37290ddb22906e5368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value against the node's own size (vertical axis).  <br /></td></tr>
-<tr class="memitem:af5acfd5d837843713b7785c089127795" id="r_af5acfd5d837843713b7785c089127795"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5acfd5d837843713b7785c089127795">operator+</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
-<tr class="memdesc:af5acfd5d837843713b7785c089127795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenate the term lists; falls back to an AST node if either side is an AST.  <br /></td></tr>
-<tr class="memitem:a454f8a2253feab025b923d624ac4e276" id="r_a454f8a2253feab025b923d624ac4e276"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a454f8a2253feab025b923d624ac4e276">operator-</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
-<tr class="memdesc:a454f8a2253feab025b923d624ac4e276"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract the term lists; falls back to an AST node if either side is an AST.  <br /></td></tr>
-<tr class="memitem:af9b44545b81a6994c26ac7856f75586f" id="r_af9b44545b81a6994c26ac7856f75586f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9b44545b81a6994c26ac7856f75586f">operator-</a> () const</td></tr>
-<tr class="memdesc:af9b44545b81a6994c26ac7856f75586f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Negate all terms; wraps an AST node in <span class="tt">Mul(-1)</span>.  <br /></td></tr>
-<tr class="memitem:a5ff1b0d517f15376f045ada2e101d77a" id="r_a5ff1b0d517f15376f045ada2e101d77a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ff1b0d517f15376f045ada2e101d77a">operator*</a> (float k) const</td></tr>
-<tr class="memdesc:a5ff1b0d517f15376f045ada2e101d77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale all terms by a scalar; wraps an AST node in <span class="tt">Mul(k)</span>.  <br /></td></tr>
-<tr class="memitem:aff02d4183f5abe5802251ba0c0ab7a99" id="r_aff02d4183f5abe5802251ba0c0ab7a99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff02d4183f5abe5802251ba0c0ab7a99">operator/</a> (float k) const</td></tr>
-<tr class="memdesc:aff02d4183f5abe5802251ba0c0ab7a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divide all terms by a scalar; <span class="tt">k == 0</span> is a no-op.  <br /></td></tr>
-<tr class="memitem:a5837ad30a7c229c660bdf50720410f26" id="r_a5837ad30a7c229c660bdf50720410f26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5837ad30a7c229c660bdf50720410f26">mulWith</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
-<tr class="memdesc:a5837ad30a7c229c660bdf50720410f26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two values, keeping the non-number operand's units.  <br /></td></tr>
-<tr class="memitem:aad6837a9f9c22b4da5fd9bec169db24e" id="r_aad6837a9f9c22b4da5fd9bec169db24e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad6837a9f9c22b4da5fd9bec169db24e">divWith</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
+<tr class="memitem:ab69c87c152265ca76209294aee7feccc" id="r_ab69c87c152265ca76209294aee7feccc"><td class="memItemLeft" align="right" valign="top"><a id="ab69c87c152265ca76209294aee7feccc" name="ab69c87c152265ca76209294aee7feccc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Value</b> (float pixels)</td></tr>
+<tr class="memdesc:ab69c87c152265ca76209294aee7feccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a pixel value. <br /></td></tr>
+<tr class="memitem:a5ef79e170eb759993d0a035139f61ccf" id="r_a5ef79e170eb759993d0a035139f61ccf"><td class="memItemLeft" align="right" valign="top"><a id="a5ef79e170eb759993d0a035139f61ccf" name="a5ef79e170eb759993d0a035139f61ccf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Value</b> (float amount, <a class="el" href="group__grp__core.html#gab8695df1b5ab8660d25da4046f1b1262">Unit</a> u)</td></tr>
+<tr class="memdesc:a5ef79e170eb759993d0a035139f61ccf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from an amount and a unit. <br /></td></tr>
+<tr class="memitem:aec750522ddc3b88469bfca4da23b06fb" id="r_aec750522ddc3b88469bfca4da23b06fb"><td class="memItemLeft" align="right" valign="top"><a id="aec750522ddc3b88469bfca4da23b06fb" name="aec750522ddc3b88469bfca4da23b06fb"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isAuto</b> () const</td></tr>
+<tr class="memdesc:aec750522ddc3b88469bfca4da23b06fb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value has no terms and no AST node (CSS <span class="tt">auto</span>). <br /></td></tr>
+<tr class="memitem:ab8f151538a7dbe0f69ad0be41d6608a3" id="r_ab8f151538a7dbe0f69ad0be41d6608a3"><td class="memItemLeft" align="right" valign="top"><a id="ab8f151538a7dbe0f69ad0be41d6608a3" name="ab8f151538a7dbe0f69ad0be41d6608a3"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isSimple</b> () const</td></tr>
+<tr class="memdesc:ab8f151538a7dbe0f69ad0be41d6608a3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value is a single term. <br /></td></tr>
+<tr class="memitem:a869e1fa558dfedf2952c289d6f6329b4" id="r_a869e1fa558dfedf2952c289d6f6329b4"><td class="memItemLeft" align="right" valign="top"><a id="a869e1fa558dfedf2952c289d6f6329b4" name="a869e1fa558dfedf2952c289d6f6329b4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isNumber</b> () const</td></tr>
+<tr class="memdesc:a869e1fa558dfedf2952c289d6f6329b4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the value is a unitless number. <br /></td></tr>
+<tr class="memitem:af0270fbcf6f336cb3597c9064db1a931" id="r_af0270fbcf6f336cb3597c9064db1a931"><td class="memItemLeft" align="right" valign="top"><a id="af0270fbcf6f336cb3597c9064db1a931" name="af0270fbcf6f336cb3597c9064db1a931"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>asNumber</b> () const</td></tr>
+<tr class="memdesc:af0270fbcf6f336cb3597c9064db1a931"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the scalar coefficient, or 0 if not a number. <br /></td></tr>
+<tr class="memitem:a95465b127ef0785073c50729b55f5486" id="r_a95465b127ef0785073c50729b55f5486"><td class="memItemLeft" align="right" valign="top"><a id="a95465b127ef0785073c50729b55f5486" name="a95465b127ef0785073c50729b55f5486"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>resolveH</b> (float parentW, float parentH, float autoValue=0.0f) const</td></tr>
+<tr class="memdesc:a95465b127ef0785073c50729b55f5486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value along the horizontal axis. <br /></td></tr>
+<tr class="memitem:af512ec6504bb415fc314db744e1c9747" id="r_af512ec6504bb415fc314db744e1c9747"><td class="memItemLeft" align="right" valign="top"><a id="af512ec6504bb415fc314db744e1c9747" name="af512ec6504bb415fc314db744e1c9747"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>resolveV</b> (float parentW, float parentH, float autoValue=0.0f) const</td></tr>
+<tr class="memdesc:af512ec6504bb415fc314db744e1c9747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value along the vertical axis. <br /></td></tr>
+<tr class="memitem:a4425b72385b68bf55a60b8d60d367e47" id="r_a4425b72385b68bf55a60b8d60d367e47"><td class="memItemLeft" align="right" valign="top"><a id="a4425b72385b68bf55a60b8d60d367e47" name="a4425b72385b68bf55a60b8d60d367e47"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>resolveSelfH</b> (float selfW, float selfH) const</td></tr>
+<tr class="memdesc:a4425b72385b68bf55a60b8d60d367e47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value against the node's own size (horizontal axis). <br /></td></tr>
+<tr class="memitem:a3f86f8d5948f8d37290ddb22906e5368" id="r_a3f86f8d5948f8d37290ddb22906e5368"><td class="memItemLeft" align="right" valign="top"><a id="a3f86f8d5948f8d37290ddb22906e5368" name="a3f86f8d5948f8d37290ddb22906e5368"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>resolveSelfV</b> (float selfW, float selfH) const</td></tr>
+<tr class="memdesc:a3f86f8d5948f8d37290ddb22906e5368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the value against the node's own size (vertical axis). <br /></td></tr>
+<tr class="memitem:af5acfd5d837843713b7785c089127795" id="r_af5acfd5d837843713b7785c089127795"><td class="memItemLeft" align="right" valign="top"><a id="af5acfd5d837843713b7785c089127795" name="af5acfd5d837843713b7785c089127795"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const Value &amp;o) const</td></tr>
+<tr class="memdesc:af5acfd5d837843713b7785c089127795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenate the term lists; falls back to an AST node if either side is an AST. <br /></td></tr>
+<tr class="memitem:a454f8a2253feab025b923d624ac4e276" id="r_a454f8a2253feab025b923d624ac4e276"><td class="memItemLeft" align="right" valign="top"><a id="a454f8a2253feab025b923d624ac4e276" name="a454f8a2253feab025b923d624ac4e276"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const Value &amp;o) const</td></tr>
+<tr class="memdesc:a454f8a2253feab025b923d624ac4e276"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subtract the term lists; falls back to an AST node if either side is an AST. <br /></td></tr>
+<tr class="memitem:af9b44545b81a6994c26ac7856f75586f" id="r_af9b44545b81a6994c26ac7856f75586f"><td class="memItemLeft" align="right" valign="top"><a id="af9b44545b81a6994c26ac7856f75586f" name="af9b44545b81a6994c26ac7856f75586f"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const</td></tr>
+<tr class="memdesc:af9b44545b81a6994c26ac7856f75586f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Negate all terms; wraps an AST node in <span class="tt">Mul(-1)</span>. <br /></td></tr>
+<tr class="memitem:a5ff1b0d517f15376f045ada2e101d77a" id="r_a5ff1b0d517f15376f045ada2e101d77a"><td class="memItemLeft" align="right" valign="top"><a id="a5ff1b0d517f15376f045ada2e101d77a" name="a5ff1b0d517f15376f045ada2e101d77a"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> (float k) const</td></tr>
+<tr class="memdesc:a5ff1b0d517f15376f045ada2e101d77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale all terms by a scalar; wraps an AST node in <span class="tt">Mul(k)</span>. <br /></td></tr>
+<tr class="memitem:aff02d4183f5abe5802251ba0c0ab7a99" id="r_aff02d4183f5abe5802251ba0c0ab7a99"><td class="memItemLeft" align="right" valign="top"><a id="aff02d4183f5abe5802251ba0c0ab7a99" name="aff02d4183f5abe5802251ba0c0ab7a99"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>operator/</b> (float k) const</td></tr>
+<tr class="memdesc:aff02d4183f5abe5802251ba0c0ab7a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divide all terms by a scalar; <span class="tt">k == 0</span> is a no-op. <br /></td></tr>
+<tr class="memitem:a5837ad30a7c229c660bdf50720410f26" id="r_a5837ad30a7c229c660bdf50720410f26"><td class="memItemLeft" align="right" valign="top"><a id="a5837ad30a7c229c660bdf50720410f26" name="a5837ad30a7c229c660bdf50720410f26"></a>
+Value&#160;</td><td class="memItemRight" valign="bottom"><b>mulWith</b> (const Value &amp;o) const</td></tr>
+<tr class="memdesc:a5837ad30a7c229c660bdf50720410f26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two values, keeping the non-number operand's units. <br /></td></tr>
+<tr class="memitem:aad6837a9f9c22b4da5fd9bec169db24e" id="r_aad6837a9f9c22b4da5fd9bec169db24e"><td class="memItemLeft" align="right" valign="top">Value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad6837a9f9c22b4da5fd9bec169db24e">divWith</a> (const Value &amp;o) const</td></tr>
 <tr class="memdesc:aad6837a9f9c22b4da5fd9bec169db24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divide by <code class="param">o</code>.  <br /></td></tr>
-<tr class="memitem:af87bd34e548600d6bee240646c22b8c2" id="r_af87bd34e548600d6bee240646c22b8c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af87bd34e548600d6bee240646c22b8c2">operator==</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
-<tr class="memitem:aa853d514da8663ef0bdb7e40f4c3721b" id="r_aa853d514da8663ef0bdb7e40f4c3721b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa853d514da8663ef0bdb7e40f4c3721b">operator!=</a> (const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;o) const</td></tr>
-<tr class="memitem:a2edf2bdf6939fc31e78c1371123db93c" id="r_a2edf2bdf6939fc31e78c1371123db93c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2edf2bdf6939fc31e78c1371123db93c">normalize</a> ()</td></tr>
-<tr class="memdesc:a2edf2bdf6939fc31e78c1371123db93c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collapse duplicate unit terms into one coefficient per unit.  <br /></td></tr>
+<tr class="memitem:af87bd34e548600d6bee240646c22b8c2" id="r_af87bd34e548600d6bee240646c22b8c2"><td class="memItemLeft" align="right" valign="top"><a id="af87bd34e548600d6bee240646c22b8c2" name="af87bd34e548600d6bee240646c22b8c2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const Value &amp;o) const</td></tr>
+<tr class="memitem:aa853d514da8663ef0bdb7e40f4c3721b" id="r_aa853d514da8663ef0bdb7e40f4c3721b"><td class="memItemLeft" align="right" valign="top"><a id="aa853d514da8663ef0bdb7e40f4c3721b" name="aa853d514da8663ef0bdb7e40f4c3721b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const Value &amp;o) const</td></tr>
+<tr class="memitem:a2edf2bdf6939fc31e78c1371123db93c" id="r_a2edf2bdf6939fc31e78c1371123db93c"><td class="memItemLeft" align="right" valign="top"><a id="a2edf2bdf6939fc31e78c1371123db93c" name="a2edf2bdf6939fc31e78c1371123db93c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>normalize</b> ()</td></tr>
+<tr class="memdesc:a2edf2bdf6939fc31e78c1371123db93c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collapse duplicate unit terms into one coefficient per unit. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a8e0e8caf09ef3dbc82798e865341b082" id="r_a8e0e8caf09ef3dbc82798e865341b082"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e0e8caf09ef3dbc82798e865341b082">autoSize</a> ()</td></tr>
-<tr class="memitem:a2b472f02d8d7d8af7acea6292b889490" id="r_a2b472f02d8d7d8af7acea6292b889490"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b472f02d8d7d8af7acea6292b889490">number</a> (float n)</td></tr>
-<tr class="memitem:a786d950e8370bfb44063c148b06af5f5" id="r_a786d950e8370bfb44063c148b06af5f5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a786d950e8370bfb44063c148b06af5f5">px</a> (float p)</td></tr>
-<tr class="memitem:af3dacbe1a5c839975dcaae1802f681fb" id="r_af3dacbe1a5c839975dcaae1802f681fb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3dacbe1a5c839975dcaae1802f681fb">percent</a> (float p)</td></tr>
-<tr class="memitem:a6b93341b01843ecd0fba8fb7378033d4" id="r_a6b93341b01843ecd0fba8fb7378033d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b93341b01843ecd0fba8fb7378033d4">vw</a> (float p)</td></tr>
-<tr class="memitem:a72a564c27d4e82e6ec3e31302b58f30c" id="r_a72a564c27d4e82e6ec3e31302b58f30c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72a564c27d4e82e6ec3e31302b58f30c">vh</a> (float p)</td></tr>
-<tr class="memitem:a953f2d4f45576f82c8bd6d373cefc9b6" id="r_a953f2d4f45576f82c8bd6d373cefc9b6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a953f2d4f45576f82c8bd6d373cefc9b6">pw</a> (float p)</td></tr>
-<tr class="memitem:a7786d55c1fb406274f49cdce4e635ad0" id="r_a7786d55c1fb406274f49cdce4e635ad0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7786d55c1fb406274f49cdce4e635ad0">ph</a> (float p)</td></tr>
+<tr class="memitem:a8e0e8caf09ef3dbc82798e865341b082" id="r_a8e0e8caf09ef3dbc82798e865341b082"><td class="memItemLeft" align="right" valign="top"><a id="a8e0e8caf09ef3dbc82798e865341b082" name="a8e0e8caf09ef3dbc82798e865341b082"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>autoSize</b> ()</td></tr>
+<tr class="memitem:a2b472f02d8d7d8af7acea6292b889490" id="r_a2b472f02d8d7d8af7acea6292b889490"><td class="memItemLeft" align="right" valign="top"><a id="a2b472f02d8d7d8af7acea6292b889490" name="a2b472f02d8d7d8af7acea6292b889490"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>number</b> (float n)</td></tr>
+<tr class="memitem:a786d950e8370bfb44063c148b06af5f5" id="r_a786d950e8370bfb44063c148b06af5f5"><td class="memItemLeft" align="right" valign="top"><a id="a786d950e8370bfb44063c148b06af5f5" name="a786d950e8370bfb44063c148b06af5f5"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>px</b> (float p)</td></tr>
+<tr class="memitem:af3dacbe1a5c839975dcaae1802f681fb" id="r_af3dacbe1a5c839975dcaae1802f681fb"><td class="memItemLeft" align="right" valign="top"><a id="af3dacbe1a5c839975dcaae1802f681fb" name="af3dacbe1a5c839975dcaae1802f681fb"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>percent</b> (float p)</td></tr>
+<tr class="memitem:a6b93341b01843ecd0fba8fb7378033d4" id="r_a6b93341b01843ecd0fba8fb7378033d4"><td class="memItemLeft" align="right" valign="top"><a id="a6b93341b01843ecd0fba8fb7378033d4" name="a6b93341b01843ecd0fba8fb7378033d4"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>vw</b> (float p)</td></tr>
+<tr class="memitem:a72a564c27d4e82e6ec3e31302b58f30c" id="r_a72a564c27d4e82e6ec3e31302b58f30c"><td class="memItemLeft" align="right" valign="top"><a id="a72a564c27d4e82e6ec3e31302b58f30c" name="a72a564c27d4e82e6ec3e31302b58f30c"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>vh</b> (float p)</td></tr>
+<tr class="memitem:a953f2d4f45576f82c8bd6d373cefc9b6" id="r_a953f2d4f45576f82c8bd6d373cefc9b6"><td class="memItemLeft" align="right" valign="top"><a id="a953f2d4f45576f82c8bd6d373cefc9b6" name="a953f2d4f45576f82c8bd6d373cefc9b6"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>pw</b> (float p)</td></tr>
+<tr class="memitem:a7786d55c1fb406274f49cdce4e635ad0" id="r_a7786d55c1fb406274f49cdce4e635ad0"><td class="memItemLeft" align="right" valign="top"><a id="a7786d55c1fb406274f49cdce4e635ad0" name="a7786d55c1fb406274f49cdce4e635ad0"></a>
+static Value&#160;</td><td class="memItemRight" valign="bottom"><b>ph</b> (float p)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8cf2ade58a567bb15ff07a20e63dfb24" id="r_a8cf2ade58a567bb15ff07a20e63dfb24"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1SmallVector.html">SmallVector</a>&lt; <a class="el" href="structZenitUI_1_1Value_1_1Term.html">Term</a>, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cf2ade58a567bb15ff07a20e63dfb24">terms</a></td></tr>
-<tr class="memitem:a039df337153ebaf1de75d7b98d229d8e" id="r_a039df337153ebaf1de75d7b98d229d8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga405a3e22553f11067934c401d608e4b9">ValueOp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a039df337153ebaf1de75d7b98d229d8e">op</a> {<a class="el" href="group__grp__core.html#gga405a3e22553f11067934c401d608e4b9a6adf97f83acf6453d4a6a4b1070f3754">ValueOp::None</a>}</td></tr>
-<tr class="memitem:a7006b634ab4885f95af6c295be862c0a" id="r_a7006b634ab4885f95af6c295be862c0a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; std::vector&lt; <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7006b634ab4885f95af6c295be862c0a">args</a></td></tr>
+<tr class="memitem:a8cf2ade58a567bb15ff07a20e63dfb24" id="r_a8cf2ade58a567bb15ff07a20e63dfb24"><td class="memItemLeft" align="right" valign="top"><a id="a8cf2ade58a567bb15ff07a20e63dfb24" name="a8cf2ade58a567bb15ff07a20e63dfb24"></a>
+<a class="el" href="classZenitUI_1_1SmallVector.html">SmallVector</a>&lt; <a class="el" href="structZenitUI_1_1Value_1_1Term.html">Term</a>, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>terms</b></td></tr>
+<tr class="memitem:a039df337153ebaf1de75d7b98d229d8e" id="r_a039df337153ebaf1de75d7b98d229d8e"><td class="memItemLeft" align="right" valign="top"><a id="a039df337153ebaf1de75d7b98d229d8e" name="a039df337153ebaf1de75d7b98d229d8e"></a>
+<a class="el" href="group__grp__core.html#ga405a3e22553f11067934c401d608e4b9">ValueOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>op</b> {ValueOp::None}</td></tr>
+<tr class="memitem:a7006b634ab4885f95af6c295be862c0a" id="r_a7006b634ab4885f95af6c295be862c0a"><td class="memItemLeft" align="right" valign="top"><a id="a7006b634ab4885f95af6c295be862c0a" name="a7006b634ab4885f95af6c295be862c0a"></a>
+std::shared_ptr&lt; std::vector&lt; Value &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A length expression: either a sum of unit terms or an AST node. </p>
 <p>Two representations coexist:</p><ul>
-<li><b>Linear form</b>: <span class="tt"><a class="el" href="#a8cf2ade58a567bb15ff07a20e63dfb24">terms</a></span> holds a sum of <span class="tt">coeff * unit</span> contributions (e.g. <span class="tt">50% + 10<a class="el" href="#a786d950e8370bfb44063c148b06af5f5">px</a></span>). Resolved in one pass by <span class="tt"><a class="el" href="#a95465b127ef0785073c50729b55f5486" title="Resolve the value along the horizontal axis.">resolveH</a></span>/<span class="tt"><a class="el" href="#af512ec6504bb415fc314db744e1c9747" title="Resolve the value along the vertical axis.">resolveV</a></span>.</li>
-<li><b>AST form</b>: <span class="tt"><a class="el" href="#a039df337153ebaf1de75d7b98d229d8e">op</a> != None</span> and <span class="tt"><a class="el" href="#a7006b634ab4885f95af6c295be862c0a">args</a></span> holds the operands (e.g. <span class="tt">clamp(0<a class="el" href="#a786d950e8370bfb44063c148b06af5f5">px</a>, 50%, 100<a class="el" href="#a6b93341b01843ecd0fba8fb7378033d4">vw</a>)</span>). Resolved recursively.</li>
+<li><b>Linear form</b>: <span class="tt">terms</span> holds a sum of <span class="tt">coeff * unit</span> contributions (e.g. <span class="tt">50% + 10px</span>). Resolved in one pass by <span class="tt"><a class="el" href="#a95465b127ef0785073c50729b55f5486" title="Resolve the value along the horizontal axis.">resolveH</a></span>/<span class="tt"><a class="el" href="#af512ec6504bb415fc314db744e1c9747" title="Resolve the value along the vertical axis.">resolveV</a></span>.</li>
+<li><b>AST form</b>: <span class="tt">op != None</span> and <span class="tt">args</span> holds the operands (e.g. <span class="tt">clamp(0px, 50%, 100vw)</span>). Resolved recursively.</li>
 </ul>
-<p><span class="tt"><a class="el" href="#aec750522ddc3b88469bfca4da23b06fb" title="true if the value has no terms and no AST node (CSS auto).">isAuto()</a></span> returns true when both <span class="tt"><a class="el" href="#a8cf2ade58a567bb15ff07a20e63dfb24">terms</a></span> is empty and <span class="tt"><a class="el" href="#a039df337153ebaf1de75d7b98d229d8e">op</a> == None</span>, which the layout system treats as "size to content".</p>
+<p><span class="tt"><a class="el" href="#aec750522ddc3b88469bfca4da23b06fb" title="true if the value has no terms and no AST node (CSS auto).">isAuto()</a></span> returns true when both <span class="tt">terms</span> is empty and <span class="tt">op == None</span>, which the layout system treats as "size to content".</p>
 <p>Arithmetic operators (<span class="tt">+</span>, <span class="tt">-</span>, <span class="tt">*</span>, <span class="tt">/</span>) preserve the representation: adding two linear values merges their term lists; adding anything to an AST node produces a new AST node. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a29">00_demo/main.cpp</a>, and <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a18">04b_imperative_animations/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a24">00_demo/main.cpp</a>, and <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a13">04b_imperative_animations/main.cpp</a>.</dd>
 </dl>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab12e972c4aaaaac2ef36e4fa6f19cc62" name="ab12e972c4aaaaac2ef36e4fa6f19cc62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">&#9670;&#160;</a></span>Value() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ZenitUI::Value::Value </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab69c87c152265ca76209294aee7feccc" name="ab69c87c152265ca76209294aee7feccc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab69c87c152265ca76209294aee7feccc">&#9670;&#160;</a></span>Value() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ZenitUI::Value::Value </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>pixels</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Construct a pixel value. </p>
-
-</div>
-</div>
-<a id="a5ef79e170eb759993d0a035139f61ccf" name="a5ef79e170eb759993d0a035139f61ccf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ef79e170eb759993d0a035139f61ccf">&#9670;&#160;</a></span>Value() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ZenitUI::Value::Value </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>amount</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__grp__core.html#gab8695df1b5ab8660d25da4046f1b1262">Unit</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Construct from an amount and a unit. </p>
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="af0270fbcf6f336cb3597c9064db1a931" name="af0270fbcf6f336cb3597c9064db1a931"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0270fbcf6f336cb3597c9064db1a931">&#9670;&#160;</a></span>asNumber()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Value::asNumber </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return the scalar coefficient, or 0 if not a number. </p>
-
-</div>
-</div>
-<a id="a8e0e8caf09ef3dbc82798e865341b082" name="a8e0e8caf09ef3dbc82798e865341b082"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e0e8caf09ef3dbc82798e865341b082">&#9670;&#160;</a></span>autoSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::autoSize </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="aad6837a9f9c22b4da5fd9bec169db24e" name="aad6837a9f9c22b4da5fd9bec169db24e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad6837a9f9c22b4da5fd9bec169db24e">&#9670;&#160;</a></span>divWith()</h2>
 
@@ -322,9 +215,9 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::divWith </td>
+          <td class="memname">Value ZenitUI::Value::divWith </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
+          <td class="paramtype">const Value &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -337,678 +230,6 @@ Public Attributes</h2></td></tr>
 
 <p>Divide by <code class="param">o</code>. </p>
 <p>Only a unitless divisor is applied; otherwise returns <span class="tt">*this</span>. </p>
-
-</div>
-</div>
-<a id="aec750522ddc3b88469bfca4da23b06fb" name="aec750522ddc3b88469bfca4da23b06fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec750522ddc3b88469bfca4da23b06fb">&#9670;&#160;</a></span>isAuto()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Value::isAuto </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the value has no terms and no AST node (CSS <span class="tt">auto</span>). </p>
-
-</div>
-</div>
-<a id="a869e1fa558dfedf2952c289d6f6329b4" name="a869e1fa558dfedf2952c289d6f6329b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a869e1fa558dfedf2952c289d6f6329b4">&#9670;&#160;</a></span>isNumber()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Value::isNumber </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the value is a unitless number. </p>
-
-</div>
-</div>
-<a id="ab8f151538a7dbe0f69ad0be41d6608a3" name="ab8f151538a7dbe0f69ad0be41d6608a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8f151538a7dbe0f69ad0be41d6608a3">&#9670;&#160;</a></span>isSimple()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Value::isSimple </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the value is a single term. </p>
-
-</div>
-</div>
-<a id="a5837ad30a7c229c660bdf50720410f26" name="a5837ad30a7c229c660bdf50720410f26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5837ad30a7c229c660bdf50720410f26">&#9670;&#160;</a></span>mulWith()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::mulWith </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Multiply two values, keeping the non-number operand's units. </p>
-
-</div>
-</div>
-<a id="a2edf2bdf6939fc31e78c1371123db93c" name="a2edf2bdf6939fc31e78c1371123db93c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2edf2bdf6939fc31e78c1371123db93c">&#9670;&#160;</a></span>normalize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Value::normalize </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Collapse duplicate unit terms into one coefficient per unit. </p>
-
-</div>
-</div>
-<a id="a2b472f02d8d7d8af7acea6292b889490" name="a2b472f02d8d7d8af7acea6292b889490"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b472f02d8d7d8af7acea6292b889490">&#9670;&#160;</a></span>number()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::number </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa853d514da8663ef0bdb7e40f4c3721b" name="aa853d514da8663ef0bdb7e40f4c3721b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa853d514da8663ef0bdb7e40f4c3721b">&#9670;&#160;</a></span>operator!=()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Value::operator!= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5ff1b0d517f15376f045ada2e101d77a" name="a5ff1b0d517f15376f045ada2e101d77a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ff1b0d517f15376f045ada2e101d77a">&#9670;&#160;</a></span>operator*()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::operator* </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>k</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Scale all terms by a scalar; wraps an AST node in <span class="tt">Mul(k)</span>. </p>
-
-</div>
-</div>
-<a id="af5acfd5d837843713b7785c089127795" name="af5acfd5d837843713b7785c089127795"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5acfd5d837843713b7785c089127795">&#9670;&#160;</a></span>operator+()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::operator+ </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Concatenate the term lists; falls back to an AST node if either side is an AST. </p>
-
-</div>
-</div>
-<a id="af9b44545b81a6994c26ac7856f75586f" name="af9b44545b81a6994c26ac7856f75586f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9b44545b81a6994c26ac7856f75586f">&#9670;&#160;</a></span>operator-() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::operator- </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Negate all terms; wraps an AST node in <span class="tt">Mul(-1)</span>. </p>
-
-</div>
-</div>
-<a id="a454f8a2253feab025b923d624ac4e276" name="a454f8a2253feab025b923d624ac4e276"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a454f8a2253feab025b923d624ac4e276">&#9670;&#160;</a></span>operator-() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::operator- </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Subtract the term lists; falls back to an AST node if either side is an AST. </p>
-
-</div>
-</div>
-<a id="aff02d4183f5abe5802251ba0c0ab7a99" name="aff02d4183f5abe5802251ba0c0ab7a99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff02d4183f5abe5802251ba0c0ab7a99">&#9670;&#160;</a></span>operator/()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::operator/ </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>k</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Divide all terms by a scalar; <span class="tt">k == 0</span> is a no-op. </p>
-
-</div>
-</div>
-<a id="af87bd34e548600d6bee240646c22b8c2" name="af87bd34e548600d6bee240646c22b8c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af87bd34e548600d6bee240646c22b8c2">&#9670;&#160;</a></span>operator==()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Value::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af3dacbe1a5c839975dcaae1802f681fb" name="af3dacbe1a5c839975dcaae1802f681fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3dacbe1a5c839975dcaae1802f681fb">&#9670;&#160;</a></span>percent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::percent </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7786d55c1fb406274f49cdce4e635ad0" name="a7786d55c1fb406274f49cdce4e635ad0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7786d55c1fb406274f49cdce4e635ad0">&#9670;&#160;</a></span>ph()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::ph </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a953f2d4f45576f82c8bd6d373cefc9b6" name="a953f2d4f45576f82c8bd6d373cefc9b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a953f2d4f45576f82c8bd6d373cefc9b6">&#9670;&#160;</a></span>pw()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::pw </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a786d950e8370bfb44063c148b06af5f5" name="a786d950e8370bfb44063c148b06af5f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a786d950e8370bfb44063c148b06af5f5">&#9670;&#160;</a></span>px()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::px </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a95465b127ef0785073c50729b55f5486" name="a95465b127ef0785073c50729b55f5486"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95465b127ef0785073c50729b55f5486">&#9670;&#160;</a></span>resolveH()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Value::resolveH </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>parentW</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>parentH</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>autoValue</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0f</span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve the value along the horizontal axis. </p>
-
-</div>
-</div>
-<a id="a4425b72385b68bf55a60b8d60d367e47" name="a4425b72385b68bf55a60b8d60d367e47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4425b72385b68bf55a60b8d60d367e47">&#9670;&#160;</a></span>resolveSelfH()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Value::resolveSelfH </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>selfW</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>selfH</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve the value against the node's own size (horizontal axis). </p>
-
-</div>
-</div>
-<a id="a3f86f8d5948f8d37290ddb22906e5368" name="a3f86f8d5948f8d37290ddb22906e5368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f86f8d5948f8d37290ddb22906e5368">&#9670;&#160;</a></span>resolveSelfV()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Value::resolveSelfV </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>selfW</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>selfH</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve the value against the node's own size (vertical axis). </p>
-
-</div>
-</div>
-<a id="af512ec6504bb415fc314db744e1c9747" name="af512ec6504bb415fc314db744e1c9747"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af512ec6504bb415fc314db744e1c9747">&#9670;&#160;</a></span>resolveV()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Value::resolveV </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>parentW</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>parentH</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>autoValue</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0f</span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve the value along the vertical axis. </p>
-
-</div>
-</div>
-<a id="a72a564c27d4e82e6ec3e31302b58f30c" name="a72a564c27d4e82e6ec3e31302b58f30c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72a564c27d4e82e6ec3e31302b58f30c">&#9670;&#160;</a></span>vh()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::vh </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6b93341b01843ecd0fba8fb7378033d4" name="a6b93341b01843ecd0fba8fb7378033d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b93341b01843ecd0fba8fb7378033d4">&#9670;&#160;</a></span>vw()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a> ZenitUI::Value::vw </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a7006b634ab4885f95af6c295be862c0a" name="a7006b634ab4885f95af6c295be862c0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7006b634ab4885f95af6c295be862c0a">&#9670;&#160;</a></span>args</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt;std::vector&lt;<a class="el" href="#ab12e972c4aaaaac2ef36e4fa6f19cc62">Value</a>&gt; &gt; ZenitUI::Value::args</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a039df337153ebaf1de75d7b98d229d8e" name="a039df337153ebaf1de75d7b98d229d8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a039df337153ebaf1de75d7b98d229d8e">&#9670;&#160;</a></span>op</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__grp__core.html#ga405a3e22553f11067934c401d608e4b9">ValueOp</a> ZenitUI::Value::op {<a class="el" href="group__grp__core.html#gga405a3e22553f11067934c401d608e4b9a6adf97f83acf6453d4a6a4b1070f3754">ValueOp::None</a>}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8cf2ade58a567bb15ff07a20e63dfb24" name="a8cf2ade58a567bb15ff07a20e63dfb24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8cf2ade58a567bb15ff07a20e63dfb24">&#9670;&#160;</a></span>terms</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1SmallVector.html">SmallVector</a>&lt;<a class="el" href="structZenitUI_1_1Value_1_1Term.html">Term</a>, 2&gt; ZenitUI::Value::terms</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -1028,7 +249,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1Value.html">Value</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1Value.html">Value</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

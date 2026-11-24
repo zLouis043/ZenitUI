@@ -117,13 +117,9 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AKeyframe" id="r_ZenitUI_3A_3AKeyframe"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Keyframe.html">ZenitUI::Keyframe</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One keyframe of a CSS animation: a normalized time and a sparse style delta.  <a href="structZenitUI_1_1Keyframe.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AKeyframeAnimation" id="r_ZenitUI_3A_3AKeyframeAnimation"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1KeyframeAnimation.html">ZenitUI::KeyframeAnimation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A named list of keyframes, keyed by <span class="tt"><a class="el" href="structZenitUI_1_1KeyframeAnimation.html#a24db8b90c11d1af16f001dd26eaffc12">name</a></span> in <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html#a651bcf7bac60a9fd1815dfe8b036c233">Theme::keyframes</a></span>.  <a href="structZenitUI_1_1KeyframeAnimation.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A named list of keyframes, keyed by <span class="tt">name</span> in <span class="tt">Theme::keyframes</span>.  <a href="structZenitUI_1_1KeyframeAnimation.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AActiveCssAnimation" id="r_ZenitUI_3A_3AActiveCssAnimation"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ZenitUI::ActiveCssAnimation</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Playback state for one CSS animation on one node.  <a href="structZenitUI_1_1ActiveCssAnimation.html#details">More...</a><br /></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:ZenitUI" id="r_ZenitUI"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZenitUI.html">ZenitUI</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -133,8 +129,9 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga1ba79222e3dc1a0c72b7cba4012971d5" id="r_ga1ba79222e3dc1a0c72b7cba4012971d5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__anim.html#ga1ba79222e3dc1a0c72b7cba4012971d5">ZenitUI::sampleActive</a> (const <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &amp;a, bool &amp;finished)</td></tr>
 <tr class="memdesc:ga1ba79222e3dc1a0c72b7cba4012971d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample the given CSS animation's local time without touching the cache.  <br /></td></tr>
-<tr class="memitem:ga5c0f9f01a02d63814fc6b96d428d5200" id="r_ga5c0f9f01a02d63814fc6b96d428d5200"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__anim.html#ga5c0f9f01a02d63814fc6b96d428d5200">ZenitUI::sampleActiveCached</a> (const <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &amp;a, bool &amp;finished)</td></tr>
-<tr class="memdesc:ga5c0f9f01a02d63814fc6b96d428d5200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cached wrapper around <span class="tt"><a class="el" href="group__grp__anim.html#ga1ba79222e3dc1a0c72b7cba4012971d5" title="Sample the given CSS animation&#39;s local time without touching the cache.">sampleActive</a></span>.  <br /></td></tr>
+<tr class="memitem:ga5c0f9f01a02d63814fc6b96d428d5200" id="r_ga5c0f9f01a02d63814fc6b96d428d5200"><td class="memItemLeft" align="right" valign="top">
+float&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::sampleActiveCached</b> (const <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &amp;a, bool &amp;finished)</td></tr>
+<tr class="memdesc:ga5c0f9f01a02d63814fc6b96d428d5200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cached wrapper around <span class="tt"><a class="el" href="group__grp__anim.html#ga1ba79222e3dc1a0c72b7cba4012971d5" title="Sample the given CSS animation&#39;s local time without touching the cache.">sampleActive</a></span>. <br /></td></tr>
 <tr class="memitem:ga48e33d9bb4122b2be16f67d16a13f249" id="r_ga48e33d9bb4122b2be16f67d16a13f249"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__anim.html#ga48e33d9bb4122b2be16f67d16a13f249">ZenitUI::evaluateKeyframes</a> (const <a class="el" href="structZenitUI_1_1KeyframeAnimation.html">KeyframeAnimation</a> &amp;anim, float localT, <a class="el" href="group__grp__anim.html#gae27ff9cac1e9b8ddc267881d389bcdf8">TransitionFunction</a> ease)</td></tr>
 <tr class="memdesc:ga48e33d9bb4122b2be16f67d16a13f249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolate a <span class="tt"><a class="el" href="structZenitUI_1_1KeyframeAnimation.html" title="A named list of keyframes, keyed by name in Theme::keyframes.">KeyframeAnimation</a></span> at local time <code class="param">localT</code>.  <br /></td></tr>
 </table>
@@ -192,7 +189,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a href="AnimPrimitives_8hpp.html">AnimPrimitives.hpp</a></li>
+    <li class="navelem"><b>include</b></li><li class="navelem"><a href="AnimPrimitives_8hpp.html">AnimPrimitives.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

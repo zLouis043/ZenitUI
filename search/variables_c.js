@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['name_0',['name',['../structZenitUI_1_1KeyframeAnimation.html#a24db8b90c11d1af16f001dd26eaffc12',1,'ZenitUI::KeyframeAnimation::name'],['../structZenitUI_1_1ActiveCssAnimation.html#aead9782dcddf645b8e4e0a062bc0f69e',1,'ZenitUI::ActiveCssAnimation::name'],['../structZenitUI_1_1FilterDef.html#a01eddf71513824b3b215f56d5cbc4280',1,'ZenitUI::FilterDef::name'],['../structZenitUI_1_1AnimationRef.html#ab375323fcad184414ca4950fde93aea7',1,'ZenitUI::AnimationRef::name'],['../structZenitUI_1_1TextureRef.html#a52340bb74e25ae7f302bb6db1b3cb7bd',1,'ZenitUI::TextureRef::name'],['../structZenitUI_1_1SimpleSelector.html#a4b5a8d2dafa4dc223d8fd598efb80220',1,'ZenitUI::SimpleSelector::name'],['../structZenitUI_1_1FilterRef.html#a23de7139e8870a5638de70461043e67f',1,'ZenitUI::FilterRef::name'],['../structZenitUI_1_1PropDesc.html#a0f932bb218b32f9cf6d13940df733a3b',1,'ZenitUI::PropDesc::name'],['../structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule.html#a1a4247ae9ed7a94465f0dcb1a47ec0ff',1,'ZenitUI::ZMarkup::StyleSheet::KfRule::name'],['../structZenitUI_1_1Theme_1_1SymbolKey.html#a26e743d5f1f45a70e42cc9cc7d9a374b',1,'ZenitUI::Theme::SymbolKey::name']]],
-  ['node_1',['node',['../structZenitUI_1_1FilterContext.html#abfc5294e0488f2c73d739881ad4f7789',1,'ZenitUI::FilterContext']]],
-  ['nodeid_2',['nodeId',['../classZenitUI_1_1Layout.html#a4aa89657fd5cc6063d01533a539a56ff',1,'ZenitUI::Layout']]]
+  ['ref_0',['ref',['../classZenitUI_1_1Layout.html#a1cc11f339765c715799f3fad120d8510',1,'ZenitUI::Layout']]],
+  ['released_1',['released',['../structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665',1,'ZenitUI::ButtonState']]]
 ];

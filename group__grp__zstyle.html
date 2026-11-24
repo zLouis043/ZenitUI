@@ -139,7 +139,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dense style: every property has a concrete value.  <a href="structZenitUI_1_1ComputedStyle.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3APropDesc" id="r_ZenitUI_3A_3APropDesc"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1PropDesc.html">ZenitUI::PropDesc</a></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3ADeclaration" id="r_ZenitUI_3A_3AZMarkup_3A_3ADeclaration"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Declaration.html">ZenitUI::ZMarkup::Declaration</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One parsed <span class="tt">key: <a class="el" href="structZenitUI_1_1ZMarkup_1_1Declaration.html#a104b545521625ac510aa410c173a5505">value</a>;</span> declaration, with source location.  <a href="structZenitUI_1_1ZMarkup_1_1Declaration.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One parsed <span class="tt">key: value;</span> declaration, with source location.  <a href="structZenitUI_1_1ZMarkup_1_1Declaration.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AStyleSheet" id="r_ZenitUI_3A_3AZMarkup_3A_3AStyleSheet"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html">ZenitUI::ZMarkup::StyleSheet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate representation: parsed rules, keyframes and root vars.  <a href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AStyleParser" id="r_ZenitUI_3A_3AZMarkup_3A_3AStyleParser"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ZMarkup_1_1StyleParser.html">ZenitUI::ZMarkup::StyleParser</a></td></tr>
@@ -155,7 +155,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga7b6f5554fdada5477c0581b9ea317530" id="r_ga7b6f5554fdada5477c0581b9ea317530"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7b6f5554fdada5477c0581b9ea317530">BUBBLE_STYLE_PROPS</a>(<a class="el" href="Style_8hpp.html#addf2dafc333dbba4d383edfa82b16cad">X</a>)</td></tr>
+<tr class="memitem:ga7b6f5554fdada5477c0581b9ea317530" id="r_ga7b6f5554fdada5477c0581b9ea317530"><td class="memItemLeft" align="right" valign="top"><a id="ga7b6f5554fdada5477c0581b9ea317530" name="ga7b6f5554fdada5477c0581b9ea317530"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>BUBBLE_STYLE_PROPS</b>(X)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -163,57 +164,59 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga33499078caccb3f383cf6da856c7a7dc" id="r_ga33499078caccb3f383cf6da856c7a7dc"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">ZenitUI::DiagnosticSeverity</a> { <a class="el" href="#gga33499078caccb3f383cf6da856c7a7dca4059b0251f66a18cb56f544728796875">ZenitUI::DiagnosticSeverity::Info</a>
-, <a class="el" href="#gga33499078caccb3f383cf6da856c7a7dca0eaadb4fcb48a0a0ed7bc9868be9fbaa">ZenitUI::DiagnosticSeverity::Warning</a>
-, <a class="el" href="#gga33499078caccb3f383cf6da856c7a7dca902b0d55fddef6f8d651fe1035b7d4bd">ZenitUI::DiagnosticSeverity::Error</a>
+<tr class="memitem:ga33499078caccb3f383cf6da856c7a7dc" id="r_ga33499078caccb3f383cf6da856c7a7dc"><td class="memItemLeft" align="right" valign="top"><a id="ga33499078caccb3f383cf6da856c7a7dc" name="ga33499078caccb3f383cf6da856c7a7dc"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">ZenitUI::DiagnosticSeverity</a> { <b>Info</b>
+, <b>Warning</b>
+, <b>Error</b>
  }</td></tr>
-<tr class="memdesc:ga33499078caccb3f383cf6da856c7a7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Diagnostic severity level.  <a href="#ga33499078caccb3f383cf6da856c7a7dc">More...</a><br /></td></tr>
+<tr class="memdesc:ga33499078caccb3f383cf6da856c7a7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Diagnostic severity level. <br /></td></tr>
 <tr class="memitem:gadfc0f636085619f9baa90bebd758bf71" id="r_gadfc0f636085619f9baa90bebd758bf71"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadfc0f636085619f9baa90bebd758bf71">ZenitUI::DiagnosticCode</a> { <br />
-&#160;&#160;<a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71aa01fcd2a66cb296300f830886af9f734">ZenitUI::DiagnosticCode::UnterminatedString</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a0c07aa1354886553d0e352070477d0c3">ZenitUI::DiagnosticCode::UnbalancedBrace</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71ac2a1728fb6705d558a76b01827e56356">ZenitUI::DiagnosticCode::UnexpectedToken</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a2190fa6ec8be6e3eb54e665ca12fe5a2">ZenitUI::DiagnosticCode::UnknownProperty</a>
+&#160;&#160;<b>UnterminatedString</b>
+, <b>UnbalancedBrace</b>
+, <b>UnexpectedToken</b>
+, <b>UnknownProperty</b>
 , <br />
-&#160;&#160;<a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a223e81e8afa42c41346a6696560ecc7b">ZenitUI::DiagnosticCode::InvalidValue</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a10ad6726d2e4564ce679dc2f0c084cfe">ZenitUI::DiagnosticCode::UnknownPseudo</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71af811879e0ab298af1a7c9f7dfe7c0e64">ZenitUI::DiagnosticCode::UnknownPart</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a5fb0d6d4c183d2338bc6af1054d24c53">ZenitUI::DiagnosticCode::UnresolvedVariable</a>
+&#160;&#160;<b>InvalidValue</b>
+, <b>UnknownPseudo</b>
+, <b>UnknownPart</b>
+, <b>UnresolvedVariable</b>
 , <br />
-&#160;&#160;<a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a90f0c9de35bea8fe8bb7e996f83c998e">ZenitUI::DiagnosticCode::UnusedVariable</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a3768b82bf3f480d9fe4619e973d5d5c5">ZenitUI::DiagnosticCode::UnknownSelectorTag</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71a6008a752bcf8e4fac4a9057f123095ec">ZenitUI::DiagnosticCode::SelectorMatchesNothing</a>
-, <a class="el" href="#ggadfc0f636085619f9baa90bebd758bf71abab1e72321c8fcdb6e216238db21e4e7">ZenitUI::DiagnosticCode::DuplicateRule</a>
+&#160;&#160;<b>UnusedVariable</b>
+, <b>UnknownSelectorTag</b>
+, <b>SelectorMatchesNothing</b>
+, <b>DuplicateRule</b>
 <br />
  }</td></tr>
 <tr class="memdesc:gadfc0f636085619f9baa90bebd758bf71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Machine-readable diagnostic identifier.  <a href="#gadfc0f636085619f9baa90bebd758bf71">More...</a><br /></td></tr>
-<tr class="memitem:gad1c0d7e8bd09eeea85e1f3acd4e1e678" id="r_gad1c0d7e8bd09eeea85e1f3acd4e1e678"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">ZenitUI::Position</a> { <a class="el" href="#ggad1c0d7e8bd09eeea85e1f3acd4e1e678a84a8921b25f505d0d2077aeb5db4bc16">ZenitUI::Position::Static</a>
-, <a class="el" href="#ggad1c0d7e8bd09eeea85e1f3acd4e1e678a2ca9469819fb0fb61ff98e914a7ccca0">ZenitUI::Position::Relative</a>
-, <a class="el" href="#ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8">ZenitUI::Position::Absolute</a>
+<tr class="memitem:gad1c0d7e8bd09eeea85e1f3acd4e1e678" id="r_gad1c0d7e8bd09eeea85e1f3acd4e1e678"><td class="memItemLeft" align="right" valign="top"><a id="gad1c0d7e8bd09eeea85e1f3acd4e1e678" name="gad1c0d7e8bd09eeea85e1f3acd4e1e678"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">ZenitUI::Position</a> { <b>Static</b>
+, <b>Relative</b>
+, <b>Absolute</b>
  }</td></tr>
-<tr class="memdesc:gad1c0d7e8bd09eeea85e1f3acd4e1e678"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS-style <span class="tt">position</span> modes supported by the layout system.  <a href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">More...</a><br /></td></tr>
-<tr class="memitem:gada49a5d270525bd8ccc73cd680f9dc5d" id="r_gada49a5d270525bd8ccc73cd680f9dc5d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gada49a5d270525bd8ccc73cd680f9dc5d">ZenitUI::Overflow</a> { <a class="el" href="#ggada49a5d270525bd8ccc73cd680f9dc5daec24d78ce33048dc73a2b6b1a0690192">ZenitUI::Overflow::Visible</a>
-, <a class="el" href="#ggada49a5d270525bd8ccc73cd680f9dc5da7acdf85c69cc3c5305456a293524386e">ZenitUI::Overflow::Hidden</a>
-, <a class="el" href="#ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934">ZenitUI::Overflow::Scroll</a>
-, <a class="el" href="#ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb">ZenitUI::Overflow::Auto</a>
+<tr class="memdesc:gad1c0d7e8bd09eeea85e1f3acd4e1e678"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS-style <span class="tt">position</span> modes supported by the layout system. <br /></td></tr>
+<tr class="memitem:gada49a5d270525bd8ccc73cd680f9dc5d" id="r_gada49a5d270525bd8ccc73cd680f9dc5d"><td class="memItemLeft" align="right" valign="top"><a id="gada49a5d270525bd8ccc73cd680f9dc5d" name="gada49a5d270525bd8ccc73cd680f9dc5d"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gada49a5d270525bd8ccc73cd680f9dc5d">ZenitUI::Overflow</a> { <b>Visible</b>
+, <b>Hidden</b>
+, <b>Scroll</b>
+, <b>Auto</b>
  }</td></tr>
-<tr class="memdesc:gada49a5d270525bd8ccc73cd680f9dc5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">overflow</span> modes for one axis.  <a href="#gada49a5d270525bd8ccc73cd680f9dc5d">More...</a><br /></td></tr>
-<tr class="memitem:gaa130abd7bfd76fae4452d5c8acd586de" id="r_gaa130abd7bfd76fae4452d5c8acd586de"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">ZenitUI::WhiteSpace</a> { <a class="el" href="#ggaa130abd7bfd76fae4452d5c8acd586dea960b44c579bc2f6818d2daaf9e4c16f0">ZenitUI::WhiteSpace::Normal</a>
-, <a class="el" href="#ggaa130abd7bfd76fae4452d5c8acd586dea2e00ab205ddfaf2c1228d907772debc4">ZenitUI::WhiteSpace::Nowrap</a>
+<tr class="memdesc:gada49a5d270525bd8ccc73cd680f9dc5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">overflow</span> modes for one axis. <br /></td></tr>
+<tr class="memitem:gaa130abd7bfd76fae4452d5c8acd586de" id="r_gaa130abd7bfd76fae4452d5c8acd586de"><td class="memItemLeft" align="right" valign="top"><a id="gaa130abd7bfd76fae4452d5c8acd586de" name="gaa130abd7bfd76fae4452d5c8acd586de"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">ZenitUI::WhiteSpace</a> { <b>Normal</b>
+, <b>Nowrap</b>
  }</td></tr>
-<tr class="memdesc:gaa130abd7bfd76fae4452d5c8acd586de"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">white-space</span> values relevant to text layout.  <a href="#gaa130abd7bfd76fae4452d5c8acd586de">More...</a><br /></td></tr>
-<tr class="memitem:ga1b3a2c403488abdad1ad1118fbd38d86" id="r_ga1b3a2c403488abdad1ad1118fbd38d86"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">ZenitUI::TextOverflow</a> { <a class="el" href="#gga1b3a2c403488abdad1ad1118fbd38d86aec24d78ce33048dc73a2b6b1a0690192">ZenitUI::TextOverflow::Visible</a>
-, <a class="el" href="#gga1b3a2c403488abdad1ad1118fbd38d86a8a97ba435dcdb6750b240cdce3ff3e11">ZenitUI::TextOverflow::Ellipsis</a>
+<tr class="memdesc:gaa130abd7bfd76fae4452d5c8acd586de"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">white-space</span> values relevant to text layout. <br /></td></tr>
+<tr class="memitem:ga1b3a2c403488abdad1ad1118fbd38d86" id="r_ga1b3a2c403488abdad1ad1118fbd38d86"><td class="memItemLeft" align="right" valign="top"><a id="ga1b3a2c403488abdad1ad1118fbd38d86" name="ga1b3a2c403488abdad1ad1118fbd38d86"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">ZenitUI::TextOverflow</a> { <b>Visible</b>
+, <b>Ellipsis</b>
  }</td></tr>
-<tr class="memdesc:ga1b3a2c403488abdad1ad1118fbd38d86"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">text-overflow</span> modes supported by the text renderer.  <a href="#ga1b3a2c403488abdad1ad1118fbd38d86">More...</a><br /></td></tr>
-<tr class="memitem:gad3dc3d3980af141d7d971b54deca0c16" id="r_gad3dc3d3980af141d7d971b54deca0c16"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad3dc3d3980af141d7d971b54deca0c16">ZenitUI::Direction</a> { <a class="el" href="#ggad3dc3d3980af141d7d971b54deca0c16a06b9281e396db002010bde1de57262eb">ZenitUI::Direction::Auto</a>
-, <a class="el" href="#ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3">ZenitUI::Direction::Row</a>
-, <a class="el" href="#ggad3dc3d3980af141d7d971b54deca0c16a1976d7f704de389d9fe064e08ea35b2d">ZenitUI::Direction::Column</a>
+<tr class="memdesc:ga1b3a2c403488abdad1ad1118fbd38d86"><td class="mdescLeft">&#160;</td><td class="mdescRight">CSS <span class="tt">text-overflow</span> modes supported by the text renderer. <br /></td></tr>
+<tr class="memitem:gad3dc3d3980af141d7d971b54deca0c16" id="r_gad3dc3d3980af141d7d971b54deca0c16"><td class="memItemLeft" align="right" valign="top"><a id="gad3dc3d3980af141d7d971b54deca0c16" name="gad3dc3d3980af141d7d971b54deca0c16"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Direction</b> { <b>Auto</b>
+, <b>Row</b>
+, <b>Column</b>
  }</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga6f0ac5c042324f2e3ad2b34ea1828fd6" id="r_ga6f0ac5c042324f2e3ad2b34ea1828fd6"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6f0ac5c042324f2e3ad2b34ea1828fd6">ZenitUI::toString</a> (<a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">DiagnosticSeverity</a> s) noexcept</td></tr>
-<tr class="memitem:ga6289c9ba9b4343e6507610042f0875fd" id="r_ga6289c9ba9b4343e6507610042f0875fd"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6289c9ba9b4343e6507610042f0875fd">ZenitUI::toString</a> (<a class="el" href="#gadfc0f636085619f9baa90bebd758bf71">DiagnosticCode</a> c) noexcept</td></tr>
+<tr class="memitem:ga6f0ac5c042324f2e3ad2b34ea1828fd6" id="r_ga6f0ac5c042324f2e3ad2b34ea1828fd6"><td class="memItemLeft" align="right" valign="top"><a id="ga6f0ac5c042324f2e3ad2b34ea1828fd6" name="ga6f0ac5c042324f2e3ad2b34ea1828fd6"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::toString</b> (<a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">DiagnosticSeverity</a> s) noexcept</td></tr>
+<tr class="memitem:ga6289c9ba9b4343e6507610042f0875fd" id="r_ga6289c9ba9b4343e6507610042f0875fd"><td class="memItemLeft" align="right" valign="top"><a id="ga6289c9ba9b4343e6507610042f0875fd" name="ga6289c9ba9b4343e6507610042f0875fd"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::toString</b> (<a class="el" href="#gadfc0f636085619f9baa90bebd758bf71">DiagnosticCode</a> c) noexcept</td></tr>
 <tr class="memitem:gac36fae417b5e1911cd3e1b3a6f4af72a" id="r_gac36fae417b5e1911cd3e1b3a6f4af72a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ZStyleDiagnostic.html">ZStyleDiagnostic</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac36fae417b5e1911cd3e1b3a6f4af72a">ZenitUI::makeDiagnostic</a> (<a class="el" href="#gadfc0f636085619f9baa90bebd758bf71">DiagnosticCode</a> code, <a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">DiagnosticSeverity</a> severity, <a class="el" href="structZenitUI_1_1SourceSpan.html">SourceSpan</a> span, std::string message, std::string hint={})</td></tr>
 <tr class="memdesc:gac36fae417b5e1911cd3e1b3a6f4af72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a diagnostic record.  <br /></td></tr>
 <tr class="memitem:gaab91f50d76f0d613812a562912fd7987" id="r_gaab91f50d76f0d613812a562912fd7987"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab91f50d76f0d613812a562912fd7987">ZenitUI::editDistance</a> (std::string_view a, std::string_view b)</td></tr>
@@ -226,65 +229,102 @@ Functions</h2></td></tr>
 <tr class="memdesc:gacfceabd5d268963255e9628528e81217"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the list of style property names known to the parser.  <br /></td></tr>
 <tr class="memitem:gaae798a3d554b625185ec7db2406ce38f" id="r_gaae798a3d554b625185ec7db2406ce38f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaae798a3d554b625185ec7db2406ce38f">ZenitUI::evaluateMedia</a> (const <a class="el" href="structZenitUI_1_1MediaQuery.html">MediaQuery</a> &amp;q, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> viewport)</td></tr>
 <tr class="memdesc:gaae798a3d554b625185ec7db2406ce38f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate a <span class="tt"><a class="el" href="structZenitUI_1_1MediaQuery.html" title="A conjunction of media conditions.">MediaQuery</a></span> against a viewport size.  <br /></td></tr>
-<tr class="memitem:ga53324f6e27109570911e0e8f4d1e25f4" id="r_ga53324f6e27109570911e0e8f4d1e25f4"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga53324f6e27109570911e0e8f4d1e25f4">ZenitUI::operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;stack)</td></tr>
-<tr class="memdesc:ga53324f6e27109570911e0e8f4d1e25f4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">std::ostream</span> operator for <span class="tt"><a class="el" href="structZenitUI_1_1FontStack.html" title="Ordered list of font family names to try, first match wins.">FontStack</a></span>, used by debug output.  <br /></td></tr>
-<tr class="memitem:ga3c9ff69b9bd4184f08b97a239047a697" id="r_ga3c9ff69b9bd4184f08b97a239047a697"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3c9ff69b9bd4184f08b97a239047a697">ZenitUI::operator==</a> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b)</td></tr>
-<tr class="memitem:ga3be83b24ba7dada1607f5a76a433d793" id="r_ga3be83b24ba7dada1607f5a76a433d793"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3be83b24ba7dada1607f5a76a433d793">ZenitUI::operator!=</a> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b)</td></tr>
-<tr class="memitem:gab7c403369c75e598e59e5cc6898b6344" id="r_gab7c403369c75e598e59e5cc6898b6344"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab7c403369c75e598e59e5cc6898b6344">ZenitUI::isInheritedProp</a> (std::string_view name)</td></tr>
-<tr class="memdesc:gab7c403369c75e598e59e5cc6898b6344"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the named property inherits from parent to child.  <br /></td></tr>
+<tr class="memitem:ga53324f6e27109570911e0e8f4d1e25f4" id="r_ga53324f6e27109570911e0e8f4d1e25f4"><td class="memItemLeft" align="right" valign="top"><a id="ga53324f6e27109570911e0e8f4d1e25f4" name="ga53324f6e27109570911e0e8f4d1e25f4"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;stack)</td></tr>
+<tr class="memdesc:ga53324f6e27109570911e0e8f4d1e25f4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">std::ostream</span> operator for <span class="tt"><a class="el" href="structZenitUI_1_1FontStack.html" title="Ordered list of font family names to try, first match wins.">FontStack</a></span>, used by debug output. <br /></td></tr>
+<tr class="memitem:ga3c9ff69b9bd4184f08b97a239047a697" id="r_ga3c9ff69b9bd4184f08b97a239047a697"><td class="memItemLeft" align="right" valign="top"><a id="ga3c9ff69b9bd4184f08b97a239047a697" name="ga3c9ff69b9bd4184f08b97a239047a697"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::operator==</b> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b)</td></tr>
+<tr class="memitem:ga3be83b24ba7dada1607f5a76a433d793" id="r_ga3be83b24ba7dada1607f5a76a433d793"><td class="memItemLeft" align="right" valign="top"><a id="ga3be83b24ba7dada1607f5a76a433d793" name="ga3be83b24ba7dada1607f5a76a433d793"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::operator!=</b> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b)</td></tr>
+<tr class="memitem:gab7c403369c75e598e59e5cc6898b6344" id="r_gab7c403369c75e598e59e5cc6898b6344"><td class="memItemLeft" align="right" valign="top"><a id="gab7c403369c75e598e59e5cc6898b6344" name="gab7c403369c75e598e59e5cc6898b6344"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::isInheritedProp</b> (std::string_view name)</td></tr>
+<tr class="memdesc:gab7c403369c75e598e59e5cc6898b6344"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the named property inherits from parent to child. <br /></td></tr>
 <tr class="memitem:ga0f234b7da90f31d9340d6d16d7e1f2cf" id="r_ga0f234b7da90f31d9340d6d16d7e1f2cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0f234b7da90f31d9340d6d16d7e1f2cf">ZenitUI::clearStyleProp</a> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s, std::string_view name)</td></tr>
 <tr class="memdesc:ga0f234b7da90f31d9340d6d16d7e1f2cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the property named <code class="param">name</code> on <code class="param">s</code>.  <br /></td></tr>
-<tr class="memitem:gabb654490b8fa4b6ae41ed21aed6c9527" id="r_gabb654490b8fa4b6ae41ed21aed6c9527"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabb654490b8fa4b6ae41ed21aed6c9527">ZenitUI::operator==</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b)</td></tr>
-<tr class="memdesc:gabb654490b8fa4b6ae41ed21aed6c9527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise equality; used to detect layout-affecting style changes.  <br /></td></tr>
-<tr class="memitem:ga8138c69c65489738eb038fc4e61bf523" id="r_ga8138c69c65489738eb038fc4e61bf523"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8138c69c65489738eb038fc4e61bf523">ZenitUI::operator!=</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b)</td></tr>
-<tr class="memitem:gadb20db30d99c8e9747040cbcbd5df22f" id="r_gadb20db30d99c8e9747040cbcbd5df22f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadb20db30d99c8e9747040cbcbd5df22f">ZenitUI::lerpProp</a> (float a, float b, float t)</td></tr>
-<tr class="memitem:ga0d7c0d301f60f1a94f95e40c41940957" id="r_ga0d7c0d301f60f1a94f95e40c41940957"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0d7c0d301f60f1a94f95e40c41940957">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;a, const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;b, float t)</td></tr>
-<tr class="memitem:gae533cfccf7ae4ce2e27451aca31e94d2" id="r_gae533cfccf7ae4ce2e27451aca31e94d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae533cfccf7ae4ce2e27451aca31e94d2">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;a, const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga51d4311fabf99dfe01cad5d571f6591b" id="r_ga51d4311fabf99dfe01cad5d571f6591b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Value.html">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga51d4311fabf99dfe01cad5d571f6591b">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;a, const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga20be7a6472534e37fc33738aaf9dc504" id="r_ga20be7a6472534e37fc33738aaf9dc504"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga20be7a6472534e37fc33738aaf9dc504">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;a, const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga083ac8c6e765c51e2e1a5b9fc44ea4f3" id="r_ga083ac8c6e765c51e2e1a5b9fc44ea4f3"><td class="memTemplParams" colspan="2">template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ga083ac8c6e765c51e2e1a5b9fc44ea4f3 template"><td class="memItemLeft" align="right" valign="top">E&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga083ac8c6e765c51e2e1a5b9fc44ea4f3">ZenitUI::lerpProp</a> (E a, E b, float t)</td></tr>
-<tr class="memitem:ga4f7fd483e7689fe745b1da93271cbcca" id="r_ga4f7fd483e7689fe745b1da93271cbcca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4f7fd483e7689fe745b1da93271cbcca">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;a, const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga866a24eb25260812625eb05960c7acfb" id="r_ga866a24eb25260812625eb05960c7acfb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga866a24eb25260812625eb05960c7acfb">ZenitUI::lerpProp</a> (const std::string &amp;a, const std::string &amp;b, float t)</td></tr>
-<tr class="memitem:ga0ddb97084ad2be048164edd9ee2f5b9a" id="r_ga0ddb97084ad2be048164edd9ee2f5b9a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0ddb97084ad2be048164edd9ee2f5b9a">ZenitUI::lerpProp</a> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b, float t)</td></tr>
-<tr class="memitem:ga6bfa13d456cf719b837d10642d72ea90" id="r_ga6bfa13d456cf719b837d10642d72ea90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6bfa13d456cf719b837d10642d72ea90">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;a, const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga28ea542cb140e6c59affcf4ceb850beb" id="r_ga28ea542cb140e6c59affcf4ceb850beb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga28ea542cb140e6c59affcf4ceb850beb">ZenitUI::lerpProp</a> (const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;a, const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;b, float t)</td></tr>
-<tr class="memitem:gab9004245831dea5272eddf65d174a15f" id="r_gab9004245831dea5272eddf65d174a15f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab9004245831dea5272eddf65d174a15f">ZenitUI::lerpStyle</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b, float t)</td></tr>
-<tr class="memdesc:gab9004245831dea5272eddf65d174a15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise lerp of two <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>.  <br /></td></tr>
-<tr class="memitem:ga3a7892a2012328b31f68e60cb9ff691f" id="r_ga3a7892a2012328b31f68e60cb9ff691f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3a7892a2012328b31f68e60cb9ff691f">ZenitUI::lerpStyleTimed</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b, float realElapsed)</td></tr>
-<tr class="memdesc:ga3a7892a2012328b31f68e60cb9ff691f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise lerp using per-property durations from <code class="param">b's</code> transition list.  <br /></td></tr>
-<tr class="memitem:ga2740315e17703a6a9e01849093e12e80" id="r_ga2740315e17703a6a9e01849093e12e80"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2740315e17703a6a9e01849093e12e80">ZenitUI::stylesDiffer</a> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;a, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;b)</td></tr>
-<tr class="memdesc:ga2740315e17703a6a9e01849093e12e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare two sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span> values for "would this change anything".  <br /></td></tr>
-<tr class="memitem:ga9b7a9b0ac3bdca2fc490d782dc2cad35" id="r_ga9b7a9b0ac3bdca2fc490d782dc2cad35"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ga9b7a9b0ac3bdca2fc490d782dc2cad35 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9b7a9b0ac3bdca2fc490d782dc2cad35">ZenitUI::lerpOpt</a> (const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;a, const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;b, float t)</td></tr>
-<tr class="memitem:ga0c0ec3d147dfaec6fcae7d8177b0811c" id="r_ga0c0ec3d147dfaec6fcae7d8177b0811c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0c0ec3d147dfaec6fcae7d8177b0811c">ZenitUI::lerpStyleParts</a> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;a, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;b, float t)</td></tr>
-<tr class="memitem:ga9f791c43bc868ce8828efd187256e530" id="r_ga9f791c43bc868ce8828efd187256e530"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9f791c43bc868ce8828efd187256e530">ZenitUI::overlayComputed</a> (<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;dst, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;src)</td></tr>
-<tr class="memitem:ga83f5276249a7dd94946c38db94e55957" id="r_ga83f5276249a7dd94946c38db94e55957"><td class="memTemplParams" colspan="2">template&lt;typename F&gt; </td></tr>
-<tr class="memitem:ga83f5276249a7dd94946c38db94e55957 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga83f5276249a7dd94946c38db94e55957">ZenitUI::forEachSetStyleProp</a> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s, F &amp;&amp;fn)</td></tr>
-<tr class="memitem:ga5ecabd0f34864e99226577e75eb433f2" id="r_ga5ecabd0f34864e99226577e75eb433f2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ecabd0f34864e99226577e75eb433f2">ZenitUI::copyStyleProp</a> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;dst, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;src, std::string_view name)</td></tr>
-<tr class="memitem:ga68503fc1c2e09ab87719a941e1c44d38" id="r_ga68503fc1c2e09ab87719a941e1c44d38"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga68503fc1c2e09ab87719a941e1c44d38">ZenitUI::hasStyleProp</a> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s, std::string_view name)</td></tr>
-<tr class="memitem:gacd7be15ed072b4222055757d12d0a6c1" id="r_gacd7be15ed072b4222055757d12d0a6c1"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacd7be15ed072b4222055757d12d0a6c1">ZenitUI::propTable</a> ()</td></tr>
-<tr class="memitem:ga9e28432b28935ee00dbc3c9a376133fb" id="r_ga9e28432b28935ee00dbc3c9a376133fb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9e28432b28935ee00dbc3c9a376133fb">ZenitUI::findProp</a> (std::string_view name)</td></tr>
-<tr class="memitem:ga375274172f1dd8f76ce59951a48fde7a" id="r_ga375274172f1dd8f76ce59951a48fde7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga375274172f1dd8f76ce59951a48fde7a">ZenitUI::lerpValue</a> (const <a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a> &amp;a, const <a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a> &amp;b, float t)</td></tr>
+<tr class="memitem:gabb654490b8fa4b6ae41ed21aed6c9527" id="r_gabb654490b8fa4b6ae41ed21aed6c9527"><td class="memItemLeft" align="right" valign="top"><a id="gabb654490b8fa4b6ae41ed21aed6c9527" name="gabb654490b8fa4b6ae41ed21aed6c9527"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::operator==</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b)</td></tr>
+<tr class="memdesc:gabb654490b8fa4b6ae41ed21aed6c9527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise equality; used to detect layout-affecting style changes. <br /></td></tr>
+<tr class="memitem:ga8138c69c65489738eb038fc4e61bf523" id="r_ga8138c69c65489738eb038fc4e61bf523"><td class="memItemLeft" align="right" valign="top"><a id="ga8138c69c65489738eb038fc4e61bf523" name="ga8138c69c65489738eb038fc4e61bf523"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::operator!=</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b)</td></tr>
+<tr class="memitem:gadb20db30d99c8e9747040cbcbd5df22f" id="r_gadb20db30d99c8e9747040cbcbd5df22f"><td class="memItemLeft" align="right" valign="top"><a id="gadb20db30d99c8e9747040cbcbd5df22f" name="gadb20db30d99c8e9747040cbcbd5df22f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (float a, float b, float t)</td></tr>
+<tr class="memitem:ga0d7c0d301f60f1a94f95e40c41940957" id="r_ga0d7c0d301f60f1a94f95e40c41940957"><td class="memItemLeft" align="right" valign="top"><a id="ga0d7c0d301f60f1a94f95e40c41940957" name="ga0d7c0d301f60f1a94f95e40c41940957"></a>
+<a class="el" href="structZenitUI_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;a, const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;b, float t)</td></tr>
+<tr class="memitem:gae533cfccf7ae4ce2e27451aca31e94d2" id="r_gae533cfccf7ae4ce2e27451aca31e94d2"><td class="memItemLeft" align="right" valign="top"><a id="gae533cfccf7ae4ce2e27451aca31e94d2" name="gae533cfccf7ae4ce2e27451aca31e94d2"></a>
+<a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;a, const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga51d4311fabf99dfe01cad5d571f6591b" id="r_ga51d4311fabf99dfe01cad5d571f6591b"><td class="memItemLeft" align="right" valign="top"><a id="ga51d4311fabf99dfe01cad5d571f6591b" name="ga51d4311fabf99dfe01cad5d571f6591b"></a>
+<a class="el" href="structZenitUI_1_1Value.html">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;a, const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga20be7a6472534e37fc33738aaf9dc504" id="r_ga20be7a6472534e37fc33738aaf9dc504"><td class="memItemLeft" align="right" valign="top"><a id="ga20be7a6472534e37fc33738aaf9dc504" name="ga20be7a6472534e37fc33738aaf9dc504"></a>
+<a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;a, const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga083ac8c6e765c51e2e1a5b9fc44ea4f3" id="r_ga083ac8c6e765c51e2e1a5b9fc44ea4f3"><td class="memTemplParams" colspan="2"><a id="ga083ac8c6e765c51e2e1a5b9fc44ea4f3" name="ga083ac8c6e765c51e2e1a5b9fc44ea4f3"></a>
+template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ga083ac8c6e765c51e2e1a5b9fc44ea4f3 template"><td class="memItemLeft" align="right" valign="top">E&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (E a, E b, float t)</td></tr>
+<tr class="memitem:ga4f7fd483e7689fe745b1da93271cbcca" id="r_ga4f7fd483e7689fe745b1da93271cbcca"><td class="memItemLeft" align="right" valign="top"><a id="ga4f7fd483e7689fe745b1da93271cbcca" name="ga4f7fd483e7689fe745b1da93271cbcca"></a>
+<a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;a, const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga866a24eb25260812625eb05960c7acfb" id="r_ga866a24eb25260812625eb05960c7acfb"><td class="memItemLeft" align="right" valign="top"><a id="ga866a24eb25260812625eb05960c7acfb" name="ga866a24eb25260812625eb05960c7acfb"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const std::string &amp;a, const std::string &amp;b, float t)</td></tr>
+<tr class="memitem:ga0ddb97084ad2be048164edd9ee2f5b9a" id="r_ga0ddb97084ad2be048164edd9ee2f5b9a"><td class="memItemLeft" align="right" valign="top"><a id="ga0ddb97084ad2be048164edd9ee2f5b9a" name="ga0ddb97084ad2be048164edd9ee2f5b9a"></a>
+std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;a, const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;b, float t)</td></tr>
+<tr class="memitem:ga6bfa13d456cf719b837d10642d72ea90" id="r_ga6bfa13d456cf719b837d10642d72ea90"><td class="memItemLeft" align="right" valign="top"><a id="ga6bfa13d456cf719b837d10642d72ea90" name="ga6bfa13d456cf719b837d10642d72ea90"></a>
+<a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;a, const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga28ea542cb140e6c59affcf4ceb850beb" id="r_ga28ea542cb140e6c59affcf4ceb850beb"><td class="memItemLeft" align="right" valign="top"><a id="ga28ea542cb140e6c59affcf4ceb850beb" name="ga28ea542cb140e6c59affcf4ceb850beb"></a>
+<a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpProp</b> (const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;a, const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;b, float t)</td></tr>
+<tr class="memitem:gab9004245831dea5272eddf65d174a15f" id="r_gab9004245831dea5272eddf65d174a15f"><td class="memItemLeft" align="right" valign="top"><a id="gab9004245831dea5272eddf65d174a15f" name="gab9004245831dea5272eddf65d174a15f"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpStyle</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b, float t)</td></tr>
+<tr class="memdesc:gab9004245831dea5272eddf65d174a15f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise lerp of two <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>. <br /></td></tr>
+<tr class="memitem:ga3a7892a2012328b31f68e60cb9ff691f" id="r_ga3a7892a2012328b31f68e60cb9ff691f"><td class="memItemLeft" align="right" valign="top"><a id="ga3a7892a2012328b31f68e60cb9ff691f" name="ga3a7892a2012328b31f68e60cb9ff691f"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpStyleTimed</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;a, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;b, float realElapsed)</td></tr>
+<tr class="memdesc:ga3a7892a2012328b31f68e60cb9ff691f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Field-wise lerp using per-property durations from <code class="param">b's</code> transition list. <br /></td></tr>
+<tr class="memitem:ga2740315e17703a6a9e01849093e12e80" id="r_ga2740315e17703a6a9e01849093e12e80"><td class="memItemLeft" align="right" valign="top"><a id="ga2740315e17703a6a9e01849093e12e80" name="ga2740315e17703a6a9e01849093e12e80"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::stylesDiffer</b> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;a, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;b)</td></tr>
+<tr class="memdesc:ga2740315e17703a6a9e01849093e12e80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare two sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span> values for "would this change anything". <br /></td></tr>
+<tr class="memitem:ga9b7a9b0ac3bdca2fc490d782dc2cad35" id="r_ga9b7a9b0ac3bdca2fc490d782dc2cad35"><td class="memTemplParams" colspan="2"><a id="ga9b7a9b0ac3bdca2fc490d782dc2cad35" name="ga9b7a9b0ac3bdca2fc490d782dc2cad35"></a>
+template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga9b7a9b0ac3bdca2fc490d782dc2cad35 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpOpt</b> (const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;a, const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;b, float t)</td></tr>
+<tr class="memitem:ga0c0ec3d147dfaec6fcae7d8177b0811c" id="r_ga0c0ec3d147dfaec6fcae7d8177b0811c"><td class="memItemLeft" align="right" valign="top"><a id="ga0c0ec3d147dfaec6fcae7d8177b0811c" name="ga0c0ec3d147dfaec6fcae7d8177b0811c"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpStyleParts</b> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;a, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;b, float t)</td></tr>
+<tr class="memitem:ga9f791c43bc868ce8828efd187256e530" id="r_ga9f791c43bc868ce8828efd187256e530"><td class="memItemLeft" align="right" valign="top"><a id="ga9f791c43bc868ce8828efd187256e530" name="ga9f791c43bc868ce8828efd187256e530"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::overlayComputed</b> (<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;dst, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;src)</td></tr>
+<tr class="memitem:ga83f5276249a7dd94946c38db94e55957" id="r_ga83f5276249a7dd94946c38db94e55957"><td class="memTemplParams" colspan="2"><a id="ga83f5276249a7dd94946c38db94e55957" name="ga83f5276249a7dd94946c38db94e55957"></a>
+template&lt;typename F&gt; </td></tr>
+<tr class="memitem:ga83f5276249a7dd94946c38db94e55957 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::forEachSetStyleProp</b> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s, F &amp;&amp;fn)</td></tr>
+<tr class="memitem:ga5ecabd0f34864e99226577e75eb433f2" id="r_ga5ecabd0f34864e99226577e75eb433f2"><td class="memItemLeft" align="right" valign="top"><a id="ga5ecabd0f34864e99226577e75eb433f2" name="ga5ecabd0f34864e99226577e75eb433f2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::copyStyleProp</b> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;dst, const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;src, std::string_view name)</td></tr>
+<tr class="memitem:ga68503fc1c2e09ab87719a941e1c44d38" id="r_ga68503fc1c2e09ab87719a941e1c44d38"><td class="memItemLeft" align="right" valign="top"><a id="ga68503fc1c2e09ab87719a941e1c44d38" name="ga68503fc1c2e09ab87719a941e1c44d38"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::hasStyleProp</b> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s, std::string_view name)</td></tr>
+<tr class="memitem:gacd7be15ed072b4222055757d12d0a6c1" id="r_gacd7be15ed072b4222055757d12d0a6c1"><td class="memItemLeft" align="right" valign="top"><a id="gacd7be15ed072b4222055757d12d0a6c1" name="gacd7be15ed072b4222055757d12d0a6c1"></a>
+const std::vector&lt; <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::propTable</b> ()</td></tr>
+<tr class="memitem:ga9e28432b28935ee00dbc3c9a376133fb" id="r_ga9e28432b28935ee00dbc3c9a376133fb"><td class="memItemLeft" align="right" valign="top"><a id="ga9e28432b28935ee00dbc3c9a376133fb" name="ga9e28432b28935ee00dbc3c9a376133fb"></a>
+const <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::findProp</b> (std::string_view name)</td></tr>
+<tr class="memitem:ga375274172f1dd8f76ce59951a48fde7a" id="r_ga375274172f1dd8f76ce59951a48fde7a"><td class="memItemLeft" align="right" valign="top"><a id="ga375274172f1dd8f76ce59951a48fde7a" name="ga375274172f1dd8f76ce59951a48fde7a"></a>
+PropValue&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::lerpValue</b> (const PropValue &amp;a, const PropValue &amp;b, float t)</td></tr>
 <tr class="memitem:ga8656f029ee654d19997fcca71c9d19ff" id="r_ga8656f029ee654d19997fcca71c9d19ff"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structZenitUI_1_1Value.html">Value</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8656f029ee654d19997fcca71c9d19ff">ZenitUI::parseValueToken</a> (std::string_view s)</td></tr>
 <tr class="memdesc:ga8656f029ee654d19997fcca71c9d19ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a single <span class="tt"><a class="el" href="structZenitUI_1_1Value.html" title="A length expression: either a sum of unit terms or an AST node.">Value</a></span> token.  <br /></td></tr>
 <tr class="memitem:ga4537b617f98ad1b66be2c8de9d7cbbb5" id="r_ga4537b617f98ad1b66be2c8de9d7cbbb5"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structZenitUI_1_1Color.html">Color</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4537b617f98ad1b66be2c8de9d7cbbb5">ZenitUI::parseColorToken</a> (std::string_view s)</td></tr>
 <tr class="memdesc:ga4537b617f98ad1b66be2c8de9d7cbbb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a color token.  <br /></td></tr>
 <tr class="memitem:gabb3091e492d423d868c1e104e6d51a51" id="r_gabb3091e492d423d868c1e104e6d51a51"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabb3091e492d423d868c1e104e6d51a51">ZenitUI::parseSpacingToken</a> (std::string_view s)</td></tr>
 <tr class="memdesc:gabb3091e492d423d868c1e104e6d51a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a 1-4 value shorthand.  <br /></td></tr>
-<tr class="memitem:ga83892b2ed636489b17cc1edc1b35d8eb" id="r_ga83892b2ed636489b17cc1edc1b35d8eb"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga83892b2ed636489b17cc1edc1b35d8eb">ZenitUI::parseAlignToken</a> (std::string_view s)</td></tr>
-<tr class="memitem:ga4bc9fb769fabf773021a4f1b0567dd73" id="r_ga4bc9fb769fabf773021a4f1b0567dd73"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="#gad3dc3d3980af141d7d971b54deca0c16">Direction</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4bc9fb769fabf773021a4f1b0567dd73">ZenitUI::parseDirectionToken</a> (std::string_view s)</td></tr>
-<tr class="memitem:ga7a56c7b227bde0a9323569386d9a473d" id="r_ga7a56c7b227bde0a9323569386d9a473d"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">Justify</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7a56c7b227bde0a9323569386d9a473d">ZenitUI::parseJustifyToken</a> (std::string_view s)</td></tr>
-<tr class="memitem:gafd6d542f8bee703aa32e479f06367b1d" id="r_gafd6d542f8bee703aa32e479f06367b1d"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">WhiteSpace</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafd6d542f8bee703aa32e479f06367b1d">ZenitUI::parseWhiteSpaceToken</a> (std::string_view s)</td></tr>
-<tr class="memitem:gaca28dee794688c0aea862bc8db50800e" id="r_gaca28dee794688c0aea862bc8db50800e"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">TextOverflow</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaca28dee794688c0aea862bc8db50800e">ZenitUI::parseTextOverflowToken</a> (std::string_view s)</td></tr>
+<tr class="memitem:ga83892b2ed636489b17cc1edc1b35d8eb" id="r_ga83892b2ed636489b17cc1edc1b35d8eb"><td class="memItemLeft" align="right" valign="top"><a id="ga83892b2ed636489b17cc1edc1b35d8eb" name="ga83892b2ed636489b17cc1edc1b35d8eb"></a>
+std::optional&lt; <a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::parseAlignToken</b> (std::string_view s)</td></tr>
+<tr class="memitem:ga4bc9fb769fabf773021a4f1b0567dd73" id="r_ga4bc9fb769fabf773021a4f1b0567dd73"><td class="memItemLeft" align="right" valign="top"><a id="ga4bc9fb769fabf773021a4f1b0567dd73" name="ga4bc9fb769fabf773021a4f1b0567dd73"></a>
+std::optional&lt; Direction &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::parseDirectionToken</b> (std::string_view s)</td></tr>
+<tr class="memitem:ga7a56c7b227bde0a9323569386d9a473d" id="r_ga7a56c7b227bde0a9323569386d9a473d"><td class="memItemLeft" align="right" valign="top"><a id="ga7a56c7b227bde0a9323569386d9a473d" name="ga7a56c7b227bde0a9323569386d9a473d"></a>
+std::optional&lt; <a class="el" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">Justify</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::parseJustifyToken</b> (std::string_view s)</td></tr>
+<tr class="memitem:gafd6d542f8bee703aa32e479f06367b1d" id="r_gafd6d542f8bee703aa32e479f06367b1d"><td class="memItemLeft" align="right" valign="top"><a id="gafd6d542f8bee703aa32e479f06367b1d" name="gafd6d542f8bee703aa32e479f06367b1d"></a>
+std::optional&lt; <a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">WhiteSpace</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::parseWhiteSpaceToken</b> (std::string_view s)</td></tr>
+<tr class="memitem:gaca28dee794688c0aea862bc8db50800e" id="r_gaca28dee794688c0aea862bc8db50800e"><td class="memItemLeft" align="right" valign="top"><a id="gaca28dee794688c0aea862bc8db50800e" name="gaca28dee794688c0aea862bc8db50800e"></a>
+std::optional&lt; <a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">TextOverflow</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::parseTextOverflowToken</b> (std::string_view s)</td></tr>
 <tr class="memitem:ga3b08ecc67b418b732b266b107fff1578" id="r_ga3b08ecc67b418b732b266b107fff1578"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3b08ecc67b418b732b266b107fff1578">ZenitUI::applyStyleAttr</a> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;st, std::string_view key, std::string_view val)</td></tr>
 <tr class="memdesc:ga3b08ecc67b418b732b266b107fff1578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a single <span class="tt">key: value</span> declaration to <code class="param">st</code>.  <br /></td></tr>
-<tr class="memitem:gae187d06a347df12dcd981d3f3c7c2344" id="r_gae187d06a347df12dcd981d3f3c7c2344"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae187d06a347df12dcd981d3f3c7c2344">ZenitUI::substituteVarRefs</a> (std::string v, const std::unordered_map&lt; std::string, std::string &gt; &amp;customProps)</td></tr>
-<tr class="memdesc:gae187d06a347df12dcd981d3f3c7c2344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively substitute <span class="tt">var(--name)</span> references in <code class="param">v</code>.  <br /></td></tr>
-<tr class="memitem:ga5c79d7fb621baadf6022f21f2d37df11" id="r_ga5c79d7fb621baadf6022f21f2d37df11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5c79d7fb621baadf6022f21f2d37df11">ZenitUI::resolveUnresolvedProps</a> (const std::unordered_map&lt; std::string, std::string &gt; &amp;unresolved, const std::unordered_map&lt; std::string, std::string &gt; &amp;customProps)</td></tr>
-<tr class="memdesc:ga5c79d7fb621baadf6022f21f2d37df11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve every pending <span class="tt">var(...)</span> declaration in <code class="param">unresolved</code>.  <br /></td></tr>
-<tr class="memitem:gaefe5d21f5a53c4bee62772282c260974" id="r_gaefe5d21f5a53c4bee62772282c260974"><td class="memItemLeft" align="right" valign="top">std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaefe5d21f5a53c4bee62772282c260974">ZenitUI::ZMarkup::trim</a> (std::string_view s)</td></tr>
-<tr class="memdesc:gaefe5d21f5a53c4bee62772282c260974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim leading and trailing ASCII whitespace.  <br /></td></tr>
+<tr class="memitem:gae187d06a347df12dcd981d3f3c7c2344" id="r_gae187d06a347df12dcd981d3f3c7c2344"><td class="memItemLeft" align="right" valign="top"><a id="gae187d06a347df12dcd981d3f3c7c2344" name="gae187d06a347df12dcd981d3f3c7c2344"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::substituteVarRefs</b> (std::string v, const std::unordered_map&lt; std::string, std::string &gt; &amp;customProps)</td></tr>
+<tr class="memdesc:gae187d06a347df12dcd981d3f3c7c2344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively substitute <span class="tt">var(--name)</span> references in <code class="param">v</code>. <br /></td></tr>
+<tr class="memitem:ga5c79d7fb621baadf6022f21f2d37df11" id="r_ga5c79d7fb621baadf6022f21f2d37df11"><td class="memItemLeft" align="right" valign="top"><a id="ga5c79d7fb621baadf6022f21f2d37df11" name="ga5c79d7fb621baadf6022f21f2d37df11"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::resolveUnresolvedProps</b> (const std::unordered_map&lt; std::string, std::string &gt; &amp;unresolved, const std::unordered_map&lt; std::string, std::string &gt; &amp;customProps)</td></tr>
+<tr class="memdesc:ga5c79d7fb621baadf6022f21f2d37df11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve every pending <span class="tt">var(...)</span> declaration in <code class="param">unresolved</code>. <br /></td></tr>
+<tr class="memitem:gaefe5d21f5a53c4bee62772282c260974" id="r_gaefe5d21f5a53c4bee62772282c260974"><td class="memItemLeft" align="right" valign="top"><a id="gaefe5d21f5a53c4bee62772282c260974" name="gaefe5d21f5a53c4bee62772282c260974"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::trim</b> (std::string_view s)</td></tr>
+<tr class="memdesc:gaefe5d21f5a53c4bee62772282c260974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim leading and trailing ASCII whitespace. <br /></td></tr>
 <tr class="memitem:gabab7cf821ef52b93b52d1ae5e9e20800" id="r_gabab7cf821ef52b93b52d1ae5e9e20800"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabab7cf821ef52b93b52d1ae5e9e20800">ZenitUI::ZMarkup::stripComments</a> (std::string_view src)</td></tr>
 <tr class="memdesc:gabab7cf821ef52b93b52d1ae5e9e20800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strip <span class="tt">// line</span> and <span class="tt">/* block *\/</span> comments from <code class="param">src</code>.  <br /></td></tr>
 <tr class="memitem:gaa197027d06364ceeaa0a516be8204066" id="r_gaa197027d06364ceeaa0a516be8204066"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string_view &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa197027d06364ceeaa0a516be8204066">ZenitUI::ZMarkup::splitBy</a> (std::string_view s, char sep)</td></tr>
@@ -303,8 +343,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7637d632d654e44425b626f2b940cf6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse <code class="param">src</code> and apply it to <code class="param">theme</code>.  <br /></td></tr>
 <tr class="memitem:gae718ac5f540d56ab4777e5f9f563f7a0" id="r_gae718ac5f540d56ab4777e5f9f563f7a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae718ac5f540d56ab4777e5f9f563f7a0">ZenitUI::ZMarkup::loadStyleFile</a> (const std::filesystem::path &amp;path, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme=<a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce">Theme::get</a>(), <a class="el" href="classZenitUI_1_1DiagnosticSink.html">DiagnosticSink</a> *sink=nullptr, bool strict=false)</td></tr>
 <tr class="memdesc:gae718ac5f540d56ab4777e5f9f563f7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a stylesheet from a file and apply it to <code class="param">theme</code>.  <br /></td></tr>
-<tr class="memitem:ga4a4e4c4428a9d695815f5a9343e5f64f" id="r_ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Specificity.html">Specificity</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4a4e4c4428a9d695815f5a9343e5f64f">ZenitUI::computeSpecificity</a> (const std::vector&lt; <a class="el" href="structZenitUI_1_1SimpleSelector.html">SimpleSelector</a> &gt; &amp;chain)</td></tr>
-<tr class="memdesc:ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the specificity of a full selector chain.  <br /></td></tr>
+<tr class="memitem:ga4a4e4c4428a9d695815f5a9343e5f64f" id="r_ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="memItemLeft" align="right" valign="top"><a id="ga4a4e4c4428a9d695815f5a9343e5f64f" name="ga4a4e4c4428a9d695815f5a9343e5f64f"></a>
+<a class="el" href="structZenitUI_1_1Specificity.html">Specificity</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::computeSpecificity</b> (const std::vector&lt; <a class="el" href="structZenitUI_1_1SimpleSelector.html">SimpleSelector</a> &gt; &amp;chain)</td></tr>
+<tr class="memdesc:ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the specificity of a full selector chain. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>CSS-like style cascade, <span class="tt">.zstyle</span> parser, custom properties, and media queries. </p>
@@ -313,30 +354,12 @@ Functions</h2></td></tr>
 </blockquote>
 <p><b>Live examples:</b> <a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a></p>
 <dl class="section user"><dt>Live examples</dt><dd><ul>
-<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship <a class="el" href="namespaceZenitUI.html">ZenitUI</a> showcase: live Dark/Light theming, <a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a> prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
+<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship ZenitUI showcase: live Dark/Light theming, ZMarkup prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
 <li><a class="el" href="04_animations_2main_8cpp-example.html">04_animations</a> — Declarative animation channels in .zstyle: state transitions, &amp;\#64;keyframes, and ::part animations.</li>
 <li><a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a> — External .zstyle stylesheet demonstrating :root custom properties, var(), calc(), &amp;#64;media queries, pseudo-classes, ::part, and transitions.</li>
 <li><a class="el" href="07_effects_2main_8cpp-example.html">07_effects</a> — Post-processing with CSS filter chains (blur, drop-shadow, custom sepia via <a class="el" href="classZenitUI_1_1FilterRegistry.html" title="Global name → FilterDef map.">FilterRegistry</a>) vs single-pass shader effects. </li>
 </ul>
 </dd></dl>
-<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="ga7b6f5554fdada5477c0581b9ea317530" name="ga7b6f5554fdada5477c0581b9ea317530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7b6f5554fdada5477c0581b9ea317530">&#9670;&#160;</a></span>BUBBLE_STYLE_PROPS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define BUBBLE_STYLE_PROPS</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em><a class="el" href="AnimPrimitives_8hpp.html#addf2dafc333dbba4d383edfa82b16cad">X</a></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
 <a id="gaffa22f25ed0d2b96cd03301663af30b8" name="gaffa22f25ed0d2b96cd03301663af30b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaffa22f25ed0d2b96cd03301663af30b8">&#9670;&#160;</a></span>PropValue</h2>
@@ -345,7 +368,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">ZenitUI::PropValue</a></td>
+          <td class="memname">using ZenitUI::PropValue</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -353,14 +376,13 @@ Functions</h2></td></tr>
 <div class="line">                                   <a class="code hl_enumeration" href="group__grp__anim.html#gae27ff9cac1e9b8ddc267881d389bcdf8">TransitionFunction</a>, <a class="code hl_enumeration" href="#gada49a5d270525bd8ccc73cd680f9dc5d">Overflow</a>, <a class="code hl_enumeration" href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">Position</a>, <a class="code hl_struct" href="structZenitUI_1_1ZIndex.html">ZIndex</a>,</div>
 <div class="line">                                   std::string, <a class="code hl_struct" href="structZenitUI_1_1FontStack.html">FontStack</a>, <a class="code hl_struct" href="structZenitUI_1_1TextureRef.html">TextureRef</a>,</div>
 <div class="line">                                   std::vector&lt;FilterRef&gt;, <a class="code hl_struct" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a>,</div>
-<div class="line">                                   <a class="code hl_enumeration" href="#gaa130abd7bfd76fae4452d5c8acd586de">WhiteSpace</a>, <a class="code hl_enumeration" href="#ga1b3a2c403488abdad1ad1118fbd38d86">TextOverflow</a>, <a class="code hl_enumeration" href="#gad3dc3d3980af141d7d971b54deca0c16">Direction</a>&gt;</div>
+<div class="line">                                   <a class="code hl_enumeration" href="#gaa130abd7bfd76fae4452d5c8acd586de">WhiteSpace</a>, <a class="code hl_enumeration" href="#ga1b3a2c403488abdad1ad1118fbd38d86">TextOverflow</a>, Direction&gt;</div>
 <div class="ttc" id="agroup__grp__anim_html_gae27ff9cac1e9b8ddc267881d389bcdf8"><div class="ttname"><a href="group__grp__anim.html#gae27ff9cac1e9b8ddc267881d389bcdf8">ZenitUI::TransitionFunction</a></div><div class="ttdeci">TransitionFunction</div><div class="ttdoc">Timing function applied between two keyframe values.</div><div class="ttdef"><b>Definition</b> Easing.hpp:27</div></div>
 <div class="ttc" id="agroup__grp__core_html_ga0f6a074d868a17d846a8e99282b084a5"><div class="ttname"><a href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">ZenitUI::Align</a></div><div class="ttdeci">Align</div><div class="ttdoc">Cross-axis alignment for flex items and content.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:273</div></div>
 <div class="ttc" id="agroup__grp__core_html_ga89eb7866ba43696b07adaac980a2a5b0"><div class="ttname"><a href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">ZenitUI::Justify</a></div><div class="ttdeci">Justify</div><div class="ttdoc">Main-axis distribution for flex containers.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:283</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_ga1b3a2c403488abdad1ad1118fbd38d86"><div class="ttname"><a href="#ga1b3a2c403488abdad1ad1118fbd38d86">ZenitUI::TextOverflow</a></div><div class="ttdeci">TextOverflow</div><div class="ttdoc">CSS text-overflow modes supported by the text renderer.</div><div class="ttdef"><b>Definition</b> Style.hpp:178</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gaa130abd7bfd76fae4452d5c8acd586de"><div class="ttname"><a href="#gaa130abd7bfd76fae4452d5c8acd586de">ZenitUI::WhiteSpace</a></div><div class="ttdeci">WhiteSpace</div><div class="ttdoc">CSS white-space values relevant to text layout.</div><div class="ttdef"><b>Definition</b> Style.hpp:171</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gad1c0d7e8bd09eeea85e1f3acd4e1e678"><div class="ttname"><a href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">ZenitUI::Position</a></div><div class="ttdeci">Position</div><div class="ttdoc">CSS-style position modes supported by the layout system.</div><div class="ttdef"><b>Definition</b> Style.hpp:135</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_gad3dc3d3980af141d7d971b54deca0c16"><div class="ttname"><a href="#gad3dc3d3980af141d7d971b54deca0c16">ZenitUI::Direction</a></div><div class="ttdeci">Direction</div><div class="ttdef"><b>Definition</b> Style.hpp:269</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gada49a5d270525bd8ccc73cd680f9dc5d"><div class="ttname"><a href="#gada49a5d270525bd8ccc73cd680f9dc5d">ZenitUI::Overflow</a></div><div class="ttdeci">Overflow</div><div class="ttdoc">CSS overflow modes for one axis.</div><div class="ttdef"><b>Definition</b> Style.hpp:162</div></div>
 <div class="ttc" id="astructZenitUI_1_1BoxShadow_html"><div class="ttname"><a href="structZenitUI_1_1BoxShadow.html">ZenitUI::BoxShadow</a></div><div class="ttdoc">CSS box-shadow payload.</div><div class="ttdef"><b>Definition</b> Style.hpp:256</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
@@ -400,191 +422,6 @@ Functions</h2></td></tr>
 <li>Selector-level: <span class="tt">UnknownSelectorTag</span>, <span class="tt">SelectorMatchesNothing</span>, <span class="tt">DuplicateRule</span></li>
 </ul>
 <p>Tools can switch on <span class="tt">code</span> without matching localized message strings. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71aa01fcd2a66cb296300f830886af9f734" name="ggadfc0f636085619f9baa90bebd758bf71aa01fcd2a66cb296300f830886af9f734"></a>UnterminatedString&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a0c07aa1354886553d0e352070477d0c3" name="ggadfc0f636085619f9baa90bebd758bf71a0c07aa1354886553d0e352070477d0c3"></a>UnbalancedBrace&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71ac2a1728fb6705d558a76b01827e56356" name="ggadfc0f636085619f9baa90bebd758bf71ac2a1728fb6705d558a76b01827e56356"></a>UnexpectedToken&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a2190fa6ec8be6e3eb54e665ca12fe5a2" name="ggadfc0f636085619f9baa90bebd758bf71a2190fa6ec8be6e3eb54e665ca12fe5a2"></a>UnknownProperty&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a223e81e8afa42c41346a6696560ecc7b" name="ggadfc0f636085619f9baa90bebd758bf71a223e81e8afa42c41346a6696560ecc7b"></a>InvalidValue&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a10ad6726d2e4564ce679dc2f0c084cfe" name="ggadfc0f636085619f9baa90bebd758bf71a10ad6726d2e4564ce679dc2f0c084cfe"></a>UnknownPseudo&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71af811879e0ab298af1a7c9f7dfe7c0e64" name="ggadfc0f636085619f9baa90bebd758bf71af811879e0ab298af1a7c9f7dfe7c0e64"></a>UnknownPart&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a5fb0d6d4c183d2338bc6af1054d24c53" name="ggadfc0f636085619f9baa90bebd758bf71a5fb0d6d4c183d2338bc6af1054d24c53"></a>UnresolvedVariable&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a90f0c9de35bea8fe8bb7e996f83c998e" name="ggadfc0f636085619f9baa90bebd758bf71a90f0c9de35bea8fe8bb7e996f83c998e"></a>UnusedVariable&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a3768b82bf3f480d9fe4619e973d5d5c5" name="ggadfc0f636085619f9baa90bebd758bf71a3768b82bf3f480d9fe4619e973d5d5c5"></a>UnknownSelectorTag&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71a6008a752bcf8e4fac4a9057f123095ec" name="ggadfc0f636085619f9baa90bebd758bf71a6008a752bcf8e4fac4a9057f123095ec"></a>SelectorMatchesNothing&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggadfc0f636085619f9baa90bebd758bf71abab1e72321c8fcdb6e216238db21e4e7" name="ggadfc0f636085619f9baa90bebd758bf71abab1e72321c8fcdb6e216238db21e4e7"></a>DuplicateRule&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga33499078caccb3f383cf6da856c7a7dc" name="ga33499078caccb3f383cf6da856c7a7dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga33499078caccb3f383cf6da856c7a7dc">&#9670;&#160;</a></span>DiagnosticSeverity</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">ZenitUI::DiagnosticSeverity</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Diagnostic severity level. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga33499078caccb3f383cf6da856c7a7dca4059b0251f66a18cb56f544728796875" name="gga33499078caccb3f383cf6da856c7a7dca4059b0251f66a18cb56f544728796875"></a>Info&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="gga33499078caccb3f383cf6da856c7a7dca0eaadb4fcb48a0a0ed7bc9868be9fbaa" name="gga33499078caccb3f383cf6da856c7a7dca0eaadb4fcb48a0a0ed7bc9868be9fbaa"></a>Warning&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="gga33499078caccb3f383cf6da856c7a7dca902b0d55fddef6f8d651fe1035b7d4bd" name="gga33499078caccb3f383cf6da856c7a7dca902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="gad3dc3d3980af141d7d971b54deca0c16" name="gad3dc3d3980af141d7d971b54deca0c16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad3dc3d3980af141d7d971b54deca0c16">&#9670;&#160;</a></span>Direction</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#gad3dc3d3980af141d7d971b54deca0c16">ZenitUI::Direction</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggad3dc3d3980af141d7d971b54deca0c16a06b9281e396db002010bde1de57262eb" name="ggad3dc3d3980af141d7d971b54deca0c16a06b9281e396db002010bde1de57262eb"></a>Auto&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3" name="ggad3dc3d3980af141d7d971b54deca0c16aa70367aa7cb74e510f4f9413ccf059d3"></a>Row&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggad3dc3d3980af141d7d971b54deca0c16a1976d7f704de389d9fe064e08ea35b2d" name="ggad3dc3d3980af141d7d971b54deca0c16a1976d7f704de389d9fe064e08ea35b2d"></a>Column&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="gada49a5d270525bd8ccc73cd680f9dc5d" name="gada49a5d270525bd8ccc73cd680f9dc5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gada49a5d270525bd8ccc73cd680f9dc5d">&#9670;&#160;</a></span>Overflow</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#gada49a5d270525bd8ccc73cd680f9dc5d">ZenitUI::Overflow</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>CSS <span class="tt">overflow</span> modes for one axis. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggada49a5d270525bd8ccc73cd680f9dc5daec24d78ce33048dc73a2b6b1a0690192" name="ggada49a5d270525bd8ccc73cd680f9dc5daec24d78ce33048dc73a2b6b1a0690192"></a>Visible&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggada49a5d270525bd8ccc73cd680f9dc5da7acdf85c69cc3c5305456a293524386e" name="ggada49a5d270525bd8ccc73cd680f9dc5da7acdf85c69cc3c5305456a293524386e"></a>Hidden&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934" name="ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934"></a>Scroll&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb" name="ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb"></a>Auto&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="gad1c0d7e8bd09eeea85e1f3acd4e1e678" name="gad1c0d7e8bd09eeea85e1f3acd4e1e678"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">&#9670;&#160;</a></span>Position</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#gad1c0d7e8bd09eeea85e1f3acd4e1e678">ZenitUI::Position</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>CSS-style <span class="tt">position</span> modes supported by the layout system. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggad1c0d7e8bd09eeea85e1f3acd4e1e678a84a8921b25f505d0d2077aeb5db4bc16" name="ggad1c0d7e8bd09eeea85e1f3acd4e1e678a84a8921b25f505d0d2077aeb5db4bc16"></a>Static&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggad1c0d7e8bd09eeea85e1f3acd4e1e678a2ca9469819fb0fb61ff98e914a7ccca0" name="ggad1c0d7e8bd09eeea85e1f3acd4e1e678a2ca9469819fb0fb61ff98e914a7ccca0"></a>Relative&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8" name="ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8"></a>Absolute&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga1b3a2c403488abdad1ad1118fbd38d86" name="ga1b3a2c403488abdad1ad1118fbd38d86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1b3a2c403488abdad1ad1118fbd38d86">&#9670;&#160;</a></span>TextOverflow</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">ZenitUI::TextOverflow</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>CSS <span class="tt">text-overflow</span> modes supported by the text renderer. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1b3a2c403488abdad1ad1118fbd38d86aec24d78ce33048dc73a2b6b1a0690192" name="gga1b3a2c403488abdad1ad1118fbd38d86aec24d78ce33048dc73a2b6b1a0690192"></a>Visible&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="gga1b3a2c403488abdad1ad1118fbd38d86a8a97ba435dcdb6750b240cdce3ff3e11" name="gga1b3a2c403488abdad1ad1118fbd38d86a8a97ba435dcdb6750b240cdce3ff3e11"></a>Ellipsis&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="gaa130abd7bfd76fae4452d5c8acd586de" name="gaa130abd7bfd76fae4452d5c8acd586de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa130abd7bfd76fae4452d5c8acd586de">&#9670;&#160;</a></span>WhiteSpace</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">ZenitUI::WhiteSpace</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>CSS <span class="tt">white-space</span> values relevant to text layout. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaa130abd7bfd76fae4452d5c8acd586dea960b44c579bc2f6818d2daaf9e4c16f0" name="ggaa130abd7bfd76fae4452d5c8acd586dea960b44c579bc2f6818d2daaf9e4c16f0"></a>Normal&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggaa130abd7bfd76fae4452d5c8acd586dea2e00ab205ddfaf2c1228d907772debc4" name="ggaa130abd7bfd76fae4452d5c8acd586dea2e00ab205ddfaf2c1228d907772debc4"></a>Nowrap&#160;</td><td class="fielddoc"></td></tr>
-</table>
 
 </div>
 </div>
@@ -681,7 +518,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">keyRaw</td><td>Property name (trimmed internally). </td></tr>
     <tr><td class="paramname">valRaw</td><td><a class="el" href="structZenitUI_1_1Value.html" title="A length expression: either a sum of unit terms or an AST node.">Value</a> string (trimmed internally). </td></tr>
     <tr><td class="paramname">loc</td><td>Source location for diagnostics. </td></tr>
-    <tr><td class="paramname">sink</td><td>Optional diagnostic sink; if null, warnings go to <span class="tt"><a class="el" href="group__grp__backends.html#ga561ae5709ec6a8804eaa416cf7d5a7b5">logWarn</a></span>. </td></tr>
+    <tr><td class="paramname">sink</td><td>Optional diagnostic sink; if null, warnings go to <span class="tt">logWarn</span>. </td></tr>
     <tr><td class="paramname">strict</td><td>If true, unknown properties become errors instead of warnings. </td></tr>
   </table>
   </dd>
@@ -768,67 +605,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga4a4e4c4428a9d695815f5a9343e5f64f" name="ga4a4e4c4428a9d695815f5a9343e5f64f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4a4e4c4428a9d695815f5a9343e5f64f">&#9670;&#160;</a></span>computeSpecificity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Specificity.html">Specificity</a> ZenitUI::computeSpecificity </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1SimpleSelector.html">SimpleSelector</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>chain</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compute the specificity of a full selector chain. </p>
-
-</div>
-</div>
-<a id="ga5ecabd0f34864e99226577e75eb433f2" name="ga5ecabd0f34864e99226577e75eb433f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5ecabd0f34864e99226577e75eb433f2">&#9670;&#160;</a></span>copyStyleProp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::copyStyleProp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="gaab91f50d76f0d613812a562912fd7987" name="gaab91f50d76f0d613812a562912fd7987"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaab91f50d76f0d613812a562912fd7987">&#9670;&#160;</a></span>editDistance()</h2>
 
@@ -901,62 +677,6 @@ mean" hints; strings of length &gt; 100 are rare in this codebase. </p>
 
 </div>
 </div>
-<a id="ga9e28432b28935ee00dbc3c9a376133fb" name="ga9e28432b28935ee00dbc3c9a376133fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9e28432b28935ee00dbc3c9a376133fb">&#9670;&#160;</a></span>findProp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> * ZenitUI::findProp </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga83f5276249a7dd94946c38db94e55957" name="ga83f5276249a7dd94946c38db94e55957"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga83f5276249a7dd94946c38db94e55957">&#9670;&#160;</a></span>forEachSetStyleProp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename F&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::forEachSetStyleProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">F &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="gaf55ddf295107f5af3151fd38ba624d05" name="gaf55ddf295107f5af3151fd38ba624d05"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf55ddf295107f5af3151fd38ba624d05">&#9670;&#160;</a></span>formatDiagnostic()</h2>
 
@@ -1009,614 +729,6 @@ template&lt;typename F&gt; </div>
 
 </div>
 </div>
-<a id="ga68503fc1c2e09ab87719a941e1c44d38" name="ga68503fc1c2e09ab87719a941e1c44d38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga68503fc1c2e09ab87719a941e1c44d38">&#9670;&#160;</a></span>hasStyleProp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::hasStyleProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gab7c403369c75e598e59e5cc6898b6344" name="gab7c403369c75e598e59e5cc6898b6344"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab7c403369c75e598e59e5cc6898b6344">&#9670;&#160;</a></span>isInheritedProp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::isInheritedProp </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the named property inherits from parent to child. </p>
-
-</div>
-</div>
-<a id="ga9b7a9b0ac3bdca2fc490d782dc2cad35" name="ga9b7a9b0ac3bdca2fc490d782dc2cad35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9b7a9b0ac3bdca2fc490d782dc2cad35">&#9670;&#160;</a></span>lerpOpt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; ZenitUI::lerpOpt </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Opt.html">Opt</a>&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga28ea542cb140e6c59affcf4ceb850beb" name="ga28ea542cb140e6c59affcf4ceb850beb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga28ea542cb140e6c59affcf4ceb850beb">&#9670;&#160;</a></span>lerpProp() <span class="overload">[1/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1BoxShadow.html">BoxShadow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga0d7c0d301f60f1a94f95e40c41940957" name="ga0d7c0d301f60f1a94f95e40c41940957"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0d7c0d301f60f1a94f95e40c41940957">&#9670;&#160;</a></span>lerpProp() <span class="overload">[2/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Color.html">Color</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Color.html">Color</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gae533cfccf7ae4ce2e27451aca31e94d2" name="gae533cfccf7ae4ce2e27451aca31e94d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae533cfccf7ae4ce2e27451aca31e94d2">&#9670;&#160;</a></span>lerpProp() <span class="overload">[3/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga20be7a6472534e37fc33738aaf9dc504" name="ga20be7a6472534e37fc33738aaf9dc504"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga20be7a6472534e37fc33738aaf9dc504">&#9670;&#160;</a></span>lerpProp() <span class="overload">[4/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Spacing.html">Spacing</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga866a24eb25260812625eb05960c7acfb" name="ga866a24eb25260812625eb05960c7acfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga866a24eb25260812625eb05960c7acfb">&#9670;&#160;</a></span>lerpProp() <span class="overload">[5/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga0ddb97084ad2be048164edd9ee2f5b9a" name="ga0ddb97084ad2be048164edd9ee2f5b9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0ddb97084ad2be048164edd9ee2f5b9a">&#9670;&#160;</a></span>lerpProp() <span class="overload">[6/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga6bfa13d456cf719b837d10642d72ea90" name="ga6bfa13d456cf719b837d10642d72ea90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6bfa13d456cf719b837d10642d72ea90">&#9670;&#160;</a></span>lerpProp() <span class="overload">[7/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1TextureRef.html">TextureRef</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga51d4311fabf99dfe01cad5d571f6591b" name="ga51d4311fabf99dfe01cad5d571f6591b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga51d4311fabf99dfe01cad5d571f6591b">&#9670;&#160;</a></span>lerpProp() <span class="overload">[8/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Value.html">Value</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Value.html">Value</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga4f7fd483e7689fe745b1da93271cbcca" name="ga4f7fd483e7689fe745b1da93271cbcca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4f7fd483e7689fe745b1da93271cbcca">&#9670;&#160;</a></span>lerpProp() <span class="overload">[9/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ZIndex.html">ZIndex</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga083ac8c6e765c51e2e1a5b9fc44ea4f3" name="ga083ac8c6e765c51e2e1a5b9fc44ea4f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga083ac8c6e765c51e2e1a5b9fc44ea4f3">&#9670;&#160;</a></span>lerpProp() <span class="overload">[10/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&gt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">E ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">E</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">E</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gadb20db30d99c8e9747040cbcbd5df22f" name="gadb20db30d99c8e9747040cbcbd5df22f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadb20db30d99c8e9747040cbcbd5df22f">&#9670;&#160;</a></span>lerpProp() <span class="overload">[11/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::lerpProp </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gab9004245831dea5272eddf65d174a15f" name="gab9004245831dea5272eddf65d174a15f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab9004245831dea5272eddf65d174a15f">&#9670;&#160;</a></span>lerpStyle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::lerpStyle </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Field-wise lerp of two <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>. </p>
-
-</div>
-</div>
-<a id="ga0c0ec3d147dfaec6fcae7d8177b0811c" name="ga0c0ec3d147dfaec6fcae7d8177b0811c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0c0ec3d147dfaec6fcae7d8177b0811c">&#9670;&#160;</a></span>lerpStyleParts()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::lerpStyleParts </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga3a7892a2012328b31f68e60cb9ff691f" name="ga3a7892a2012328b31f68e60cb9ff691f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3a7892a2012328b31f68e60cb9ff691f">&#9670;&#160;</a></span>lerpStyleTimed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::lerpStyleTimed </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>realElapsed</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Field-wise lerp using per-property durations from <code class="param">b's</code> transition list. </p>
-
-</div>
-</div>
-<a id="ga375274172f1dd8f76ce59951a48fde7a" name="ga375274172f1dd8f76ce59951a48fde7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga375274172f1dd8f76ce59951a48fde7a">&#9670;&#160;</a></span>lerpValue()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a> ZenitUI::lerpValue </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="#gaffa22f25ed0d2b96cd03301663af30b8">PropValue</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="gae718ac5f540d56ab4777e5f9f563f7a0" name="gae718ac5f540d56ab4777e5f9f563f7a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae718ac5f540d56ab4777e5f9f563f7a0">&#9670;&#160;</a></span>loadStyleFile()</h2>
 
@@ -1648,7 +760,7 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 <p>Load a stylesheet from a file and apply it to <code class="param">theme</code>. </p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">false</span> if the file could not be read or a parse error occurred. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a12">00_demo/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a6">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a4">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a11">07_effects/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a7">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a6">09_custom_widget/main.cpp</a>, and <a class="el" href="10_canvas_2main_8cpp-example.html#_a10">10_canvas/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a11">00_demo/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a6">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a4">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a10">07_effects/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a7">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a6">09_custom_widget/main.cpp</a>, and <a class="el" href="10_canvas_2main_8cpp-example.html#_a9">10_canvas/main.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -1689,7 +801,7 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 <p>Parse <code class="param">src</code> and apply it to <code class="param">theme</code>. </p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">false</span> if the sink reported any error. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="03_widgets_2main_8cpp-example.html#_a12">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a13">04_animations/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a11">07b_effects_stress/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a7">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a4">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a4">13_prefabs/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="03_widgets_2main_8cpp-example.html#_a9">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a10">04_animations/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a10">07b_effects_stress/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a6">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a4">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a4">13_prefabs/main.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -1770,212 +882,7 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 </div><div class="memdoc">
 
 <p>Fill missing properties in every keyframe from neighbouring frames. </p>
-<p>CSS animations that declare a property only at the start and end still need all keyframes to hold a value for that property, so that the evaluator can interpolate uniformly. This function fills gaps by copying from the previous keyframe, or from the next if the gap is at the beginning. Emits a <span class="tt"><a class="el" href="group__grp__backends.html#ga561ae5709ec6a8804eaa416cf7d5a7b5">logWarn</a></span> for each auto-filled property to make authoring errors visible. </p>
-
-</div>
-</div>
-<a id="ga8138c69c65489738eb038fc4e61bf523" name="ga8138c69c65489738eb038fc4e61bf523"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8138c69c65489738eb038fc4e61bf523">&#9670;&#160;</a></span>operator!=() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::operator!= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga3be83b24ba7dada1607f5a76a433d793" name="ga3be83b24ba7dada1607f5a76a433d793"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3be83b24ba7dada1607f5a76a433d793">&#9670;&#160;</a></span>operator!=() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::operator!= </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga53324f6e27109570911e0e8f4d1e25f4" name="ga53324f6e27109570911e0e8f4d1e25f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga53324f6e27109570911e0e8f4d1e25f4">&#9670;&#160;</a></span>operator&lt;&lt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::ostream &amp; ZenitUI::operator&lt;&lt; </td>
-          <td>(</td>
-          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>os</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>stack</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">std::ostream</span> operator for <span class="tt"><a class="el" href="structZenitUI_1_1FontStack.html" title="Ordered list of font family names to try, first match wins.">FontStack</a></span>, used by debug output. </p>
-
-</div>
-</div>
-<a id="gabb654490b8fa4b6ae41ed21aed6c9527" name="gabb654490b8fa4b6ae41ed21aed6c9527"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabb654490b8fa4b6ae41ed21aed6c9527">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Field-wise equality; used to detect layout-affecting style changes. </p>
-
-</div>
-</div>
-<a id="ga3c9ff69b9bd4184f08b97a239047a697" name="ga3c9ff69b9bd4184f08b97a239047a697"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3c9ff69b9bd4184f08b97a239047a697">&#9670;&#160;</a></span>operator==() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::operator== </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1FilterRef.html">FilterRef</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a0">00_demo/main.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="ga9f791c43bc868ce8828efd187256e530" name="ga9f791c43bc868ce8828efd187256e530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9f791c43bc868ce8828efd187256e530">&#9670;&#160;</a></span>overlayComputed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::overlayComputed </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>src</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga83892b2ed636489b17cc1edc1b35d8eb" name="ga83892b2ed636489b17cc1edc1b35d8eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga83892b2ed636489b17cc1edc1b35d8eb">&#9670;&#160;</a></span>parseAlignToken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a> &gt; ZenitUI::parseAlignToken </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>CSS animations that declare a property only at the start and end still need all keyframes to hold a value for that property, so that the evaluator can interpolate uniformly. This function fills gaps by copying from the previous keyframe, or from the next if the gap is at the beginning. Emits a <span class="tt">logWarn</span> for each auto-filled property to make authoring errors visible. </p>
 
 </div>
 </div>
@@ -2007,31 +914,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 </div>
 </div>
-<a id="ga4bc9fb769fabf773021a4f1b0567dd73" name="ga4bc9fb769fabf773021a4f1b0567dd73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4bc9fb769fabf773021a4f1b0567dd73">&#9670;&#160;</a></span>parseDirectionToken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="#gad3dc3d3980af141d7d971b54deca0c16">Direction</a> &gt; ZenitUI::parseDirectionToken </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="gacc8bcdb6a2ff82cf38a8a5e6b8b125df" name="gacc8bcdb6a2ff82cf38a8a5e6b8b125df"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gacc8bcdb6a2ff82cf38a8a5e6b8b125df">&#9670;&#160;</a></span>parseDurationSec()</h2>
 
@@ -2049,31 +931,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 <p>Parse a CSS duration (<span class="tt">"200ms"</span> → 0.2, <span class="tt">"1.5s"</span> → 1.5). </p>
 <p>Bare numbers are treated as seconds. Used by both <span class="tt">transition</span> and <span class="tt">animation</span> shorthands. </p>
-
-</div>
-</div>
-<a id="ga7a56c7b227bde0a9323569386d9a473d" name="ga7a56c7b227bde0a9323569386d9a473d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7a56c7b227bde0a9323569386d9a473d">&#9670;&#160;</a></span>parseJustifyToken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">Justify</a> &gt; ZenitUI::parseJustifyToken </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -2105,31 +962,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 </div>
 </div>
-<a id="gaca28dee794688c0aea862bc8db50800e" name="gaca28dee794688c0aea862bc8db50800e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaca28dee794688c0aea862bc8db50800e">&#9670;&#160;</a></span>parseTextOverflowToken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="#ga1b3a2c403488abdad1ad1118fbd38d86">TextOverflow</a> &gt; ZenitUI::parseTextOverflowToken </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ga8656f029ee654d19997fcca71c9d19ff" name="ga8656f029ee654d19997fcca71c9d19ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8656f029ee654d19997fcca71c9d19ff">&#9670;&#160;</a></span>parseValueToken()</h2>
 
@@ -2155,87 +987,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 <p>Parse a single <span class="tt"><a class="el" href="structZenitUI_1_1Value.html" title="A length expression: either a sum of unit terms or an AST node.">Value</a></span> token. </p>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">nullopt</span> on parse failure or unknown unit. </dd></dl>
-
-</div>
-</div>
-<a id="gafd6d542f8bee703aa32e479f06367b1d" name="gafd6d542f8bee703aa32e479f06367b1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafd6d542f8bee703aa32e479f06367b1d">&#9670;&#160;</a></span>parseWhiteSpaceToken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="#gaa130abd7bfd76fae4452d5c8acd586de">WhiteSpace</a> &gt; ZenitUI::parseWhiteSpaceToken </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gacd7be15ed072b4222055757d12d0a6c1" name="gacd7be15ed072b4222055757d12d0a6c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacd7be15ed072b4222055757d12d0a6c1">&#9670;&#160;</a></span>propTable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt; <a class="el" href="structZenitUI_1_1PropDesc.html">PropDesc</a> &gt; &amp; ZenitUI::propTable </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga5c79d7fb621baadf6022f21f2d37df11" name="ga5c79d7fb621baadf6022f21f2d37df11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5c79d7fb621baadf6022f21f2d37df11">&#9670;&#160;</a></span>resolveUnresolvedProps()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::resolveUnresolvedProps </td>
-          <td>(</td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>unresolved</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>customProps</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve every pending <span class="tt">var(...)</span> declaration in <code class="param">unresolved</code>. </p>
 
 </div>
 </div>
@@ -2303,68 +1054,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
 
 </div>
 </div>
-<a id="ga2740315e17703a6a9e01849093e12e80" name="ga2740315e17703a6a9e01849093e12e80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2740315e17703a6a9e01849093e12e80">&#9670;&#160;</a></span>stylesDiffer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::stylesDiffer </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compare two sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span> values for "would this change anything". </p>
-
-</div>
-</div>
-<a id="gae187d06a347df12dcd981d3f3c7c2344" name="gae187d06a347df12dcd981d3f3c7c2344"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae187d06a347df12dcd981d3f3c7c2344">&#9670;&#160;</a></span>substituteVarRefs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::substituteVarRefs </td>
-          <td>(</td>
-          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>v</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::unordered_map&lt; std::string, std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>customProps</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Recursively substitute <span class="tt">var(--name)</span> references in <code class="param">v</code>. </p>
-
-</div>
-</div>
 <a id="ga10d8fc6b11221a5371485aaee638198c" name="ga10d8fc6b11221a5371485aaee638198c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga10d8fc6b11221a5371485aaee638198c">&#9670;&#160;</a></span>suggestSimilar()</h2>
 
@@ -2413,75 +1102,6 @@ template&lt;typename E, typename = std::enable_if_t&lt;std::is_enum_v&lt;E&gt;&g
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Suggestions sorted by (distance, alphabetical). </dd></dl>
-
-</div>
-</div>
-<a id="ga6289c9ba9b4343e6507610042f0875fd" name="ga6289c9ba9b4343e6507610042f0875fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6289c9ba9b4343e6507610042f0875fd">&#9670;&#160;</a></span>toString() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * ZenitUI::toString </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#gadfc0f636085619f9baa90bebd758bf71">DiagnosticCode</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga6f0ac5c042324f2e3ad2b34ea1828fd6" name="ga6f0ac5c042324f2e3ad2b34ea1828fd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6f0ac5c042324f2e3ad2b34ea1828fd6">&#9670;&#160;</a></span>toString() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * ZenitUI::toString </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#ga33499078caccb3f383cf6da856c7a7dc">DiagnosticSeverity</a></td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gaefe5d21f5a53c4bee62772282c260974" name="gaefe5d21f5a53c4bee62772282c260974"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaefe5d21f5a53c4bee62772282c260974">&#9670;&#160;</a></span>trim()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string_view ZenitUI::ZMarkup::trim </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Trim leading and trailing ASCII whitespace. </p>
 
 </div>
 </div>

@@ -1,6 +1,5 @@
 var classZenitUI_1_1IPlatform =
 [
-    [ "~IPlatform", "classZenitUI_1_1IPlatform.html#a377342ff72909ecc9e56c86037f56b6a", null ],
     [ "dpiScale", "classZenitUI_1_1IPlatform.html#a673ab78b2798ee1e3de741a83f66acc4", null ],
     [ "getClipboardText", "classZenitUI_1_1IPlatform.html#a6780ffc6f400eb052db184399b802876", null ],
     [ "modifiers", "classZenitUI_1_1IPlatform.html#a1ac863a3b940b2f9f5e1eacf22496711", null ],

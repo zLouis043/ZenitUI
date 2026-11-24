@@ -103,64 +103,22 @@ $(function(){initNavTree('namespaceZenitUI_1_1Anim.html','',''); });
 Functions</h2></td></tr>
 <tr class="memitem:a6d9a8ebff50b85bcca27a9df8d17bdf2" id="r_a6d9a8ebff50b85bcca27a9df8d17bdf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d9a8ebff50b85bcca27a9df8d17bdf2">syncRefs</a> (std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims, const std::vector&lt; <a class="el" href="structZenitUI_1_1AnimationRef.html">AnimationRef</a> &gt; &amp;refs, double now)</td></tr>
 <tr class="memdesc:a6d9a8ebff50b85bcca27a9df8d17bdf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronize the active-animation list with a new set of references.  <br /></td></tr>
-<tr class="memitem:a82d9800df4eeab1bbba738127e8b1402" id="r_a82d9800df4eeab1bbba738127e8b1402"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82d9800df4eeab1bbba738127e8b1402">tickIncremental</a> (std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims, float dt)</td></tr>
-<tr class="memdesc:a82d9800df4eeab1bbba738127e8b1402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by <code class="param">dt</code> seconds, and drop finished non-filling ones.  <br /></td></tr>
-<tr class="memitem:a79db6afedbc1374e01605aeb65971474" id="r_a79db6afedbc1374e01605aeb65971474"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79db6afedbc1374e01605aeb65971474">tickAbsolute</a> (std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims, double now)</td></tr>
-<tr class="memdesc:a79db6afedbc1374e01605aeb65971474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by setting <span class="tt">elapsed = now - startTime</span>.  <br /></td></tr>
-<tr class="memitem:ad26bc73fa9faed2b9b6ba876ae4d05e5" id="r_ad26bc73fa9faed2b9b6ba876ae4d05e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad26bc73fa9faed2b9b6ba876ae4d05e5">overlayCssStyle</a> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;out, const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims)</td></tr>
-<tr class="memdesc:ad26bc73fa9faed2b9b6ba876ae4d05e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay every active CSS animation onto a sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span>.  <br /></td></tr>
-<tr class="memitem:aad1a44922ba5f8a0f3332846ce943b9c" id="r_aad1a44922ba5f8a0f3332846ce943b9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad1a44922ba5f8a0f3332846ce943b9c">overlayCssComputed</a> (<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;out, const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims)</td></tr>
-<tr class="memdesc:aad1a44922ba5f8a0f3332846ce943b9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay every active CSS animation onto a dense <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>.  <br /></td></tr>
+<tr class="memitem:a82d9800df4eeab1bbba738127e8b1402" id="r_a82d9800df4eeab1bbba738127e8b1402"><td class="memItemLeft" align="right" valign="top"><a id="a82d9800df4eeab1bbba738127e8b1402" name="a82d9800df4eeab1bbba738127e8b1402"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>tickIncremental</b> (std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims, float dt)</td></tr>
+<tr class="memdesc:a82d9800df4eeab1bbba738127e8b1402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by <code class="param">dt</code> seconds, and drop finished non-filling ones. <br /></td></tr>
+<tr class="memitem:a79db6afedbc1374e01605aeb65971474" id="r_a79db6afedbc1374e01605aeb65971474"><td class="memItemLeft" align="right" valign="top"><a id="a79db6afedbc1374e01605aeb65971474" name="a79db6afedbc1374e01605aeb65971474"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>tickAbsolute</b> (std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims, double now)</td></tr>
+<tr class="memdesc:a79db6afedbc1374e01605aeb65971474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by setting <span class="tt">elapsed = now - startTime</span>. <br /></td></tr>
+<tr class="memitem:ad26bc73fa9faed2b9b6ba876ae4d05e5" id="r_ad26bc73fa9faed2b9b6ba876ae4d05e5"><td class="memItemLeft" align="right" valign="top"><a id="ad26bc73fa9faed2b9b6ba876ae4d05e5" name="ad26bc73fa9faed2b9b6ba876ae4d05e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>overlayCssStyle</b> (<a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;out, const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims)</td></tr>
+<tr class="memdesc:ad26bc73fa9faed2b9b6ba876ae4d05e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay every active CSS animation onto a sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span>. <br /></td></tr>
+<tr class="memitem:aad1a44922ba5f8a0f3332846ce943b9c" id="r_aad1a44922ba5f8a0f3332846ce943b9c"><td class="memItemLeft" align="right" valign="top"><a id="aad1a44922ba5f8a0f3332846ce943b9c" name="aad1a44922ba5f8a0f3332846ce943b9c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>overlayCssComputed</b> (<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;out, const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;anims)</td></tr>
+<tr class="memdesc:aad1a44922ba5f8a0f3332846ce943b9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay every active CSS animation onto a dense <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal helpers; called from <span class="tt"><a class="el" href="structZenitUI_1_1AnimationPlayer.html" title="Per-node animation state and operations.">AnimationPlayer</a></span> and from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a88571f053d662594f49e1a3d8014dec2" title="Draw the node and its children.">Layout::draw</a></span>. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="aad1a44922ba5f8a0f3332846ce943b9c" name="aad1a44922ba5f8a0f3332846ce943b9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad1a44922ba5f8a0f3332846ce943b9c">&#9670;&#160;</a></span>overlayCssComputed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Anim::overlayCssComputed </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>anims</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Overlay every active CSS animation onto a dense <span class="tt"><a class="el" href="structZenitUI_1_1ComputedStyle.html" title="Dense style: every property has a concrete value.">ComputedStyle</a></span>. </p>
-
-</div>
-</div>
-<a id="ad26bc73fa9faed2b9b6ba876ae4d05e5" name="ad26bc73fa9faed2b9b6ba876ae4d05e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad26bc73fa9faed2b9b6ba876ae4d05e5">&#9670;&#160;</a></span>overlayCssStyle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Anim::overlayCssStyle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>anims</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Overlay every active CSS animation onto a sparse <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span>. </p>
-
-</div>
-</div>
 <a id="a6d9a8ebff50b85bcca27a9df8d17bdf2" name="a6d9a8ebff50b85bcca27a9df8d17bdf2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d9a8ebff50b85bcca27a9df8d17bdf2">&#9670;&#160;</a></span>syncRefs()</h2>
 
@@ -190,52 +148,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a79db6afedbc1374e01605aeb65971474" name="a79db6afedbc1374e01605aeb65971474"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79db6afedbc1374e01605aeb65971474">&#9670;&#160;</a></span>tickAbsolute()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Anim::tickAbsolute </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>anims</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>now</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Advance CSS animations by setting <span class="tt">elapsed = now - startTime</span>. </p>
-
-</div>
-</div>
-<a id="a82d9800df4eeab1bbba738127e8b1402" name="a82d9800df4eeab1bbba738127e8b1402"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82d9800df4eeab1bbba738127e8b1402">&#9670;&#160;</a></span>tickIncremental()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Anim::tickIncremental </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>anims</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Advance CSS animations by <code class="param">dt</code> seconds, and drop finished non-filling ones. </p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -249,7 +161,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="namespaceZenitUI_1_1Anim.html">Anim</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="namespaceZenitUI_1_1Anim.html">Anim</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

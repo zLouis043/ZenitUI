@@ -31,10 +31,7 @@ var NAVTREE =
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Functions", "namespacemembers_func.html", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -44,18 +41,12 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ],
-        [ "Related Symbols", "functions_rela.html", null ]
+        [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Macros", "globals_defs.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ],
     [ "Examples", "examples.html", "examples" ]
   ] ]
@@ -64,12 +55,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00_demo_2main_8cpp-example.html",
-"classZenitUI_1_1Layout.html#a05f2c67cd1f32b028def4668ff011427",
-"classZenitUI_1_1TargetPool.html#aac5c5e2a23c9f1c45afeae6686488d9c",
-"functions_func_e.html",
-"group__grp__zstyle.html#ga51d4311fabf99dfe01cad5d571f6591b",
-"structZenitUI_1_1FilterRef.html#add8e556a319da346507afe7bcac2eb64",
-"structZenitUI_1_1TargetHandle.html"
+"classZenitUI_1_1Layout.html#a82e6548ce9c9d4320f010081f072b516",
+"classZenitUI_1_1UI_1_1ScrollView.html",
+"group__grp__zmarkup.html#ga31ee8a66397a4e3c8c1cc9ade0e0df70",
+"structZenitUI_1_1Value.html#af9b44545b81a6994c26ac7856f75586f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

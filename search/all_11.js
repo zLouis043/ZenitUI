@@ -1,4 +1,26 @@
 var searchData=
 [
-  ['quick_20start_20hello_20world_0',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]]
+  ['main_20cpp_0',['main cpp',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md6',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md8',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md10',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md12',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md14',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md17',1,'main.cpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md19',1,'main.cpp']]],
+  ['makediagnostic_1',['makeDiagnostic',['../group__grp__zstyle.html#gac36fae417b5e1911cd3e1b3a6f4af72a',1,'ZenitUI']]],
+  ['measure_2',['measure',['../classZenitUI_1_1Layout.html#ae0d08a4a3bf9d9110d1c08684a8f4c0e',1,'ZenitUI::Layout']]],
+  ['measurecodepoint_3',['measureCodepoint',['../classZenitUI_1_1IRenderer.html#a63f46fd8c1353d714f26a4e21ca3e2a0',1,'ZenitUI::IRenderer::measureCodepoint()'],['../classZenitUI_1_1RaylibRenderer.html#ac1014eccbfa8803736d2cef914b34156',1,'ZenitUI::RaylibRenderer::measureCodepoint()']]],
+  ['measuretext_4',['measureText',['../classZenitUI_1_1IRenderer.html#a56fc660402893d6885e92e82efd59a14',1,'ZenitUI::IRenderer::measureText()'],['../classZenitUI_1_1RaylibRenderer.html#a99a47e5d000fbaa8eedda2eaf5cee77b',1,'ZenitUI::RaylibRenderer::measureText()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#ae106a467fb5bc0f2444ee474ad783e45',1,'ZenitUI::Test::MockRenderer::measureText()']]],
+  ['media_2ehpp_5',['Media.hpp',['../Media_8hpp.html',1,'']]],
+  ['mediacondition_6',['MediaCondition',['../structZenitUI_1_1MediaCondition.html',1,'ZenitUI']]],
+  ['mediaquery_7',['MediaQuery',['../structZenitUI_1_1MediaQuery.html',1,'ZenitUI']]],
+  ['mental_20model_8',['Mental Model',['../index.html#sec_mental_model',1,'']]],
+  ['merge_9',['merge',['../classZenitUI_1_1CodepointSet.html#a7375eea7aad39fd80c0cef6818c1a3fb',1,'ZenitUI::CodepointSet']]],
+  ['metrics_10',['Metrics',['../structZenitUI_1_1Metrics.html',1,'ZenitUI']]],
+  ['minimum_20viable_20backend_20vs_20optional_20features_11',['2. Minimum Viable Backend vs Optional Features',['../page_custom_backends.html#sec_backend_minimum',1,'']]],
+  ['mockassetprovider_12',['MockAssetProvider',['../classZenitUI_1_1Test_1_1MockAssetProvider.html',1,'ZenitUI::Test']]],
+  ['mockbackend_2ehpp_13',['MockBackend.hpp',['../MockBackend_8hpp.html',1,'']]],
+  ['mockplatform_14',['MockPlatform',['../classZenitUI_1_1Test_1_1MockPlatform.html',1,'ZenitUI::Test']]],
+  ['mockrenderer_15',['MockRenderer',['../classZenitUI_1_1Test_1_1MockRenderer.html',1,'ZenitUI::Test']]],
+  ['modal_16',['Modal',['../classZenitUI_1_1UI_1_1Modal.html',1,'ZenitUI::UI']]],
+  ['modal_2ehpp_17',['Modal.hpp',['../Modal_8hpp.html',1,'']]],
+  ['model_18',['Mental Model',['../index.html#sec_mental_model',1,'']]],
+  ['modifiers_19',['modifiers',['../classZenitUI_1_1IPlatform.html#a1ac863a3b940b2f9f5e1eacf22496711',1,'ZenitUI::IPlatform::modifiers()'],['../classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2',1,'ZenitUI::RaylibPlatform::modifiers()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d',1,'ZenitUI::Test::MockPlatform::modifiers()']]],
+  ['modifierstate_20',['ModifierState',['../structZenitUI_1_1ModifierState.html',1,'ZenitUI']]],
+  ['mousebutton_21',['MouseButton',['../group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75',1,'ZenitUI']]],
+  ['mulwith_22',['mulWith',['../structZenitUI_1_1Value.html#a5837ad30a7c229c660bdf50720410f26',1,'ZenitUI::Value']]]
 ];

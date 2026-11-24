@@ -1,6 +1,5 @@
 var classZenitUI_1_1IAssetProvider =
 [
-    [ "~IAssetProvider", "classZenitUI_1_1IAssetProvider.html#a4734555609fd4c3ce76ef842ad54ee43", null ],
     [ "getEffect", "classZenitUI_1_1IAssetProvider.html#a53e3acb2f4fe7bf80761cf728900b427", null ],
     [ "getFont", "classZenitUI_1_1IAssetProvider.html#a38308be482389a9c4e4646b9527b5654", null ],
     [ "getFont", "classZenitUI_1_1IAssetProvider.html#a4378453450aebf4ddd7d07a42653c249", null ],

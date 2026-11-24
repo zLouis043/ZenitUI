@@ -103,7 +103,7 @@ $(function(){initNavTree('Tooltip_8hpp_source.html','',''); });
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="Layouts_8hpp.html">Layouts.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="Text_8hpp.html">Text.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>ZenitUI::UI</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
 <div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
@@ -176,11 +176,11 @@ $(function(){initNavTree('Tooltip_8hpp_source.html','',''); });
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            setPortal(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            setInteractive(<span class="keyword">false</span>);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            setBlocksRaycast(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            style_.inlineBase.position = <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8">Position::Absolute</a>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            style_.inlineBase.position = Position::Absolute;</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            style_.inlineBase.opacity = 0.0f;</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keyword">auto</span> label = <a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(text_);</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            label-&gt;getInlineBase().fontSize = <a class="code hl_function" href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">VH</a>(2.4f);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            label-&gt;getInlineBase().fontSize = VH(2.4f);</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            addChild(label);</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        }</div>
 </div>
@@ -201,26 +201,26 @@ $(function(){initNavTree('Tooltip_8hpp_source.html','',''); });
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            {</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                <a class="code hl_struct" href="structZenitUI_1_1Rect.html">Rect</a> a = anchor_-&gt;getRect();</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> ms = getMeasuredSize();</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                <span class="keywordflow">if</span> (ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a> &gt; 0.0f &amp;&amp; ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a> &gt; 0.0f)</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                <span class="keywordflow">if</span> (ms.x &gt; 0.0f &amp;&amp; ms.y &gt; 0.0f)</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                    <span class="keywordtype">float</span> targetX = a.<a class="code hl_variable" href="structZenitUI_1_1Rect.html#a0634203eb3a8bb0e204cbc7c7793022a">x</a> + a.<a class="code hl_variable" href="structZenitUI_1_1Rect.html#aea895fb42a5e2f5c0fbbfc841abec66b">width</a> * 0.5f - ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a> * 0.5f;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    <span class="keywordtype">float</span> targetY = a.<a class="code hl_variable" href="structZenitUI_1_1Rect.html#a805cb3f6366f82941fcac46ebcc8d1d7">y</a> - ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a> - 6.0f;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                    <span class="keywordtype">float</span> targetX = a.x + a.width * 0.5f - ms.x * 0.5f;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    <span class="keywordtype">float</span> targetY = a.y - ms.y - 6.0f;</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                    <span class="keywordflow">if</span> (targetX &lt; 0.0f)</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                        targetX = 0.0f;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    <span class="keywordflow">if</span> (targetX + ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a> &gt; <a class="code hl_variable" href="structZenitUI_1_1Metrics.html#ab6ae92f89df34056eaa6038fadb6cf81">Metrics::viewport</a>.x)</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                        targetX = <a class="code hl_variable" href="structZenitUI_1_1Metrics.html#ab6ae92f89df34056eaa6038fadb6cf81">Metrics::viewport</a>.x - ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a>;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    <span class="keywordflow">if</span> (targetX + ms.x &gt; Metrics::viewport.x)</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                        targetX = Metrics::viewport.x - ms.x;</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                    <span class="keywordflow">if</span> (targetY &lt; 0.0f)</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    {</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                        targetY = a.<a class="code hl_variable" href="structZenitUI_1_1Rect.html#a805cb3f6366f82941fcac46ebcc8d1d7">y</a> + a.<a class="code hl_variable" href="structZenitUI_1_1Rect.html#a79a242abc1d9a57f91bda928d7eac621">height</a> + 6.0f;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                        targetY = a.y + a.height + 6.0f;</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    }</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    <span class="keywordflow">if</span> (targetY + ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a> &gt; <a class="code hl_variable" href="structZenitUI_1_1Metrics.html#ab6ae92f89df34056eaa6038fadb6cf81">Metrics::viewport</a>.y)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    <span class="keywordflow">if</span> (targetY + ms.y &gt; Metrics::viewport.y)</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                    {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                        targetY = <a class="code hl_variable" href="structZenitUI_1_1Metrics.html#ab6ae92f89df34056eaa6038fadb6cf81">Metrics::viewport</a>.y - ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a>;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                        targetY = Metrics::viewport.y - ms.y;</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                    }</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    rect = {targetX, targetY, ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a>, ms.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a>};</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    rect = {targetX, targetY, ms.x, ms.y};</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                    arrangeInto(rect);</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                }</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            }</div>
@@ -264,26 +264,16 @@ $(function(){initNavTree('Tooltip_8hpp_source.html','',''); });
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Tooltip_html_a8d4c25c4e16f43630ad6ae284b32283b"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Tooltip.html#a8d4c25c4e16f43630ad6ae284b32283b">ZenitUI::UI::Tooltip::show</a></div><div class="ttdeci">void show()</div><div class="ttdoc">Begin the countdown to show.</div><div class="ttdef"><b>Definition</b> Tooltip.hpp:104</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Tooltip_html_ae28b024a0d3a1f423a83497f7782f13e"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Tooltip.html#ae28b024a0d3a1f423a83497f7782f13e">ZenitUI::UI::Tooltip::setAnchor</a></div><div class="ttdeci">void setAnchor(Layout *a)</div><div class="ttdoc">Change the anchor (advanced).</div><div class="ttdef"><b>Definition</b> Tooltip.hpp:99</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Tooltip_html_ae9ded275674469f6b9045c3777928fdd"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Tooltip.html#ae9ded275674469f6b9045c3777928fdd">ZenitUI::UI::Tooltip::onUpdate</a></div><div class="ttdeci">void onUpdate(float dt) override</div><div class="ttdoc">Count down the delay and position the tooltip.</div><div class="ttdef"><b>Definition</b> Tooltip.hpp:149</div></div>
-<div class="ttc" id="agroup__grp__core_html_gab0693da6b66407115c9e193dc4fb5ec0"><div class="ttname"><a href="group__grp__core.html#gab0693da6b66407115c9e193dc4fb5ec0">ZenitUI::VH</a></div><div class="ttdeci">Value VH(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:580</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_ga78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:538</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8"><div class="ttname"><a href="group__grp__zstyle.html#ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8">ZenitUI::Position::Absolute</a></div><div class="ttdeci">@ Absolute</div><div class="ttdef"><b>Definition</b> Style.hpp:138</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
-<div class="ttc" id="astructZenitUI_1_1Metrics_html_ab6ae92f89df34056eaa6038fadb6cf81"><div class="ttname"><a href="structZenitUI_1_1Metrics.html#ab6ae92f89df34056eaa6038fadb6cf81">ZenitUI::Metrics::viewport</a></div><div class="ttdeci">static Vec2 viewport</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:228</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html"><div class="ttname"><a href="structZenitUI_1_1Rect.html">ZenitUI::Rect</a></div><div class="ttdoc">Axis-aligned rectangle in screen coordinates.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:45</div></div>
-<div class="ttc" id="astructZenitUI_1_1Rect_html_a0634203eb3a8bb0e204cbc7c7793022a"><div class="ttname"><a href="structZenitUI_1_1Rect.html#a0634203eb3a8bb0e204cbc7c7793022a">ZenitUI::Rect::x</a></div><div class="ttdeci">float x</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:46</div></div>
-<div class="ttc" id="astructZenitUI_1_1Rect_html_a79a242abc1d9a57f91bda928d7eac621"><div class="ttname"><a href="structZenitUI_1_1Rect.html#a79a242abc1d9a57f91bda928d7eac621">ZenitUI::Rect::height</a></div><div class="ttdeci">float height</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:46</div></div>
-<div class="ttc" id="astructZenitUI_1_1Rect_html_a805cb3f6366f82941fcac46ebcc8d1d7"><div class="ttname"><a href="structZenitUI_1_1Rect.html#a805cb3f6366f82941fcac46ebcc8d1d7">ZenitUI::Rect::y</a></div><div class="ttdeci">float y</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:46</div></div>
-<div class="ttc" id="astructZenitUI_1_1Rect_html_aea895fb42a5e2f5c0fbbfc841abec66b"><div class="ttname"><a href="structZenitUI_1_1Rect.html#aea895fb42a5e2f5c0fbbfc841abec66b">ZenitUI::Rect::width</a></div><div class="ttdeci">float width</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:46</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec2_html"><div class="ttname"><a href="structZenitUI_1_1Vec2.html">ZenitUI::Vec2</a></div><div class="ttdoc">2D vector with component-wise arithmetic.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:24</div></div>
-<div class="ttc" id="astructZenitUI_1_1Vec2_html_aac55da8d47d896187a5b5238e71a9088"><div class="ttname"><a href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">ZenitUI::Vec2::x</a></div><div class="ttdeci">float x</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:25</div></div>
-<div class="ttc" id="astructZenitUI_1_1Vec2_html_ae7f4d2140ab32fe866759163c9cf8f3c"><div class="ttname"><a href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">ZenitUI::Vec2::y</a></div><div class="ttdeci">float y</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a href="dir_d66e8d5a7776834ccee339fd5fd3e729.html">components</a></li><li class="navelem"><a href="Tooltip_8hpp.html">Tooltip.hpp</a></li>
+    <li class="navelem"><b>include</b></li><li class="navelem"><b>components</b></li><li class="navelem"><a href="Tooltip_8hpp.html">Tooltip.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

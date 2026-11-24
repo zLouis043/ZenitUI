@@ -103,84 +103,23 @@ $(function(){initNavTree('structZenitUI_1_1NodeState.html','','structZenitUI_1_1
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:acc94539b88d16d76ba24fe7a98c54d3a" id="r_acc94539b88d16d76ba24fe7a98c54d3a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc94539b88d16d76ba24fe7a98c54d3a">hovered</a>: 1</td></tr>
-<tr class="memdesc:acc94539b88d16d76ba24fe7a98c54d3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer is currently inside the node.  <br /></td></tr>
-<tr class="memitem:a735c311106016a32c766f30772c2603e" id="r_a735c311106016a32c766f30772c2603e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a735c311106016a32c766f30772c2603e">pressed</a>: 1</td></tr>
-<tr class="memdesc:a735c311106016a32c766f30772c2603e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary mouse button is pressed on this node.  <br /></td></tr>
-<tr class="memitem:ad7b90a7cdea9ce6864283982fa01a620" id="r_ad7b90a7cdea9ce6864283982fa01a620"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7b90a7cdea9ce6864283982fa01a620">focused</a>: 1</td></tr>
-<tr class="memdesc:ad7b90a7cdea9ce6864283982fa01a620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node currently holds keyboard focus.  <br /></td></tr>
-<tr class="memitem:ae3fe7918290fbba57b3ce7b6801ee380" id="r_ae3fe7918290fbba57b3ce7b6801ee380"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380">checked</a>: 1</td></tr>
-<tr class="memdesc:ae3fe7918290fbba57b3ce7b6801ee380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle / Checkbox checked state (<span class="tt">:<a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380" title="Toggle / Checkbox checked state (:checked).">checked</a></span>).  <br /></td></tr>
+<tr class="memitem:acc94539b88d16d76ba24fe7a98c54d3a" id="r_acc94539b88d16d76ba24fe7a98c54d3a"><td class="memItemLeft" align="right" valign="top"><a id="acc94539b88d16d76ba24fe7a98c54d3a" name="acc94539b88d16d76ba24fe7a98c54d3a"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>hovered</b>: 1</td></tr>
+<tr class="memdesc:acc94539b88d16d76ba24fe7a98c54d3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer is currently inside the node. <br /></td></tr>
+<tr class="memitem:a735c311106016a32c766f30772c2603e" id="r_a735c311106016a32c766f30772c2603e"><td class="memItemLeft" align="right" valign="top"><a id="a735c311106016a32c766f30772c2603e" name="a735c311106016a32c766f30772c2603e"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>pressed</b>: 1</td></tr>
+<tr class="memdesc:a735c311106016a32c766f30772c2603e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary mouse button is pressed on this node. <br /></td></tr>
+<tr class="memitem:ad7b90a7cdea9ce6864283982fa01a620" id="r_ad7b90a7cdea9ce6864283982fa01a620"><td class="memItemLeft" align="right" valign="top"><a id="ad7b90a7cdea9ce6864283982fa01a620" name="ad7b90a7cdea9ce6864283982fa01a620"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>focused</b>: 1</td></tr>
+<tr class="memdesc:ad7b90a7cdea9ce6864283982fa01a620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node currently holds keyboard focus. <br /></td></tr>
+<tr class="memitem:ae3fe7918290fbba57b3ce7b6801ee380" id="r_ae3fe7918290fbba57b3ce7b6801ee380"><td class="memItemLeft" align="right" valign="top"><a id="ae3fe7918290fbba57b3ce7b6801ee380" name="ae3fe7918290fbba57b3ce7b6801ee380"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>checked</b>: 1</td></tr>
+<tr class="memdesc:ae3fe7918290fbba57b3ce7b6801ee380"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle / Checkbox checked state (<span class="tt">:<a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380" title="Toggle / Checkbox checked state (:checked).">checked</a></span>). <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-frame interaction flags derived from pointer / keyboard state. </p>
 <p>Packed as bitfields to keep the node struct small. Written by <span class="tt"><a class="el" href="structZenitUI_1_1InputController.html#a5e09454c72c2349823e6e39162292465" title="Recompute the node&#39;s hovered / pressed / focused flags.">InputController::updateFlags</a></span>, read by <span class="tt"><a class="el" href="structZenitUI_1_1StyleResolver.html" title="Resolves, caches, and transitions the style of a single node.">StyleResolver</a></span> and by components that need to render state-dependent visuals. </p>
-</div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="ae3fe7918290fbba57b3ce7b6801ee380" name="ae3fe7918290fbba57b3ce7b6801ee380"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3fe7918290fbba57b3ce7b6801ee380">&#9670;&#160;</a></span>checked</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeState::checked</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Toggle / Checkbox checked state (<span class="tt">:<a class="el" href="#ae3fe7918290fbba57b3ce7b6801ee380" title="Toggle / Checkbox checked state (:checked).">checked</a></span>). </p>
-
-</div>
-</div>
-<a id="ad7b90a7cdea9ce6864283982fa01a620" name="ad7b90a7cdea9ce6864283982fa01a620"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7b90a7cdea9ce6864283982fa01a620">&#9670;&#160;</a></span>focused</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeState::focused</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Node currently holds keyboard focus. </p>
-
-</div>
-</div>
-<a id="acc94539b88d16d76ba24fe7a98c54d3a" name="acc94539b88d16d76ba24fe7a98c54d3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc94539b88d16d76ba24fe7a98c54d3a">&#9670;&#160;</a></span>hovered</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeState::hovered</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Pointer is currently inside the node. </p>
-
-</div>
-</div>
-<a id="a735c311106016a32c766f30772c2603e" name="a735c311106016a32c766f30772c2603e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a735c311106016a32c766f30772c2603e">&#9670;&#160;</a></span>pressed</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ZenitUI::NodeState::pressed</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Primary mouse button is pressed on this node. </p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -196,7 +135,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1NodeState.html">NodeState</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1NodeState.html">NodeState</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

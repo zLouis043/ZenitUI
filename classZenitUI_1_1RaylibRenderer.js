@@ -1,7 +1,7 @@
 var classZenitUI_1_1RaylibRenderer =
 [
     [ "RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#a79a47245d790d8749841ca73d8d6e376", null ],
-    [ "~RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#a3dcc97c09f0a549ccf026fa9b5dff3d1", null ],
+    [ "~RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html#aa6a19b3459aa3bc8aacab2a317b73a31", null ],
     [ "beginFrame", "classZenitUI_1_1RaylibRenderer.html#a8e331b34807b2d21aff503adc4ee4a47", null ],
     [ "clearTarget", "classZenitUI_1_1RaylibRenderer.html#ad77c756e63c5b37b79e681531df57eaa", null ],
     [ "createTarget", "classZenitUI_1_1RaylibRenderer.html#a2b44ced5665e4aaa36b78f6c3cfb0c22", null ],

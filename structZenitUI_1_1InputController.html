@@ -107,10 +107,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5e09454c72c2349823e6e39162292465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recompute the node's <span class="tt">hovered</span> / <span class="tt">pressed</span> / <span class="tt">focused</span> flags.  <br /></td></tr>
 <tr class="memitem:ab9c6365369ea9b7c51fb84d01f2e039f" id="r_ab9c6365369ea9b7c51fb84d01f2e039f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9c6365369ea9b7c51fb84d01f2e039f">computeNextState</a> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node) const</td></tr>
 <tr class="memdesc:ab9c6365369ea9b7c51fb84d01f2e039f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Derive the <span class="tt"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665" title="Interaction state computed per node and consumed by the style resolver to select pseudo-class overlay...">UIState</a></span> enum from the node's current state flags.  <br /></td></tr>
-<tr class="memitem:af54c02682642c3ab8508ef3b8bc88e85" id="r_af54c02682642c3ab8508ef3b8bc88e85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af54c02682642c3ab8508ef3b8bc88e85">fireCallbacks</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, <a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> prev, <a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> next, bool changed)</td></tr>
-<tr class="memdesc:af54c02682642c3ab8508ef3b8bc88e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire callbacks for state transitions and pointer events.  <br /></td></tr>
-<tr class="memitem:a31e532c5672f69957b7403be764cbda6" id="r_a31e532c5672f69957b7403be764cbda6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31e532c5672f69957b7403be764cbda6">handleKeyInput</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node)</td></tr>
-<tr class="memdesc:a31e532c5672f69957b7403be764cbda6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire <span class="tt">onClick</span> on Enter or Space for the focused, keyboard- activatable node.  <br /></td></tr>
+<tr class="memitem:af54c02682642c3ab8508ef3b8bc88e85" id="r_af54c02682642c3ab8508ef3b8bc88e85"><td class="memItemLeft" align="right" valign="top"><a id="af54c02682642c3ab8508ef3b8bc88e85" name="af54c02682642c3ab8508ef3b8bc88e85"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fireCallbacks</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, <a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> prev, <a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> next, bool changed)</td></tr>
+<tr class="memdesc:af54c02682642c3ab8508ef3b8bc88e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire callbacks for state transitions and pointer events. <br /></td></tr>
+<tr class="memitem:a31e532c5672f69957b7403be764cbda6" id="r_a31e532c5672f69957b7403be764cbda6"><td class="memItemLeft" align="right" valign="top"><a id="a31e532c5672f69957b7403be764cbda6" name="a31e532c5672f69957b7403be764cbda6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>handleKeyInput</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node)</td></tr>
+<tr class="memdesc:a31e532c5672f69957b7403be764cbda6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire <span class="tt">onClick</span> on Enter or Space for the focused, keyboard- activatable node. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stateless per-node input dispatcher. </p>
@@ -132,58 +134,6 @@ Public Member Functions</h2></td></tr>
 
 <p>Derive the <span class="tt"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665" title="Interaction state computed per node and consumed by the style resolver to select pseudo-class overlay...">UIState</a></span> enum from the node's current state flags. </p>
 <p>Order of precedence: <span class="tt">Disabled</span> &gt; <span class="tt">Pressed</span> &gt; <span class="tt">Hover</span> &gt; <span class="tt">Idle</span>. </p>
-
-</div>
-</div>
-<a id="af54c02682642c3ab8508ef3b8bc88e85" name="af54c02682642c3ab8508ef3b8bc88e85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af54c02682642c3ab8508ef3b8bc88e85">&#9670;&#160;</a></span>fireCallbacks()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::InputController::fireCallbacks </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a></td>          <td class="paramname"><span class="paramname"><em>prev</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a></td>          <td class="paramname"><span class="paramname"><em>next</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>changed</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Fire callbacks for state transitions and pointer events. </p>
-
-</div>
-</div>
-<a id="a31e532c5672f69957b7403be764cbda6" name="a31e532c5672f69957b7403be764cbda6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31e532c5672f69957b7403be764cbda6">&#9670;&#160;</a></span>handleKeyInput()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::InputController::handleKeyInput </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Fire <span class="tt">onClick</span> on Enter or Space for the focused, keyboard- activatable node. </p>
 
 </div>
 </div>
@@ -239,7 +189,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1InputController.html">InputController</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1InputController.html">InputController</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

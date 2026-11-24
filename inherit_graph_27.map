@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend." alt="" coords="5,5,143,33"/>
-<area shape="rect" id="Node000001" href="$classZenitUI_1_1RaylibPlatform.html" title="Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard)." alt="" coords="191,5,365,33"/>
-<area shape="poly" id="edge41_Node000000_Node000001" title=" " alt="" coords="158,17,193,19,188,19,158,22"/>
+<area shape="rect" id="Node000000" href="$classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend." alt="" coords="5,32,143,60"/>
+<area shape="rect" id="Node000001" href="$classZenitUI_1_1RaylibPlatform.html" title="Reference IPlatform backed by Raylib window, input, and clipboard APIs." alt="" coords="205,5,379,33"/>
+<area shape="poly" id="edge42_Node000000_Node000001" title=" " alt="" coords="157,33,207,29,202,31,158,38"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1Test_1_1MockPlatform.html" title="Programmable IPlatform for injecting deterministic pointer, keyboard, viewport, and clipboard state i..." alt="" coords="191,57,393,85"/>
+<area shape="poly" id="edge43_Node000000_Node000002" title=" " alt="" coords="158,53,193,59,187,60,158,58"/>
 </map>

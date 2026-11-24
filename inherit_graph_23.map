@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classZenitUI_1_1IAssetProvider.html" title="Abstract font / texture / effect lookup." alt="" coords="5,5,177,33"/>
-<area shape="rect" id="Node000001" href="$classZenitUI_1_1RaylibAssetProvider.html" title="Raylib implementation of IAssetProvider for fonts, textures, and shaders." alt="" coords="225,5,433,33"/>
-<area shape="poly" id="edge39_Node000000_Node000001" title=" " alt="" coords="192,17,227,19,222,19,193,22"/>
+<area shape="rect" id="Node000000" href="$classZenitUI_1_1IAssetProvider.html" title="Abstract name&#45;based lookup and runtime lifecycle for fonts, textures, and shaders." alt="" coords="5,36,177,64"/>
+<area shape="rect" id="Node000001" href="$classZenitUI_1_1RaylibAssetProvider.html" title="Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name." alt="" coords="225,5,433,33"/>
+<area shape="poly" id="edge39_Node000000_Node000001" title=" " alt="" coords="192,34,227,32,222,33,193,39"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In&#45;memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem..." alt="" coords="238,57,420,102"/>
+<area shape="poly" id="edge40_Node000000_Node000002" title=" " alt="" coords="192,60,240,68,235,68,192,65"/>
 </map>

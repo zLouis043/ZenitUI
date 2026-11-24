@@ -22,7 +22,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="structZenitUI_1_1ZMarkup_1_1KeyedStore.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="162.25,-33.5 0,-33.5 0,0 162.25,0 162.25,-33.5"/>
+<polygon fill="white" stroke="#bfbfbf" points="162.25,-33.5 0,-33.5 0,0 162.25,0 162.25,-33.5"/>
 <text xml:space="preserve" text-anchor="start" x="8" y="-20" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::ZMarkup::KeyedStore</text>
 <text xml:space="preserve" text-anchor="middle" x="81.12" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; KeyT &gt;</text>
 </a>

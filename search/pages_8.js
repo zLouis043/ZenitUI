@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rating_20hpp_0',['Rating.hpp',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md11',1,'']]],
-  ['reading_20order_1',['Suggested Reading Order',['../index.html#sec_learning_path',1,'']]],
-  ['reference_2',['ZenitUI — Guide &amp;amp; API Reference',['../index.html',1,'']]]
+  ['guide_20api_20reference_0',['ZenitUI — Guide &amp;amp; API Reference',['../index.html',1,'']]],
+  ['guides_1',['Topic Guides',['../index.html#sec_guides',1,'']]]
 ];

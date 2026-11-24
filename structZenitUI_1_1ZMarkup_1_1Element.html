@@ -103,216 +103,39 @@ $(function(){initNavTree('structZenitUI_1_1ZMarkup_1_1Element.html','','structZe
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a26dda51061e7e55d7669c77e14fb55dd" id="r_a26dda51061e7e55d7669c77e14fb55dd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26dda51061e7e55d7669c77e14fb55dd">attr</a> (std::string_view k, std::string_view d=&quot;&quot;) const</td></tr>
-<tr class="memdesc:a26dda51061e7e55d7669c77e14fb55dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the value of attribute <code class="param">k</code>, or <code class="param">d</code> if absent.  <br /></td></tr>
-<tr class="memitem:ae1779d59083ef2e92c75955f751a7e09" id="r_ae1779d59083ef2e92c75955f751a7e09"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1779d59083ef2e92c75955f751a7e09">has</a> (std::string_view k) const</td></tr>
-<tr class="memdesc:ae1779d59083ef2e92c75955f751a7e09"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the element has attribute <code class="param">k</code> (regardless of value).  <br /></td></tr>
-<tr class="memitem:a7d104ff0a29ab1369b7b4c15bb07c208" id="r_a7d104ff0a29ab1369b7b4c15bb07c208"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d104ff0a29ab1369b7b4c15bb07c208">attrFloat</a> (std::string_view k, float d=0.0f) const</td></tr>
-<tr class="memdesc:a7d104ff0a29ab1369b7b4c15bb07c208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return attribute <code class="param">k</code> parsed as <span class="tt">float</span>, or <code class="param">d</code> on failure.  <br /></td></tr>
-<tr class="memitem:acb61965ccd8df3464c8aa4bd6b1e13d2" id="r_acb61965ccd8df3464c8aa4bd6b1e13d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb61965ccd8df3464c8aa4bd6b1e13d2">attrBool</a> (std::string_view k, bool d=false) const</td></tr>
-<tr class="memdesc:acb61965ccd8df3464c8aa4bd6b1e13d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return attribute <code class="param">k</code> as <span class="tt">bool</span> (<span class="tt">"true"</span>, <span class="tt">"1"</span>, <span class="tt">"yes"</span>).  <br /></td></tr>
+<tr class="memitem:a26dda51061e7e55d7669c77e14fb55dd" id="r_a26dda51061e7e55d7669c77e14fb55dd"><td class="memItemLeft" align="right" valign="top"><a id="a26dda51061e7e55d7669c77e14fb55dd" name="a26dda51061e7e55d7669c77e14fb55dd"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>attr</b> (std::string_view k, std::string_view d=&quot;&quot;) const</td></tr>
+<tr class="memdesc:a26dda51061e7e55d7669c77e14fb55dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the value of attribute <code class="param">k</code>, or <code class="param">d</code> if absent. <br /></td></tr>
+<tr class="memitem:ae1779d59083ef2e92c75955f751a7e09" id="r_ae1779d59083ef2e92c75955f751a7e09"><td class="memItemLeft" align="right" valign="top"><a id="ae1779d59083ef2e92c75955f751a7e09" name="ae1779d59083ef2e92c75955f751a7e09"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>has</b> (std::string_view k) const</td></tr>
+<tr class="memdesc:ae1779d59083ef2e92c75955f751a7e09"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the element has attribute <code class="param">k</code> (regardless of value). <br /></td></tr>
+<tr class="memitem:a7d104ff0a29ab1369b7b4c15bb07c208" id="r_a7d104ff0a29ab1369b7b4c15bb07c208"><td class="memItemLeft" align="right" valign="top"><a id="a7d104ff0a29ab1369b7b4c15bb07c208" name="a7d104ff0a29ab1369b7b4c15bb07c208"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>attrFloat</b> (std::string_view k, float d=0.0f) const</td></tr>
+<tr class="memdesc:a7d104ff0a29ab1369b7b4c15bb07c208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return attribute <code class="param">k</code> parsed as <span class="tt">float</span>, or <code class="param">d</code> on failure. <br /></td></tr>
+<tr class="memitem:acb61965ccd8df3464c8aa4bd6b1e13d2" id="r_acb61965ccd8df3464c8aa4bd6b1e13d2"><td class="memItemLeft" align="right" valign="top"><a id="acb61965ccd8df3464c8aa4bd6b1e13d2" name="acb61965ccd8df3464c8aa4bd6b1e13d2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>attrBool</b> (std::string_view k, bool d=false) const</td></tr>
+<tr class="memdesc:acb61965ccd8df3464c8aa4bd6b1e13d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return attribute <code class="param">k</code> as <span class="tt">bool</span> (<span class="tt">"true"</span>, <span class="tt">"1"</span>, <span class="tt">"yes"</span>). <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a24c91309c38462def8f229d3af390350" id="r_a24c91309c38462def8f229d3af390350"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24c91309c38462def8f229d3af390350">tag</a></td></tr>
-<tr class="memitem:a7c4f6089da2aaa8ed0bb6dbf4506777b" id="r_a7c4f6089da2aaa8ed0bb6dbf4506777b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c4f6089da2aaa8ed0bb6dbf4506777b">classes</a></td></tr>
-<tr class="memitem:a63572d6a9ca4b83245d52516e378e3ae" id="r_a63572d6a9ca4b83245d52516e378e3ae"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63572d6a9ca4b83245d52516e378e3ae">id</a></td></tr>
-<tr class="memitem:a0af86c054c9961b96968c48d03240eb3" id="r_a0af86c054c9961b96968c48d03240eb3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0af86c054c9961b96968c48d03240eb3">ref</a></td></tr>
-<tr class="memitem:aac9752d5955a4281625ca0df4262597f" id="r_aac9752d5955a4281625ca0df4262597f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac9752d5955a4281625ca0df4262597f">text</a></td></tr>
-<tr class="memitem:a06e72b4b410023577a909ab31a2b0c39" id="r_a06e72b4b410023577a909ab31a2b0c39"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06e72b4b410023577a909ab31a2b0c39">attrs</a></td></tr>
-<tr class="memitem:af6479aabc378a73e2b61f389a8cde897" id="r_af6479aabc378a73e2b61f389a8cde897"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6479aabc378a73e2b61f389a8cde897">children</a></td></tr>
+<tr class="memitem:a24c91309c38462def8f229d3af390350" id="r_a24c91309c38462def8f229d3af390350"><td class="memItemLeft" align="right" valign="top"><a id="a24c91309c38462def8f229d3af390350" name="a24c91309c38462def8f229d3af390350"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>tag</b></td></tr>
+<tr class="memitem:a7c4f6089da2aaa8ed0bb6dbf4506777b" id="r_a7c4f6089da2aaa8ed0bb6dbf4506777b"><td class="memItemLeft" align="right" valign="top"><a id="a7c4f6089da2aaa8ed0bb6dbf4506777b" name="a7c4f6089da2aaa8ed0bb6dbf4506777b"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>classes</b></td></tr>
+<tr class="memitem:a63572d6a9ca4b83245d52516e378e3ae" id="r_a63572d6a9ca4b83245d52516e378e3ae"><td class="memItemLeft" align="right" valign="top"><a id="a63572d6a9ca4b83245d52516e378e3ae" name="a63572d6a9ca4b83245d52516e378e3ae"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="memitem:a0af86c054c9961b96968c48d03240eb3" id="r_a0af86c054c9961b96968c48d03240eb3"><td class="memItemLeft" align="right" valign="top"><a id="a0af86c054c9961b96968c48d03240eb3" name="a0af86c054c9961b96968c48d03240eb3"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></tr>
+<tr class="memitem:aac9752d5955a4281625ca0df4262597f" id="r_aac9752d5955a4281625ca0df4262597f"><td class="memItemLeft" align="right" valign="top"><a id="aac9752d5955a4281625ca0df4262597f" name="aac9752d5955a4281625ca0df4262597f"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>text</b></td></tr>
+<tr class="memitem:a06e72b4b410023577a909ab31a2b0c39" id="r_a06e72b4b410023577a909ab31a2b0c39"><td class="memItemLeft" align="right" valign="top"><a id="a06e72b4b410023577a909ab31a2b0c39" name="a06e72b4b410023577a909ab31a2b0c39"></a>
+std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>attrs</b></td></tr>
+<tr class="memitem:af6479aabc378a73e2b61f389a8cde897" id="r_af6479aabc378a73e2b61f389a8cde897"><td class="memItemLeft" align="right" valign="top"><a id="af6479aabc378a73e2b61f389a8cde897" name="af6479aabc378a73e2b61f389a8cde897"></a>
+std::vector&lt; <a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>children</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Parsed representation of one markup node. </p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a26dda51061e7e55d7669c77e14fb55dd" name="a26dda51061e7e55d7669c77e14fb55dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26dda51061e7e55d7669c77e14fb55dd">&#9670;&#160;</a></span>attr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::ZMarkup::Element::attr </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the value of attribute <code class="param">k</code>, or <code class="param">d</code> if absent. </p>
-
-</div>
-</div>
-<a id="acb61965ccd8df3464c8aa4bd6b1e13d2" name="acb61965ccd8df3464c8aa4bd6b1e13d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb61965ccd8df3464c8aa4bd6b1e13d2">&#9670;&#160;</a></span>attrBool()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::ZMarkup::Element::attrBool </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return attribute <code class="param">k</code> as <span class="tt">bool</span> (<span class="tt">"true"</span>, <span class="tt">"1"</span>, <span class="tt">"yes"</span>). </p>
-
-</div>
-</div>
-<a id="a7d104ff0a29ab1369b7b4c15bb07c208" name="a7d104ff0a29ab1369b7b4c15bb07c208"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d104ff0a29ab1369b7b4c15bb07c208">&#9670;&#160;</a></span>attrFloat()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::ZMarkup::Element::attrFloat </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>k</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0f</span>&#160;) const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return attribute <code class="param">k</code> parsed as <span class="tt">float</span>, or <code class="param">d</code> on failure. </p>
-
-</div>
-</div>
-<a id="ae1779d59083ef2e92c75955f751a7e09" name="ae1779d59083ef2e92c75955f751a7e09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1779d59083ef2e92c75955f751a7e09">&#9670;&#160;</a></span>has()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::ZMarkup::Element::has </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>k</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the element has attribute <code class="param">k</code> (regardless of value). </p>
-
-</div>
-</div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a06e72b4b410023577a909ab31a2b0c39" name="a06e72b4b410023577a909ab31a2b0c39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06e72b4b410023577a909ab31a2b0c39">&#9670;&#160;</a></span>attrs</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;std::string, std::string&gt; &gt; ZenitUI::ZMarkup::Element::attrs</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af6479aabc378a73e2b61f389a8cde897" name="af6479aabc378a73e2b61f389a8cde897"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6479aabc378a73e2b61f389a8cde897">&#9670;&#160;</a></span>children</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a>&gt; ZenitUI::ZMarkup::Element::children</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7c4f6089da2aaa8ed0bb6dbf4506777b" name="a7c4f6089da2aaa8ed0bb6dbf4506777b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c4f6089da2aaa8ed0bb6dbf4506777b">&#9670;&#160;</a></span>classes</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::string&gt; ZenitUI::ZMarkup::Element::classes</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a63572d6a9ca4b83245d52516e378e3ae" name="a63572d6a9ca4b83245d52516e378e3ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63572d6a9ca4b83245d52516e378e3ae">&#9670;&#160;</a></span>id</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::ZMarkup::Element::id</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0af86c054c9961b96968c48d03240eb3" name="a0af86c054c9961b96968c48d03240eb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0af86c054c9961b96968c48d03240eb3">&#9670;&#160;</a></span>ref</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::ZMarkup::Element::ref</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a24c91309c38462def8f229d3af390350" name="a24c91309c38462def8f229d3af390350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24c91309c38462def8f229d3af390350">&#9670;&#160;</a></span>tag</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::ZMarkup::Element::tag</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aac9752d5955a4281625ca0df4262597f" name="aac9752d5955a4281625ca0df4262597f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac9752d5955a4281625ca0df4262597f">&#9670;&#160;</a></span>text</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::ZMarkup::Element::text</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="ZMarkup_8hpp_source.html">ZMarkup.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -328,7 +151,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a></li><li class="navelem"><a href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><b>ZMarkup</b></li><li class="navelem"><a href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

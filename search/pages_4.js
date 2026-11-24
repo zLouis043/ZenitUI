@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['hello_20world_0',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]],
-  ['hpp_1',['hpp',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md11',1,'Rating.hpp'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md0',1,'ShowcaseApp.hpp']]]
+  ['a_20backend_20into_20uicontext_0',['1. Wiring a Backend into UIContext',['../page_custom_backends.html#sec_backend_wiring',1,'']]],
+  ['a_20custom_20backend_1',['Writing a Custom Backend',['../page_custom_backends.html',1,'index']]],
+  ['api_20reference_2',['ZenitUI — Guide &amp;amp; API Reference',['../index.html',1,'']]]
 ];

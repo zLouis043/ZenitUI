@@ -1,6 +1,6 @@
 var classZenitUI_1_1RaylibAssetProvider =
 [
-    [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html#a11ee26ac9277d53d57435224ee8107c1", null ],
+    [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html#a67d0d38aa4752ddacd1bdc46534911ac", null ],
     [ "defaultCodepoints", "classZenitUI_1_1RaylibAssetProvider.html#a14ede4b179f7a3892e632f8d300e5a39", null ],
     [ "defaultCodepoints", "classZenitUI_1_1RaylibAssetProvider.html#aea7abb853e8df59290117a7bdbfc014a", null ],
     [ "getEffect", "classZenitUI_1_1RaylibAssetProvider.html#af25b76ef189ce8bef55a58a63359af66", null ],

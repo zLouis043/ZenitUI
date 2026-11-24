@@ -122,48 +122,70 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5d7794a19ebce343c5912eb1e31b877f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the state transition by <code class="param">dt</code> seconds.  <br /></td></tr>
 <tr class="memitem:ad8ada536a783ab7025e5ccfa152af2fa" id="r_ad8ada536a783ab7025e5ccfa152af2fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8ada536a783ab7025e5ccfa152af2fa">propagateInheritance</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node)</td></tr>
 <tr class="memdesc:ad8ada536a783ab7025e5ccfa152af2fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagate inherited property changes to children.  <br /></td></tr>
-<tr class="memitem:a94b48c82862dc3dd555411194a824491" id="r_a94b48c82862dc3dd555411194a824491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94b48c82862dc3dd555411194a824491">invalidateCache</a> () noexcept</td></tr>
-<tr class="memdesc:a94b48c82862dc3dd555411194a824491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate <span class="tt"><a class="el" href="#aa6bc3e977a99c7f8726e8c3c5b34518c">cachedValid_</a></span>; called on inline setter changes.  <br /></td></tr>
+<tr class="memitem:a94b48c82862dc3dd555411194a824491" id="r_a94b48c82862dc3dd555411194a824491"><td class="memItemLeft" align="right" valign="top"><a id="a94b48c82862dc3dd555411194a824491" name="a94b48c82862dc3dd555411194a824491"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>invalidateCache</b> () noexcept</td></tr>
+<tr class="memdesc:a94b48c82862dc3dd555411194a824491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate <span class="tt">cachedValid_</span>; called on inline setter changes. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:abadf5168dd51b0e34020d1cb55c092fb" id="r_abadf5168dd51b0e34020d1cb55c092fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abadf5168dd51b0e34020d1cb55c092fb">inlineDefaults</a></td></tr>
-<tr class="memdesc:abadf5168dd51b0e34020d1cb55c092fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest-priority inline: applied first, overridable by rules.  <br /></td></tr>
-<tr class="memitem:a39eeb62adac8670ecc8ab5220c3a7b74" id="r_a39eeb62adac8670ecc8ab5220c3a7b74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39eeb62adac8670ecc8ab5220c3a7b74">inlineBase</a></td></tr>
-<tr class="memdesc:a39eeb62adac8670ecc8ab5220c3a7b74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Highest-priority inline: applied last, after all overlays.  <br /></td></tr>
-<tr class="memitem:a98e7f754444835af01de54981b0d11f0" id="r_a98e7f754444835af01de54981b0d11f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98e7f754444835af01de54981b0d11f0">inlineHover</a></td></tr>
-<tr class="memdesc:a98e7f754444835af01de54981b0d11f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node is hovered or pressed.  <br /></td></tr>
-<tr class="memitem:a7097cca6399b1b0f53ed3f1258076c43" id="r_a7097cca6399b1b0f53ed3f1258076c43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7097cca6399b1b0f53ed3f1258076c43">inlinePressed</a></td></tr>
-<tr class="memdesc:a7097cca6399b1b0f53ed3f1258076c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied on top of <span class="tt"><a class="el" href="#a98e7f754444835af01de54981b0d11f0" title="Applied when the node is hovered or pressed.">inlineHover</a></span> when pressed.  <br /></td></tr>
-<tr class="memitem:a55033db9437c9317bd92c61786a111f0" id="r_a55033db9437c9317bd92c61786a111f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55033db9437c9317bd92c61786a111f0">inlineDisabled</a></td></tr>
-<tr class="memdesc:a55033db9437c9317bd92c61786a111f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied instead of state overlays when <span class="tt">enabled == false</span>.  <br /></td></tr>
-<tr class="memitem:a66d4285d11377202173df3081ac93b97" id="r_a66d4285d11377202173df3081ac93b97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66d4285d11377202173df3081ac93b97">inlineFocus</a></td></tr>
-<tr class="memdesc:a66d4285d11377202173df3081ac93b97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node has keyboard focus.  <br /></td></tr>
-<tr class="memitem:afb5af91932e23f6ad6d90d411d0e7ecb" id="r_afb5af91932e23f6ad6d90d411d0e7ecb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb5af91932e23f6ad6d90d411d0e7ecb">inlineChecked</a></td></tr>
-<tr class="memdesc:afb5af91932e23f6ad6d90d411d0e7ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node is in the <span class="tt">:checked</span> state.  <br /></td></tr>
-<tr class="memitem:a25e820af891eab5be02707dc07b4362b" id="r_a25e820af891eab5be02707dc07b4362b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25e820af891eab5be02707dc07b4362b">currentStyle</a></td></tr>
-<tr class="memdesc:a25e820af891eab5be02707dc07b4362b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value consumed by layout and render.  <br /></td></tr>
-<tr class="memitem:a17902630a3515233aac592761f33d1c0" id="r_a17902630a3515233aac592761f33d1c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17902630a3515233aac592761f33d1c0">targetStyle</a></td></tr>
-<tr class="memdesc:a17902630a3515233aac592761f33d1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value the transition is heading toward.  <br /></td></tr>
-<tr class="memitem:a67706481e2c2c3638d116cc99cd70efd" id="r_a67706481e2c2c3638d116cc99cd70efd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67706481e2c2c3638d116cc99cd70efd">transitionStartStyle</a></td></tr>
-<tr class="memdesc:a67706481e2c2c3638d116cc99cd70efd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value at <span class="tt"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1" title="Normalized [0, 1]; 1 means &quot;settled&quot;.">transitionTimer</a> == 0</span>.  <br /></td></tr>
-<tr class="memitem:a9ab34e0367289d8c5cf6132557cac246" id="r_a9ab34e0367289d8c5cf6132557cac246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ab34e0367289d8c5cf6132557cac246">currentState</a> {<a class="el" href="group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td></tr>
-<tr class="memdesc:a9ab34e0367289d8c5cf6132557cac246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last observed interaction state.  <br /></td></tr>
-<tr class="memitem:afe378f63cfe4c2c111cd478a7308fdd1" id="r_afe378f63cfe4c2c111cd478a7308fdd1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1">transitionTimer</a> {1.0f}</td></tr>
-<tr class="memdesc:afe378f63cfe4c2c111cd478a7308fdd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized <span class="tt">[0, 1]</span>; 1 means "settled".  <br /></td></tr>
-<tr class="memitem:a9cd9295481167cb9decd98e33352b5fc" id="r_a9cd9295481167cb9decd98e33352b5fc"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cd9295481167cb9decd98e33352b5fc">transitionDirtyMask_</a> {0}</td></tr>
-<tr class="memdesc:a9cd9295481167cb9decd98e33352b5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit per property, 1 = currently transitioning.  <br /></td></tr>
-<tr class="memitem:a95bcd029b5134684dc810deb3ee6e6e6" id="r_a95bcd029b5134684dc810deb3ee6e6e6"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="structZenitUI_1_1StyleResolver_1_1PartTransition.html">PartTransition</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95bcd029b5134684dc810deb3ee6e6e6">partTransitions</a></td></tr>
-<tr class="memdesc:a95bcd029b5134684dc810deb3ee6e6e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">One entry per accessed part.  <br /></td></tr>
-<tr class="memitem:ac7166349965d107264f1eec5d51a2d90" id="r_ac7166349965d107264f1eec5d51a2d90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html">InheritedSnapshot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7166349965d107264f1eec5d51a2d90">lastInherited</a> {}</td></tr>
-<tr class="memitem:a3d25699b7be96d09f87e19744889ea72" id="r_a3d25699b7be96d09f87e19744889ea72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d25699b7be96d09f87e19744889ea72">cachedThemeStyle_</a></td></tr>
-<tr class="memdesc:a3d25699b7be96d09f87e19744889ea72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result including theme rules but <em>before</em> inline overlays.  <br /></td></tr>
-<tr class="memitem:afe0a8239e0d25bfae236a6757b0883bd" id="r_afe0a8239e0d25bfae236a6757b0883bd"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe0a8239e0d25bfae236a6757b0883bd">cachedKey_</a> {0}</td></tr>
-<tr class="memdesc:afe0a8239e0d25bfae236a6757b0883bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash of every input that can change <span class="tt"><a class="el" href="#a3d25699b7be96d09f87e19744889ea72" title="Result including theme rules but before inline overlays.">cachedThemeStyle_</a></span>.  <br /></td></tr>
-<tr class="memitem:aa6bc3e977a99c7f8726e8c3c5b34518c" id="r_aa6bc3e977a99c7f8726e8c3c5b34518c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6bc3e977a99c7f8726e8c3c5b34518c">cachedValid_</a> {false}</td></tr>
-<tr class="memitem:a4efb70cc07e6960c9ba70fb2e6615522" id="r_a4efb70cc07e6960c9ba70fb2e6615522"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4efb70cc07e6960c9ba70fb2e6615522">cachedAlignItemsSet_</a> {false}</td></tr>
-<tr class="memitem:a6d6d8f3b04ac506a336419ef064af6aa" id="r_a6d6d8f3b04ac506a336419ef064af6aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d6d8f3b04ac506a336419ef064af6aa">cachedItemsHSet_</a> {false}</td></tr>
-<tr class="memitem:a58736bb31dd0313b7c13b6254696b9d4" id="r_a58736bb31dd0313b7c13b6254696b9d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58736bb31dd0313b7c13b6254696b9d4">cachedItemsVSet_</a> {false}</td></tr>
+<tr class="memitem:abadf5168dd51b0e34020d1cb55c092fb" id="r_abadf5168dd51b0e34020d1cb55c092fb"><td class="memItemLeft" align="right" valign="top"><a id="abadf5168dd51b0e34020d1cb55c092fb" name="abadf5168dd51b0e34020d1cb55c092fb"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineDefaults</b></td></tr>
+<tr class="memdesc:abadf5168dd51b0e34020d1cb55c092fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest-priority inline: applied first, overridable by rules. <br /></td></tr>
+<tr class="memitem:a39eeb62adac8670ecc8ab5220c3a7b74" id="r_a39eeb62adac8670ecc8ab5220c3a7b74"><td class="memItemLeft" align="right" valign="top"><a id="a39eeb62adac8670ecc8ab5220c3a7b74" name="a39eeb62adac8670ecc8ab5220c3a7b74"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineBase</b></td></tr>
+<tr class="memdesc:a39eeb62adac8670ecc8ab5220c3a7b74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Highest-priority inline: applied last, after all overlays. <br /></td></tr>
+<tr class="memitem:a98e7f754444835af01de54981b0d11f0" id="r_a98e7f754444835af01de54981b0d11f0"><td class="memItemLeft" align="right" valign="top"><a id="a98e7f754444835af01de54981b0d11f0" name="a98e7f754444835af01de54981b0d11f0"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineHover</b></td></tr>
+<tr class="memdesc:a98e7f754444835af01de54981b0d11f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node is hovered or pressed. <br /></td></tr>
+<tr class="memitem:a7097cca6399b1b0f53ed3f1258076c43" id="r_a7097cca6399b1b0f53ed3f1258076c43"><td class="memItemLeft" align="right" valign="top"><a id="a7097cca6399b1b0f53ed3f1258076c43" name="a7097cca6399b1b0f53ed3f1258076c43"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlinePressed</b></td></tr>
+<tr class="memdesc:a7097cca6399b1b0f53ed3f1258076c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied on top of <span class="tt"><a class="el" href="#a98e7f754444835af01de54981b0d11f0" title="Applied when the node is hovered or pressed.">inlineHover</a></span> when pressed. <br /></td></tr>
+<tr class="memitem:a55033db9437c9317bd92c61786a111f0" id="r_a55033db9437c9317bd92c61786a111f0"><td class="memItemLeft" align="right" valign="top"><a id="a55033db9437c9317bd92c61786a111f0" name="a55033db9437c9317bd92c61786a111f0"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineDisabled</b></td></tr>
+<tr class="memdesc:a55033db9437c9317bd92c61786a111f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied instead of state overlays when <span class="tt">enabled == false</span>. <br /></td></tr>
+<tr class="memitem:a66d4285d11377202173df3081ac93b97" id="r_a66d4285d11377202173df3081ac93b97"><td class="memItemLeft" align="right" valign="top"><a id="a66d4285d11377202173df3081ac93b97" name="a66d4285d11377202173df3081ac93b97"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineFocus</b></td></tr>
+<tr class="memdesc:a66d4285d11377202173df3081ac93b97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node has keyboard focus. <br /></td></tr>
+<tr class="memitem:afb5af91932e23f6ad6d90d411d0e7ecb" id="r_afb5af91932e23f6ad6d90d411d0e7ecb"><td class="memItemLeft" align="right" valign="top"><a id="afb5af91932e23f6ad6d90d411d0e7ecb" name="afb5af91932e23f6ad6d90d411d0e7ecb"></a>
+<a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inlineChecked</b></td></tr>
+<tr class="memdesc:afb5af91932e23f6ad6d90d411d0e7ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applied when the node is in the <span class="tt">:checked</span> state. <br /></td></tr>
+<tr class="memitem:a25e820af891eab5be02707dc07b4362b" id="r_a25e820af891eab5be02707dc07b4362b"><td class="memItemLeft" align="right" valign="top"><a id="a25e820af891eab5be02707dc07b4362b" name="a25e820af891eab5be02707dc07b4362b"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>currentStyle</b></td></tr>
+<tr class="memdesc:a25e820af891eab5be02707dc07b4362b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value consumed by layout and render. <br /></td></tr>
+<tr class="memitem:a17902630a3515233aac592761f33d1c0" id="r_a17902630a3515233aac592761f33d1c0"><td class="memItemLeft" align="right" valign="top"><a id="a17902630a3515233aac592761f33d1c0" name="a17902630a3515233aac592761f33d1c0"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>targetStyle</b></td></tr>
+<tr class="memdesc:a17902630a3515233aac592761f33d1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value the transition is heading toward. <br /></td></tr>
+<tr class="memitem:a67706481e2c2c3638d116cc99cd70efd" id="r_a67706481e2c2c3638d116cc99cd70efd"><td class="memItemLeft" align="right" valign="top"><a id="a67706481e2c2c3638d116cc99cd70efd" name="a67706481e2c2c3638d116cc99cd70efd"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>transitionStartStyle</b></td></tr>
+<tr class="memdesc:a67706481e2c2c3638d116cc99cd70efd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value at <span class="tt"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1" title="Normalized [0, 1]; 1 means &quot;settled&quot;.">transitionTimer</a> == 0</span>. <br /></td></tr>
+<tr class="memitem:a9ab34e0367289d8c5cf6132557cac246" id="r_a9ab34e0367289d8c5cf6132557cac246"><td class="memItemLeft" align="right" valign="top"><a id="a9ab34e0367289d8c5cf6132557cac246" name="a9ab34e0367289d8c5cf6132557cac246"></a>
+<a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a>&#160;</td><td class="memItemRight" valign="bottom"><b>currentState</b> {<a class="el" href="group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td></tr>
+<tr class="memdesc:a9ab34e0367289d8c5cf6132557cac246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last observed interaction state. <br /></td></tr>
+<tr class="memitem:afe378f63cfe4c2c111cd478a7308fdd1" id="r_afe378f63cfe4c2c111cd478a7308fdd1"><td class="memItemLeft" align="right" valign="top"><a id="afe378f63cfe4c2c111cd478a7308fdd1" name="afe378f63cfe4c2c111cd478a7308fdd1"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>transitionTimer</b> {1.0f}</td></tr>
+<tr class="memdesc:afe378f63cfe4c2c111cd478a7308fdd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized <span class="tt">[0, 1]</span>; 1 means "settled". <br /></td></tr>
+<tr class="memitem:a9cd9295481167cb9decd98e33352b5fc" id="r_a9cd9295481167cb9decd98e33352b5fc"><td class="memItemLeft" align="right" valign="top"><a id="a9cd9295481167cb9decd98e33352b5fc" name="a9cd9295481167cb9decd98e33352b5fc"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>transitionDirtyMask_</b> {0}</td></tr>
+<tr class="memdesc:a9cd9295481167cb9decd98e33352b5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit per property, 1 = currently transitioning. <br /></td></tr>
+<tr class="memitem:a95bcd029b5134684dc810deb3ee6e6e6" id="r_a95bcd029b5134684dc810deb3ee6e6e6"><td class="memItemLeft" align="right" valign="top"><a id="a95bcd029b5134684dc810deb3ee6e6e6" name="a95bcd029b5134684dc810deb3ee6e6e6"></a>
+std::unordered_map&lt; std::string, <a class="el" href="structZenitUI_1_1StyleResolver_1_1PartTransition.html">PartTransition</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>partTransitions</b></td></tr>
+<tr class="memdesc:a95bcd029b5134684dc810deb3ee6e6e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">One entry per accessed part. <br /></td></tr>
+<tr class="memitem:ac7166349965d107264f1eec5d51a2d90" id="r_ac7166349965d107264f1eec5d51a2d90"><td class="memItemLeft" align="right" valign="top"><a id="ac7166349965d107264f1eec5d51a2d90" name="ac7166349965d107264f1eec5d51a2d90"></a>
+<a class="el" href="structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html">InheritedSnapshot</a>&#160;</td><td class="memItemRight" valign="bottom"><b>lastInherited</b> {}</td></tr>
+<tr class="memitem:a3d25699b7be96d09f87e19744889ea72" id="r_a3d25699b7be96d09f87e19744889ea72"><td class="memItemLeft" align="right" valign="top"><a id="a3d25699b7be96d09f87e19744889ea72" name="a3d25699b7be96d09f87e19744889ea72"></a>
+<a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cachedThemeStyle_</b></td></tr>
+<tr class="memdesc:a3d25699b7be96d09f87e19744889ea72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result including theme rules but <em>before</em> inline overlays. <br /></td></tr>
+<tr class="memitem:afe0a8239e0d25bfae236a6757b0883bd" id="r_afe0a8239e0d25bfae236a6757b0883bd"><td class="memItemLeft" align="right" valign="top"><a id="afe0a8239e0d25bfae236a6757b0883bd" name="afe0a8239e0d25bfae236a6757b0883bd"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>cachedKey_</b> {0}</td></tr>
+<tr class="memdesc:afe0a8239e0d25bfae236a6757b0883bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash of every input that can change <span class="tt"><a class="el" href="#a3d25699b7be96d09f87e19744889ea72" title="Result including theme rules but before inline overlays.">cachedThemeStyle_</a></span>. <br /></td></tr>
+<tr class="memitem:aa6bc3e977a99c7f8726e8c3c5b34518c" id="r_aa6bc3e977a99c7f8726e8c3c5b34518c"><td class="memItemLeft" align="right" valign="top"><a id="aa6bc3e977a99c7f8726e8c3c5b34518c" name="aa6bc3e977a99c7f8726e8c3c5b34518c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>cachedValid_</b> {false}</td></tr>
+<tr class="memitem:a4efb70cc07e6960c9ba70fb2e6615522" id="r_a4efb70cc07e6960c9ba70fb2e6615522"><td class="memItemLeft" align="right" valign="top"><a id="a4efb70cc07e6960c9ba70fb2e6615522" name="a4efb70cc07e6960c9ba70fb2e6615522"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>cachedAlignItemsSet_</b> {false}</td></tr>
+<tr class="memitem:a6d6d8f3b04ac506a336419ef064af6aa" id="r_a6d6d8f3b04ac506a336419ef064af6aa"><td class="memItemLeft" align="right" valign="top"><a id="a6d6d8f3b04ac506a336419ef064af6aa" name="a6d6d8f3b04ac506a336419ef064af6aa"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>cachedItemsHSet_</b> {false}</td></tr>
+<tr class="memitem:a58736bb31dd0313b7c13b6254696b9d4" id="r_a58736bb31dd0313b7c13b6254696b9d4"><td class="memItemLeft" align="right" valign="top"><a id="a58736bb31dd0313b7c13b6254696b9d4" name="a58736bb31dd0313b7c13b6254696b9d4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>cachedItemsVSet_</b> {false}</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Resolves, caches, and transitions the style of a single node. </p>
@@ -190,33 +212,6 @@ Public Attributes</h2></td></tr>
 
 <p>Start a transition from the current style to <code class="param">newState's</code> style. </p>
 <p>Called by <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305" title="Per-frame update: input, style, animation, then recurse into children.">Layout::update</a></span> when <span class="tt">computeNextState</span> differs from <span class="tt"><a class="el" href="#a9ab34e0367289d8c5cf6132557cac246" title="Last observed interaction state.">currentState</a></span>. Records the pre-transition style, resolves the post-transition target, and marks every differing property in <span class="tt"><a class="el" href="#a9cd9295481167cb9decd98e33352b5fc" title="Bit per property, 1 = currently transitioning.">transitionDirtyMask_</a></span>. </p>
-
-</div>
-</div>
-<a id="a94b48c82862dc3dd555411194a824491" name="a94b48c82862dc3dd555411194a824491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94b48c82862dc3dd555411194a824491">&#9670;&#160;</a></span>invalidateCache()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::StyleResolver::invalidateCache </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Invalidate <span class="tt"><a class="el" href="#aa6bc3e977a99c7f8726e8c3c5b34518c">cachedValid_</a></span>; called on inline setter changes. </p>
 
 </div>
 </div>
@@ -260,7 +255,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Propagate inherited property changes to children. </p>
-<p>Compares the current inherited values against <span class="tt"><a class="el" href="#ac7166349965d107264f1eec5d51a2d90">lastInherited</a></span>; on any change, marks every child as inheritance-dirty so they re-resolve on the next frame. Also updates the snapshot. </p>
+<p>Compares the current inherited values against <span class="tt">lastInherited</span>; on any change, marks every child as inheritance-dirty so they re-resolve on the next frame. Also updates the snapshot. </p>
 
 </div>
 </div>
@@ -345,333 +340,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a4efb70cc07e6960c9ba70fb2e6615522" name="a4efb70cc07e6960c9ba70fb2e6615522"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4efb70cc07e6960c9ba70fb2e6615522">&#9670;&#160;</a></span>cachedAlignItemsSet_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::StyleResolver::cachedAlignItemsSet_ {false}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6d6d8f3b04ac506a336419ef064af6aa" name="a6d6d8f3b04ac506a336419ef064af6aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d6d8f3b04ac506a336419ef064af6aa">&#9670;&#160;</a></span>cachedItemsHSet_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::StyleResolver::cachedItemsHSet_ {false}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a58736bb31dd0313b7c13b6254696b9d4" name="a58736bb31dd0313b7c13b6254696b9d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58736bb31dd0313b7c13b6254696b9d4">&#9670;&#160;</a></span>cachedItemsVSet_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::StyleResolver::cachedItemsVSet_ {false}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afe0a8239e0d25bfae236a6757b0883bd" name="afe0a8239e0d25bfae236a6757b0883bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe0a8239e0d25bfae236a6757b0883bd">&#9670;&#160;</a></span>cachedKey_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t ZenitUI::StyleResolver::cachedKey_ {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Hash of every input that can change <span class="tt"><a class="el" href="#a3d25699b7be96d09f87e19744889ea72" title="Result including theme rules but before inline overlays.">cachedThemeStyle_</a></span>. </p>
-
-</div>
-</div>
-<a id="a3d25699b7be96d09f87e19744889ea72" name="a3d25699b7be96d09f87e19744889ea72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d25699b7be96d09f87e19744889ea72">&#9670;&#160;</a></span>cachedThemeStyle_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::StyleResolver::cachedThemeStyle_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Result including theme rules but <em>before</em> inline overlays. </p>
-
-</div>
-</div>
-<a id="aa6bc3e977a99c7f8726e8c3c5b34518c" name="aa6bc3e977a99c7f8726e8c3c5b34518c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6bc3e977a99c7f8726e8c3c5b34518c">&#9670;&#160;</a></span>cachedValid_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::StyleResolver::cachedValid_ {false}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9ab34e0367289d8c5cf6132557cac246" name="a9ab34e0367289d8c5cf6132557cac246"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ab34e0367289d8c5cf6132557cac246">&#9670;&#160;</a></span>currentState</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665">UIState</a> ZenitUI::StyleResolver::currentState {<a class="el" href="group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c">UIState::Idle</a>}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Last observed interaction state. </p>
-
-</div>
-</div>
-<a id="a25e820af891eab5be02707dc07b4362b" name="a25e820af891eab5be02707dc07b4362b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25e820af891eab5be02707dc07b4362b">&#9670;&#160;</a></span>currentStyle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::StyleResolver::currentStyle</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The value consumed by layout and render. </p>
-
-</div>
-</div>
-<a id="a39eeb62adac8670ecc8ab5220c3a7b74" name="a39eeb62adac8670ecc8ab5220c3a7b74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39eeb62adac8670ecc8ab5220c3a7b74">&#9670;&#160;</a></span>inlineBase</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineBase</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Highest-priority inline: applied last, after all overlays. </p>
-
-</div>
-</div>
-<a id="afb5af91932e23f6ad6d90d411d0e7ecb" name="afb5af91932e23f6ad6d90d411d0e7ecb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb5af91932e23f6ad6d90d411d0e7ecb">&#9670;&#160;</a></span>inlineChecked</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineChecked</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Applied when the node is in the <span class="tt">:checked</span> state. </p>
-
-</div>
-</div>
-<a id="abadf5168dd51b0e34020d1cb55c092fb" name="abadf5168dd51b0e34020d1cb55c092fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abadf5168dd51b0e34020d1cb55c092fb">&#9670;&#160;</a></span>inlineDefaults</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineDefaults</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Lowest-priority inline: applied first, overridable by rules. </p>
-
-</div>
-</div>
-<a id="a55033db9437c9317bd92c61786a111f0" name="a55033db9437c9317bd92c61786a111f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55033db9437c9317bd92c61786a111f0">&#9670;&#160;</a></span>inlineDisabled</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineDisabled</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Applied instead of state overlays when <span class="tt">enabled == false</span>. </p>
-
-</div>
-</div>
-<a id="a66d4285d11377202173df3081ac93b97" name="a66d4285d11377202173df3081ac93b97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66d4285d11377202173df3081ac93b97">&#9670;&#160;</a></span>inlineFocus</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineFocus</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Applied when the node has keyboard focus. </p>
-
-</div>
-</div>
-<a id="a98e7f754444835af01de54981b0d11f0" name="a98e7f754444835af01de54981b0d11f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98e7f754444835af01de54981b0d11f0">&#9670;&#160;</a></span>inlineHover</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlineHover</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Applied when the node is hovered or pressed. </p>
-
-</div>
-</div>
-<a id="a7097cca6399b1b0f53ed3f1258076c43" name="a7097cca6399b1b0f53ed3f1258076c43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7097cca6399b1b0f53ed3f1258076c43">&#9670;&#160;</a></span>inlinePressed</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Style.html">Style</a> ZenitUI::StyleResolver::inlinePressed</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Applied on top of <span class="tt"><a class="el" href="#a98e7f754444835af01de54981b0d11f0" title="Applied when the node is hovered or pressed.">inlineHover</a></span> when pressed. </p>
-
-</div>
-</div>
-<a id="ac7166349965d107264f1eec5d51a2d90" name="ac7166349965d107264f1eec5d51a2d90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7166349965d107264f1eec5d51a2d90">&#9670;&#160;</a></span>lastInherited</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html">InheritedSnapshot</a> ZenitUI::StyleResolver::lastInherited {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a95bcd029b5134684dc810deb3ee6e6e6" name="a95bcd029b5134684dc810deb3ee6e6e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95bcd029b5134684dc810deb3ee6e6e6">&#9670;&#160;</a></span>partTransitions</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="structZenitUI_1_1StyleResolver_1_1PartTransition.html">PartTransition</a>&gt; ZenitUI::StyleResolver::partTransitions</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>One entry per accessed part. </p>
-
-</div>
-</div>
-<a id="a17902630a3515233aac592761f33d1c0" name="a17902630a3515233aac592761f33d1c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17902630a3515233aac592761f33d1c0">&#9670;&#160;</a></span>targetStyle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::StyleResolver::targetStyle</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The value the transition is heading toward. </p>
-
-</div>
-</div>
-<a id="a9cd9295481167cb9decd98e33352b5fc" name="a9cd9295481167cb9decd98e33352b5fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cd9295481167cb9decd98e33352b5fc">&#9670;&#160;</a></span>transitionDirtyMask_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint64_t ZenitUI::StyleResolver::transitionDirtyMask_ {0}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Bit per property, 1 = currently transitioning. </p>
-
-</div>
-</div>
-<a id="a67706481e2c2c3638d116cc99cd70efd" name="a67706481e2c2c3638d116cc99cd70efd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67706481e2c2c3638d116cc99cd70efd">&#9670;&#160;</a></span>transitionStartStyle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> ZenitUI::StyleResolver::transitionStartStyle</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The value at <span class="tt"><a class="el" href="#afe378f63cfe4c2c111cd478a7308fdd1" title="Normalized [0, 1]; 1 means &quot;settled&quot;.">transitionTimer</a> == 0</span>. </p>
-
-</div>
-</div>
-<a id="afe378f63cfe4c2c111cd478a7308fdd1" name="afe378f63cfe4c2c111cd478a7308fdd1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe378f63cfe4c2c111cd478a7308fdd1">&#9670;&#160;</a></span>transitionTimer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::StyleResolver::transitionTimer {1.0f}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Normalized <span class="tt">[0, 1]</span>; 1 means "settled". </p>
-
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="StyleResolver_8hpp_source.html">StyleResolver.hpp</a></li>
 </ul>
@@ -688,7 +356,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1StyleResolver.html">StyleResolver</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1StyleResolver.html">StyleResolver</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

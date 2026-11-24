@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['imagecontainer_2ehpp_0',['ImageContainer.hpp',['../ImageContainer_8hpp.html',1,'']]],
-  ['inputcontroller_2ehpp_1',['InputController.hpp',['../InputController_8hpp.html',1,'']]]
+  ['layout_2ehpp_0',['Layout.hpp',['../Layout_8hpp.html',1,'']]],
+  ['layouts_2ehpp_1',['Layouts.hpp',['../Layouts_8hpp.html',1,'']]],
+  ['logger_2ehpp_2',['Logger.hpp',['../Logger_8hpp.html',1,'']]]
 ];

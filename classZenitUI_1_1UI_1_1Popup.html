@@ -108,51 +108,67 @@ Inheritance diagram for ZenitUI::UI::Popup:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7327a097e3c01dfe9584d72b9daa48e3" id="r_a7327a097e3c01dfe9584d72b9daa48e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7327a097e3c01dfe9584d72b9daa48e3">Popup</a> ()</td></tr>
 <tr class="memitem:a1534982406f877da3f6be892f63f0def" id="r_a1534982406f877da3f6be892f63f0def"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1534982406f877da3f6be892f63f0def">setContent</a> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; content)</td></tr>
 <tr class="memdesc:a1534982406f877da3f6be892f63f0def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the popup's content.  <br /></td></tr>
-<tr class="memitem:aa485e715276a31a89b7bc183d6ea0fba" id="r_aa485e715276a31a89b7bc183d6ea0fba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa485e715276a31a89b7bc183d6ea0fba">openBelow</a> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; anchor)</td></tr>
-<tr class="memdesc:aa485e715276a31a89b7bc183d6ea0fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the popup just below <code class="param">anchor</code>.  <br /></td></tr>
+<tr class="memitem:aa485e715276a31a89b7bc183d6ea0fba" id="r_aa485e715276a31a89b7bc183d6ea0fba"><td class="memItemLeft" align="right" valign="top"><a id="aa485e715276a31a89b7bc183d6ea0fba" name="aa485e715276a31a89b7bc183d6ea0fba"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>openBelow</b> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; anchor)</td></tr>
+<tr class="memdesc:aa485e715276a31a89b7bc183d6ea0fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the popup just below <code class="param">anchor</code>. <br /></td></tr>
 <tr class="memitem:a97335dc0fcd18011ac3a2d3051a52f86" id="r_a97335dc0fcd18011ac3a2d3051a52f86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a97335dc0fcd18011ac3a2d3051a52f86">openAbove</a> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; anchor)</td></tr>
 <tr class="memdesc:a97335dc0fcd18011ac3a2d3051a52f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the popup just above <code class="param">anchor</code>.  <br /></td></tr>
-<tr class="memitem:a1e9e87f46d967b3b199c5b92b8fd9e76" id="r_a1e9e87f46d967b3b199c5b92b8fd9e76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e9e87f46d967b3b199c5b92b8fd9e76">openAt</a> (<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> screenPos)</td></tr>
-<tr class="memdesc:a1e9e87f46d967b3b199c5b92b8fd9e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the popup at an absolute screen position.  <br /></td></tr>
+<tr class="memitem:a1e9e87f46d967b3b199c5b92b8fd9e76" id="r_a1e9e87f46d967b3b199c5b92b8fd9e76"><td class="memItemLeft" align="right" valign="top"><a id="a1e9e87f46d967b3b199c5b92b8fd9e76" name="a1e9e87f46d967b3b199c5b92b8fd9e76"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>openAt</b> (<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> screenPos)</td></tr>
+<tr class="memdesc:a1e9e87f46d967b3b199c5b92b8fd9e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the popup at an absolute screen position. <br /></td></tr>
 <tr class="memitem:ade83e23bcdaa5ec496e4cf93cc532033" id="r_ade83e23bcdaa5ec496e4cf93cc532033"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade83e23bcdaa5ec496e4cf93cc532033">close</a> ()</td></tr>
 <tr class="memdesc:ade83e23bcdaa5ec496e4cf93cc532033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the popup, if it is open.  <br /></td></tr>
-<tr class="memitem:a887151502baa1fe56318bf59d6bc5020" id="r_a887151502baa1fe56318bf59d6bc5020"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a887151502baa1fe56318bf59d6bc5020">isOpen</a> () const</td></tr>
-<tr class="memdesc:a887151502baa1fe56318bf59d6bc5020"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> while the popup is visible.  <br /></td></tr>
-<tr class="memitem:a946a967ea6ee7609e6a013da3bcf5548" id="r_a946a967ea6ee7609e6a013da3bcf5548"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a946a967ea6ee7609e6a013da3bcf5548">arrange</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a>) override</td></tr>
-<tr class="memdesc:a946a967ea6ee7609e6a013da3bcf5548"><td class="mdescLeft">&#160;</td><td class="mdescRight">No-op: the popup owns its rect via <span class="tt"><a class="el" href="#a533accc30a91ceb09bd0194f02202f5e" title="Reposition, resize, and close-on-outside / Escape.">onUpdate</a></span>.  <br /></td></tr>
+<tr class="memitem:a887151502baa1fe56318bf59d6bc5020" id="r_a887151502baa1fe56318bf59d6bc5020"><td class="memItemLeft" align="right" valign="top"><a id="a887151502baa1fe56318bf59d6bc5020" name="a887151502baa1fe56318bf59d6bc5020"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOpen</b> () const</td></tr>
+<tr class="memdesc:a887151502baa1fe56318bf59d6bc5020"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> while the popup is visible. <br /></td></tr>
+<tr class="memitem:a946a967ea6ee7609e6a013da3bcf5548" id="r_a946a967ea6ee7609e6a013da3bcf5548"><td class="memItemLeft" align="right" valign="top"><a id="a946a967ea6ee7609e6a013da3bcf5548" name="a946a967ea6ee7609e6a013da3bcf5548"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>arrange</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a>) override</td></tr>
+<tr class="memdesc:a946a967ea6ee7609e6a013da3bcf5548"><td class="mdescLeft">&#160;</td><td class="mdescRight">No-op: the popup owns its rect via <span class="tt"><a class="el" href="#a533accc30a91ceb09bd0194f02202f5e" title="Reposition, resize, and close-on-outside / Escape.">onUpdate</a></span>. <br /></td></tr>
 <tr class="inherit_header pub_methods_classZenitUI_1_1TLayout"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classZenitUI_1_1TLayout')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout&lt; Popup, Panel &gt;</a></td></tr>
-<tr class="memitem:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a4225e5714ee6a1e6f804daae8d0fa319"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319">TLayout</a> (Args &amp;&amp;...args)</td></tr>
-<tr class="memdesc:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward constructor arguments to <code class="param">Base</code>.  <br /></td></tr>
-<tr class="memitem:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a761c138f6036050628d7d754b6689c2a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a761c138f6036050628d7d754b6689c2a">cls</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addClass</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a28669d2339e792209576303c9cf3d0e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a28669d2339e792209576303c9cf3d0e3">id</a> (const std::string &amp;node_id)</td></tr>
-<tr class="memdesc:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setId</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout" id="r_a472c4fbd714c621910c723fb6b8310ad"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a472c4fbd714c621910c723fb6b8310ad">withRef</a> (const std::string &amp;r)</td></tr>
-<tr class="memdesc:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setRef</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a3eee4e557450f8c80bfdb8009ee3f334"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a3eee4e557450f8c80bfdb8009ee3f334">size</a> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
-<tr class="memdesc:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setSize</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout" id="r_a42e869aa691c66abc74a2ff8e6b7978c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a42e869aa691c66abc74a2ff8e6b7978c">passThrough</a> (bool p=true)</td></tr>
-<tr class="memdesc:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setPassThrough</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout" id="r_ae9181188f4cc34fbcf0d1a48b179b695"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#ae9181188f4cc34fbcf0d1a48b179b695">with</a> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; c)</td></tr>
-<tr class="memdesc:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addChild</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>.  <br /></td></tr>
-<tr class="memitem:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a1239e1317f23df8d06cb3cb814a10a7a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1TLayout.html#a1239e1317f23df8d06cb3cb814a10a7a">self</a> ()</td></tr>
-<tr class="memdesc:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <span class="tt">shared_from_this()</span> statically cast to <span class="tt">Derived</span>.  <br /></td></tr>
+<tr class="memitem:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a4225e5714ee6a1e6f804daae8d0fa319"><td class="memItemLeft" align="right" valign="top">
+&#160;</td><td class="memItemRight" valign="bottom"><b>TLayout</b> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a4225e5714ee6a1e6f804daae8d0fa319 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward constructor arguments to <code class="param">Base</code>. <br /></td></tr>
+<tr class="memitem:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a761c138f6036050628d7d754b6689c2a"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cls</b> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a761c138f6036050628d7d754b6689c2a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addClass</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a28669d2339e792209576303c9cf3d0e3"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> (const std::string &amp;node_id)</td></tr>
+<tr class="memdesc:a28669d2339e792209576303c9cf3d0e3 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setId</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout" id="r_a472c4fbd714c621910c723fb6b8310ad"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>withRef</b> (const std::string &amp;r)</td></tr>
+<tr class="memdesc:a472c4fbd714c621910c723fb6b8310ad inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setRef</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout" id="r_a3eee4e557450f8c80bfdb8009ee3f334"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
+<tr class="memdesc:a3eee4e557450f8c80bfdb8009ee3f334 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setSize</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout" id="r_a42e869aa691c66abc74a2ff8e6b7978c"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>passThrough</b> (bool p=true)</td></tr>
+<tr class="memdesc:a42e869aa691c66abc74a2ff8e6b7978c inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">setPassThrough</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout" id="r_ae9181188f4cc34fbcf0d1a48b179b695"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>with</b> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; c)</td></tr>
+<tr class="memdesc:ae9181188f4cc34fbcf0d1a48b179b695 inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt">addChild</span>; returns typed <span class="tt">shared_ptr&lt;Derived&gt;</span>. <br /></td></tr>
+<tr class="memitem:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout" id="r_a1239e1317f23df8d06cb3cb814a10a7a"><td class="memItemLeft" align="right" valign="top">
+std::shared_ptr&lt; Popup &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>self</b> ()</td></tr>
+<tr class="memdesc:a1239e1317f23df8d06cb3cb814a10a7a inherit pub_methods_classZenitUI_1_1TLayout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <span class="tt">shared_from_this()</span> statically cast to <span class="tt">Derived</span>. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af69a3cf2c0a12fdfdd47b209d2ec671b" id="r_af69a3cf2c0a12fdfdd47b209d2ec671b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af69a3cf2c0a12fdfdd47b209d2ec671b">closeOnClickOutside</a> {true}</td></tr>
-<tr class="memdesc:af69a3cf2c0a12fdfdd47b209d2ec671b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close on any button press outside the popup.  <br /></td></tr>
-<tr class="memitem:ae4d7ecba6378560808fe611ec5ee519a" id="r_ae4d7ecba6378560808fe611ec5ee519a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4d7ecba6378560808fe611ec5ee519a">closeOnEscape</a> {true}</td></tr>
-<tr class="memdesc:ae4d7ecba6378560808fe611ec5ee519a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close on Escape.  <br /></td></tr>
-<tr class="memitem:a98164c274a260c9746efde8d12322634" id="r_a98164c274a260c9746efde8d12322634"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98164c274a260c9746efde8d12322634">offsetBelow</a> {4.0f}</td></tr>
-<tr class="memdesc:a98164c274a260c9746efde8d12322634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gap between the anchor and the popup.  <br /></td></tr>
-<tr class="memitem:a620e48fdf10883061e2bfce65a5343bf" id="r_a620e48fdf10883061e2bfce65a5343bf"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a620e48fdf10883061e2bfce65a5343bf">onOpen</a></td></tr>
-<tr class="memdesc:a620e48fdf10883061e2bfce65a5343bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fired after <span class="tt">open*</span>.  <br /></td></tr>
-<tr class="memitem:aa6738619d8a2d244070e04a0333f3b35" id="r_aa6738619d8a2d244070e04a0333f3b35"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6738619d8a2d244070e04a0333f3b35">onClose</a></td></tr>
-<tr class="memdesc:aa6738619d8a2d244070e04a0333f3b35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fired after <span class="tt"><a class="el" href="#ade83e23bcdaa5ec496e4cf93cc532033" title="Close the popup, if it is open.">close</a></span>.  <br /></td></tr>
+<tr class="memitem:af69a3cf2c0a12fdfdd47b209d2ec671b" id="r_af69a3cf2c0a12fdfdd47b209d2ec671b"><td class="memItemLeft" align="right" valign="top"><a id="af69a3cf2c0a12fdfdd47b209d2ec671b" name="af69a3cf2c0a12fdfdd47b209d2ec671b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>closeOnClickOutside</b> {true}</td></tr>
+<tr class="memdesc:af69a3cf2c0a12fdfdd47b209d2ec671b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close on any button press outside the popup. <br /></td></tr>
+<tr class="memitem:ae4d7ecba6378560808fe611ec5ee519a" id="r_ae4d7ecba6378560808fe611ec5ee519a"><td class="memItemLeft" align="right" valign="top"><a id="ae4d7ecba6378560808fe611ec5ee519a" name="ae4d7ecba6378560808fe611ec5ee519a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>closeOnEscape</b> {true}</td></tr>
+<tr class="memdesc:ae4d7ecba6378560808fe611ec5ee519a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close on Escape. <br /></td></tr>
+<tr class="memitem:a98164c274a260c9746efde8d12322634" id="r_a98164c274a260c9746efde8d12322634"><td class="memItemLeft" align="right" valign="top"><a id="a98164c274a260c9746efde8d12322634" name="a98164c274a260c9746efde8d12322634"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>offsetBelow</b> {4.0f}</td></tr>
+<tr class="memdesc:a98164c274a260c9746efde8d12322634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gap between the anchor and the popup. <br /></td></tr>
+<tr class="memitem:a620e48fdf10883061e2bfce65a5343bf" id="r_a620e48fdf10883061e2bfce65a5343bf"><td class="memItemLeft" align="right" valign="top"><a id="a620e48fdf10883061e2bfce65a5343bf" name="a620e48fdf10883061e2bfce65a5343bf"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onOpen</b></td></tr>
+<tr class="memdesc:a620e48fdf10883061e2bfce65a5343bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fired after <span class="tt">open*</span>. <br /></td></tr>
+<tr class="memitem:aa6738619d8a2d244070e04a0333f3b35" id="r_aa6738619d8a2d244070e04a0333f3b35"><td class="memItemLeft" align="right" valign="top"><a id="aa6738619d8a2d244070e04a0333f3b35" name="aa6738619d8a2d244070e04a0333f3b35"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onClose</b></td></tr>
+<tr class="memdesc:aa6738619d8a2d244070e04a0333f3b35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fired after <span class="tt"><a class="el" href="#ade83e23bcdaa5ec496e4cf93cc532033" title="Close the popup, if it is open.">close</a></span>. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -170,60 +186,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A floating, anchored panel. </p>
 <p><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a> tag: <span class="tt">"<a class="el" href="classZenitUI_1_1UI_1_1Popup.html" title="A floating, anchored panel.">Popup</a>"</span>. Portal by default. Content is whatever you pass to <span class="tt"><a class="el" href="#a1534982406f877da3f6be892f63f0def" title="Set the popup&#39;s content.">setContent</a></span>. </p>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7327a097e3c01dfe9584d72b9daa48e3" name="a7327a097e3c01dfe9584d72b9daa48e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7327a097e3c01dfe9584d72b9daa48e3">&#9670;&#160;</a></span>Popup()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ZenitUI::UI::Popup::Popup </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a946a967ea6ee7609e6a013da3bcf5548" name="a946a967ea6ee7609e6a013da3bcf5548"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a946a967ea6ee7609e6a013da3bcf5548">&#9670;&#160;</a></span>arrange()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::Popup::arrange </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No-op: the popup owns its rect via <span class="tt"><a class="el" href="#a533accc30a91ceb09bd0194f02202f5e" title="Reposition, resize, and close-on-outside / Escape.">onUpdate</a></span>. </p>
-
-</div>
-</div>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="ade83e23bcdaa5ec496e4cf93cc532033" name="ade83e23bcdaa5ec496e4cf93cc532033"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade83e23bcdaa5ec496e4cf93cc532033">&#9670;&#160;</a></span>close()</h2>
 
@@ -249,33 +212,6 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Close the popup, if it is open. </p>
 <p>Fades out via inline style transition, disables the popup, and fires <span class="tt"><a class="el" href="#aa6738619d8a2d244070e04a0333f3b35" title="Fired after close.">onClose</a></span>. No-op if already closed. </p>
-
-</div>
-</div>
-<a id="a887151502baa1fe56318bf59d6bc5020" name="a887151502baa1fe56318bf59d6bc5020"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a887151502baa1fe56318bf59d6bc5020">&#9670;&#160;</a></span>isOpen()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::UI::Popup::isOpen </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> while the popup is visible. </p>
 
 </div>
 </div>
@@ -364,60 +300,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a1e9e87f46d967b3b199c5b92b8fd9e76" name="a1e9e87f46d967b3b199c5b92b8fd9e76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e9e87f46d967b3b199c5b92b8fd9e76">&#9670;&#160;</a></span>openAt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::Popup::openAt </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a></td>          <td class="paramname"><span class="paramname"><em>screenPos</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Open the popup at an absolute screen position. </p>
-
-</div>
-</div>
-<a id="aa485e715276a31a89b7bc183d6ea0fba" name="aa485e715276a31a89b7bc183d6ea0fba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa485e715276a31a89b7bc183d6ea0fba">&#9670;&#160;</a></span>openBelow()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::Popup::openBelow </td>
-          <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>anchor</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Open the popup just below <code class="param">anchor</code>. </p>
-
-</div>
-</div>
 <a id="a1534982406f877da3f6be892f63f0def" name="a1534982406f877da3f6be892f63f0def"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1534982406f877da3f6be892f63f0def">&#9670;&#160;</a></span>setContent()</h2>
 
@@ -447,87 +329,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="af69a3cf2c0a12fdfdd47b209d2ec671b" name="af69a3cf2c0a12fdfdd47b209d2ec671b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af69a3cf2c0a12fdfdd47b209d2ec671b">&#9670;&#160;</a></span>closeOnClickOutside</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::UI::Popup::closeOnClickOutside {true}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Close on any button press outside the popup. </p>
-
-</div>
-</div>
-<a id="ae4d7ecba6378560808fe611ec5ee519a" name="ae4d7ecba6378560808fe611ec5ee519a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4d7ecba6378560808fe611ec5ee519a">&#9670;&#160;</a></span>closeOnEscape</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::UI::Popup::closeOnEscape {true}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Close on Escape. </p>
-
-</div>
-</div>
-<a id="a98164c274a260c9746efde8d12322634" name="a98164c274a260c9746efde8d12322634"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98164c274a260c9746efde8d12322634">&#9670;&#160;</a></span>offsetBelow</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::UI::Popup::offsetBelow {4.0f}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gap between the anchor and the popup. </p>
-
-</div>
-</div>
-<a id="aa6738619d8a2d244070e04a0333f3b35" name="aa6738619d8a2d244070e04a0333f3b35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6738619d8a2d244070e04a0333f3b35">&#9670;&#160;</a></span>onClose</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::UI::Popup::onClose</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Fired after <span class="tt"><a class="el" href="#ade83e23bcdaa5ec496e4cf93cc532033" title="Close the popup, if it is open.">close</a></span>. </p>
-
-</div>
-</div>
-<a id="a620e48fdf10883061e2bfce65a5343bf" name="a620e48fdf10883061e2bfce65a5343bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a620e48fdf10883061e2bfce65a5343bf">&#9670;&#160;</a></span>onOpen</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::UI::Popup::onOpen</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Fired after <span class="tt">open*</span>. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/components/<a class="el" href="Popup_8hpp_source.html">Popup.hpp</a></li>
 </ul>
@@ -544,7 +345,7 @@ Additional Inherited Members</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="namespaceZenitUI_1_1UI.html">UI</a></li><li class="navelem"><a href="classZenitUI_1_1UI_1_1Popup.html">Popup</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><b>UI</b></li><li class="navelem"><a href="classZenitUI_1_1UI_1_1Popup.html">Popup</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

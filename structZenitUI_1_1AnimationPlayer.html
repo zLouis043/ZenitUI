@@ -103,233 +103,46 @@ $(function(){initNavTree('structZenitUI_1_1AnimationPlayer.html','','structZenit
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aee2591d41d0b98fe8e4e140acc288782" id="r_aee2591d41d0b98fe8e4e140acc288782"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee2591d41d0b98fe8e4e140acc288782">play</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, const std::string &amp;name, bool reverse)</td></tr>
-<tr class="memdesc:aee2591d41d0b98fe8e4e140acc288782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start (or restart) the imperative animation named <code class="param">name</code>.  <br /></td></tr>
-<tr class="memitem:a91fbdb006d6166d00440ae6241f58f2c" id="r_a91fbdb006d6166d00440ae6241f58f2c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91fbdb006d6166d00440ae6241f58f2c">hasActive</a> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node) const</td></tr>
-<tr class="memdesc:a91fbdb006d6166d00440ae6241f58f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node or any descendant has an active animation.  <br /></td></tr>
+<tr class="memitem:aee2591d41d0b98fe8e4e140acc288782" id="r_aee2591d41d0b98fe8e4e140acc288782"><td class="memItemLeft" align="right" valign="top"><a id="aee2591d41d0b98fe8e4e140acc288782" name="aee2591d41d0b98fe8e4e140acc288782"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>play</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, const std::string &amp;name, bool reverse)</td></tr>
+<tr class="memdesc:aee2591d41d0b98fe8e4e140acc288782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start (or restart) the imperative animation named <code class="param">name</code>. <br /></td></tr>
+<tr class="memitem:a91fbdb006d6166d00440ae6241f58f2c" id="r_a91fbdb006d6166d00440ae6241f58f2c"><td class="memItemLeft" align="right" valign="top"><a id="a91fbdb006d6166d00440ae6241f58f2c" name="a91fbdb006d6166d00440ae6241f58f2c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasActive</b> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node) const</td></tr>
+<tr class="memdesc:a91fbdb006d6166d00440ae6241f58f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node or any descendant has an active animation. <br /></td></tr>
 <tr class="memitem:a5b73e0725b0a349769afe87975c68081" id="r_a5b73e0725b0a349769afe87975c68081"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b73e0725b0a349769afe87975c68081">tickImperative</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, float dt)</td></tr>
 <tr class="memdesc:a5b73e0725b0a349769afe87975c68081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance imperative animations by <code class="param">dt</code> seconds.  <br /></td></tr>
-<tr class="memitem:a313e9920a858adb1573c7faffb16883c" id="r_a313e9920a858adb1573c7faffb16883c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a313e9920a858adb1573c7faffb16883c">syncCss</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node)</td></tr>
-<tr class="memdesc:a313e9920a858adb1573c7faffb16883c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync <span class="tt"><a class="el" href="#aaad6b5c4272198bcdde8383b8479fa92">css</a></span> with <span class="tt">node.style_.targetStyle.animations</span>.  <br /></td></tr>
-<tr class="memitem:aaf2324d7c774a71d31efd6135fb6e43d" id="r_aaf2324d7c774a71d31efd6135fb6e43d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf2324d7c774a71d31efd6135fb6e43d">tickCss</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, float dt)</td></tr>
-<tr class="memdesc:aaf2324d7c774a71d31efd6135fb6e43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by <code class="param">dt</code> seconds.  <br /></td></tr>
-<tr class="memitem:a597b891f7cb6e7df64da83d572ceade3" id="r_a597b891f7cb6e7df64da83d572ceade3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a597b891f7cb6e7df64da83d572ceade3">applyCssToPart</a> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, const std::string &amp;partName, <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;out)</td></tr>
-<tr class="memdesc:a597b891f7cb6e7df64da83d572ceade3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve and overlay CSS animations for pseudo-element <code class="param">partName</code>.  <br /></td></tr>
-<tr class="memitem:a4c5f744070d8794c7a2e74874977b02f" id="r_a4c5f744070d8794c7a2e74874977b02f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c5f744070d8794c7a2e74874977b02f">hasActivePartAnims</a> () const</td></tr>
-<tr class="memdesc:a4c5f744070d8794c7a2e74874977b02f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if any part is currently animating.  <br /></td></tr>
-<tr class="memitem:a318b4c8368ade509af391f3d7e334cac" id="r_a318b4c8368ade509af391f3d7e334cac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a318b4c8368ade509af391f3d7e334cac">hasActiveLocal</a> () const</td></tr>
-<tr class="memdesc:a318b4c8368ade509af391f3d7e334cac"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node itself (not descendants) has any active animation.  <br /></td></tr>
-<tr class="memitem:a96249070236737bbe0b5567a74d70240" id="r_a96249070236737bbe0b5567a74d70240"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96249070236737bbe0b5567a74d70240">hasActiveImperative</a> () const</td></tr>
-<tr class="memdesc:a96249070236737bbe0b5567a74d70240"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if any imperative animation is currently playing.  <br /></td></tr>
+<tr class="memitem:a313e9920a858adb1573c7faffb16883c" id="r_a313e9920a858adb1573c7faffb16883c"><td class="memItemLeft" align="right" valign="top"><a id="a313e9920a858adb1573c7faffb16883c" name="a313e9920a858adb1573c7faffb16883c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>syncCss</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node)</td></tr>
+<tr class="memdesc:a313e9920a858adb1573c7faffb16883c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync <span class="tt">css</span> with <span class="tt">node.style_.targetStyle.animations</span>. <br /></td></tr>
+<tr class="memitem:aaf2324d7c774a71d31efd6135fb6e43d" id="r_aaf2324d7c774a71d31efd6135fb6e43d"><td class="memItemLeft" align="right" valign="top"><a id="aaf2324d7c774a71d31efd6135fb6e43d" name="aaf2324d7c774a71d31efd6135fb6e43d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>tickCss</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, float dt)</td></tr>
+<tr class="memdesc:aaf2324d7c774a71d31efd6135fb6e43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance CSS animations by <code class="param">dt</code> seconds. <br /></td></tr>
+<tr class="memitem:a597b891f7cb6e7df64da83d572ceade3" id="r_a597b891f7cb6e7df64da83d572ceade3"><td class="memItemLeft" align="right" valign="top"><a id="a597b891f7cb6e7df64da83d572ceade3" name="a597b891f7cb6e7df64da83d572ceade3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>applyCssToPart</b> (<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;node, const std::string &amp;partName, <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;out)</td></tr>
+<tr class="memdesc:a597b891f7cb6e7df64da83d572ceade3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve and overlay CSS animations for pseudo-element <code class="param">partName</code>. <br /></td></tr>
+<tr class="memitem:a4c5f744070d8794c7a2e74874977b02f" id="r_a4c5f744070d8794c7a2e74874977b02f"><td class="memItemLeft" align="right" valign="top"><a id="a4c5f744070d8794c7a2e74874977b02f" name="a4c5f744070d8794c7a2e74874977b02f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasActivePartAnims</b> () const</td></tr>
+<tr class="memdesc:a4c5f744070d8794c7a2e74874977b02f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if any part is currently animating. <br /></td></tr>
+<tr class="memitem:a318b4c8368ade509af391f3d7e334cac" id="r_a318b4c8368ade509af391f3d7e334cac"><td class="memItemLeft" align="right" valign="top"><a id="a318b4c8368ade509af391f3d7e334cac" name="a318b4c8368ade509af391f3d7e334cac"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasActiveLocal</b> () const</td></tr>
+<tr class="memdesc:a318b4c8368ade509af391f3d7e334cac"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node itself (not descendants) has any active animation. <br /></td></tr>
+<tr class="memitem:a96249070236737bbe0b5567a74d70240" id="r_a96249070236737bbe0b5567a74d70240"><td class="memItemLeft" align="right" valign="top"><a id="a96249070236737bbe0b5567a74d70240" name="a96249070236737bbe0b5567a74d70240"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasActiveImperative</b> () const</td></tr>
+<tr class="memdesc:a96249070236737bbe0b5567a74d70240"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if any imperative animation is currently playing. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a13c63443b785351e80d6ecc89b948b2d" id="r_a13c63443b785351e80d6ecc89b948b2d"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="structZenitUI_1_1AnimState.html">AnimState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13c63443b785351e80d6ecc89b948b2d">imperative</a></td></tr>
-<tr class="memitem:aaad6b5c4272198bcdde8383b8479fa92" id="r_aaad6b5c4272198bcdde8383b8479fa92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaad6b5c4272198bcdde8383b8479fa92">css</a></td></tr>
-<tr class="memitem:a0f9392b2f9850506b85e0f60a2f8a729" id="r_a0f9392b2f9850506b85e0f60a2f8a729"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f9392b2f9850506b85e0f60a2f8a729">parts</a></td></tr>
+<tr class="memitem:a13c63443b785351e80d6ecc89b948b2d" id="r_a13c63443b785351e80d6ecc89b948b2d"><td class="memItemLeft" align="right" valign="top"><a id="a13c63443b785351e80d6ecc89b948b2d" name="a13c63443b785351e80d6ecc89b948b2d"></a>
+std::unordered_map&lt; std::string, <a class="el" href="structZenitUI_1_1AnimState.html">AnimState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>imperative</b></td></tr>
+<tr class="memitem:aaad6b5c4272198bcdde8383b8479fa92" id="r_aaad6b5c4272198bcdde8383b8479fa92"><td class="memItemLeft" align="right" valign="top"><a id="aaad6b5c4272198bcdde8383b8479fa92" name="aaad6b5c4272198bcdde8383b8479fa92"></a>
+std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>css</b></td></tr>
+<tr class="memitem:a0f9392b2f9850506b85e0f60a2f8a729" id="r_a0f9392b2f9850506b85e0f60a2f8a729"><td class="memItemLeft" align="right" valign="top"><a id="a0f9392b2f9850506b85e0f60a2f8a729" name="a0f9392b2f9850506b85e0f60a2f8a729"></a>
+std::unordered_map&lt; std::string, std::vector&lt; <a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parts</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-node animation state and operations. </p>
 <p>Fields are public by design: <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">Layout</a></span> and <span class="tt">Render.cpp</span> read and write them directly in hot paths. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a597b891f7cb6e7df64da83d572ceade3" name="a597b891f7cb6e7df64da83d572ceade3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a597b891f7cb6e7df64da83d572ceade3">&#9670;&#160;</a></span>applyCssToPart()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::AnimationPlayer::applyCssToPart </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>partName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Resolve and overlay CSS animations for pseudo-element <code class="param">partName</code>. </p>
-
-</div>
-</div>
-<a id="a91fbdb006d6166d00440ae6241f58f2c" name="a91fbdb006d6166d00440ae6241f58f2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91fbdb006d6166d00440ae6241f58f2c">&#9670;&#160;</a></span>hasActive()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::AnimationPlayer::hasActive </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if this node or any descendant has an active animation. </p>
-
-</div>
-</div>
-<a id="a96249070236737bbe0b5567a74d70240" name="a96249070236737bbe0b5567a74d70240"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96249070236737bbe0b5567a74d70240">&#9670;&#160;</a></span>hasActiveImperative()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::AnimationPlayer::hasActiveImperative </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if any imperative animation is currently playing. </p>
-
-</div>
-</div>
-<a id="a318b4c8368ade509af391f3d7e334cac" name="a318b4c8368ade509af391f3d7e334cac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a318b4c8368ade509af391f3d7e334cac">&#9670;&#160;</a></span>hasActiveLocal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::AnimationPlayer::hasActiveLocal </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if this node itself (not descendants) has any active animation. </p>
-
-</div>
-</div>
-<a id="a4c5f744070d8794c7a2e74874977b02f" name="a4c5f744070d8794c7a2e74874977b02f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c5f744070d8794c7a2e74874977b02f">&#9670;&#160;</a></span>hasActivePartAnims()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::AnimationPlayer::hasActivePartAnims </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if any part is currently animating. </p>
-
-</div>
-</div>
-<a id="aee2591d41d0b98fe8e4e140acc288782" name="aee2591d41d0b98fe8e4e140acc288782"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee2591d41d0b98fe8e4e140acc288782">&#9670;&#160;</a></span>play()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::AnimationPlayer::play </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>reverse</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Start (or restart) the imperative animation named <code class="param">name</code>. </p>
-
-</div>
-</div>
-<a id="a313e9920a858adb1573c7faffb16883c" name="a313e9920a858adb1573c7faffb16883c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a313e9920a858adb1573c7faffb16883c">&#9670;&#160;</a></span>syncCss()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::AnimationPlayer::syncCss </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sync <span class="tt"><a class="el" href="#aaad6b5c4272198bcdde8383b8479fa92">css</a></span> with <span class="tt">node.style_.targetStyle.animations</span>. </p>
-
-</div>
-</div>
-<a id="aaf2324d7c774a71d31efd6135fb6e43d" name="aaf2324d7c774a71d31efd6135fb6e43d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf2324d7c774a71d31efd6135fb6e43d">&#9670;&#160;</a></span>tickCss()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::AnimationPlayer::tickCss </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>node</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Advance CSS animations by <code class="param">dt</code> seconds. </p>
-
-</div>
-</div>
 <a id="a5b73e0725b0a349769afe87975c68081" name="a5b73e0725b0a349769afe87975c68081"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5b73e0725b0a349769afe87975c68081">&#9670;&#160;</a></span>tickImperative()</h2>
 
@@ -354,49 +167,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="aaad6b5c4272198bcdde8383b8479fa92" name="aaad6b5c4272198bcdde8383b8479fa92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaad6b5c4272198bcdde8383b8479fa92">&#9670;&#160;</a></span>css</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a>&gt; ZenitUI::AnimationPlayer::css</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a13c63443b785351e80d6ecc89b948b2d" name="a13c63443b785351e80d6ecc89b948b2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13c63443b785351e80d6ecc89b948b2d">&#9670;&#160;</a></span>imperative</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="structZenitUI_1_1AnimState.html">AnimState</a>&gt; ZenitUI::AnimationPlayer::imperative</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0f9392b2f9850506b85e0f60a2f8a729" name="a0f9392b2f9850506b85e0f60a2f8a729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f9392b2f9850506b85e0f60a2f8a729">&#9670;&#160;</a></span>parts</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, std::vector&lt;<a class="el" href="structZenitUI_1_1ActiveCssAnimation.html">ActiveCssAnimation</a>&gt; &gt; ZenitUI::AnimationPlayer::parts</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/<a class="el" href="AnimationPlayer_8hpp_source.html">AnimationPlayer.hpp</a></li>
 </ul>
@@ -413,7 +183,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="structZenitUI_1_1AnimationPlayer.html">AnimationPlayer</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="structZenitUI_1_1AnimationPlayer.html">AnimationPlayer</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

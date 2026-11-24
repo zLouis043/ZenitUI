@@ -11,15 +11,12 @@ var searchData=
   ['tickincremental_8',['tickIncremental',['../namespaceZenitUI_1_1Anim.html#a82d9800df4eeab1bbba738127e8b1402',1,'ZenitUI::Anim']]],
   ['tickinertia_9',['tickInertia',['../structZenitUI_1_1ScrollState.html#a67440d4d60a81885e396ca54bcf999a3',1,'ZenitUI::ScrollState']]],
   ['tickinput_10',['tickInput',['../structZenitUI_1_1ScrollController.html#acbdbe9473b24f729c91fb4a17974d0da',1,'ZenitUI::ScrollController']]],
-  ['time_11',['time',['../classZenitUI_1_1IPlatform.html#aaf9c903d4b0b70e742c06bfc8095339d',1,'ZenitUI::IPlatform::time()'],['../classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a',1,'ZenitUI::RaylibPlatform::time()']]],
+  ['time_11',['time',['../classZenitUI_1_1IPlatform.html#aaf9c903d4b0b70e742c06bfc8095339d',1,'ZenitUI::IPlatform::time()'],['../classZenitUI_1_1RaylibPlatform.html#a88da7baa67734d5ee9926721a9897f0a',1,'ZenitUI::RaylibPlatform::time()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a2db7597be2da2a157a5c410a4e0f8644',1,'ZenitUI::Test::MockPlatform::time()']]],
   ['tlayout_12',['TLayout',['../classZenitUI_1_1TLayout.html#a4225e5714ee6a1e6f804daae8d0fa319',1,'ZenitUI::TLayout']]],
   ['toggle_13',['Toggle',['../classZenitUI_1_1UI_1_1Toggle.html#aeeffc5fe0771b56a3635a999248ce5f8',1,'ZenitUI::UI::Toggle']]],
-  ['toggleclassref_14',['toggleClassRef',['../classZenitUI_1_1ZMarkup_1_1UINode.html#abae89e2a8c054aadd4f74bb5042edb5a',1,'ZenitUI::ZMarkup::UINode']]],
-  ['tooltip_15',['Tooltip',['../classZenitUI_1_1UI_1_1Tooltip.html#a5bbc7888e10be08a0cdd078fbf9811bf',1,'ZenitUI::UI::Tooltip']]],
-  ['tostring_16',['toString',['../group__grp__zstyle.html#ga6f0ac5c042324f2e3ad2b34ea1828fd6',1,'ZenitUI::toString(DiagnosticSeverity s) noexcept'],['../group__grp__zstyle.html#ga6289c9ba9b4343e6507610042f0875fd',1,'ZenitUI::toString(DiagnosticCode c) noexcept']]],
-  ['track_17',['Track',['../structZenitUI_1_1UIAnimation_1_1Track.html#a198d79a0e073ee9c49857e5b6e271730',1,'ZenitUI::UIAnimation::Track']]],
-  ['transformcliptoscreen_18',['transformClipToScreen',['../classZenitUI_1_1RaylibRenderer.html#ac729470843fd38d79575d343ceffefca',1,'ZenitUI::RaylibRenderer']]],
-  ['translatesubtree_19',['translateSubtree',['../classZenitUI_1_1UI_1_1Dropdown.html#afa638f14816b42df0471cfa77f7aa02f',1,'ZenitUI::UI::Dropdown::translateSubtree()'],['../classZenitUI_1_1Layout.html#a7e36c2d73ad2298c4cf330a86715c2e7',1,'ZenitUI::Layout::translateSubtree()']]],
-  ['trim_20',['trim',['../classZenitUI_1_1TargetPool.html#a1a9d34b66946d9da77228428a167ad72',1,'ZenitUI::TargetPool::trim()'],['../group__grp__zstyle.html#gaefe5d21f5a53c4bee62772282c260974',1,'ZenitUI::ZMarkup::trim()']]],
-  ['typography_21',['typography',['../classZenitUI_1_1CodepointSet.html#a7650c656823aefdcad9d7f1a3a4aae9b',1,'ZenitUI::CodepointSet']]]
+  ['tooltip_14',['Tooltip',['../classZenitUI_1_1UI_1_1Tooltip.html#a5bbc7888e10be08a0cdd078fbf9811bf',1,'ZenitUI::UI::Tooltip']]],
+  ['transformcliptoscreen_15',['transformClipToScreen',['../classZenitUI_1_1RaylibRenderer.html#ac729470843fd38d79575d343ceffefca',1,'ZenitUI::RaylibRenderer']]],
+  ['translatesubtree_16',['translateSubtree',['../classZenitUI_1_1UI_1_1Dropdown.html#afa638f14816b42df0471cfa77f7aa02f',1,'ZenitUI::UI::Dropdown::translateSubtree()'],['../classZenitUI_1_1Layout.html#a7e36c2d73ad2298c4cf330a86715c2e7',1,'ZenitUI::Layout::translateSubtree()']]],
+  ['trim_17',['trim',['../group__grp__zstyle.html#gaefe5d21f5a53c4bee62772282c260974',1,'ZenitUI::ZMarkup']]],
+  ['typography_18',['typography',['../classZenitUI_1_1CodepointSet.html#a7650c656823aefdcad9d7f1a3a4aae9b',1,'ZenitUI::CodepointSet']]]
 ];

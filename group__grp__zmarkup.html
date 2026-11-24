@@ -96,7 +96,7 @@ $(function(){initNavTree('group__grp__zmarkup.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Declarative <a class="el" href="namespaceZenitUI_1_1UI.html">UI</a> construction, reusable components, and reactive bindings.  
+<p>Declarative UI construction, reusable components, and reactive bindings.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -106,7 +106,7 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AElement" id="r_ZenitUI_3A_3AZMarkup_3A_3AElement"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">ZenitUI::ZMarkup::Element</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parsed representation of one markup node.  <a href="structZenitUI_1_1ZMarkup_1_1Element.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AParser" id="r_ZenitUI_3A_3AZMarkup_3A_3AParser"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ZMarkup_1_1Parser.html">ZenitUI::ZMarkup::Parser</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single-pass recursive-descent parser for <a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a> source.  <a href="classZenitUI_1_1ZMarkup_1_1Parser.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single-pass recursive-descent parser for ZMarkup source.  <a href="classZenitUI_1_1ZMarkup_1_1Parser.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3ASlotFrame" id="r_ZenitUI_3A_3AZMarkup_3A_3ASlotFrame"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ZMarkup_1_1SlotFrame.html">ZenitUI::ZMarkup::SlotFrame</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-prefab-invocation slot routing table.  <a href="structZenitUI_1_1ZMarkup_1_1SlotFrame.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AConditionBinding" id="r_ZenitUI_3A_3AZMarkup_3A_3AConditionBinding"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ZMarkup_1_1ConditionBinding.html">ZenitUI::ZMarkup::ConditionBinding</a></td></tr>
@@ -121,228 +121,51 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3ARegistry" id="r_ZenitUI_3A_3AZMarkup_3A_3ARegistry"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">ZenitUI::ZMarkup::Registry</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global tag → factory map plus the prefab table.  <a href="classZenitUI_1_1ZMarkup_1_1Registry.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AUINode" id="r_ZenitUI_3A_3AZMarkup_3A_3AUINode"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">ZenitUI::ZMarkup::UINode</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Root handle returned by <span class="tt"><a class="el" href="#ga4aa385688630fa29d4aaaf1807368bd4">build</a></span> / <span class="tt"><a class="el" href="#gad8f4d32b36a5dde7c63169a68581276b">instantiate</a></span>: root node + build context + wiring helpers.  <a href="classZenitUI_1_1ZMarkup_1_1UINode.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Root handle returned by <span class="tt">build</span> / <span class="tt">instantiate</span>: root node + build context + wiring helpers.  <a href="classZenitUI_1_1ZMarkup_1_1UINode.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AZMarkup_3A_3AWeakUINode" id="r_ZenitUI_3A_3AZMarkup_3A_3AWeakUINode"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html">ZenitUI::ZMarkup::WeakUINode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-owning handle to a <span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html" title="Root handle returned by build / instantiate: root node + build context + wiring helpers.">UINode</a></span>, safe to capture inside child callbacks.  <a href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga31ee8a66397a4e3c8c1cc9ade0e0df70" id="r_ga31ee8a66397a4e3c8c1cc9ade0e0df70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga31ee8a66397a4e3c8c1cc9ade0e0df70">ZenitUI::ZMarkup::parse</a> (std::string_view src)</td></tr>
-<tr class="memdesc:ga31ee8a66397a4e3c8c1cc9ade0e0df70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse <code class="param">src</code> into a single root <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span>.  <br /></td></tr>
-<tr class="memitem:gac714949df91b535a26d925b10c8bec23" id="r_gac714949df91b535a26d925b10c8bec23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac714949df91b535a26d925b10c8bec23">ZenitUI::ZMarkup::registerBuiltins</a> (<a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp;r)</td></tr>
-<tr class="memdesc:gac714949df91b535a26d925b10c8bec23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the built-in widgets into <code class="param">r</code>.  <br /></td></tr>
-<tr class="memitem:ga073c2e31b3bf890b08b3ef50e855e87e" id="r_ga073c2e31b3bf890b08b3ef50e855e87e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga073c2e31b3bf890b08b3ef50e855e87e">ZenitUI::ZMarkup::getGlobalRegistry</a> ()</td></tr>
-<tr class="memdesc:ga073c2e31b3bf890b08b3ef50e855e87e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the global registry, initializing built-ins on first call.  <br /></td></tr>
-<tr class="memitem:gaea7eb0baf6d6afd81a02ba575c04adcb" id="r_gaea7eb0baf6d6afd81a02ba575c04adcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaea7eb0baf6d6afd81a02ba575c04adcb">ZenitUI::ZMarkup::registerPrefab</a> (const std::string &amp;tagName, const std::string &amp;markupSource)</td></tr>
-<tr class="memitem:ga892e18737e758fb15bdb10a923cdac45" id="r_ga892e18737e758fb15bdb10a923cdac45"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga892e18737e758fb15bdb10a923cdac45">ZenitUI::ZMarkup::registerPrefabFile</a> (const std::string &amp;tagName, const std::filesystem::path &amp;path)</td></tr>
-<tr class="memitem:gafac30a26b8ed2ae756c5d779403ce300" id="r_gafac30a26b8ed2ae756c5d779403ce300"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafac30a26b8ed2ae756c5d779403ce300">ZenitUI::ZMarkup::hasPrefab</a> (const std::string &amp;tagName)</td></tr>
-<tr class="memitem:ga4aa385688630fa29d4aaaf1807368bd4" id="r_ga4aa385688630fa29d4aaaf1807368bd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4aa385688630fa29d4aaaf1807368bd4">ZenitUI::ZMarkup::build</a> (std::string_view source)</td></tr>
-<tr class="memitem:gaf6dc9dc485de6117642e5b47d75cd08c" id="r_gaf6dc9dc485de6117642e5b47d75cd08c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf6dc9dc485de6117642e5b47d75cd08c">ZenitUI::ZMarkup::loadMarkupFile</a> (const std::filesystem::path &amp;path)</td></tr>
-<tr class="memitem:gad8f4d32b36a5dde7c63169a68581276b" id="r_gad8f4d32b36a5dde7c63169a68581276b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad8f4d32b36a5dde7c63169a68581276b">ZenitUI::ZMarkup::instantiate</a> (const std::string &amp;tagName, const std::vector&lt; std::string &gt; &amp;extraClasses={}, const std::string &amp;id=&quot;&quot;, const std::string &amp;ref=&quot;&quot;)</td></tr>
+<tr class="memitem:ga31ee8a66397a4e3c8c1cc9ade0e0df70" id="r_ga31ee8a66397a4e3c8c1cc9ade0e0df70"><td class="memItemLeft" align="right" valign="top"><a id="ga31ee8a66397a4e3c8c1cc9ade0e0df70" name="ga31ee8a66397a4e3c8c1cc9ade0e0df70"></a>
+<a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::parse</b> (std::string_view src)</td></tr>
+<tr class="memdesc:ga31ee8a66397a4e3c8c1cc9ade0e0df70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse <code class="param">src</code> into a single root <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span>. <br /></td></tr>
+<tr class="memitem:gac714949df91b535a26d925b10c8bec23" id="r_gac714949df91b535a26d925b10c8bec23"><td class="memItemLeft" align="right" valign="top"><a id="gac714949df91b535a26d925b10c8bec23" name="gac714949df91b535a26d925b10c8bec23"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::registerBuiltins</b> (<a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp;r)</td></tr>
+<tr class="memdesc:gac714949df91b535a26d925b10c8bec23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the built-in widgets into <code class="param">r</code>. <br /></td></tr>
+<tr class="memitem:ga073c2e31b3bf890b08b3ef50e855e87e" id="r_ga073c2e31b3bf890b08b3ef50e855e87e"><td class="memItemLeft" align="right" valign="top"><a id="ga073c2e31b3bf890b08b3ef50e855e87e" name="ga073c2e31b3bf890b08b3ef50e855e87e"></a>
+<a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::getGlobalRegistry</b> ()</td></tr>
+<tr class="memdesc:ga073c2e31b3bf890b08b3ef50e855e87e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the global registry, initializing built-ins on first call. <br /></td></tr>
+<tr class="memitem:gaea7eb0baf6d6afd81a02ba575c04adcb" id="r_gaea7eb0baf6d6afd81a02ba575c04adcb"><td class="memItemLeft" align="right" valign="top"><a id="gaea7eb0baf6d6afd81a02ba575c04adcb" name="gaea7eb0baf6d6afd81a02ba575c04adcb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::registerPrefab</b> (const std::string &amp;tagName, const std::string &amp;markupSource)</td></tr>
+<tr class="memitem:ga892e18737e758fb15bdb10a923cdac45" id="r_ga892e18737e758fb15bdb10a923cdac45"><td class="memItemLeft" align="right" valign="top"><a id="ga892e18737e758fb15bdb10a923cdac45" name="ga892e18737e758fb15bdb10a923cdac45"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::registerPrefabFile</b> (const std::string &amp;tagName, const std::filesystem::path &amp;path)</td></tr>
+<tr class="memitem:gafac30a26b8ed2ae756c5d779403ce300" id="r_gafac30a26b8ed2ae756c5d779403ce300"><td class="memItemLeft" align="right" valign="top"><a id="gafac30a26b8ed2ae756c5d779403ce300" name="gafac30a26b8ed2ae756c5d779403ce300"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::hasPrefab</b> (const std::string &amp;tagName)</td></tr>
+<tr class="memitem:ga4aa385688630fa29d4aaaf1807368bd4" id="r_ga4aa385688630fa29d4aaaf1807368bd4"><td class="memItemLeft" align="right" valign="top"><a id="ga4aa385688630fa29d4aaaf1807368bd4" name="ga4aa385688630fa29d4aaaf1807368bd4"></a>
+<a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::build</b> (std::string_view source)</td></tr>
+<tr class="memitem:gaf6dc9dc485de6117642e5b47d75cd08c" id="r_gaf6dc9dc485de6117642e5b47d75cd08c"><td class="memItemLeft" align="right" valign="top"><a id="gaf6dc9dc485de6117642e5b47d75cd08c" name="gaf6dc9dc485de6117642e5b47d75cd08c"></a>
+<a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::loadMarkupFile</b> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memitem:gad8f4d32b36a5dde7c63169a68581276b" id="r_gad8f4d32b36a5dde7c63169a68581276b"><td class="memItemLeft" align="right" valign="top"><a id="gad8f4d32b36a5dde7c63169a68581276b" name="gad8f4d32b36a5dde7c63169a68581276b"></a>
+<a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::instantiate</b> (const std::string &amp;tagName, const std::vector&lt; std::string &gt; &amp;extraClasses={}, const std::string &amp;id=&quot;&quot;, const std::string &amp;ref=&quot;&quot;)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<p>Declarative <a class="el" href="namespaceZenitUI_1_1UI.html">UI</a> construction, reusable components, and reactive bindings. </p>
+<p>Declarative UI construction, reusable components, and reactive bindings. </p>
 <p><a class="el" href="namespaceZenitUI_1_1Key.html" title="Platform-agnostic key constants.">Key</a> concepts:</p><ul>
-<li><b>Building trees:</b> parse inline strings with <span class="tt"><a class="el" href="#ga4aa385688630fa29d4aaaf1807368bd4">ZMarkup::build</a></span> or files with <span class="tt"><a class="el" href="#gaf6dc9dc485de6117642e5b47d75cd08c">ZMarkup::loadMarkupFile</a></span>.</li>
+<li><b>Building trees:</b> parse inline strings with <span class="tt">ZMarkup::build</span> or files with <span class="tt">ZMarkup::loadMarkupFile</span>.</li>
 <li><b>Addressing nodes:</b> use <span class="tt">#id</span> for global CSS/lookup IDs (<span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#a0b04cdc7ebc5953f76fca7cfd416a48e" title="Look up a node by its #id.">UINode::find</a></span>) and <span class="tt">@ref</span> for local template handles (<span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#ac9e4d8da8aa26ff83e017930f36056c5" title="Look up a live node by @ref.">UINode::ref</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#a7ba05db650a0082b2fdc5e55a3cbed2b" title="Return every live node sharing the given @ref.">UINode::refAll</a></span>).</li>
-<li><b>Prefabs &amp; slots:</b> register reusable templates with <span class="tt"><a class="el" href="#gaea7eb0baf6d6afd81a02ba575c04adcb">ZMarkup::registerPrefab</a></span> and inject caller children via anonymous or named <span class="tt">&lt;Slot&gt;</span> elements.</li>
-<li><b>Structural &amp; reactive <a class="el" href="namespaceZenitUI_1_1UI.html">UI</a>:</b> use <span class="tt">If</span> / <span class="tt">Each</span> (with keyed reconciliation) together with <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a>&lt;T&gt;</span> and <span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html" title="Non-owning handle to a UINode, safe to capture inside child callbacks.">WeakUINode</a></span> for cycle-free updates.</li>
+<li><b>Prefabs &amp; slots:</b> register reusable templates with <span class="tt">ZMarkup::registerPrefab</span> and inject caller children via anonymous or named <span class="tt">&lt;Slot&gt;</span> elements.</li>
+<li><b>Structural &amp; reactive UI:</b> use <span class="tt">If</span> / <span class="tt">Each</span> (with keyed reconciliation) together with <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a>&lt;T&gt;</span> and <span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html" title="Non-owning handle to a UINode, safe to capture inside child callbacks.">WeakUINode</a></span> for cycle-free updates.</li>
 </ul>
 <p><b>Live examples:</b> <a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a> · <a class="el" href="11_ref_list_2main_8cpp-example.html">11_ref_list</a> · <a class="el" href="12_bindable_2main_8cpp-example.html">12_bindable</a> · <a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a></p>
 <dl class="section user"><dt>Live examples</dt><dd><ul>
-<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship <a class="el" href="namespaceZenitUI.html">ZenitUI</a> showcase: live Dark/Light theming, <a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a> prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
-<li><a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a> — Declarative <a class="el" href="namespaceZenitUI_1_1UI.html">UI</a> tree built with <a class="el" href="#ga4aa385688630fa29d4aaaf1807368bd4">ZMarkup::build</a>, external ui.zstyle styling, typed #id lookup, and event callbacks.</li>
+<li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship ZenitUI showcase: live Dark/Light theming, ZMarkup prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
+<li><a class="el" href="06_zmarkup_2main_8cpp-example.html">06_zmarkup</a> — Declarative UI tree built with ZMarkup::build, external ui.zstyle styling, typed #id lookup, and event callbacks.</li>
 <li><a class="el" href="11_ref_list_2main_8cpp-example.html">11_ref_list</a> — Logic-only &amp;#64;ref handles and refAll&lt;T&gt;() for wiring repeated elements in dynamic lists without unique #ids.</li>
 <li><a class="el" href="12_bindable_2main_8cpp-example.html">12_bindable</a> — Reactive model-to-UI synchronization with <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, RAII subscriptions, fireImmediately, and weak_ptr lifetime safety.</li>
-<li><a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a> — Reusable <a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a> prefabs with <a class="el" href="#gaea7eb0baf6d6afd81a02ba575c04adcb">ZMarkup::registerPrefab</a> and Slot child injection. </li>
+<li><a class="el" href="13_prefabs_2main_8cpp-example.html">13_prefabs</a> — Reusable ZMarkup prefabs with ZMarkup::registerPrefab and Slot child injection. </li>
 </ul>
 </dd></dl>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ga4aa385688630fa29d4aaaf1807368bd4" name="ga4aa385688630fa29d4aaaf1807368bd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4aa385688630fa29d4aaaf1807368bd4">&#9670;&#160;</a></span>build()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a> ZenitUI::ZMarkup::build </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>source</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a4">00_demo/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a5">06_zmarkup/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a8">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a6">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a6">13_prefabs/main.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="ga073c2e31b3bf890b08b3ef50e855e87e" name="ga073c2e31b3bf890b08b3ef50e855e87e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga073c2e31b3bf890b08b3ef50e855e87e">&#9670;&#160;</a></span>getGlobalRegistry()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp; ZenitUI::ZMarkup::getGlobalRegistry </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return the global registry, initializing built-ins on first call. </p>
-
-</div>
-</div>
-<a id="gafac30a26b8ed2ae756c5d779403ce300" name="gafac30a26b8ed2ae756c5d779403ce300"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafac30a26b8ed2ae756c5d779403ce300">&#9670;&#160;</a></span>hasPrefab()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::ZMarkup::hasPrefab </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gad8f4d32b36a5dde7c63169a68581276b" name="gad8f4d32b36a5dde7c63169a68581276b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad8f4d32b36a5dde7c63169a68581276b">&#9670;&#160;</a></span>instantiate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a> ZenitUI::ZMarkup::instantiate </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>extraClasses</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>id</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>ref</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gaf6dc9dc485de6117642e5b47d75cd08c" name="gaf6dc9dc485de6117642e5b47d75cd08c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf6dc9dc485de6117642e5b47d75cd08c">&#9670;&#160;</a></span>loadMarkupFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html">UINode</a> ZenitUI::ZMarkup::loadMarkupFile </td>
-          <td>(</td>
-          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga31ee8a66397a4e3c8c1cc9ade0e0df70" name="ga31ee8a66397a4e3c8c1cc9ade0e0df70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga31ee8a66397a4e3c8c1cc9ade0e0df70">&#9670;&#160;</a></span>parse()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html">Element</a> ZenitUI::ZMarkup::parse </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>src</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parse <code class="param">src</code> into a single root <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1Element.html" title="Parsed representation of one markup node.">Element</a></span>. </p>
-
-</div>
-</div>
-<a id="gac714949df91b535a26d925b10c8bec23" name="gac714949df91b535a26d925b10c8bec23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac714949df91b535a26d925b10c8bec23">&#9670;&#160;</a></span>registerBuiltins()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::ZMarkup::registerBuiltins </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1ZMarkup_1_1Registry.html">Registry</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>r</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Register the built-in widgets into <code class="param">r</code>. </p>
-
-</div>
-</div>
-<a id="gaea7eb0baf6d6afd81a02ba575c04adcb" name="gaea7eb0baf6d6afd81a02ba575c04adcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaea7eb0baf6d6afd81a02ba575c04adcb">&#9670;&#160;</a></span>registerPrefab()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::ZMarkup::registerPrefab </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>markupSource</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a3">00_demo/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a5">13_prefabs/main.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="ga892e18737e758fb15bdb10a923cdac45" name="ga892e18737e758fb15bdb10a923cdac45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga892e18737e758fb15bdb10a923cdac45">&#9670;&#160;</a></span>registerPrefabFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::ZMarkup::registerPrefabFile </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>tagName</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

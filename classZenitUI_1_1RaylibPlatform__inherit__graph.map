@@ -1,5 +1,5 @@
 <map id="ZenitUI::RaylibPlatform" name="ZenitUI::RaylibPlatform">
-<area shape="rect" id="Node000001" title="Raylib implementation of IPlatform (window metrics, pointer, keyboard, clipboard)." alt="" coords="5,81,180,109"/>
-<area shape="rect" id="Node000002" href="$classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend." alt="" coords="24,5,161,33"/>
+<area shape="rect" id="Node000001" title="Reference IPlatform backed by Raylib window, input, and clipboard APIs." alt="" coords="5,81,180,109"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend." alt="" coords="24,5,161,33"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,47,95,82,90,80,91,51"/>
 </map>

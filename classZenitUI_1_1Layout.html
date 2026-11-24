@@ -128,30 +128,42 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae26f586d451550fdcbaf7297b1aa710a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove every class name.  <br /></td></tr>
 <tr class="memitem:a5876a7aea2edde2dad10c3d65d7ae834" id="r_a5876a7aea2edde2dad10c3d65d7ae834"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5876a7aea2edde2dad10c3d65d7ae834">setStyleTag</a> (const std::string &amp;t)</td></tr>
 <tr class="memdesc:a5876a7aea2edde2dad10c3d65d7ae834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the node's style tag.  <br /></td></tr>
-<tr class="memitem:a23f2a818edca26021d7c7822140c710b" id="r_a23f2a818edca26021d7c7822140c710b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23f2a818edca26021d7c7822140c710b">hasClass</a> (const std::string &amp;className) const</td></tr>
-<tr class="memdesc:a23f2a818edca26021d7c7822140c710b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node has the given class.  <br /></td></tr>
-<tr class="memitem:a25db8be3dd83fdda0d10bc54aeb2f90a" id="r_a25db8be3dd83fdda0d10bc54aeb2f90a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25db8be3dd83fdda0d10bc54aeb2f90a">hasId</a> (const std::string &amp;targetId) const</td></tr>
-<tr class="memdesc:a25db8be3dd83fdda0d10bc54aeb2f90a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node's <span class="tt"><a class="el" href="#a4aa89657fd5cc6063d01533a539a56ff" title="#id for selector matching and UINode::find.">nodeId</a></span> equals <code class="param">targetId</code>.  <br /></td></tr>
-<tr class="memitem:acd49bc6f4646a67786bc3dfcbbf1dc97" id="r_acd49bc6f4646a67786bc3dfcbbf1dc97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd49bc6f4646a67786bc3dfcbbf1dc97">setId</a> (const std::string &amp;node_id)</td></tr>
-<tr class="memdesc:acd49bc6f4646a67786bc3dfcbbf1dc97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the node's <span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> (used in selectors and by <span class="tt">UINode::find</span>).  <br /></td></tr>
-<tr class="memitem:a186e9f088af0faaad8520b365361fd1a" id="r_a186e9f088af0faaad8520b365361fd1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a186e9f088af0faaad8520b365361fd1a">setRef</a> (const std::string &amp;r)</td></tr>
-<tr class="memdesc:a186e9f088af0faaad8520b365361fd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the node's <span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> (used by <span class="tt">UINode::ref</span> / <span class="tt">refAll</span>).  <br /></td></tr>
-<tr class="memitem:ac916bb38b7d5188d149b8e82bdad69ad" id="r_ac916bb38b7d5188d149b8e82bdad69ad"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac916bb38b7d5188d149b8e82bdad69ad">getStyleTag</a> () const</td></tr>
-<tr class="memitem:aef9811d8471c71d9b2f568e48be6e8f1" id="r_aef9811d8471c71d9b2f568e48be6e8f1"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef9811d8471c71d9b2f568e48be6e8f1">getStyleClasses</a> () const</td></tr>
-<tr class="memitem:ac9c3528f729e8967ad4f02edd49a010b" id="r_ac9c3528f729e8967ad4f02edd49a010b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9c3528f729e8967ad4f02edd49a010b">setSize</a> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
-<tr class="memdesc:ac9c3528f729e8967ad4f02edd49a010b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience: set explicit <span class="tt">width</span> and <span class="tt">height</span>.  <br /></td></tr>
-<tr class="memitem:a3527816c22a46f320510fcb5c01b1cf9" id="r_a3527816c22a46f320510fcb5c01b1cf9"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3527816c22a46f320510fcb5c01b1cf9">cls</a> (const std::string &amp;className)</td></tr>
-<tr class="memdesc:a3527816c22a46f320510fcb5c01b1cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#a7a2137069845518130e460a4c1633810" title="Add a class name to the node&#39;s style class list.">addClass</a></span>; returns <span class="tt">shared_from_this()</span>.  <br /></td></tr>
-<tr class="memitem:a27eae4bcca4eaf6b02afabbc3e99ac11" id="r_a27eae4bcca4eaf6b02afabbc3e99ac11"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11">id</a> (const std::string &amp;node_id)</td></tr>
-<tr class="memdesc:a27eae4bcca4eaf6b02afabbc3e99ac11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#acd49bc6f4646a67786bc3dfcbbf1dc97" title="Set the node&#39;s #id (used in selectors and by UINode::find).">setId</a></span>; returns <span class="tt">shared_from_this()</span>.  <br /></td></tr>
-<tr class="memitem:a88311603f8b652a7ff11457c5b90a061" id="r_a88311603f8b652a7ff11457c5b90a061"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88311603f8b652a7ff11457c5b90a061">size</a> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
-<tr class="memdesc:a88311603f8b652a7ff11457c5b90a061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#ac9c3528f729e8967ad4f02edd49a010b" title="Convenience: set explicit width and height.">setSize</a></span>; returns <span class="tt">shared_from_this()</span>.  <br /></td></tr>
-<tr class="memitem:a6d457c84747e2a521ecda3e7b98e85c0" id="r_a6d457c84747e2a521ecda3e7b98e85c0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d457c84747e2a521ecda3e7b98e85c0">with</a> (std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; child)</td></tr>
-<tr class="memdesc:a6d457c84747e2a521ecda3e7b98e85c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#abadfdf973f3e6a9c572dd6e66a124fc8" title="Append child to this node&#39;s child list.">addChild</a></span>; returns <span class="tt">shared_from_this()</span>.  <br /></td></tr>
+<tr class="memitem:a23f2a818edca26021d7c7822140c710b" id="r_a23f2a818edca26021d7c7822140c710b"><td class="memItemLeft" align="right" valign="top"><a id="a23f2a818edca26021d7c7822140c710b" name="a23f2a818edca26021d7c7822140c710b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasClass</b> (const std::string &amp;className) const</td></tr>
+<tr class="memdesc:a23f2a818edca26021d7c7822140c710b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node has the given class. <br /></td></tr>
+<tr class="memitem:a25db8be3dd83fdda0d10bc54aeb2f90a" id="r_a25db8be3dd83fdda0d10bc54aeb2f90a"><td class="memItemLeft" align="right" valign="top"><a id="a25db8be3dd83fdda0d10bc54aeb2f90a" name="a25db8be3dd83fdda0d10bc54aeb2f90a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasId</b> (const std::string &amp;targetId) const</td></tr>
+<tr class="memdesc:a25db8be3dd83fdda0d10bc54aeb2f90a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node's <span class="tt"><a class="el" href="#a4aa89657fd5cc6063d01533a539a56ff" title="#id for selector matching and UINode::find.">nodeId</a></span> equals <code class="param">targetId</code>. <br /></td></tr>
+<tr class="memitem:acd49bc6f4646a67786bc3dfcbbf1dc97" id="r_acd49bc6f4646a67786bc3dfcbbf1dc97"><td class="memItemLeft" align="right" valign="top"><a id="acd49bc6f4646a67786bc3dfcbbf1dc97" name="acd49bc6f4646a67786bc3dfcbbf1dc97"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setId</b> (const std::string &amp;node_id)</td></tr>
+<tr class="memdesc:acd49bc6f4646a67786bc3dfcbbf1dc97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the node's <span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> (used in selectors and by <span class="tt">UINode::find</span>). <br /></td></tr>
+<tr class="memitem:a186e9f088af0faaad8520b365361fd1a" id="r_a186e9f088af0faaad8520b365361fd1a"><td class="memItemLeft" align="right" valign="top"><a id="a186e9f088af0faaad8520b365361fd1a" name="a186e9f088af0faaad8520b365361fd1a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setRef</b> (const std::string &amp;r)</td></tr>
+<tr class="memdesc:a186e9f088af0faaad8520b365361fd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the node's <span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> (used by <span class="tt">UINode::ref</span> / <span class="tt">refAll</span>). <br /></td></tr>
+<tr class="memitem:ac916bb38b7d5188d149b8e82bdad69ad" id="r_ac916bb38b7d5188d149b8e82bdad69ad"><td class="memItemLeft" align="right" valign="top"><a id="ac916bb38b7d5188d149b8e82bdad69ad" name="ac916bb38b7d5188d149b8e82bdad69ad"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getStyleTag</b> () const</td></tr>
+<tr class="memitem:aef9811d8471c71d9b2f568e48be6e8f1" id="r_aef9811d8471c71d9b2f568e48be6e8f1"><td class="memItemLeft" align="right" valign="top"><a id="aef9811d8471c71d9b2f568e48be6e8f1" name="aef9811d8471c71d9b2f568e48be6e8f1"></a>
+const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getStyleClasses</b> () const</td></tr>
+<tr class="memitem:ac9c3528f729e8967ad4f02edd49a010b" id="r_ac9c3528f729e8967ad4f02edd49a010b"><td class="memItemLeft" align="right" valign="top"><a id="ac9c3528f729e8967ad4f02edd49a010b" name="ac9c3528f729e8967ad4f02edd49a010b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setSize</b> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
+<tr class="memdesc:ac9c3528f729e8967ad4f02edd49a010b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience: set explicit <span class="tt">width</span> and <span class="tt">height</span>. <br /></td></tr>
+<tr class="memitem:a3527816c22a46f320510fcb5c01b1cf9" id="r_a3527816c22a46f320510fcb5c01b1cf9"><td class="memItemLeft" align="right" valign="top"><a id="a3527816c22a46f320510fcb5c01b1cf9" name="a3527816c22a46f320510fcb5c01b1cf9"></a>
+std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cls</b> (const std::string &amp;className)</td></tr>
+<tr class="memdesc:a3527816c22a46f320510fcb5c01b1cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#a7a2137069845518130e460a4c1633810" title="Add a class name to the node&#39;s style class list.">addClass</a></span>; returns <span class="tt">shared_from_this()</span>. <br /></td></tr>
+<tr class="memitem:a27eae4bcca4eaf6b02afabbc3e99ac11" id="r_a27eae4bcca4eaf6b02afabbc3e99ac11"><td class="memItemLeft" align="right" valign="top"><a id="a27eae4bcca4eaf6b02afabbc3e99ac11" name="a27eae4bcca4eaf6b02afabbc3e99ac11"></a>
+std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> (const std::string &amp;node_id)</td></tr>
+<tr class="memdesc:a27eae4bcca4eaf6b02afabbc3e99ac11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#acd49bc6f4646a67786bc3dfcbbf1dc97" title="Set the node&#39;s #id (used in selectors and by UINode::find).">setId</a></span>; returns <span class="tt">shared_from_this()</span>. <br /></td></tr>
+<tr class="memitem:a88311603f8b652a7ff11457c5b90a061" id="r_a88311603f8b652a7ff11457c5b90a061"><td class="memItemLeft" align="right" valign="top"><a id="a88311603f8b652a7ff11457c5b90a061" name="a88311603f8b652a7ff11457c5b90a061"></a>
+std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> (<a class="el" href="structZenitUI_1_1Value.html">Value</a> w, <a class="el" href="structZenitUI_1_1Value.html">Value</a> h)</td></tr>
+<tr class="memdesc:a88311603f8b652a7ff11457c5b90a061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#ac9c3528f729e8967ad4f02edd49a010b" title="Convenience: set explicit width and height.">setSize</a></span>; returns <span class="tt">shared_from_this()</span>. <br /></td></tr>
+<tr class="memitem:a6d457c84747e2a521ecda3e7b98e85c0" id="r_a6d457c84747e2a521ecda3e7b98e85c0"><td class="memItemLeft" align="right" valign="top"><a id="a6d457c84747e2a521ecda3e7b98e85c0" name="a6d457c84747e2a521ecda3e7b98e85c0"></a>
+std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>with</b> (std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; child)</td></tr>
+<tr class="memdesc:a6d457c84747e2a521ecda3e7b98e85c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fluent <span class="tt"><a class="el" href="#abadfdf973f3e6a9c572dd6e66a124fc8" title="Append child to this node&#39;s child list.">addChild</a></span>; returns <span class="tt">shared_from_this()</span>. <br /></td></tr>
 <tr class="memitem:abadfdf973f3e6a9c572dd6e66a124fc8" id="r_abadfdf973f3e6a9c572dd6e66a124fc8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abadfdf973f3e6a9c572dd6e66a124fc8">addChild</a> (std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; child)</td></tr>
 <tr class="memdesc:abadfdf973f3e6a9c572dd6e66a124fc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append <code class="param">child</code> to this node's child list.  <br /></td></tr>
-<tr class="memitem:a949f58d45333bc3e93e2392cb2671d73" id="r_a949f58d45333bc3e93e2392cb2671d73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a949f58d45333bc3e93e2392cb2671d73">insertChildBefore</a> (const <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *anchor, std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; child)</td></tr>
-<tr class="memdesc:a949f58d45333bc3e93e2392cb2671d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert <code class="param">child</code> immediately before <code class="param">anchor</code> (or append if <code class="param">anchor</code> is not found).  <br /></td></tr>
+<tr class="memitem:a949f58d45333bc3e93e2392cb2671d73" id="r_a949f58d45333bc3e93e2392cb2671d73"><td class="memItemLeft" align="right" valign="top"><a id="a949f58d45333bc3e93e2392cb2671d73" name="a949f58d45333bc3e93e2392cb2671d73"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insertChildBefore</b> (const <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *anchor, std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; child)</td></tr>
+<tr class="memdesc:a949f58d45333bc3e93e2392cb2671d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert <code class="param">child</code> immediately before <code class="param">anchor</code> (or append if <code class="param">anchor</code> is not found). <br /></td></tr>
 <tr class="memitem:a6fb1969516639fff733938b2180ae901" id="r_a6fb1969516639fff733938b2180ae901"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fb1969516639fff733938b2180ae901">removeChild</a> (const <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *child)</td></tr>
 <tr class="memdesc:a6fb1969516639fff733938b2180ae901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously detach a single direct child, clearing its parent pointer.  <br /></td></tr>
 <tr class="memitem:a8678893b8bbf38b782a23db0294b2de3" id="r_a8678893b8bbf38b782a23db0294b2de3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8678893b8bbf38b782a23db0294b2de3">contentTarget</a> ()</td></tr>
@@ -162,80 +174,124 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a98c0c39310be798050f8ef5320c037f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detach every child immediately, clearing their parent pointers.  <br /></td></tr>
 <tr class="memitem:a5448d53fa04b95bf0ea6d7770c3fa234" id="r_a5448d53fa04b95bf0ea6d7770c3fa234"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5448d53fa04b95bf0ea6d7770c3fa234">retainObject</a> (std::shared_ptr&lt; void &gt; obj)</td></tr>
 <tr class="memdesc:a5448d53fa04b95bf0ea6d7770c3fa234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retain an arbitrary type-erased object for the lifetime of this node.  <br /></td></tr>
-<tr class="memitem:ae8df40a5d4bf9d83d5cd36ef018a91f8" id="r_ae8df40a5d4bf9d83d5cd36ef018a91f8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8df40a5d4bf9d83d5cd36ef018a91f8">getParent</a> () const</td></tr>
-<tr class="memitem:ac1864a027a5c70b738e2fb0451ad82f6" id="r_ac1864a027a5c70b738e2fb0451ad82f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1864a027a5c70b738e2fb0451ad82f6">hasParent</a> () const</td></tr>
+<tr class="memitem:ae8df40a5d4bf9d83d5cd36ef018a91f8" id="r_ae8df40a5d4bf9d83d5cd36ef018a91f8"><td class="memItemLeft" align="right" valign="top"><a id="ae8df40a5d4bf9d83d5cd36ef018a91f8" name="ae8df40a5d4bf9d83d5cd36ef018a91f8"></a>
+std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParent</b> () const</td></tr>
+<tr class="memitem:ac1864a027a5c70b738e2fb0451ad82f6" id="r_ac1864a027a5c70b738e2fb0451ad82f6"><td class="memItemLeft" align="right" valign="top"><a id="ac1864a027a5c70b738e2fb0451ad82f6" name="ac1864a027a5c70b738e2fb0451ad82f6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasParent</b> () const</td></tr>
 <tr class="memitem:a2c47c8b11bc551d0e2dde3d6cc97bb68" id="r_a2c47c8b11bc551d0e2dde3d6cc97bb68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c47c8b11bc551d0e2dde3d6cc97bb68">isAncestorOf</a> (const <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *other) const</td></tr>
 <tr class="memdesc:a2c47c8b11bc551d0e2dde3d6cc97bb68"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node is an ancestor of <code class="param">other</code>.  <br /></td></tr>
-<tr class="memitem:a7e996a0106f326c1394e4725b457d4cd" id="r_a7e996a0106f326c1394e4725b457d4cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e996a0106f326c1394e4725b457d4cd">setInteractive</a> (bool interactive)</td></tr>
-<tr class="memitem:aa3d97262e4531d6c5d7ada4c5b4b3755" id="r_aa3d97262e4531d6c5d7ada4c5b4b3755"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3d97262e4531d6c5d7ada4c5b4b3755">setBlocksRaycast</a> (bool blocks)</td></tr>
+<tr class="memitem:a7e996a0106f326c1394e4725b457d4cd" id="r_a7e996a0106f326c1394e4725b457d4cd"><td class="memItemLeft" align="right" valign="top"><a id="a7e996a0106f326c1394e4725b457d4cd" name="a7e996a0106f326c1394e4725b457d4cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setInteractive</b> (bool interactive)</td></tr>
+<tr class="memitem:aa3d97262e4531d6c5d7ada4c5b4b3755" id="r_aa3d97262e4531d6c5d7ada4c5b4b3755"><td class="memItemLeft" align="right" valign="top"><a id="aa3d97262e4531d6c5d7ada4c5b4b3755" name="aa3d97262e4531d6c5d7ada4c5b4b3755"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBlocksRaycast</b> (bool blocks)</td></tr>
 <tr class="memitem:ab4c284e13f7a59d99dbcabf616b51960" id="r_ab4c284e13f7a59d99dbcabf616b51960"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4c284e13f7a59d99dbcabf616b51960">setEnabled</a> (bool e)</td></tr>
 <tr class="memdesc:ab4c284e13f7a59d99dbcabf616b51960"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the node.  <br /></td></tr>
-<tr class="memitem:aea9ce1015be41f998a8f777fa0f62118" id="r_aea9ce1015be41f998a8f777fa0f62118"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea9ce1015be41f998a8f777fa0f62118">getEnabled</a> () const</td></tr>
+<tr class="memitem:aea9ce1015be41f998a8f777fa0f62118" id="r_aea9ce1015be41f998a8f777fa0f62118"><td class="memItemLeft" align="right" valign="top"><a id="aea9ce1015be41f998a8f777fa0f62118" name="aea9ce1015be41f998a8f777fa0f62118"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getEnabled</b> () const</td></tr>
 <tr class="memitem:acdce17e5c2c657ae7a9d6408ea5ba917" id="r_acdce17e5c2c657ae7a9d6408ea5ba917"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acdce17e5c2c657ae7a9d6408ea5ba917">setVisible</a> (bool v)</td></tr>
 <tr class="memdesc:acdce17e5c2c657ae7a9d6408ea5ba917"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show or hide the node (<span class="tt">display: none</span> semantics).  <br /></td></tr>
-<tr class="memitem:a635649259faf5d6691a5706745b9d561" id="r_a635649259faf5d6691a5706745b9d561"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a635649259faf5d6691a5706745b9d561">isVisible</a> () const</td></tr>
+<tr class="memitem:a635649259faf5d6691a5706745b9d561" id="r_a635649259faf5d6691a5706745b9d561"><td class="memItemLeft" align="right" valign="top"><a id="a635649259faf5d6691a5706745b9d561" name="a635649259faf5d6691a5706745b9d561"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisible</b> () const</td></tr>
 <tr class="memitem:a683502699acbd875fec3e43e65d0cb51" id="r_a683502699acbd875fec3e43e65d0cb51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a683502699acbd875fec3e43e65d0cb51">setChecked</a> (bool c)</td></tr>
 <tr class="memdesc:a683502699acbd875fec3e43e65d0cb51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the <span class="tt">:checked</span> pseudo-class state.  <br /></td></tr>
-<tr class="memitem:aec9c9c27956c9d74a0b2f2797a1fd083" id="r_aec9c9c27956c9d74a0b2f2797a1fd083"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec9c9c27956c9d74a0b2f2797a1fd083">getChecked</a> () const</td></tr>
-<tr class="memitem:add3130df45a2668cf3ca8463e44cc6a6" id="r_add3130df45a2668cf3ca8463e44cc6a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add3130df45a2668cf3ca8463e44cc6a6">isHoveredState</a> () const</td></tr>
-<tr class="memitem:a4f925297207279f3fe589078f6ce8fa6" id="r_a4f925297207279f3fe589078f6ce8fa6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f925297207279f3fe589078f6ce8fa6">isPressedState</a> () const</td></tr>
-<tr class="memitem:a25b722f4c8de2ba5462e5d56096dd195" id="r_a25b722f4c8de2ba5462e5d56096dd195"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25b722f4c8de2ba5462e5d56096dd195">isFocusedState</a> () const</td></tr>
-<tr class="memitem:a3d52db68d20871a5e3563ba141e819ad" id="r_a3d52db68d20871a5e3563ba141e819ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d52db68d20871a5e3563ba141e819ad">isDisabledState</a> () const</td></tr>
-<tr class="memitem:a5641b97d8a2e5197d164cc15c0b33b3b" id="r_a5641b97d8a2e5197d164cc15c0b33b3b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5641b97d8a2e5197d164cc15c0b33b3b">isCheckedState</a> () const</td></tr>
-<tr class="memitem:ab06c114502f547f959c7b059cdb46c55" id="r_ab06c114502f547f959c7b059cdb46c55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab06c114502f547f959c7b059cdb46c55">setUpdateWhenDisabled</a> (bool v)</td></tr>
-<tr class="memitem:a4e1880d6d5d2e9eb78b463a5b10f122d" id="r_a4e1880d6d5d2e9eb78b463a5b10f122d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e1880d6d5d2e9eb78b463a5b10f122d">getUpdateWhenDisabled</a> () const</td></tr>
+<tr class="memitem:aec9c9c27956c9d74a0b2f2797a1fd083" id="r_aec9c9c27956c9d74a0b2f2797a1fd083"><td class="memItemLeft" align="right" valign="top"><a id="aec9c9c27956c9d74a0b2f2797a1fd083" name="aec9c9c27956c9d74a0b2f2797a1fd083"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getChecked</b> () const</td></tr>
+<tr class="memitem:add3130df45a2668cf3ca8463e44cc6a6" id="r_add3130df45a2668cf3ca8463e44cc6a6"><td class="memItemLeft" align="right" valign="top"><a id="add3130df45a2668cf3ca8463e44cc6a6" name="add3130df45a2668cf3ca8463e44cc6a6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isHoveredState</b> () const</td></tr>
+<tr class="memitem:a4f925297207279f3fe589078f6ce8fa6" id="r_a4f925297207279f3fe589078f6ce8fa6"><td class="memItemLeft" align="right" valign="top"><a id="a4f925297207279f3fe589078f6ce8fa6" name="a4f925297207279f3fe589078f6ce8fa6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPressedState</b> () const</td></tr>
+<tr class="memitem:a25b722f4c8de2ba5462e5d56096dd195" id="r_a25b722f4c8de2ba5462e5d56096dd195"><td class="memItemLeft" align="right" valign="top"><a id="a25b722f4c8de2ba5462e5d56096dd195" name="a25b722f4c8de2ba5462e5d56096dd195"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFocusedState</b> () const</td></tr>
+<tr class="memitem:a3d52db68d20871a5e3563ba141e819ad" id="r_a3d52db68d20871a5e3563ba141e819ad"><td class="memItemLeft" align="right" valign="top"><a id="a3d52db68d20871a5e3563ba141e819ad" name="a3d52db68d20871a5e3563ba141e819ad"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isDisabledState</b> () const</td></tr>
+<tr class="memitem:a5641b97d8a2e5197d164cc15c0b33b3b" id="r_a5641b97d8a2e5197d164cc15c0b33b3b"><td class="memItemLeft" align="right" valign="top"><a id="a5641b97d8a2e5197d164cc15c0b33b3b" name="a5641b97d8a2e5197d164cc15c0b33b3b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isCheckedState</b> () const</td></tr>
+<tr class="memitem:ab06c114502f547f959c7b059cdb46c55" id="r_ab06c114502f547f959c7b059cdb46c55"><td class="memItemLeft" align="right" valign="top"><a id="ab06c114502f547f959c7b059cdb46c55" name="ab06c114502f547f959c7b059cdb46c55"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpdateWhenDisabled</b> (bool v)</td></tr>
+<tr class="memitem:a4e1880d6d5d2e9eb78b463a5b10f122d" id="r_a4e1880d6d5d2e9eb78b463a5b10f122d"><td class="memItemLeft" align="right" valign="top"><a id="a4e1880d6d5d2e9eb78b463a5b10f122d" name="a4e1880d6d5d2e9eb78b463a5b10f122d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getUpdateWhenDisabled</b> () const</td></tr>
 <tr class="memitem:af90b044f98e765ddb5a8cc8dc1a2f165" id="r_af90b044f98e765ddb5a8cc8dc1a2f165"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af90b044f98e765ddb5a8cc8dc1a2f165">beginTransition</a> ()</td></tr>
 <tr class="memdesc:af90b044f98e765ddb5a8cc8dc1a2f165"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restart the current style transition from the current value.  <br /></td></tr>
-<tr class="memitem:ae63e338ea4a9f5930db7286fcb1100c6" id="r_ae63e338ea4a9f5930db7286fcb1100c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae63e338ea4a9f5930db7286fcb1100c6">setFocusable</a> (bool f)</td></tr>
-<tr class="memitem:ab5928991e4d541bb39543931eaa1c794" id="r_ab5928991e4d541bb39543931eaa1c794"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5928991e4d541bb39543931eaa1c794">isFocusable</a> () const</td></tr>
-<tr class="memitem:ade810498210306e45b19d3bfc8bb3a50" id="r_ade810498210306e45b19d3bfc8bb3a50"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade810498210306e45b19d3bfc8bb3a50">getFocused</a> () const</td></tr>
-<tr class="memitem:a7e1459534c4327f3a0389777e4b5bd84" id="r_a7e1459534c4327f3a0389777e4b5bd84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e1459534c4327f3a0389777e4b5bd84">setFocusScope</a> (bool s)</td></tr>
-<tr class="memitem:ad256c8476e54bd508aeb7fdd539d5db0" id="r_ad256c8476e54bd508aeb7fdd539d5db0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad256c8476e54bd508aeb7fdd539d5db0">isFocusScope</a> () const</td></tr>
-<tr class="memitem:a1db2fe0c0851859b2f054d8fbe6d124d" id="r_a1db2fe0c0851859b2f054d8fbe6d124d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1db2fe0c0851859b2f054d8fbe6d124d">notifyDescendantFocused</a> (<a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *descendant)</td></tr>
-<tr class="memdesc:a1db2fe0c0851859b2f054d8fbe6d124d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify the node that one of its descendants gained focus.  <br /></td></tr>
-<tr class="memitem:a2e303ff831b79316b2ef5c100d5e5b30" id="r_a2e303ff831b79316b2ef5c100d5e5b30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e303ff831b79316b2ef5c100d5e5b30">isStackingContext</a> () const</td></tr>
-<tr class="memdesc:a2e303ff831b79316b2ef5c100d5e5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node has a non-static <span class="tt">position</span> and a non-auto <span class="tt">zIndex</span>.  <br /></td></tr>
-<tr class="memitem:adc2b0dc01a9a3af641b4a09049b642b4" id="r_adc2b0dc01a9a3af641b4a09049b642b4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc2b0dc01a9a3af641b4a09049b642b4">getZIndex</a> () const</td></tr>
-<tr class="memdesc:adc2b0dc01a9a3af641b4a09049b642b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective <span class="tt">zIndex</span>; returns 0 for the "auto" case.  <br /></td></tr>
-<tr class="memitem:ad81b905d7691d3e19f18fe36b1597ceb" id="r_ad81b905d7691d3e19f18fe36b1597ceb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad81b905d7691d3e19f18fe36b1597ceb">isScrollContainer</a> () const</td></tr>
-<tr class="memdesc:ad81b905d7691d3e19f18fe36b1597ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if either overflow axis is non-visible.  <br /></td></tr>
+<tr class="memitem:ae63e338ea4a9f5930db7286fcb1100c6" id="r_ae63e338ea4a9f5930db7286fcb1100c6"><td class="memItemLeft" align="right" valign="top"><a id="ae63e338ea4a9f5930db7286fcb1100c6" name="ae63e338ea4a9f5930db7286fcb1100c6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setFocusable</b> (bool f)</td></tr>
+<tr class="memitem:ab5928991e4d541bb39543931eaa1c794" id="r_ab5928991e4d541bb39543931eaa1c794"><td class="memItemLeft" align="right" valign="top"><a id="ab5928991e4d541bb39543931eaa1c794" name="ab5928991e4d541bb39543931eaa1c794"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFocusable</b> () const</td></tr>
+<tr class="memitem:ade810498210306e45b19d3bfc8bb3a50" id="r_ade810498210306e45b19d3bfc8bb3a50"><td class="memItemLeft" align="right" valign="top"><a id="ade810498210306e45b19d3bfc8bb3a50" name="ade810498210306e45b19d3bfc8bb3a50"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getFocused</b> () const</td></tr>
+<tr class="memitem:a7e1459534c4327f3a0389777e4b5bd84" id="r_a7e1459534c4327f3a0389777e4b5bd84"><td class="memItemLeft" align="right" valign="top"><a id="a7e1459534c4327f3a0389777e4b5bd84" name="a7e1459534c4327f3a0389777e4b5bd84"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setFocusScope</b> (bool s)</td></tr>
+<tr class="memitem:ad256c8476e54bd508aeb7fdd539d5db0" id="r_ad256c8476e54bd508aeb7fdd539d5db0"><td class="memItemLeft" align="right" valign="top"><a id="ad256c8476e54bd508aeb7fdd539d5db0" name="ad256c8476e54bd508aeb7fdd539d5db0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFocusScope</b> () const</td></tr>
+<tr class="memitem:a1db2fe0c0851859b2f054d8fbe6d124d" id="r_a1db2fe0c0851859b2f054d8fbe6d124d"><td class="memItemLeft" align="right" valign="top"><a id="a1db2fe0c0851859b2f054d8fbe6d124d" name="a1db2fe0c0851859b2f054d8fbe6d124d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>notifyDescendantFocused</b> (<a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *descendant)</td></tr>
+<tr class="memdesc:a1db2fe0c0851859b2f054d8fbe6d124d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify the node that one of its descendants gained focus. <br /></td></tr>
+<tr class="memitem:a2e303ff831b79316b2ef5c100d5e5b30" id="r_a2e303ff831b79316b2ef5c100d5e5b30"><td class="memItemLeft" align="right" valign="top"><a id="a2e303ff831b79316b2ef5c100d5e5b30" name="a2e303ff831b79316b2ef5c100d5e5b30"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isStackingContext</b> () const</td></tr>
+<tr class="memdesc:a2e303ff831b79316b2ef5c100d5e5b30"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if the node has a non-static <span class="tt">position</span> and a non-auto <span class="tt">zIndex</span>. <br /></td></tr>
+<tr class="memitem:adc2b0dc01a9a3af641b4a09049b642b4" id="r_adc2b0dc01a9a3af641b4a09049b642b4"><td class="memItemLeft" align="right" valign="top"><a id="adc2b0dc01a9a3af641b4a09049b642b4" name="adc2b0dc01a9a3af641b4a09049b642b4"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getZIndex</b> () const</td></tr>
+<tr class="memdesc:adc2b0dc01a9a3af641b4a09049b642b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective <span class="tt">zIndex</span>; returns 0 for the "auto" case. <br /></td></tr>
+<tr class="memitem:ad81b905d7691d3e19f18fe36b1597ceb" id="r_ad81b905d7691d3e19f18fe36b1597ceb"><td class="memItemLeft" align="right" valign="top"><a id="ad81b905d7691d3e19f18fe36b1597ceb" name="ad81b905d7691d3e19f18fe36b1597ceb"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isScrollContainer</b> () const</td></tr>
+<tr class="memdesc:ad81b905d7691d3e19f18fe36b1597ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if either overflow axis is non-visible. <br /></td></tr>
 <tr class="memitem:a2320c0baa8f725b6cc73944fbbcde1b6" id="r_a2320c0baa8f725b6cc73944fbbcde1b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2320c0baa8f725b6cc73944fbbcde1b6">scrollTo</a> (float x, float y)</td></tr>
 <tr class="memdesc:a2320c0baa8f725b6cc73944fbbcde1b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the scroll offset, clamped to the valid range.  <br /></td></tr>
-<tr class="memitem:a1437f01c1ba410f0951b6f9198d982fe" id="r_a1437f01c1ba410f0951b6f9198d982fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1437f01c1ba410f0951b6f9198d982fe">scrollToX</a> (float x)</td></tr>
-<tr class="memitem:a46b8d254d49492d0b746950d3e38885c" id="r_a46b8d254d49492d0b746950d3e38885c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46b8d254d49492d0b746950d3e38885c">scrollToY</a> (float y)</td></tr>
-<tr class="memitem:a2d497e716742aa87725ba171695aa2ea" id="r_a2d497e716742aa87725ba171695aa2ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d497e716742aa87725ba171695aa2ea">scrollToTop</a> ()</td></tr>
-<tr class="memitem:ac0c35e7314ac9fa88c030e57a4cdf20e" id="r_ac0c35e7314ac9fa88c030e57a4cdf20e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0c35e7314ac9fa88c030e57a4cdf20e">scrollToBottom</a> ()</td></tr>
-<tr class="memitem:a178504c4badd8766d633adaffe6f592f" id="r_a178504c4badd8766d633adaffe6f592f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a178504c4badd8766d633adaffe6f592f">scrollToLeft</a> ()</td></tr>
-<tr class="memitem:a05f2c67cd1f32b028def4668ff011427" id="r_a05f2c67cd1f32b028def4668ff011427"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05f2c67cd1f32b028def4668ff011427">scrollToRight</a> ()</td></tr>
+<tr class="memitem:a1437f01c1ba410f0951b6f9198d982fe" id="r_a1437f01c1ba410f0951b6f9198d982fe"><td class="memItemLeft" align="right" valign="top"><a id="a1437f01c1ba410f0951b6f9198d982fe" name="a1437f01c1ba410f0951b6f9198d982fe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToX</b> (float x)</td></tr>
+<tr class="memitem:a46b8d254d49492d0b746950d3e38885c" id="r_a46b8d254d49492d0b746950d3e38885c"><td class="memItemLeft" align="right" valign="top"><a id="a46b8d254d49492d0b746950d3e38885c" name="a46b8d254d49492d0b746950d3e38885c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToY</b> (float y)</td></tr>
+<tr class="memitem:a2d497e716742aa87725ba171695aa2ea" id="r_a2d497e716742aa87725ba171695aa2ea"><td class="memItemLeft" align="right" valign="top"><a id="a2d497e716742aa87725ba171695aa2ea" name="a2d497e716742aa87725ba171695aa2ea"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToTop</b> ()</td></tr>
+<tr class="memitem:ac0c35e7314ac9fa88c030e57a4cdf20e" id="r_ac0c35e7314ac9fa88c030e57a4cdf20e"><td class="memItemLeft" align="right" valign="top"><a id="ac0c35e7314ac9fa88c030e57a4cdf20e" name="ac0c35e7314ac9fa88c030e57a4cdf20e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToBottom</b> ()</td></tr>
+<tr class="memitem:a178504c4badd8766d633adaffe6f592f" id="r_a178504c4badd8766d633adaffe6f592f"><td class="memItemLeft" align="right" valign="top"><a id="a178504c4badd8766d633adaffe6f592f" name="a178504c4badd8766d633adaffe6f592f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToLeft</b> ()</td></tr>
+<tr class="memitem:a05f2c67cd1f32b028def4668ff011427" id="r_a05f2c67cd1f32b028def4668ff011427"><td class="memItemLeft" align="right" valign="top"><a id="a05f2c67cd1f32b028def4668ff011427" name="a05f2c67cd1f32b028def4668ff011427"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scrollToRight</b> ()</td></tr>
 <tr class="memitem:a668c2491a3edcea7da1496e60279d157" id="r_a668c2491a3edcea7da1496e60279d157"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a668c2491a3edcea7da1496e60279d157">scrollIntoView</a> (float margin=0.0f)</td></tr>
 <tr class="memdesc:a668c2491a3edcea7da1496e60279d157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scroll the nearest scrolling ancestor so that this node's rect becomes visible, respecting <code class="param">margin</code>.  <br /></td></tr>
 <tr class="memitem:a9c6fd879072b00e5f1b9550bd94b0857" id="r_a9c6fd879072b00e5f1b9550bd94b0857"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c6fd879072b00e5f1b9550bd94b0857">scrollIntoView</a> (const <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> &amp;subRect, float margin=0.0f)</td></tr>
 <tr class="memdesc:a9c6fd879072b00e5f1b9550bd94b0857"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scroll the nearest scrolling ancestor so that <code class="param">subRect</code> becomes visible, respecting <code class="param">margin</code>.  <br /></td></tr>
-<tr class="memitem:a5defa2ed8b22a48dc008b4410931983f" id="r_a5defa2ed8b22a48dc008b4410931983f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5defa2ed8b22a48dc008b4410931983f">getScrollX</a> () const</td></tr>
-<tr class="memitem:ab5ec5f01032ed199f89ee788db59caf0" id="r_ab5ec5f01032ed199f89ee788db59caf0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5ec5f01032ed199f89ee788db59caf0">getScrollY</a> () const</td></tr>
-<tr class="memitem:ac45ba9d94967403e6f20578dc3f97972" id="r_ac45ba9d94967403e6f20578dc3f97972"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac45ba9d94967403e6f20578dc3f97972">getMaxScrollX</a> () const</td></tr>
-<tr class="memitem:a29254f596f01ba983775ab44d96a5dec" id="r_a29254f596f01ba983775ab44d96a5dec"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29254f596f01ba983775ab44d96a5dec">getMaxScrollY</a> () const</td></tr>
+<tr class="memitem:a5defa2ed8b22a48dc008b4410931983f" id="r_a5defa2ed8b22a48dc008b4410931983f"><td class="memItemLeft" align="right" valign="top"><a id="a5defa2ed8b22a48dc008b4410931983f" name="a5defa2ed8b22a48dc008b4410931983f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getScrollX</b> () const</td></tr>
+<tr class="memitem:ab5ec5f01032ed199f89ee788db59caf0" id="r_ab5ec5f01032ed199f89ee788db59caf0"><td class="memItemLeft" align="right" valign="top"><a id="ab5ec5f01032ed199f89ee788db59caf0" name="ab5ec5f01032ed199f89ee788db59caf0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getScrollY</b> () const</td></tr>
+<tr class="memitem:ac45ba9d94967403e6f20578dc3f97972" id="r_ac45ba9d94967403e6f20578dc3f97972"><td class="memItemLeft" align="right" valign="top"><a id="ac45ba9d94967403e6f20578dc3f97972" name="ac45ba9d94967403e6f20578dc3f97972"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxScrollX</b> () const</td></tr>
+<tr class="memitem:a29254f596f01ba983775ab44d96a5dec" id="r_a29254f596f01ba983775ab44d96a5dec"><td class="memItemLeft" align="right" valign="top"><a id="a29254f596f01ba983775ab44d96a5dec" name="a29254f596f01ba983775ab44d96a5dec"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxScrollY</b> () const</td></tr>
 <tr class="memitem:a401f00952548d2945f13edd53630a357" id="r_a401f00952548d2945f13edd53630a357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a401f00952548d2945f13edd53630a357">setPortal</a> (bool p)</td></tr>
 <tr class="memdesc:a401f00952548d2945f13edd53630a357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable portal rendering for this node.  <br /></td></tr>
-<tr class="memitem:ac1199fc50b16b4353000e8ed55e5171d" id="r_ac1199fc50b16b4353000e8ed55e5171d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1199fc50b16b4353000e8ed55e5171d">isPortal</a> () const</td></tr>
-<tr class="memitem:a86a1b0566862800399ee3a2edca131d8" id="r_a86a1b0566862800399ee3a2edca131d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86a1b0566862800399ee3a2edca131d8">setPassThrough</a> (bool p)</td></tr>
-<tr class="memitem:ae8d59407b2aa0ce2f0f76f5ecb9bf815" id="r_ae8d59407b2aa0ce2f0f76f5ecb9bf815"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8d59407b2aa0ce2f0f76f5ecb9bf815">getPassThrough</a> () const</td></tr>
+<tr class="memitem:ac1199fc50b16b4353000e8ed55e5171d" id="r_ac1199fc50b16b4353000e8ed55e5171d"><td class="memItemLeft" align="right" valign="top"><a id="ac1199fc50b16b4353000e8ed55e5171d" name="ac1199fc50b16b4353000e8ed55e5171d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPortal</b> () const</td></tr>
+<tr class="memitem:a86a1b0566862800399ee3a2edca131d8" id="r_a86a1b0566862800399ee3a2edca131d8"><td class="memItemLeft" align="right" valign="top"><a id="a86a1b0566862800399ee3a2edca131d8" name="a86a1b0566862800399ee3a2edca131d8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPassThrough</b> (bool p)</td></tr>
+<tr class="memitem:ae8d59407b2aa0ce2f0f76f5ecb9bf815" id="r_ae8d59407b2aa0ce2f0f76f5ecb9bf815"><td class="memItemLeft" align="right" valign="top"><a id="ae8d59407b2aa0ce2f0f76f5ecb9bf815" name="ae8d59407b2aa0ce2f0f76f5ecb9bf815"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getPassThrough</b> () const</td></tr>
 <tr class="memitem:a53125eed0196f1c6d86f4ebc4db523c9" id="r_a53125eed0196f1c6d86f4ebc4db523c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53125eed0196f1c6d86f4ebc4db523c9">capturePointer</a> ()</td></tr>
 <tr class="memdesc:a53125eed0196f1c6d86f4ebc4db523c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capture the pointer: all subsequent input events go to this node.  <br /></td></tr>
-<tr class="memitem:ad9a5cd8a14e7224fb071c08ea74e1b1a" id="r_ad9a5cd8a14e7224fb071c08ea74e1b1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9a5cd8a14e7224fb071c08ea74e1b1a">releasePointer</a> ()</td></tr>
-<tr class="memdesc:ad9a5cd8a14e7224fb071c08ea74e1b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the pointer capture if this node owns it.  <br /></td></tr>
-<tr class="memitem:a2cf44eb9626aa9e2005d4873c9cd8890" id="r_a2cf44eb9626aa9e2005d4873c9cd8890"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cf44eb9626aa9e2005d4873c9cd8890">hasPointerCapture</a> () const</td></tr>
-<tr class="memdesc:a2cf44eb9626aa9e2005d4873c9cd8890"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node currently holds the pointer capture.  <br /></td></tr>
-<tr class="memitem:af483ebd107b9411fef4a66109486ae60" id="r_af483ebd107b9411fef4a66109486ae60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af483ebd107b9411fef4a66109486ae60">setKeyboardActivates</a> (bool v)</td></tr>
-<tr class="memitem:a61faac7a5a3a321a3f29a8ccb2143ace" id="r_a61faac7a5a3a321a3f29a8ccb2143ace"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61faac7a5a3a321a3f29a8ccb2143ace">getKeyboardActivates</a> () const</td></tr>
-<tr class="memitem:a3d7c6cd8ff4289ec5489da7bd425ed6f" id="r_a3d7c6cd8ff4289ec5489da7bd425ed6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d7c6cd8ff4289ec5489da7bd425ed6f">getLayoutType</a> () const</td></tr>
-<tr class="memitem:aae24a9107e7f424291f7448aad42fc84" id="r_aae24a9107e7f424291f7448aad42fc84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae24a9107e7f424291f7448aad42fc84">getEffectiveLayoutType</a> () const</td></tr>
+<tr class="memitem:ad9a5cd8a14e7224fb071c08ea74e1b1a" id="r_ad9a5cd8a14e7224fb071c08ea74e1b1a"><td class="memItemLeft" align="right" valign="top"><a id="ad9a5cd8a14e7224fb071c08ea74e1b1a" name="ad9a5cd8a14e7224fb071c08ea74e1b1a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>releasePointer</b> ()</td></tr>
+<tr class="memdesc:ad9a5cd8a14e7224fb071c08ea74e1b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the pointer capture if this node owns it. <br /></td></tr>
+<tr class="memitem:a2cf44eb9626aa9e2005d4873c9cd8890" id="r_a2cf44eb9626aa9e2005d4873c9cd8890"><td class="memItemLeft" align="right" valign="top"><a id="a2cf44eb9626aa9e2005d4873c9cd8890" name="a2cf44eb9626aa9e2005d4873c9cd8890"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasPointerCapture</b> () const</td></tr>
+<tr class="memdesc:a2cf44eb9626aa9e2005d4873c9cd8890"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node currently holds the pointer capture. <br /></td></tr>
+<tr class="memitem:af483ebd107b9411fef4a66109486ae60" id="r_af483ebd107b9411fef4a66109486ae60"><td class="memItemLeft" align="right" valign="top"><a id="af483ebd107b9411fef4a66109486ae60" name="af483ebd107b9411fef4a66109486ae60"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setKeyboardActivates</b> (bool v)</td></tr>
+<tr class="memitem:a61faac7a5a3a321a3f29a8ccb2143ace" id="r_a61faac7a5a3a321a3f29a8ccb2143ace"><td class="memItemLeft" align="right" valign="top"><a id="a61faac7a5a3a321a3f29a8ccb2143ace" name="a61faac7a5a3a321a3f29a8ccb2143ace"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getKeyboardActivates</b> () const</td></tr>
+<tr class="memitem:a3d7c6cd8ff4289ec5489da7bd425ed6f" id="r_a3d7c6cd8ff4289ec5489da7bd425ed6f"><td class="memItemLeft" align="right" valign="top"><a id="a3d7c6cd8ff4289ec5489da7bd425ed6f" name="a3d7c6cd8ff4289ec5489da7bd425ed6f"></a>
+<a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getLayoutType</b> () const</td></tr>
+<tr class="memitem:aae24a9107e7f424291f7448aad42fc84" id="r_aae24a9107e7f424291f7448aad42fc84"><td class="memItemLeft" align="right" valign="top"><a id="aae24a9107e7f424291f7448aad42fc84" name="aae24a9107e7f424291f7448aad42fc84"></a>
+<a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getEffectiveLayoutType</b> () const</td></tr>
 <tr class="memitem:a70810adfe3681d62ae8ccaaf3827b76a" id="r_a70810adfe3681d62ae8ccaaf3827b76a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70810adfe3681d62ae8ccaaf3827b76a">resolveFont</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> fallback={})</td></tr>
 <tr class="memdesc:a70810adfe3681d62ae8ccaaf3827b76a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span> from the node's style font stack.  <br /></td></tr>
-<tr class="memitem:ab8584d86d03975d3bd75e18134f6b318" id="r_ab8584d86d03975d3bd75e18134f6b318"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Layout_1_1ResolvedBgTexture.html">ResolvedBgTexture</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8584d86d03975d3bd75e18134f6b318">resolveBgTexture</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> fallbackTex={}, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> fallbackSlice={0, 0, 0, 0})</td></tr>
-<tr class="memdesc:ab8584d86d03975d3bd75e18134f6b318"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the background texture from the style, falling back to explicit parameters if the style has no <span class="tt">background-texture</span>.  <br /></td></tr>
-<tr class="memitem:a4f6cec3a6feebbde5bae94dedd973911" id="r_a4f6cec3a6feebbde5bae94dedd973911"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f6cec3a6feebbde5bae94dedd973911">setInlineBase</a> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s)</td></tr>
-<tr class="memdesc:a4f6cec3a6feebbde5bae94dedd973911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay <code class="param">s</code> onto the node's inline style (highest priority).  <br /></td></tr>
+<tr class="memitem:ab8584d86d03975d3bd75e18134f6b318" id="r_ab8584d86d03975d3bd75e18134f6b318"><td class="memItemLeft" align="right" valign="top"><a id="ab8584d86d03975d3bd75e18134f6b318" name="ab8584d86d03975d3bd75e18134f6b318"></a>
+<a class="el" href="structZenitUI_1_1Layout_1_1ResolvedBgTexture.html">ResolvedBgTexture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>resolveBgTexture</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> fallbackTex={}, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> fallbackSlice={0, 0, 0, 0})</td></tr>
+<tr class="memdesc:ab8584d86d03975d3bd75e18134f6b318"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the background texture from the style, falling back to explicit parameters if the style has no <span class="tt">background-texture</span>. <br /></td></tr>
+<tr class="memitem:a4f6cec3a6feebbde5bae94dedd973911" id="r_a4f6cec3a6feebbde5bae94dedd973911"><td class="memItemLeft" align="right" valign="top"><a id="a4f6cec3a6feebbde5bae94dedd973911" name="a4f6cec3a6feebbde5bae94dedd973911"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setInlineBase</b> (const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;s)</td></tr>
+<tr class="memdesc:a4f6cec3a6feebbde5bae94dedd973911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overlay <code class="param">s</code> onto the node's inline style (highest priority). <br /></td></tr>
 <tr class="memitem:a047cb7ecfd33214da9a2ad4566f3a184" id="r_a047cb7ecfd33214da9a2ad4566f3a184"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a047cb7ecfd33214da9a2ad4566f3a184">getInlineBase</a> ()</td></tr>
 <tr class="memdesc:a047cb7ecfd33214da9a2ad4566f3a184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Direct mutable access to the inline style.  <br /></td></tr>
 <tr class="memitem:a5a2dab9e1ba418bbbbdf6433036e5931" id="r_a5a2dab9e1ba418bbbbdf6433036e5931"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a2dab9e1ba418bbbbdf6433036e5931">getInlineDefaults</a> ()</td></tr>
@@ -244,12 +300,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa506040cf4f9fb55481d45a1bd4d1d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register an imperative animation under <code class="param">name</code>.  <br /></td></tr>
 <tr class="memitem:a9f4ab9ebb5fe348f85879dce47cfe355" id="r_a9f4ab9ebb5fe348f85879dce47cfe355"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f4ab9ebb5fe348f85879dce47cfe355">playAnimation</a> (const std::string &amp;name, bool playReverse=false)</td></tr>
 <tr class="memdesc:a9f4ab9ebb5fe348f85879dce47cfe355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start (or restart) the imperative animation named <code class="param">name</code>.  <br /></td></tr>
-<tr class="memitem:a234071bbf64fbf4d13133a46cdc95960" id="r_a234071bbf64fbf4d13133a46cdc95960"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a234071bbf64fbf4d13133a46cdc95960">hasActiveAnimations</a> () const</td></tr>
-<tr class="memdesc:a234071bbf64fbf4d13133a46cdc95960"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node or any descendant is currently animating.  <br /></td></tr>
+<tr class="memitem:a234071bbf64fbf4d13133a46cdc95960" id="r_a234071bbf64fbf4d13133a46cdc95960"><td class="memItemLeft" align="right" valign="top"><a id="a234071bbf64fbf4d13133a46cdc95960" name="a234071bbf64fbf4d13133a46cdc95960"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasActiveAnimations</b> () const</td></tr>
+<tr class="memdesc:a234071bbf64fbf4d13133a46cdc95960"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if this node or any descendant is currently animating. <br /></td></tr>
 <tr class="memitem:a4b5d0665939c88411197933ba26d7414" id="r_a4b5d0665939c88411197933ba26d7414"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b5d0665939c88411197933ba26d7414">addCssAnimation</a> (const std::string &amp;name)</td></tr>
 <tr class="memdesc:a4b5d0665939c88411197933ba26d7414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manually start a CSS animation by name.  <br /></td></tr>
-<tr class="memitem:acb2acc20c0edff07a46aeab329f1ceea" id="r_acb2acc20c0edff07a46aeab329f1ceea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb2acc20c0edff07a46aeab329f1ceea">stopCssAnimation</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:acb2acc20c0edff07a46aeab329f1ceea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the named CSS animation as finished.  <br /></td></tr>
+<tr class="memitem:acb2acc20c0edff07a46aeab329f1ceea" id="r_acb2acc20c0edff07a46aeab329f1ceea"><td class="memItemLeft" align="right" valign="top"><a id="acb2acc20c0edff07a46aeab329f1ceea" name="acb2acc20c0edff07a46aeab329f1ceea"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>stopCssAnimation</b> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:acb2acc20c0edff07a46aeab329f1ceea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the named CSS animation as finished. <br /></td></tr>
 <tr class="memitem:ae0d08a4a3bf9d9110d1c08684a8f4c0e" id="r_ae0d08a4a3bf9d9110d1c08684a8f4c0e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0d08a4a3bf9d9110d1c08684a8f4c0e">measure</a> (float parent_w, float parent_h)</td></tr>
 <tr class="memdesc:ae0d08a4a3bf9d9110d1c08684a8f4c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the intrinsic size given available space.  <br /></td></tr>
 <tr class="memitem:ac88ab6799cd704ea27a86a2e05b62155" id="r_ac88ab6799cd704ea27a86a2e05b62155"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac88ab6799cd704ea27a86a2e05b62155">arrange</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> space)</td></tr>
@@ -262,14 +320,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9acdbf51a8b976f4f46ff9b9d6ad709f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hit-test a point against this subtree.  <br /></td></tr>
 <tr class="memitem:abbc59a92125d89a5b1600c8d2a4e156e" id="r_abbc59a92125d89a5b1600c8d2a4e156e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbc59a92125d89a5b1600c8d2a4e156e">updateTree</a> (float dt)</td></tr>
 <tr class="memdesc:abbc59a92125d89a5b1600c8d2a4e156e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Root-of-tree update: refresh pointer state and recurse.  <br /></td></tr>
-<tr class="memitem:a79b315b1be72aab5b323df07cff4732d" id="r_a79b315b1be72aab5b323df07cff4732d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79b315b1be72aab5b323df07cff4732d">runFrame</a> (float dt)</td></tr>
-<tr class="memdesc:a79b315b1be72aab5b323df07cff4732d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one full frame: update, measure, arrange.  <br /></td></tr>
-<tr class="memitem:a01ab125b033e17669efc48de5d581176" id="r_a01ab125b033e17669efc48de5d581176"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01ab125b033e17669efc48de5d581176">renderFrame</a> ()</td></tr>
-<tr class="memdesc:a01ab125b033e17669efc48de5d581176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the current state: beginFrame, draw, endFrame.  <br /></td></tr>
-<tr class="memitem:a774dfdf38e30a48878a7da44f8f0c233" id="r_a774dfdf38e30a48878a7da44f8f0c233"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a774dfdf38e30a48878a7da44f8f0c233">getRect</a> () const</td></tr>
-<tr class="memitem:a7e234674f02f63b6c3c26c1b518c3a0a" id="r_a7e234674f02f63b6c3c26c1b518c3a0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e234674f02f63b6c3c26c1b518c3a0a">getMeasuredSize</a> () const</td></tr>
-<tr class="memitem:a079825b756095b94037c61d92a1de9ec" id="r_a079825b756095b94037c61d92a1de9ec"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a079825b756095b94037c61d92a1de9ec">getStyle</a> () const</td></tr>
-<tr class="memitem:a52a4e1236549ca43876a75c61f6c041e" id="r_a52a4e1236549ca43876a75c61f6c041e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const <a class="el" href="structZenitUI_1_1ThemeRule.html">ThemeRule</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52a4e1236549ca43876a75c61f6c041e">getMatchingRules</a> () const</td></tr>
+<tr class="memitem:a79b315b1be72aab5b323df07cff4732d" id="r_a79b315b1be72aab5b323df07cff4732d"><td class="memItemLeft" align="right" valign="top"><a id="a79b315b1be72aab5b323df07cff4732d" name="a79b315b1be72aab5b323df07cff4732d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>runFrame</b> (float dt)</td></tr>
+<tr class="memdesc:a79b315b1be72aab5b323df07cff4732d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one full frame: update, measure, arrange. <br /></td></tr>
+<tr class="memitem:a01ab125b033e17669efc48de5d581176" id="r_a01ab125b033e17669efc48de5d581176"><td class="memItemLeft" align="right" valign="top"><a id="a01ab125b033e17669efc48de5d581176" name="a01ab125b033e17669efc48de5d581176"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>renderFrame</b> ()</td></tr>
+<tr class="memdesc:a01ab125b033e17669efc48de5d581176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the current state: beginFrame, draw, endFrame. <br /></td></tr>
+<tr class="memitem:a774dfdf38e30a48878a7da44f8f0c233" id="r_a774dfdf38e30a48878a7da44f8f0c233"><td class="memItemLeft" align="right" valign="top"><a id="a774dfdf38e30a48878a7da44f8f0c233" name="a774dfdf38e30a48878a7da44f8f0c233"></a>
+<a class="el" href="structZenitUI_1_1Rect.html">Rect</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getRect</b> () const</td></tr>
+<tr class="memitem:a7e234674f02f63b6c3c26c1b518c3a0a" id="r_a7e234674f02f63b6c3c26c1b518c3a0a"><td class="memItemLeft" align="right" valign="top"><a id="a7e234674f02f63b6c3c26c1b518c3a0a" name="a7e234674f02f63b6c3c26c1b518c3a0a"></a>
+<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getMeasuredSize</b> () const</td></tr>
+<tr class="memitem:a079825b756095b94037c61d92a1de9ec" id="r_a079825b756095b94037c61d92a1de9ec"><td class="memItemLeft" align="right" valign="top"><a id="a079825b756095b94037c61d92a1de9ec" name="a079825b756095b94037c61d92a1de9ec"></a>
+const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getStyle</b> () const</td></tr>
+<tr class="memitem:a52a4e1236549ca43876a75c61f6c041e" id="r_a52a4e1236549ca43876a75c61f6c041e"><td class="memItemLeft" align="right" valign="top"><a id="a52a4e1236549ca43876a75c61f6c041e" name="a52a4e1236549ca43876a75c61f6c041e"></a>
+std::vector&lt; const <a class="el" href="structZenitUI_1_1ThemeRule.html">ThemeRule</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getMatchingRules</b> () const</td></tr>
 <tr class="memitem:a82e6548ce9c9d4320f010081f072b516" id="r_a82e6548ce9c9d4320f010081f072b516"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82e6548ce9c9d4320f010081f072b516">setBackgroundTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> tex, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> np={0, 0, 0, 0})</td></tr>
 <tr class="memdesc:a82e6548ce9c9d4320f010081f072b516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override the background texture with a direct handle.  <br /></td></tr>
 <tr class="memitem:a261e980f72acd0d48be79414e309c1e9" id="r_a261e980f72acd0d48be79414e309c1e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a261e980f72acd0d48be79414e309c1e9">setShader</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> shader)</td></tr>
@@ -277,31 +341,43 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af002c282f777dcdab19ece4d97f5b02f" id="r_af002c282f777dcdab19ece4d97f5b02f"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af002c282f777dcdab19ece4d97f5b02f">onHoverEnter</a></td></tr>
-<tr class="memitem:a8530095a4f4ca4abd4556739d60a2517" id="r_a8530095a4f4ca4abd4556739d60a2517"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8530095a4f4ca4abd4556739d60a2517">onHoverExit</a></td></tr>
-<tr class="memitem:ac0afc46f55e461592039168fe6566f20" id="r_ac0afc46f55e461592039168fe6566f20"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0afc46f55e461592039168fe6566f20">onPress</a></td></tr>
-<tr class="memitem:a3465c6935d987b7bce268d8414359b14" id="r_a3465c6935d987b7bce268d8414359b14"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3465c6935d987b7bce268d8414359b14">onRelease</a></td></tr>
-<tr class="memitem:a49d1cbf9564c972bd40208518125ebb9" id="r_a49d1cbf9564c972bd40208518125ebb9"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49d1cbf9564c972bd40208518125ebb9">onClick</a></td></tr>
-<tr class="memitem:a32d175420a843fe81cbb6adaa373c80c" id="r_a32d175420a843fe81cbb6adaa373c80c"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32d175420a843fe81cbb6adaa373c80c">onRightClick</a></td></tr>
-<tr class="memdesc:a32d175420a843fe81cbb6adaa373c80c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-click hook; fires on right-button release over the node.  <br /></td></tr>
-<tr class="memitem:a87365cfcadf3e1ff4ce27eb95427ba71" id="r_a87365cfcadf3e1ff4ce27eb95427ba71"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87365cfcadf3e1ff4ce27eb95427ba71">onButtonPress</a></td></tr>
-<tr class="memitem:aff02d2bd6667822b932edd61b0552223" id="r_aff02d2bd6667822b932edd61b0552223"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff02d2bd6667822b932edd61b0552223">onButtonRelease</a></td></tr>
-<tr class="memitem:a5c9d9972f44d3ca296d045f77b607cd5" id="r_a5c9d9972f44d3ca296d045f77b607cd5"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c9d9972f44d3ca296d045f77b607cd5">onButtonClick</a></td></tr>
+<tr class="memitem:af002c282f777dcdab19ece4d97f5b02f" id="r_af002c282f777dcdab19ece4d97f5b02f"><td class="memItemLeft" align="right" valign="top"><a id="af002c282f777dcdab19ece4d97f5b02f" name="af002c282f777dcdab19ece4d97f5b02f"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onHoverEnter</b></td></tr>
+<tr class="memitem:a8530095a4f4ca4abd4556739d60a2517" id="r_a8530095a4f4ca4abd4556739d60a2517"><td class="memItemLeft" align="right" valign="top"><a id="a8530095a4f4ca4abd4556739d60a2517" name="a8530095a4f4ca4abd4556739d60a2517"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onHoverExit</b></td></tr>
+<tr class="memitem:ac0afc46f55e461592039168fe6566f20" id="r_ac0afc46f55e461592039168fe6566f20"><td class="memItemLeft" align="right" valign="top"><a id="ac0afc46f55e461592039168fe6566f20" name="ac0afc46f55e461592039168fe6566f20"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onPress</b></td></tr>
+<tr class="memitem:a3465c6935d987b7bce268d8414359b14" id="r_a3465c6935d987b7bce268d8414359b14"><td class="memItemLeft" align="right" valign="top"><a id="a3465c6935d987b7bce268d8414359b14" name="a3465c6935d987b7bce268d8414359b14"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onRelease</b></td></tr>
+<tr class="memitem:a49d1cbf9564c972bd40208518125ebb9" id="r_a49d1cbf9564c972bd40208518125ebb9"><td class="memItemLeft" align="right" valign="top"><a id="a49d1cbf9564c972bd40208518125ebb9" name="a49d1cbf9564c972bd40208518125ebb9"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onClick</b></td></tr>
+<tr class="memitem:a32d175420a843fe81cbb6adaa373c80c" id="r_a32d175420a843fe81cbb6adaa373c80c"><td class="memItemLeft" align="right" valign="top"><a id="a32d175420a843fe81cbb6adaa373c80c" name="a32d175420a843fe81cbb6adaa373c80c"></a>
+std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onRightClick</b></td></tr>
+<tr class="memdesc:a32d175420a843fe81cbb6adaa373c80c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-click hook; fires on right-button release over the node. <br /></td></tr>
+<tr class="memitem:a87365cfcadf3e1ff4ce27eb95427ba71" id="r_a87365cfcadf3e1ff4ce27eb95427ba71"><td class="memItemLeft" align="right" valign="top"><a id="a87365cfcadf3e1ff4ce27eb95427ba71" name="a87365cfcadf3e1ff4ce27eb95427ba71"></a>
+std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onButtonPress</b></td></tr>
+<tr class="memitem:aff02d2bd6667822b932edd61b0552223" id="r_aff02d2bd6667822b932edd61b0552223"><td class="memItemLeft" align="right" valign="top"><a id="aff02d2bd6667822b932edd61b0552223" name="aff02d2bd6667822b932edd61b0552223"></a>
+std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onButtonRelease</b></td></tr>
+<tr class="memitem:a5c9d9972f44d3ca296d045f77b607cd5" id="r_a5c9d9972f44d3ca296d045f77b607cd5"><td class="memItemLeft" align="right" valign="top"><a id="a5c9d9972f44d3ca296d045f77b607cd5" name="a5c9d9972f44d3ca296d045f77b607cd5"></a>
+std::function&lt; void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>onButtonClick</b></td></tr>
 <tr class="memitem:a3c56e7f18365d215f731174013fa30e6" id="r_a3c56e7f18365d215f731174013fa30e6"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c56e7f18365d215f731174013fa30e6">onAnimationsFinished</a></td></tr>
 <tr class="memdesc:a3c56e7f18365d215f731174013fa30e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node had active local animations and now has none.  <br /></td></tr>
 <tr class="memitem:a688b24f754064e75c00763f2a623c598" id="r_a688b24f754064e75c00763f2a623c598"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a688b24f754064e75c00763f2a623c598">children</a></td></tr>
 <tr class="memdesc:a688b24f754064e75c00763f2a623c598"><td class="mdescLeft">&#160;</td><td class="mdescRight">Children of this node.  <br /></td></tr>
-<tr class="memitem:a4aa89657fd5cc6063d01533a539a56ff" id="r_a4aa89657fd5cc6063d01533a539a56ff"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aa89657fd5cc6063d01533a539a56ff">nodeId</a></td></tr>
-<tr class="memdesc:a4aa89657fd5cc6063d01533a539a56ff"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> for selector matching and <span class="tt">UINode::find</span>.  <br /></td></tr>
-<tr class="memitem:a1cc11f339765c715799f3fad120d8510" id="r_a1cc11f339765c715799f3fad120d8510"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1cc11f339765c715799f3fad120d8510">ref</a></td></tr>
-<tr class="memdesc:a1cc11f339765c715799f3fad120d8510"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> for <span class="tt">UINode::ref</span> / <span class="tt">refAll</span> lookup.  <br /></td></tr>
+<tr class="memitem:a4aa89657fd5cc6063d01533a539a56ff" id="r_a4aa89657fd5cc6063d01533a539a56ff"><td class="memItemLeft" align="right" valign="top"><a id="a4aa89657fd5cc6063d01533a539a56ff" name="a4aa89657fd5cc6063d01533a539a56ff"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>nodeId</b></td></tr>
+<tr class="memdesc:a4aa89657fd5cc6063d01533a539a56ff"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> for selector matching and <span class="tt">UINode::find</span>. <br /></td></tr>
+<tr class="memitem:a1cc11f339765c715799f3fad120d8510" id="r_a1cc11f339765c715799f3fad120d8510"><td class="memItemLeft" align="right" valign="top"><a id="a1cc11f339765c715799f3fad120d8510" name="a1cc11f339765c715799f3fad120d8510"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></tr>
+<tr class="memdesc:a1cc11f339765c715799f3fad120d8510"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> for <span class="tt">UINode::ref</span> / <span class="tt">refAll</span> lookup. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a5782ee0432840cdebbea4cd893bdbde1" id="r_a5782ee0432840cdebbea4cd893bdbde1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5782ee0432840cdebbea4cd893bdbde1">invalidateIfRelevant</a> (<a class="el" href="structZenitUI_1_1SimpleSelector.html#a32a6fc6da798b9ad87f285add3249940">SimpleSelector::Kind</a> kind, std::string_view name)</td></tr>
+<tr class="memitem:a5782ee0432840cdebbea4cd893bdbde1" id="r_a5782ee0432840cdebbea4cd893bdbde1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5782ee0432840cdebbea4cd893bdbde1">invalidateIfRelevant</a> (SimpleSelector::Kind kind, std::string_view name)</td></tr>
 <tr class="memdesc:a5782ee0432840cdebbea4cd893bdbde1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagate a class/tag change to descendants that may match it.  <br /></td></tr>
-<tr class="memitem:aa56e9c718bbe17f8e8cbecf0647c58ac" id="r_aa56e9c718bbe17f8e8cbecf0647c58ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa56e9c718bbe17f8e8cbecf0647c58ac">invalidateStyleCacheRecursive</a> ()</td></tr>
-<tr class="memdesc:aa56e9c718bbe17f8e8cbecf0647c58ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the whole subtree as needing style re-resolution.  <br /></td></tr>
+<tr class="memitem:aa56e9c718bbe17f8e8cbecf0647c58ac" id="r_aa56e9c718bbe17f8e8cbecf0647c58ac"><td class="memItemLeft" align="right" valign="top"><a id="aa56e9c718bbe17f8e8cbecf0647c58ac" name="aa56e9c718bbe17f8e8cbecf0647c58ac"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>invalidateStyleCacheRecursive</b> ()</td></tr>
+<tr class="memdesc:aa56e9c718bbe17f8e8cbecf0647c58ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the whole subtree as needing style re-resolution. <br /></td></tr>
 <tr class="memitem:a3fc53b532fdda7e012ad4fa7d78c4d7b" id="r_a3fc53b532fdda7e012ad4fa7d78c4d7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Style.html">Style</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fc53b532fdda7e012ad4fa7d78c4d7b">partStyle</a> (const std::string &amp;partName)</td></tr>
 <tr class="memdesc:a3fc53b532fdda7e012ad4fa7d78c4d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the style for pseudo-element <code class="param">partName</code>.  <br /></td></tr>
 <tr class="memitem:a64992532175cef48e851af91864b7216" id="r_a64992532175cef48e851af91864b7216"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64992532175cef48e851af91864b7216">computeIntrinsicSize</a> (float, float)</td></tr>
@@ -318,27 +394,33 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a717d10c9b181272661ee155eb6418f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the node's content (text, images, custom geometry).  <br /></td></tr>
 <tr class="memitem:a521a1fadcadc81270eb004db6127c445" id="r_a521a1fadcadc81270eb004db6127c445"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a521a1fadcadc81270eb004db6127c445">renderChrome</a> (float op, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style)</td></tr>
 <tr class="memdesc:a521a1fadcadc81270eb004db6127c445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the node's background, border, and shadow.  <br /></td></tr>
-<tr class="memitem:ae714ccd2c8951aadf9522151bc0b9559" id="r_ae714ccd2c8951aadf9522151bc0b9559"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae714ccd2c8951aadf9522151bc0b9559">onDescendantFocused</a> (<a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *)</td></tr>
-<tr class="memdesc:ae714ccd2c8951aadf9522151bc0b9559"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called on ancestors when a descendant gains focus.  <br /></td></tr>
+<tr class="memitem:ae714ccd2c8951aadf9522151bc0b9559" id="r_ae714ccd2c8951aadf9522151bc0b9559"><td class="memItemLeft" align="right" valign="top"><a id="ae714ccd2c8951aadf9522151bc0b9559" name="ae714ccd2c8951aadf9522151bc0b9559"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onDescendantFocused</b> (<a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *)</td></tr>
+<tr class="memdesc:ae714ccd2c8951aadf9522151bc0b9559"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called on ancestors when a descendant gains focus. <br /></td></tr>
 <tr class="memitem:a10d1aa92b372d3414760aab602df3e0e" id="r_a10d1aa92b372d3414760aab602df3e0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10d1aa92b372d3414760aab602df3e0e">arrangeInto</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> space)</td></tr>
 <tr class="memdesc:a10d1aa92b372d3414760aab602df3e0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatch to the layout-type-specific arrange helper.  <br /></td></tr>
-<tr class="memitem:a4b1c60a74a96ccb800f9d55c1fd2f1c3" id="r_a4b1c60a74a96ccb800f9d55c1fd2f1c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Transform2D.html">Transform2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b1c60a74a96ccb800f9d55c1fd2f1c3">currentTransform</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style) const</td></tr>
-<tr class="memdesc:a4b1c60a74a96ccb800f9d55c1fd2f1c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the current transform from the style's <span class="tt">translateX</span>/<span class="tt">translateY</span>/<span class="tt">rotation</span>/<span class="tt">scale</span>.  <br /></td></tr>
+<tr class="memitem:a4b1c60a74a96ccb800f9d55c1fd2f1c3" id="r_a4b1c60a74a96ccb800f9d55c1fd2f1c3"><td class="memItemLeft" align="right" valign="top"><a id="a4b1c60a74a96ccb800f9d55c1fd2f1c3" name="a4b1c60a74a96ccb800f9d55c1fd2f1c3"></a>
+<a class="el" href="structZenitUI_1_1Transform2D.html">Transform2D</a>&#160;</td><td class="memItemRight" valign="bottom"><b>currentTransform</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style) const</td></tr>
+<tr class="memdesc:a4b1c60a74a96ccb800f9d55c1fd2f1c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the current transform from the style's <span class="tt">translateX</span>/<span class="tt">translateY</span>/<span class="tt">rotation</span>/<span class="tt">scale</span>. <br /></td></tr>
 <tr class="memitem:a7e36c2d73ad2298c4cf330a86715c2e7" id="r_a7e36c2d73ad2298c4cf330a86715c2e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e36c2d73ad2298c4cf330a86715c2e7">translateSubtree</a> (float dx, float dy)</td></tr>
 <tr class="memdesc:a7e36c2d73ad2298c4cf330a86715c2e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translate the subtree (children and their descendants) by <span class="tt">(dx, dy)</span>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:aa788ab239be162f827288be018807a27" id="r_aa788ab239be162f827288be018807a27"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa788ab239be162f827288be018807a27">StyleResolver</a></td></tr>
-<tr class="memitem:a666c0cd3d28dfd272e18f8e6036884bf" id="r_a666c0cd3d28dfd272e18f8e6036884bf"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a666c0cd3d28dfd272e18f8e6036884bf">AnimationPlayer</a></td></tr>
-<tr class="memitem:af65d46d1c9a9c3fb50995523fe6e5ee3" id="r_af65d46d1c9a9c3fb50995523fe6e5ee3"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af65d46d1c9a9c3fb50995523fe6e5ee3">InputController</a></td></tr>
-<tr class="memitem:aa00ecff80d5434fb8c4b01b305a94145" id="r_aa00ecff80d5434fb8c4b01b305a94145"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa00ecff80d5434fb8c4b01b305a94145">ScrollController</a></td></tr>
+<tr class="memitem:aa788ab239be162f827288be018807a27" id="r_aa788ab239be162f827288be018807a27"><td class="memItemLeft" align="right" valign="top"><a id="aa788ab239be162f827288be018807a27" name="aa788ab239be162f827288be018807a27"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>StyleResolver</b></td></tr>
+<tr class="memitem:a666c0cd3d28dfd272e18f8e6036884bf" id="r_a666c0cd3d28dfd272e18f8e6036884bf"><td class="memItemLeft" align="right" valign="top"><a id="a666c0cd3d28dfd272e18f8e6036884bf" name="a666c0cd3d28dfd272e18f8e6036884bf"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>AnimationPlayer</b></td></tr>
+<tr class="memitem:af65d46d1c9a9c3fb50995523fe6e5ee3" id="r_af65d46d1c9a9c3fb50995523fe6e5ee3"><td class="memItemLeft" align="right" valign="top"><a id="af65d46d1c9a9c3fb50995523fe6e5ee3" name="af65d46d1c9a9c3fb50995523fe6e5ee3"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>InputController</b></td></tr>
+<tr class="memitem:aa00ecff80d5434fb8c4b01b305a94145" id="r_aa00ecff80d5434fb8c4b01b305a94145"><td class="memItemLeft" align="right" valign="top"><a id="aa00ecff80d5434fb8c4b01b305a94145" name="aa00ecff80d5434fb8c4b01b305a94145"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>ScrollController</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The base node type: tree, style, layout, input, scroll, render. </p>
 <p>See the file-level documentation for a description of the four main passes and the composition points for subclasses.</p>
 <dl class="section note"><dt>Note</dt><dd><span class="tt"><a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">Layout</a></span> is not intended to be instantiated directly in user code; use <span class="tt">std::make_shared&lt;<a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">Layout</a>&gt;</span> for layout containers (<span class="tt">VStack</span>, <span class="tt">HStack</span>, <span class="tt">Stack</span>) or <span class="tt"><a class="el" href="classZenitUI_1_1TLayout.html" title="CRTP base for components that want fluent builders and a static create() factory.">TLayout</a>&lt;Derived&gt;::create</span> for custom components. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a30">00_demo/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a16">04b_imperative_animations/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a9">11_ref_list/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#_a12">12_bindable/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a25">00_demo/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a12">04b_imperative_animations/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a7">11_ref_list/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#_a11">12_bindable/main.cpp</a>.</dd>
 </dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2ffb4c7702a0b391634b8fea3bfead1e" name="a2ffb4c7702a0b391634b8fea3bfead1e"></a>
@@ -691,33 +773,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a3527816c22a46f320510fcb5c01b1cf9" name="a3527816c22a46f320510fcb5c01b1cf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3527816c22a46f320510fcb5c01b1cf9">&#9670;&#160;</a></span>cls()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; ZenitUI::Layout::cls </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>className</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Fluent <span class="tt"><a class="el" href="#a7a2137069845518130e460a4c1633810" title="Add a class name to the node&#39;s style class list.">addClass</a></span>; returns <span class="tt">shared_from_this()</span>. </p>
-
-</div>
-</div>
 <a id="a64992532175cef48e851af91864b7216" name="a64992532175cef48e851af91864b7216"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a64992532175cef48e851af91864b7216">&#9670;&#160;</a></span>computeIntrinsicSize()</h2>
 
@@ -782,33 +837,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a4b1c60a74a96ccb800f9d55c1fd2f1c3" name="a4b1c60a74a96ccb800f9d55c1fd2f1c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b1c60a74a96ccb800f9d55c1fd2f1c3">&#9670;&#160;</a></span>currentTransform()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Transform2D.html">Transform2D</a> ZenitUI::Layout::currentTransform </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>style</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compute the current transform from the style's <span class="tt">translateX</span>/<span class="tt">translateY</span>/<span class="tt">rotation</span>/<span class="tt">scale</span>. </p>
-
-</div>
-</div>
 <a id="a88571f053d662594f49e1a3d8014dec2" name="a88571f053d662594f49e1a3d8014dec2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a88571f053d662594f49e1a3d8014dec2">&#9670;&#160;</a></span>draw()</h2>
 
@@ -837,106 +865,6 @@ template&lt;typename T = Layout&gt; </div>
 <p>Root nodes also flush <span class="tt">framePortals</span>: portals that were registered during the tree walk are drawn at the root, above everything else. </p>
 
 <p>Reimplemented in <a class="el" href="classZenitUI_1_1UI_1_1CanvasLayout.html#a115c7729c7748fd6796c205add7e9bee">ZenitUI::UI::CanvasLayout</a>.</p>
-
-</div>
-</div>
-<a id="aec9c9c27956c9d74a0b2f2797a1fd083" name="aec9c9c27956c9d74a0b2f2797a1fd083"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec9c9c27956c9d74a0b2f2797a1fd083">&#9670;&#160;</a></span>getChecked()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getChecked </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aae24a9107e7f424291f7448aad42fc84" name="aae24a9107e7f424291f7448aad42fc84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae24a9107e7f424291f7448aad42fc84">&#9670;&#160;</a></span>getEffectiveLayoutType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a> ZenitUI::Layout::getEffectiveLayoutType </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aea9ce1015be41f998a8f777fa0f62118" name="aea9ce1015be41f998a8f777fa0f62118"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea9ce1015be41f998a8f777fa0f62118">&#9670;&#160;</a></span>getEnabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getEnabled </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ade810498210306e45b19d3bfc8bb3a50" name="ade810498210306e45b19d3bfc8bb3a50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade810498210306e45b19d3bfc8bb3a50">&#9670;&#160;</a></span>getFocused()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getFocused </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -996,533 +924,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a61faac7a5a3a321a3f29a8ccb2143ace" name="a61faac7a5a3a321a3f29a8ccb2143ace"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61faac7a5a3a321a3f29a8ccb2143ace">&#9670;&#160;</a></span>getKeyboardActivates()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getKeyboardActivates </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3d7c6cd8ff4289ec5489da7bd425ed6f" name="a3d7c6cd8ff4289ec5489da7bd425ed6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d7c6cd8ff4289ec5489da7bd425ed6f">&#9670;&#160;</a></span>getLayoutType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a> ZenitUI::Layout::getLayoutType </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a52a4e1236549ca43876a75c61f6c041e" name="a52a4e1236549ca43876a75c61f6c041e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52a4e1236549ca43876a75c61f6c041e">&#9670;&#160;</a></span>getMatchingRules()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; const <a class="el" href="structZenitUI_1_1ThemeRule.html">ThemeRule</a> * &gt; ZenitUI::Layout::getMatchingRules </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac45ba9d94967403e6f20578dc3f97972" name="ac45ba9d94967403e6f20578dc3f97972"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac45ba9d94967403e6f20578dc3f97972">&#9670;&#160;</a></span>getMaxScrollX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Layout::getMaxScrollX </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a29254f596f01ba983775ab44d96a5dec" name="a29254f596f01ba983775ab44d96a5dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29254f596f01ba983775ab44d96a5dec">&#9670;&#160;</a></span>getMaxScrollY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Layout::getMaxScrollY </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7e234674f02f63b6c3c26c1b518c3a0a" name="a7e234674f02f63b6c3c26c1b518c3a0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e234674f02f63b6c3c26c1b518c3a0a">&#9670;&#160;</a></span>getMeasuredSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::Layout::getMeasuredSize </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae8df40a5d4bf9d83d5cd36ef018a91f8" name="ae8df40a5d4bf9d83d5cd36ef018a91f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8df40a5d4bf9d83d5cd36ef018a91f8">&#9670;&#160;</a></span>getParent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; ZenitUI::Layout::getParent </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae8d59407b2aa0ce2f0f76f5ecb9bf815" name="ae8d59407b2aa0ce2f0f76f5ecb9bf815"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8d59407b2aa0ce2f0f76f5ecb9bf815">&#9670;&#160;</a></span>getPassThrough()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getPassThrough </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a774dfdf38e30a48878a7da44f8f0c233" name="a774dfdf38e30a48878a7da44f8f0c233"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a774dfdf38e30a48878a7da44f8f0c233">&#9670;&#160;</a></span>getRect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a> ZenitUI::Layout::getRect </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5defa2ed8b22a48dc008b4410931983f" name="a5defa2ed8b22a48dc008b4410931983f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5defa2ed8b22a48dc008b4410931983f">&#9670;&#160;</a></span>getScrollX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Layout::getScrollX </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab5ec5f01032ed199f89ee788db59caf0" name="ab5ec5f01032ed199f89ee788db59caf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5ec5f01032ed199f89ee788db59caf0">&#9670;&#160;</a></span>getScrollY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float ZenitUI::Layout::getScrollY </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a079825b756095b94037c61d92a1de9ec" name="a079825b756095b94037c61d92a1de9ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a079825b756095b94037c61d92a1de9ec">&#9670;&#160;</a></span>getStyle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp; ZenitUI::Layout::getStyle </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aef9811d8471c71d9b2f568e48be6e8f1" name="aef9811d8471c71d9b2f568e48be6e8f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef9811d8471c71d9b2f568e48be6e8f1">&#9670;&#160;</a></span>getStyleClasses()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt; std::string &gt; &amp; ZenitUI::Layout::getStyleClasses </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac916bb38b7d5188d149b8e82bdad69ad" name="ac916bb38b7d5188d149b8e82bdad69ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac916bb38b7d5188d149b8e82bdad69ad">&#9670;&#160;</a></span>getStyleTag()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string &amp; ZenitUI::Layout::getStyleTag </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4e1880d6d5d2e9eb78b463a5b10f122d" name="a4e1880d6d5d2e9eb78b463a5b10f122d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e1880d6d5d2e9eb78b463a5b10f122d">&#9670;&#160;</a></span>getUpdateWhenDisabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::getUpdateWhenDisabled </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adc2b0dc01a9a3af641b4a09049b642b4" name="adc2b0dc01a9a3af641b4a09049b642b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc2b0dc01a9a3af641b4a09049b642b4">&#9670;&#160;</a></span>getZIndex()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ZenitUI::Layout::getZIndex </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Effective <span class="tt">zIndex</span>; returns 0 for the "auto" case. </p>
-
-</div>
-</div>
-<a id="a234071bbf64fbf4d13133a46cdc95960" name="a234071bbf64fbf4d13133a46cdc95960"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a234071bbf64fbf4d13133a46cdc95960">&#9670;&#160;</a></span>hasActiveAnimations()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::hasActiveAnimations </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if this node or any descendant is currently animating. </p>
-
-</div>
-</div>
-<a id="a23f2a818edca26021d7c7822140c710b" name="a23f2a818edca26021d7c7822140c710b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23f2a818edca26021d7c7822140c710b">&#9670;&#160;</a></span>hasClass()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::hasClass </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>className</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the node has the given class. </p>
-
-</div>
-</div>
-<a id="a25db8be3dd83fdda0d10bc54aeb2f90a" name="a25db8be3dd83fdda0d10bc54aeb2f90a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25db8be3dd83fdda0d10bc54aeb2f90a">&#9670;&#160;</a></span>hasId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::hasId </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>targetId</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the node's <span class="tt"><a class="el" href="#a4aa89657fd5cc6063d01533a539a56ff" title="#id for selector matching and UINode::find.">nodeId</a></span> equals <code class="param">targetId</code>. </p>
-
-</div>
-</div>
-<a id="ac1864a027a5c70b738e2fb0451ad82f6" name="ac1864a027a5c70b738e2fb0451ad82f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1864a027a5c70b738e2fb0451ad82f6">&#9670;&#160;</a></span>hasParent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::hasParent </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2cf44eb9626aa9e2005d4873c9cd8890" name="a2cf44eb9626aa9e2005d4873c9cd8890"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cf44eb9626aa9e2005d4873c9cd8890">&#9670;&#160;</a></span>hasPointerCapture()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::hasPointerCapture </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if this node currently holds the pointer capture. </p>
-
-</div>
-</div>
 <a id="a9acdbf51a8b976f4f46ff9b9d6ad709f" name="a9acdbf51a8b976f4f46ff9b9d6ad709f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9acdbf51a8b976f4f46ff9b9d6ad709f">&#9670;&#160;</a></span>hitTest()</h2>
 
@@ -1561,64 +962,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a27eae4bcca4eaf6b02afabbc3e99ac11" name="a27eae4bcca4eaf6b02afabbc3e99ac11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27eae4bcca4eaf6b02afabbc3e99ac11">&#9670;&#160;</a></span>id()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; ZenitUI::Layout::id </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>node_id</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Fluent <span class="tt"><a class="el" href="#acd49bc6f4646a67786bc3dfcbbf1dc97" title="Set the node&#39;s #id (used in selectors and by UINode::find).">setId</a></span>; returns <span class="tt">shared_from_this()</span>. </p>
-
-</div>
-</div>
-<a id="a949f58d45333bc3e93e2392cb2671d73" name="a949f58d45333bc3e93e2392cb2671d73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a949f58d45333bc3e93e2392cb2671d73">&#9670;&#160;</a></span>insertChildBefore()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::insertChildBefore </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *</td>          <td class="paramname"><span class="paramname"><em>anchor</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>child</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Insert <code class="param">child</code> immediately before <code class="param">anchor</code> (or append if <code class="param">anchor</code> is not found). </p>
-
-</div>
-</div>
 <a id="a5782ee0432840cdebbea4cd893bdbde1" name="a5782ee0432840cdebbea4cd893bdbde1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5782ee0432840cdebbea4cd893bdbde1">&#9670;&#160;</a></span>invalidateIfRelevant()</h2>
 
@@ -1631,7 +974,7 @@ template&lt;typename T = Layout&gt; </div>
         <tr>
           <td class="memname">void ZenitUI::Layout::invalidateIfRelevant </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1SimpleSelector.html#a32a6fc6da798b9ad87f285add3249940">SimpleSelector::Kind</a></td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
+          <td class="paramtype">SimpleSelector::Kind</td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1648,33 +991,6 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Propagate a class/tag change to descendants that may match it. </p>
 <p>Only descendants whose <span class="tt">relevantSymbols_</span> list mentions the changed symbol are marked. If the theme version changed since the last refresh, every descendant is invalidated conservatively. </p>
-
-</div>
-</div>
-<a id="aa56e9c718bbe17f8e8cbecf0647c58ac" name="aa56e9c718bbe17f8e8cbecf0647c58ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa56e9c718bbe17f8e8cbecf0647c58ac">&#9670;&#160;</a></span>invalidateStyleCacheRecursive()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::invalidateStyleCacheRecursive </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Mark the whole subtree as needing style re-resolution. </p>
 
 </div>
 </div>
@@ -1702,286 +1018,7 @@ template&lt;typename T = Layout&gt; </div>
 </div><div class="memdoc">
 
 <p><span class="tt">true</span> if this node is an ancestor of <code class="param">other</code>. </p>
-<p>Walks up from <span class="tt">other-&gt;<a class="el" href="#ae8df40a5d4bf9d83d5cd36ef018a91f8">getParent()</a></span>; <span class="tt">this</span> is an ancestor only if found strictly above <span class="tt">other</span>. Self is not an ancestor of self. </p>
-
-</div>
-</div>
-<a id="a5641b97d8a2e5197d164cc15c0b33b3b" name="a5641b97d8a2e5197d164cc15c0b33b3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5641b97d8a2e5197d164cc15c0b33b3b">&#9670;&#160;</a></span>isCheckedState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isCheckedState </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3d52db68d20871a5e3563ba141e819ad" name="a3d52db68d20871a5e3563ba141e819ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d52db68d20871a5e3563ba141e819ad">&#9670;&#160;</a></span>isDisabledState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isDisabledState </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab5928991e4d541bb39543931eaa1c794" name="ab5928991e4d541bb39543931eaa1c794"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5928991e4d541bb39543931eaa1c794">&#9670;&#160;</a></span>isFocusable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isFocusable </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a25b722f4c8de2ba5462e5d56096dd195" name="a25b722f4c8de2ba5462e5d56096dd195"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25b722f4c8de2ba5462e5d56096dd195">&#9670;&#160;</a></span>isFocusedState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isFocusedState </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad256c8476e54bd508aeb7fdd539d5db0" name="ad256c8476e54bd508aeb7fdd539d5db0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad256c8476e54bd508aeb7fdd539d5db0">&#9670;&#160;</a></span>isFocusScope()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isFocusScope </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="add3130df45a2668cf3ca8463e44cc6a6" name="add3130df45a2668cf3ca8463e44cc6a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add3130df45a2668cf3ca8463e44cc6a6">&#9670;&#160;</a></span>isHoveredState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isHoveredState </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac1199fc50b16b4353000e8ed55e5171d" name="ac1199fc50b16b4353000e8ed55e5171d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1199fc50b16b4353000e8ed55e5171d">&#9670;&#160;</a></span>isPortal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isPortal </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4f925297207279f3fe589078f6ce8fa6" name="a4f925297207279f3fe589078f6ce8fa6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f925297207279f3fe589078f6ce8fa6">&#9670;&#160;</a></span>isPressedState()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isPressedState </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad81b905d7691d3e19f18fe36b1597ceb" name="ad81b905d7691d3e19f18fe36b1597ceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad81b905d7691d3e19f18fe36b1597ceb">&#9670;&#160;</a></span>isScrollContainer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isScrollContainer </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if either overflow axis is non-visible. </p>
-
-</div>
-</div>
-<a id="a2e303ff831b79316b2ef5c100d5e5b30" name="a2e303ff831b79316b2ef5c100d5e5b30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e303ff831b79316b2ef5c100d5e5b30">&#9670;&#160;</a></span>isStackingContext()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isStackingContext </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><span class="tt">true</span> if the node has a non-static <span class="tt">position</span> and a non-auto <span class="tt">zIndex</span>. </p>
-
-</div>
-</div>
-<a id="a635649259faf5d6691a5706745b9d561" name="a635649259faf5d6691a5706745b9d561"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a635649259faf5d6691a5706745b9d561">&#9670;&#160;</a></span>isVisible()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ZenitUI::Layout::isVisible </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Walks up from <span class="tt">other-&gt;getParent()</span>; <span class="tt">this</span> is an ancestor only if found strictly above <span class="tt">other</span>. Self is not an ancestor of self. </p>
 
 </div>
 </div>
@@ -2022,60 +1059,6 @@ template&lt;typename T = Layout&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The node's own measured size, including padding and border. </dd></dl>
-
-</div>
-</div>
-<a id="a1db2fe0c0851859b2f054d8fbe6d124d" name="a1db2fe0c0851859b2f054d8fbe6d124d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1db2fe0c0851859b2f054d8fbe6d124d">&#9670;&#160;</a></span>notifyDescendantFocused()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::notifyDescendantFocused </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *</td>          <td class="paramname"><span class="paramname"><em>descendant</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Notify the node that one of its descendants gained focus. </p>
-
-</div>
-</div>
-<a id="ae714ccd2c8951aadf9522151bc0b9559" name="ae714ccd2c8951aadf9522151bc0b9559"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae714ccd2c8951aadf9522151bc0b9559">&#9670;&#160;</a></span>onDescendantFocused()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void ZenitUI::Layout::onDescendantFocused </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> *</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called on ancestors when a descendant gains focus. </p>
 
 </div>
 </div>
@@ -2229,33 +1212,6 @@ template&lt;typename T = Layout&gt; </div>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="ad9a5cd8a14e7224fb071c08ea74e1b1a" name="ad9a5cd8a14e7224fb071c08ea74e1b1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9a5cd8a14e7224fb071c08ea74e1b1a">&#9670;&#160;</a></span>releasePointer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::releasePointer </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Release the pointer capture if this node owns it. </p>
 
 </div>
 </div>
@@ -2437,25 +1393,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a01ab125b033e17669efc48de5d581176" name="a01ab125b033e17669efc48de5d581176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01ab125b033e17669efc48de5d581176">&#9670;&#160;</a></span>renderFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::renderFrame </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Render the current state: beginFrame, draw, endFrame. </p>
-
-</div>
-</div>
 <a id="aa4183e338b497b9aaf84b41efeab2748" name="aa4183e338b497b9aaf84b41efeab2748"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4183e338b497b9aaf84b41efeab2748">&#9670;&#160;</a></span>resolveActiveEffect()</h2>
 
@@ -2481,42 +1418,6 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Resolve the currently active effect handle. </p>
 <p>Prefers the style's <span class="tt">effect</span> over the <span class="tt"><a class="el" href="#a261e980f72acd0d48be79414e309c1e9" title="Set a custom shader effect applied to the node&#39;s content.">setShader</a></span> override. Returns an invalid handle if neither is set. </p>
-
-</div>
-</div>
-<a id="ab8584d86d03975d3bd75e18134f6b318" name="ab8584d86d03975d3bd75e18134f6b318"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8584d86d03975d3bd75e18134f6b318">&#9670;&#160;</a></span>resolveBgTexture()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Layout_1_1ResolvedBgTexture.html">ResolvedBgTexture</a> ZenitUI::Layout::resolveBgTexture </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>style</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></td>          <td class="paramname"><span class="paramname"><em>fallbackTex</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a></td>          <td class="paramname"><span class="paramname"><em>fallbackSlice</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{0,&#160;0,&#160;0,&#160;0}</span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Resolve the background texture from the style, falling back to explicit parameters if the style has no <span class="tt">background-texture</span>. </p>
 
 </div>
 </div>
@@ -2582,26 +1483,7 @@ template&lt;typename T = Layout&gt; </div>
 </div><div class="memdoc">
 
 <p>Retain an arbitrary type-erased object for the lifetime of this node. </p>
-<p>Lazily allocates storage on first call (zero heap overhead for nodes that do not retain objects). Used by <span class="tt"><a class="el" href="namespaceZenitUI_1_1ZMarkup.html">ZMarkup</a></span> to tie a <span class="tt">BuildContext</span> (and its <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a></span> subscriptions) to the root node without cycles. </p>
-
-</div>
-</div>
-<a id="a79b315b1be72aab5b323df07cff4732d" name="a79b315b1be72aab5b323df07cff4732d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79b315b1be72aab5b323df07cff4732d">&#9670;&#160;</a></span>runFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::runFrame </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>dt</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Run one full frame: update, measure, arrange. </p>
+<p>Lazily allocates storage on first call (zero heap overhead for nodes that do not retain objects). Used by <span class="tt">ZMarkup</span> to tie a <span class="tt">BuildContext</span> (and its <span class="tt"><a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable</a></span> subscriptions) to the root node without cycles. </p>
 
 </div>
 </div>
@@ -2683,156 +1565,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="ac0c35e7314ac9fa88c030e57a4cdf20e" name="ac0c35e7314ac9fa88c030e57a4cdf20e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0c35e7314ac9fa88c030e57a4cdf20e">&#9670;&#160;</a></span>scrollToBottom()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToBottom </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a178504c4badd8766d633adaffe6f592f" name="a178504c4badd8766d633adaffe6f592f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a178504c4badd8766d633adaffe6f592f">&#9670;&#160;</a></span>scrollToLeft()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToLeft </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a05f2c67cd1f32b028def4668ff011427" name="a05f2c67cd1f32b028def4668ff011427"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05f2c67cd1f32b028def4668ff011427">&#9670;&#160;</a></span>scrollToRight()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToRight </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2d497e716742aa87725ba171695aa2ea" name="a2d497e716742aa87725ba171695aa2ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d497e716742aa87725ba171695aa2ea">&#9670;&#160;</a></span>scrollToTop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToTop </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1437f01c1ba410f0951b6f9198d982fe" name="a1437f01c1ba410f0951b6f9198d982fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1437f01c1ba410f0951b6f9198d982fe">&#9670;&#160;</a></span>scrollToX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToX </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a46b8d254d49492d0b746950d3e38885c" name="a46b8d254d49492d0b746950d3e38885c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46b8d254d49492d0b746950d3e38885c">&#9670;&#160;</a></span>scrollToY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::scrollToY </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a82e6548ce9c9d4320f010081f072b516" name="a82e6548ce9c9d4320f010081f072b516"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82e6548ce9c9d4320f010081f072b516">&#9670;&#160;</a></span>setBackgroundTexture()</h2>
 
@@ -2862,31 +1594,6 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Override the background texture with a direct handle. </p>
 <p>Takes precedence over the style's <span class="tt">background-texture</span> field. Used by <span class="tt">ImageContainer</span> and components that set the texture at runtime. </p>
-
-</div>
-</div>
-<a id="aa3d97262e4531d6c5d7ada4c5b4b3755" name="aa3d97262e4531d6c5d7ada4c5b4b3755"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3d97262e4531d6c5d7ada4c5b4b3755">&#9670;&#160;</a></span>setBlocksRaycast()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setBlocksRaycast </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>blocks</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -2946,185 +1653,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="ae63e338ea4a9f5930db7286fcb1100c6" name="ae63e338ea4a9f5930db7286fcb1100c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae63e338ea4a9f5930db7286fcb1100c6">&#9670;&#160;</a></span>setFocusable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setFocusable </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7e1459534c4327f3a0389777e4b5bd84" name="a7e1459534c4327f3a0389777e4b5bd84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e1459534c4327f3a0389777e4b5bd84">&#9670;&#160;</a></span>setFocusScope()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setFocusScope </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="acd49bc6f4646a67786bc3dfcbbf1dc97" name="acd49bc6f4646a67786bc3dfcbbf1dc97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd49bc6f4646a67786bc3dfcbbf1dc97">&#9670;&#160;</a></span>setId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setId </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>node_id</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the node's <span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> (used in selectors and by <span class="tt">UINode::find</span>). </p>
-
-</div>
-</div>
-<a id="a4f6cec3a6feebbde5bae94dedd973911" name="a4f6cec3a6feebbde5bae94dedd973911"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f6cec3a6feebbde5bae94dedd973911">&#9670;&#160;</a></span>setInlineBase()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setInlineBase </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Style.html">Style</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Overlay <code class="param">s</code> onto the node's inline style (highest priority). </p>
-
-</div>
-</div>
-<a id="a7e996a0106f326c1394e4725b457d4cd" name="a7e996a0106f326c1394e4725b457d4cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e996a0106f326c1394e4725b457d4cd">&#9670;&#160;</a></span>setInteractive()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setInteractive </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>interactive</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af483ebd107b9411fef4a66109486ae60" name="af483ebd107b9411fef4a66109486ae60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af483ebd107b9411fef4a66109486ae60">&#9670;&#160;</a></span>setKeyboardActivates()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setKeyboardActivates </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a86a1b0566862800399ee3a2edca131d8" name="a86a1b0566862800399ee3a2edca131d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86a1b0566862800399ee3a2edca131d8">&#9670;&#160;</a></span>setPassThrough()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setPassThrough </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a401f00952548d2945f13edd53630a357" name="a401f00952548d2945f13edd53630a357"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a401f00952548d2945f13edd53630a357">&#9670;&#160;</a></span>setPortal()</h2>
 
@@ -3153,33 +1681,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a186e9f088af0faaad8520b365361fd1a" name="a186e9f088af0faaad8520b365361fd1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a186e9f088af0faaad8520b365361fd1a">&#9670;&#160;</a></span>setRef()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setRef </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>r</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the node's <span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> (used by <span class="tt">UINode::ref</span> / <span class="tt">refAll</span>). </p>
-
-</div>
-</div>
 <a id="a261e980f72acd0d48be79414e309c1e9" name="a261e980f72acd0d48be79414e309c1e9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a261e980f72acd0d48be79414e309c1e9">&#9670;&#160;</a></span>setShader()</h2>
 
@@ -3204,38 +1705,7 @@ template&lt;typename T = Layout&gt; </div>
 </div><div class="memdoc">
 
 <p>Set a custom shader effect applied to the node's content. </p>
-<p>Composed on top of any <span class="tt">effect</span> from the style. Both are pushed during <span class="tt">drawInline</span> / <span class="tt">drawLayer</span> when the renderer supports <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916">Feature::Effects</a></span>. </p>
-
-</div>
-</div>
-<a id="ac9c3528f729e8967ad4f02edd49a010b" name="ac9c3528f729e8967ad4f02edd49a010b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9c3528f729e8967ad4f02edd49a010b">&#9670;&#160;</a></span>setSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setSize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Value.html">Value</a></td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Value.html">Value</a></td>          <td class="paramname"><span class="paramname"><em>h</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convenience: set explicit <span class="tt">width</span> and <span class="tt">height</span>. </p>
+<p>Composed on top of any <span class="tt">effect</span> from the style. Both are pushed during <span class="tt">drawInline</span> / <span class="tt">drawLayer</span> when the renderer supports <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span>. </p>
 
 </div>
 </div>
@@ -3263,32 +1733,7 @@ template&lt;typename T = Layout&gt; </div>
 </div><div class="memdoc">
 
 <p>Set the node's style tag. </p>
-<p>The tag is matched against <span class="tt"><a class="el" href="structZenitUI_1_1SimpleSelector.html#a32a6fc6da798b9ad87f285add3249940ac101058e7ea21bbbf2a5ac893088e90b">SimpleSelector::Kind::Tag</a></span> in the stylesheet. Changing the tag invalidates both the old and new tag rules for every descendant. </p>
-
-</div>
-</div>
-<a id="ab06c114502f547f959c7b059cdb46c55" name="ab06c114502f547f959c7b059cdb46c55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab06c114502f547f959c7b059cdb46c55">&#9670;&#160;</a></span>setUpdateWhenDisabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::setUpdateWhenDisabled </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>The tag is matched against <span class="tt">SimpleSelector::Kind::Tag</span> in the stylesheet. Changing the tag invalidates both the old and new tag rules for every descendant. </p>
 
 </div>
 </div>
@@ -3317,64 +1762,6 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Show or hide the node (<span class="tt">display: none</span> semantics). </p>
 <p>Hidden nodes take zero space, do not contribute to parent <span class="tt">gap</span> or flex distribution, are skipped by <span class="tt"><a class="el" href="#a88571f053d662594f49e1a3d8014dec2" title="Draw the node and its children.">draw</a></span>, <span class="tt"><a class="el" href="#a9acdbf51a8b976f4f46ff9b9d6ad709f" title="Hit-test a point against this subtree.">hitTest</a></span>, and Tab focus traversal, and release focus/capture if held by this subtree. </p>
-
-</div>
-</div>
-<a id="a88311603f8b652a7ff11457c5b90a061" name="a88311603f8b652a7ff11457c5b90a061"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88311603f8b652a7ff11457c5b90a061">&#9670;&#160;</a></span>size()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; ZenitUI::Layout::size </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Value.html">Value</a></td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Value.html">Value</a></td>          <td class="paramname"><span class="paramname"><em>h</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Fluent <span class="tt"><a class="el" href="#ac9c3528f729e8967ad4f02edd49a010b" title="Convenience: set explicit width and height.">setSize</a></span>; returns <span class="tt">shared_from_this()</span>. </p>
-
-</div>
-</div>
-<a id="acb2acc20c0edff07a46aeab329f1ceea" name="acb2acc20c0edff07a46aeab329f1ceea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb2acc20c0edff07a46aeab329f1ceea">&#9670;&#160;</a></span>stopCssAnimation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::Layout::stopCssAnimation </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Mark the named CSS animation as finished. </p>
 
 </div>
 </div>
@@ -3474,122 +1861,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a6d457c84747e2a521ecda3e7b98e85c0" name="a6d457c84747e2a521ecda3e7b98e85c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d457c84747e2a521ecda3e7b98e85c0">&#9670;&#160;</a></span>with()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt; ZenitUI::Layout::with </td>
-          <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="#a2ffb4c7702a0b391634b8fea3bfead1e">Layout</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>child</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Fluent <span class="tt"><a class="el" href="#abadfdf973f3e6a9c572dd6e66a124fc8" title="Append child to this node&#39;s child list.">addChild</a></span>; returns <span class="tt">shared_from_this()</span>. </p>
-
-</div>
-</div>
-<a name="doc-related-members" id="doc-related-members"></a><h2 id="header-doc-related-members" class="groupheader">Friends And Related Symbol Documentation</h2>
-<a id="a666c0cd3d28dfd272e18f8e6036884bf" name="a666c0cd3d28dfd272e18f8e6036884bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a666c0cd3d28dfd272e18f8e6036884bf">&#9670;&#160;</a></span>AnimationPlayer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend struct AnimationPlayer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af65d46d1c9a9c3fb50995523fe6e5ee3" name="af65d46d1c9a9c3fb50995523fe6e5ee3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af65d46d1c9a9c3fb50995523fe6e5ee3">&#9670;&#160;</a></span>InputController</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend struct InputController</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa00ecff80d5434fb8c4b01b305a94145" name="aa00ecff80d5434fb8c4b01b305a94145"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa00ecff80d5434fb8c4b01b305a94145">&#9670;&#160;</a></span>ScrollController</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend struct ScrollController</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa788ab239be162f827288be018807a27" name="aa788ab239be162f827288be018807a27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa788ab239be162f827288be018807a27">&#9670;&#160;</a></span>StyleResolver</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">friend struct StyleResolver</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="a688b24f754064e75c00763f2a623c598" name="a688b24f754064e75c00763f2a623c598"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a688b24f754064e75c00763f2a623c598">&#9670;&#160;</a></span>children</h2>
@@ -3605,22 +1876,6 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Children of this node. </p>
 <p>Managed by <span class="tt"><a class="el" href="#abadfdf973f3e6a9c572dd6e66a124fc8" title="Append child to this node&#39;s child list.">addChild</a></span> / <span class="tt">cullRemovedChildren</span>. </p>
-
-</div>
-</div>
-<a id="a4aa89657fd5cc6063d01533a539a56ff" name="a4aa89657fd5cc6063d01533a539a56ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4aa89657fd5cc6063d01533a539a56ff">&#9670;&#160;</a></span>nodeId</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::Layout::nodeId</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><span class="tt">#<a class="el" href="#a27eae4bcca4eaf6b02afabbc3e99ac11" title="Fluent setId; returns shared_from_this().">id</a></span> for selector matching and <span class="tt">UINode::find</span>. </p>
 
 </div>
 </div>
@@ -3641,154 +1896,6 @@ template&lt;typename T = Layout&gt; </div>
 
 </div>
 </div>
-<a id="a5c9d9972f44d3ca296d045f77b607cd5" name="a5c9d9972f44d3ca296d045f77b607cd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c9d9972f44d3ca296d045f77b607cd5">&#9670;&#160;</a></span>onButtonClick</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt; ZenitUI::Layout::onButtonClick</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a87365cfcadf3e1ff4ce27eb95427ba71" name="a87365cfcadf3e1ff4ce27eb95427ba71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87365cfcadf3e1ff4ce27eb95427ba71">&#9670;&#160;</a></span>onButtonPress</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt; ZenitUI::Layout::onButtonPress</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aff02d2bd6667822b932edd61b0552223" name="aff02d2bd6667822b932edd61b0552223"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff02d2bd6667822b932edd61b0552223">&#9670;&#160;</a></span>onButtonRelease</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void(<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a>)&gt; ZenitUI::Layout::onButtonRelease</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a49d1cbf9564c972bd40208518125ebb9" name="a49d1cbf9564c972bd40208518125ebb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49d1cbf9564c972bd40208518125ebb9">&#9670;&#160;</a></span>onClick</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onClick</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="06_zmarkup_2main_8cpp-example.html#a7">06_zmarkup/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#a13">11_ref_list/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#a22">12_bindable/main.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
-<a id="af002c282f777dcdab19ece4d97f5b02f" name="af002c282f777dcdab19ece4d97f5b02f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af002c282f777dcdab19ece4d97f5b02f">&#9670;&#160;</a></span>onHoverEnter</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onHoverEnter</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8530095a4f4ca4abd4556739d60a2517" name="a8530095a4f4ca4abd4556739d60a2517"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8530095a4f4ca4abd4556739d60a2517">&#9670;&#160;</a></span>onHoverExit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onHoverExit</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac0afc46f55e461592039168fe6566f20" name="ac0afc46f55e461592039168fe6566f20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0afc46f55e461592039168fe6566f20">&#9670;&#160;</a></span>onPress</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onPress</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3465c6935d987b7bce268d8414359b14" name="a3465c6935d987b7bce268d8414359b14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3465c6935d987b7bce268d8414359b14">&#9670;&#160;</a></span>onRelease</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onRelease</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a32d175420a843fe81cbb6adaa373c80c" name="a32d175420a843fe81cbb6adaa373c80c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32d175420a843fe81cbb6adaa373c80c">&#9670;&#160;</a></span>onRightClick</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::function&lt;void()&gt; ZenitUI::Layout::onRightClick</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Right-click hook; fires on right-button release over the node. </p>
-
-</div>
-</div>
-<a id="a1cc11f339765c715799f3fad120d8510" name="a1cc11f339765c715799f3fad120d8510"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cc11f339765c715799f3fad120d8510">&#9670;&#160;</a></span>ref</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string ZenitUI::Layout::ref</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><span class="tt">@<a class="el" href="#a1cc11f339765c715799f3fad120d8510" title="@ref for UINode::ref / refAll lookup.">ref</a></span> for <span class="tt">UINode::ref</span> / <span class="tt">refAll</span> lookup. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="11_ref_list_2main_8cpp-example.html#a10">11_ref_list/main.cpp</a>.</dd>
-</dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a></li>
 </ul>
@@ -3805,7 +1912,7 @@ template&lt;typename T = Layout&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="classZenitUI_1_1Layout.html">Layout</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="classZenitUI_1_1Layout.html">Layout</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

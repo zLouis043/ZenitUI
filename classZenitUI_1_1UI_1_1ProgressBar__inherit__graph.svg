@@ -69,7 +69,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="136.75,-216.5 13.5,-216.5 13.5,-183 136.75,-183 136.75,-216.5"/>
+<polygon fill="white" stroke="#bfbfbf" points="136.75,-216.5 13.5,-216.5 13.5,-183 136.75,-183 136.75,-216.5"/>
 <text xml:space="preserve" text-anchor="start" x="21.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text xml:space="preserve" text-anchor="middle" x="75.12" y="-190.25" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Layout &gt;</text>
 </a>

@@ -107,7 +107,7 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">namespace </span>ZenitUI::UI</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
 <div class="foldopen" id="foldopen00057" data-start="{" data-end="};">
@@ -159,7 +159,7 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="group__grp__widgets.html#ga2440ae63bb1b4f6fb2d2910e684de679">onBuild</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea">arrange</a>(<a class="code hl_struct" href="structZenitUI_1_1Rect.html">Rect</a> space) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f">computeIntrinsicSize</a>(<span class="keywordtype">float</span> availW, <span class="keywordtype">float</span> availH) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> computeIntrinsicSize(<span class="keywordtype">float</span> availW, <span class="keywordtype">float</span> availH) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <a class="code hl_typedef" href="classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39">ItemFactory</a> itemFactory;</div>
@@ -193,8 +193,8 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        setInteractive(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        setBlocksRaycast(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <a class="code hl_function" href="classZenitUI_1_1TLayout.html#a2c2d04d1bcdf383f75e355dc2b3f2730">TLayout&lt;VirtualView, ScrollView&gt;::onBuild</a>();</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        getInlineDefaults().overflowX = <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb">Overflow::Auto</a>;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        getInlineDefaults().overflowY = <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb">Overflow::Auto</a>;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        getInlineDefaults().overflowX = Overflow::Auto;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        getInlineDefaults().overflowY = Overflow::Auto;</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    }</div>
 </div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
@@ -255,7 +255,7 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="keywordflow">if</span> (node)</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            {</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> sz = node-&gt;measure(availW, 1e9f);</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                acc += std::max(1.0f, sz.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">y</a>);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                acc += std::max(1.0f, sz.y);</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            }</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            {</div>
@@ -334,11 +334,11 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keywordtype">float</span> top = cumulativeHeights[index];</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="keywordtype">float</span> bot = cumulativeHeights[index + 1];</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        node-&gt;getInlineBase().position = <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8">Position::Absolute</a>;</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        node-&gt;getInlineBase().left = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(0.0f);</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        node-&gt;getInlineBase().width = <a class="code hl_function" href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">Percent</a>(100.0f);</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        node-&gt;getInlineBase().top = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(top);</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        node-&gt;getInlineBase().height = <a class="code hl_function" href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">Px</a>(std::max(1.0f, bot - top));</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        node-&gt;getInlineBase().position = Position::Absolute;</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        node-&gt;getInlineBase().left = Px(0.0f);</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        node-&gt;getInlineBase().width = Percent(100.0f);</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        node-&gt;getInlineBase().top = Px(top);</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        node-&gt;getInlineBase().height = Px(std::max(1.0f, bot - top));</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        node-&gt;setEnabled(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>        addChild(node);</div>
@@ -386,8 +386,7 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>            addMaterialized(i);</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    }</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span> </div>
-<div class="foldopen" id="foldopen00419" data-start="{" data-end="}">
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f">  419</a></span>    <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f">VirtualView::computeIntrinsicSize</a>(<span class="keywordtype">float</span> availW, <span class="keywordtype">float</span> <span class="comment">/*availH*/</span>)</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    <span class="keyword">inline</span> Vec2 VirtualView::computeIntrinsicSize(<span class="keywordtype">float</span> availW, <span class="keywordtype">float</span> <span class="comment">/*availH*/</span>)</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    {</div>
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>        <span class="keywordflow">if</span> (cumulativeHeights.size() != (<span class="keywordtype">size_t</span>)itemCount + 1 ||</div>
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            (uniformHeight == 0.0f &amp;&amp; lastMeasuredWidth != availW))</div>
@@ -397,7 +396,7 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>        <span class="keywordtype">float</span> maxW = availW;</div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;st = getStyle();</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        <span class="keywordflow">if</span> (st.overflowX == <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb">Overflow::Auto</a> || st.overflowX == <a class="code hl_enumvalue" href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934">Overflow::Scroll</a>)</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        <span class="keywordflow">if</span> (st.overflowX == Overflow::Auto || st.overflowX == Overflow::Scroll)</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        {</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;e : materialized)</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>            {</div>
@@ -405,17 +404,16 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>                    <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>                <span class="keyword">auto</span> &amp;ib = e.node-&gt;getInlineBase();</div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>                <span class="keyword">auto</span> prevW = ib.width;</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                ib.width = <a class="code hl_function" href="group__grp__core.html#gaf7c3fd10e7382e05a6a0f2534a84dd0e">Auto</a>();</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> sz = e.node-&gt;measure(1e9f, 1e9f);</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                ib.width = Auto();</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                Vec2 sz = e.node-&gt;measure(1e9f, 1e9f);</div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>                ib.width = prevW;</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                maxW = std::max(maxW, sz.<a class="code hl_variable" href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">x</a>);</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                maxW = std::max(maxW, sz.x);</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>            }</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>        }</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
 <div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>        <span class="keywordtype">float</span> totalH = cumulativeHeights.empty() ? 0.0f : cumulativeHeights.back();</div>
 <div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>        <span class="keywordflow">return</span> {maxW, totalH};</div>
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    }</div>
-</div>
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span></div>
 <div class="foldopen" id="foldopen00457" data-start="{" data-end="}">
 <div class="line"><a id="l00457" name="l00457"></a><span class="lineno"><a class="line" href="group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea">  457</a></span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea">VirtualView::arrange</a>(<a class="code hl_struct" href="structZenitUI_1_1Rect.html">Rect</a> space)</div>
@@ -448,12 +446,8 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1VirtualView_html_aa67808d00c5618f698330b6a70446e71"><div class="ttname"><a href="classZenitUI_1_1UI_1_1VirtualView.html#aa67808d00c5618f698330b6a70446e71">ZenitUI::UI::VirtualView::getItemCount</a></div><div class="ttdeci">int getItemCount() const noexcept</div><div class="ttdoc">Number of items in the list.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:104</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1VirtualView_html_aa797f5142b05b9d0dd909e8d71e1f863"><div class="ttname"><a href="classZenitUI_1_1UI_1_1VirtualView.html#aa797f5142b05b9d0dd909e8d71e1f863">ZenitUI::UI::VirtualView::create</a></div><div class="ttdeci">static std::shared_ptr&lt; VirtualView &gt; create(std::function&lt; std::shared_ptr&lt; Layout &gt;()&gt; factory, int count)</div><div class="ttdoc">Construct with an index-agnostic factory.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:95</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1VirtualView_html_adbf68f5bb4e953c9e20720c4bfa03125"><div class="ttname"><a href="classZenitUI_1_1UI_1_1VirtualView.html#adbf68f5bb4e953c9e20720c4bfa03125">ZenitUI::UI::VirtualView::onItemCreated</a></div><div class="ttdeci">std::function&lt; void(Layout *, int)&gt; onItemCreated</div><div class="ttdoc">Fired each time an item node is materialized.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:154</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga06d16ddb9f5f1573c7da7f9a886890c2"><div class="ttname"><a href="group__grp__core.html#ga06d16ddb9f5f1573c7da7f9a886890c2">ZenitUI::Px</a></div><div class="ttdeci">Value Px(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:577</div></div>
 <div class="ttc" id="agroup__grp__core_html_gaa4d6ce73648fe3085851e0e7bfd42f32"><div class="ttname"><a href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">ZenitUI::LayoutType</a></div><div class="ttdeci">LayoutType</div><div class="ttdoc">Positioning strategy applied to a Layout node&#39;s direct children.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:27</div></div>
-<div class="ttc" id="agroup__grp__core_html_gaf72b1ff456f88154b5b928f3540fe74a"><div class="ttname"><a href="group__grp__core.html#gaf72b1ff456f88154b5b928f3540fe74a">ZenitUI::Percent</a></div><div class="ttdeci">Value Percent(float p)</div><div class="ttdef"><b>Definition</b> Unit.hpp:578</div></div>
-<div class="ttc" id="agroup__grp__core_html_gaf7c3fd10e7382e05a6a0f2534a84dd0e"><div class="ttname"><a href="group__grp__core.html#gaf7c3fd10e7382e05a6a0f2534a84dd0e">ZenitUI::Auto</a></div><div class="ttdeci">Value Auto()</div><div class="ttdef"><b>Definition</b> Unit.hpp:576</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">ZenitUI::LayoutType::Vertical</a></div><div class="ttdeci">@ Vertical</div><div class="ttdoc">Children flow top-to-bottom (column flex semantics).</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:29</div></div>
-<div class="ttc" id="agroup__grp__widgets_html_ga0012e1c6cd2b90e6354b8c497098477f"><div class="ttname"><a href="group__grp__widgets.html#ga0012e1c6cd2b90e6354b8c497098477f">ZenitUI::UI::VirtualView::computeIntrinsicSize</a></div><div class="ttdeci">Vec2 computeIntrinsicSize(float availW, float availH) override</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:419</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_ga0c520c07d2a975893a42d20633012dea"><div class="ttname"><a href="group__grp__widgets.html#ga0c520c07d2a975893a42d20633012dea">ZenitUI::UI::VirtualView::arrange</a></div><div class="ttdeci">void arrange(Rect space) override</div><div class="ttdoc">Arrange: update the materialized set, then delegate to base.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:457</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_ga2440ae63bb1b4f6fb2d2910e684de679"><div class="ttname"><a href="group__grp__widgets.html#ga2440ae63bb1b4f6fb2d2910e684de679">ZenitUI::UI::VirtualView::onBuild</a></div><div class="ttdeci">void onBuild() override</div><div class="ttdoc">Hook: called once after create() finishes constructing the object.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:191</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_ga26c1db115e5bb00e67513d0e8ce5c256"><div class="ttname"><a href="group__grp__widgets.html#ga26c1db115e5bb00e67513d0e8ce5c256">ZenitUI::UI::VirtualView::getFirstVisibleItem</a></div><div class="ttdeci">int getFirstVisibleItem() const</div><div class="ttdoc">First item whose range overlaps [scrollY, scrollY+height).</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:292</div></div>
@@ -462,21 +456,15 @@ $(function(){initNavTree('VirtualView_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__grp__widgets_html_ga9c04bb2f6f12faf81ed4cf0947ddd6d5"><div class="ttname"><a href="group__grp__widgets.html#ga9c04bb2f6f12faf81ed4cf0947ddd6d5">ZenitUI::UI::VirtualView::setUniformHeight</a></div><div class="ttdeci">void setUniformHeight(float px)</div><div class="ttdoc">Set a uniform height for all items.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:219</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_gad4a5f2c43e4beb127af536eea39d4a4b"><div class="ttname"><a href="group__grp__widgets.html#gad4a5f2c43e4beb127af536eea39d4a4b">ZenitUI::UI::VirtualView::getLastVisibleItem</a></div><div class="ttdeci">int getLastVisibleItem() const</div><div class="ttdoc">Last visible item, inclusive.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:297</div></div>
 <div class="ttc" id="agroup__grp__widgets_html_gad8aea759d477623a1d7a06dce1130a30"><div class="ttname"><a href="group__grp__widgets.html#gad8aea759d477623a1d7a06dce1130a30">ZenitUI::UI::VirtualView::scrollToItem</a></div><div class="ttdeci">void scrollToItem(int index)</div><div class="ttdoc">Scroll so that the given item is the first visible.</div><div class="ttdef"><b>Definition</b> VirtualView.hpp:305</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8"><div class="ttname"><a href="group__grp__zstyle.html#ggad1c0d7e8bd09eeea85e1f3acd4e1e678ab51ca26c6c89cfc9bec338f7a0d3e0c8">ZenitUI::Position::Absolute</a></div><div class="ttdeci">@ Absolute</div><div class="ttdef"><b>Definition</b> Style.hpp:138</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb"><div class="ttname"><a href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da06b9281e396db002010bde1de57262eb">ZenitUI::Overflow::Auto</a></div><div class="ttdeci">@ Auto</div><div class="ttdef"><b>Definition</b> Style.hpp:166</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934"><div class="ttname"><a href="group__grp__zstyle.html#ggada49a5d270525bd8ccc73cd680f9dc5da105078d294d30c978ca2badf7f376934">ZenitUI::Overflow::Scroll</a></div><div class="ttdeci">@ Scroll</div><div class="ttdef"><b>Definition</b> Style.hpp:165</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1UI_html"><div class="ttname"><a href="namespaceZenitUI_1_1UI.html">ZenitUI::UI</a></div><div class="ttdef"><b>Definition</b> Button.hpp:27</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html"><div class="ttname"><a href="structZenitUI_1_1Rect.html">ZenitUI::Rect</a></div><div class="ttdoc">Axis-aligned rectangle in screen coordinates.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:45</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec2_html"><div class="ttname"><a href="structZenitUI_1_1Vec2.html">ZenitUI::Vec2</a></div><div class="ttdoc">2D vector with component-wise arithmetic.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:24</div></div>
-<div class="ttc" id="astructZenitUI_1_1Vec2_html_aac55da8d47d896187a5b5238e71a9088"><div class="ttname"><a href="structZenitUI_1_1Vec2.html#aac55da8d47d896187a5b5238e71a9088">ZenitUI::Vec2::x</a></div><div class="ttdeci">float x</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:25</div></div>
-<div class="ttc" id="astructZenitUI_1_1Vec2_html_ae7f4d2140ab32fe866759163c9cf8f3c"><div class="ttname"><a href="structZenitUI_1_1Vec2.html#ae7f4d2140ab32fe866759163c9cf8f3c">ZenitUI::Vec2::y</a></div><div class="ttdeci">float y</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a href="dir_d66e8d5a7776834ccee339fd5fd3e729.html">components</a></li><li class="navelem"><a href="VirtualView_8hpp.html">VirtualView.hpp</a></li>
+    <li class="navelem"><b>include</b></li><li class="navelem"><b>components</b></li><li class="navelem"><a href="VirtualView_8hpp.html">VirtualView.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

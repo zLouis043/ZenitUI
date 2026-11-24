@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['zindex_0',['ZIndex',['../structZenitUI_1_1ZIndex.html#a10e980eb666f9887ccf0cb18d4581d85',1,'ZenitUI::ZIndex::ZIndex()=default'],['../structZenitUI_1_1ZIndex.html#ab9c8c63d7fcabebee69133701b86f4b6',1,'ZenitUI::ZIndex::ZIndex(int v)']]]
+  ['_7ecanvaslayout_0',['~CanvasLayout',['../classZenitUI_1_1UI_1_1CanvasLayout.html#a5c62ae85c573b5a1e53827ee3598adb9',1,'ZenitUI::UI::CanvasLayout']]],
+  ['_7elayout_1',['~Layout',['../classZenitUI_1_1Layout.html#a7d9f7110530dabf1c3d07939468d52d0',1,'ZenitUI::Layout']]],
+  ['_7eraylibrenderer_2',['~RaylibRenderer',['../classZenitUI_1_1RaylibRenderer.html#aa6a19b3459aa3bc8aacab2a317b73a31',1,'ZenitUI::RaylibRenderer']]]
 ];

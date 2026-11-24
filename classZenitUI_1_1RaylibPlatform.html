@@ -96,7 +96,7 @@ $(function(){initNavTree('classZenitUI_1_1RaylibPlatform.html','','classZenitUI_
 </div><!--header-->
 <div class="contents">
 
-<p>Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend.">IPlatform</a></span> (window metrics, pointer, keyboard, clipboard).  
+<p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span> backed by Raylib window, input, and clipboard APIs.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="RaylibBackend_8hpp_source.html">RaylibBackend.hpp</a>&gt;</code></p>
@@ -108,21 +108,32 @@ Inheritance diagram for ZenitUI::RaylibPlatform:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Window &amp; Timing</div></td></tr>
 <tr class="memitem:a2e17dcec506b3211000091c260e7c681" id="r_a2e17dcec506b3211000091c260e7c681"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e17dcec506b3211000091c260e7c681">viewportSize</a> () override</td></tr>
-<tr class="memitem:ac0650a504a4d58ddb434cd5cffc72258" id="r_ac0650a504a4d58ddb434cd5cffc72258"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1PointerState.html">PointerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0650a504a4d58ddb434cd5cffc72258">pointer</a> () override</td></tr>
+<tr class="memdesc:a2e17dcec506b3211000091c260e7c681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current window/surface dimensions in <b>logical pixels</b>.  <br /></td></tr>
 <tr class="memitem:a88da7baa67734d5ee9926721a9897f0a" id="r_a88da7baa67734d5ee9926721a9897f0a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88da7baa67734d5ee9926721a9897f0a">time</a> () override</td></tr>
-<tr class="memitem:a0bbb8a9fa4aedc03da846683f8e3f2c2" id="r_a0bbb8a9fa4aedc03da846683f8e3f2c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ModifierState.html">ModifierState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bbb8a9fa4aedc03da846683f8e3f2c2">modifiers</a> () override</td></tr>
-<tr class="memitem:a0ed9f3a35646a75390ba1df05f3bf37f" id="r_a0ed9f3a35646a75390ba1df05f3bf37f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1InputEvents.html">InputEvents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ed9f3a35646a75390ba1df05f3bf37f">pollInputEvents</a> () override</td></tr>
+<tr class="memdesc:a88da7baa67734d5ee9926721a9897f0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a monotonic clock timestamp in seconds.  <br /></td></tr>
 <tr class="memitem:aead674a29004e10bdeb87d2e46815930" id="r_aead674a29004e10bdeb87d2e46815930"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aead674a29004e10bdeb87d2e46815930">dpiScale</a> () override</td></tr>
+<tr class="memdesc:aead674a29004e10bdeb87d2e46815930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the physical-to-logical DPI scale factor (e.g.  <br /></td></tr>
 <tr class="memitem:a34972fda73d0fa24ef64b47d62f7f26c" id="r_a34972fda73d0fa24ef64b47d62f7f26c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34972fda73d0fa24ef64b47d62f7f26c">safeArea</a> () override</td></tr>
+<tr class="memdesc:a34972fda73d0fa24ef64b47d62f7f26c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return screen safe-area insets in logical pixels (notches, rounded corners, system bars).  <br /></td></tr>
+<tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Pointer &amp; Keyboard Input</div></td></tr>
+<tr class="memitem:ac0650a504a4d58ddb434cd5cffc72258" id="r_ac0650a504a4d58ddb434cd5cffc72258"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1PointerState.html">PointerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0650a504a4d58ddb434cd5cffc72258">pointer</a> () override</td></tr>
+<tr class="memdesc:ac0650a504a4d58ddb434cd5cffc72258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current pointer position (logical pixels), scroll wheel delta, and button states.  <br /></td></tr>
+<tr class="memitem:a0bbb8a9fa4aedc03da846683f8e3f2c2" id="r_a0bbb8a9fa4aedc03da846683f8e3f2c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1ModifierState.html">ModifierState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bbb8a9fa4aedc03da846683f8e3f2c2">modifiers</a> () override</td></tr>
+<tr class="memdesc:a0bbb8a9fa4aedc03da846683f8e3f2c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current state of modifier keys (<span class="tt">shift</span>, <span class="tt">ctrl</span>, <span class="tt">alt</span>, <span class="tt">super</span>).  <br /></td></tr>
+<tr class="memitem:a0ed9f3a35646a75390ba1df05f3bf37f" id="r_a0ed9f3a35646a75390ba1df05f3bf37f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1InputEvents.html">InputEvents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ed9f3a35646a75390ba1df05f3bf37f">pollInputEvents</a> () override</td></tr>
+<tr class="memdesc:a0ed9f3a35646a75390ba1df05f3bf37f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drain and return keyboard events queued since the previous frame.  <br /></td></tr>
+<tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">System Clipboard</div></td></tr>
 <tr class="memitem:ad476e496e61d6c76511170817cf870bb" id="r_ad476e496e61d6c76511170817cf870bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad476e496e61d6c76511170817cf870bb">setClipboardText</a> (const std::string &amp;text) override</td></tr>
+<tr class="memdesc:ad476e496e61d6c76511170817cf870bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy UTF-8 <span class="tt">text</span> to the operating system clipboard.  <br /></td></tr>
 <tr class="memitem:aa7e18c9c3453416f208a504a51ab8abe" id="r_aa7e18c9c3453416f208a504a51ab8abe"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7e18c9c3453416f208a504a51ab8abe">getClipboardText</a> () override</td></tr>
-<tr class="inherit_header pub_methods_classZenitUI_1_1IPlatform"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classZenitUI_1_1IPlatform')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classZenitUI_1_1IPlatform.html">ZenitUI::IPlatform</a></td></tr>
-<tr class="memitem:a377342ff72909ecc9e56c86037f56b6a inherit pub_methods_classZenitUI_1_1IPlatform" id="r_a377342ff72909ecc9e56c86037f56b6a"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IPlatform.html#a377342ff72909ecc9e56c86037f56b6a">~IPlatform</a> ()=default</td></tr>
+<tr class="memdesc:aa7e18c9c3453416f208a504a51ab8abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read UTF-8 text from the operating system clipboard (empty string if unavailable).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Raylib implementation of <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing and input backend.">IPlatform</a></span> (window metrics, pointer, keyboard, clipboard). </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a1">00_demo/main.cpp</a>, <a class="el" href="01_hello_world_2main_8cpp-example.html#_a1">01_hello_world/main.cpp</a>, <a class="el" href="02_layouts_2main_8cpp-example.html#_a11">02_layouts/main.cpp</a>, <a class="el" href="03_widgets_2main_8cpp-example.html#_a9">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a10">04_animations/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a12">04b_imperative_animations/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a3">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a1">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a4">07_effects/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a1">07b_effects_stress/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a4">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a3">09_custom_widget/main.cpp</a>, <a class="el" href="10_canvas_2main_8cpp-example.html#_a7">10_canvas/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a4">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a1">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a1">13_prefabs/main.cpp</a>.</dd>
+<div class="textblock"><p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span> backed by Raylib window, input, and clipboard APIs. </p>
+<p>Translates Raylib's physical screen coordinates into ZenitUI logical coordinates by dividing by <span class="tt"><a class="el" href="#aead674a29004e10bdeb87d2e46815930" title="Return the physical-to-logical DPI scale factor (e.g.">dpiScale()</a></span>, and maps Raylib key/mouse states into ZenitUI's per-frame <span class="tt"><a class="el" href="structZenitUI_1_1PointerState.html" title="Pointer position, wheel delta, and per-button state for one frame.">PointerState</a></span> and <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html" title="One frame&#39;s worth of keyboard input.">InputEvents</a></span>. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a1">00_demo/main.cpp</a>, <a class="el" href="01_hello_world_2main_8cpp-example.html#_a1">01_hello_world/main.cpp</a>, <a class="el" href="02_layouts_2main_8cpp-example.html#_a8">02_layouts/main.cpp</a>, <a class="el" href="03_widgets_2main_8cpp-example.html#_a6">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a7">04_animations/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a8">04b_imperative_animations/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a3">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a1">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a4">07_effects/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a1">07b_effects_stress/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a4">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a3">09_custom_widget/main.cpp</a>, <a class="el" href="10_canvas_2main_8cpp-example.html#_a6">10_canvas/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a3">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a1">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a1">13_prefabs/main.cpp</a>.</dd>
 </dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="aead674a29004e10bdeb87d2e46815930" name="aead674a29004e10bdeb87d2e46815930"></a>
@@ -147,6 +158,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Return the physical-to-logical DPI scale factor (e.g. </p>
+<p><span class="tt">1.0f</span> on standard displays, <span class="tt">2.0f</span> on Retina). </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a673ab78b2798ee1e3de741a83f66acc4">ZenitUI::IPlatform</a>.</p>
 
@@ -175,6 +189,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Read UTF-8 text from the operating system clipboard (empty string if unavailable). </p>
+
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a6780ffc6f400eb052db184399b802876">ZenitUI::IPlatform</a>.</p>
 
 </div>
@@ -201,6 +217,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Return the current state of modifier keys (<span class="tt">shift</span>, <span class="tt">ctrl</span>, <span class="tt">alt</span>, <span class="tt">super</span>). </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a1ac863a3b940b2f9f5e1eacf22496711">ZenitUI::IPlatform</a>.</p>
 
@@ -229,6 +247,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Return the current pointer position (logical pixels), scroll wheel delta, and button states. </p>
+<p>Edge-triggered fields (<span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a" title="Button transitioned from up to down this frame.">ButtonState::pressed</a></span>, <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665" title="Button transitioned from down to up this frame.">ButtonState::released</a></span>, <span class="tt">PointerState::wheelY</span>) must fire for <b>one frame only</b>; <span class="tt"><a class="el" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341" title="Button is currently held.">ButtonState::down</a></span> stays <span class="tt">true</span> while held. </p>
+
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a4c9c7af2e10e19fa71d0eb520bf6e550">ZenitUI::IPlatform</a>.</p>
 
 </div>
@@ -255,6 +276,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Drain and return keyboard events queued since the previous frame. </p>
+<p><span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa" title="Printable characters typed this frame.">InputEvents::chars</a></span> and <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af" title="Keys pressed this frame (edge-triggered).">InputEvents::keys</a></span> are edge-triggered (one frame); <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70" title="Keys currently held (level-triggered).">InputEvents::held</a></span> lists keys currently held down for repeat handling. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#ab48407bd3932d669980e4c3693d5b317">ZenitUI::IPlatform</a>.</p>
 
@@ -283,6 +307,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Return screen safe-area insets in logical pixels (notches, rounded corners, system bars). </p>
+
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a17419a963cbe4d5de9a85a5153bcfd09">ZenitUI::IPlatform</a>.</p>
 
 </div>
@@ -309,6 +335,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Copy UTF-8 <span class="tt">text</span> to the operating system clipboard. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#a531c1e8b33d017f33fbd6470f0f6c449">ZenitUI::IPlatform</a>.</p>
 
@@ -337,6 +365,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Return a monotonic clock timestamp in seconds. </p>
+
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#aaf9c903d4b0b70e742c06bfc8095339d">ZenitUI::IPlatform</a>.</p>
 
 </div>
@@ -364,6 +394,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Return the current window/surface dimensions in <b>logical pixels</b>. </p>
+
 <p>Implements <a class="el" href="classZenitUI_1_1IPlatform.html#af37fc1ef2e86c6907164d7402ae0f0ba">ZenitUI::IPlatform</a>.</p>
 
 </div>
@@ -384,7 +416,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="namespaceZenitUI.html">ZenitUI</a></li><li class="navelem"><a href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a></li>
+    <li class="navelem"><b>ZenitUI</b></li><li class="navelem"><a href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

@@ -1,5 +1,7 @@
 <map id="ZenitUI::IRenderer" name="ZenitUI::IRenderer">
-<area shape="rect" id="Node000001" title="Abstract 2D rendering backend." alt="" coords="24,5,164,33"/>
-<area shape="rect" id="Node000002" href="$classZenitUI_1_1RaylibRenderer.html" title="Raylib implementation of IRenderer with transform/clip/target/shader stacks." alt="" coords="5,81,183,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,47,96,82,92,80,92,51"/>
+<area shape="rect" id="Node000001" title="Abstract 2D rendering backend." alt="" coords="132,5,272,33"/>
+<area shape="rect" id="Node000002" href="$classZenitUI_1_1RaylibRenderer.html" title="Reference IRenderer backed by Raylib / rlgl." alt="" coords="5,81,183,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,42,114,83,112,78,167,43"/>
+<area shape="rect" id="Node000003" href="$classZenitUI_1_1Test_1_1MockRenderer.html" title="Recording IRenderer that tracks draw counts, text metrics, clip stacks, render targets,..." alt="" coords="207,81,413,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,40,294,81,288,81,233,45"/>
 </map>

@@ -8,6 +8,7 @@ var hierarchy =
     [ "ZenitUI::BoxShadow", "structZenitUI_1_1BoxShadow.html", null ],
     [ "ZenitUI::ZMarkup::BuildContext", "structZenitUI_1_1ZMarkup_1_1BuildContext.html", null ],
     [ "ZenitUI::ButtonState", "structZenitUI_1_1ButtonState.html", null ],
+    [ "ZenitUI::Test::MockRenderer::CapturedUniform&lt; T &gt;", "structZenitUI_1_1Test_1_1MockRenderer_1_1CapturedUniform.html", null ],
     [ "ZenitUI::CodepointSet", "classZenitUI_1_1CodepointSet.html", null ],
     [ "ZenitUI::Color", "structZenitUI_1_1Color.html", null ],
     [ "ZenitUI::ComputedStyle", "structZenitUI_1_1ComputedStyle.html", null ],
@@ -66,6 +67,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "ZenitUI::ZMarkup::KeyedStore&lt; KeyT &gt;::Entry", "structZenitUI_1_1ZMarkup_1_1KeyedStore_1_1Entry.html", null ],
+    [ "ZenitUI::Test::Env", "structZenitUI_1_1Test_1_1Env.html", null ],
     [ "ZenitUI::FilterContext", "structZenitUI_1_1FilterContext.html", null ],
     [ "ZenitUI::FilterDef", "structZenitUI_1_1FilterDef.html", null ],
     [ "ZenitUI::FilterParam", "structZenitUI_1_1FilterParam.html", null ],
@@ -73,7 +75,8 @@ var hierarchy =
     [ "ZenitUI::FilterRegistry", "classZenitUI_1_1FilterRegistry.html", null ],
     [ "ZenitUI::FontHandle", "structZenitUI_1_1FontHandle.html", null ],
     [ "ZenitUI::IAssetProvider", "classZenitUI_1_1IAssetProvider.html", [
-      [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", null ]
+      [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", null ],
+      [ "ZenitUI::Test::MockAssetProvider", "classZenitUI_1_1Test_1_1MockAssetProvider.html", null ]
     ] ],
     [ "ZenitUI::ZMarkup::IKeyedStore", "structZenitUI_1_1ZMarkup_1_1IKeyedStore.html", [
       [ "ZenitUI::ZMarkup::KeyedStore< KeyT >", "structZenitUI_1_1ZMarkup_1_1KeyedStore.html", null ]
@@ -85,10 +88,12 @@ var hierarchy =
     [ "ZenitUI::InputController", "structZenitUI_1_1InputController.html", null ],
     [ "ZenitUI::InputEvents", "structZenitUI_1_1InputEvents.html", null ],
     [ "ZenitUI::IPlatform", "classZenitUI_1_1IPlatform.html", [
-      [ "ZenitUI::RaylibPlatform", "classZenitUI_1_1RaylibPlatform.html", null ]
+      [ "ZenitUI::RaylibPlatform", "classZenitUI_1_1RaylibPlatform.html", null ],
+      [ "ZenitUI::Test::MockPlatform", "classZenitUI_1_1Test_1_1MockPlatform.html", null ]
     ] ],
     [ "ZenitUI::IRenderer", "classZenitUI_1_1IRenderer.html", [
-      [ "ZenitUI::RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html", null ]
+      [ "ZenitUI::RaylibRenderer", "classZenitUI_1_1RaylibRenderer.html", null ],
+      [ "ZenitUI::Test::MockRenderer", "classZenitUI_1_1Test_1_1MockRenderer.html", null ]
     ] ],
     [ "ZenitUI::Keyframe", "structZenitUI_1_1Keyframe.html", null ],
     [ "ZenitUI::KeyframeAnimation", "structZenitUI_1_1KeyframeAnimation.html", null ],
