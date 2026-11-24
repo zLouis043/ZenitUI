@@ -17,7 +17,6 @@ namespace ZenitUI
 	namespace
 	{
 		constexpr int kRoundedCornerSegments = 12;
-		constexpr int kDefaultFontBaseSize = 96;
 
 		::Color toRl(const Color &c) { return {c.r, c.g, c.b, c.a}; }
 		::Vector2 toRl(const Vec2 &v) { return {v.x, v.y}; }
@@ -904,7 +903,7 @@ namespace ZenitUI
 	FontHandle RaylibAssetProvider::loadFont(std::string_view name, std::string_view path)
 	{
 		const std::string key(name);
-		if (!loadFont(key, std::string(path).c_str(), kDefaultFontBaseSize, defaultCodepoints_))
+		if (!loadFont(key, std::string(path).c_str(), defaultFontSize_, defaultCodepoints_))
 			return {};
 		return fonts_[key];
 	}
@@ -912,7 +911,7 @@ namespace ZenitUI
 	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
 													   const void *data, size_t size)
 	{
-		return loadFontFromMemory(name, data, size, kDefaultFontBaseSize, defaultCodepoints_);
+		return loadFontFromMemory(name, data, size, defaultFontSize_, defaultCodepoints_);
 	}
 
 	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
@@ -983,4 +982,118 @@ namespace ZenitUI
 		effects_[std::move(name)] = renderer_.registerEffect(s);
 		return true;
 	}
+
+	TextureHandle RaylibAssetProvider::loadTexture(std::string_view name, std::string_view path)
+	{
+		const std::string key(name);
+		if (!loadTexture(key, std::string(path).c_str()))
+			return getTexture(name);
+		return textures_[key];
+	}
+
+	void RaylibAssetProvider::unloadTexture(std::string_view name)
+	{
+		if (auto it = textures_.find(name); it != textures_.end())
+		{
+			renderer_.unregisterTexture(it->second);
+			textures_.erase(it);
+		}
+	}
+
+	EffectHandle RaylibAssetProvider::loadEffect(std::string_view name,
+												 std::string_view fsPath,
+												 std::string_view vsPath)
+	{
+		const std::string key(name);
+		const std::string fsStr(fsPath);
+		const std::string vsStr(vsPath);
+		const char *vsPtr = vsStr.empty() ? nullptr : vsStr.c_str();
+		if (!loadEffect(key, fsStr.c_str(), vsPtr))
+			return getEffect(name);
+		return effects_[key];
+	}
+
+	void RaylibAssetProvider::unloadEffect(std::string_view name)
+	{
+		if (auto it = effects_.find(name); it != effects_.end())
+		{
+			renderer_.unregisterEffect(it->second);
+			effects_.erase(it);
+		}
+	}
+
+	// =========================================================================
+	// 4. RaylibBackend (IBackend)
+	// =========================================================================
+
+	bool RaylibBackend::init(const WindowConfig &config)
+	{
+		if (initialized_)
+			return true;
+
+		unsigned int flags = 0;
+		if (config.resizable)
+			flags |= FLAG_WINDOW_RESIZABLE;
+		if (config.msaa)
+			flags |= FLAG_MSAA_4X_HINT;
+		if (config.vsync)
+			flags |= FLAG_VSYNC_HINT;
+
+		SetConfigFlags(flags);
+		InitWindow(config.width, config.height, config.title.c_str());
+		if (!IsWindowReady())
+			return false;
+
+		if (config.minWidth > 0 && config.minHeight > 0)
+			SetWindowMinSize(config.minWidth, config.minHeight);
+		if (config.targetFps > 0)
+			SetTargetFPS(config.targetFps);
+
+		platform_ = std::make_unique<RaylibPlatform>();
+		renderer_ = std::make_unique<RaylibRenderer>();
+		assets_ = std::make_unique<RaylibAssetProvider>(*renderer_);
+
+		bindToContext();
+		initialized_ = true;
+		return true;
+	}
+
+	void RaylibBackend::shutdown()
+	{
+		if (!initialized_)
+			return;
+
+		auto &ctx = UIContext::get();
+		if (renderer_)
+			ctx.targetPool.clear(*renderer_, &ctx.renderStats);
+
+		unbindFromContext();
+		assets_.reset();
+		renderer_.reset();
+		platform_.reset();
+		CloseWindow();
+		initialized_ = false;
+	}
+
+	bool RaylibBackend::pollFrame()
+	{
+		return initialized_ && !WindowShouldClose();
+	}
+
+	float RaylibBackend::deltaTime() const
+	{
+		return GetFrameTime();
+	}
+
+	void RaylibBackend::beginDraw(Color clearColor)
+	{
+		BeginDrawing();
+		ClearBackground(toRl(clearColor));
+	}
+
+	void RaylibBackend::endDraw()
+	{
+		EndDrawing();
+	}
+
 } // namespace ZenitUI

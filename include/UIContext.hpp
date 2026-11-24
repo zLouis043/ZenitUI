@@ -410,6 +410,32 @@ namespace ZenitUI
 
 		/** \brief Optional runtime hook to unload and unregister a font by logical name. */
 		virtual void unloadFont(std::string_view /*name*/) {}
+
+		/** \brief Optional hint setting the default rasterization pixel size used by `loadFont`. */
+		virtual void setDefaultFontSize(int /*baseSize*/) {}
+
+		/** \brief Optional hook to include an extra Unicode codepoint range `[first, last]` in subsequent font bakes. */
+		virtual void addDefaultCodepointRange(uint32_t /*first*/, uint32_t /*last*/) {}
+
+		/** \brief Optional runtime hook to load a 2D texture from disk under `name`. */
+		virtual TextureHandle loadTexture(std::string_view /*name*/, std::string_view /*path*/)
+		{
+			return {};
+		}
+
+		/** \brief Optional runtime hook to unload a texture by logical name. */
+		virtual void unloadTexture(std::string_view /*name*/) {}
+
+		/** \brief Optional runtime hook to load a fragment (and optional vertex) shader from disk under `name`. */
+		virtual EffectHandle loadEffect(std::string_view /*name*/,
+										std::string_view /*fsPath*/,
+										std::string_view /*vsPath*/ = {})
+		{
+			return {};
+		}
+
+		/** \brief Optional runtime hook to unload a shader effect by logical name. */
+		virtual void unloadEffect(std::string_view /*name*/) {}
 	};
 
 	/**

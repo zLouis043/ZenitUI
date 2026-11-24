@@ -1,5 +1,11 @@
 #pragma once
 
+// @backend_name     Raylib
+// @backend_target   ZenitUI::RaylibBackend
+// @backend_role     Reference desktop GPU backend (Raylib / rlgl)
+// @backend_features Effects, NestedTargets, TargetSubRect
+// @backend_classes  ZenitUI::RaylibBackend ZenitUI::RaylibPlatform ZenitUI::RaylibRenderer ZenitUI::RaylibAssetProvider
+
 /**
  * \file RaylibBackend.hpp
  * \brief Reference Raylib implementation of ZenitUI's three backend interfaces:
@@ -36,6 +42,7 @@
 #endif
 
 #include "UIContext.hpp"
+#include "Backend.hpp"
 #include "Utf8.hpp"
 
 #include <raylib.h>
@@ -297,6 +304,10 @@ namespace ZenitUI
 		using IAssetProvider::loadFont;
 		using IAssetProvider::loadFontFromMemory;
 		using IAssetProvider::unloadFont;
+		using IAssetProvider::loadTexture; 
+		using IAssetProvider::loadEffect; 
+		using IAssetProvider::unloadTexture; 
+		using IAssetProvider::unloadEffect;
 
 		/** \brief Construct an asset provider bound to \p renderer for GPU handle registration. */
 		explicit RaylibAssetProvider(RaylibRenderer &renderer) : renderer_(renderer) {}
@@ -350,6 +361,25 @@ namespace ZenitUI
 			auto it = effects_.find(name);
 			return it != effects_.end() ? it->second : EffectHandle{};
 		}
+
+		void setDefaultFontSize(int baseSize) override
+	{
+		if (baseSize > 0)
+			defaultFontSize_ = baseSize;
+	}
+
+	void addDefaultCodepointRange(uint32_t first, uint32_t last) override
+	{
+		defaultCodepoints_.addRange(first, last);
+	}
+
+	TextureHandle loadTexture(std::string_view name, std::string_view path) override;
+	void unloadTexture(std::string_view name) override;
+	EffectHandle loadEffect(std::string_view name,
+							std::string_view fsPath,
+							std::string_view vsPath = {}) override;
+	void unloadEffect(std::string_view name) override;
+
 		/// @}
 
 	private:
@@ -366,6 +396,44 @@ namespace ZenitUI
 		HandleMap<TextureHandle> textures_;
 		HandleMap<EffectHandle> effects_;
 		CodepointSet defaultCodepoints_{CodepointSet::defaultLatin()};
+		int defaultFontSize_{96};
+	};
+
+	// =========================================================================
+	// 4. Unified Host Adapter (IBackend)
+	// =========================================================================
+
+	/**
+	 * \class RaylibBackend
+	 * \ingroup grp_backends
+	 * \brief Unified `IBackend` host wrapping Raylib windowing, rendering, and assets.
+	 */
+	class RaylibBackend : public IBackend
+	{
+	public:
+		RaylibBackend() = default;
+		~RaylibBackend() override { shutdown(); }
+
+		RaylibBackend(const RaylibBackend &) = delete;
+		RaylibBackend &operator=(const RaylibBackend &) = delete;
+
+		bool init(const WindowConfig &config) override;
+		void shutdown() override;
+		bool pollFrame() override;
+		float deltaTime() const override;
+		void beginDraw(Color clearColor) override;
+		void endDraw() override;
+		std::string_view name() const override { return "Raylib"; }
+
+		IPlatform &platform() override { return *platform_; }
+		IRenderer &renderer() override { return *renderer_; }
+		IAssetProvider &assets() override { return *assets_; }
+
+	private:
+		std::unique_ptr<RaylibPlatform> platform_;
+		std::unique_ptr<RaylibRenderer> renderer_;
+		std::unique_ptr<RaylibAssetProvider> assets_;
+		bool initialized_{false};
 	};
 
 	/** @} */
