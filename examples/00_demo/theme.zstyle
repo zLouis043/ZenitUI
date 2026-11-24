@@ -1,0 +1,632 @@
+/* =========================================================================
+   ZenitUI — 00_demo Showcase Stylesheet
+   Demonstrates :root tokens, live Dark/Light + Accent theme switching via
+   class overrides, @media responsiveness, ::part styling, @keyframes,
+   transitions, box-shadow, and post-processing filters.
+   ========================================================================= */
+
+:root {
+    --bg:           #111217;
+    --sidebar-bg:   #161820;
+    --surface:      #1c1f29;
+    --surface-hi:   #252936;
+    --input-bg:     #13151c;
+    --border:       #2f3445;
+    --text:         #eceef5;
+    --text-dim:     #9299ad;
+    --accent:       #4f8cff;
+    --accent-hi:    #78a9ff;
+    --accent-soft:  #4f8cff28;
+    --danger:       #e05263;
+    --danger-hi:    #f06c7c;
+    --warn:         #f5a623;
+    --warn-bg:      #f5a62324;
+    --ok:           #34c77b;
+    --overlay:      #000000bb;
+}
+
+/* Live Light theme override (toggled on #app at runtime) */
+#app.theme-light {
+    --bg:           #f2f4f8;
+    --sidebar-bg:   #ffffff;
+    --surface:      #ffffff;
+    --surface-hi:   #eef1f7;
+    --input-bg:     #f7f8fb;
+    --border:       #d8deea;
+    --text:         #181c26;
+    --text-dim:     #5c6478;
+    --overlay:      #0e111888;
+}
+
+/* Live Accent overrides (cycled on #app at runtime) */
+#app.accent-violet {
+    --accent:       #8b5cf6;
+    --accent-hi:    #a78bfa;
+    --accent-soft:  #8b5cf628;
+}
+#app.accent-emerald {
+    --accent:       #10b981;
+    --accent-hi:    #34d399;
+    --accent-soft:  #10b98128;
+}
+
+/* ---- Application Shell ------------------------------------------------ */
+#app {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font: inter-bold;
+    font-size: 14px;
+}
+
+.shell {
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar {
+    width: 230px;
+    height: 100%;
+    background: var(--sidebar-bg);
+    border-width: 0px 1px 0px 0px;
+    border-color: var(--border);
+    padding: 18px 14px;
+    gap: 8px;
+}
+
+.brand-row {
+    align-items: center;
+    gap: 10px;
+    padding: 4px 6px 12px 6px;
+}
+
+.brand-title {
+    font: inter-bold;
+    font-size: 20px;
+    color: var(--text);
+}
+
+.version-pill {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font: inter-semibold;
+    font-size: 11px;
+    padding: 3px 8px;
+    radius: 10px;
+}
+
+.nav-section {
+    color: var(--text-dim);
+    font: inter-semibold;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 8px 2px 8px;
+}
+
+.nav-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--text-dim);
+    radius: 8px;
+    padding: 10px 12px;
+    justify: start;
+    transition: background 0.15s ease-out-quad, color 0.15s ease-out-quad;
+}
+.nav-btn:hover {
+    background: var(--surface-hi);
+    color: var(--text);
+}
+.nav-btn.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.sidebar-controls {
+    gap: 6px;
+    padding: 8px 0px 4px 0px;
+}
+
+.stats-box {
+    background: var(--input-bg);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 6px;
+    padding: 8px 10px;
+    color: var(--text-dim);
+    font-size: 11px;
+}
+
+.main-col {
+    grow: 1;
+    min-width: 0;
+    height: 100%;
+}
+
+.topbar {
+    width: 100%;
+    padding: 14px 22px;
+    gap: 12px;
+    align-items: center;
+    background: var(--sidebar-bg);
+    border-width: 0px 0px 1px 0px;
+    border-color: var(--border);
+}
+
+.page-title {
+    font: inter-bold;
+    font-size: 18px;
+    color: var(--text);
+}
+
+.pill-warn {
+    background: var(--warn-bg);
+    color: var(--warn);
+    border-width: 1px;
+    border-color: var(--warn);
+    font: inter-semibold;
+    font-size: 12px;
+    padding: 4px 10px;
+    radius: 12px;
+}
+
+.spacer { grow: 1; }
+
+.content-host {
+    width: 100%;
+    grow: 1;
+    min-height: 0;
+}
+
+.view-scroll {
+    width: 100%;
+    height: 100%;
+    padding: 20px 22px;
+    gap: 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.view-fixed {
+    width: 100%;
+    height: 100%;
+    padding: 20px 22px;
+    gap: 14px;
+}
+
+/* ---- Cards & Typography ----------------------------------------------- */
+.card {
+    background: var(--surface);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 10px;
+    padding: 16px;
+    gap: 12px;
+    width: 100%;
+}
+
+.card-elevated {
+    box-shadow: 0px 6px 14px #00000055;
+}
+
+.card-title {
+    font: inter-semibold;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.muted {
+    color: var(--text-dim);
+    font-size: 13px;
+}
+
+.kpi-grid {
+    width: 100%;
+    gap: 12px;
+    wrap: true;
+}
+
+.kpi-card {
+    background: var(--surface);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 10px;
+    padding: 14px 16px;
+    gap: 6px;
+    min-width: 170px;
+    grow: 1;
+}
+
+.kpi-label {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+
+.kpi-value {
+    font: inter-bold;
+    font-size: 24px;
+    color: var(--accent);
+}
+
+.alert-banner {
+    width: 100%;
+    background: var(--warn-bg);
+    border-width: 1px;
+    border-color: var(--warn);
+    radius: 8px;
+    padding: 10px 14px;
+    gap: 8px;
+    align-items: center;
+}
+
+.alert-text {
+    color: var(--warn);
+    font: inter-semibold;
+    font-size: 13px;
+}
+
+/* ---- Rows & Split Layout ---------------------------------------------- */
+.row {
+    width: 100%;
+    gap: 12px;
+    align-items: center;
+}
+
+.row-wrap {
+    width: 100%;
+    gap: 12px;
+    wrap: true;
+    align-items: center;
+}
+
+.split-row {
+    width: 100%;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.split-col {
+    width: auto;
+    grow: 1;
+    min-width: 0;
+    gap: 12px;
+}
+
+.form-label {
+    color: var(--text-dim);
+    font-size: 13px;
+    min-width: 130px;
+}
+
+.value-readout {
+    color: var(--accent);
+    font: inter-semibold;
+    font-size: 13px;
+    min-width: 48px;
+}
+
+/* ---- Task List (Each + Keyed Reconciliation) -------------------------- */
+.task-row {
+    width: 100%;
+    background: var(--surface-hi);
+    radius: 8px;
+    padding: 9px 12px;
+    gap: 10px;
+    align-items: center;
+}
+
+.task-tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font: inter-semibold;
+    font-size: 11px;
+    padding: 3px 8px;
+    radius: 6px;
+}
+
+.task-title {
+    grow: 1;
+    min-width: 0;
+    color: var(--text);
+}
+
+.empty-state {
+    width: 100%;
+    background: var(--input-bg);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 8px;
+    padding: 16px;
+    color: var(--text-dim);
+    align-items: center;
+}
+
+/* ---- Built-in Widget Styling ------------------------------------------ */
+Button {
+    background: var(--surface-hi);
+    color: var(--text);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 7px;
+    padding: 7px 14px;
+    transition: background 0.14s ease-out-quad, scale 0.10s ease-out-back;
+}
+Button:hover   { background: var(--border); }
+Button:pressed { scale: 0.96; }
+
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    border-width: 0px;
+}
+.btn-primary:hover {
+    background: var(--accent-hi);
+    border-color: var(--accent-hi);
+}
+
+.btn-danger {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #ffffff;
+    border-width: 0px;
+}
+.btn-danger:hover {
+    background: var(--danger-hi);
+    border-color: var(--danger-hi);
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+VirtualView {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+TextInput, TextArea {
+    background: var(--input-bg);
+    color: var(--text);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 6px;
+    padding: 8px 12px;
+    transition: border-color 0.15s ease-out-quad;
+}
+TextInput:focus, TextArea:focus { border-color: var(--accent); }
+TextInput::placeholder, TextArea::placeholder { color: var(--text-dim); }
+TextInput::selection, TextArea::selection { background: var(--accent-soft); }
+TextInput::cursor, TextArea::cursor { color: var(--accent); border-width: 2px; }
+
+Slider {
+    height: 24px;
+}
+Slider::track { background: var(--surface-hi); radius: 4px; }
+Slider::fill  { color: var(--accent); }
+Slider::knob  { color: #ffffff; }
+
+ProgressBar {
+    height: 12px;
+    background: var(--surface-hi);
+    color: var(--accent);
+    radius: 6px;
+}
+
+Toggle {
+    width: 48px;
+    height: 26px;
+    background: var(--border);
+    radius: 13px;
+    transition: background 0.16s linear;
+}
+Toggle:checked { background: var(--accent); }
+Toggle .toggle-knob {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 3px;
+    left: 3px;
+    radius: 10px;
+    background: #ffffff;
+    transition: left 0.18s ease-out-cubic;
+}
+Toggle:checked .toggle-knob { left: 25px; }
+
+Checkbox {
+    width: 24px;
+    height: 24px;
+    background: var(--input-bg);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 5px;
+    transition: background 0.14s linear;
+}
+Checkbox:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+Checkbox::mark { color: #ffffff; }
+
+Dropdown {
+    height: auto;
+    min-height: 36px;
+}
+
+.dropdown-trigger {
+    background: var(--input-bg);
+    color: var(--text);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 6px;
+    padding: 8px 12px;
+    height: auto;
+    min-height: 36px;
+    font-size: 14px;
+}
+
+/* ---- Explorer (VirtualView + Nine-Slice) ------------------------------ */
+.virtual-host {
+    width: 100%;
+    grow: 1;
+    min-height: 0;
+    background: var(--surface);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 8px;
+    padding: 4px;
+}
+
+.vrow {
+    width: 100%;
+    height: 100%;
+    padding: 0px 22px 0px 14px;
+    gap: 12px;
+    align-items: center;
+    radius: 6px;
+    transition: background 0.10s linear;
+}
+
+.vrow.alt   { background: var(--surface-hi); }
+.vrow:hover { background: var(--accent-soft); }
+
+.vrow-id {
+    color: var(--accent);
+    font: inter-semibold;
+    min-width: 72px;
+}
+
+.vrow-cat {
+    background: var(--input-bg);
+    border-width: 1px;
+    border-color: var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 2px 8px;
+    radius: 5px;
+    min-width: 82px;
+}
+
+.vrow-msg {
+    grow: 1;
+    min-width: 0;
+    color: var(--text);
+}
+
+.nineslice-box {
+    background-texture: npatches 8 8 8 8;
+    padding: 10px 16px;
+    color: #181c26;
+    font: inter-semibold;
+    align-items: center;
+}
+
+/* ---- Effects, Animations & Canvas ------------------------------------- */
+@keyframes pulseSoft {
+    0%   { scale: 1.00; opacity: 1.0; }
+    50%  { scale: 1.06; opacity: 0.78; }
+    100% { scale: 1.00; opacity: 1.0; }
+}
+
+.fx-tile {
+    background: var(--surface-hi);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 8px;
+    padding: 16px 20px;
+    min-width: 150px;
+    align-items: center;
+    gap: 4px;
+}
+
+.fx-hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    transition: background 0.22s ease-out-quad, scale 0.16s ease-out-back;
+}
+.fx-hover:hover   { background: var(--accent-hi); scale: 1.08; }
+.fx-hover:pressed { scale: 0.94; }
+
+.fx-pulse {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    animation: pulseSoft 1.8s ease-in-out infinite;
+}
+
+.fx-blur   { filter: blur(2px); }
+.fx-sepia  { filter: sepia(0.85); background: #4a78d0; color: #ffffff; }
+.fx-shadow { filter: drop-shadow(4px, 4px, #000000aa); }
+.fx-chain  { filter: blur(1.5px), sepia(0.7); background: #4a78d0; color: #ffffff; }
+
+Canvas {
+    background: var(--input-bg);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 8px;
+    padding: 8px;
+}
+
+.swatch {
+    min-width: 44px;
+    min-height: 44px;
+    radius: 6px;
+}
+
+/* ---- Portals (Tooltip, Popup/ContextMenu, Modal) ---------------------- */
+Tooltip {
+    background: #101218ee;
+    color: #ffffff;
+    border-width: 1px;
+    border-color: var(--accent);
+    radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+Popup {
+    background: var(--surface);
+    border-width: 1px;
+    border-color: var(--border);
+    radius: 8px;
+    padding: 6px;
+    box-shadow: 0px 8px 18px #00000066;
+}
+
+.popup-item {
+    background: transparent;
+    color: var(--text);
+    radius: 5px;
+    padding: 7px 14px;
+    transition: background 0.10s linear;
+}
+.popup-item:hover { background: var(--accent-soft); color: var(--accent); }
+
+Modal {
+    background: var(--overlay);
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
+.modal-card {
+    background: var(--surface);
+    border-width: 1px;
+    border-color: var(--accent);
+    radius: 12px;
+    padding: 22px;
+    gap: 14px;
+    min-width: 360px;
+    max-width: 460px;
+    box-shadow: 0px 14px 28px #00000088;
+}
+
+/* ---- Responsive Breakpoint -------------------------------------------- */
+@media (max-width: 860px) {
+    .sidebar { width: 192px; padding: 12px 10px; }
+    .nav-btn { padding: 8px 10px; font-size: 13px; }
+    .split-row { wrap: true; }
+    .split-col { width: 100%; }
+    .form-label { min-width: 100px; }
+}
