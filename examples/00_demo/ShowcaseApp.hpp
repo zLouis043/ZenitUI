@@ -10,178 +10,180 @@
 #include <string>
 #include <vector>
 
-using namespace ZenitUI;
-using namespace ZenitUI::UI;
-
-// ============================================================================
-//  ShowcaseApp — Flagship ZenitUI multi-view showcase
-//
-//  Demonstrates how ZenitUI's subsystems work together in a single app:
-//    - App shell with live Dark/Light + Accent theme switching (CSS variables)
-//    - View 1 (Dashboard): ZMarkup Prefabs + <Slot>, If, keyed Each, Bindable<T>
-//    - View 2 (Editor):    Form controls, UTF-8 TextArea, live dirty state, Modal
-//    - View 3 (Explorer):  10,000-row VirtualView, live filter, ContextMenu, 9-slice
-//    - View 4 (Effects):   @keyframes, transitions, UIAnimation, filter:, CanvasLayout
-// ============================================================================
-class ShowcaseApp
+namespace Showcase
 {
-public:
-    struct TaskItem
+    using namespace ZenitUI;
+    using namespace ZenitUI::UI;
+
+    // ============================================================================
+    //  ShowcaseApp — Flagship ZenitUI multi-view showcase
+    //
+    //  Demonstrates how ZenitUI's subsystems work together in a single app:
+    //    - App shell with live Dark/Light + Accent theme switching (CSS variables)
+    //    - View 1 (Dashboard): ZMarkup Prefabs + <Slot>, If, keyed Each, Bindable<T>
+    //    - View 2 (Editor):    Form controls, UTF-8 TextArea, live dirty state, Modal
+    //    - View 3 (Explorer):  10,000-row VirtualView, live filter, ContextMenu, 9-slice
+    //    - View 4 (Effects):   @keyframes, transitions, UIAnimation, filter:, CanvasLayout
+    // ============================================================================
+    class ShowcaseApp
     {
-        int id{0};
-        std::string tag;
-        std::string title;
-        bool operator==(const TaskItem &) const = default;
-    };
-
-    struct CatalogEntry
-    {
-        int id{0};
-        std::string category;
-        std::string message;
-    };
-
-    ShowcaseApp()
-    {
-        seedCatalog();
-        registerPrefabs();
-        buildShell();
-        buildDashboardView();
-        buildEditorView();
-        buildExplorerView();
-        buildEffectsView();
-        buildModal();
-        switchView(0);
-    }
-
-    std::shared_ptr<Layout> root() const { return appRoot_; }
-
-    // Called once per frame from main() to refresh the live FPS/RenderStats box
-    // and the VirtualView visible-range readout.
-    void tickStats(int fps, float dtMs)
-    {
-        statsTimer_ += dtMs;
-        if (statsTimer_ < 250.0f)
-            return;
-        statsTimer_ = 0.0f;
-
-        const auto &st = UIContext::get().renderStats;
-        char buf[160];
-        std::snprintf(buf, sizeof(buf),
-                      "FPS: %d (%.1f ms)\nTargets live: %u  Passes: %u",
-                      fps, dtMs, st.liveTargets, st.filterPasses);
-        if (shellUi_)
-            shellUi_->setTextRef("stats-label", buf);
-
-        updateExplorerRange();
-    }
-
-private:
-    // ---- Reactive application state (Bindable<T>) -------------------------
-    Bindable<bool> dirty_{false};
-    Bindable<float> workload_{0.42f};
-    Bindable<bool> highWorkload_{false};
-    Bindable<std::vector<TaskItem>> tasks_{std::vector<TaskItem>{
-        {1, "Layout", "Audit Flexbox wrap & responsive breakpoints"},
-        {2, "Styling", "Verify Dark/Light custom property cascade"},
-        {3, "Widgets", "Test UTF-8 grapheme editing in TextArea"},
-    }};
-    int nextTaskId_{4};
-
-    // Editor model defaults
-    Bindable<std::string> username_{std::string("zenit_dev")};
-    Bindable<float> volume_{0.72f};
-    Bindable<int> qualityIdx_{2};
-    Bindable<bool> notifications_{true};
-    Bindable<bool> cloudSync_{false};
-
-    // Keep RAII subscriptions alive for the lifetime of ShowcaseApp
-    std::vector<Bindable<float>::Subscription> floatSubs_;
-    std::vector<Bindable<std::vector<TaskItem>>::Subscription> taskSubs_;
-    std::vector<Bindable<std::string>::Subscription> strSubs_;
-
-    // Explorer dataset (10,000 items) + active filter indices
-    std::vector<CatalogEntry> catalog_;
-    std::vector<int> filteredIndices_;
-    std::string filterQuery_;
-    int contextRowIndex_{-1};
-
-    // Theme state
-    bool lightTheme_{false};
-    int accentIndex_{0}; // 0: Blue, 1: Violet, 2: Emerald
-    float statsTimer_{250.0f};
-
-    // Node handles
-    std::shared_ptr<Layout> appRoot_;
-    std::optional<ZMarkup::UINode> shellUi_;
-    std::optional<ZMarkup::UINode> dashUi_;
-    std::optional<ZMarkup::UINode> editorUi_;
-    std::optional<ZMarkup::UINode> explorerUi_;
-    std::optional<ZMarkup::UINode> effectsUi_;
-
-    std::vector<std::shared_ptr<Layout>> views_;
-    std::shared_ptr<TextArea> notesArea_;
-    std::shared_ptr<VirtualView> virtualList_;
-    std::shared_ptr<Popup> rowContextMenu_;
-    std::shared_ptr<Modal> modal_;
-    std::shared_ptr<Text> modalTitle_;
-    std::shared_ptr<Text> modalBody_;
-    std::function<void()> modalConfirmAction_;
-
-    // -----------------------------------------------------------------------
-    //  Seed 10,000 deterministic entries for the VirtualView explorer
-    // -----------------------------------------------------------------------
-    void seedCatalog()
-    {
-        static const char *kCats[] = {"Layout", "Style", "Input", "Render", "Markup", "Anim"};
-        static const char *kMsgs[] = {
-            "Resolved cascade with cached selector rules",
-            "Reused off-screen layer target from TargetPool",
-            "Materialized visible row inside VirtualView overscan",
-            "Dispatched pointer capture across stacking context",
-            "Reconciled keyed Each slice without rebuilding rows",
-            "Completed ease-out-back transform transition",
+    public:
+        struct TaskItem
+        {
+            int id{0};
+            std::string tag;
+            std::string title;
+            bool operator==(const TaskItem &) const = default;
         };
 
-        catalog_.reserve(10000);
-        filteredIndices_.reserve(10000);
-        for (int i = 0; i < 10000; ++i)
+        struct CatalogEntry
         {
-            catalog_.push_back({
-                i + 1,
-                kCats[i % 6],
-                std::string(kMsgs[(i * 7) % 6]) + " (event #" + std::to_string(i + 1) + ")",
-            });
-            filteredIndices_.push_back(i);
-        }
-    }
+            int id{0};
+            std::string category;
+            std::string message;
+        };
 
-    // -----------------------------------------------------------------------
-    //  Register reusable ZMarkup prefabs (using <Slot> child injection)
-    // -----------------------------------------------------------------------
-    void registerPrefabs()
-    {
-        ZMarkup::registerPrefab("KpiCard", R"zm(
+        ShowcaseApp()
+        {
+            seedCatalog();
+            registerPrefabs();
+            buildShell();
+            buildDashboardView();
+            buildEditorView();
+            buildExplorerView();
+            buildEffectsView();
+            buildModal();
+            switchView(0);
+        }
+
+        std::shared_ptr<Layout> root() const { return appRoot_; }
+
+        // Called once per frame from main() to refresh the live FPS/RenderStats box
+        // and the VirtualView visible-range readout.
+        void tickStats(int fps, float dtMs)
+        {
+            statsTimer_ += dtMs;
+            if (statsTimer_ < 250.0f)
+                return;
+            statsTimer_ = 0.0f;
+
+            const auto &st = UIContext::get().renderStats;
+            char buf[160];
+            std::snprintf(buf, sizeof(buf),
+                          "FPS: %d (%.1f ms)\nTargets live: %u  Passes: %u",
+                          fps, dtMs, st.liveTargets, st.filterPasses);
+            if (shellUi_)
+                shellUi_->setTextRef("stats-label", buf);
+
+            updateExplorerRange();
+        }
+
+    private:
+        // ---- Reactive application state (Bindable<T>) -------------------------
+        Bindable<bool> dirty_{false};
+        Bindable<float> workload_{0.42f};
+        Bindable<bool> highWorkload_{false};
+        Bindable<std::vector<TaskItem>> tasks_{std::vector<TaskItem>{
+            {1, "Layout", "Audit Flexbox wrap & responsive breakpoints"},
+            {2, "Styling", "Verify Dark/Light custom property cascade"},
+            {3, "Widgets", "Test UTF-8 grapheme editing in TextArea"},
+        }};
+        int nextTaskId_{4};
+
+        // Editor model defaults
+        Bindable<std::string> username_{std::string("zenit_dev")};
+        Bindable<float> volume_{0.72f};
+        Bindable<int> qualityIdx_{2};
+        Bindable<bool> notifications_{true};
+        Bindable<bool> cloudSync_{false};
+
+        // Keep RAII subscriptions alive for the lifetime of ShowcaseApp
+        std::vector<Bindable<float>::Subscription> floatSubs_;
+        std::vector<Bindable<std::vector<TaskItem>>::Subscription> taskSubs_;
+        std::vector<Bindable<std::string>::Subscription> strSubs_;
+
+        // Explorer dataset (10,000 items) + active filter indices
+        std::vector<CatalogEntry> catalog_;
+        std::vector<int> filteredIndices_;
+        std::string filterQuery_;
+        int contextRowIndex_{-1};
+
+        // Theme state
+        bool lightTheme_{false};
+        int accentIndex_{0}; // 0: Blue, 1: Violet, 2: Emerald
+        float statsTimer_{250.0f};
+
+        // Node handles
+        std::shared_ptr<Layout> appRoot_;
+        std::optional<ZMarkup::UINode> shellUi_;
+        std::optional<ZMarkup::UINode> dashUi_;
+        std::optional<ZMarkup::UINode> editorUi_;
+        std::optional<ZMarkup::UINode> explorerUi_;
+        std::optional<ZMarkup::UINode> effectsUi_;
+
+        std::vector<std::shared_ptr<Layout>> views_;
+        std::shared_ptr<TextArea> notesArea_;
+        std::shared_ptr<VirtualView> virtualList_;
+        std::shared_ptr<Popup> rowContextMenu_;
+        std::shared_ptr<Modal> modal_;
+        std::shared_ptr<Text> modalTitle_;
+        std::shared_ptr<Text> modalBody_;
+        std::function<void()> modalConfirmAction_;
+
+        // -----------------------------------------------------------------------
+        //  Seed 10,000 deterministic entries for the VirtualView explorer
+        // -----------------------------------------------------------------------
+        void seedCatalog()
+        {
+            static const char *kCats[] = {"Layout", "Style", "Input", "Render", "Markup", "Anim"};
+            static const char *kMsgs[] = {
+                "Resolved cascade with cached selector rules",
+                "Reused off-screen layer target from TargetPool",
+                "Materialized visible row inside VirtualView overscan",
+                "Dispatched pointer capture across stacking context",
+                "Reconciled keyed Each slice without rebuilding rows",
+                "Completed ease-out-back transform transition",
+            };
+
+            catalog_.reserve(10000);
+            filteredIndices_.reserve(10000);
+            for (int i = 0; i < 10000; ++i)
+            {
+                catalog_.push_back({
+                    i + 1,
+                    kCats[i % 6],
+                    std::string(kMsgs[(i * 7) % 6]) + " (event #" + std::to_string(i + 1) + ")",
+                });
+                filteredIndices_.push_back(i);
+            }
+        }
+
+        // -----------------------------------------------------------------------
+        //  Register reusable ZMarkup prefabs (using <Slot> child injection)
+        // -----------------------------------------------------------------------
+        void registerPrefabs()
+        {
+            ZMarkup::registerPrefab("KpiCard", R"zm(
             VStack.kpi-card {
                 Slot
             }
         )zm");
 
-        ZMarkup::registerPrefab("TaskRow", R"zm(
+            ZMarkup::registerPrefab("TaskRow", R"zm(
             HStack.task-row {
                 Text.task-tag@tag ""
                 Text.task-title@title wrap="true" ""
                 Button.btn-danger.btn-sm@done "Done"
             }
         )zm");
-    }
+        }
 
-    // -----------------------------------------------------------------------
-    //  App shell: persistent sidebar + top bar + 4-view content host
-    // -----------------------------------------------------------------------
-    void buildShell()
-    {
-        static const char *kShellMarkup = R"zm(
+        // -----------------------------------------------------------------------
+        //  App shell: persistent sidebar + top bar + 4-view content host
+        // -----------------------------------------------------------------------
+        void buildShell()
+        {
+            static const char *kShellMarkup = R"zm(
             Stack#app {
                 HStack.shell {
                     VStack.sidebar {
@@ -222,21 +224,21 @@ private:
             }
         )zm";
 
-        shellUi_ = ZMarkup::build(kShellMarkup);
-        appRoot_ = shellUi_->root();
+            shellUi_ = ZMarkup::build(kShellMarkup);
+            appRoot_ = shellUi_->root();
 
-        // Bind the "Unsaved changes" badge directly to the dirty_ Bindable<bool>.
-        shellUi_->bindCondition("dirty-badge", dirty_, true);
+            // Bind the "Unsaved changes" badge directly to the dirty_ Bindable<bool>.
+            shellUi_->bindCondition("dirty-badge", dirty_, true);
 
-        for (int i = 0; i < 4; ++i)
-        {
-            shellUi_->onClickRef("nav-" + std::to_string(i), [this, i]
-                                 { switchView(i); });
-        }
+            for (int i = 0; i < 4; ++i)
+            {
+                shellUi_->onClickRef("nav-" + std::to_string(i), [this, i]
+                                     { switchView(i); });
+            }
 
-        // Live Dark/Light switch: toggling one class re-evaluates all CSS variables.
-        shellUi_->onClickRef("theme-btn", [this]
-                             {
+            // Live Dark/Light switch: toggling one class re-evaluates all CSS variables.
+            shellUi_->onClickRef("theme-btn", [this]
+                                 {
             lightTheme_ = !lightTheme_;
             if (lightTheme_)
                 appRoot_->addClass("theme-light");
@@ -247,9 +249,9 @@ private:
             if (dashUi_)
                 dashUi_->setTextRef("kpi-theme", lightTheme_ ? "Light" : "Dark"); });
 
-        // Live Accent palette switch: cycles between 3 token sets on #app.
-        shellUi_->onClickRef("accent-btn", [this]
-                             {
+            // Live Accent palette switch: cycles between 3 token sets on #app.
+            shellUi_->onClickRef("accent-btn", [this]
+                                 {
             accentIndex_ = (accentIndex_ + 1) % 3;
             appRoot_->removeClass("accent-violet");
             appRoot_->removeClass("accent-emerald");
@@ -261,26 +263,26 @@ private:
             static const char *kNames[] = {"Accent: Blue", "Accent: Violet", "Accent: Emerald"};
             shellUi_->setButtonTextRef("accent-btn", kNames[accentIndex_]); });
 
-        shellUi_->onClickRef("about-btn", [this]
-                             { openModal(
-                                   "ZenitUI Showcase",
-                                   "Retained-mode C++20 UI framework featuring Flexbox layout, "
-                                   "ZStyle cascade, ZMarkup prefabs & keyed Each, Bindable<T> "
-                                   "reactivity, VirtualView, portals, and post-processing filters.",
-                                   nullptr); });
+            shellUi_->onClickRef("about-btn", [this]
+                                 { openModal(
+                                       "ZenitUI Showcase",
+                                       "Retained-mode C++20 UI framework featuring Flexbox layout, "
+                                       "ZStyle cascade, ZMarkup prefabs & keyed Each, Bindable<T> "
+                                       "reactivity, VirtualView, portals, and post-processing filters.",
+                                       nullptr); });
 
-        if (auto btn = shellUi_->ref("theme-btn"))
-            Tooltip::attach(btn, "Toggles #app.theme-light to re-resolve all CSS variables", 0.35f);
-        if (auto btn = shellUi_->ref("accent-btn"))
-            Tooltip::attach(btn, "Cycles --accent tokens across every view in real time", 0.35f);
-    }
+            if (auto btn = shellUi_->ref("theme-btn"))
+                Tooltip::attach(btn, "Toggles #app.theme-light to re-resolve all CSS variables", 0.35f);
+            if (auto btn = shellUi_->ref("accent-btn"))
+                Tooltip::attach(btn, "Cycles --accent tokens across every view in real time", 0.35f);
+        }
 
-    // -----------------------------------------------------------------------
-    //  View 1: Dashboard — Prefabs + <Slot>, Bindable<T>, If, Keyed Each
-    // -----------------------------------------------------------------------
-    void buildDashboardView()
-    {
-        static const char *kDashMarkup = R"zm(
+        // -----------------------------------------------------------------------
+        //  View 1: Dashboard — Prefabs + <Slot>, Bindable<T>, If, Keyed Each
+        // -----------------------------------------------------------------------
+        void buildDashboardView()
+        {
+            static const char *kDashMarkup = R"zm(
             ScrollView.view-scroll {
                 HStack.kpi-grid {
                     KpiCard {
@@ -338,100 +340,100 @@ private:
             }
         )zm";
 
-        dashUi_ = ZMarkup::build(kDashMarkup);
-        auto view = dashUi_->root();
-        mountView(view);
+            dashUi_ = ZMarkup::build(kDashMarkup);
+            auto view = dashUi_->root();
+            mountView(view);
 
-        // Wire slider -> workload_ Bindable<float>
-        dashUi_->onValueChangedRef("load-slider", [this](float v)
-                                   {
+            // Wire slider -> workload_ Bindable<float>
+            dashUi_->onValueChangedRef("load-slider", [this](float v)
+                                       {
             workload_.set(v);
             highWorkload_.set(v > 0.80f); });
 
-        // Bind conditional warning banner
-        dashUi_->bindCondition("overload-warn", highWorkload_, true);
+            // Bind conditional warning banner
+            dashUi_->bindCondition("overload-warn", highWorkload_, true);
 
-        // Bind KPI bar and labels directly to workload_
-        if (auto bar = dashUi_->ref<ProgressBar>("kpi-bar"))
-            floatSubs_.push_back(workload_.bindTo(bar, &ProgressBar::setValue, true));
+            // Bind KPI bar and labels directly to workload_
+            if (auto bar = dashUi_->ref<ProgressBar>("kpi-bar"))
+                floatSubs_.push_back(workload_.bindTo(bar, &ProgressBar::setValue, true));
 
-        ZMarkup::WeakUINode weakDash = dashUi_->weak();
-        floatSubs_.push_back(workload_.onChanged(
-            [weakDash](const float &v)
-            {
-                if (auto ui = weakDash.lock())
+            ZMarkup::WeakUINode weakDash = dashUi_->weak();
+            floatSubs_.push_back(workload_.onChanged(
+                [weakDash](const float &v)
                 {
-                    std::string pct = std::to_string((int)std::lround(v * 100.0f)) + "%";
-                    ui->setTextRef("kpi-load", pct);
-                    ui->setTextRef("load-pct", pct);
-                }
-            },
-            true));
+                    if (auto ui = weakDash.lock())
+                    {
+                        std::string pct = std::to_string((int)std::lround(v * 100.0f)) + "%";
+                        ui->setTextRef("kpi-load", pct);
+                        ui->setTextRef("load-pct", pct);
+                    }
+                },
+                true));
 
-        // Update KPI task counter whenever tasks_ changes
-        taskSubs_.push_back(tasks_.onChanged(
-            [weakDash](const std::vector<TaskItem> &vec)
-            {
-                if (auto ui = weakDash.lock())
-                    ui->setTextRef("kpi-tasks", std::to_string(vec.size()));
-            },
-            true));
+            // Update KPI task counter whenever tasks_ changes
+            taskSubs_.push_back(tasks_.onChanged(
+                [weakDash](const std::vector<TaskItem> &vec)
+                {
+                    if (auto ui = weakDash.lock())
+                        ui->setTextRef("kpi-tasks", std::to_string(vec.size()));
+                },
+                true));
 
-        // Keyed reconciliation for the task list
-        dashUi_->bindEachKeyed(
-            "task-list",
-            tasks_,
-            [](const TaskItem &t)
-            { return t.id; },
-            [this](ZMarkup::UINode &itemUi, const TaskItem &t)
-            {
-                int taskId = t.id;
-                itemUi.onClickRef("done", [this, taskId]
-                                  {
+            // Keyed reconciliation for the task list
+            dashUi_->bindEachKeyed(
+                "task-list",
+                tasks_,
+                [](const TaskItem &t)
+                { return t.id; },
+                [this](ZMarkup::UINode &itemUi, const TaskItem &t)
+                {
+                    int taskId = t.id;
+                    itemUi.onClickRef("done", [this, taskId]
+                                      {
                     auto next = tasks_.get();
                     next.erase(std::remove_if(next.begin(), next.end(),
                                               [taskId](const TaskItem &it) { return it.id == taskId; }),
                                next.end());
                     tasks_.set(std::move(next)); });
-            },
-            [](ZMarkup::UINode &itemUi, const TaskItem &t)
+                },
+                [](ZMarkup::UINode &itemUi, const TaskItem &t)
+                {
+                    itemUi.setTextRef("tag", t.tag);
+                    itemUi.setTextRef("title", t.title);
+                },
+                true);
+
+            // Add / Clear actions
+            auto addTask = [this]
             {
-                itemUi.setTextRef("tag", t.tag);
-                itemUi.setTextRef("title", t.title);
-            },
-            true);
+                auto input = dashUi_->ref<TextInput>("task-input");
+                if (!input)
+                    return;
+                std::string txt = input->getText();
+                if (txt.empty())
+                    return;
+                auto next = tasks_.get();
+                next.push_back({nextTaskId_++, "Custom", txt});
+                tasks_.set(std::move(next));
+                input->setText("");
+            };
 
-        // Add / Clear actions
-        auto addTask = [this]
-        {
-            auto input = dashUi_->ref<TextInput>("task-input");
-            if (!input)
-                return;
-            std::string txt = input->getText();
-            if (txt.empty())
-                return;
-            auto next = tasks_.get();
-            next.push_back({nextTaskId_++, "Custom", txt});
-            tasks_.set(std::move(next));
-            input->setText("");
-        };
-
-        dashUi_->onClickRef("task-add", addTask);
-        if (auto input = dashUi_->ref<TextInput>("task-input"))
-        {
-            input->onSubmit = [addTask](const std::string &)
-            { addTask(); };
+            dashUi_->onClickRef("task-add", addTask);
+            if (auto input = dashUi_->ref<TextInput>("task-input"))
+            {
+                input->onSubmit = [addTask](const std::string &)
+                { addTask(); };
+            }
+            dashUi_->onClickRef("task-clear", [this]
+                                { tasks_.set({}); });
         }
-        dashUi_->onClickRef("task-clear", [this]
-                            { tasks_.set({}); });
-    }
 
-    // -----------------------------------------------------------------------
-    //  View 2: Editor & Forms — Widgets, UTF-8 TextArea, Dirty State, Modal
-    // -----------------------------------------------------------------------
-    void buildEditorView()
-    {
-        static const char *kEditorMarkup = R"zm(
+        // -----------------------------------------------------------------------
+        //  View 2: Editor & Forms — Widgets, UTF-8 TextArea, Dirty State, Modal
+        // -----------------------------------------------------------------------
+        void buildEditorView()
+        {
+            static const char *kEditorMarkup = R"zm(
             ScrollView.view-scroll {
                 HStack.split-row {
                     VStack.card.split-col {
@@ -479,86 +481,86 @@ private:
             }
         )zm";
 
-        editorUi_ = ZMarkup::build(kEditorMarkup);
-        auto view = editorUi_->root();
-        mountView(view);
+            editorUi_ = ZMarkup::build(kEditorMarkup);
+            auto view = editorUi_->root();
+            mountView(view);
 
-        // Mount a multi-line UTF-8 TextArea inside the reserved slot.
-        static const char *kDefaultNotes =
-            "ZenitUI supports full UTF-8 editing:\n"
-            "• Accented Latin: café, naïve, résumé, città\n"
-            "• Symbols & arrows: → ← ↑ ↓ — € £ ©\n"
-            "• Shortcuts: Ctrl+A, Ctrl+C/X/V, Ctrl+Z/Y\n\n"
-            "Try selecting across wrapped lines or dragging with the mouse.";
+            // Mount a multi-line UTF-8 TextArea inside the reserved slot.
+            static const char *kDefaultNotes =
+                "ZenitUI supports full UTF-8 editing:\n"
+                "• Accented Latin: café, naïve, résumé, città\n"
+                "• Symbols & arrows: → ← ↑ ↓ — € £ ©\n"
+                "• Shortcuts: Ctrl+A, Ctrl+C/X/V, Ctrl+Z/Y\n\n"
+                "Try selecting across wrapped lines or dragging with the mouse.";
 
-        notesArea_ = TextArea::create(kDefaultNotes, 8);
-        notesArea_->size(Percent(100), Px(210));
-        notesArea_->setPlaceholder("Write release notes here...");
+            notesArea_ = TextArea::create(kDefaultNotes, 8);
+            notesArea_->size(Percent(100), Px(210));
+            notesArea_->setPlaceholder("Write release notes here...");
 
-        auto updateNotesMeta = [this](const std::string &txt)
-        {
-            int lines = 1 + (int)std::count(txt.begin(), txt.end(), '\n');
-            editorUi_->setTextRef(
-                "notes-meta",
-                std::to_string(lines) + " lines · " + std::to_string(txt.size()) + " bytes");
-        };
-        updateNotesMeta(notesArea_->getText());
-        notesArea_->onTextChanged = [this, updateNotesMeta](const std::string &s)
-        {
-            updateNotesMeta(s);
-            dirty_.set(true);
-        };
-
-        if (auto slot = editorUi_->ref("textarea-slot"))
-            slot->addChild(notesArea_);
-
-        // Wire form controls -> Bindable state + dirty flag
-        if (auto qual = editorUi_->ref<Dropdown>("ed-qual"))
-        {
-            qual->setSelected(qualityIdx_.get());
-            qual->onChange = [this](int idx, const std::string &)
+            auto updateNotesMeta = [this](const std::string &txt)
             {
-                qualityIdx_.set(idx);
+                int lines = 1 + (int)std::count(txt.begin(), txt.end(), '\n');
+                editorUi_->setTextRef(
+                    "notes-meta",
+                    std::to_string(lines) + " lines · " + std::to_string(txt.size()) + " bytes");
+            };
+            updateNotesMeta(notesArea_->getText());
+            notesArea_->onTextChanged = [this, updateNotesMeta](const std::string &s)
+            {
+                updateNotesMeta(s);
                 dirty_.set(true);
             };
-        }
 
-        editorUi_->onTextChangedRef("ed-name", [this](const std::string &s)
-                                    {
+            if (auto slot = editorUi_->ref("textarea-slot"))
+                slot->addChild(notesArea_);
+
+            // Wire form controls -> Bindable state + dirty flag
+            if (auto qual = editorUi_->ref<Dropdown>("ed-qual"))
+            {
+                qual->setSelected(qualityIdx_.get());
+                qual->onChange = [this](int idx, const std::string &)
+                {
+                    qualityIdx_.set(idx);
+                    dirty_.set(true);
+                };
+            }
+
+            editorUi_->onTextChangedRef("ed-name", [this](const std::string &s)
+                                        {
             username_.set(s);
             dirty_.set(true); });
 
-        editorUi_->onValueChangedRef("ed-vol", [this](float v)
-                                     {
+            editorUi_->onValueChangedRef("ed-vol", [this](float v)
+                                         {
             volume_.set(v);
             dirty_.set(true); });
 
-        ZMarkup::WeakUINode weakEd = editorUi_->weak();
-        floatSubs_.push_back(volume_.onChanged(
-            [weakEd](const float &v)
-            {
-                if (auto ui = weakEd.lock())
-                    ui->setTextRef("ed-vol-lbl", std::to_string((int)std::lround(v * 100.0f)) + "%");
-            },
-            true));
+            ZMarkup::WeakUINode weakEd = editorUi_->weak();
+            floatSubs_.push_back(volume_.onChanged(
+                [weakEd](const float &v)
+                {
+                    if (auto ui = weakEd.lock())
+                        ui->setTextRef("ed-vol-lbl", std::to_string((int)std::lround(v * 100.0f)) + "%");
+                },
+                true));
 
-        editorUi_->onToggleRef("ed-notif", [this](bool v)
-                               {
+            editorUi_->onToggleRef("ed-notif", [this](bool v)
+                                   {
             notifications_.set(v);
             dirty_.set(true); });
 
-        if (auto cb = editorUi_->ref<Checkbox>("ed-cloud"))
-        {
-            cb->onToggle = [this](bool v)
+            if (auto cb = editorUi_->ref<Checkbox>("ed-cloud"))
             {
-                cloudSync_.set(v);
-                dirty_.set(true);
-            };
-        }
+                cb->onToggle = [this](bool v)
+                {
+                    cloudSync_.set(v);
+                    dirty_.set(true);
+                };
+            }
 
-        // Working Reset button: restores model & all widgets
-        editorUi_->onClickRef("ed-reset", [this, updateNotesMeta]
-                              {
+            // Working Reset button: restores model & all widgets
+            editorUi_->onClickRef("ed-reset", [this, updateNotesMeta]
+                                  {
             username_.set("zenit_dev");
             volume_.set(0.72f);
             qualityIdx_.set(2);
@@ -582,23 +584,23 @@ private:
             }
             dirty_.set(false); });
 
-        // Working Save button: confirms via Modal and clears dirty flag
-        editorUi_->onClickRef("ed-save", [this]
-                              { openModal(
-                                    "Save Workspace Settings?",
-                                    "Profile \"" + username_.get() + "\" (volume " +
-                                        std::to_string((int)std::lround(volume_.get() * 100.0f)) +
-                                        "%) will be committed and the unsaved indicator cleared.",
-                                    [this]
-                                    { dirty_.set(false); }); });
-    }
+            // Working Save button: confirms via Modal and clears dirty flag
+            editorUi_->onClickRef("ed-save", [this]
+                                  { openModal(
+                                        "Save Workspace Settings?",
+                                        "Profile \"" + username_.get() + "\" (volume " +
+                                            std::to_string((int)std::lround(volume_.get() * 100.0f)) +
+                                            "%) will be committed and the unsaved indicator cleared.",
+                                        [this]
+                                        { dirty_.set(false); }); });
+        }
 
-    // -----------------------------------------------------------------------
-    //  View 3: Virtual Explorer — 10,000-row VirtualView + ContextMenu + 9-slice
-    // -----------------------------------------------------------------------
-    void buildExplorerView()
-    {
-        static const char *kExplorerMarkup = R"zm(
+        // -----------------------------------------------------------------------
+        //  View 3: Virtual Explorer — 10,000-row VirtualView + ContextMenu + 9-slice
+        // -----------------------------------------------------------------------
+        void buildExplorerView()
+        {
+            static const char *kExplorerMarkup = R"zm(
             VStack.view-fixed {
                 HStack.row-wrap {
                     TextInput@exp-search placeholder="Filter 10,000 entries by category, text, or ID..." grow="1" min-width="150px"
@@ -620,168 +622,168 @@ private:
             }
         )zm";
 
-        explorerUi_ = ZMarkup::build(kExplorerMarkup);
-        auto view = explorerUi_->root();
-        mountView(view);
+            explorerUi_ = ZMarkup::build(kExplorerMarkup);
+            auto view = explorerUi_->root();
+            mountView(view);
 
-        // Apply the custom nine-slice texture asset to the preview badge.
-        if (auto badge = explorerUi_->ref("nineslice-badge"))
-        {
-            Tooltip::attach(badge, "Rendered via ZStyle: background-texture: npatches 8 8 8 8", 0.35f);
-        }
-
-        // Single shared ContextMenu mounted on the Explorer view (escaped via portal).
-        rowContextMenu_ = ContextMenu({
-            {"Inspect entry", [this]
-             {
-                 if (contextRowIndex_ >= 0 && contextRowIndex_ < (int)filteredIndices_.size())
-                 {
-                     const auto &e = catalog_[filteredIndices_[contextRowIndex_]];
-                     openModal(
-                         "Entry #" + std::to_string(e.id) + " [" + e.category + "]",
-                         e.message,
-                         nullptr);
-                 }
-             }},
-            {"Copy summary to clipboard", [this]
-             {
-                 if (contextRowIndex_ >= 0 && contextRowIndex_ < (int)filteredIndices_.size())
-                 {
-                     const auto &e = catalog_[filteredIndices_[contextRowIndex_]];
-                     std::string text = "#" + std::to_string(e.id) + " [" + e.category + "] " + e.message;
-                     if (UIContext::get().platform)
-                         UIContext::get().platform->setClipboardText(text);
-                     explorerUi_->setTextRef("exp-status", "Copied to clipboard: " + text);
-                 }
-             }},
-            {"Scroll entry to top", [this]
-             {
-                 if (virtualList_ && contextRowIndex_ >= 0)
-                     virtualList_->scrollToItem(contextRowIndex_);
-             }},
-        });
-        view->addChild(rowContextMenu_);
-
-        // Create the 10,000-row VirtualView with O(1) uniform row height.
-        virtualList_ = VirtualView::create(
-            [this](int idx) -> std::shared_ptr<Layout>
+            // Apply the custom nine-slice texture asset to the preview badge.
+            if (auto badge = explorerUi_->ref("nineslice-badge"))
             {
-                if (idx < 0 || idx >= (int)filteredIndices_.size())
-                    return nullptr;
-                const auto &e = catalog_[filteredIndices_[idx]];
+                Tooltip::attach(badge, "Rendered via ZStyle: background-texture: npatches 8 8 8 8", 0.35f);
+            }
 
-                auto row = HStack()->cls("vrow");
-                if (idx % 2 == 1)
-                    row->addClass("alt");
-                row->setInteractive(true);
-                row->setBlocksRaycast(true);
+            // Single shared ContextMenu mounted on the Explorer view (escaped via portal).
+            rowContextMenu_ = ContextMenu({
+                {"Inspect entry", [this]
+                 {
+                     if (contextRowIndex_ >= 0 && contextRowIndex_ < (int)filteredIndices_.size())
+                     {
+                         const auto &e = catalog_[filteredIndices_[contextRowIndex_]];
+                         openModal(
+                             "Entry #" + std::to_string(e.id) + " [" + e.category + "]",
+                             e.message,
+                             nullptr);
+                     }
+                 }},
+                {"Copy summary to clipboard", [this]
+                 {
+                     if (contextRowIndex_ >= 0 && contextRowIndex_ < (int)filteredIndices_.size())
+                     {
+                         const auto &e = catalog_[filteredIndices_[contextRowIndex_]];
+                         std::string text = "#" + std::to_string(e.id) + " [" + e.category + "] " + e.message;
+                         if (UIContext::get().platform)
+                             UIContext::get().platform->setClipboardText(text);
+                         explorerUi_->setTextRef("exp-status", "Copied to clipboard: " + text);
+                     }
+                 }},
+                {"Scroll entry to top", [this]
+                 {
+                     if (virtualList_ && contextRowIndex_ >= 0)
+                         virtualList_->scrollToItem(contextRowIndex_);
+                 }},
+            });
+            view->addChild(rowContextMenu_);
 
-                row->addChild(Label("#" + std::to_string(e.id))->cls("vrow-id"));
-                row->addChild(Label(e.category)->cls("vrow-cat"));
-                row->addChild(Label(e.message)->cls("vrow-msg"));
-
-                row->onClick = [this, id = e.id, cat = e.category]
+            // Create the 10,000-row VirtualView with O(1) uniform row height.
+            virtualList_ = VirtualView::create(
+                [this](int idx) -> std::shared_ptr<Layout>
                 {
-                    explorerUi_->setTextRef(
-                        "exp-status",
-                        "Selected entry #" + std::to_string(id) + " [" + cat + "]");
-                };
-                row->onRightClick = [this, idx]
-                {
-                    contextRowIndex_ = idx;
-                    if (rowContextMenu_)
-                        rowContextMenu_->openAt(UIContext::get().pointer.pos);
-                };
-                return row;
-            },
-            (int)filteredIndices_.size());
+                    if (idx < 0 || idx >= (int)filteredIndices_.size())
+                        return nullptr;
+                    const auto &e = catalog_[filteredIndices_[idx]];
 
-        virtualList_->size(Percent(100), Percent(100));
-        virtualList_->setUniformHeight(42.0f);
+                    auto row = HStack()->cls("vrow");
+                    if (idx % 2 == 1)
+                        row->addClass("alt");
+                    row->setInteractive(true);
+                    row->setBlocksRaycast(true);
 
-        if (auto host = explorerUi_->ref("virtual-host"))
-            host->addChild(virtualList_);
+                    row->addChild(Label("#" + std::to_string(e.id))->cls("vrow-id"));
+                    row->addChild(Label(e.category)->cls("vrow-cat"));
+                    row->addChild(Label(e.message)->cls("vrow-msg"));
 
-        // Live case-insensitive filtering
-        explorerUi_->onTextChangedRef("exp-search", [this](const std::string &q)
-                                      { applyExplorerFilter(q); });
+                    row->onClick = [this, id = e.id, cat = e.category]
+                    {
+                        explorerUi_->setTextRef(
+                            "exp-status",
+                            "Selected entry #" + std::to_string(id) + " [" + cat + "]");
+                    };
+                    row->onRightClick = [this, idx]
+                    {
+                        contextRowIndex_ = idx;
+                        if (rowContextMenu_)
+                            rowContextMenu_->openAt(UIContext::get().pointer.pos);
+                    };
+                    return row;
+                },
+                (int)filteredIndices_.size());
 
-        explorerUi_->onClickRef("jump-top", [this]
-                                {
+            virtualList_->size(Percent(100), Percent(100));
+            virtualList_->setUniformHeight(42.0f);
+
+            if (auto host = explorerUi_->ref("virtual-host"))
+                host->addChild(virtualList_);
+
+            // Live case-insensitive filtering
+            explorerUi_->onTextChangedRef("exp-search", [this](const std::string &q)
+                                          { applyExplorerFilter(q); });
+
+            explorerUi_->onClickRef("jump-top", [this]
+                                    {
             if (virtualList_)
                 virtualList_->scrollToItem(0); });
-        explorerUi_->onClickRef("jump-mid", [this]
-                                {
+            explorerUi_->onClickRef("jump-mid", [this]
+                                    {
             if (virtualList_)
                 virtualList_->scrollToItem(std::min(4999, std::max(0, (int)filteredIndices_.size() - 1))); });
-        explorerUi_->onClickRef("jump-end", [this]
-                                {
+            explorerUi_->onClickRef("jump-end", [this]
+                                    {
             if (virtualList_ && !filteredIndices_.empty())
                 virtualList_->scrollToItem((int)filteredIndices_.size() - 1); });
-    }
+        }
 
-    void applyExplorerFilter(const std::string &query)
-    {
-        filterQuery_ = query;
-        std::string lowerQ = query;
-        std::transform(lowerQ.begin(), lowerQ.end(), lowerQ.begin(),
-                       [](unsigned char c)
-                       { return (char)std::tolower(c); });
-
-        filteredIndices_.clear();
-        for (int i = 0; i < (int)catalog_.size(); ++i)
+        void applyExplorerFilter(const std::string &query)
         {
-            if (lowerQ.empty())
-            {
-                filteredIndices_.push_back(i);
-                continue;
-            }
-            const auto &e = catalog_[i];
-            std::string hay = std::to_string(e.id) + " " + e.category + " " + e.message;
-            std::transform(hay.begin(), hay.end(), hay.begin(),
+            filterQuery_ = query;
+            std::string lowerQ = query;
+            std::transform(lowerQ.begin(), lowerQ.end(), lowerQ.begin(),
                            [](unsigned char c)
                            { return (char)std::tolower(c); });
-            if (hay.find(lowerQ) != std::string::npos)
-                filteredIndices_.push_back(i);
+
+            filteredIndices_.clear();
+            for (int i = 0; i < (int)catalog_.size(); ++i)
+            {
+                if (lowerQ.empty())
+                {
+                    filteredIndices_.push_back(i);
+                    continue;
+                }
+                const auto &e = catalog_[i];
+                std::string hay = std::to_string(e.id) + " " + e.category + " " + e.message;
+                std::transform(hay.begin(), hay.end(), hay.begin(),
+                               [](unsigned char c)
+                               { return (char)std::tolower(c); });
+                if (hay.find(lowerQ) != std::string::npos)
+                    filteredIndices_.push_back(i);
+            }
+
+            if (virtualList_)
+            {
+                virtualList_->removeAllChildren();
+                virtualList_->scrollToTop();
+                // Force height/materialization refresh even if count matched previous count.
+                if (virtualList_->getItemCount() == (int)filteredIndices_.size())
+                    virtualList_->setItemCount(0);
+                virtualList_->setItemCount((int)filteredIndices_.size());
+            }
+            updateExplorerRange();
         }
 
-        if (virtualList_)
+        void updateExplorerRange()
         {
-            virtualList_->removeAllChildren();
-            virtualList_->scrollToTop();
-            // Force height/materialization refresh even if count matched previous count.
-            if (virtualList_->getItemCount() == (int)filteredIndices_.size())
-                virtualList_->setItemCount(0);
-            virtualList_->setItemCount((int)filteredIndices_.size());
+            if (!explorerUi_ || !virtualList_)
+                return;
+            int total = (int)filteredIndices_.size();
+            int first = virtualList_->getFirstVisibleItem();
+            int last = virtualList_->getLastVisibleItem();
+            if (total == 0 || first < 0)
+            {
+                explorerUi_->setTextRef("exp-range", "0 matching entries");
+                return;
+            }
+            explorerUi_->setTextRef(
+                "exp-range",
+                "Materialized viewport: #" + std::to_string(first + 1) + " – #" +
+                    std::to_string(last + 1) + " of " + std::to_string(total) + " entries");
         }
-        updateExplorerRange();
-    }
 
-    void updateExplorerRange()
-    {
-        if (!explorerUi_ || !virtualList_)
-            return;
-        int total = (int)filteredIndices_.size();
-        int first = virtualList_->getFirstVisibleItem();
-        int last = virtualList_->getLastVisibleItem();
-        if (total == 0 || first < 0)
+        // -----------------------------------------------------------------------
+        //  View 4: Effects & Motion — CSS Transitions, @keyframes, UIAnimation,
+        //                             FilterRegistry, and CanvasLayout
+        // -----------------------------------------------------------------------
+        void buildEffectsView()
         {
-            explorerUi_->setTextRef("exp-range", "0 matching entries");
-            return;
-        }
-        explorerUi_->setTextRef(
-            "exp-range",
-            "Materialized viewport: #" + std::to_string(first + 1) + " – #" +
-                std::to_string(last + 1) + " of " + std::to_string(total) + " entries");
-    }
-
-    // -----------------------------------------------------------------------
-    //  View 4: Effects & Motion — CSS Transitions, @keyframes, UIAnimation,
-    //                             FilterRegistry, and CanvasLayout
-    // -----------------------------------------------------------------------
-    void buildEffectsView()
-    {
-        static const char *kEffectsMarkup = R"zm(
+            static const char *kEffectsMarkup = R"zm(
             ScrollView.view-scroll {
                 VStack.card {
                     Text.card-title wrap="true" "Declarative Motion (ZStyle Transitions & @keyframes)"
@@ -839,164 +841,167 @@ private:
             }
         )zm";
 
-        effectsUi_ = ZMarkup::build(kEffectsMarkup);
-        auto view = effectsUi_->root();
-        mountView(view);
+            effectsUi_ = ZMarkup::build(kEffectsMarkup);
+            auto view = effectsUi_->root();
+            mountView(view);
 
-        // Register imperative UIAnimations on @anim-target
-        if (auto target = effectsUi_->ref("anim-target"))
-        {
-            auto slide = std::make_shared<UIAnimation>(0.45f);
-            slide->addTrack<Value>(
-                Px(0.0f), Px(36.0f),
-                [](Layout *l, Value v)
-                { l->getInlineBase().translateX = v; },
-                TransitionFunction::EaseOutBack);
-            slide->addTrack<float>(
-                1.0f, 1.06f,
-                [](Layout *l, float s)
-                { l->getInlineBase().scale = s; },
-                TransitionFunction::EaseOutQuad);
+            // Register imperative UIAnimations on @anim-target
+            if (auto target = effectsUi_->ref("anim-target"))
+            {
+                auto slide = std::make_shared<UIAnimation>(0.45f);
+                slide->addTrack<Value>(
+                    Px(0.0f), Px(36.0f),
+                    [](Layout *l, Value v)
+                    { l->getInlineBase().translateX = v; },
+                    TransitionFunction::EaseOutBack);
+                slide->addTrack<float>(
+                    1.0f, 1.06f,
+                    [](Layout *l, float s)
+                    { l->getInlineBase().scale = s; },
+                    TransitionFunction::EaseOutQuad);
 
-            auto shake = std::make_shared<UIAnimation>(0.45f);
-            shake->addTrack<float>(
-                0.0f, 1.0f,
-                [](Layout *l, float t)
-                {
-                    float amp = (1.0f - t) * 14.0f;
-                    l->getInlineBase().translateX = Px(std::sin(t * 32.0f) * amp);
-                },
-                TransitionFunction::Linear);
+                auto shake = std::make_shared<UIAnimation>(0.45f);
+                shake->addTrack<float>(
+                    0.0f, 1.0f,
+                    [](Layout *l, float t)
+                    {
+                        float amp = (1.0f - t) * 14.0f;
+                        l->getInlineBase().translateX = Px(std::sin(t * 32.0f) * amp);
+                    },
+                    TransitionFunction::Linear);
 
-            target->addAnimation("slide", slide);
-            target->addAnimation("shake", shake);
+                target->addAnimation("slide", slide);
+                target->addAnimation("shake", shake);
 
-            std::weak_ptr<Layout> weakTarget = target;
-            effectsUi_->onClickRef("anim-slide", [weakTarget]
-                                   {
+                std::weak_ptr<Layout> weakTarget = target;
+                effectsUi_->onClickRef("anim-slide", [weakTarget]
+                                       {
                 if (auto t = weakTarget.lock())
                     t->playAnimation("slide", false); });
-            effectsUi_->onClickRef("anim-reverse", [weakTarget]
-                                   {
+                effectsUi_->onClickRef("anim-reverse", [weakTarget]
+                                       {
                 if (auto t = weakTarget.lock())
                     t->playAnimation("slide", true); });
-            effectsUi_->onClickRef("anim-shake", [weakTarget]
-                                   {
+                effectsUi_->onClickRef("anim-shake", [weakTarget]
+                                       {
                 if (auto t = weakTarget.lock())
                     t->playAnimation("shake", false); });
+            }
+
+            // CanvasLayout with toggleable hueShift shader
+            auto canvas = CanvasLayout::create();
+            canvas->size(Px(210), Px(110));
+
+            auto scene = VStack();
+            scene->getInlineBase().gap = Px(8);
+            scene->getInlineBase().alignItems = Align::Center;
+
+            auto swatches = HStack();
+            swatches->getInlineBase().gap = Px(8);
+            auto makeSwatch = [](ZenitUI::Color c)
+            {
+                auto s = std::make_shared<Layout>(LayoutType::Stack);
+                s->cls("swatch");
+                s->getInlineBase().background = c;
+                return s;
+            };
+            swatches->addChild(makeSwatch({225, 70, 75, 255}));
+            swatches->addChild(makeSwatch({65, 200, 110, 255}));
+            swatches->addChild(makeSwatch({75, 135, 240, 255}));
+            scene->addChild(swatches);
+            scene->addChild(Label("Composited RGB Scene")->cls("muted"));
+            canvas->addChild(scene);
+
+            auto applyCanvasShader = [canvas](bool enabled)
+            {
+                if (!UIContext::get().assets)
+                    return;
+                canvas->setShader(enabled ? UIContext::get().assets->getEffect("hueShift")
+                                          : EffectHandle{});
+            };
+            applyCanvasShader(true);
+
+            effectsUi_->onToggleRef("canvas-shader-toggle", applyCanvasShader);
+
+            if (auto slot = effectsUi_->ref("canvas-slot"))
+                slot->addChild(canvas);
         }
 
-        // CanvasLayout with toggleable hueShift shader
-        auto canvas = CanvasLayout::create();
-        canvas->size(Px(210), Px(110));
-
-        auto scene = VStack();
-        scene->getInlineBase().gap = Px(8);
-        scene->getInlineBase().alignItems = Align::Center;
-
-        auto swatches = HStack();
-        swatches->getInlineBase().gap = Px(8);
-        auto makeSwatch = [](ZenitUI::Color c)
+        // -----------------------------------------------------------------------
+        //  Shared Modal overlay mounted directly on #app
+        // -----------------------------------------------------------------------
+        void buildModal()
         {
-            auto s = std::make_shared<Layout>(LayoutType::Stack);
-            s->cls("swatch");
-            s->getInlineBase().background = c;
-            return s;
-        };
-        swatches->addChild(makeSwatch({225, 70, 75, 255}));
-        swatches->addChild(makeSwatch({65, 200, 110, 255}));
-        swatches->addChild(makeSwatch({75, 135, 240, 255}));
-        scene->addChild(swatches);
-        scene->addChild(Label("Composited RGB Scene")->cls("muted"));
-        canvas->addChild(scene);
+            modal_ = Modal::create();
+            auto card = modal_->children[0];
+            card->cls("modal-card");
 
-        auto applyCanvasShader = [canvas](bool enabled)
-        {
-            if (!UIContext::get().assets)
-                return;
-            canvas->setShader(enabled ? UIContext::get().assets->getEffect("hueShift")
-                                      : EffectHandle{});
-        };
-        applyCanvasShader(true);
+            modalTitle_ = Label("")->cls("page-title");
+            modalBody_ = Label("")->cls("muted");
+            modalBody_->setWrap(true);
 
-        effectsUi_->onToggleRef("canvas-shader-toggle", applyCanvasShader);
+            auto actions = HStack();
+            actions->getInlineBase().width = Percent(100);
+            actions->getInlineBase().justify = Justify::End;
+            actions->getInlineBase().gap = Px(10);
 
-        if (auto slot = effectsUi_->ref("canvas-slot"))
-            slot->addChild(canvas);
-    }
-
-    // -----------------------------------------------------------------------
-    //  Shared Modal overlay mounted directly on #app
-    // -----------------------------------------------------------------------
-    void buildModal()
-    {
-        modal_ = Modal::create();
-        auto card = modal_->children[0];
-        card->cls("modal-card");
-
-        modalTitle_ = Label("")->cls("page-title");
-        modalBody_ = Label("")->cls("muted");
-        modalBody_->setWrap(true);
-
-        auto actions = HStack();
-        actions->getInlineBase().width = Percent(100);
-        actions->getInlineBase().justify = Justify::End;
-        actions->getInlineBase().gap = Px(10);
-
-        actions->addChild(Btn("Close", [this]
-                              { modal_->hide(); }));
-        actions->addChild(Btn("Confirm", [this]
-                              {
+            actions->addChild(Btn("Close", [this]
+                                  { modal_->hide(); }));
+            actions->addChild(Btn("Confirm", [this]
+                                  {
                               if (modalConfirmAction_)
                                   modalConfirmAction_();
                               modal_->hide(); })
-                              ->cls("btn-primary"));
+                                  ->cls("btn-primary"));
 
-        card->addChild(modalTitle_);
-        card->addChild(modalBody_);
-        card->addChild(actions);
+            card->addChild(modalTitle_);
+            card->addChild(modalBody_);
+            card->addChild(actions);
 
-        appRoot_->addChild(modal_);
-    }
-
-    void openModal(const std::string &title,
-                   const std::string &body,
-                   std::function<void()> onConfirm)
-    {
-        if (!modal_)
-            return;
-        modalTitle_->setText(title);
-        modalBody_->setText(body);
-        modalConfirmAction_ = std::move(onConfirm);
-        modal_->show();
-    }
-
-    // -----------------------------------------------------------------------
-    //  View mounting & tab switching (preserves live state per view)
-    // -----------------------------------------------------------------------
-    void mountView(std::shared_ptr<Layout> view)
-    {
-        if (auto host = shellUi_->ref("content-host"))
-            host->addChild(view);
-        views_.push_back(std::move(view));
-    }
-
-    void switchView(int index)
-    {
-        static const char *kTitles[] = {
-            "Dashboard — Prefabs, Bindable & Keyed Each",
-            "Editor & Forms — Widgets & UTF-8 TextArea",
-            "Virtual Explorer — 10,000 Rows & Portals",
-            "Effects & Motion — Shaders & Animations",
-        };
-
-        for (int i = 0; i < (int)views_.size(); ++i)
-        {
-            views_[i]->setVisible(i == index);
-            shellUi_->toggleClassRef("nav-" + std::to_string(i), "active", i == index);
+            appRoot_->addChild(modal_);
         }
-        shellUi_->setTextRef("page-title", kTitles[index]);
-        if (index == 2)
-            updateExplorerRange();
-    }
-};
+
+        void openModal(const std::string &title,
+                       const std::string &body,
+                       std::function<void()> onConfirm)
+        {
+            if (!modal_)
+                return;
+            modalTitle_->setText(title);
+            modalBody_->setText(body);
+            modalConfirmAction_ = std::move(onConfirm);
+            modal_->show();
+        }
+
+        // -----------------------------------------------------------------------
+        //  View mounting & tab switching (preserves live state per view)
+        // -----------------------------------------------------------------------
+        void mountView(std::shared_ptr<Layout> view)
+        {
+            if (auto host = shellUi_->ref("content-host"))
+                host->addChild(view);
+            views_.push_back(std::move(view));
+        }
+
+        void switchView(int index)
+        {
+            static const char *kTitles[] = {
+                "Dashboard — Prefabs, Bindable & Keyed Each",
+                "Editor & Forms — Widgets & UTF-8 TextArea",
+                "Virtual Explorer — 10,000 Rows & Portals",
+                "Effects & Motion — Shaders & Animations",
+            };
+
+            for (int i = 0; i < (int)views_.size(); ++i)
+            {
+                views_[i]->setVisible(i == index);
+                shellUi_->toggleClassRef("nav-" + std::to_string(i), "active", i == index);
+            }
+            shellUi_->setTextRef("page-title", kTitles[index]);
+            if (index == 2)
+                updateExplorerRange();
+        }
+    };
+} // namespace Showcase
+
+using Showcase::ShowcaseApp;
