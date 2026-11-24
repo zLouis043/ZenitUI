@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['settingsscreen_20hpp_0',['SettingsScreen.hpp',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md2',1,'']]],
-  ['start_20hello_20world_1',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]],
-  ['suggested_20reading_20order_2',['Suggested Reading Order',['../index.html#sec_learning_path',1,'']]]
+  ['theme_20zstyle_0',['theme zstyle',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md1',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md3',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md7',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md9',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md12',1,'theme.zstyle'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md14',1,'theme.zstyle']]],
+  ['topic_1',['Browse by Topic',['../index.html#sec_modules',1,'']]]
 ];

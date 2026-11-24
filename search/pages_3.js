@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['demowindow_20hpp_0',['DemoWindow.hpp',['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md0',1,'']]]
+  ['guide_20api_20reference_0',['ZenitUI — Guide &amp;amp; API Reference',['../index.html',1,'']]]
 ];

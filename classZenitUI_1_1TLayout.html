@@ -366,7 +366,7 @@ class ZenitUI::TLayout&lt; Derived, Base &gt;</div><p>CRTP base for components t
 <li><span class="tt"><a class="el" href="#a2c2d04d1bcdf383f75e355dc2b3f2730" title="Hook: called once after create() finishes constructing the object.">onBuild()</a></span> virtual, called exactly once at the end of <span class="tt"><a class="el" href="#ab3bf0250bf5a974c4ba752ad95bc7ba0" title="Construct a shared_ptr&lt;Derived&gt; and call onBuild().">create()</a></span>.</li>
 </ul>
 <p>Subclass constructors should do only initialization; structural work (creating child widgets, wiring callbacks that need <span class="tt">shared_from_this</span>) belongs in <span class="tt"><a class="el" href="#a2c2d04d1bcdf383f75e355dc2b3f2730" title="Hook: called once after create() finishes constructing the object.">onBuild</a></span>, because <span class="tt">shared_from_this</span> is valid only after <span class="tt"><a class="el" href="#ab3bf0250bf5a974c4ba752ad95bc7ba0" title="Construct a shared_ptr&lt;Derived&gt; and call onBuild().">create()</a></span> returns from <span class="tt">make_shared</span>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a0">00_demo/main.cpp</a>, and <a class="el" href="11_ref_list_2main_8cpp-example.html#_a0">11_ref_list/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="11_ref_list_2main_8cpp-example.html#_a0">11_ref_list/main.cpp</a>.</dd>
 </dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4225e5714ee6a1e6f804daae8d0fa319" name="a4225e5714ee6a1e6f804daae8d0fa319"></a>

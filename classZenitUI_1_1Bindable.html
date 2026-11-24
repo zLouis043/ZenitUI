@@ -138,7 +138,7 @@ class ZenitUI::Bindable&lt; T &gt;</div><p>Observable single-value container. </
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="12_bindable_2main_8cpp-example.html#_a5">12_bindable/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a2">00_demo/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#_a5">12_bindable/main.cpp</a>.</dd>
 </dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abe97b13532dbc3eb4a282ff59073bb13" name="abe97b13532dbc3eb4a282ff59073bb13"></a>
@@ -373,7 +373,7 @@ template&lt;typename W, typename Arg&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <span class="tt"><a class="el" href="classZenitUI_1_1Bindable_1_1Subscription.html" title="RAII handle to an onChanged registration.">Subscription</a></span> that unregisters on destruction.</dd></dl>
 <p>The weak pointer is locked on every notification, so the widget can be destroyed independently of the subscription. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="12_bindable_2main_8cpp-example.html#a20">12_bindable/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a8">00_demo/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#a20">12_bindable/main.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -404,6 +404,8 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 
 <p>Read the current value. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a14">00_demo/main.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -445,7 +447,7 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <span class="tt"><a class="el" href="classZenitUI_1_1Bindable_1_1Subscription.html" title="RAII handle to an onChanged registration.">Subscription</a></span> that unregisters on destruction. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="12_bindable_2main_8cpp-example.html#a14">12_bindable/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a11">00_demo/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#a14">12_bindable/main.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -531,7 +533,7 @@ template&lt;typename T&gt; </div>
 
 <p>Replace the value and notify subscribers if it changed. </p>
 <p>Equality is compared on <span class="tt">T</span>; setting the same value is a no-op. Subscribers are snapshotted before dispatch, so a subscriber that (un)subscribes from within its callback does not invalidate the loop. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="12_bindable_2main_8cpp-example.html#a13">12_bindable/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#a6">00_demo/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#a13">12_bindable/main.cpp</a>.</dd>
 </dl>
 
 </div>

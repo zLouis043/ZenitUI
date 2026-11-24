@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['order_0',['Suggested Reading Order',['../index.html#sec_learning_path',1,'']]]
+  ['quick_20start_20hello_20world_0',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]]
 ];
