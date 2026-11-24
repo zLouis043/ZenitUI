@@ -25,10 +25,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y doxygen graphviz
 
-      - name: Build documentation
+      - name: Generate Doxygen metadata
         run: |
           cmake -P docs/gen_examples.cmake
-          doxygen Doxyfile
+          cmake -P docs/gen_backends.cmake
+
+      - name: Build Doxygen HTML
+        run: doxygen Doxyfile
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
