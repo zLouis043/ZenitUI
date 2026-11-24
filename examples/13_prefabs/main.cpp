@@ -35,8 +35,6 @@ int main(void)
     UIContext::get().platform = &backendPlatform;
     UIContext::get().assets = &backendAssets;
 
-    backendAssets.loadFont("calibri", "./assets/calibrib.ttf", 64);
-
     // Inline styling for Toggle (its intrinsic size is 0x0 until styled).
     ZMarkup::loadStyleString(R"(
         Toggle {

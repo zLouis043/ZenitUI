@@ -103,7 +103,7 @@ int main()
     UIContext::get().assets   = &assets;
 
     // Load the shader used by the second canvas.
-    assets.loadEffect("hueShift", "assets/hue_shift.fs");
+    assets.loadEffect("hueShift", "assets/shaders/hue_shift.fs");
 
     ZMarkup::loadStyleFile("examples/10_canvas/theme.zstyle");
 

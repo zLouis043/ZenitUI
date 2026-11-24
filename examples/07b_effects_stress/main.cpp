@@ -32,8 +32,8 @@ int main()
     ctx.assets = &assets;
 
     // Load fragment shaders used by the built-in and custom filters
-    assets.loadEffect("blur", "assets/blur.fs");
-    assets.loadEffect("dropShadow", "assets/drop_shadow.fs");
+    assets.loadEffect("blur", "assets/shaders/blur.fs");
+    assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
 
     registerBuiltinFilters();
     FilterRegistry::get().add(FilterDef{

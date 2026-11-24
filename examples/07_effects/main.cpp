@@ -77,10 +77,10 @@ int main()
     //  Load shaders used by both `filter:` and `effect:`.
     //  Paths are relative to the repository root.
     // -----------------------------------------------------------------------
-    assets.loadEffect("blur", "assets/blur.fs");
-    assets.loadEffect("dropShadow", "assets/drop_shadow.fs");
-    assets.loadEffect("hueShift", "assets/hue_shift.fs");
-    assets.loadEffect("sepia", "assets/sepia.fs");
+    assets.loadEffect("blur", "assets/shaders/blur.fs");
+    assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
+    assets.loadEffect("hueShift", "assets/shaders/hue_shift.fs");
+    assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
     // -----------------------------------------------------------------------
     //  Register the sepia filter. `blur` and `drop-shadow` are built-in
