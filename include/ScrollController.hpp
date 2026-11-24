@@ -54,6 +54,7 @@ namespace ZenitUI
         Vec2 appliedOffset{0, 0};
         bool arrangeInitialized{false};
         bool scrolling{false};
+        int dragAxis{0}; // 0 = none, 1 = vertical, 2 = horizontal
         Overflow lastOverflowX{Overflow::Visible};
         Overflow lastOverflowY{Overflow::Visible};
         bool overflowInitialized{false};

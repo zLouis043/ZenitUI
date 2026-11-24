@@ -495,7 +495,9 @@ TEST(Layout_align, explicit_align_items_stretch_on_stack)
     parent->getInlineBase().alignItems = Align::Stretch;
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
-    child->size(Px(50), Px(50));
+    child->size(Auto(), Auto());
+    child->getInlineBase().minWidth = Px(50);
+    child->getInlineBase().minHeight = Px(50);
     parent->addChild(child);
 
     parent->measure(200, 200);
@@ -634,16 +636,13 @@ TEST(Layout_flex, min_width_auto_prevents_collapse)
 
 TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
 {
-    // itemsH is a deprecated alias for align-items, which controls how
-    // a node aligns its OWN children. It must NOT be interpreted as an
-    // align-self hint on the node itself. This was the bug introduced
-    // in §5.25 and fixed here.
     freshTheme();
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
     auto child = std::make_shared<Layout>(LayoutType::Stack);
-    child->size(Px(50), Px(50));
+    child->size(Auto(), Px(50));
+    child->getInlineBase().minWidth = Px(50);
     child->getInlineBase().itemsH = Align::Center;
     parent->addChild(child);
 
@@ -654,6 +653,23 @@ TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
     // Child does not derive alignH from itemsH -> stretched.
     CHECK_NEAR(child->getRect().x, 0.0f, 0.5f);
     CHECK_NEAR(child->getRect().width, 200.0f, 0.5f);
+}
+
+TEST(Layout_align, stretch_respects_explicit_cross_size)
+{
+    freshTheme();
+    auto parent = std::make_shared<Layout>(LayoutType::Vertical);
+    parent->size(Px(200), Px(200));
+
+    auto child = std::make_shared<Layout>(LayoutType::Stack);
+    child->size(Px(48), Px(26));
+    parent->addChild(child);
+
+    parent->measure(200, 200);
+    parent->arrange({0, 0, 200, 200});
+
+    CHECK_NEAR(child->getRect().width, 48.0f, 0.5f);
+    CHECK_NEAR(child->getRect().height, 26.0f, 0.5f);
 }
 
 TEST(Layout_align, explicit_align_h_on_child_overrides_parent_stretch)
@@ -721,4 +737,40 @@ TEST(Layout_margin, auto_margins_center_in_stack)
 
     CHECK_NEAR(child->getRect().x, 200.0f, 1e-3);
     CHECK_NEAR(child->getRect().width, 600.0f, 1e-3);
+}
+
+TEST(Layout_flex, horizontal_shrink_remeasures_child_height)
+{
+    freshTheme();
+
+    // Aspect-like leaf: taller when narrower (simulates wrapped text).
+    struct WrappingBox : public Layout
+    {
+        WrappingBox() : Layout(LayoutType::Stack) {}
+        Vec2 computeIntrinsicSize(float availW, float) override
+        {
+            if (availW < 250.0f)
+                return {std::min(availW, 200.0f), 60.0f};
+            return {300.0f, 20.0f};
+        }
+    };
+
+    auto row = std::make_shared<Layout>(LayoutType::Horizontal);
+    row->size(Px(300.0f), Auto());
+
+    auto text = std::make_shared<WrappingBox>();
+    text->getInlineBase().minWidth = Px(0.0f);
+
+    auto btn = std::make_shared<Layout>(LayoutType::Stack);
+    btn->size(Px(100.0f), Px(30.0f));
+
+    row->addChild(text);
+    row->addChild(btn);
+
+    Vec2 sz = row->measure(300.0f, 500.0f);
+    row->arrange({0.0f, 0.0f, sz.x, sz.y});
+
+    CHECK_NEAR(text->getRect().width, 200.0f, 0.5f);
+    CHECK_NEAR(text->getRect().height, 60.0f, 0.5f);
+    CHECK_NEAR(row->getRect().height, 60.0f, 0.5f);
 }

@@ -1020,6 +1020,7 @@ namespace ZenitUI
 		Vec2 measuredSize{0, 0};
 		float lastMeasureW_{-1.0f};
 		float lastMeasureH_{-1.0f};
+		float forcedMeasureW_{-1.0f};
 		ScrollController scroll_;
 
 		NodeState state{};
@@ -1346,6 +1347,8 @@ namespace ZenitUI
 
 	private:
 		// ---- Private internals ----
+
+		Vec2 measureConstrainedW(float constrainedW, float parent_w, float parent_h);
 
 		/** \brief Lazily initialize `style_` on the first `update` / `measure`. */
 		void initStyleIfNeeded();

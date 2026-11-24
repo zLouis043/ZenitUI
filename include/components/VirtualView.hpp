@@ -194,6 +194,8 @@ namespace ZenitUI::UI
         setInteractive(true);
         setBlocksRaycast(true);
         TLayout<VirtualView, ScrollView>::onBuild();
+        getInlineDefaults().overflowX = Overflow::Auto;
+        getInlineDefaults().overflowY = Overflow::Auto;
     }
 
     inline void VirtualView::removeAllChildren()
@@ -421,8 +423,26 @@ namespace ZenitUI::UI
         {
             rebuildCumulative(availW);
         }
+
+        float maxW = availW;
+        const auto &st = getStyle();
+        if (st.overflowX == Overflow::Auto || st.overflowX == Overflow::Scroll)
+        {
+            for (const auto &e : materialized)
+            {
+                if (!e.node)
+                    continue;
+                auto &ib = e.node->getInlineBase();
+                auto prevW = ib.width;
+                ib.width = Auto();
+                Vec2 sz = e.node->measure(1e9f, 1e9f);
+                ib.width = prevW;
+                maxW = std::max(maxW, sz.x);
+            }
+        }
+
         float totalH = cumulativeHeights.empty() ? 0.0f : cumulativeHeights.back();
-        return {availW, totalH};
+        return {maxW, totalH};
     }
 
     /**

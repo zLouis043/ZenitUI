@@ -108,6 +108,7 @@ namespace ZenitUI
             Align textAlign{Align::Auto};
             Overflow overflowX{Overflow::Visible};
             Overflow overflowY{Overflow::Visible};
+            std::unordered_map<std::string, std::string> customProps;
         };
         InheritedSnapshot lastInherited{};
 

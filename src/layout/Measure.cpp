@@ -28,6 +28,104 @@ namespace ZenitUI
 		return (ov == Overflow::Visible) ? contentSize : 0.0f;
 	}
 
+	struct FlexItem
+	{
+		float base;
+		float minS;
+		float maxS;
+		float grow;
+		float shrink;
+	};
+
+	// CSS Flexbox §9.7: iteratively distribute free space, freezing any item
+	// that hits its min/max constraint and redistributing the remainder to
+	// still-flexible siblings.
+	static std::vector<float> resolveFlexSizes(const std::vector<FlexItem> &items,
+											   float availMain)
+	{
+		const size_t n = items.size();
+		std::vector<float> sizes(n, 0.0f);
+		std::vector<bool> frozen(n, false);
+
+		auto clamp = [](float v, float lo, float hi) -> float
+		{
+			return (hi < lo) ? hi : std::clamp(v, lo, hi);
+		};
+
+		float baseSum = 0.0f;
+		for (const auto &it : items)
+			baseSum += it.base;
+
+		const bool growing = (availMain >= baseSum);
+
+		for (size_t i = 0; i < n; ++i)
+		{
+			const float factor = growing ? items[i].grow : items[i].shrink;
+			if (factor <= 0.0f)
+			{
+				sizes[i] = clamp(items[i].base, items[i].minS, items[i].maxS);
+				frozen[i] = true;
+			}
+			else
+			{
+				sizes[i] = items[i].base;
+			}
+		}
+
+		for (size_t iter = 0; iter <= n; ++iter)
+		{
+			float remainingFree = availMain;
+			float totalFlex = 0.0f;
+			size_t unfrozen = 0;
+
+			for (size_t i = 0; i < n; ++i)
+			{
+				if (frozen[i])
+				{
+					remainingFree -= sizes[i];
+				}
+				else
+				{
+					remainingFree -= items[i].base;
+					totalFlex += growing ? items[i].grow : items[i].shrink;
+					++unfrozen;
+				}
+			}
+
+			if (unfrozen == 0 || totalFlex <= 0.0f)
+				break;
+
+			if ((growing && remainingFree <= 0.0f) || (!growing && remainingFree >= 0.0f))
+			{
+				for (size_t i = 0; i < n; ++i)
+					if (!frozen[i])
+						sizes[i] = clamp(items[i].base, items[i].minS, items[i].maxS);
+				break;
+			}
+
+			bool anyClamped = false;
+			for (size_t i = 0; i < n; ++i)
+			{
+				if (frozen[i])
+					continue;
+				const float factor = growing ? items[i].grow : items[i].shrink;
+				const float target = items[i].base + remainingFree * (factor / totalFlex);
+				const float clamped = clamp(target, items[i].minS, items[i].maxS);
+				sizes[i] = clamped;
+				if (std::fabs(clamped - target) > 1e-4f)
+				{
+					frozen[i] = true;
+					anyClamped = true;
+				}
+			}
+
+			if (!anyClamped)
+				break;
+		}
+
+		return sizes;
+	}
+
 	Vec2 Layout::measure(float parent_w, float parent_h)
 	{
 		if (!config.visible)
@@ -38,10 +136,11 @@ namespace ZenitUI
 			return measuredSize;
 		}
 
-		if (!internal_.subtreeDirty && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
+		const bool forcedW = (forcedMeasureW_ >= 0.0f);
+		if (!forcedW && !internal_.subtreeDirty && parent_w == lastMeasureW_ && parent_h == lastMeasureH_)
 			return measuredSize;
-		lastMeasureW_ = parent_w;
-		lastMeasureH_ = parent_h;
+		lastMeasureW_ = forcedW ? -1.0f : parent_w;
+		lastMeasureH_ = forcedW ? -1.0f : parent_h;
 
 		if (!internal_.styleInitialized)
 		{
@@ -61,9 +160,11 @@ namespace ZenitUI
 		float bwt = bws.top.resolveV(parent_w, parent_h);
 		float bwb = bws.bottom.resolveV(parent_w, parent_h);
 
-		float availW = calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h);
+		float availW = forcedW
+						   ? forcedMeasureW_
+						   : (calcStyle.width.isAuto() ? parent_w : calcStyle.width.resolveH(parent_w, parent_h));
 		float availH = calcStyle.height.isAuto() ? parent_h : calcStyle.height.resolveV(parent_w, parent_h);
-		if (!calcStyle.maxWidth.isAuto())
+		if (!forcedW && !calcStyle.maxWidth.isAuto())
 			availW = std::min(availW, calcStyle.maxWidth.resolveH(parent_w, parent_h));
 		if (!calcStyle.maxHeight.isAuto())
 			availH = std::min(availH, calcStyle.maxHeight.resolveV(parent_w, parent_h));
@@ -184,6 +285,78 @@ namespace ZenitUI
 				}
 			}
 
+			if (innerW < 1e8f && visibleChildren > 0)
+			{
+				std::vector<FlexItem> flexItems;
+				flexItems.reserve(visibleChildren);
+				float totalMarginsX = 0.0f;
+				float totalBaseMain = 0.0f;
+
+				for (auto &c : children)
+				{
+					if (!c->isVisible())
+						continue;
+					const auto &cst = c->getStyle();
+					if (cst.position == Position::Absolute || c->isPortal())
+						continue;
+
+					float ml = cst.margin.left.isAuto() ? 0.0f : cst.margin.left.resolveH(innerW, innerH);
+					float mr = cst.margin.right.isAuto() ? 0.0f : cst.margin.right.resolveH(innerW, innerH);
+					float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(innerW, innerH);
+					float minW = resolveFlexMin(cst, false, c->measuredSize.x, innerW, innerH);
+					float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(innerW, innerH);
+
+					flexItems.push_back({baseW, minW, maxW, cst.grow, cst.shrink});
+					totalMarginsX += ml + mr;
+					totalBaseMain += baseW + ml + mr;
+				}
+
+				if (totalBaseMain + totalGaps > innerW + 0.5f)
+				{
+					float availMain = innerW - totalMarginsX - totalGaps;
+					std::vector<float> shrunkWidths = resolveFlexSizes(flexItems, availMain);
+
+					bool anyResized = false;
+					size_t flowIdx = 0;
+					for (auto &c : children)
+					{
+						if (!c->isVisible())
+							continue;
+						const auto &cst = c->getStyle();
+						if (cst.position == Position::Absolute || c->isPortal())
+							continue;
+
+						float targetW = shrunkWidths[flowIdx++];
+						if (targetW < c->measuredSize.x - 0.5f)
+						{
+							c->measureConstrainedW(targetW, innerW, innerH);
+							anyResized = true;
+						}
+					}
+
+					if (anyResized)
+					{
+						totalMainSize = 0.0f;
+						maxCrossSize = 0.0f;
+						for (auto &c : children)
+						{
+							if (!c->isVisible())
+								continue;
+							const auto &cst = c->getStyle();
+							if (cst.position == Position::Absolute || c->isPortal())
+								continue;
+
+							float ml = cst.margin.left.isAuto() ? 0.0f : cst.margin.left.resolveH(innerW, innerH);
+							float mr = cst.margin.right.isAuto() ? 0.0f : cst.margin.right.resolveH(innerW, innerH);
+							float mt = cst.margin.top.isAuto() ? 0.0f : cst.margin.top.resolveV(innerW, innerH);
+							float mb = cst.margin.bottom.isAuto() ? 0.0f : cst.margin.bottom.resolveV(innerW, innerH);
+							totalMainSize += c->measuredSize.x + ml + mr;
+							maxCrossSize = std::max(maxCrossSize, c->measuredSize.y + mt + mb);
+						}
+					}
+				}
+			}
+
 			totalMainSize += totalGaps;
 			contentSize.x = std::max(contentSize.x, totalMainSize);
 			contentSize.y = std::max(contentSize.y, maxCrossSize);
@@ -231,7 +404,8 @@ namespace ZenitUI
 		scroll_.contentSize = contentSize;
 
 		float finalW = calcStyle.width.isAuto()
-						   ? (contentSize.x + pl + pr + bwl + bwr)
+						   ? (forcedW ? std::min(availW, contentSize.x + pl + pr + bwl + bwr)
+									  : (contentSize.x + pl + pr + bwl + bwr))
 						   : availW;
 		float finalH = calcStyle.height.isAuto()
 						   ? (contentSize.y + pt + pb + bwt + bwb)
@@ -242,7 +416,10 @@ namespace ZenitUI
 		float minH = calcStyle.minHeight.isAuto() ? 0.0f : calcStyle.minHeight.resolveV(parent_w, parent_h);
 		float maxH = calcStyle.maxHeight.isAuto() ? 1e9f : calcStyle.maxHeight.resolveV(parent_w, parent_h);
 
-		measuredSize = {std::clamp(finalW, minW, maxW), std::clamp(finalH, minH, maxH)};
+		float clampedW = forcedW
+							 ? clampSafe(finalW, minW, std::min(availW, maxW))
+							 : clampSafe(finalW, minW, maxW);
+		measuredSize = {clampedW, clampSafe(finalH, minH, maxH)};
 		return measuredSize;
 	}
 
@@ -432,7 +609,11 @@ namespace ZenitUI
 
 	void Layout::arrangeVerticalFlow(const Rect &inner, float gapY)
 	{
-		float totalFixedH = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
+		std::vector<FlexItem> flexItems;
+		flexItems.reserve(children.size());
+
+		float totalMarginsY = 0.0f;
+		float totalGrow = 0.0f;
 		int visibleChildren = 0;
 		int totalAutoY = 0;
 
@@ -453,15 +634,24 @@ namespace ZenitUI
 				totalAutoY++;
 
 			float baseH = cst.flexBasis.isAuto() ? c->measuredSize.y : cst.flexBasis.resolveV(inner.width, inner.height);
-			totalFixedH += mt + baseH + mb;
+			float minH = resolveFlexMin(cst, true, c->measuredSize.y, inner.width, inner.height);
+			float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
+
+			flexItems.push_back({baseH, minH, maxH, cst.grow, cst.shrink});
+			totalMarginsY += mt + mb;
 			totalGrow += cst.grow;
-			totalShrink += cst.shrink;
 			visibleChildren++;
 		}
-		if (visibleChildren > 1)
-			totalFixedH += gapY * (visibleChildren - 1);
 
-		float freeSpace = inner.height - totalFixedH;
+		float totalGaps = (visibleChildren > 1) ? gapY * (visibleChildren - 1) : 0.0f;
+		float availMain = inner.height - totalMarginsY - totalGaps;
+		std::vector<float> finalHeights = resolveFlexSizes(flexItems, availMain);
+
+		float actualUsedHeight = totalMarginsY + totalGaps;
+		for (float h : finalHeights)
+			actualUsedHeight += h;
+
+		float freeSpace = inner.height - actualUsedHeight;
 		float startY = inner.y;
 		float extraGap = 0.0f;
 		float autoMarginYSize = 0.0f;
@@ -493,6 +683,7 @@ namespace ZenitUI
 		}
 
 		float curY = startY;
+		size_t flowIdx = 0;
 		for (auto &c : children)
 		{
 			if (!c->isVisible())
@@ -506,18 +697,7 @@ namespace ZenitUI
 			float mt = (cst.margin.top.isAuto() ? autoMarginYSize : cst.margin.top.resolveV(inner.width, inner.height));
 			float mb = (cst.margin.bottom.isAuto() ? autoMarginYSize : cst.margin.bottom.resolveV(inner.width, inner.height));
 
-			float baseH = cst.flexBasis.isAuto() ? c->measuredSize.y : cst.flexBasis.resolveV(inner.width, inner.height);
-			float ch = baseH;
-
-			if (freeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
-				ch += freeSpace * (cst.grow / totalGrow);
-			else if (freeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
-				ch += freeSpace * (cst.shrink / totalShrink);
-
-			float minH = resolveFlexMin(cst, true, c->measuredSize.y, inner.width, inner.height);
-			float maxH = cst.maxHeight.isAuto() ? 1e9f : cst.maxHeight.resolveV(inner.width, inner.height);
-			ch = clampSafe(ch, minH, maxH);
-
+			float ch = finalHeights[flowIdx++];
 			float cw = c->measuredSize.x;
 
 			int autoX = (cst.margin.left.isAuto() ? 1 : 0) + (cst.margin.right.isAuto() ? 1 : 0);
@@ -538,7 +718,7 @@ namespace ZenitUI
 			float cx = inner.x + ml;
 			Align aH = (autoX > 0) ? Align::Start : ((cst.alignH == Align::Auto) ? style_.currentStyle.alignItems : cst.alignH);
 
-			if (aH == Align::Stretch)
+			if (aH == Align::Stretch && cst.width.isAuto())
 				cw = clampSafe(availW, minW, std::min(availW, maxW));
 			else if (aH == Align::Center)
 				cx += (availW - cw) * 0.5f;
@@ -552,7 +732,11 @@ namespace ZenitUI
 
 	void Layout::arrangeHorizontalFlow(const Rect &inner, float gapX)
 	{
-		float totalFixedW = 0.0f, totalGrow = 0.0f, totalShrink = 0.0f;
+		std::vector<FlexItem> flexItems;
+		flexItems.reserve(children.size());
+
+		float totalMarginsX = 0.0f;
+		float totalGrow = 0.0f;
 		int visibleChildren = 0;
 		int totalAutoX = 0;
 
@@ -573,50 +757,25 @@ namespace ZenitUI
 				totalAutoX++;
 
 			float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
-			totalFixedW += ml + baseW + mr;
-			totalGrow += cst.grow;
-			totalShrink += cst.shrink;
-			visibleChildren++;
-		}
-		if (visibleChildren > 1)
-			totalFixedW += gapX * (visibleChildren - 1);
-
-		float initialFreeSpace = inner.width - totalFixedW;
-		float startX = inner.x;
-		float actualUsedWidth = 0.0f;
-		std::vector<float> finalWidths;
-		finalWidths.reserve(children.size());
-
-		for (auto &c : children)
-		{
-			const auto &cst = c->getStyle();
-			if (!c->isVisible() || cst.position == Position::Absolute || c->isPortal())
-			{
-				finalWidths.push_back(0.0f);
-				continue;
-			}
-
-			float baseW = cst.flexBasis.isAuto() ? c->measuredSize.x : cst.flexBasis.resolveH(inner.width, inner.height);
-			float cw = baseW;
-
-			if (initialFreeSpace > 0.0f && totalGrow > 0.0f && cst.grow > 0.0f)
-				cw += initialFreeSpace * (cst.grow / totalGrow);
-			else if (initialFreeSpace < 0.0f && totalShrink > 0.0f && cst.shrink > 0.0f)
-				cw += initialFreeSpace * (cst.shrink / totalShrink);
-
 			float minW = resolveFlexMin(cst, false, c->measuredSize.x, inner.width, inner.height);
 			float maxW = cst.maxWidth.isAuto() ? 1e9f : cst.maxWidth.resolveH(inner.width, inner.height);
-			cw = clampSafe(cw, minW, maxW);
-			finalWidths.push_back(cw);
 
-			float ml = cst.margin.left.isAuto() ? 0.0f : cst.margin.left.resolveH(inner.width, inner.height);
-			float mr = cst.margin.right.isAuto() ? 0.0f : cst.margin.right.resolveH(inner.width, inner.height);
-			actualUsedWidth += cw + ml + mr;
+			flexItems.push_back({baseW, minW, maxW, cst.grow, cst.shrink});
+			totalMarginsX += ml + mr;
+			totalGrow += cst.grow;
+			visibleChildren++;
 		}
-		if (visibleChildren > 1)
-			actualUsedWidth += gapX * (visibleChildren - 1);
+
+		float totalGaps = (visibleChildren > 1) ? gapX * (visibleChildren - 1) : 0.0f;
+		float availMain = inner.width - totalMarginsX - totalGaps;
+		std::vector<float> finalWidths = resolveFlexSizes(flexItems, availMain);
+
+		float actualUsedWidth = totalMarginsX + totalGaps;
+		for (float w : finalWidths)
+			actualUsedWidth += w;
 
 		float finalFreeSpace = inner.width - actualUsedWidth;
+		float startX = inner.x;
 		float extraGap = 0.0f;
 		float autoMarginXSize = 0.0f;
 
@@ -647,23 +806,20 @@ namespace ZenitUI
 		}
 
 		float curX = startX;
-		size_t childIndex = 0;
+		size_t flowIdx = 0;
 
 		for (auto &c : children)
 		{
 			const auto &cst = c->getStyle();
 			if (!c->isVisible() || cst.position == Position::Absolute || c->isPortal())
-			{
-				childIndex++;
 				continue;
-			}
 
 			float ml = cst.margin.left.isAuto() ? autoMarginXSize : cst.margin.left.resolveH(inner.width, inner.height);
 			float mr = cst.margin.right.isAuto() ? autoMarginXSize : cst.margin.right.resolveH(inner.width, inner.height);
 			float mt = cst.margin.top.isAuto() ? 0.0f : cst.margin.top.resolveV(inner.width, inner.height);
 			float mb = cst.margin.bottom.isAuto() ? 0.0f : cst.margin.bottom.resolveV(inner.width, inner.height);
 
-			float cw = finalWidths[childIndex++];
+			float cw = finalWidths[flowIdx++];
 			float ch = c->measuredSize.y;
 
 			int autoY = (cst.margin.top.isAuto() ? 1 : 0) + (cst.margin.bottom.isAuto() ? 1 : 0);
@@ -683,7 +839,7 @@ namespace ZenitUI
 
 			float cy = inner.y + mt;
 			Align aV = (autoY > 0) ? Align::Start : ((cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV);
-			if (aV == Align::Stretch)
+			if (aV == Align::Stretch && cst.height.isAuto())
 				ch = clampSafe(availH, minH, std::min(availH, maxH));
 			else if (aV == Align::Center)
 				cy += (availH - ch) * 0.5f;
@@ -748,14 +904,14 @@ namespace ZenitUI
 			Align aH = (autoX > 0) ? Align::Start : ((cst.alignH == Align::Auto) ? style_.currentStyle.alignItems : cst.alignH);
 			Align aV = (autoY > 0) ? Align::Start : ((cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV);
 
-			if (aH == Align::Stretch)
+			if (aH == Align::Stretch && cst.width.isAuto())
 				cw = clampSafe(availW, minW, std::min(availW, maxW));
 			else if (aH == Align::Center)
 				cx += (availW - cw) * 0.5f;
 			else if (aH == Align::End)
 				cx += availW - cw;
 
-			if (aV == Align::Stretch)
+			if (aV == Align::Stretch && cst.height.isAuto())
 				ch = clampSafe(availH, minH, std::min(availH, maxH));
 			else if (aV == Align::Center)
 				cy += (availH - ch) * 0.5f;
@@ -997,7 +1153,7 @@ namespace ZenitUI
 
 				float cy = curY + mt;
 				Align aV = (cst.alignV == Align::Auto) ? style_.currentStyle.alignItems : cst.alignV;
-				if (aV == Align::Stretch)
+				if (aV == Align::Stretch && cst.height.isAuto())
 					ch = clampSafe(availH, minH, std::min(availH, maxH));
 				else if (aV == Align::Center)
 					cy += (availH - ch) * 0.5f;
@@ -1010,4 +1166,14 @@ namespace ZenitUI
 			curY += line.height + gapY;
 		}
 	}
+
+	Vec2 Layout::measureConstrainedW(float constrainedW, float parent_w, float parent_h)
+	{
+		float prev = forcedMeasureW_;
+		forcedMeasureW_ = constrainedW;
+		Vec2 s = measure(parent_w, parent_h);
+		forcedMeasureW_ = prev;
+		return s;
+	}
+
 } // namespace ZenitUI

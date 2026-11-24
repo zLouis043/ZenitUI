@@ -256,6 +256,16 @@ namespace ZenitUI
 		for (const auto *r : matches)
 			target.overlay(r->style);
 
+		if (!target.unresolvedProps.empty())
+		{
+			const auto &props = node.getStyle().customProps.empty()
+									? theme.root.customProps
+									: node.getStyle().customProps;
+			Style resolved = resolveUnresolvedProps(target.unresolvedProps, props);
+			target.overlay(resolved);
+			target.unresolvedProps.clear();
+		}
+
 		double now = UIContext::get().time;
 		auto &st = partTransitions[partName];
 
@@ -319,6 +329,7 @@ namespace ZenitUI
 		transitionTimer = 0.0f;
 		transitionStartStyle = currentStyle;
 		targetStyle = resolveFor(node);
+		currentStyle.customProps = targetStyle.customProps;
 		node.internal_.pendingTransition = 0;
 
 		transitionDirtyMask_ = 0;
@@ -372,6 +383,8 @@ namespace ZenitUI
 				transitionDirtyMask_ = 0;
 			}
 		}
+
+		currentStyle.customProps = targetStyle.customProps;
 	}
 
 	void StyleResolver::tick(Layout & /*node*/, float dt)
@@ -440,7 +453,8 @@ namespace ZenitUI
 			!(lastInherited.fontSize == currentStyle.fontSize) ||
 			!(lastInherited.color == currentStyle.color) ||
 			!(lastInherited.letterSpacing == currentStyle.letterSpacing) ||
-			!(lastInherited.textAlign == currentStyle.textAlign);
+			!(lastInherited.textAlign == currentStyle.textAlign) ||
+			lastInherited.customProps != currentStyle.customProps;
 
 		if (!changed)
 			return;
@@ -460,6 +474,7 @@ namespace ZenitUI
 		lastInherited.textAlign = currentStyle.textAlign;
 		lastInherited.overflowX = currentStyle.overflowX;
 		lastInherited.overflowY = currentStyle.overflowY;
+		lastInherited.customProps = currentStyle.customProps;
 	}
 
 	void StyleResolver::deriveAlignAliases(Layout &node,

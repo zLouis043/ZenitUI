@@ -25,6 +25,7 @@ namespace ZenitUI
         appliedOffset = {0.0f, 0.0f};
         arrangeInitialized = false;
         scrolling = false;
+        dragAxis = 0;
     }
 
     bool ScrollController::needsFullArrange(const Layout &node, bool positionChanged) const
@@ -43,12 +44,12 @@ namespace ZenitUI
 
         Rect arranged = space;
 
-        if (node.getEffectiveLayoutType() == LayoutType::Vertical && st.overflowY != Overflow::Visible)
+        if (st.overflowY != Overflow::Visible)
         {
             float contentH = contentSize.y + pt + pb;
             arranged.height = std::max(space.height, contentH);
         }
-        else if (node.getEffectiveLayoutType() == LayoutType::Horizontal && st.overflowX != Overflow::Visible)
+        if (st.overflowX != Overflow::Visible)
         {
             float contentW = contentSize.x + pl + pr;
             arranged.width = std::max(space.width, contentW);
@@ -131,6 +132,7 @@ namespace ZenitUI
                         state.dragStartOffsetY = state.offset.y;
                         state.velocity = {0.0f, 0.0f};
                         handled = true;
+                        dragAxis = 1;
                     }
                     else if (track.contains(pointer.pos))
                     {
@@ -156,6 +158,7 @@ namespace ZenitUI
                         state.dragStartOffsetX = state.offset.x;
                         state.velocity = {0.0f, 0.0f};
                         handled = true;
+                        dragAxis = 2;
                     }
                     else if (track.contains(pointer.pos))
                     {
@@ -168,20 +171,24 @@ namespace ZenitUI
         }
         else if (pointer[MouseButton::Left].down)
         {
-            if (canScrollY)
+            if (dragAxis == 1 && canScrollY)
             {
                 float dy = pointer.pos.y - state.dragStartMouseY;
                 float ratio = (rect.height > 0.0f) ? (contentSize.y / rect.height) : 1.0f;
                 state.offset.y = std::clamp(
                     state.dragStartOffsetY + dy * ratio, 0.0f, state.maxScroll.y);
             }
-            if (canScrollX)
+            else if (dragAxis == 2 && canScrollX)
             {
                 float dx = pointer.pos.x - state.dragStartMouseX;
                 float ratio = (rect.width > 0.0f) ? (contentSize.x / rect.width) : 1.0f;
                 state.offset.x = std::clamp(
                     state.dragStartOffsetX + dx * ratio, 0.0f, state.maxScroll.x);
             }
+        }
+        else
+        {
+            dragAxis = 0;
         }
 
         if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
@@ -206,7 +213,7 @@ namespace ZenitUI
 
         scrolling = node.hasPointerCapture() || std::abs(state.velocity.x) > ScrollState::VELOCITY_MIN || std::abs(state.velocity.y) > ScrollState::VELOCITY_MIN;
     }
-    
+
     void ScrollController::drawScrollbar(const Layout &node, float parentOpacity) const
     {
         const auto &st = node.style_.currentStyle;
