@@ -1,5 +1,11 @@
 #pragma once
 
+// @backend_name     Mock (Headless)
+// @backend_target   ZenitUI::MockBackend
+// @backend_role     Deterministic headless backend & test fixture (no GPU/window)
+// @backend_features Configurable (Effects, NestedTargets, TargetSubRect)
+// @backend_classes  ZenitUI::Test::MockPlatform ZenitUI::Test::MockRenderer ZenitUI::Test::MockAssetProvider ZenitUI::Test::Env
+
 /**
  * \file MockBackend.hpp
  * \brief Headless mock backend (`MockRenderer`, `MockPlatform`, `MockAssetProvider`)

@@ -6,9 +6,9 @@ OUTPUT_DIRECTORY       = build/docs
 # ---- Input ----
 INPUT                  = include \
                          docs \
+                         backends \
                          build/docs/generated_examples.dox \
-                         backends/raylib/RaylibBackend.hpp \
-                         backends/mock/MockBackend.hpp
+                         build/docs/generated_backends.dox
 FILE_PATTERNS          = *.hpp *.h *.dox
 RECURSIVE              = YES
 EXAMPLE_PATH           = examples

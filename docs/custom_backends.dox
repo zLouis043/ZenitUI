@@ -6,11 +6,11 @@
  * DirectX, etc.), implement three lightweight interfaces and bind them to
  * `ZenitUI::UIContext`:
  *
- * | Interface | Responsibility | Reference |
- * | :--- | :--- | :--- |
- * | `IPlatform` | Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard | \ref ZenitUI::RaylibPlatform, \ref ZenitUI::Test::MockPlatform |
- * | `IRenderer` | 2D vector primitives, textures/nine-slice, text metrics & draw, clip/transform/shader stacks, optional off-screen targets | \ref ZenitUI::RaylibRenderer, \ref ZenitUI::Test::MockRenderer |
- * | `IAssetProvider` | Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders | \ref ZenitUI::RaylibAssetProvider, \ref ZenitUI::Test::MockAssetProvider |
+ * | Interface | Responsibility |
+ * | :--- | :--- |
+ * | `IPlatform` | Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard |
+ * | `IRenderer` | 2D vector primitives, textures/nine-slice, text metrics & draw, clip/transform/shader stacks, optional off-screen targets  |
+ * | `IAssetProvider` | Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders  |
  *
  * All reference classes are grouped under \ref grp_backends.
  *
@@ -99,15 +99,11 @@
  *
  * ---
  *
- * \section sec_backend_refs 4. Reference Implementations
+ * \section sec_backend_refs 4. Built-in Reference Implementations
  *
- * - **Production GPU backend (Raylib / rlgl)**:
- *   - \ref ZenitUI::RaylibPlatform
- *   - \ref ZenitUI::RaylibRenderer
- *   - \ref ZenitUI::RaylibAssetProvider
- * - **Headless / testing backend (no GPU required)**:
- *   - \ref ZenitUI::Test::MockPlatform
- *   - \ref ZenitUI::Test::MockRenderer
- *   - \ref ZenitUI::Test::MockAssetProvider
- *   - \ref ZenitUI::Test::Env
+ * Every backend shipped under `backends/` is indexed automatically with its
+ * CMake target, supported optional features, and class references:
+ *
+ * - \subpage page_available_backends — full auto-generated catalog of all built-in backends.
+ * - \ref grp_backends — complete module API reference.
  */
