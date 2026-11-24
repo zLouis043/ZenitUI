@@ -36,6 +36,7 @@ var classZenitUI_1_1RaylibRenderer =
     [ "setEffectVec3", "classZenitUI_1_1RaylibRenderer.html#a64c83e93da916587a509b775eed282da", null ],
     [ "setEffectVec4", "classZenitUI_1_1RaylibRenderer.html#a00bf88895d36ebf01e205cd19087f441", null ],
     [ "setEffectVec4f", "classZenitUI_1_1RaylibRenderer.html#adbae8b7185c9cc39cb2afc8277171277", null ],
+    [ "shaderLanguage", "classZenitUI_1_1RaylibRenderer.html#a015923fe1ad130ece35a757e63bb0b18", null ],
     [ "strokeRect", "classZenitUI_1_1RaylibRenderer.html#aceb5b6e0016a18192ba9c798c245cf8c", null ],
     [ "strokeRoundedRect", "classZenitUI_1_1RaylibRenderer.html#aba5b2d3eff82e509fd6063daa554da83", null ],
     [ "supports", "classZenitUI_1_1RaylibRenderer.html#a6544a78d6b4036f4061a7373d992b172", null ],

@@ -8,5 +8,6 @@ var searchData=
   ['registry_5',['Registry',['../classZenitUI_1_1ZMarkup_1_1Registry.html',1,'ZenitUI::ZMarkup']]],
   ['renderstats_6',['RenderStats',['../structZenitUI_1_1RenderStats.html',1,'ZenitUI']]],
   ['resolvedbgtexture_7',['ResolvedBgTexture',['../structZenitUI_1_1Layout_1_1ResolvedBgTexture.html',1,'ZenitUI::Layout']]],
-  ['rule_8',['Rule',['../structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule.html',1,'ZenitUI::ZMarkup::StyleSheet']]]
+  ['roundedborderring_8',['RoundedBorderRing',['../structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html',1,'ZenitUI::Geometry2D']]],
+  ['rule_9',['Rule',['../structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule.html',1,'ZenitUI::ZMarkup::StyleSheet']]]
 ];

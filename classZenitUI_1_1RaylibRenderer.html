@@ -129,6 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Capabilities</div></td></tr>
 <tr class="memitem:a6544a78d6b4036f4061a7373d992b172" id="r_a6544a78d6b4036f4061a7373d992b172"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6544a78d6b4036f4061a7373d992b172">supports</a> (<a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const override</td></tr>
 <tr class="memdesc:a6544a78d6b4036f4061a7373d992b172"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports support for <span class="tt">Effects</span>, <span class="tt">NestedTargets</span>, and <span class="tt">TargetSubRect</span>.  <br /></td></tr>
+<tr class="memitem:a015923fe1ad130ece35a757e63bb0b18" id="r_a015923fe1ad130ece35a757e63bb0b18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a015923fe1ad130ece35a757e63bb0b18">shaderLanguage</a> () const override</td></tr>
+<tr class="memdesc:a015923fe1ad130ece35a757e63bb0b18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports support for <span class="tt">GLSL330</span> shader language.  <br /></td></tr>
 <tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">2D Vector Primitives</div></td></tr>
 <tr class="memitem:aa149120cfec95e92ccdc6151d79d0311" id="r_aa149120cfec95e92ccdc6151d79d0311"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa149120cfec95e92ccdc6151d79d0311">fillRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c) override</td></tr>
 <tr class="memdesc:aa149120cfec95e92ccdc6151d79d0311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill an axis-aligned rectangle <span class="tt">r</span> with solid color <span class="tt">c</span>.  <br /></td></tr>
@@ -1354,6 +1356,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unregisterEffect</b> 
 <p>Set a <span class="tt">vec4</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#aaf7bcdb058f642332c4b715cbdfbbd42">ZenitUI::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a015923fe1ad130ece35a757e63bb0b18" name="a015923fe1ad130ece35a757e63bb0b18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a015923fe1ad130ece35a757e63bb0b18">&#9670;&#160;</a></span>shaderLanguage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a> ZenitUI::RaylibRenderer::shaderLanguage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reports support for <span class="tt">GLSL330</span> shader language. </p>
+
+<p>Reimplemented from <a class="el" href="classZenitUI_1_1IRenderer.html#a6c17f3037f2d441990c410a6e8f351ae">ZenitUI::IRenderer</a>.</p>
 
 </div>
 </div>

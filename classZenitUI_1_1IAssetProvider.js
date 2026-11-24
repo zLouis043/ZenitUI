@@ -7,6 +7,7 @@ var classZenitUI_1_1IAssetProvider =
     [ "getFont", "classZenitUI_1_1IAssetProvider.html#aed151b0118daf7352b037a4c04f010d4", null ],
     [ "getTexture", "classZenitUI_1_1IAssetProvider.html#a44c65cac87cb8bdc6d2d3a6548bfda69", null ],
     [ "loadEffect", "classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563", null ],
+    [ "loadEffectAsset", "classZenitUI_1_1IAssetProvider.html#a5b7b93de2aca079dbc734910b5f2451a", null ],
     [ "loadFont", "classZenitUI_1_1IAssetProvider.html#a39e172a9fee5064ed6bafdbac1023161", null ],
     [ "loadFontFromMemory", "classZenitUI_1_1IAssetProvider.html#a4ae98181a71a2ad9416f82d0a79c9712", null ],
     [ "loadTexture", "classZenitUI_1_1IAssetProvider.html#a0b279ae7e528c6fbf3ac60fe7a503ba9", null ],

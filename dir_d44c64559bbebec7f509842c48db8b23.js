@@ -11,6 +11,8 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "Diagnostics.hpp", "Diagnostics_8hpp.html", "Diagnostics_8hpp" ],
     [ "Easing.hpp", "Easing_8hpp.html", "Easing_8hpp" ],
     [ "FilterRegistry.hpp", "FilterRegistry_8hpp.html", "FilterRegistry_8hpp" ],
+    [ "Geometry2D.hpp", "Geometry2D_8hpp.html", "Geometry2D_8hpp" ],
+    [ "InputAccumulator.hpp", "InputAccumulator_8hpp.html", null ],
     [ "InputController.hpp", "InputController_8hpp.html", null ],
     [ "Layout.hpp", "Layout_8hpp.html", "Layout_8hpp" ],
     [ "Logger.hpp", "Logger_8hpp.html", "Logger_8hpp" ],

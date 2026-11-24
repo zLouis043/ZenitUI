@@ -1,7 +1,9 @@
 <map id="ZenitUI::IBackend" name="ZenitUI::IBackend">
-<area shape="rect" id="Node000001" title="Unified window, frame&#45;loop, and subsystem host for interchangeable backends." alt="" coords="120,5,256,33"/>
+<area shape="rect" id="Node000001" title="Unified window, frame&#45;loop, and subsystem host for interchangeable backends." alt="" coords="217,5,354,33"/>
 <area shape="rect" id="Node000002" href="$classZenitUI_1_1RaylibBackend.html" title="Unified IBackend host wrapping Raylib windowing, rendering, and assets." alt="" coords="5,81,179,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,42,110,83,108,78,156,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,40,127,83,125,78,234,38"/>
 <area shape="rect" id="Node000003" href="$classZenitUI_1_1SDL3Backend.html" title="Unified IBackend host managing an SDL3 window, OpenGL 3.3 Core context, and SDL3Platform / SDL3Render..." alt="" coords="203,81,368,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,40,271,81,265,80,216,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="287,47,287,82,283,79,283,51"/>
+<area shape="rect" id="Node000004" href="$classZenitUI_1_1Test_1_1MockBackend.html" title="Headless IBackend host wrapping MockPlatform, MockRenderer, and MockAssetProvider." alt="" coords="393,81,594,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="337,36,459,80,453,81,336,41"/>
 </map>

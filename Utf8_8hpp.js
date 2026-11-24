@@ -11,6 +11,7 @@ var Utf8_8hpp =
     [ "ZenitUI::Utf8::isRegionalIndicator", "group__grp__backends.html#ga44d44e5a8676d95ce62cf53580bf3eb9", null ],
     [ "ZenitUI::Utf8::isValidCodepoint", "group__grp__backends.html#ga0da4297aad7dd24abbe31122461b114a", null ],
     [ "ZenitUI::Utf8::isWordChar", "group__grp__backends.html#ga3402c4dd831fa041e44906585680f754", null ],
+    [ "ZenitUI::Utf8::next", "group__grp__backends.html#ga8452def7b2a4c82e2f74d8a89321e451", null ],
     [ "ZenitUI::Utf8::nextCluster", "group__grp__backends.html#ga8fa23c9532b872e7c7d37a553e96a6d2", null ],
     [ "ZenitUI::Utf8::nextCodepoint", "group__grp__backends.html#ga3eff068bb97d90377fad60fd9bd84269", null ],
     [ "ZenitUI::Utf8::nextWordBoundary", "group__grp__backends.html#ga42cba58c90d805e2bbd12e6352144eb4", null ],

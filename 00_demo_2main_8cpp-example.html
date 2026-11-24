@@ -111,178 +111,180 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span>ZenitUI;</div>
-<div class="line"><span class="keyword">using namespace </span>ZenitUI::UI;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// ============================================================================</span></div>
-<div class="line"><span class="comment">//  ShowcaseApp — Flagship ZenitUI multi-view showcase</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  Demonstrates how ZenitUI&#39;s subsystems work together in a single app:</span></div>
-<div class="line"><span class="comment">//    - App shell with live Dark/Light + Accent theme switching (CSS variables)</span></div>
-<div class="line"><span class="comment">//    - View 1 (Dashboard): ZMarkup Prefabs + &lt;Slot&gt;, If, keyed Each, Bindable&lt;T&gt;</span></div>
-<div class="line"><span class="comment">//    - View 2 (Editor):    Form controls, UTF-8 TextArea, live dirty state, Modal</span></div>
-<div class="line"><span class="comment">//    - View 3 (Explorer):  10,000-row VirtualView, live filter, ContextMenu, 9-slice</span></div>
-<div class="line"><span class="comment">//    - View 4 (Effects):   @keyframes, transitions, UIAnimation, filter:, CanvasLayout</span></div>
-<div class="line"><span class="comment">// ============================================================================</span></div>
-<div class="line"><span class="keyword">class </span>ShowcaseApp</div>
+<div class="line"><span class="keyword">namespace </span>Showcase</div>
 <div class="line">{</div>
-<div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keyword">struct </span>TaskItem</div>
+<div class="line">    <span class="keyword">using namespace </span>ZenitUI;</div>
+<div class="line">    <span class="keyword">using namespace </span>ZenitUI::UI;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// ============================================================================</span></div>
+<div class="line">    <span class="comment">//  ShowcaseApp — Flagship ZenitUI multi-view showcase</span></div>
+<div class="line">    <span class="comment">//</span></div>
+<div class="line">    <span class="comment">//  Demonstrates how ZenitUI&#39;s subsystems work together in a single app:</span></div>
+<div class="line">    <span class="comment">//    - App shell with live Dark/Light + Accent theme switching (CSS variables)</span></div>
+<div class="line">    <span class="comment">//    - View 1 (Dashboard): ZMarkup Prefabs + &lt;Slot&gt;, If, keyed Each, Bindable&lt;T&gt;</span></div>
+<div class="line">    <span class="comment">//    - View 2 (Editor):    Form controls, UTF-8 TextArea, live dirty state, Modal</span></div>
+<div class="line">    <span class="comment">//    - View 3 (Explorer):  10,000-row VirtualView, live filter, ContextMenu, 9-slice</span></div>
+<div class="line">    <span class="comment">//    - View 4 (Effects):   @keyframes, transitions, UIAnimation, filter:, CanvasLayout</span></div>
+<div class="line">    <span class="comment">// ============================================================================</span></div>
+<div class="line">    <span class="keyword">class </span>ShowcaseApp</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordtype">int</span> <span class="keywordtype">id</span>{0};</div>
-<div class="line">        std::string tag;</div>
-<div class="line">        std::string title;</div>
-<div class="line">        <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> TaskItem &amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
-<div class="line">    };</div>
-<div class="line"> </div>
-<div class="line">    <span class="keyword">struct </span>CatalogEntry</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordtype">int</span> <span class="keywordtype">id</span>{0};</div>
-<div class="line">        std::string category;</div>
-<div class="line">        std::string message;</div>
-<div class="line">    };</div>
-<div class="line"> </div>
-<div class="line">    ShowcaseApp()</div>
-<div class="line">    {</div>
-<div class="line">        seedCatalog();</div>
-<div class="line">        registerPrefabs();</div>
-<div class="line">        buildShell();</div>
-<div class="line">        buildDashboardView();</div>
-<div class="line">        buildEditorView();</div>
-<div class="line">        buildExplorerView();</div>
-<div class="line">        buildEffectsView();</div>
-<div class="line">        buildModal();</div>
-<div class="line">        switchView(0);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    std::shared_ptr&lt;Layout&gt; root()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> appRoot_; }</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Called once per frame from main() to refresh the live FPS/RenderStats box</span></div>
-<div class="line">    <span class="comment">// and the VirtualView visible-range readout.</span></div>
-<div class="line">    <span class="keywordtype">void</span> tickStats(<span class="keywordtype">int</span> fps, <span class="keywordtype">float</span> dtMs)</div>
-<div class="line">    {</div>
-<div class="line">        statsTimer_ += dtMs;</div>
-<div class="line">        <span class="keywordflow">if</span> (statsTimer_ &lt; 250.0f)</div>
-<div class="line">            <span class="keywordflow">return</span>;</div>
-<div class="line">        statsTimer_ = 0.0f;</div>
-<div class="line"> </div>
-<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;st = <a id="_a0" name="_a0"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderStats;</div>
-<div class="line">        <span class="keywordtype">char</span> buf[160];</div>
-<div class="line">        std::snprintf(buf, <span class="keyword">sizeof</span>(buf),</div>
-<div class="line">                      <span class="stringliteral">&quot;FPS: %d (%.1f ms)\nTargets live: %u  Passes: %u&quot;</span>,</div>
-<div class="line">                      fps, dtMs, st.liveTargets, st.filterPasses);</div>
-<div class="line">        <span class="keywordflow">if</span> (shellUi_)</div>
-<div class="line">            shellUi_-&gt;setTextRef(<span class="stringliteral">&quot;stats-label&quot;</span>, buf);</div>
-<div class="line"> </div>
-<div class="line">        updateExplorerRange();</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">private</span>:</div>
-<div class="line">    <span class="comment">// ---- Reactive application state (Bindable&lt;T&gt;) -------------------------</span></div>
-<div class="line">    <a id="_a1" name="_a1"></a><a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> dirty_{<span class="keyword">false</span>};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;float&gt;</a> workload_{0.42f};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> highWorkload_{<span class="keyword">false</span>};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;std::vector&lt;TaskItem&gt;</a>&gt; tasks_{std::vector&lt;TaskItem&gt;{</div>
-<div class="line">        {1, <span class="stringliteral">&quot;Layout&quot;</span>, <span class="stringliteral">&quot;Audit Flexbox wrap &amp; responsive breakpoints&quot;</span>},</div>
-<div class="line">        {2, <span class="stringliteral">&quot;Styling&quot;</span>, <span class="stringliteral">&quot;Verify Dark/Light custom property cascade&quot;</span>},</div>
-<div class="line">        {3, <span class="stringliteral">&quot;Widgets&quot;</span>, <span class="stringliteral">&quot;Test UTF-8 grapheme editing in TextArea&quot;</span>},</div>
-<div class="line">    }};</div>
-<div class="line">    <span class="keywordtype">int</span> nextTaskId_{4};</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Editor model defaults</span></div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;std::string&gt;</a> username_{std::string(<span class="stringliteral">&quot;zenit_dev&quot;</span>)};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;float&gt;</a> volume_{0.72f};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;int&gt;</a> qualityIdx_{2};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> notifications_{<span class="keyword">true</span>};</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> cloudSync_{<span class="keyword">false</span>};</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Keep RAII subscriptions alive for the lifetime of ShowcaseApp</span></div>
-<div class="line">    std::vector&lt;Bindable&lt;float&gt;::Subscription&gt; floatSubs_;</div>
-<div class="line">    std::vector&lt;Bindable&lt;std::vector&lt;TaskItem&gt;&gt;::Subscription&gt; taskSubs_;</div>
-<div class="line">    std::vector&lt;Bindable&lt;std::string&gt;::Subscription&gt; strSubs_;</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Explorer dataset (10,000 items) + active filter indices</span></div>
-<div class="line">    std::vector&lt;CatalogEntry&gt; catalog_;</div>
-<div class="line">    std::vector&lt;int&gt; filteredIndices_;</div>
-<div class="line">    std::string filterQuery_;</div>
-<div class="line">    <span class="keywordtype">int</span> contextRowIndex_{-1};</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Theme state</span></div>
-<div class="line">    <span class="keywordtype">bool</span> lightTheme_{<span class="keyword">false</span>};</div>
-<div class="line">    <span class="keywordtype">int</span> accentIndex_{0}; <span class="comment">// 0: Blue, 1: Violet, 2: Emerald</span></div>
-<div class="line">    <span class="keywordtype">float</span> statsTimer_{250.0f};</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Node handles</span></div>
-<div class="line">    std::shared_ptr&lt;Layout&gt; appRoot_;</div>
-<div class="line">    std::optional&lt;ZMarkup::UINode&gt; shellUi_;</div>
-<div class="line">    std::optional&lt;ZMarkup::UINode&gt; dashUi_;</div>
-<div class="line">    std::optional&lt;ZMarkup::UINode&gt; editorUi_;</div>
-<div class="line">    std::optional&lt;ZMarkup::UINode&gt; explorerUi_;</div>
-<div class="line">    std::optional&lt;ZMarkup::UINode&gt; effectsUi_;</div>
-<div class="line"> </div>
-<div class="line">    std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt; views_;</div>
-<div class="line">    std::shared_ptr&lt;TextArea&gt; notesArea_;</div>
-<div class="line">    std::shared_ptr&lt;VirtualView&gt; virtualList_;</div>
-<div class="line">    std::shared_ptr&lt;Popup&gt; rowContextMenu_;</div>
-<div class="line">    std::shared_ptr&lt;Modal&gt; modal_;</div>
-<div class="line">    std::shared_ptr&lt;Text&gt; modalTitle_;</div>
-<div class="line">    std::shared_ptr&lt;Text&gt; modalBody_;</div>
-<div class="line">    std::function&lt;void()&gt; modalConfirmAction_;</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  Seed 10,000 deterministic entries for the VirtualView explorer</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> seedCatalog()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kCats[] = {<span class="stringliteral">&quot;Layout&quot;</span>, <span class="stringliteral">&quot;Style&quot;</span>, <span class="stringliteral">&quot;Input&quot;</span>, <span class="stringliteral">&quot;Render&quot;</span>, <span class="stringliteral">&quot;Markup&quot;</span>, <span class="stringliteral">&quot;Anim&quot;</span>};</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kMsgs[] = {</div>
-<div class="line">            <span class="stringliteral">&quot;Resolved cascade with cached selector rules&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Reused off-screen layer target from TargetPool&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Materialized visible row inside VirtualView overscan&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Dispatched pointer capture across stacking context&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Reconciled keyed Each slice without rebuilding rows&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Completed ease-out-back transform transition&quot;</span>,</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">struct </span>TaskItem</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordtype">int</span> <span class="keywordtype">id</span>{0};</div>
+<div class="line">            std::string tag;</div>
+<div class="line">            std::string title;</div>
+<div class="line">            <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> TaskItem &amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line">        };</div>
 <div class="line"> </div>
-<div class="line">        catalog_.reserve(10000);</div>
-<div class="line">        filteredIndices_.reserve(10000);</div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 10000; ++i)</div>
+<div class="line">        <span class="keyword">struct </span>CatalogEntry</div>
 <div class="line">        {</div>
-<div class="line">            catalog_.push_back({</div>
-<div class="line">                i + 1,</div>
-<div class="line">                kCats[i % 6],</div>
-<div class="line">                std::string(kMsgs[(i * 7) % 6]) + <span class="stringliteral">&quot; (event #&quot;</span> + std::to_string(i + 1) + <span class="stringliteral">&quot;)&quot;</span>,</div>
-<div class="line">            });</div>
-<div class="line">            filteredIndices_.push_back(i);</div>
-<div class="line">        }</div>
-<div class="line">    }</div>
+<div class="line">            <span class="keywordtype">int</span> <span class="keywordtype">id</span>{0};</div>
+<div class="line">            std::string category;</div>
+<div class="line">            std::string message;</div>
+<div class="line">        };</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  Register reusable ZMarkup prefabs (using &lt;Slot&gt; child injection)</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> registerPrefabs()</div>
-<div class="line">    {</div>
-<div class="line">        ZMarkup::registerPrefab(<span class="stringliteral">&quot;KpiCard&quot;</span>, R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line">        ShowcaseApp()</div>
+<div class="line">        {</div>
+<div class="line">            seedCatalog();</div>
+<div class="line">            registerPrefabs();</div>
+<div class="line">            buildShell();</div>
+<div class="line">            buildDashboardView();</div>
+<div class="line">            buildEditorView();</div>
+<div class="line">            buildExplorerView();</div>
+<div class="line">            buildEffectsView();</div>
+<div class="line">            buildModal();</div>
+<div class="line">            switchView(0);</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        std::shared_ptr&lt;Layout&gt; root()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> appRoot_; }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Called once per frame from main() to refresh the live FPS/RenderStats box</span></div>
+<div class="line">        <span class="comment">// and the VirtualView visible-range readout.</span></div>
+<div class="line">        <span class="keywordtype">void</span> tickStats(<span class="keywordtype">int</span> fps, <span class="keywordtype">float</span> dtMs)</div>
+<div class="line">        {</div>
+<div class="line">            statsTimer_ += dtMs;</div>
+<div class="line">            <span class="keywordflow">if</span> (statsTimer_ &lt; 250.0f)</div>
+<div class="line">                <span class="keywordflow">return</span>;</div>
+<div class="line">            statsTimer_ = 0.0f;</div>
+<div class="line"> </div>
+<div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> &amp;st = <a id="_a0" name="_a0"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderStats;</div>
+<div class="line">            <span class="keywordtype">char</span> buf[160];</div>
+<div class="line">            std::snprintf(buf, <span class="keyword">sizeof</span>(buf),</div>
+<div class="line">                          <span class="stringliteral">&quot;FPS: %d (%.1f ms)\nTargets live: %u  Passes: %u&quot;</span>,</div>
+<div class="line">                          fps, dtMs, st.liveTargets, st.filterPasses);</div>
+<div class="line">            <span class="keywordflow">if</span> (shellUi_)</div>
+<div class="line">                shellUi_-&gt;setTextRef(<span class="stringliteral">&quot;stats-label&quot;</span>, buf);</div>
+<div class="line"> </div>
+<div class="line">            updateExplorerRange();</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">private</span>:</div>
+<div class="line">        <span class="comment">// ---- Reactive application state (Bindable&lt;T&gt;) -------------------------</span></div>
+<div class="line">        <a id="_a1" name="_a1"></a><a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> dirty_{<span class="keyword">false</span>};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;float&gt;</a> workload_{0.42f};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> highWorkload_{<span class="keyword">false</span>};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;std::vector&lt;TaskItem&gt;</a>&gt; tasks_{std::vector&lt;TaskItem&gt;{</div>
+<div class="line">            {1, <span class="stringliteral">&quot;Layout&quot;</span>, <span class="stringliteral">&quot;Audit Flexbox wrap &amp; responsive breakpoints&quot;</span>},</div>
+<div class="line">            {2, <span class="stringliteral">&quot;Styling&quot;</span>, <span class="stringliteral">&quot;Verify Dark/Light custom property cascade&quot;</span>},</div>
+<div class="line">            {3, <span class="stringliteral">&quot;Widgets&quot;</span>, <span class="stringliteral">&quot;Test UTF-8 grapheme editing in TextArea&quot;</span>},</div>
+<div class="line">        }};</div>
+<div class="line">        <span class="keywordtype">int</span> nextTaskId_{4};</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Editor model defaults</span></div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;std::string&gt;</a> username_{std::string(<span class="stringliteral">&quot;zenit_dev&quot;</span>)};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;float&gt;</a> volume_{0.72f};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;int&gt;</a> qualityIdx_{2};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> notifications_{<span class="keyword">true</span>};</div>
+<div class="line">        <a class="code hl_class" href="classZenitUI_1_1Bindable.html">Bindable&lt;bool&gt;</a> cloudSync_{<span class="keyword">false</span>};</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Keep RAII subscriptions alive for the lifetime of ShowcaseApp</span></div>
+<div class="line">        std::vector&lt;Bindable&lt;float&gt;::Subscription&gt; floatSubs_;</div>
+<div class="line">        std::vector&lt;Bindable&lt;std::vector&lt;TaskItem&gt;&gt;::Subscription&gt; taskSubs_;</div>
+<div class="line">        std::vector&lt;Bindable&lt;std::string&gt;::Subscription&gt; strSubs_;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Explorer dataset (10,000 items) + active filter indices</span></div>
+<div class="line">        std::vector&lt;CatalogEntry&gt; catalog_;</div>
+<div class="line">        std::vector&lt;int&gt; filteredIndices_;</div>
+<div class="line">        std::string filterQuery_;</div>
+<div class="line">        <span class="keywordtype">int</span> contextRowIndex_{-1};</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Theme state</span></div>
+<div class="line">        <span class="keywordtype">bool</span> lightTheme_{<span class="keyword">false</span>};</div>
+<div class="line">        <span class="keywordtype">int</span> accentIndex_{0}; <span class="comment">// 0: Blue, 1: Violet, 2: Emerald</span></div>
+<div class="line">        <span class="keywordtype">float</span> statsTimer_{250.0f};</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Node handles</span></div>
+<div class="line">        std::shared_ptr&lt;Layout&gt; appRoot_;</div>
+<div class="line">        std::optional&lt;ZMarkup::UINode&gt; shellUi_;</div>
+<div class="line">        std::optional&lt;ZMarkup::UINode&gt; dashUi_;</div>
+<div class="line">        std::optional&lt;ZMarkup::UINode&gt; editorUi_;</div>
+<div class="line">        std::optional&lt;ZMarkup::UINode&gt; explorerUi_;</div>
+<div class="line">        std::optional&lt;ZMarkup::UINode&gt; effectsUi_;</div>
+<div class="line"> </div>
+<div class="line">        std::vector&lt;std::shared_ptr&lt;Layout&gt;&gt; views_;</div>
+<div class="line">        std::shared_ptr&lt;TextArea&gt; notesArea_;</div>
+<div class="line">        std::shared_ptr&lt;VirtualView&gt; virtualList_;</div>
+<div class="line">        std::shared_ptr&lt;Popup&gt; rowContextMenu_;</div>
+<div class="line">        std::shared_ptr&lt;Modal&gt; modal_;</div>
+<div class="line">        std::shared_ptr&lt;Text&gt; modalTitle_;</div>
+<div class="line">        std::shared_ptr&lt;Text&gt; modalBody_;</div>
+<div class="line">        std::function&lt;void()&gt; modalConfirmAction_;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  Seed 10,000 deterministic entries for the VirtualView explorer</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> seedCatalog()</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kCats[] = {<span class="stringliteral">&quot;Layout&quot;</span>, <span class="stringliteral">&quot;Style&quot;</span>, <span class="stringliteral">&quot;Input&quot;</span>, <span class="stringliteral">&quot;Render&quot;</span>, <span class="stringliteral">&quot;Markup&quot;</span>, <span class="stringliteral">&quot;Anim&quot;</span>};</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kMsgs[] = {</div>
+<div class="line">                <span class="stringliteral">&quot;Resolved cascade with cached selector rules&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Reused off-screen layer target from TargetPool&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Materialized visible row inside VirtualView overscan&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Dispatched pointer capture across stacking context&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Reconciled keyed Each slice without rebuilding rows&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Completed ease-out-back transform transition&quot;</span>,</div>
+<div class="line">            };</div>
+<div class="line"> </div>
+<div class="line">            catalog_.reserve(10000);</div>
+<div class="line">            filteredIndices_.reserve(10000);</div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 10000; ++i)</div>
+<div class="line">            {</div>
+<div class="line">                catalog_.push_back({</div>
+<div class="line">                    i + 1,</div>
+<div class="line">                    kCats[i % 6],</div>
+<div class="line">                    std::string(kMsgs[(i * 7) % 6]) + <span class="stringliteral">&quot; (event #&quot;</span> + std::to_string(i + 1) + <span class="stringliteral">&quot;)&quot;</span>,</div>
+<div class="line">                });</div>
+<div class="line">                filteredIndices_.push_back(i);</div>
+<div class="line">            }</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  Register reusable ZMarkup prefabs (using &lt;Slot&gt; child injection)</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> registerPrefabs()</div>
+<div class="line">        {</div>
+<div class="line">            ZMarkup::registerPrefab(<span class="stringliteral">&quot;KpiCard&quot;</span>, R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            VStack.kpi-card {</span></div>
 <div class="line"><span class="stringliteral">                Slot</span></div>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        ZMarkup::registerPrefab(</span><span class="stringliteral">&quot;TaskRow&quot;</span>, R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line"><span class="stringliteral">            ZMarkup::registerPrefab(</span><span class="stringliteral">&quot;TaskRow&quot;</span>, R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            HStack.task-row {</span></div>
 <div class="line"><span class="stringliteral">                Text.task-tag@tag &quot;&quot;</span></div>
 <div class="line"><span class="stringliteral">                Text.task-title@title wrap=&quot;true&quot; &quot;&quot;</span></div>
 <div class="line"><span class="stringliteral">                Button.btn-danger.btn-sm@done &quot;Done&quot;</span></div>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;);</span></div>
-<div class="line"><span class="stringliteral">    }</span></div>
+<div class="line"><span class="stringliteral">        }</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">    </span><span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  App shell: persistent sidebar + top bar + 4-view content host</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildShell()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kShellMarkup = R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line"><span class="stringliteral">        </span><span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  App shell: persistent sidebar + top bar + 4-view content host</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildShell()</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kShellMarkup = R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            Stack#app {</span></div>
 <div class="line"><span class="stringliteral">                HStack.shell {</span></div>
 <div class="line"><span class="stringliteral">                    VStack.sidebar {</span></div>
@@ -323,21 +325,21 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        shellUi_ = ZMarkup::build(kShellMarkup);</span></div>
-<div class="line"><span class="stringliteral">        appRoot_ = shellUi_-&gt;root();</span></div>
+<div class="line"><span class="stringliteral">            shellUi_ = ZMarkup::build(kShellMarkup);</span></div>
+<div class="line"><span class="stringliteral">            appRoot_ = shellUi_-&gt;root();</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        </span><span class="comment">// Bind the &quot;Unsaved changes&quot; badge directly to the dirty_ Bindable&lt;bool&gt;.</span></div>
-<div class="line">        shellUi_-&gt;bindCondition(<span class="stringliteral">&quot;dirty-badge&quot;</span>, dirty_, <span class="keyword">true</span>);</div>
+<div class="line"><span class="stringliteral">            </span><span class="comment">// Bind the &quot;Unsaved changes&quot; badge directly to the dirty_ Bindable&lt;bool&gt;.</span></div>
+<div class="line">            shellUi_-&gt;bindCondition(<span class="stringliteral">&quot;dirty-badge&quot;</span>, dirty_, <span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 4; ++i)</div>
-<div class="line">        {</div>
-<div class="line">            shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;nav-&quot;</span> + std::to_string(i), [<span class="keyword">this</span>, i]</div>
-<div class="line">                                 { switchView(i); });</div>
-<div class="line">        }</div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 4; ++i)</div>
+<div class="line">            {</div>
+<div class="line">                shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;nav-&quot;</span> + std::to_string(i), [<span class="keyword">this</span>, i]</div>
+<div class="line">                                     { switchView(i); });</div>
+<div class="line">            }</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Live Dark/Light switch: toggling one class re-evaluates all CSS variables.</span></div>
-<div class="line">        shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;theme-btn&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                             {</div>
+<div class="line">            <span class="comment">// Live Dark/Light switch: toggling one class re-evaluates all CSS variables.</span></div>
+<div class="line">            shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;theme-btn&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                 {</div>
 <div class="line">            lightTheme_ = !lightTheme_;</div>
 <div class="line">            <span class="keywordflow">if</span> (lightTheme_)</div>
 <div class="line">                appRoot_-&gt;addClass(<span class="stringliteral">&quot;theme-light&quot;</span>);</div>
@@ -348,9 +350,9 @@ ShowcaseApp.hpp</h3>
 <div class="line">            <span class="keywordflow">if</span> (dashUi_)</div>
 <div class="line">                dashUi_-&gt;setTextRef(<span class="stringliteral">&quot;kpi-theme&quot;</span>, lightTheme_ ? <span class="stringliteral">&quot;Light&quot;</span> : <span class="stringliteral">&quot;Dark&quot;</span>); });</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Live Accent palette switch: cycles between 3 token sets on #app.</span></div>
-<div class="line">        shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;accent-btn&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                             {</div>
+<div class="line">            <span class="comment">// Live Accent palette switch: cycles between 3 token sets on #app.</span></div>
+<div class="line">            shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;accent-btn&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                 {</div>
 <div class="line">            accentIndex_ = (accentIndex_ + 1) % 3;</div>
 <div class="line">            appRoot_-&gt;removeClass(<span class="stringliteral">&quot;accent-violet&quot;</span>);</div>
 <div class="line">            appRoot_-&gt;removeClass(<span class="stringliteral">&quot;accent-emerald&quot;</span>);</div>
@@ -362,26 +364,26 @@ ShowcaseApp.hpp</h3>
 <div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kNames[] = {<span class="stringliteral">&quot;Accent: Blue&quot;</span>, <span class="stringliteral">&quot;Accent: Violet&quot;</span>, <span class="stringliteral">&quot;Accent: Emerald&quot;</span>};</div>
 <div class="line">            shellUi_-&gt;setButtonTextRef(<span class="stringliteral">&quot;accent-btn&quot;</span>, kNames[accentIndex_]); });</div>
 <div class="line"> </div>
-<div class="line">        shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;about-btn&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                             { openModal(</div>
-<div class="line">                                   <span class="stringliteral">&quot;ZenitUI Showcase&quot;</span>,</div>
-<div class="line">                                   <span class="stringliteral">&quot;Retained-mode C++20 UI framework featuring Flexbox layout, &quot;</span></div>
-<div class="line">                                   <span class="stringliteral">&quot;ZStyle cascade, ZMarkup prefabs &amp; keyed Each, Bindable&lt;T&gt; &quot;</span></div>
-<div class="line">                                   <span class="stringliteral">&quot;reactivity, VirtualView, portals, and post-processing filters.&quot;</span>,</div>
-<div class="line">                                   <span class="keyword">nullptr</span>); });</div>
+<div class="line">            shellUi_-&gt;onClickRef(<span class="stringliteral">&quot;about-btn&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                 { openModal(</div>
+<div class="line">                                       <span class="stringliteral">&quot;ZenitUI Showcase&quot;</span>,</div>
+<div class="line">                                       <span class="stringliteral">&quot;Retained-mode C++20 UI framework featuring Flexbox layout, &quot;</span></div>
+<div class="line">                                       <span class="stringliteral">&quot;ZStyle cascade, ZMarkup prefabs &amp; keyed Each, Bindable&lt;T&gt; &quot;</span></div>
+<div class="line">                                       <span class="stringliteral">&quot;reactivity, VirtualView, portals, and post-processing filters.&quot;</span>,</div>
+<div class="line">                                       <span class="keyword">nullptr</span>); });</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> btn = shellUi_-&gt;ref(<span class="stringliteral">&quot;theme-btn&quot;</span>))</div>
-<div class="line">            <a id="_a2" name="_a2"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(btn, <span class="stringliteral">&quot;Toggles #app.theme-light to re-resolve all CSS variables&quot;</span>, 0.35f);</div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> btn = shellUi_-&gt;ref(<span class="stringliteral">&quot;accent-btn&quot;</span>))</div>
-<div class="line">            <a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(btn, <span class="stringliteral">&quot;Cycles --accent tokens across every view in real time&quot;</span>, 0.35f);</div>
-<div class="line">    }</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> btn = shellUi_-&gt;ref(<span class="stringliteral">&quot;theme-btn&quot;</span>))</div>
+<div class="line">                <a id="_a2" name="_a2"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(btn, <span class="stringliteral">&quot;Toggles #app.theme-light to re-resolve all CSS variables&quot;</span>, 0.35f);</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> btn = shellUi_-&gt;ref(<span class="stringliteral">&quot;accent-btn&quot;</span>))</div>
+<div class="line">                <a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(btn, <span class="stringliteral">&quot;Cycles --accent tokens across every view in real time&quot;</span>, 0.35f);</div>
+<div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  View 1: Dashboard — Prefabs + &lt;Slot&gt;, Bindable&lt;T&gt;, If, Keyed Each</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildDashboardView()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kDashMarkup = R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  View 1: Dashboard — Prefabs + &lt;Slot&gt;, Bindable&lt;T&gt;, If, Keyed Each</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildDashboardView()</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kDashMarkup = R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            ScrollView.view-scroll {</span></div>
 <div class="line"><span class="stringliteral">                HStack.kpi-grid {</span></div>
 <div class="line"><span class="stringliteral">                    KpiCard {</span></div>
@@ -439,100 +441,100 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        dashUi_ = ZMarkup::build(kDashMarkup);</span></div>
-<div class="line"><span class="stringliteral">        </span><span class="keyword">auto</span> view = dashUi_-&gt;root();</div>
-<div class="line">        mountView(view);</div>
+<div class="line"><span class="stringliteral">            dashUi_ = ZMarkup::build(kDashMarkup);</span></div>
+<div class="line"><span class="stringliteral">            </span><span class="keyword">auto</span> view = dashUi_-&gt;root();</div>
+<div class="line">            mountView(view);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Wire slider -&gt; workload_ Bindable&lt;float&gt;</span></div>
-<div class="line">        dashUi_-&gt;onValueChangedRef(<span class="stringliteral">&quot;load-slider&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">float</span> v)</div>
-<div class="line">                                   {</div>
+<div class="line">            <span class="comment">// Wire slider -&gt; workload_ Bindable&lt;float&gt;</span></div>
+<div class="line">            dashUi_-&gt;onValueChangedRef(<span class="stringliteral">&quot;load-slider&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">float</span> v)</div>
+<div class="line">                                       {</div>
 <div class="line">            workload_.<a id="a3" name="a3"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>(v);</div>
 <div class="line">            highWorkload_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>(v &gt; 0.80f); });</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Bind conditional warning banner</span></div>
-<div class="line">        dashUi_-&gt;bindCondition(<span class="stringliteral">&quot;overload-warn&quot;</span>, highWorkload_, <span class="keyword">true</span>);</div>
+<div class="line">            <span class="comment">// Bind conditional warning banner</span></div>
+<div class="line">            dashUi_-&gt;bindCondition(<span class="stringliteral">&quot;overload-warn&quot;</span>, highWorkload_, <span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Bind KPI bar and labels directly to workload_</span></div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> bar = dashUi_-&gt;ref&lt;<a id="_a4" name="_a4"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1ProgressBar.html">ProgressBar</a>&gt;(<span class="stringliteral">&quot;kpi-bar&quot;</span>))</div>
-<div class="line">            floatSubs_.push_back(workload_.<a id="a5" name="a5"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#ac31f0825f52c01c1c761c2d3bd957b0f">bindTo</a>(bar, &amp;<a id="_a6" name="_a6"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1ProgressBar.html#a320ee2a92b12a7844d8cf77520c14ea0">ProgressBar::setValue</a>, <span class="keyword">true</span>));</div>
+<div class="line">            <span class="comment">// Bind KPI bar and labels directly to workload_</span></div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> bar = dashUi_-&gt;ref&lt;<a id="_a4" name="_a4"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1ProgressBar.html">ProgressBar</a>&gt;(<span class="stringliteral">&quot;kpi-bar&quot;</span>))</div>
+<div class="line">                floatSubs_.push_back(workload_.<a id="a5" name="a5"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#ac31f0825f52c01c1c761c2d3bd957b0f">bindTo</a>(bar, &amp;<a id="_a6" name="_a6"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1ProgressBar.html#a320ee2a92b12a7844d8cf77520c14ea0">ProgressBar::setValue</a>, <span class="keyword">true</span>));</div>
 <div class="line"> </div>
-<div class="line">        <a id="_a7" name="_a7"></a><a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html">ZMarkup::WeakUINode</a> weakDash = dashUi_-&gt;weak();</div>
-<div class="line">        floatSubs_.push_back(workload_.<a id="a8" name="a8"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#aa3a38e540a078ff4c08c5f3d8169abb8">onChanged</a>(</div>
-<div class="line">            [weakDash](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;v)</div>
-<div class="line">            {</div>
-<div class="line">                if (auto ui = weakDash.lock())</div>
+<div class="line">            <a id="_a7" name="_a7"></a><a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html">ZMarkup::WeakUINode</a> weakDash = dashUi_-&gt;weak();</div>
+<div class="line">            floatSubs_.push_back(workload_.<a id="a8" name="a8"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#aa3a38e540a078ff4c08c5f3d8169abb8">onChanged</a>(</div>
+<div class="line">                [weakDash](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;v)</div>
 <div class="line">                {</div>
-<div class="line">                    std::string pct = std::to_string((int)std::lround(v * 100.0f)) + <span class="stringliteral">&quot;%&quot;</span>;</div>
-<div class="line">                    ui-&gt;setTextRef(<span class="stringliteral">&quot;kpi-load&quot;</span>, pct);</div>
-<div class="line">                    ui-&gt;setTextRef(<span class="stringliteral">&quot;load-pct&quot;</span>, pct);</div>
-<div class="line">                }</div>
-<div class="line">            },</div>
-<div class="line">            <span class="keyword">true</span>));</div>
+<div class="line">                    if (auto ui = weakDash.lock())</div>
+<div class="line">                    {</div>
+<div class="line">                        std::string pct = std::to_string((int)std::lround(v * 100.0f)) + <span class="stringliteral">&quot;%&quot;</span>;</div>
+<div class="line">                        ui-&gt;setTextRef(<span class="stringliteral">&quot;kpi-load&quot;</span>, pct);</div>
+<div class="line">                        ui-&gt;setTextRef(<span class="stringliteral">&quot;load-pct&quot;</span>, pct);</div>
+<div class="line">                    }</div>
+<div class="line">                },</div>
+<div class="line">                <span class="keyword">true</span>));</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Update KPI task counter whenever tasks_ changes</span></div>
-<div class="line">        taskSubs_.push_back(tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#aa3a38e540a078ff4c08c5f3d8169abb8">onChanged</a>(</div>
-<div class="line">            [weakDash](<span class="keyword">const</span> std::vector&lt;TaskItem&gt; &amp;vec)</div>
-<div class="line">            {</div>
-<div class="line">                if (auto ui = weakDash.lock())</div>
-<div class="line">                    ui-&gt;setTextRef(<span class="stringliteral">&quot;kpi-tasks&quot;</span>, std::to_string(vec.size()));</div>
-<div class="line">            },</div>
-<div class="line">            <span class="keyword">true</span>));</div>
+<div class="line">            <span class="comment">// Update KPI task counter whenever tasks_ changes</span></div>
+<div class="line">            taskSubs_.push_back(tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#aa3a38e540a078ff4c08c5f3d8169abb8">onChanged</a>(</div>
+<div class="line">                [weakDash](<span class="keyword">const</span> std::vector&lt;TaskItem&gt; &amp;vec)</div>
+<div class="line">                {</div>
+<div class="line">                    if (auto ui = weakDash.lock())</div>
+<div class="line">                        ui-&gt;setTextRef(<span class="stringliteral">&quot;kpi-tasks&quot;</span>, std::to_string(vec.size()));</div>
+<div class="line">                },</div>
+<div class="line">                <span class="keyword">true</span>));</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Keyed reconciliation for the task list</span></div>
-<div class="line">        dashUi_-&gt;bindEachKeyed(</div>
-<div class="line">            <span class="stringliteral">&quot;task-list&quot;</span>,</div>
-<div class="line">            tasks_,</div>
-<div class="line">            [](<span class="keyword">const</span> TaskItem &amp;t)</div>
-<div class="line">            { <span class="keywordflow">return</span> t.id; },</div>
-<div class="line">            [<span class="keyword">this</span>](<a id="_a9" name="_a9"></a><a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1UINode.html">ZMarkup::UINode</a> &amp;itemUi, <span class="keyword">const</span> TaskItem &amp;t)</div>
-<div class="line">            {</div>
-<div class="line">                <span class="keywordtype">int</span> taskId = t.id;</div>
-<div class="line">                itemUi.<a id="a10" name="a10"></a>onClickRef(<span class="stringliteral">&quot;done&quot;</span>, [<span class="keyword">this</span>, taskId]</div>
-<div class="line">                                  {</div>
+<div class="line">            <span class="comment">// Keyed reconciliation for the task list</span></div>
+<div class="line">            dashUi_-&gt;bindEachKeyed(</div>
+<div class="line">                <span class="stringliteral">&quot;task-list&quot;</span>,</div>
+<div class="line">                tasks_,</div>
+<div class="line">                [](<span class="keyword">const</span> TaskItem &amp;t)</div>
+<div class="line">                { <span class="keywordflow">return</span> t.id; },</div>
+<div class="line">                [<span class="keyword">this</span>](<a id="_a9" name="_a9"></a><a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1UINode.html">ZMarkup::UINode</a> &amp;itemUi, <span class="keyword">const</span> TaskItem &amp;t)</div>
+<div class="line">                {</div>
+<div class="line">                    <span class="keywordtype">int</span> taskId = t.id;</div>
+<div class="line">                    itemUi.<a id="a10" name="a10"></a>onClickRef(<span class="stringliteral">&quot;done&quot;</span>, [<span class="keyword">this</span>, taskId]</div>
+<div class="line">                                      {</div>
 <div class="line">                    <span class="keyword">auto</span> next = tasks_.<a id="a11" name="a11"></a><a class="code hl_function" href="classZenitUI_1_1Bindable.html#a27e8c70be01a9616da546261cf9959eb">get</a>();</div>
 <div class="line">                    next.erase(std::remove_if(next.begin(), next.end(),</div>
 <div class="line">                                              [taskId](<span class="keyword">const</span> TaskItem &amp;it) { return it.id == taskId; }),</div>
 <div class="line">                               next.end());</div>
 <div class="line">                    tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>(std::move(next)); });</div>
-<div class="line">            },</div>
-<div class="line">            [](<a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1UINode.html">ZMarkup::UINode</a> &amp;itemUi, <span class="keyword">const</span> TaskItem &amp;t)</div>
+<div class="line">                },</div>
+<div class="line">                [](<a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1UINode.html">ZMarkup::UINode</a> &amp;itemUi, <span class="keyword">const</span> TaskItem &amp;t)</div>
+<div class="line">                {</div>
+<div class="line">                    itemUi.<a id="a12" name="a12"></a>setTextRef(<span class="stringliteral">&quot;tag&quot;</span>, t.tag);</div>
+<div class="line">                    itemUi.setTextRef(<span class="stringliteral">&quot;title&quot;</span>, t.title);</div>
+<div class="line">                },</div>
+<div class="line">                <span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// Add / Clear actions</span></div>
+<div class="line">            <span class="keyword">auto</span> addTask = [<span class="keyword">this</span>]</div>
 <div class="line">            {</div>
-<div class="line">                itemUi.<a id="a12" name="a12"></a>setTextRef(<span class="stringliteral">&quot;tag&quot;</span>, t.tag);</div>
-<div class="line">                itemUi.setTextRef(<span class="stringliteral">&quot;title&quot;</span>, t.title);</div>
-<div class="line">            },</div>
-<div class="line">            <span class="keyword">true</span>);</div>
+<div class="line">                <span class="keyword">auto</span> input = dashUi_-&gt;ref&lt;<a id="_a13" name="_a13"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1TextInput.html">TextInput</a>&gt;(<span class="stringliteral">&quot;task-input&quot;</span>);</div>
+<div class="line">                <span class="keywordflow">if</span> (!input)</div>
+<div class="line">                    <span class="keywordflow">return</span>;</div>
+<div class="line">                std::string txt = input-&gt;<a id="a14" name="a14"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1TextInput.html#a1716ef2a473b64183e7124114f034f98">getText</a>();</div>
+<div class="line">                <span class="keywordflow">if</span> (txt.empty())</div>
+<div class="line">                    <span class="keywordflow">return</span>;</div>
+<div class="line">                <span class="keyword">auto</span> next = tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#a27e8c70be01a9616da546261cf9959eb">get</a>();</div>
+<div class="line">                next.push_back({nextTaskId_++, <span class="stringliteral">&quot;Custom&quot;</span>, txt});</div>
+<div class="line">                tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>(std::move(next));</div>
+<div class="line">                input-&gt;setText(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line">            };</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Add / Clear actions</span></div>
-<div class="line">        <span class="keyword">auto</span> addTask = [<span class="keyword">this</span>]</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keyword">auto</span> input = dashUi_-&gt;ref&lt;<a id="_a13" name="_a13"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1TextInput.html">TextInput</a>&gt;(<span class="stringliteral">&quot;task-input&quot;</span>);</div>
-<div class="line">            <span class="keywordflow">if</span> (!input)</div>
-<div class="line">                <span class="keywordflow">return</span>;</div>
-<div class="line">            std::string txt = input-&gt;<a id="a14" name="a14"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1TextInput.html#a1716ef2a473b64183e7124114f034f98">getText</a>();</div>
-<div class="line">            <span class="keywordflow">if</span> (txt.empty())</div>
-<div class="line">                <span class="keywordflow">return</span>;</div>
-<div class="line">            <span class="keyword">auto</span> next = tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#a27e8c70be01a9616da546261cf9959eb">get</a>();</div>
-<div class="line">            next.push_back({nextTaskId_++, <span class="stringliteral">&quot;Custom&quot;</span>, txt});</div>
-<div class="line">            tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>(std::move(next));</div>
-<div class="line">            input-&gt;setText(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line">        };</div>
-<div class="line"> </div>
-<div class="line">        dashUi_-&gt;onClickRef(<span class="stringliteral">&quot;task-add&quot;</span>, addTask);</div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> input = dashUi_-&gt;ref&lt;<a class="code hl_class" href="classZenitUI_1_1UI_1_1TextInput.html">TextInput</a>&gt;(<span class="stringliteral">&quot;task-input&quot;</span>))</div>
-<div class="line">        {</div>
-<div class="line">            input-&gt;onSubmit = [addTask](<span class="keyword">const</span> std::string &amp;)</div>
-<div class="line">            { addTask(); };</div>
+<div class="line">            dashUi_-&gt;onClickRef(<span class="stringliteral">&quot;task-add&quot;</span>, addTask);</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> input = dashUi_-&gt;ref&lt;<a class="code hl_class" href="classZenitUI_1_1UI_1_1TextInput.html">TextInput</a>&gt;(<span class="stringliteral">&quot;task-input&quot;</span>))</div>
+<div class="line">            {</div>
+<div class="line">                input-&gt;onSubmit = [addTask](<span class="keyword">const</span> std::string &amp;)</div>
+<div class="line">                { addTask(); };</div>
+<div class="line">            }</div>
+<div class="line">            dashUi_-&gt;onClickRef(<span class="stringliteral">&quot;task-clear&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                { tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>({}); });</div>
 <div class="line">        }</div>
-<div class="line">        dashUi_-&gt;onClickRef(<span class="stringliteral">&quot;task-clear&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                            { tasks_.<a class="code hl_function" href="classZenitUI_1_1Bindable.html#ab2c8f6a6ce1689ab5296dc09d408ff80">set</a>({}); });</div>
-<div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  View 2: Editor &amp; Forms — Widgets, UTF-8 TextArea, Dirty State, Modal</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildEditorView()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kEditorMarkup = R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  View 2: Editor &amp; Forms — Widgets, UTF-8 TextArea, Dirty State, Modal</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildEditorView()</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kEditorMarkup = R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            ScrollView.view-scroll {</span></div>
 <div class="line"><span class="stringliteral">                HStack.split-row {</span></div>
 <div class="line"><span class="stringliteral">                    VStack.card.split-col {</span></div>
@@ -580,86 +582,86 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        editorUi_ = ZMarkup::build(kEditorMarkup);</span></div>
-<div class="line"><span class="stringliteral">        </span><span class="keyword">auto</span> view = editorUi_-&gt;root();</div>
-<div class="line">        mountView(view);</div>
+<div class="line"><span class="stringliteral">            editorUi_ = ZMarkup::build(kEditorMarkup);</span></div>
+<div class="line"><span class="stringliteral">            </span><span class="keyword">auto</span> view = editorUi_-&gt;root();</div>
+<div class="line">            mountView(view);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Mount a multi-line UTF-8 TextArea inside the reserved slot.</span></div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kDefaultNotes =</div>
-<div class="line">            <span class="stringliteral">&quot;ZenitUI supports full UTF-8 editing:\n&quot;</span></div>
-<div class="line">            <span class="stringliteral">&quot;• Accented Latin: café, naïve, résumé, città\n&quot;</span></div>
-<div class="line">            <span class="stringliteral">&quot;• Symbols &amp; arrows: → ← ↑ ↓ — € £ ©\n&quot;</span></div>
-<div class="line">            <span class="stringliteral">&quot;• Shortcuts: Ctrl+A, Ctrl+C/X/V, Ctrl+Z/Y\n\n&quot;</span></div>
-<div class="line">            <span class="stringliteral">&quot;Try selecting across wrapped lines or dragging with the mouse.&quot;</span>;</div>
+<div class="line">            <span class="comment">// Mount a multi-line UTF-8 TextArea inside the reserved slot.</span></div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kDefaultNotes =</div>
+<div class="line">                <span class="stringliteral">&quot;ZenitUI supports full UTF-8 editing:\n&quot;</span></div>
+<div class="line">                <span class="stringliteral">&quot;• Accented Latin: café, naïve, résumé, città\n&quot;</span></div>
+<div class="line">                <span class="stringliteral">&quot;• Symbols &amp; arrows: → ← ↑ ↓ — € £ ©\n&quot;</span></div>
+<div class="line">                <span class="stringliteral">&quot;• Shortcuts: Ctrl+A, Ctrl+C/X/V, Ctrl+Z/Y\n\n&quot;</span></div>
+<div class="line">                <span class="stringliteral">&quot;Try selecting across wrapped lines or dragging with the mouse.&quot;</span>;</div>
 <div class="line"> </div>
-<div class="line">        notesArea_ = <a id="_a15" name="_a15"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">TextArea::create</a>(kDefaultNotes, 8);</div>
-<div class="line">        notesArea_-&gt;size(Percent(100), Px(210));</div>
-<div class="line">        notesArea_-&gt;setPlaceholder(<span class="stringliteral">&quot;Write release notes here...&quot;</span>);</div>
+<div class="line">            notesArea_ = <a id="_a15" name="_a15"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">TextArea::create</a>(kDefaultNotes, 8);</div>
+<div class="line">            notesArea_-&gt;size(Percent(100), Px(210));</div>
+<div class="line">            notesArea_-&gt;setPlaceholder(<span class="stringliteral">&quot;Write release notes here...&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> updateNotesMeta = [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;txt)</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keywordtype">int</span> lines = 1 + (int)std::count(txt.begin(), txt.end(), <span class="charliteral">&#39;\n&#39;</span>);</div>
-<div class="line">            editorUi_-&gt;setTextRef(</div>
-<div class="line">                <span class="stringliteral">&quot;notes-meta&quot;</span>,</div>
-<div class="line">                std::to_string(lines) + <span class="stringliteral">&quot; lines · &quot;</span> + std::to_string(txt.size()) + <span class="stringliteral">&quot; bytes&quot;</span>);</div>
-<div class="line">        };</div>
-<div class="line">        updateNotesMeta(notesArea_-&gt;getText());</div>
-<div class="line">        notesArea_-&gt;onTextChanged = [<span class="keyword">this</span>, updateNotesMeta](<span class="keyword">const</span> std::string &amp;s)</div>
-<div class="line">        {</div>
-<div class="line">            updateNotesMeta(s);</div>
-<div class="line">            dirty_.set(<span class="keyword">true</span>);</div>
-<div class="line">        };</div>
-<div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> slot = editorUi_-&gt;ref(<span class="stringliteral">&quot;textarea-slot&quot;</span>))</div>
-<div class="line">            slot-&gt;addChild(notesArea_);</div>
-<div class="line"> </div>
-<div class="line">        <span class="comment">// Wire form controls -&gt; Bindable state + dirty flag</span></div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> qual = editorUi_-&gt;ref&lt;<a id="_a16" name="_a16"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Dropdown.html">Dropdown</a>&gt;(<span class="stringliteral">&quot;ed-qual&quot;</span>))</div>
-<div class="line">        {</div>
-<div class="line">            qual-&gt;setSelected(qualityIdx_.get());</div>
-<div class="line">            qual-&gt;onChange = [<span class="keyword">this</span>](<span class="keywordtype">int</span> idx, <span class="keyword">const</span> std::string &amp;)</div>
+<div class="line">            <span class="keyword">auto</span> updateNotesMeta = [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;txt)</div>
 <div class="line">            {</div>
-<div class="line">                qualityIdx_.set(idx);</div>
+<div class="line">                <span class="keywordtype">int</span> lines = 1 + (int)std::count(txt.begin(), txt.end(), <span class="charliteral">&#39;\n&#39;</span>);</div>
+<div class="line">                editorUi_-&gt;setTextRef(</div>
+<div class="line">                    <span class="stringliteral">&quot;notes-meta&quot;</span>,</div>
+<div class="line">                    std::to_string(lines) + <span class="stringliteral">&quot; lines · &quot;</span> + std::to_string(txt.size()) + <span class="stringliteral">&quot; bytes&quot;</span>);</div>
+<div class="line">            };</div>
+<div class="line">            updateNotesMeta(notesArea_-&gt;getText());</div>
+<div class="line">            notesArea_-&gt;onTextChanged = [<span class="keyword">this</span>, updateNotesMeta](<span class="keyword">const</span> std::string &amp;s)</div>
+<div class="line">            {</div>
+<div class="line">                updateNotesMeta(s);</div>
 <div class="line">                dirty_.set(<span class="keyword">true</span>);</div>
 <div class="line">            };</div>
-<div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">        editorUi_-&gt;onTextChangedRef(<span class="stringliteral">&quot;ed-name&quot;</span>, [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;s)</div>
-<div class="line">                                    {</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> slot = editorUi_-&gt;ref(<span class="stringliteral">&quot;textarea-slot&quot;</span>))</div>
+<div class="line">                slot-&gt;addChild(notesArea_);</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// Wire form controls -&gt; Bindable state + dirty flag</span></div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> qual = editorUi_-&gt;ref&lt;<a id="_a16" name="_a16"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Dropdown.html">Dropdown</a>&gt;(<span class="stringliteral">&quot;ed-qual&quot;</span>))</div>
+<div class="line">            {</div>
+<div class="line">                qual-&gt;setSelected(qualityIdx_.get());</div>
+<div class="line">                qual-&gt;onChange = [<span class="keyword">this</span>](<span class="keywordtype">int</span> idx, <span class="keyword">const</span> std::string &amp;)</div>
+<div class="line">                {</div>
+<div class="line">                    qualityIdx_.set(idx);</div>
+<div class="line">                    dirty_.set(<span class="keyword">true</span>);</div>
+<div class="line">                };</div>
+<div class="line">            }</div>
+<div class="line"> </div>
+<div class="line">            editorUi_-&gt;onTextChangedRef(<span class="stringliteral">&quot;ed-name&quot;</span>, [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;s)</div>
+<div class="line">                                        {</div>
 <div class="line">            username_.set(s);</div>
 <div class="line">            dirty_.set(<span class="keyword">true</span>); });</div>
 <div class="line"> </div>
-<div class="line">        editorUi_-&gt;onValueChangedRef(<span class="stringliteral">&quot;ed-vol&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">float</span> v)</div>
-<div class="line">                                     {</div>
+<div class="line">            editorUi_-&gt;onValueChangedRef(<span class="stringliteral">&quot;ed-vol&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">float</span> v)</div>
+<div class="line">                                         {</div>
 <div class="line">            volume_.set(v);</div>
 <div class="line">            dirty_.set(<span class="keyword">true</span>); });</div>
 <div class="line"> </div>
-<div class="line">        <a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html">ZMarkup::WeakUINode</a> weakEd = editorUi_-&gt;weak();</div>
-<div class="line">        floatSubs_.push_back(volume_.onChanged(</div>
-<div class="line">            [weakEd](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;v)</div>
-<div class="line">            {</div>
-<div class="line">                if (auto ui = weakEd.lock())</div>
-<div class="line">                    ui-&gt;setTextRef(<span class="stringliteral">&quot;ed-vol-lbl&quot;</span>, std::to_string((int)std::lround(v * 100.0f)) + <span class="stringliteral">&quot;%&quot;</span>);</div>
-<div class="line">            },</div>
-<div class="line">            <span class="keyword">true</span>));</div>
+<div class="line">            <a class="code hl_class" href="classZenitUI_1_1ZMarkup_1_1WeakUINode.html">ZMarkup::WeakUINode</a> weakEd = editorUi_-&gt;weak();</div>
+<div class="line">            floatSubs_.push_back(volume_.onChanged(</div>
+<div class="line">                [weakEd](<span class="keyword">const</span> <span class="keywordtype">float</span> &amp;v)</div>
+<div class="line">                {</div>
+<div class="line">                    if (auto ui = weakEd.lock())</div>
+<div class="line">                        ui-&gt;setTextRef(<span class="stringliteral">&quot;ed-vol-lbl&quot;</span>, std::to_string((int)std::lround(v * 100.0f)) + <span class="stringliteral">&quot;%&quot;</span>);</div>
+<div class="line">                },</div>
+<div class="line">                <span class="keyword">true</span>));</div>
 <div class="line"> </div>
-<div class="line">        editorUi_-&gt;onToggleRef(<span class="stringliteral">&quot;ed-notif&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">bool</span> v)</div>
-<div class="line">                               {</div>
+<div class="line">            editorUi_-&gt;onToggleRef(<span class="stringliteral">&quot;ed-notif&quot;</span>, [<span class="keyword">this</span>](<span class="keywordtype">bool</span> v)</div>
+<div class="line">                                   {</div>
 <div class="line">            notifications_.set(v);</div>
 <div class="line">            dirty_.set(<span class="keyword">true</span>); });</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> cb = editorUi_-&gt;ref&lt;<a id="_a17" name="_a17"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Checkbox.html">Checkbox</a>&gt;(<span class="stringliteral">&quot;ed-cloud&quot;</span>))</div>
-<div class="line">        {</div>
-<div class="line">            cb-&gt;onToggle = [<span class="keyword">this</span>](<span class="keywordtype">bool</span> v)</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> cb = editorUi_-&gt;ref&lt;<a id="_a17" name="_a17"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Checkbox.html">Checkbox</a>&gt;(<span class="stringliteral">&quot;ed-cloud&quot;</span>))</div>
 <div class="line">            {</div>
-<div class="line">                cloudSync_.set(v);</div>
-<div class="line">                dirty_.set(<span class="keyword">true</span>);</div>
-<div class="line">            };</div>
-<div class="line">        }</div>
+<div class="line">                cb-&gt;onToggle = [<span class="keyword">this</span>](<span class="keywordtype">bool</span> v)</div>
+<div class="line">                {</div>
+<div class="line">                    cloudSync_.set(v);</div>
+<div class="line">                    dirty_.set(<span class="keyword">true</span>);</div>
+<div class="line">                };</div>
+<div class="line">            }</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Working Reset button: restores model &amp; all widgets</span></div>
-<div class="line">        editorUi_-&gt;onClickRef(<span class="stringliteral">&quot;ed-reset&quot;</span>, [<span class="keyword">this</span>, updateNotesMeta]</div>
-<div class="line">                              {</div>
+<div class="line">            <span class="comment">// Working Reset button: restores model &amp; all widgets</span></div>
+<div class="line">            editorUi_-&gt;onClickRef(<span class="stringliteral">&quot;ed-reset&quot;</span>, [<span class="keyword">this</span>, updateNotesMeta]</div>
+<div class="line">                                  {</div>
 <div class="line">            username_.set(<span class="stringliteral">&quot;zenit_dev&quot;</span>);</div>
 <div class="line">            volume_.set(0.72f);</div>
 <div class="line">            qualityIdx_.set(2);</div>
@@ -683,23 +685,23 @@ ShowcaseApp.hpp</h3>
 <div class="line">            }</div>
 <div class="line">            dirty_.set(<span class="keyword">false</span>); });</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Working Save button: confirms via Modal and clears dirty flag</span></div>
-<div class="line">        editorUi_-&gt;onClickRef(<span class="stringliteral">&quot;ed-save&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                              { openModal(</div>
-<div class="line">                                    <span class="stringliteral">&quot;Save Workspace Settings?&quot;</span>,</div>
-<div class="line">                                    <span class="stringliteral">&quot;Profile \&quot;&quot;</span> + username_.get() + <span class="stringliteral">&quot;\&quot; (volume &quot;</span> +</div>
-<div class="line">                                        std::to_string((<span class="keywordtype">int</span>)std::lround(volume_.get() * 100.0f)) +</div>
-<div class="line">                                        <span class="stringliteral">&quot;%) will be committed and the unsaved indicator cleared.&quot;</span>,</div>
-<div class="line">                                    [<span class="keyword">this</span>]</div>
-<div class="line">                                    { dirty_.set(false); }); });</div>
-<div class="line">    }</div>
+<div class="line">            <span class="comment">// Working Save button: confirms via Modal and clears dirty flag</span></div>
+<div class="line">            editorUi_-&gt;onClickRef(<span class="stringliteral">&quot;ed-save&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                  { openModal(</div>
+<div class="line">                                        <span class="stringliteral">&quot;Save Workspace Settings?&quot;</span>,</div>
+<div class="line">                                        <span class="stringliteral">&quot;Profile \&quot;&quot;</span> + username_.get() + <span class="stringliteral">&quot;\&quot; (volume &quot;</span> +</div>
+<div class="line">                                            std::to_string((<span class="keywordtype">int</span>)std::lround(volume_.get() * 100.0f)) +</div>
+<div class="line">                                            <span class="stringliteral">&quot;%) will be committed and the unsaved indicator cleared.&quot;</span>,</div>
+<div class="line">                                        [<span class="keyword">this</span>]</div>
+<div class="line">                                        { dirty_.set(false); }); });</div>
+<div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  View 3: Virtual Explorer — 10,000-row VirtualView + ContextMenu + 9-slice</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildExplorerView()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kExplorerMarkup = R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  View 3: Virtual Explorer — 10,000-row VirtualView + ContextMenu + 9-slice</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildExplorerView()</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kExplorerMarkup = R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            VStack.view-fixed {</span></div>
 <div class="line"><span class="stringliteral">                HStack.row-wrap {</span></div>
 <div class="line"><span class="stringliteral">                    TextInput@exp-search placeholder=&quot;Filter 10,000 entries by category, text, or ID...&quot; grow=&quot;1&quot; min-width=&quot;150px&quot;</span></div>
@@ -721,168 +723,168 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        explorerUi_ = ZMarkup::build(kExplorerMarkup);</span></div>
-<div class="line"><span class="stringliteral">        </span><span class="keyword">auto</span> view = explorerUi_-&gt;root();</div>
-<div class="line">        mountView(view);</div>
+<div class="line"><span class="stringliteral">            explorerUi_ = ZMarkup::build(kExplorerMarkup);</span></div>
+<div class="line"><span class="stringliteral">            </span><span class="keyword">auto</span> view = explorerUi_-&gt;root();</div>
+<div class="line">            mountView(view);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Apply the custom nine-slice texture asset to the preview badge.</span></div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> badge = explorerUi_-&gt;ref(<span class="stringliteral">&quot;nineslice-badge&quot;</span>))</div>
-<div class="line">        {</div>
-<div class="line">            <a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(badge, <span class="stringliteral">&quot;Rendered via ZStyle: background-texture: npatches 8 8 8 8&quot;</span>, 0.35f);</div>
-<div class="line">        }</div>
-<div class="line"> </div>
-<div class="line">        <span class="comment">// Single shared ContextMenu mounted on the Explorer view (escaped via portal).</span></div>
-<div class="line">        rowContextMenu_ = <a id="_a20" name="_a20"></a><a class="code hl_function" href="group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d">ContextMenu</a>({</div>
-<div class="line">            {<span class="stringliteral">&quot;Inspect entry&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">             {</div>
-<div class="line">                 <span class="keywordflow">if</span> (contextRowIndex_ &gt;= 0 &amp;&amp; contextRowIndex_ &lt; (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
-<div class="line">                 {</div>
-<div class="line">                     <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[contextRowIndex_]];</div>
-<div class="line">                     openModal(</div>
-<div class="line">                         <span class="stringliteral">&quot;Entry #&quot;</span> + std::to_string(e.id) + <span class="stringliteral">&quot; [&quot;</span> + e.category + <span class="stringliteral">&quot;]&quot;</span>,</div>
-<div class="line">                         e.message,</div>
-<div class="line">                         <span class="keyword">nullptr</span>);</div>
-<div class="line">                 }</div>
-<div class="line">             }},</div>
-<div class="line">            {<span class="stringliteral">&quot;Copy summary to clipboard&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">             {</div>
-<div class="line">                 <span class="keywordflow">if</span> (contextRowIndex_ &gt;= 0 &amp;&amp; contextRowIndex_ &lt; (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
-<div class="line">                 {</div>
-<div class="line">                     <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[contextRowIndex_]];</div>
-<div class="line">                     std::string text = <span class="stringliteral">&quot;#&quot;</span> + std::to_string(e.id) + <span class="stringliteral">&quot; [&quot;</span> + e.category + <span class="stringliteral">&quot;] &quot;</span> + e.message;</div>
-<div class="line">                     <span class="keywordflow">if</span> (<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform)</div>
-<div class="line">                         <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform-&gt;setClipboardText(text);</div>
-<div class="line">                     explorerUi_-&gt;setTextRef(<span class="stringliteral">&quot;exp-status&quot;</span>, <span class="stringliteral">&quot;Copied to clipboard: &quot;</span> + text);</div>
-<div class="line">                 }</div>
-<div class="line">             }},</div>
-<div class="line">            {<span class="stringliteral">&quot;Scroll entry to top&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">             {</div>
-<div class="line">                 <span class="keywordflow">if</span> (virtualList_ &amp;&amp; contextRowIndex_ &gt;= 0)</div>
-<div class="line">                     virtualList_-&gt;scrollToItem(contextRowIndex_);</div>
-<div class="line">             }},</div>
-<div class="line">        });</div>
-<div class="line">        view-&gt;addChild(rowContextMenu_);</div>
-<div class="line"> </div>
-<div class="line">        <span class="comment">// Create the 10,000-row VirtualView with O(1) uniform row height.</span></div>
-<div class="line">        virtualList_ = <a id="_a21" name="_a21"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d">VirtualView::create</a>(</div>
-<div class="line">            [<span class="keyword">this</span>](<span class="keywordtype">int</span> idx) -&gt; std::shared_ptr&lt;Layout&gt;</div>
+<div class="line">            <span class="comment">// Apply the custom nine-slice texture asset to the preview badge.</span></div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> badge = explorerUi_-&gt;ref(<span class="stringliteral">&quot;nineslice-badge&quot;</span>))</div>
 <div class="line">            {</div>
-<div class="line">                <span class="keywordflow">if</span> (idx &lt; 0 || idx &gt;= (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
-<div class="line">                    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line">                <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[idx]];</div>
+<div class="line">                <a class="code hl_function" href="classZenitUI_1_1UI_1_1Tooltip.html#a24c527c7f0d69ac9823dc43524e09378">Tooltip::attach</a>(badge, <span class="stringliteral">&quot;Rendered via ZStyle: background-texture: npatches 8 8 8 8&quot;</span>, 0.35f);</div>
+<div class="line">            }</div>
 <div class="line"> </div>
-<div class="line">                <span class="keyword">auto</span> row = <a id="_a22" name="_a22"></a><a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>()-&gt;cls(<span class="stringliteral">&quot;vrow&quot;</span>);</div>
-<div class="line">                <span class="keywordflow">if</span> (idx % 2 == 1)</div>
-<div class="line">                    row-&gt;addClass(<span class="stringliteral">&quot;alt&quot;</span>);</div>
-<div class="line">                row-&gt;setInteractive(<span class="keyword">true</span>);</div>
-<div class="line">                row-&gt;setBlocksRaycast(<span class="keyword">true</span>);</div>
+<div class="line">            <span class="comment">// Single shared ContextMenu mounted on the Explorer view (escaped via portal).</span></div>
+<div class="line">            rowContextMenu_ = <a id="_a20" name="_a20"></a><a class="code hl_function" href="group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d">ContextMenu</a>({</div>
+<div class="line">                {<span class="stringliteral">&quot;Inspect entry&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                 {</div>
+<div class="line">                     <span class="keywordflow">if</span> (contextRowIndex_ &gt;= 0 &amp;&amp; contextRowIndex_ &lt; (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
+<div class="line">                     {</div>
+<div class="line">                         <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[contextRowIndex_]];</div>
+<div class="line">                         openModal(</div>
+<div class="line">                             <span class="stringliteral">&quot;Entry #&quot;</span> + std::to_string(e.id) + <span class="stringliteral">&quot; [&quot;</span> + e.category + <span class="stringliteral">&quot;]&quot;</span>,</div>
+<div class="line">                             e.message,</div>
+<div class="line">                             <span class="keyword">nullptr</span>);</div>
+<div class="line">                     }</div>
+<div class="line">                 }},</div>
+<div class="line">                {<span class="stringliteral">&quot;Copy summary to clipboard&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                 {</div>
+<div class="line">                     <span class="keywordflow">if</span> (contextRowIndex_ &gt;= 0 &amp;&amp; contextRowIndex_ &lt; (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
+<div class="line">                     {</div>
+<div class="line">                         <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[contextRowIndex_]];</div>
+<div class="line">                         std::string text = <span class="stringliteral">&quot;#&quot;</span> + std::to_string(e.id) + <span class="stringliteral">&quot; [&quot;</span> + e.category + <span class="stringliteral">&quot;] &quot;</span> + e.message;</div>
+<div class="line">                         <span class="keywordflow">if</span> (<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform)</div>
+<div class="line">                             <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform-&gt;setClipboardText(text);</div>
+<div class="line">                         explorerUi_-&gt;setTextRef(<span class="stringliteral">&quot;exp-status&quot;</span>, <span class="stringliteral">&quot;Copied to clipboard: &quot;</span> + text);</div>
+<div class="line">                     }</div>
+<div class="line">                 }},</div>
+<div class="line">                {<span class="stringliteral">&quot;Scroll entry to top&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                 {</div>
+<div class="line">                     <span class="keywordflow">if</span> (virtualList_ &amp;&amp; contextRowIndex_ &gt;= 0)</div>
+<div class="line">                         virtualList_-&gt;scrollToItem(contextRowIndex_);</div>
+<div class="line">                 }},</div>
+<div class="line">            });</div>
+<div class="line">            view-&gt;addChild(rowContextMenu_);</div>
 <div class="line"> </div>
-<div class="line">                row-&gt;addChild(<a id="_a23" name="_a23"></a><a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;#&quot;</span> + std::to_string(e.id))-&gt;cls(<span class="stringliteral">&quot;vrow-id&quot;</span>));</div>
-<div class="line">                row-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(e.category)-&gt;cls(<span class="stringliteral">&quot;vrow-cat&quot;</span>));</div>
-<div class="line">                row-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(e.message)-&gt;cls(<span class="stringliteral">&quot;vrow-msg&quot;</span>));</div>
-<div class="line"> </div>
-<div class="line">                row-&gt;onClick = [<span class="keyword">this</span>, <span class="keywordtype">id</span> = e.id, cat = e.category]</div>
+<div class="line">            <span class="comment">// Create the 10,000-row VirtualView with O(1) uniform row height.</span></div>
+<div class="line">            virtualList_ = <a id="_a21" name="_a21"></a><a class="code hl_function" href="classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d">VirtualView::create</a>(</div>
+<div class="line">                [<span class="keyword">this</span>](<span class="keywordtype">int</span> idx) -&gt; std::shared_ptr&lt;Layout&gt;</div>
 <div class="line">                {</div>
-<div class="line">                    explorerUi_-&gt;setTextRef(</div>
-<div class="line">                        <span class="stringliteral">&quot;exp-status&quot;</span>,</div>
-<div class="line">                        <span class="stringliteral">&quot;Selected entry #&quot;</span> + std::to_string(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot; [&quot;</span> + cat + <span class="stringliteral">&quot;]&quot;</span>);</div>
-<div class="line">                };</div>
-<div class="line">                row-&gt;onRightClick = [<span class="keyword">this</span>, idx]</div>
-<div class="line">                {</div>
-<div class="line">                    contextRowIndex_ = idx;</div>
-<div class="line">                    <span class="keywordflow">if</span> (rowContextMenu_)</div>
-<div class="line">                        rowContextMenu_-&gt;openAt(<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().pointer.pos);</div>
-<div class="line">                };</div>
-<div class="line">                <span class="keywordflow">return</span> row;</div>
-<div class="line">            },</div>
-<div class="line">            (int)filteredIndices_.size());</div>
+<div class="line">                    <span class="keywordflow">if</span> (idx &lt; 0 || idx &gt;= (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
+<div class="line">                        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line">                    <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[filteredIndices_[idx]];</div>
 <div class="line"> </div>
-<div class="line">        virtualList_-&gt;size(Percent(100), Percent(100));</div>
-<div class="line">        virtualList_-&gt;setUniformHeight(42.0f);</div>
+<div class="line">                    <span class="keyword">auto</span> row = <a id="_a22" name="_a22"></a><a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>()-&gt;cls(<span class="stringliteral">&quot;vrow&quot;</span>);</div>
+<div class="line">                    <span class="keywordflow">if</span> (idx % 2 == 1)</div>
+<div class="line">                        row-&gt;addClass(<span class="stringliteral">&quot;alt&quot;</span>);</div>
+<div class="line">                    row-&gt;setInteractive(<span class="keyword">true</span>);</div>
+<div class="line">                    row-&gt;setBlocksRaycast(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> host = explorerUi_-&gt;ref(<span class="stringliteral">&quot;virtual-host&quot;</span>))</div>
-<div class="line">            host-&gt;addChild(virtualList_);</div>
+<div class="line">                    row-&gt;addChild(<a id="_a23" name="_a23"></a><a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;#&quot;</span> + std::to_string(e.id))-&gt;cls(<span class="stringliteral">&quot;vrow-id&quot;</span>));</div>
+<div class="line">                    row-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(e.category)-&gt;cls(<span class="stringliteral">&quot;vrow-cat&quot;</span>));</div>
+<div class="line">                    row-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(e.message)-&gt;cls(<span class="stringliteral">&quot;vrow-msg&quot;</span>));</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Live case-insensitive filtering</span></div>
-<div class="line">        explorerUi_-&gt;onTextChangedRef(<span class="stringliteral">&quot;exp-search&quot;</span>, [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;q)</div>
-<div class="line">                                      { applyExplorerFilter(q); });</div>
+<div class="line">                    row-&gt;onClick = [<span class="keyword">this</span>, <span class="keywordtype">id</span> = e.id, cat = e.category]</div>
+<div class="line">                    {</div>
+<div class="line">                        explorerUi_-&gt;setTextRef(</div>
+<div class="line">                            <span class="stringliteral">&quot;exp-status&quot;</span>,</div>
+<div class="line">                            <span class="stringliteral">&quot;Selected entry #&quot;</span> + std::to_string(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot; [&quot;</span> + cat + <span class="stringliteral">&quot;]&quot;</span>);</div>
+<div class="line">                    };</div>
+<div class="line">                    row-&gt;onRightClick = [<span class="keyword">this</span>, idx]</div>
+<div class="line">                    {</div>
+<div class="line">                        contextRowIndex_ = idx;</div>
+<div class="line">                        <span class="keywordflow">if</span> (rowContextMenu_)</div>
+<div class="line">                            rowContextMenu_-&gt;openAt(<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().pointer.pos);</div>
+<div class="line">                    };</div>
+<div class="line">                    <span class="keywordflow">return</span> row;</div>
+<div class="line">                },</div>
+<div class="line">                (int)filteredIndices_.size());</div>
 <div class="line"> </div>
-<div class="line">        explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-top&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                                {</div>
+<div class="line">            virtualList_-&gt;size(Percent(100), Percent(100));</div>
+<div class="line">            virtualList_-&gt;setUniformHeight(42.0f);</div>
+<div class="line"> </div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> host = explorerUi_-&gt;ref(<span class="stringliteral">&quot;virtual-host&quot;</span>))</div>
+<div class="line">                host-&gt;addChild(virtualList_);</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// Live case-insensitive filtering</span></div>
+<div class="line">            explorerUi_-&gt;onTextChangedRef(<span class="stringliteral">&quot;exp-search&quot;</span>, [<span class="keyword">this</span>](<span class="keyword">const</span> std::string &amp;q)</div>
+<div class="line">                                          { applyExplorerFilter(q); });</div>
+<div class="line"> </div>
+<div class="line">            explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-top&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                    {</div>
 <div class="line">            <span class="keywordflow">if</span> (virtualList_)</div>
 <div class="line">                virtualList_-&gt;scrollToItem(0); });</div>
-<div class="line">        explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-mid&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                                {</div>
+<div class="line">            explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-mid&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                    {</div>
 <div class="line">            <span class="keywordflow">if</span> (virtualList_)</div>
 <div class="line">                virtualList_-&gt;scrollToItem(std::min(4999, std::max(0, (<span class="keywordtype">int</span>)filteredIndices_.size() - 1))); });</div>
-<div class="line">        explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-end&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                                {</div>
+<div class="line">            explorerUi_-&gt;onClickRef(<span class="stringliteral">&quot;jump-end&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                    {</div>
 <div class="line">            <span class="keywordflow">if</span> (virtualList_ &amp;&amp; !filteredIndices_.empty())</div>
 <div class="line">                virtualList_-&gt;scrollToItem((<span class="keywordtype">int</span>)filteredIndices_.size() - 1); });</div>
-<div class="line">    }</div>
+<div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordtype">void</span> applyExplorerFilter(<span class="keyword">const</span> std::string &amp;query)</div>
-<div class="line">    {</div>
-<div class="line">        filterQuery_ = query;</div>
-<div class="line">        std::string lowerQ = query;</div>
-<div class="line">        std::transform(lowerQ.begin(), lowerQ.end(), lowerQ.begin(),</div>
-<div class="line">                       [](<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c)</div>
-<div class="line">                       { return (char)std::tolower(c); });</div>
-<div class="line"> </div>
-<div class="line">        filteredIndices_.clear();</div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)catalog_.size(); ++i)</div>
+<div class="line">        <span class="keywordtype">void</span> applyExplorerFilter(<span class="keyword">const</span> std::string &amp;query)</div>
 <div class="line">        {</div>
-<div class="line">            <span class="keywordflow">if</span> (lowerQ.empty())</div>
-<div class="line">            {</div>
-<div class="line">                filteredIndices_.push_back(i);</div>
-<div class="line">                <span class="keywordflow">continue</span>;</div>
-<div class="line">            }</div>
-<div class="line">            <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[i];</div>
-<div class="line">            std::string hay = std::to_string(e.id) + <span class="stringliteral">&quot; &quot;</span> + e.category + <span class="stringliteral">&quot; &quot;</span> + e.message;</div>
-<div class="line">            std::transform(hay.begin(), hay.end(), hay.begin(),</div>
+<div class="line">            filterQuery_ = query;</div>
+<div class="line">            std::string lowerQ = query;</div>
+<div class="line">            std::transform(lowerQ.begin(), lowerQ.end(), lowerQ.begin(),</div>
 <div class="line">                           [](<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c)</div>
 <div class="line">                           { return (char)std::tolower(c); });</div>
-<div class="line">            <span class="keywordflow">if</span> (hay.find(lowerQ) != std::string::npos)</div>
-<div class="line">                filteredIndices_.push_back(i);</div>
+<div class="line"> </div>
+<div class="line">            filteredIndices_.clear();</div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)catalog_.size(); ++i)</div>
+<div class="line">            {</div>
+<div class="line">                <span class="keywordflow">if</span> (lowerQ.empty())</div>
+<div class="line">                {</div>
+<div class="line">                    filteredIndices_.push_back(i);</div>
+<div class="line">                    <span class="keywordflow">continue</span>;</div>
+<div class="line">                }</div>
+<div class="line">                <span class="keyword">const</span> <span class="keyword">auto</span> &amp;e = catalog_[i];</div>
+<div class="line">                std::string hay = std::to_string(e.id) + <span class="stringliteral">&quot; &quot;</span> + e.category + <span class="stringliteral">&quot; &quot;</span> + e.message;</div>
+<div class="line">                std::transform(hay.begin(), hay.end(), hay.begin(),</div>
+<div class="line">                               [](<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c)</div>
+<div class="line">                               { return (char)std::tolower(c); });</div>
+<div class="line">                <span class="keywordflow">if</span> (hay.find(lowerQ) != std::string::npos)</div>
+<div class="line">                    filteredIndices_.push_back(i);</div>
+<div class="line">            }</div>
+<div class="line"> </div>
+<div class="line">            <span class="keywordflow">if</span> (virtualList_)</div>
+<div class="line">            {</div>
+<div class="line">                virtualList_-&gt;removeAllChildren();</div>
+<div class="line">                virtualList_-&gt;scrollToTop();</div>
+<div class="line">                <span class="comment">// Force height/materialization refresh even if count matched previous count.</span></div>
+<div class="line">                <span class="keywordflow">if</span> (virtualList_-&gt;getItemCount() == (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
+<div class="line">                    virtualList_-&gt;setItemCount(0);</div>
+<div class="line">                virtualList_-&gt;setItemCount((<span class="keywordtype">int</span>)filteredIndices_.size());</div>
+<div class="line">            }</div>
+<div class="line">            updateExplorerRange();</div>
 <div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (virtualList_)</div>
+<div class="line">        <span class="keywordtype">void</span> updateExplorerRange()</div>
 <div class="line">        {</div>
-<div class="line">            virtualList_-&gt;removeAllChildren();</div>
-<div class="line">            virtualList_-&gt;scrollToTop();</div>
-<div class="line">            <span class="comment">// Force height/materialization refresh even if count matched previous count.</span></div>
-<div class="line">            <span class="keywordflow">if</span> (virtualList_-&gt;getItemCount() == (<span class="keywordtype">int</span>)filteredIndices_.size())</div>
-<div class="line">                virtualList_-&gt;setItemCount(0);</div>
-<div class="line">            virtualList_-&gt;setItemCount((<span class="keywordtype">int</span>)filteredIndices_.size());</div>
+<div class="line">            <span class="keywordflow">if</span> (!explorerUi_ || !virtualList_)</div>
+<div class="line">                <span class="keywordflow">return</span>;</div>
+<div class="line">            <span class="keywordtype">int</span> total = (int)filteredIndices_.size();</div>
+<div class="line">            <span class="keywordtype">int</span> first = virtualList_-&gt;getFirstVisibleItem();</div>
+<div class="line">            <span class="keywordtype">int</span> last = virtualList_-&gt;getLastVisibleItem();</div>
+<div class="line">            <span class="keywordflow">if</span> (total == 0 || first &lt; 0)</div>
+<div class="line">            {</div>
+<div class="line">                explorerUi_-&gt;setTextRef(<span class="stringliteral">&quot;exp-range&quot;</span>, <span class="stringliteral">&quot;0 matching entries&quot;</span>);</div>
+<div class="line">                <span class="keywordflow">return</span>;</div>
+<div class="line">            }</div>
+<div class="line">            explorerUi_-&gt;setTextRef(</div>
+<div class="line">                <span class="stringliteral">&quot;exp-range&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Materialized viewport: #&quot;</span> + std::to_string(first + 1) + <span class="stringliteral">&quot; – #&quot;</span> +</div>
+<div class="line">                    std::to_string(last + 1) + <span class="stringliteral">&quot; of &quot;</span> + std::to_string(total) + <span class="stringliteral">&quot; entries&quot;</span>);</div>
 <div class="line">        }</div>
-<div class="line">        updateExplorerRange();</div>
-<div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordtype">void</span> updateExplorerRange()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordflow">if</span> (!explorerUi_ || !virtualList_)</div>
-<div class="line">            <span class="keywordflow">return</span>;</div>
-<div class="line">        <span class="keywordtype">int</span> total = (int)filteredIndices_.size();</div>
-<div class="line">        <span class="keywordtype">int</span> first = virtualList_-&gt;getFirstVisibleItem();</div>
-<div class="line">        <span class="keywordtype">int</span> last = virtualList_-&gt;getLastVisibleItem();</div>
-<div class="line">        <span class="keywordflow">if</span> (total == 0 || first &lt; 0)</div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  View 4: Effects &amp; Motion — CSS Transitions, @keyframes, UIAnimation,</span></div>
+<div class="line">        <span class="comment">//                             FilterRegistry, and CanvasLayout</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildEffectsView()</div>
 <div class="line">        {</div>
-<div class="line">            explorerUi_-&gt;setTextRef(<span class="stringliteral">&quot;exp-range&quot;</span>, <span class="stringliteral">&quot;0 matching entries&quot;</span>);</div>
-<div class="line">            <span class="keywordflow">return</span>;</div>
-<div class="line">        }</div>
-<div class="line">        explorerUi_-&gt;setTextRef(</div>
-<div class="line">            <span class="stringliteral">&quot;exp-range&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Materialized viewport: #&quot;</span> + std::to_string(first + 1) + <span class="stringliteral">&quot; – #&quot;</span> +</div>
-<div class="line">                std::to_string(last + 1) + <span class="stringliteral">&quot; of &quot;</span> + std::to_string(total) + <span class="stringliteral">&quot; entries&quot;</span>);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  View 4: Effects &amp; Motion — CSS Transitions, @keyframes, UIAnimation,</span></div>
-<div class="line">    <span class="comment">//                             FilterRegistry, and CanvasLayout</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildEffectsView()</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kEffectsMarkup = R<span class="stringliteral">&quot;zm(</span></div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kEffectsMarkup = R<span class="stringliteral">&quot;zm(</span></div>
 <div class="line"><span class="stringliteral">            ScrollView.view-scroll {</span></div>
 <div class="line"><span class="stringliteral">                VStack.card {</span></div>
 <div class="line"><span class="stringliteral">                    Text.card-title wrap=&quot;true&quot; &quot;Declarative Motion (ZStyle Transitions &amp; @keyframes)&quot;</span></div>
@@ -940,167 +942,170 @@ ShowcaseApp.hpp</h3>
 <div class="line"><span class="stringliteral">            }</span></div>
 <div class="line"><span class="stringliteral">        )zm&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        effectsUi_ = ZMarkup::build(kEffectsMarkup);</span></div>
-<div class="line"><span class="stringliteral">        </span><span class="keyword">auto</span> view = effectsUi_-&gt;root();</div>
-<div class="line">        mountView(view);</div>
+<div class="line"><span class="stringliteral">            effectsUi_ = ZMarkup::build(kEffectsMarkup);</span></div>
+<div class="line"><span class="stringliteral">            </span><span class="keyword">auto</span> view = effectsUi_-&gt;root();</div>
+<div class="line">            mountView(view);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// Register imperative UIAnimations on @anim-target</span></div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> target = effectsUi_-&gt;ref(<span class="stringliteral">&quot;anim-target&quot;</span>))</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keyword">auto</span> slide = std::make_shared&lt;UIAnimation&gt;(0.45f);</div>
-<div class="line">            slide-&gt;addTrack&lt;<a id="_a24" name="_a24"></a><a class="code hl_struct" href="structZenitUI_1_1Value.html">Value</a>&gt;(</div>
-<div class="line">                Px(0.0f), Px(36.0f),</div>
-<div class="line">                [](<a id="_a25" name="_a25"></a><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <a class="code hl_struct" href="structZenitUI_1_1Value.html">Value</a> v)</div>
-<div class="line">                { l-&gt;getInlineBase().translateX = v; },</div>
-<div class="line">                TransitionFunction::EaseOutBack);</div>
-<div class="line">            slide-&gt;addTrack&lt;<span class="keywordtype">float</span>&gt;(</div>
-<div class="line">                1.0f, 1.06f,</div>
-<div class="line">                [](<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <span class="keywordtype">float</span> s)</div>
-<div class="line">                { l-&gt;getInlineBase().scale = s; },</div>
-<div class="line">                TransitionFunction::EaseOutQuad);</div>
+<div class="line">            <span class="comment">// Register imperative UIAnimations on @anim-target</span></div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> target = effectsUi_-&gt;ref(<span class="stringliteral">&quot;anim-target&quot;</span>))</div>
+<div class="line">            {</div>
+<div class="line">                <span class="keyword">auto</span> slide = std::make_shared&lt;UIAnimation&gt;(0.45f);</div>
+<div class="line">                slide-&gt;addTrack&lt;<a id="_a24" name="_a24"></a><a class="code hl_struct" href="structZenitUI_1_1Value.html">Value</a>&gt;(</div>
+<div class="line">                    Px(0.0f), Px(36.0f),</div>
+<div class="line">                    [](<a id="_a25" name="_a25"></a><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <a class="code hl_struct" href="structZenitUI_1_1Value.html">Value</a> v)</div>
+<div class="line">                    { l-&gt;getInlineBase().translateX = v; },</div>
+<div class="line">                    TransitionFunction::EaseOutBack);</div>
+<div class="line">                slide-&gt;addTrack&lt;<span class="keywordtype">float</span>&gt;(</div>
+<div class="line">                    1.0f, 1.06f,</div>
+<div class="line">                    [](<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <span class="keywordtype">float</span> s)</div>
+<div class="line">                    { l-&gt;getInlineBase().scale = s; },</div>
+<div class="line">                    TransitionFunction::EaseOutQuad);</div>
 <div class="line"> </div>
-<div class="line">            <span class="keyword">auto</span> shake = std::make_shared&lt;UIAnimation&gt;(0.45f);</div>
-<div class="line">            shake-&gt;addTrack&lt;<span class="keywordtype">float</span>&gt;(</div>
-<div class="line">                0.0f, 1.0f,</div>
-<div class="line">                [](<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <span class="keywordtype">float</span> t)</div>
-<div class="line">                {</div>
-<div class="line">                    <span class="keywordtype">float</span> amp = (1.0f - t) * 14.0f;</div>
-<div class="line">                    l-&gt;getInlineBase().translateX = Px(std::sin(t * 32.0f) * amp);</div>
-<div class="line">                },</div>
-<div class="line">                TransitionFunction::Linear);</div>
+<div class="line">                <span class="keyword">auto</span> shake = std::make_shared&lt;UIAnimation&gt;(0.45f);</div>
+<div class="line">                shake-&gt;addTrack&lt;<span class="keywordtype">float</span>&gt;(</div>
+<div class="line">                    0.0f, 1.0f,</div>
+<div class="line">                    [](<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *l, <span class="keywordtype">float</span> t)</div>
+<div class="line">                    {</div>
+<div class="line">                        <span class="keywordtype">float</span> amp = (1.0f - t) * 14.0f;</div>
+<div class="line">                        l-&gt;getInlineBase().translateX = Px(std::sin(t * 32.0f) * amp);</div>
+<div class="line">                    },</div>
+<div class="line">                    TransitionFunction::Linear);</div>
 <div class="line"> </div>
-<div class="line">            target-&gt;addAnimation(<span class="stringliteral">&quot;slide&quot;</span>, slide);</div>
-<div class="line">            target-&gt;addAnimation(<span class="stringliteral">&quot;shake&quot;</span>, shake);</div>
+<div class="line">                target-&gt;addAnimation(<span class="stringliteral">&quot;slide&quot;</span>, slide);</div>
+<div class="line">                target-&gt;addAnimation(<span class="stringliteral">&quot;shake&quot;</span>, shake);</div>
 <div class="line"> </div>
-<div class="line">            std::weak_ptr&lt;Layout&gt; weakTarget = target;</div>
-<div class="line">            effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-slide&quot;</span>, [weakTarget]</div>
-<div class="line">                                   {</div>
+<div class="line">                std::weak_ptr&lt;Layout&gt; weakTarget = target;</div>
+<div class="line">                effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-slide&quot;</span>, [weakTarget]</div>
+<div class="line">                                       {</div>
 <div class="line">                <span class="keywordflow">if</span> (<span class="keyword">auto</span> t = weakTarget.lock())</div>
 <div class="line">                    t-&gt;playAnimation(<span class="stringliteral">&quot;slide&quot;</span>, <span class="keyword">false</span>); });</div>
-<div class="line">            effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-reverse&quot;</span>, [weakTarget]</div>
-<div class="line">                                   {</div>
+<div class="line">                effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-reverse&quot;</span>, [weakTarget]</div>
+<div class="line">                                       {</div>
 <div class="line">                <span class="keywordflow">if</span> (<span class="keyword">auto</span> t = weakTarget.lock())</div>
 <div class="line">                    t-&gt;playAnimation(<span class="stringliteral">&quot;slide&quot;</span>, <span class="keyword">true</span>); });</div>
-<div class="line">            effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-shake&quot;</span>, [weakTarget]</div>
-<div class="line">                                   {</div>
+<div class="line">                effectsUi_-&gt;onClickRef(<span class="stringliteral">&quot;anim-shake&quot;</span>, [weakTarget]</div>
+<div class="line">                                       {</div>
 <div class="line">                <span class="keywordflow">if</span> (<span class="keyword">auto</span> t = weakTarget.lock())</div>
 <div class="line">                    t-&gt;playAnimation(<span class="stringliteral">&quot;shake&quot;</span>, <span class="keyword">false</span>); });</div>
+<div class="line">            }</div>
+<div class="line"> </div>
+<div class="line">            <span class="comment">// CanvasLayout with toggleable hueShift shader</span></div>
+<div class="line">            <span class="keyword">auto</span> canvas = <a id="_a26" name="_a26"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">CanvasLayout::create</a>();</div>
+<div class="line">            canvas-&gt;size(Px(210), Px(110));</div>
+<div class="line"> </div>
+<div class="line">            <span class="keyword">auto</span> scene = <a id="_a27" name="_a27"></a><a class="code hl_function" href="group__grp__widgets.html#gaac4e85376513ca6e4bf89008d4385e79">VStack</a>();</div>
+<div class="line">            scene-&gt;getInlineBase().gap = Px(8);</div>
+<div class="line">            scene-&gt;getInlineBase().alignItems = <a id="_a28" name="_a28"></a><a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line"> </div>
+<div class="line">            <span class="keyword">auto</span> swatches = <a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>();</div>
+<div class="line">            swatches-&gt;getInlineBase().gap = Px(8);</div>
+<div class="line">            <span class="keyword">auto</span> makeSwatch = [](<a id="_a29" name="_a29"></a><a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a> c)</div>
+<div class="line">            {</div>
+<div class="line">                <span class="keyword">auto</span> s = std::make_shared&lt;Layout&gt;(<a id="_a30" name="_a30"></a><a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
+<div class="line">                s-&gt;cls(<span class="stringliteral">&quot;swatch&quot;</span>);</div>
+<div class="line">                s-&gt;getInlineBase().background = c;</div>
+<div class="line">                <span class="keywordflow">return</span> s;</div>
+<div class="line">            };</div>
+<div class="line">            swatches-&gt;addChild(makeSwatch({225, 70, 75, 255}));</div>
+<div class="line">            swatches-&gt;addChild(makeSwatch({65, 200, 110, 255}));</div>
+<div class="line">            swatches-&gt;addChild(makeSwatch({75, 135, 240, 255}));</div>
+<div class="line">            scene-&gt;addChild(swatches);</div>
+<div class="line">            scene-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;Composited RGB Scene&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;muted&quot;</span>));</div>
+<div class="line">            canvas-&gt;addChild(scene);</div>
+<div class="line"> </div>
+<div class="line">            <span class="keyword">auto</span> applyCanvasShader = [canvas](<span class="keywordtype">bool</span> enabled)</div>
+<div class="line">            {</div>
+<div class="line">                <span class="keywordflow">if</span> (!<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets)</div>
+<div class="line">                    <span class="keywordflow">return</span>;</div>
+<div class="line">                canvas-&gt;setShader(enabled ? <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets-&gt;getEffect(<span class="stringliteral">&quot;hueShift&quot;</span>)</div>
+<div class="line">                                          : <a id="_a31" name="_a31"></a><a class="code hl_struct" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>{});</div>
+<div class="line">            };</div>
+<div class="line">            applyCanvasShader(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">            effectsUi_-&gt;onToggleRef(<span class="stringliteral">&quot;canvas-shader-toggle&quot;</span>, applyCanvasShader);</div>
+<div class="line"> </div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> slot = effectsUi_-&gt;ref(<span class="stringliteral">&quot;canvas-slot&quot;</span>))</div>
+<div class="line">                slot-&gt;addChild(canvas);</div>
 <div class="line">        }</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// CanvasLayout with toggleable hueShift shader</span></div>
-<div class="line">        <span class="keyword">auto</span> canvas = <a id="_a26" name="_a26"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">CanvasLayout::create</a>();</div>
-<div class="line">        canvas-&gt;size(Px(210), Px(110));</div>
-<div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> scene = <a id="_a27" name="_a27"></a><a class="code hl_function" href="group__grp__widgets.html#gaac4e85376513ca6e4bf89008d4385e79">VStack</a>();</div>
-<div class="line">        scene-&gt;getInlineBase().gap = Px(8);</div>
-<div class="line">        scene-&gt;getInlineBase().alignItems = <a id="_a28" name="_a28"></a><a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
-<div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> swatches = <a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>();</div>
-<div class="line">        swatches-&gt;getInlineBase().gap = Px(8);</div>
-<div class="line">        <span class="keyword">auto</span> makeSwatch = [](<a id="_a29" name="_a29"></a><a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a> c)</div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  Shared Modal overlay mounted directly on #app</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> buildModal()</div>
 <div class="line">        {</div>
-<div class="line">            <span class="keyword">auto</span> s = std::make_shared&lt;Layout&gt;(<a id="_a30" name="_a30"></a><a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
-<div class="line">            s-&gt;cls(<span class="stringliteral">&quot;swatch&quot;</span>);</div>
-<div class="line">            s-&gt;getInlineBase().background = c;</div>
-<div class="line">            <span class="keywordflow">return</span> s;</div>
-<div class="line">        };</div>
-<div class="line">        swatches-&gt;addChild(makeSwatch({225, 70, 75, 255}));</div>
-<div class="line">        swatches-&gt;addChild(makeSwatch({65, 200, 110, 255}));</div>
-<div class="line">        swatches-&gt;addChild(makeSwatch({75, 135, 240, 255}));</div>
-<div class="line">        scene-&gt;addChild(swatches);</div>
-<div class="line">        scene-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;Composited RGB Scene&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;muted&quot;</span>));</div>
-<div class="line">        canvas-&gt;addChild(scene);</div>
+<div class="line">            modal_ = <a id="_a32" name="_a32"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Modal::create</a>();</div>
+<div class="line">            <span class="keyword">auto</span> card = modal_-&gt;children[0];</div>
+<div class="line">            card-&gt;cls(<span class="stringliteral">&quot;modal-card&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> applyCanvasShader = [canvas](<span class="keywordtype">bool</span> enabled)</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keywordflow">if</span> (!<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets)</div>
-<div class="line">                <span class="keywordflow">return</span>;</div>
-<div class="line">            canvas-&gt;setShader(enabled ? <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets-&gt;getEffect(<span class="stringliteral">&quot;hueShift&quot;</span>)</div>
-<div class="line">                                      : <a id="_a31" name="_a31"></a><a class="code hl_struct" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>{});</div>
-<div class="line">        };</div>
-<div class="line">        applyCanvasShader(<span class="keyword">true</span>);</div>
+<div class="line">            modalTitle_ = <a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;page-title&quot;</span>);</div>
+<div class="line">            modalBody_ = <a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;muted&quot;</span>);</div>
+<div class="line">            modalBody_-&gt;setWrap(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        effectsUi_-&gt;onToggleRef(<span class="stringliteral">&quot;canvas-shader-toggle&quot;</span>, applyCanvasShader);</div>
+<div class="line">            <span class="keyword">auto</span> actions = <a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>();</div>
+<div class="line">            actions-&gt;getInlineBase().width = Percent(100);</div>
+<div class="line">            actions-&gt;getInlineBase().justify = <a id="_a33" name="_a33"></a><a class="code hl_enumvalue" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e">Justify::End</a>;</div>
+<div class="line">            actions-&gt;getInlineBase().gap = Px(10);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> slot = effectsUi_-&gt;ref(<span class="stringliteral">&quot;canvas-slot&quot;</span>))</div>
-<div class="line">            slot-&gt;addChild(canvas);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  Shared Modal overlay mounted directly on #app</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> buildModal()</div>
-<div class="line">    {</div>
-<div class="line">        modal_ = <a id="_a32" name="_a32"></a><a class="code hl_function" href="classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0">Modal::create</a>();</div>
-<div class="line">        <span class="keyword">auto</span> card = modal_-&gt;children[0];</div>
-<div class="line">        card-&gt;cls(<span class="stringliteral">&quot;modal-card&quot;</span>);</div>
-<div class="line"> </div>
-<div class="line">        modalTitle_ = <a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;page-title&quot;</span>);</div>
-<div class="line">        modalBody_ = <a class="code hl_function" href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">Label</a>(<span class="stringliteral">&quot;&quot;</span>)-&gt;cls(<span class="stringliteral">&quot;muted&quot;</span>);</div>
-<div class="line">        modalBody_-&gt;setWrap(<span class="keyword">true</span>);</div>
-<div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span> actions = <a class="code hl_function" href="group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8">HStack</a>();</div>
-<div class="line">        actions-&gt;getInlineBase().width = Percent(100);</div>
-<div class="line">        actions-&gt;getInlineBase().justify = <a id="_a33" name="_a33"></a><a class="code hl_enumvalue" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e">Justify::End</a>;</div>
-<div class="line">        actions-&gt;getInlineBase().gap = Px(10);</div>
-<div class="line"> </div>
-<div class="line">        actions-&gt;addChild(<a id="_a34" name="_a34"></a><a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Close&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                              { modal_-&gt;hide(); }));</div>
-<div class="line">        actions-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Confirm&quot;</span>, [<span class="keyword">this</span>]</div>
-<div class="line">                              {</div>
+<div class="line">            actions-&gt;addChild(<a id="_a34" name="_a34"></a><a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Close&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                  { modal_-&gt;hide(); }));</div>
+<div class="line">            actions-&gt;addChild(<a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Confirm&quot;</span>, [<span class="keyword">this</span>]</div>
+<div class="line">                                  {</div>
 <div class="line">                              <span class="keywordflow">if</span> (modalConfirmAction_)</div>
 <div class="line">                                  modalConfirmAction_();</div>
 <div class="line">                              modal_-&gt;hide(); })</div>
-<div class="line">                              -&gt;cls(<span class="stringliteral">&quot;btn-primary&quot;</span>));</div>
+<div class="line">                                  -&gt;cls(<span class="stringliteral">&quot;btn-primary&quot;</span>));</div>
 <div class="line"> </div>
-<div class="line">        card-&gt;addChild(modalTitle_);</div>
-<div class="line">        card-&gt;addChild(modalBody_);</div>
-<div class="line">        card-&gt;addChild(actions);</div>
+<div class="line">            card-&gt;addChild(modalTitle_);</div>
+<div class="line">            card-&gt;addChild(modalBody_);</div>
+<div class="line">            card-&gt;addChild(actions);</div>
 <div class="line"> </div>
-<div class="line">        appRoot_-&gt;addChild(modal_);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    <span class="keywordtype">void</span> openModal(<span class="keyword">const</span> std::string &amp;title,</div>
-<div class="line">                   <span class="keyword">const</span> std::string &amp;body,</div>
-<div class="line">                   std::function&lt;<span class="keywordtype">void</span>()&gt; onConfirm)</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordflow">if</span> (!modal_)</div>
-<div class="line">            <span class="keywordflow">return</span>;</div>
-<div class="line">        modalTitle_-&gt;setText(title);</div>
-<div class="line">        modalBody_-&gt;setText(body);</div>
-<div class="line">        modalConfirmAction_ = std::move(onConfirm);</div>
-<div class="line">        modal_-&gt;show();</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="comment">//  View mounting &amp; tab switching (preserves live state per view)</span></div>
-<div class="line">    <span class="comment">// -----------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keywordtype">void</span> mountView(std::shared_ptr&lt;Layout&gt; view)</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordflow">if</span> (<span class="keyword">auto</span> host = shellUi_-&gt;ref(<span class="stringliteral">&quot;content-host&quot;</span>))</div>
-<div class="line">            host-&gt;addChild(view);</div>
-<div class="line">        views_.push_back(std::move(view));</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    <span class="keywordtype">void</span> switchView(<span class="keywordtype">int</span> index)</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kTitles[] = {</div>
-<div class="line">            <span class="stringliteral">&quot;Dashboard — Prefabs, Bindable &amp; Keyed Each&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Editor &amp; Forms — Widgets &amp; UTF-8 TextArea&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Virtual Explorer — 10,000 Rows &amp; Portals&quot;</span>,</div>
-<div class="line">            <span class="stringliteral">&quot;Effects &amp; Motion — Shaders &amp; Animations&quot;</span>,</div>
-<div class="line">        };</div>
-<div class="line"> </div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)views_.size(); ++i)</div>
-<div class="line">        {</div>
-<div class="line">            views_[i]-&gt;setVisible(i == index);</div>
-<div class="line">            shellUi_-&gt;toggleClassRef(<span class="stringliteral">&quot;nav-&quot;</span> + std::to_string(i), <span class="stringliteral">&quot;active&quot;</span>, i == index);</div>
+<div class="line">            appRoot_-&gt;addChild(modal_);</div>
 <div class="line">        }</div>
-<div class="line">        shellUi_-&gt;setTextRef(<span class="stringliteral">&quot;page-title&quot;</span>, kTitles[index]);</div>
-<div class="line">        <span class="keywordflow">if</span> (index == 2)</div>
-<div class="line">            updateExplorerRange();</div>
-<div class="line">    }</div>
-<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordtype">void</span> openModal(<span class="keyword">const</span> std::string &amp;title,</div>
+<div class="line">                       <span class="keyword">const</span> std::string &amp;body,</div>
+<div class="line">                       std::function&lt;<span class="keywordtype">void</span>()&gt; onConfirm)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">if</span> (!modal_)</div>
+<div class="line">                <span class="keywordflow">return</span>;</div>
+<div class="line">            modalTitle_-&gt;setText(title);</div>
+<div class="line">            modalBody_-&gt;setText(body);</div>
+<div class="line">            modalConfirmAction_ = std::move(onConfirm);</div>
+<div class="line">            modal_-&gt;show();</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="comment">//  View mounting &amp; tab switching (preserves live state per view)</span></div>
+<div class="line">        <span class="comment">// -----------------------------------------------------------------------</span></div>
+<div class="line">        <span class="keywordtype">void</span> mountView(std::shared_ptr&lt;Layout&gt; view)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">if</span> (<span class="keyword">auto</span> host = shellUi_-&gt;ref(<span class="stringliteral">&quot;content-host&quot;</span>))</div>
+<div class="line">                host-&gt;addChild(view);</div>
+<div class="line">            views_.push_back(std::move(view));</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="keywordtype">void</span> switchView(<span class="keywordtype">int</span> index)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *kTitles[] = {</div>
+<div class="line">                <span class="stringliteral">&quot;Dashboard — Prefabs, Bindable &amp; Keyed Each&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Editor &amp; Forms — Widgets &amp; UTF-8 TextArea&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Virtual Explorer — 10,000 Rows &amp; Portals&quot;</span>,</div>
+<div class="line">                <span class="stringliteral">&quot;Effects &amp; Motion — Shaders &amp; Animations&quot;</span>,</div>
+<div class="line">            };</div>
+<div class="line"> </div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; (int)views_.size(); ++i)</div>
+<div class="line">            {</div>
+<div class="line">                views_[i]-&gt;setVisible(i == index);</div>
+<div class="line">                shellUi_-&gt;toggleClassRef(<span class="stringliteral">&quot;nav-&quot;</span> + std::to_string(i), <span class="stringliteral">&quot;active&quot;</span>, i == index);</div>
+<div class="line">            }</div>
+<div class="line">            shellUi_-&gt;setTextRef(<span class="stringliteral">&quot;page-title&quot;</span>, kTitles[index]);</div>
+<div class="line">            <span class="keywordflow">if</span> (index == 2)</div>
+<div class="line">                updateExplorerRange();</div>
+<div class="line">        }</div>
+<div class="line">    };</div>
+<div class="line">} <span class="comment">// namespace Showcase</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using </span>Showcase::ShowcaseApp;</div>
 <div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
 <div class="ttc" id="aclassZenitUI_1_1Bindable_html"><div class="ttname"><a href="classZenitUI_1_1Bindable.html">ZenitUI::Bindable</a></div><div class="ttdoc">Observable single-value container.</div><div class="ttdef"><b>Definition</b> Bindable.hpp:44</div></div>
 <div class="ttc" id="aclassZenitUI_1_1Bindable_html_a27e8c70be01a9616da546261cf9959eb"><div class="ttname"><a href="classZenitUI_1_1Bindable.html#a27e8c70be01a9616da546261cf9959eb">ZenitUI::Bindable::get</a></div><div class="ttdeci">const T &amp; get() const</div><div class="ttdoc">Read the current value.</div><div class="ttdef"><b>Definition</b> Bindable.hpp:146</div></div>
@@ -1131,7 +1136,7 @@ ShowcaseApp.hpp</h3>
 <div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1EffectHandle_html"><div class="ttname"><a href="structZenitUI_1_1EffectHandle.html">ZenitUI::EffectHandle</a></div><div class="ttdoc">Opaque handle to a shader/effect owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:126</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:709</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:802</div></div>
 <div class="ttc" id="astructZenitUI_1_1Value_html"><div class="ttname"><a href="structZenitUI_1_1Value.html">ZenitUI::Value</a></div><div class="ttdoc">A length expression: either a sum of unit terms or an AST node.</div><div class="ttdef"><b>Definition</b> Unit.hpp:71</div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 theme.zstyle</h3>

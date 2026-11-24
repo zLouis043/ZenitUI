@@ -19,10 +19,11 @@ var searchData=
   ['hello_20world_16',['Quick Start (Hello World)',['../index.html#sec_quickstart',1,'']]],
   ['hide_17',['hide',['../classZenitUI_1_1UI_1_1Modal.html#a508b9522d9aff9be7bc4ad8ff78e9d70',1,'ZenitUI::UI::Modal::hide()'],['../classZenitUI_1_1UI_1_1Tooltip.html#a3b26e0609ec2354a361c3602db96b211',1,'ZenitUI::UI::Tooltip::hide()']]],
   ['hittest_18',['hitTest',['../classZenitUI_1_1Layout.html#a9acdbf51a8b976f4f46ff9b9d6ad709f',1,'ZenitUI::Layout']]],
-  ['horizontal_19',['Horizontal',['../group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f',1,'ZenitUI']]],
-  ['horizontalthumb_20',['horizontalThumb',['../structZenitUI_1_1ScrollController.html#a91adcacaa7e90116c259f17873c0a0df',1,'ZenitUI::ScrollController']]],
-  ['hover_21',['Hover',['../group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665aeee0168be69b854c20621fc6f01cc3fc',1,'ZenitUI']]],
-  ['hovered_22',['hovered',['../structZenitUI_1_1NodeState.html#acc94539b88d16d76ba24fe7a98c54d3a',1,'ZenitUI::NodeState']]],
-  ['hpp_23',['hpp',['../page_available_backends.html#sec_backend_mock',1,'Mock (Headless) (&lt;span class=&quot;tt&quot;&gt;backends/mock/MockBackend.hpp&lt;/span&gt;)'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md15',1,'Rating.hpp'],['../page_available_backends.html#sec_backend_raylib',1,'Raylib (&lt;span class=&quot;tt&quot;&gt;backends/raylib/RaylibBackend.hpp&lt;/span&gt;)'],['../page_available_backends.html#sec_backend_sdl3',1,'SDL3 + OpenGL 3.3 (&lt;span class=&quot;tt&quot;&gt;backends/sdl3/SDL3Backend.hpp&lt;/span&gt;)'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md4',1,'ShowcaseApp.hpp']]],
-  ['hstack_24',['HStack',['../group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8',1,'ZenitUI::UI']]]
+  ['hlsl_19',['HLSL',['../group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f',1,'ZenitUI']]],
+  ['horizontal_20',['Horizontal',['../group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f',1,'ZenitUI']]],
+  ['horizontalthumb_21',['horizontalThumb',['../structZenitUI_1_1ScrollController.html#a91adcacaa7e90116c259f17873c0a0df',1,'ZenitUI::ScrollController']]],
+  ['hover_22',['Hover',['../group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665aeee0168be69b854c20621fc6f01cc3fc',1,'ZenitUI']]],
+  ['hovered_23',['hovered',['../structZenitUI_1_1NodeState.html#acc94539b88d16d76ba24fe7a98c54d3a',1,'ZenitUI::NodeState']]],
+  ['hpp_24',['hpp',['../page_available_backends.html#sec_backend_mock',1,'Mock (Headless) (&lt;span class=&quot;tt&quot;&gt;backends/mock/MockBackend.hpp&lt;/span&gt;)'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md15',1,'Rating.hpp'],['../page_available_backends.html#sec_backend_raylib',1,'Raylib (&lt;span class=&quot;tt&quot;&gt;backends/raylib/RaylibBackend.hpp&lt;/span&gt;)'],['../page_available_backends.html#sec_backend_sdl3',1,'SDL3 + OpenGL 3.3 (&lt;span class=&quot;tt&quot;&gt;backends/sdl3/SDL3Backend.hpp&lt;/span&gt;)'],['..//home/runner/work/ZenitUI/ZenitUI/build/docs/generated_examples.dox#autotoc_md4',1,'ShowcaseApp.hpp']]],
+  ['hstack_25',['HStack',['../group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8',1,'ZenitUI::UI']]]
 ];

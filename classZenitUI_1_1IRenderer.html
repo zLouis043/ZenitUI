@@ -179,6 +179,8 @@ Public Member Functions</h2></td></tr>
 <tr id="pub-methods-6" class="groupHeader"><td colspan="2"><div class="groupHeader">Capabilities &amp; Frame Lifecycle</div></td></tr>
 <tr class="memitem:a2f516b76d539008019ed2838f54ebff6" id="r_a2f516b76d539008019ed2838f54ebff6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f516b76d539008019ed2838f54ebff6">supports</a> (<a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const =0</td></tr>
 <tr class="memdesc:a2f516b76d539008019ed2838f54ebff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether this backend implements an optional <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities queried via IRenderer::supports.">Feature</a></span>.  <br /></td></tr>
+<tr class="memitem:a6c17f3037f2d441990c410a6e8f351ae" id="r_a6c17f3037f2d441990c410a6e8f351ae"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c17f3037f2d441990c410a6e8f351ae">shaderLanguage</a> () const</td></tr>
+<tr class="memdesc:a6c17f3037f2d441990c410a6e8f351ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the shading language expected by <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563" title="Optional runtime hook to load a fragment (and optional vertex) shader from disk under name.">IAssetProvider::loadEffect</a></span> on this renderer.  <br /></td></tr>
 <tr class="memitem:a7877e2c0869b8d61ed144cfca069e2bd" id="r_a7877e2c0869b8d61ed144cfca069e2bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7877e2c0869b8d61ed144cfca069e2bd">beginFrame</a> ()=0</td></tr>
 <tr class="memdesc:a7877e2c0869b8d61ed144cfca069e2bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the start of <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a01ab125b033e17669efc48de5d581176" title="Render the current state: beginFrame, draw, endFrame.">Layout::renderFrame</a></span> before any draw calls (e.g.  <br /></td></tr>
 <tr class="memitem:a1da05d78179fcd7112c9ea63f1d3808d" id="r_a1da05d78179fcd7112c9ea63f1d3808d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da05d78179fcd7112c9ea63f1d3808d">endFrame</a> ()=0</td></tr>
@@ -1308,6 +1310,35 @@ Public Member Functions</h2></td></tr>
 <p>Set a <span class="tt">vec4</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>. </p>
 
 <p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#adbae8b7185c9cc39cb2afc8277171277">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a403b5d7ad3c04d66e73d4455cdffe9c1">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#acf549b2627d43bb662bf91640b78571f">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a6c17f3037f2d441990c410a6e8f351ae" name="a6c17f3037f2d441990c410a6e8f351ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c17f3037f2d441990c410a6e8f351ae">&#9670;&#160;</a></span>shaderLanguage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a> ZenitUI::IRenderer::shaderLanguage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the shading language expected by <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563" title="Optional runtime hook to load a fragment (and optional vertex) shader from disk under name.">IAssetProvider::loadEffect</a></span> on this renderer. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a015923fe1ad130ece35a757e63bb0b18">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a2619bf7a706c7bb509f021a56d9510fb">ZenitUI::SDL3Renderer</a>.</p>
 
 </div>
 </div>

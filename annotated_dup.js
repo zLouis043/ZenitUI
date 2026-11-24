@@ -20,6 +20,9 @@ var annotated_dup =
         [ "Tooltip", "classZenitUI_1_1UI_1_1Tooltip.html", "classZenitUI_1_1UI_1_1Tooltip" ],
         [ "VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html", "classZenitUI_1_1UI_1_1VirtualView" ]
       ] ],
+      [ "Geometry2D", null, [
+        [ "RoundedBorderRing", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing" ]
+      ] ],
       [ "ZMarkup", null, [
         [ "Declaration", "structZenitUI_1_1ZMarkup_1_1Declaration.html", null ],
         [ "StyleSheet", "structZenitUI_1_1ZMarkup_1_1StyleSheet.html", "structZenitUI_1_1ZMarkup_1_1StyleSheet" ],
@@ -40,7 +43,8 @@ var annotated_dup =
         [ "MockRenderer", "classZenitUI_1_1Test_1_1MockRenderer.html", "classZenitUI_1_1Test_1_1MockRenderer" ],
         [ "MockPlatform", "classZenitUI_1_1Test_1_1MockPlatform.html", "classZenitUI_1_1Test_1_1MockPlatform" ],
         [ "MockAssetProvider", "classZenitUI_1_1Test_1_1MockAssetProvider.html", "classZenitUI_1_1Test_1_1MockAssetProvider" ],
-        [ "Env", "structZenitUI_1_1Test_1_1Env.html", "structZenitUI_1_1Test_1_1Env" ]
+        [ "Env", "structZenitUI_1_1Test_1_1Env.html", "structZenitUI_1_1Test_1_1Env" ],
+        [ "MockBackend", "classZenitUI_1_1Test_1_1MockBackend.html", "classZenitUI_1_1Test_1_1MockBackend" ]
       ] ],
       [ "AnimationPlayer", "structZenitUI_1_1AnimationPlayer.html", "structZenitUI_1_1AnimationPlayer" ],
       [ "UIAnimation", "classZenitUI_1_1UIAnimation.html", "classZenitUI_1_1UIAnimation" ],
@@ -78,6 +82,7 @@ var annotated_dup =
       [ "FilterContext", "structZenitUI_1_1FilterContext.html", null ],
       [ "FilterDef", "structZenitUI_1_1FilterDef.html", "structZenitUI_1_1FilterDef" ],
       [ "FilterRegistry", "classZenitUI_1_1FilterRegistry.html", "classZenitUI_1_1FilterRegistry" ],
+      [ "InputAccumulator", "classZenitUI_1_1InputAccumulator.html", "classZenitUI_1_1InputAccumulator" ],
       [ "InputController", "structZenitUI_1_1InputController.html", "structZenitUI_1_1InputController" ],
       [ "NodeState", "structZenitUI_1_1NodeState.html", "structZenitUI_1_1NodeState" ],
       [ "NodeConfig", "structZenitUI_1_1NodeConfig.html", "structZenitUI_1_1NodeConfig" ],

@@ -221,6 +221,7 @@ var group__grp__core =
       [ "setEffectVec3", "classZenitUI_1_1IRenderer.html#afaa3b501f8fd5fbf5a805ad830e97574", null ],
       [ "setEffectVec4", "classZenitUI_1_1IRenderer.html#ab3128b62fe468f8c70c49e38531a7cc1", null ],
       [ "setEffectVec4f", "classZenitUI_1_1IRenderer.html#aaf7bcdb058f642332c4b715cbdfbbd42", null ],
+      [ "shaderLanguage", "classZenitUI_1_1IRenderer.html#a6c17f3037f2d441990c410a6e8f351ae", null ],
       [ "strokeRect", "classZenitUI_1_1IRenderer.html#a14a943f0fddf8c662ee280f987f0a1ca", null ],
       [ "strokeRoundedRect", "classZenitUI_1_1IRenderer.html#a5629420bd6bb7fadc1537aa2e1dfff93", null ],
       [ "supports", "classZenitUI_1_1IRenderer.html#a2f516b76d539008019ed2838f54ebff6", null ]
@@ -244,6 +245,7 @@ var group__grp__core =
       [ "getFont", "classZenitUI_1_1IAssetProvider.html#aed151b0118daf7352b037a4c04f010d4", null ],
       [ "getTexture", "classZenitUI_1_1IAssetProvider.html#a44c65cac87cb8bdc6d2d3a6548bfda69", null ],
       [ "loadEffect", "classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563", null ],
+      [ "loadEffectAsset", "classZenitUI_1_1IAssetProvider.html#a5b7b93de2aca079dbc734910b5f2451a", null ],
       [ "loadFont", "classZenitUI_1_1IAssetProvider.html#a39e172a9fee5064ed6bafdbac1023161", null ],
       [ "loadFontFromMemory", "classZenitUI_1_1IAssetProvider.html#a4ae98181a71a2ad9416f82d0a79c9712", null ],
       [ "loadTexture", "classZenitUI_1_1IAssetProvider.html#a0b279ae7e528c6fbf3ac60fe7a503ba9", null ],
@@ -259,10 +261,13 @@ var group__grp__core =
       [ "consumeClick", "structZenitUI_1_1UIContext.html#a214e0406e09b6432835da164d5032635", null ],
       [ "endFrame", "structZenitUI_1_1UIContext.html#a6c789023ad9f0c5e9960e3d62050beec", null ],
       [ "get", "structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0", null ],
+      [ "getCullingClip", "structZenitUI_1_1UIContext.html#a510ee97a57a08b49054a057e7124b523", null ],
       [ "hasFocus", "structZenitUI_1_1UIContext.html#ad6a585461c24f02be608e55513feeec8", null ],
       [ "invalidateStyles", "structZenitUI_1_1UIContext.html#a5de7e7bb4e67c89f789afec6350bc8b4", null ],
       [ "isPressTarget", "structZenitUI_1_1UIContext.html#afeddbe732b94c595f2c3b917e97677ff", null ],
       [ "isValidClick", "structZenitUI_1_1UIContext.html#a6d48c76abbdb32a5566711ee5ab9f318", null ],
+      [ "popLayerTarget", "structZenitUI_1_1UIContext.html#ae4e40fe3770dfbdf1ac1dc7db2587887", null ],
+      [ "pushLayerTarget", "structZenitUI_1_1UIContext.html#a90dcd34dfd0f306b6db8080481be96f2", null ],
       [ "releaseFocus", "structZenitUI_1_1UIContext.html#a4787a68f0c89cbe5527f010d579f22e9", null ],
       [ "requestFocus", "structZenitUI_1_1UIContext.html#a1d74768d6e555ac06c84c3025acb364a", null ],
       [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ]
@@ -312,6 +317,15 @@ var group__grp__core =
       [ "ZenitUI::LayoutType::Horizontal", "group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f", null ]
     ] ],
     [ "ZenitUI::MouseButton", "group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75", null ],
+    [ "ZenitUI::ShaderLanguage", "group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e", [
+      [ "ZenitUI::ShaderLanguage::None", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea6adf97f83acf6453d4a6a4b1070f3754", null ],
+      [ "ZenitUI::ShaderLanguage::GLSL330", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03eaa0e6ab91ff8da26d476a797b90aee303", null ],
+      [ "ZenitUI::ShaderLanguage::GLSL300ES", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea7f73ee2692f6ac47e01223262e106341", null ],
+      [ "ZenitUI::ShaderLanguage::SPIRV", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea649dd317597e959fb32149ac40206199", null ],
+      [ "ZenitUI::ShaderLanguage::HLSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f", null ],
+      [ "ZenitUI::ShaderLanguage::MSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666", null ],
+      [ "ZenitUI::ShaderLanguage::WGSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea29e42526b6c679260105b3ec393f410e", null ]
+    ] ],
     [ "ZenitUI::UIState", "group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665", [
       [ "ZenitUI::UIState::Idle", "group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665ae599161956d626eda4cb0a5ffb85271c", null ],
       [ "ZenitUI::UIState::Hover", "group__grp__core.html#gga84d5f553430837fc0d9c2c026ee04665aeee0168be69b854c20621fc6f01cc3fc", null ],

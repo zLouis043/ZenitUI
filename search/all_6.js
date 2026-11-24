@@ -9,7 +9,7 @@ var searchData=
   ['backends_20raylib_20raylibbackend_20hpp_6',['Raylib (&lt;span class=&quot;tt&quot;&gt;backends/raylib/RaylibBackend.hpp&lt;/span&gt;)',['../page_available_backends.html#sec_backend_raylib',1,'']]],
   ['backends_20sdl3_20sdl3backend_20hpp_7',['SDL3 + OpenGL 3.3 (&lt;span class=&quot;tt&quot;&gt;backends/sdl3/SDL3Backend.hpp&lt;/span&gt;)',['../page_available_backends.html#sec_backend_sdl3',1,'']]],
   ['backends_20utf_208_20debugging_8',['Backends, UTF-8 &amp;amp; Debugging',['../group__grp__backends.html',1,'']]],
-  ['begindraw_9',['beginDraw',['../classZenitUI_1_1IBackend.html#a45e229d063524b4b5ea10d343b964132',1,'ZenitUI::IBackend::beginDraw()'],['../classZenitUI_1_1RaylibBackend.html#a6a95fc74502dde976e38667c05a3ed77',1,'ZenitUI::RaylibBackend::beginDraw()'],['../classZenitUI_1_1SDL3Backend.html#a05585ae655be98a64359a2df5ac62c75',1,'ZenitUI::SDL3Backend::beginDraw()']]],
+  ['begindraw_9',['beginDraw',['../classZenitUI_1_1IBackend.html#a45e229d063524b4b5ea10d343b964132',1,'ZenitUI::IBackend::beginDraw()'],['../classZenitUI_1_1Test_1_1MockBackend.html#a9a3b0989b85d081f76c83e9de70f2bfb',1,'ZenitUI::Test::MockBackend::beginDraw()'],['../classZenitUI_1_1RaylibBackend.html#a6a95fc74502dde976e38667c05a3ed77',1,'ZenitUI::RaylibBackend::beginDraw()'],['../classZenitUI_1_1SDL3Backend.html#a05585ae655be98a64359a2df5ac62c75',1,'ZenitUI::SDL3Backend::beginDraw()']]],
   ['beginframe_10',['beginFrame',['../classZenitUI_1_1IRenderer.html#a7877e2c0869b8d61ed144cfca069e2bd',1,'ZenitUI::IRenderer::beginFrame()'],['../structZenitUI_1_1UIContext.html#ac65b879662445e21ba0c08c1ff693422',1,'ZenitUI::UIContext::beginFrame()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#ae4530a873fd9ac9a2439aa910534cc56',1,'ZenitUI::Test::MockRenderer::beginFrame()'],['../classZenitUI_1_1RaylibRenderer.html#a8e331b34807b2d21aff503adc4ee4a47',1,'ZenitUI::RaylibRenderer::beginFrame()'],['../classZenitUI_1_1SDL3Renderer.html#aa45f3921bcef0060c10625614b8cb8c3',1,'ZenitUI::SDL3Renderer::beginFrame()']]],
   ['beginstatetransition_11',['beginStateTransition',['../structZenitUI_1_1StyleResolver.html#a3c2ef98dd15805ea83998e4dd338ca19',1,'ZenitUI::StyleResolver']]],
   ['begintransition_12',['beginTransition',['../classZenitUI_1_1Layout.html#af90b044f98e765ddb5a8cc8dc1a2f165',1,'ZenitUI::Layout']]],
@@ -26,10 +26,11 @@ var searchData=
   ['btn_23',['Btn',['../group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd',1,'ZenitUI::UI']]],
   ['build_24',['build',['../classZenitUI_1_1CodepointSet.html#a23e36e629f9b35695b81454435706fdb',1,'ZenitUI::CodepointSet']]],
   ['buildcontext_25',['BuildContext',['../structZenitUI_1_1ZMarkup_1_1BuildContext.html',1,'ZenitUI::ZMarkup']]],
-  ['built_20in_20reference_20implementations_26',['4. Built-in Reference Implementations',['../page_custom_backends.html#sec_backend_refs',1,'']]],
-  ['built_20in_20widgets_27',['Built-in Widgets',['../group__grp__widgets.html',1,'']]],
-  ['button_28',['Button',['../classZenitUI_1_1UI_1_1Button.html',1,'ZenitUI::UI::Button'],['../group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button::Button()']]],
-  ['button_2ehpp_29',['Button.hpp',['../Button_8hpp.html',1,'']]],
-  ['buttonstate_30',['ButtonState',['../structZenitUI_1_1ButtonState.html',1,'ZenitUI']]],
-  ['by_20topic_31',['Browse by Topic',['../index.html#sec_modules',1,'']]]
+  ['buildroundedborderring_26',['buildRoundedBorderRing',['../group__grp__backends.html#gaee6db3cba2c125dec508b716e4f85f76',1,'ZenitUI::Geometry2D']]],
+  ['built_20in_20reference_20implementations_27',['4. Built-in Reference Implementations',['../page_custom_backends.html#sec_backend_refs',1,'']]],
+  ['built_20in_20widgets_28',['Built-in Widgets',['../group__grp__widgets.html',1,'']]],
+  ['button_29',['Button',['../classZenitUI_1_1UI_1_1Button.html',1,'ZenitUI::UI::Button'],['../group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button::Button()']]],
+  ['button_2ehpp_30',['Button.hpp',['../Button_8hpp.html',1,'']]],
+  ['buttonstate_31',['ButtonState',['../structZenitUI_1_1ButtonState.html',1,'ZenitUI']]],
+  ['by_20topic_32',['Browse by Topic',['../index.html#sec_modules',1,'']]]
 ];

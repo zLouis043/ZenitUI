@@ -105,6 +105,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Backend-agnostic window and graphics-context creation parameters.  <a href="structZenitUI_1_1WindowConfig.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AIBackend" id="r_ZenitUI_3A_3AIBackend"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IBackend.html">ZenitUI::IBackend</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unified window, frame-loop, and subsystem host for interchangeable backends.  <a href="classZenitUI_1_1IBackend.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3AGeometry2D_3A_3ARoundedBorderRing" id="r_ZenitUI_3A_3AGeometry2D_3A_3ARoundedBorderRing"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">ZenitUI::Geometry2D::RoundedBorderRing</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer and inner vertex loops of a CSS border-box rounded stroke.  <a href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3AInputAccumulator" id="r_ZenitUI_3A_3AInputAccumulator"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1InputAccumulator.html">ZenitUI::InputAccumulator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffers asynchronous OS mouse/keyboard/text events and drains them once per frame into <span class="tt"><a class="el" href="structZenitUI_1_1PointerState.html" title="Pointer position, wheel delta, and per-button state for one frame.">PointerState</a></span> and <span class="tt"><a class="el" href="structZenitUI_1_1InputEvents.html" title="One frame&#39;s worth of keyboard input.">InputEvents</a></span>.  <a href="classZenitUI_1_1InputAccumulator.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ALogMessage" id="r_ZenitUI_3A_3ALogMessage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1LogMessage.html">ZenitUI::LogMessage</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single log record passed to <span class="tt">ILogger::log</span>.  <a href="structZenitUI_1_1LogMessage.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AILogger" id="r_ZenitUI_3A_3AILogger"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1ILogger.html">ZenitUI::ILogger</a></td></tr>
@@ -123,6 +127,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">In-memory <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> that mints synthetic font and shader handles without touching the filesystem or GPU.  <a href="classZenitUI_1_1Test_1_1MockAssetProvider.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ATest_3A_3AEnv" id="r_ZenitUI_3A_3ATest_3A_3AEnv"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Test_1_1Env.html">ZenitUI::Test::Env</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scoped test fixture that binds <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html" title="Recording IRenderer that tracks draw counts, text metrics, clip stacks, render targets,...">MockRenderer</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html" title="Programmable IPlatform for injecting deterministic pointer, keyboard, viewport, and clipboard state i...">MockPlatform</a></span>, and <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In-memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem...">MockAssetProvider</a></span> into <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">UIContext</a></span> and restores clean state on destruction.  <a href="structZenitUI_1_1Test_1_1Env.html#details">More...</a><br /></td></tr>
+<tr class="memitem:ZenitUI_3A_3ATest_3A_3AMockBackend" id="r_ZenitUI_3A_3ATest_3A_3AMockBackend"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Test_1_1MockBackend.html">ZenitUI::Test::MockBackend</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Headless <span class="tt"><a class="el" href="classZenitUI_1_1IBackend.html" title="Unified window, frame-loop, and subsystem host for interchangeable backends.">IBackend</a></span> host wrapping <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockPlatform.html" title="Programmable IPlatform for injecting deterministic pointer, keyboard, viewport, and clipboard state i...">MockPlatform</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html" title="Recording IRenderer that tracks draw counts, text metrics, clip stacks, render targets,...">MockRenderer</a></span>, and <span class="tt"><a class="el" href="classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In-memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem...">MockAssetProvider</a></span>.  <a href="classZenitUI_1_1Test_1_1MockBackend.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibPlatform" id="r_ZenitUI_3A_3ARaylibPlatform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference <span class="tt"><a class="el" href="classZenitUI_1_1IPlatform.html" title="Abstract windowing, timing, input, and clipboard backend.">IPlatform</a></span> backed by Raylib window, input, and clipboard APIs.  <a href="classZenitUI_1_1RaylibPlatform.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ARaylibRenderer" id="r_ZenitUI_3A_3ARaylibRenderer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></td></tr>
@@ -151,6 +157,8 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gaee6db3cba2c125dec508b716e4f85f76" id="r_gaee6db3cba2c125dec508b716e4f85f76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">RoundedBorderRing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaee6db3cba2c125dec508b716e4f85f76">ZenitUI::Geometry2D::buildRoundedBorderRing</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness)</td></tr>
+<tr class="memdesc:gaee6db3cba2c125dec508b716e4f85f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the inward-extruded rounded ring for <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html#a5629420bd6bb7fadc1537aa2e1dfff93" title="Stroke a rounded border strictly inside r (CSS border-box).">IRenderer::strokeRoundedRect</a></span>.  <br /></td></tr>
 <tr class="memitem:gaac8a43c1768528d08df39b70de5465d6" id="r_gaac8a43c1768528d08df39b70de5465d6"><td class="memItemLeft" align="right" valign="top"><a id="gaac8a43c1768528d08df39b70de5465d6" name="gaac8a43c1768528d08df39b70de5465d6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::logImpl</b> (<a class="el" href="#gab65de980c193bb23cf24aa29c1881402">LogLevel</a> level, const std::string &amp;cat, const std::string &amp;file, int line, int col, const std::string &amp;text)</td></tr>
 <tr class="memdesc:gaac8a43c1768528d08df39b70de5465d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal dispatch: build a <span class="tt"><a class="el" href="structZenitUI_1_1LogMessage.html" title="A single log record passed to ILogger::log.">LogMessage</a></span> and forward it to the active logger. <br /></td></tr>
@@ -177,6 +185,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8:
 <tr class="memdesc:ga3d8d611ca62ead5cfc396eb733698fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encode <code class="param">cp</code> into a new UTF-8 <span class="tt">std::string</span> (empty if invalid). <br /></td></tr>
 <tr class="memitem:gaa245d34e67c2fefd727066b7677db67a" id="r_gaa245d34e67c2fefd727066b7677db67a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa245d34e67c2fefd727066b7677db67a">ZenitUI::Utf8::decode</a> (std::string_view s, size_t pos, uint32_t &amp;outCp) noexcept</td></tr>
 <tr class="memdesc:gaa245d34e67c2fefd727066b7677db67a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode one UTF-8 codepoint starting at byte offset <code class="param">pos</code>.  <br /></td></tr>
+<tr class="memitem:ga8452def7b2a4c82e2f74d8a89321e451" id="r_ga8452def7b2a4c82e2f74d8a89321e451"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8452def7b2a4c82e2f74d8a89321e451">ZenitUI::Utf8::next</a> (std::string_view s, size_t &amp;pos) noexcept</td></tr>
+<tr class="memdesc:ga8452def7b2a4c82e2f74d8a89321e451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode one UTF-8 codepoint at <code class="param">pos</code> and advance <code class="param">pos</code> past it.  <br /></td></tr>
 <tr class="memitem:gaa78769040d4b8987f6f72375dcc0b07c" id="r_gaa78769040d4b8987f6f72375dcc0b07c"><td class="memItemLeft" align="right" valign="top"><a id="gaa78769040d4b8987f6f72375dcc0b07c" name="gaa78769040d4b8987f6f72375dcc0b07c"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::snapFloor</b> (std::string_view s, size_t pos) noexcept</td></tr>
 <tr class="memdesc:gaa78769040d4b8987f6f72375dcc0b07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clamp <code class="param">pos</code> to <span class="tt">s.size()</span> and snap down to the nearest codepoint boundary. <br /></td></tr>
@@ -217,6 +227,13 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::next
 <tr class="memdesc:ga62b510f5a4d9495ccd9edbf67411b05a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sanitize a pasted string for single-line text fields.  <br /></td></tr>
 <tr class="memitem:ga08a993cafc55aad633f28e5b6756c8cd" id="r_ga08a993cafc55aad633f28e5b6756c8cd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08a993cafc55aad633f28e5b6756c8cd">ZenitUI::Utf8::sanitizeMultiLine</a> (std::string_view src)</td></tr>
 <tr class="memdesc:ga08a993cafc55aad633f28e5b6756c8cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sanitize a pasted string for multi-line text fields.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gaf59624a91f184e97446d323532aaff17" id="r_gaf59624a91f184e97446d323532aaff17"><td class="memItemLeft" align="right" valign="top"><a id="gaf59624a91f184e97446d323532aaff17" name="gaf59624a91f184e97446d323532aaff17"></a>
+constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::kRoundedCornerSegments</b> = 12</td></tr>
+<tr class="memitem:gac9a3048696a43913233648c1dd3c2618" id="r_gac9a3048696a43913233648c1dd3c2618"><td class="memItemLeft" align="right" valign="top"><a id="gac9a3048696a43913233648c1dd3c2618" name="gac9a3048696a43913233648c1dd3c2618"></a>
+constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::kRoundedRingPoints</b> = 4 * (kRoundedCornerSegments + 1)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Pluggable backend implementations, Unicode utilities (<span class="tt">Utf8</span>, <span class="tt"><a class="el" href="classZenitUI_1_1CodepointSet.html" title="Composable set of Unicode codepoints for static font-atlas baking.">CodepointSet</a></span>), logging, and debug dumps. </p>
@@ -241,6 +258,43 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::next
 </table>
 </dd></dl>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gaee6db3cba2c125dec508b716e4f85f76" name="gaee6db3cba2c125dec508b716e4f85f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaee6db3cba2c125dec508b716e4f85f76">&#9670;&#160;</a></span>buildRoundedBorderRing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">RoundedBorderRing</a> ZenitUI::Geometry2D::buildRoundedBorderRing </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>radiusPx</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>thickness</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build the inward-extruded rounded ring for <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html#a5629420bd6bb7fadc1537aa2e1dfff93" title="Stroke a rounded border strictly inside r (CSS border-box).">IRenderer::strokeRoundedRect</a></span>. </p>
+<p>Generates <span class="tt">kRoundedRingPoints</span> pairs in clockwise screen order (TR, BR, BL, TL). For each index <span class="tt">i</span> with <span class="tt">next = (i + 1) % kRoundedRingPoints</span>, emit the two counter-clockwise (Y-down screen space) triangles: <span class="tt">(outer[i], inner[next], outer[next])</span> and <span class="tt">(outer[i], inner[i], inner[next])</span>. </p>
+
+</div>
+</div>
 <a id="gac25a60a5464e36b9a20fd03e5f762476" name="gac25a60a5464e36b9a20fd03e5f762476"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac25a60a5464e36b9a20fd03e5f762476">&#9670;&#160;</a></span>clusterBoundaries()</h2>
 
@@ -428,6 +482,38 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Utf8::next
 
 <p><span class="tt">true</span> if <code class="param">cp</code> belongs to a word (for double-click selection and Ctrl+Arrow). </p>
 <p>Covers ASCII alphanumerics + <span class="tt">_</span>, accented Latin-1 / Latin Extended letters, combining marks, Greek, Cyrillic, and CJK / Hangul blocks. </p>
+
+</div>
+</div>
+<a id="ga8452def7b2a4c82e2f74d8a89321e451" name="ga8452def7b2a4c82e2f74d8a89321e451"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8452def7b2a4c82e2f74d8a89321e451">&#9670;&#160;</a></span>next()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t ZenitUI::Utf8::next </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t &amp;</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Decode one UTF-8 codepoint at <code class="param">pos</code> and advance <code class="param">pos</code> past it. </p>
+<dl class="section return"><dt>Returns</dt><dd>Decoded Unicode scalar value (<span class="tt">0</span> at end-of-string, <span class="tt">U+FFFD</span> on malformed bytes). </dd></dl>
 
 </div>
 </div>

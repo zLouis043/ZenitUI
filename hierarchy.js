@@ -81,7 +81,8 @@ var hierarchy =
     ] ],
     [ "ZenitUI::IBackend", "classZenitUI_1_1IBackend.html", [
       [ "ZenitUI::RaylibBackend", "classZenitUI_1_1RaylibBackend.html", null ],
-      [ "ZenitUI::SDL3Backend", "classZenitUI_1_1SDL3Backend.html", null ]
+      [ "ZenitUI::SDL3Backend", "classZenitUI_1_1SDL3Backend.html", null ],
+      [ "ZenitUI::Test::MockBackend", "classZenitUI_1_1Test_1_1MockBackend.html", null ]
     ] ],
     [ "ZenitUI::ZMarkup::IKeyedStore", "structZenitUI_1_1ZMarkup_1_1IKeyedStore.html", [
       [ "ZenitUI::ZMarkup::KeyedStore< KeyT >", "structZenitUI_1_1ZMarkup_1_1KeyedStore.html", null ]
@@ -90,6 +91,7 @@ var hierarchy =
       [ "ZenitUI::ConsoleLogger", "classZenitUI_1_1ConsoleLogger.html", null ]
     ] ],
     [ "ZenitUI::StyleResolver::InheritedSnapshot", "structZenitUI_1_1StyleResolver_1_1InheritedSnapshot.html", null ],
+    [ "ZenitUI::InputAccumulator", "classZenitUI_1_1InputAccumulator.html", null ],
     [ "ZenitUI::InputController", "structZenitUI_1_1InputController.html", null ],
     [ "ZenitUI::InputEvents", "structZenitUI_1_1InputEvents.html", null ],
     [ "ZenitUI::IPlatform", "classZenitUI_1_1IPlatform.html", [
@@ -136,6 +138,7 @@ var hierarchy =
     [ "ZenitUI::ZMarkup::Registry", "classZenitUI_1_1ZMarkup_1_1Registry.html", null ],
     [ "ZenitUI::RenderStats", "structZenitUI_1_1RenderStats.html", null ],
     [ "ZenitUI::Layout::ResolvedBgTexture", "structZenitUI_1_1Layout_1_1ResolvedBgTexture.html", null ],
+    [ "ZenitUI::Geometry2D::RoundedBorderRing", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html", null ],
     [ "ZenitUI::ZMarkup::StyleSheet::Rule", "structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1Rule.html", null ],
     [ "ZenitUI::ScrollController", "structZenitUI_1_1ScrollController.html", null ],
     [ "ZenitUI::ScrollState", "structZenitUI_1_1ScrollState.html", null ],

@@ -32,6 +32,7 @@ var classZenitUI_1_1IRenderer =
     [ "setEffectVec3", "classZenitUI_1_1IRenderer.html#afaa3b501f8fd5fbf5a805ad830e97574", null ],
     [ "setEffectVec4", "classZenitUI_1_1IRenderer.html#ab3128b62fe468f8c70c49e38531a7cc1", null ],
     [ "setEffectVec4f", "classZenitUI_1_1IRenderer.html#aaf7bcdb058f642332c4b715cbdfbbd42", null ],
+    [ "shaderLanguage", "classZenitUI_1_1IRenderer.html#a6c17f3037f2d441990c410a6e8f351ae", null ],
     [ "strokeRect", "classZenitUI_1_1IRenderer.html#a14a943f0fddf8c662ee280f987f0a1ca", null ],
     [ "strokeRoundedRect", "classZenitUI_1_1IRenderer.html#a5629420bd6bb7fadc1537aa2e1dfff93", null ],
     [ "supports", "classZenitUI_1_1IRenderer.html#a2f516b76d539008019ed2838f54ebff6", null ]

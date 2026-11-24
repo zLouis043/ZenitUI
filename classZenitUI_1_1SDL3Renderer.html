@@ -127,6 +127,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isReady</b> () const<
 <tr class="memdesc:a9aaa10c6354704bb613c36ec961571da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify the renderer of the active logical-to-physical DPI scale factor for the current frame.  <br /></td></tr>
 <tr class="memitem:a239793b85f0c5fe43410f6b200459ac2" id="r_a239793b85f0c5fe43410f6b200459ac2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a239793b85f0c5fe43410f6b200459ac2">supports</a> (<a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const override</td></tr>
 <tr class="memdesc:a239793b85f0c5fe43410f6b200459ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether this backend implements an optional <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities queried via IRenderer::supports.">Feature</a></span>.  <br /></td></tr>
+<tr class="memitem:a2619bf7a706c7bb509f021a56d9510fb" id="r_a2619bf7a706c7bb509f021a56d9510fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2619bf7a706c7bb509f021a56d9510fb">shaderLanguage</a> () const override</td></tr>
+<tr class="memdesc:a2619bf7a706c7bb509f021a56d9510fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the shading language expected by <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563" title="Optional runtime hook to load a fragment (and optional vertex) shader from disk under name.">IAssetProvider::loadEffect</a></span> on this renderer.  <br /></td></tr>
 <tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">2D Vector Primitives</div></td></tr>
 <tr class="memitem:a98e595cc75aabc21819380647d9775b8" id="r_a98e595cc75aabc21819380647d9775b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98e595cc75aabc21819380647d9775b8">fillRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c) override</td></tr>
 <tr class="memdesc:a98e595cc75aabc21819380647d9775b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill an axis-aligned rectangle <span class="tt">r</span> with solid color <span class="tt">c</span>.  <br /></td></tr>
@@ -1295,6 +1297,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyEffect</b> (<a
 <p>Set a <span class="tt">vec4</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#aaf7bcdb058f642332c4b715cbdfbbd42">ZenitUI::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a2619bf7a706c7bb509f021a56d9510fb" name="a2619bf7a706c7bb509f021a56d9510fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2619bf7a706c7bb509f021a56d9510fb">&#9670;&#160;</a></span>shaderLanguage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a> ZenitUI::SDL3Renderer::shaderLanguage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the shading language expected by <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html#a410385e978ea07cebfe3983abf787563" title="Optional runtime hook to load a fragment (and optional vertex) shader from disk under name.">IAssetProvider::loadEffect</a></span> on this renderer. </p>
+
+<p>Reimplemented from <a class="el" href="classZenitUI_1_1IRenderer.html#a6c17f3037f2d441990c410a6e8f351ae">ZenitUI::IRenderer</a>.</p>
 
 </div>
 </div>

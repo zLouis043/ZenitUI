@@ -206,6 +206,18 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#ggada7f34c1ace3e7a57e6c0b00b86505cea480459aab8fdf1febfb3ab869480a7cf">Feature::TargetSubRect</a>
  }</td></tr>
 <tr class="memdesc:gada7f34c1ace3e7a57e6c0b00b86505ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional renderer capabilities queried via <span class="tt">IRenderer::supports</span>.  <a href="#gada7f34c1ace3e7a57e6c0b00b86505ce">More...</a><br /></td></tr>
+<tr class="memitem:ga544be25d4522a6a93f8e7a6300def03e" id="r_ga544be25d4522a6a93f8e7a6300def03e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga544be25d4522a6a93f8e7a6300def03e">ZenitUI::ShaderLanguage</a> { <br />
+&#160;&#160;<a class="el" href="#gga544be25d4522a6a93f8e7a6300def03ea6adf97f83acf6453d4a6a4b1070f3754">ShaderLanguage::None</a>
+, <a class="el" href="#gga544be25d4522a6a93f8e7a6300def03eaa0e6ab91ff8da26d476a797b90aee303">ShaderLanguage::GLSL330</a>
+, <a class="el" href="#gga544be25d4522a6a93f8e7a6300def03ea7f73ee2692f6ac47e01223262e106341">ShaderLanguage::GLSL300ES</a>
+, <a class="el" href="#gga544be25d4522a6a93f8e7a6300def03ea649dd317597e959fb32149ac40206199">ShaderLanguage::SPIRV</a>
+, <br />
+&#160;&#160;<a class="el" href="#gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f">ShaderLanguage::HLSL</a>
+, <a class="el" href="#gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666">ShaderLanguage::MSL</a>
+, <a class="el" href="#gga544be25d4522a6a93f8e7a6300def03ea29e42526b6c679260105b3ec393f410e">ShaderLanguage::WGSL</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga544be25d4522a6a93f8e7a6300def03e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shading language consumed by an <span class="tt">IRenderer</span> that supports <span class="tt">Feature::Effects</span>.  <a href="#ga544be25d4522a6a93f8e7a6300def03e">More...</a><br /></td></tr>
 <tr class="memitem:gaa4d6ce73648fe3085851e0e7bfd42f32" id="r_gaa4d6ce73648fe3085851e0e7bfd42f32"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa4d6ce73648fe3085851e0e7bfd42f32">ZenitUI::LayoutType</a> { <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>
 , <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">LayoutType::Vertical</a>
 , <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f">LayoutType::Horizontal</a>
@@ -460,6 +472,46 @@ Functions</h2></td></tr>
 
 <p>Mouse buttons tracked by the input system. </p>
 <p><span class="tt">Count</span> is the sentinel. </p>
+
+</div>
+</div>
+<a id="ga544be25d4522a6a93f8e7a6300def03e" name="ga544be25d4522a6a93f8e7a6300def03e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga544be25d4522a6a93f8e7a6300def03e">&#9670;&#160;</a></span>ShaderLanguage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ga544be25d4522a6a93f8e7a6300def03e">ZenitUI::ShaderLanguage</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Shading language consumed by an <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> that supports <span class="tt"><a class="el" href="#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span>. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03ea6adf97f83acf6453d4a6a4b1070f3754" name="gga544be25d4522a6a93f8e7a6300def03ea6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"><p>Backend does not execute custom shaders. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03eaa0e6ab91ff8da26d476a797b90aee303" name="gga544be25d4522a6a93f8e7a6300def03eaa0e6ab91ff8da26d476a797b90aee303"></a>GLSL330&#160;</td><td class="fielddoc"><p>OpenGL 3.3 Core GLSL (<span class="tt">.fs</span> / <span class="tt">.vs</span>, Raylib &amp; SDL3 GL convention). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03ea7f73ee2692f6ac47e01223262e106341" name="gga544be25d4522a6a93f8e7a6300def03ea7f73ee2692f6ac47e01223262e106341"></a>GLSL300ES&#160;</td><td class="fielddoc"><p>OpenGL ES 3.0 / WebGL 2 GLSL. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03ea649dd317597e959fb32149ac40206199" name="gga544be25d4522a6a93f8e7a6300def03ea649dd317597e959fb32149ac40206199"></a>SPIRV&#160;</td><td class="fielddoc"><p>Precompiled Vulkan / SDL_GPU SPIR-V binaries (<span class="tt">.frag.spv</span>). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f" name="gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f"></a>HLSL&#160;</td><td class="fielddoc"><p>Direct3D HLSL (<span class="tt">.hlsl</span>). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666" name="gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666"></a>MSL&#160;</td><td class="fielddoc"><p>Apple Metal Shading Language (<span class="tt">.metal</span>). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga544be25d4522a6a93f8e7a6300def03ea29e42526b6c679260105b3ec393f410e" name="gga544be25d4522a6a93f8e7a6300def03ea29e42526b6c679260105b3ec393f410e"></a>WGSL&#160;</td><td class="fielddoc"><p>WebGPU Shading Language (<span class="tt">.wgsl</span>). </p>
+</td></tr>
+</table>
 
 </div>
 </div>

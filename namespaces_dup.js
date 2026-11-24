@@ -46,6 +46,7 @@ var namespaces_dup =
       [ "FilterContext", "structZenitUI_1_1FilterContext.html", null ],
       [ "FilterDef", "structZenitUI_1_1FilterDef.html", "structZenitUI_1_1FilterDef" ],
       [ "FilterRegistry", "classZenitUI_1_1FilterRegistry.html", "classZenitUI_1_1FilterRegistry" ],
+      [ "InputAccumulator", "classZenitUI_1_1InputAccumulator.html", "classZenitUI_1_1InputAccumulator" ],
       [ "InputController", "structZenitUI_1_1InputController.html", "structZenitUI_1_1InputController" ],
       [ "NodeState", "structZenitUI_1_1NodeState.html", "structZenitUI_1_1NodeState" ],
       [ "NodeConfig", "structZenitUI_1_1NodeConfig.html", "structZenitUI_1_1NodeConfig" ],
@@ -130,6 +131,15 @@ var namespaces_dup =
       [ "MouseButton", "group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75", null ],
       [ "Overflow", "group__grp__zstyle.html#gada49a5d270525bd8ccc73cd680f9dc5d", null ],
       [ "Position", "group__grp__zstyle.html#gad1c0d7e8bd09eeea85e1f3acd4e1e678", null ],
+      [ "ShaderLanguage", "group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e", [
+        [ "None", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea6adf97f83acf6453d4a6a4b1070f3754", null ],
+        [ "GLSL330", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03eaa0e6ab91ff8da26d476a797b90aee303", null ],
+        [ "GLSL300ES", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea7f73ee2692f6ac47e01223262e106341", null ],
+        [ "SPIRV", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea649dd317597e959fb32149ac40206199", null ],
+        [ "HLSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03eacdf45fdd8960ab47314fb33febc95d9f", null ],
+        [ "MSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666", null ],
+        [ "WGSL", "group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea29e42526b6c679260105b3ec393f410e", null ]
+      ] ],
       [ "TextOverflow", "group__grp__zstyle.html#ga1b3a2c403488abdad1ad1118fbd38d86", null ],
       [ "TransitionFunction", "group__grp__anim.html#gae27ff9cac1e9b8ddc267881d389bcdf8", null ],
       [ "UIState", "group__grp__core.html#ga84d5f553430837fc0d9c2c026ee04665", [

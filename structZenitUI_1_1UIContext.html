@@ -118,6 +118,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPressTarget</b> (co
 <tr class="memitem:a6d48c76abbdb32a5566711ee5ab9f318" id="r_a6d48c76abbdb32a5566711ee5ab9f318"><td class="memItemLeft" align="right" valign="top"><a id="a6d48c76abbdb32a5566711ee5ab9f318" name="a6d48c76abbdb32a5566711ee5ab9f318"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isValidClick</b> () const</td></tr>
 <tr class="memdesc:a6d48c76abbdb32a5566711ee5ab9f318"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if press and release targets agree (a valid click). <br /></td></tr>
+<tr class="memitem:a510ee97a57a08b49054a057e7124b523" id="r_a510ee97a57a08b49054a057e7124b523"><td class="memItemLeft" align="right" valign="top"><a id="a510ee97a57a08b49054a057e7124b523" name="a510ee97a57a08b49054a057e7124b523"></a>
+<a class="el" href="structZenitUI_1_1Rect.html">Rect</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getCullingClip</b> () const</td></tr>
+<tr class="memdesc:a510ee97a57a08b49054a057e7124b523"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active screen-space clip rect used by <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a88571f053d662594f49e1a3d8014dec2" title="Draw the node and its children.">Layout::draw()</a></span> for off-screen culling. <br /></td></tr>
+<tr class="memitem:a90dcd34dfd0f306b6db8080481be96f2" id="r_a90dcd34dfd0f306b6db8080481be96f2"><td class="memItemLeft" align="right" valign="top"><a id="a90dcd34dfd0f306b6db8080481be96f2" name="a90dcd34dfd0f306b6db8080481be96f2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>pushLayerTarget</b> (<a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a> t)</td></tr>
+<tr class="memdesc:a90dcd34dfd0f306b6db8080481be96f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push an off-screen target while preserving the root screen-space culling clip. <br /></td></tr>
+<tr class="memitem:ae4e40fe3770dfbdf1ac1dc7db2587887" id="r_ae4e40fe3770dfbdf1ac1dc7db2587887"><td class="memItemLeft" align="right" valign="top"><a id="ae4e40fe3770dfbdf1ac1dc7db2587887" name="ae4e40fe3770dfbdf1ac1dc7db2587887"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>popLayerTarget</b> ()</td></tr>
+<tr class="memdesc:ae4e40fe3770dfbdf1ac1dc7db2587887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop an off-screen target pushed via <span class="tt"><a class="el" href="#a90dcd34dfd0f306b6db8080481be96f2" title="Push an off-screen target while preserving the root screen-space culling clip.">pushLayerTarget</a></span>. <br /></td></tr>
 <tr class="memitem:ac65b879662445e21ba0c08c1ff693422" id="r_ac65b879662445e21ba0c08c1ff693422"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac65b879662445e21ba0c08c1ff693422">beginFrame</a> (float delta_time)</td></tr>
 <tr class="memdesc:ac65b879662445e21ba0c08c1ff693422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the frame: pull platform state and reset one-shot flags.  <br /></td></tr>
 <tr class="memitem:a6c789023ad9f0c5e9960e3d62050beec" id="r_a6c789023ad9f0c5e9960e3d62050beec"><td class="memItemLeft" align="right" valign="top"><a id="a6c789023ad9f0c5e9960e3d62050beec" name="a6c789023ad9f0c5e9960e3d62050beec"></a>
@@ -189,6 +198,8 @@ std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><b>rng</b></td><
 <a class="el" href="structZenitUI_1_1RenderStats.html">RenderStats</a>&#160;</td><td class="memItemRight" valign="bottom"><b>renderStats</b></td></tr>
 <tr class="memitem:ac78a3ce75516f86ac411b170ad6a429f" id="r_ac78a3ce75516f86ac411b170ad6a429f"><td class="memItemLeft" align="right" valign="top"><a id="ac78a3ce75516f86ac411b170ad6a429f" name="ac78a3ce75516f86ac411b170ad6a429f"></a>
 <a class="el" href="classZenitUI_1_1TargetPool.html">TargetPool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>targetPool</b></td></tr>
+<tr class="memitem:a13231bfe325b6c90e924f3dbb34655e4" id="r_a13231bfe325b6c90e924f3dbb34655e4"><td class="memItemLeft" align="right" valign="top"><a id="a13231bfe325b6c90e924f3dbb34655e4" name="a13231bfe325b6c90e924f3dbb34655e4"></a>
+std::vector&lt; <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cullingClipStack</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-application singleton: backends, frame state, and routing. </p>
