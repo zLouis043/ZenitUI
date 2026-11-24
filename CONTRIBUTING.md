@@ -1,7 +1,8 @@
 # Contributing to ZenitUI
 
 Thanks for considering contributing. This document describes how to
-report bugs, propose changes, and submit pull requests.
+report bugs, set up a development environment, write tests, and submit
+pull requests.
 
 ---
 
@@ -17,30 +18,30 @@ Before opening an issue:
 
 1. **Check the existing issues.** Someone may have already reported the
    same problem.
-2. **Check the documentation.** Some behavior that looks like a bug is
-   intentional — see the "Pitfalls" sections in the docs.
-3. **Check the roadmap.** Known issues and planned work are listed in
-   [docs/ROADMAP.md](docs/ROADMAP.md).
+2. **Check the documentation.** Browse the online guides and API
+   reference at [zlouis043.github.io/ZenitUI](https://zlouis043.github.io/ZenitUI/)
+   to confirm whether the behavior is intentional.
 
 When you open an issue, include:
 
-- **A minimal reproduction.** The smaller the better. Use the
-  `Mocks.hpp` fixture if the bug is about layout, style, or input —
-  it lets you reproduce without a window.
+- **A minimal reproduction.** The smaller the better. Use the `Env`
+  fixture from `tests/Mocks.hpp` (`ZenitUI::MockBackend`) if the bug is
+  about layout, style, or input — it reproduces deterministically
+  without a window.
 - **Expected behavior.** What you thought would happen.
 - **Actual behavior.** What actually happened.
-- **Environment.** OS, compiler, backend (Raylib version if relevant).
-- **Log output** if any. `Logger` writes to `stderr` by default.
+- **Environment.** OS, compiler, and backend (Raylib version if relevant).
+- **Log output**, if any (`Logger` writes to `stderr` by default).
 
 Example issue template:
 
-```markdown
+````markdown
 ### Description
 Short description.
 
 ### Reproduction
 ```cpp
-// Minimal snippet using Mocks.hpp
+// Minimal snippet using Env from Mocks.hpp
 ```
 
 ### Expected
@@ -51,8 +52,9 @@ Short description.
 
 ### Environment
 - OS: Windows 11
-- Compiler: MSVC 19.38
-- Backend: Raylib 5.5
+- Compiler: GCC / Clang / MSVC version
+- Backend: Raylib 5.5 (or MockBackend)
+````
 
 ---
 
@@ -65,38 +67,52 @@ Before writing code for a non-trivial feature:
    design needs to change.
 2. **Reference a real use case.** "It would be nice to have X" is
    weaker than "I'm building Y and X is blocking me because Z."
-3. **Consider the existing design.** ZenitUI has opinions (retained
-   mode, CSS-like styling, pluggable backends). A feature that fights
-   those opinions is unlikely to be accepted.
+3. **Respect the core architecture.** ZenitUI is retained-mode,
+   CSS-like in styling, and backend-agnostic (`IPlatform`, `IRenderer`,
+   `IAssetProvider`). Changes that couple core logic to a specific
+   graphics library will not be accepted.
 
-For small fixes (typos, obvious bugs, doc improvements), just open the
-PR directly.
+For small fixes (typos, clear bugs, doc improvements), feel free to open
+a PR directly.
 
 ---
 
 ## Development setup
 
-*TODO — fill in once the build system is finalized.*
+### Requirements
 
-Minimum required:
+- CMake ≥ 3.20
+- A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)
+- Ninja (recommended)
+- Git (for fetching Raylib on demand when building examples)
+- Doxygen + Graphviz (optional, for `make docs`)
 
-- A C++20 compiler (GCC, Clang, or MSVC).
-- Raylib (for the reference backend and the manual test apps).
+The core library and headless test suite have **no external runtime
+dependencies** (Raylib is only fetched when building examples).
 
-To build the tests without a window, only the core library and the
-mock backend are needed — no Raylib.
+### Building and running tests
 
-### Running the tests
+Using the root `Makefile` wrapper:
 
 ```bash
-# Once the build is set up:
-ctest --test-dir build
-# or:
-./build/tests/tests
+make               # build libzenit.a + unit tests
+make test          # run the headless test suite via CTest
+make examples      # build all examples (fetches Raylib automatically)
+make run-00_demo   # build and launch the ShowcaseApp demo
+make docs          # regenerate Doxygen HTML docs into build/docs/html/
 ```
 
-The test suite is headless — it uses `MockRenderer` and `MockPlatform`
-from `tests/Mocks.hpp`, so no window is created.
+Or directly with CMake:
+
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+The test suite runs completely headless using `MockRenderer`,
+`MockPlatform`, and `MockAssetProvider` from
+`backends/mock/MockBackend.hpp` (exposed to tests via `tests/Mocks.hpp`).
 
 ---
 
@@ -104,12 +120,13 @@ from `tests/Mocks.hpp`, so no window is created.
 
 ### Before you submit
 
-- **Run the tests.** All existing tests must pass.
-- **Add tests for new behavior.** See "Writing tests" below.
-- **Update the documentation.** If you add a widget, an API, or a
-  behavior, add or update the corresponding file in `docs/`.
-- **Update the roadmap.** If you complete an item from
-  [docs/ROADMAP.md](docs/ROADMAP.md), check it off.
+- **Run the full test suite (`make test`).** All existing tests must pass.
+- **Add tests for new behavior or bug fixes.** See [Writing tests](#writing-tests).
+- **Build the examples (`make examples`)** if you touched public APIs,
+  styling, layout, or the Raylib backend.
+- **Update documentation and run `make docs`.** Public APIs in `include/`
+  and `backends/` should have Doxygen comments, and `make docs` should
+  complete cleanly without new warnings.
 
 ### PR description
 
@@ -117,19 +134,19 @@ Include:
 
 - **What** the PR changes.
 - **Why** — the motivation, ideally linking to an issue.
-- **How** — a brief description of the approach.
+- **How** — a brief summary of the approach.
 - **Testing** — what you tested and how.
 
 ### Commits
 
-Small, focused commits are preferred over one large commit. A commit
-should compile and pass tests on its own when possible.
+Small, focused commits are preferred over one large commit. Each commit
+should compile and pass tests on its own whenever possible.
 
 Commit message style: short imperative subject line, blank line, then
 details if needed.
 
 ```txt
-Fix onHoverExit firing on Hover -> Pressed
+fix(input): stop firing onHoverExit on Hover -> Pressed
 
 The state comparison treated Pressed as "not hovered", which fired
 onHoverExit when pressing a hovered node. Hover and Pressed are both
@@ -140,25 +157,22 @@ Closes #42.
 
 ### Code style
 
-There's no formal style guide yet. Match the surrounding code:
+Match the surrounding file's style:
 
 - 4-space indentation.
-- `snake_case` for private fields, `camelCase` for public methods,
-  `PascalCase` for types.
-- Trailing underscores for private fields (`knob_`, `value_`).
-- `auto` when the type is obvious, explicit otherwise.
-- Prefer `const&` for parameters, `const` methods where possible.
+- `camelCase` for methods and local variables, `PascalCase` for types.
+- Trailing underscores for private fields (`knob_`, `value_`, `res_`).
+- `auto` when the type is obvious, explicit types otherwise.
+- Prefer `const&` or `std::string_view` for read-only parameters, and
+  `const` methods where possible.
 - Comments explain **why**, not **what**.
-
-If you see a clear inconsistency, matching the file you're editing is
-better than introducing a new style.
 
 ---
 
 ## Writing tests
 
 Tests live in `tests/`, in files named `test_<area>.cpp`. They use a
-small macro-based framework defined in `TestFramework.hpp`:
+lightweight macro framework defined in `tests/TestFramework.hpp`:
 
 ```cpp
 TEST(SuiteName, test_name) {
@@ -167,8 +181,8 @@ TEST(SuiteName, test_name) {
 }
 ```
 
-For tests that need a running UI (layout, input, style resolution),
-use the `Env` fixture from `Mocks.hpp`:
+For tests that need a running UI (layout, input, style resolution,
+widgets, targets), use the `Env` fixture from `Mocks.hpp`:
 
 ```cpp
 TEST(Interaction_click, simple_click_increments) {
@@ -194,86 +208,78 @@ TEST(Interaction_click, simple_click_increments) {
 
 ### What to test
 
-- **Parsers** — pure functions, no `Env` needed. Test the AST and the
-  resulting `Theme` / `Style`.
-- **Layout** — build a tree, run `env.frame(root)`, check `getRect()`
+- **Parsers** — pure functions, no `Env` needed. Test the AST, resolved
+  `Theme` / `Style`, and diagnostics.
+- **Layout** — build a tree, run `env.frame(root)`, assert `getRect()`
   and `getMeasuredSize()`.
-- **Input** — use `platform.pressLeft()`, `releaseLeft()`,
-  `moveMouse()`, `pressKey()`, then `env.frame(root)`.
-- **Widgets** — test the widget's specific behavior (state changes,
-  callbacks, intrinsic size).
-- **Animations** — run N frames and check the interpolated values.
+- **Input** — drive `env.platform.pressLeft()`, `releaseLeft()`,
+  `moveMouse()`, `pressKey()`, `typeChar()`, `scrollWheel()`, then
+  `env.frame(root)`.
+- **Widgets** — test state transitions, callbacks, and intrinsic sizing.
+- **Animations** — advance N frames and verify interpolated values.
+- **Effects & TargetPool** — toggle `env.renderer.supportsEffects`,
+  `supportsNestedTargets`, or `supportsTargetSubRect` to test shader
+  uniform capture (`capturedFloat`, `capturedVec2`, …) and target
+  lifecycle (`liveTargets`, `createTargetCount`, `destroyTargetCount`).
 
 ### What can't be tested with the mocks
 
-- Visual output (no pixel readback).
-- Shaders and filters (the mock renderer reports
-  `supports(Effects) == false`).
-- Render targets (the mock returns invalid handles).
-- Exact text measurement (the mock uses `charWidth × length`).
-
-For these, test the logic in isolation or use a real backend with an
-offscreen framebuffer.
+- Visual pixel output and GPU shader execution (no pixel readback).
+- Real font glyph metrics (the mock uses fixed monospace `charWidth × codepoints`).
+- Windowing / OS-specific behavior (verify manually with `make run-00_demo`
+  or the relevant example under `examples/`).
 
 ---
 
 ## Documentation
 
-Documentation lives in `docs/`, split into three sections:
+Documentation is generated with **Doxygen** (`Doxyfile`) and published
+to [zlouis043.github.io/ZenitUI](https://zlouis043.github.io/ZenitUI/):
 
-- **`docs/user/`** — for people writing UI. Tutorials, patterns,
-  pitfalls. Examples in C++ and ZMarkup.
-- **`docs/internals/`** — for people extending the core. Architecture,
-  subsystem mechanics, invariants.
-- **`docs/api/`** — compact reference. Method signatures, fields,
-  enum values.
+- **API reference** — Doxygen comments directly in `include/`,
+  `include/components/`, and `backends/`. Document interface contracts on
+  base classes (`IPlatform`, `IRenderer`, `IAssetProvider` in
+  `include/UIContext.hpp`) so overrides inherit them automatically.
+- **Guides** — narrative pages in `docs/`:
+  - `docs/Guides.dox` — main page, mental model, and module definitions (`grp_*`).
+  - `docs/custom_backends.dox` — step-by-step guide to implementing new backends.
+- **Examples gallery** — `docs/gen_examples.cmake` automatically pulls
+  every `examples/*/main.cpp` (plus sibling `.hpp`, `.zstyle`, `.zm`,
+  and `.fs` files). Add `// @doc` and `// @group` tags at the top of any
+  new example's `main.cpp` so it is indexed properly.
 
-When you change a public API, update the corresponding file in
-`docs/api/`. When you change behavior that users rely on, update the
-relevant `docs/user/` file.
-
-### Style
-
-- Markdown, one sentence per line where it helps readability.
-- Fenced code blocks with language tags (`cpp`, `css`, `markup`).
-- Cross-reference between files with relative links.
-- Each doc file ends with a "See also" section.
-
----
-
-## Reporting documentation issues
-
-Typos, unclear paragraphs, broken examples — open an issue or a PR.
-Documentation PRs are welcome and reviewed quickly.
+Always run `make docs` locally and check for broken `\ref` links or
+Doxygen warnings before opening a PR.
 
 ---
 
 ## What we're looking for
 
-The current priorities (see [docs/ROADMAP.md](docs/ROADMAP.md)):
+- **Bug reports & regression tests** — especially around Flexbox edge
+  cases, scrolling, text editing/wrapping, and ZStyle cascade rules.
+- **Custom backends** — ports of `IPlatform`, `IRenderer`, and
+  `IAssetProvider` to other ecosystems (SDL3, GLFW + bgfx, Sokol, etc.).
+- **Widgets & ZStyle coverage** — refinements to existing widgets,
+  accessibility/keyboard navigation, and ZStyle diagnostics.
+- **Documentation & examples** — clearer docstrings, walkthroughs, and
+  focused examples.
 
-- **Phase 1** — bug fixes. See the specific items in the roadmap.
-- **Phase 2** — small API additions (`Slider::setValue`,
-  `removeClass`, etc.).
-- **Phase 3** — test coverage for scroll, TextInput, Dropdown, text
-  wrapping.
-- **Phase 4** — performance (allocation reduction, rule indexing).
-
-If you want to help but don't know where to start, look for issues
-tagged `good first issue` or `help wanted`.
+Look for issues tagged `good first issue` or `help wanted` if you are
+not sure where to start.
 
 ---
 
 ## Questions?
 
-Open a discussion (if enabled) or an issue with the `question` label.
+Open a GitHub Discussion (if enabled) or an issue with the `question`
+label.
 
 ---
 
 ## See also
 
-- [README](README.md) — project overview.
-- [Roadmap](docs/ROADMAP.md) — planned work and known issues.
-- [Architecture](docs/internals/01-architecture.md) — how the framework
-  is built.
-  
+- [README](README.md) — project overview and quick start.
+- [Online Documentation](https://zlouis043.github.io/ZenitUI/) — full
+  guides, API reference, and examples gallery.
+- [Writing a Custom Backend](docs/custom_backends.dox) — guide for
+  porting ZenitUI to other graphics/windowing libraries.
