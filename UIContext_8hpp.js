@@ -1,5 +1,10 @@
 var UIContext_8hpp =
 [
+    [ "ZenitUI::BlendMode", "group__grp__core.html#gab862907ee575802a8271da3923d1f76c", [
+      [ "Alpha", "UIContext_8hpp.html#ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598", null ],
+      [ "Premultiplied", "UIContext_8hpp.html#ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459", null ],
+      [ "Replace", "UIContext_8hpp.html#ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb", null ]
+    ] ],
     [ "ZenitUI::Feature", "group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce", [
       [ "Effects", "UIContext_8hpp.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916", null ],
       [ "NestedTargets", "UIContext_8hpp.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688", null ],

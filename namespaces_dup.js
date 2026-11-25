@@ -83,7 +83,7 @@ var namespaces_dup =
       [ "IPlatform", "classZenitUI_1_1IPlatform.html", "classZenitUI_1_1IPlatform" ],
       [ "IAssetProvider", "classZenitUI_1_1IAssetProvider.html", "classZenitUI_1_1IAssetProvider" ],
       [ "RenderStats", "structZenitUI_1_1RenderStats.html", null ],
-      [ "TargetPool", "classZenitUI_1_1TargetPool.html", null ],
+      [ "TargetPool", "classZenitUI_1_1TargetPool.html", "classZenitUI_1_1TargetPool" ],
       [ "UIContext", "structZenitUI_1_1UIContext.html", "structZenitUI_1_1UIContext" ],
       [ "Value", "structZenitUI_1_1Value.html", "structZenitUI_1_1Value" ],
       [ "CodepointSet", "classZenitUI_1_1CodepointSet.html", "classZenitUI_1_1CodepointSet" ],
@@ -102,6 +102,11 @@ var namespaces_dup =
         [ "Center", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
         [ "End", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e", null ],
         [ "Stretch", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560", null ]
+      ] ],
+      [ "BlendMode", "group__grp__core.html#gab862907ee575802a8271da3923d1f76c", [
+        [ "Alpha", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598", null ],
+        [ "Premultiplied", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459", null ],
+        [ "Replace", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb", null ]
       ] ],
       [ "DiagnosticCode", "group__grp__zstyle.html#gadfc0f636085619f9baa90bebd758bf71", null ],
       [ "DiagnosticSeverity", "group__grp__zstyle.html#ga33499078caccb3f383cf6da856c7a7dc", null ],

@@ -29,6 +29,7 @@ var classZenitUI_1_1Layout =
     [ "id", "classZenitUI_1_1Layout.html#a27eae4bcca4eaf6b02afabbc3e99ac11", null ],
     [ "insertChildBefore", "classZenitUI_1_1Layout.html#a949f58d45333bc3e93e2392cb2671d73", null ],
     [ "invalidateIfRelevant", "classZenitUI_1_1Layout.html#a5782ee0432840cdebbea4cd893bdbde1", null ],
+    [ "invalidateLayerCache", "classZenitUI_1_1Layout.html#a0a5bb61b3fe46dae02fbff430f5e6487", null ],
     [ "invalidateStyleCacheRecursive", "classZenitUI_1_1Layout.html#aa56e9c718bbe17f8e8cbecf0647c58ac", null ],
     [ "isAncestorOf", "classZenitUI_1_1Layout.html#a2c47c8b11bc551d0e2dde3d6cc97bb68", null ],
     [ "isScrollContainer", "classZenitUI_1_1Layout.html#ad81b905d7691d3e19f18fe36b1597ceb", null ],

@@ -338,6 +338,8 @@ std::vector&lt; const <a class="el" href="structZenitUI_1_1ThemeRule.html">Theme
 <tr class="memdesc:a82e6548ce9c9d4320f010081f072b516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override the background texture with a direct handle.  <br /></td></tr>
 <tr class="memitem:a261e980f72acd0d48be79414e309c1e9" id="r_a261e980f72acd0d48be79414e309c1e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a261e980f72acd0d48be79414e309c1e9">setShader</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> shader)</td></tr>
 <tr class="memdesc:a261e980f72acd0d48be79414e309c1e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a custom shader effect applied to the node's content.  <br /></td></tr>
+<tr class="memitem:a0a5bb61b3fe46dae02fbff430f5e6487" id="r_a0a5bb61b3fe46dae02fbff430f5e6487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a5bb61b3fe46dae02fbff430f5e6487">invalidateLayerCache</a> ()</td></tr>
+<tr class="memdesc:a0a5bb61b3fe46dae02fbff430f5e6487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark any cached off-screen filter layer on this node and its ancestors as dirty so it is re-baked on the next draw pass.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -991,6 +993,34 @@ template&lt;typename T = Layout&gt; </div>
 
 <p>Propagate a class/tag change to descendants that may match it. </p>
 <p>Only descendants whose <span class="tt">relevantSymbols_</span> list mentions the changed symbol are marked. If the theme version changed since the last refresh, every descendant is invalidated conservatively. </p>
+
+</div>
+</div>
+<a id="a0a5bb61b3fe46dae02fbff430f5e6487" name="a0a5bb61b3fe46dae02fbff430f5e6487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a5bb61b3fe46dae02fbff430f5e6487">&#9670;&#160;</a></span>invalidateLayerCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ZenitUI::Layout::invalidateLayerCache </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Mark any cached off-screen filter layer on this node and its ancestors as dirty so it is re-baked on the next draw pass. </p>
+<p>Subclasses whose visual output can change without modifying style or layout (e.g. custom <span class="tt">Canvas</span> draws or blinking carets) should call this whenever their rendered pixels change. </p>
 
 </div>
 </div>

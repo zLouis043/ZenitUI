@@ -31,6 +31,7 @@ var classZenitUI_1_1RaylibRenderer =
     [ "registerEffect", "classZenitUI_1_1RaylibRenderer.html#a9ff90fb31ab9119c4a7971bc8b1b4544", null ],
     [ "registerFont", "classZenitUI_1_1RaylibRenderer.html#aaa358a6eb700d3b0bb6767b4141f35b2", null ],
     [ "registerTexture", "classZenitUI_1_1RaylibRenderer.html#a178b5386c4e5591b13a8992104eeaa52", null ],
+    [ "setBlendMode", "classZenitUI_1_1RaylibRenderer.html#a2d209c1ee9243747879896306dc52085", null ],
     [ "setDpiScale", "classZenitUI_1_1RaylibRenderer.html#a766a01319b0b6edaa50d3fde43a38dd0", null ],
     [ "setEffectFloat", "classZenitUI_1_1RaylibRenderer.html#a17c233b501afeb22e129bc7f84a84084", null ],
     [ "setEffectVec2", "classZenitUI_1_1RaylibRenderer.html#ad0cceb988032dd27248b2ec79c4549a1", null ],

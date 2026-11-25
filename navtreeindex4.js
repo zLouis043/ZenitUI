@@ -1,5 +1,15 @@
 var NAVTREEINDEX4 =
 {
+"structZenitUI_1_1AnimationPlayer.html#a597b891f7cb6e7df64da83d572ceade3":[1,4,1,0],
+"structZenitUI_1_1AnimationPlayer.html#a5b73e0725b0a349769afe87975c68081":[1,4,1,8],
+"structZenitUI_1_1AnimationPlayer.html#a91fbdb006d6166d00440ae6241f58f2c":[1,4,1,1],
+"structZenitUI_1_1AnimationPlayer.html#a96249070236737bbe0b5567a74d70240":[1,4,1,2],
+"structZenitUI_1_1AnimationPlayer.html#aaf2324d7c774a71d31efd6135fb6e43d":[1,4,1,7],
+"structZenitUI_1_1AnimationPlayer.html#aee2591d41d0b98fe8e4e140acc288782":[1,4,1,5],
+"structZenitUI_1_1AnimationRef.html":[1,3,10],
+"structZenitUI_1_1BoxShadow.html":[1,3,15],
+"structZenitUI_1_1ButtonState.html":[1,0,16],
+"structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341":[1,0,16,0],
 "structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665":[1,0,16,2],
 "structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a":[1,0,16,1],
 "structZenitUI_1_1Color.html":[1,0,7],

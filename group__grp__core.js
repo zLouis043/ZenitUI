@@ -99,6 +99,7 @@ var group__grp__core =
       [ "id", "classZenitUI_1_1Layout.html#a27eae4bcca4eaf6b02afabbc3e99ac11", null ],
       [ "insertChildBefore", "classZenitUI_1_1Layout.html#a949f58d45333bc3e93e2392cb2671d73", null ],
       [ "invalidateIfRelevant", "classZenitUI_1_1Layout.html#a5782ee0432840cdebbea4cd893bdbde1", null ],
+      [ "invalidateLayerCache", "classZenitUI_1_1Layout.html#a0a5bb61b3fe46dae02fbff430f5e6487", null ],
       [ "invalidateStyleCacheRecursive", "classZenitUI_1_1Layout.html#aa56e9c718bbe17f8e8cbecf0647c58ac", null ],
       [ "isAncestorOf", "classZenitUI_1_1Layout.html#a2c47c8b11bc551d0e2dde3d6cc97bb68", null ],
       [ "isScrollContainer", "classZenitUI_1_1Layout.html#ad81b905d7691d3e19f18fe36b1597ceb", null ],
@@ -217,6 +218,7 @@ var group__grp__core =
       [ "pushEffect", "classZenitUI_1_1IRenderer.html#a4d960a076b2f535e159965cf2a583be6", null ],
       [ "pushTarget", "classZenitUI_1_1IRenderer.html#acc46deb233eeebcbd37bc891ce9c74e7", null ],
       [ "pushTransform", "classZenitUI_1_1IRenderer.html#a8ce877d4bad538b62df8d32177a7e9c2", null ],
+      [ "setBlendMode", "classZenitUI_1_1IRenderer.html#ac7e7515808eec251aafa58a4a29684d4", null ],
       [ "setDpiScale", "classZenitUI_1_1IRenderer.html#ad7b21e23e97176e1a0586f6e035941f7", null ],
       [ "setEffectFloat", "classZenitUI_1_1IRenderer.html#a9a081c5c757acd806f9473e16701cb7e", null ],
       [ "setEffectVec2", "classZenitUI_1_1IRenderer.html#af30e5b154656044710f16200dcfbf0b8", null ],
@@ -257,7 +259,10 @@ var group__grp__core =
       [ "unloadTexture", "classZenitUI_1_1IAssetProvider.html#a92c2ac07d4ba4656fb3f3abd08fa1f13", null ]
     ] ],
     [ "ZenitUI::RenderStats", "structZenitUI_1_1RenderStats.html", null ],
-    [ "ZenitUI::TargetPool", "classZenitUI_1_1TargetPool.html", null ],
+    [ "ZenitUI::TargetPool", "classZenitUI_1_1TargetPool.html", [
+      [ "frameIndex", "classZenitUI_1_1TargetPool.html#ada1033d9539a4fdeac0f46b4fa5f1e01", null ],
+      [ "generation", "classZenitUI_1_1TargetPool.html#a3564dea1979714f26eb6a0dda673ade3", null ]
+    ] ],
     [ "ZenitUI::UIContext", "structZenitUI_1_1UIContext.html", [
       [ "beginFrame", "structZenitUI_1_1UIContext.html#ac65b879662445e21ba0c08c1ff693422", null ],
       [ "consumeClick", "structZenitUI_1_1UIContext.html#a214e0406e09b6432835da164d5032635", null ],
@@ -301,6 +306,11 @@ var group__grp__core =
       [ "ZenitUI::Align::Center", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd", null ],
       [ "ZenitUI::Align::End", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e", null ],
       [ "ZenitUI::Align::Stretch", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560", null ]
+    ] ],
+    [ "ZenitUI::BlendMode", "group__grp__core.html#gab862907ee575802a8271da3923d1f76c", [
+      [ "ZenitUI::BlendMode::Alpha", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598", null ],
+      [ "ZenitUI::BlendMode::Premultiplied", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459", null ],
+      [ "ZenitUI::BlendMode::Replace", "group__grp__core.html#ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb", null ]
     ] ],
     [ "ZenitUI::Feature", "group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce", [
       [ "ZenitUI::Feature::Effects", "group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916", null ],

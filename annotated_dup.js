@@ -120,7 +120,7 @@ var annotated_dup =
       [ "IPlatform", "classZenitUI_1_1IPlatform.html", "classZenitUI_1_1IPlatform" ],
       [ "IAssetProvider", "classZenitUI_1_1IAssetProvider.html", "classZenitUI_1_1IAssetProvider" ],
       [ "RenderStats", "structZenitUI_1_1RenderStats.html", null ],
-      [ "TargetPool", "classZenitUI_1_1TargetPool.html", null ],
+      [ "TargetPool", "classZenitUI_1_1TargetPool.html", "classZenitUI_1_1TargetPool" ],
       [ "UIContext", "structZenitUI_1_1UIContext.html", "structZenitUI_1_1UIContext" ],
       [ "Value", "structZenitUI_1_1Value.html", "structZenitUI_1_1Value" ],
       [ "CodepointSet", "classZenitUI_1_1CodepointSet.html", "classZenitUI_1_1CodepointSet" ],

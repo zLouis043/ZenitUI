@@ -27,6 +27,7 @@ var classZenitUI_1_1IRenderer =
     [ "pushEffect", "classZenitUI_1_1IRenderer.html#a4d960a076b2f535e159965cf2a583be6", null ],
     [ "pushTarget", "classZenitUI_1_1IRenderer.html#acc46deb233eeebcbd37bc891ce9c74e7", null ],
     [ "pushTransform", "classZenitUI_1_1IRenderer.html#a8ce877d4bad538b62df8d32177a7e9c2", null ],
+    [ "setBlendMode", "classZenitUI_1_1IRenderer.html#ac7e7515808eec251aafa58a4a29684d4", null ],
     [ "setDpiScale", "classZenitUI_1_1IRenderer.html#ad7b21e23e97176e1a0586f6e035941f7", null ],
     [ "setEffectFloat", "classZenitUI_1_1IRenderer.html#a9a081c5c757acd806f9473e16701cb7e", null ],
     [ "setEffectVec2", "classZenitUI_1_1IRenderer.html#af30e5b154656044710f16200dcfbf0b8", null ],

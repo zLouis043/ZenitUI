@@ -220,6 +220,11 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="memdesc:ga544be25d4522a6a93f8e7a6300def03e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shading language consumed by an <span class="tt">IRenderer</span> that supports <span class="tt">Feature::Effects</span>.  <a href="#ga544be25d4522a6a93f8e7a6300def03e">More...</a><br /></td></tr>
+<tr class="memitem:gab862907ee575802a8271da3923d1f76c" id="r_gab862907ee575802a8271da3923d1f76c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab862907ee575802a8271da3923d1f76c">ZenitUI::BlendMode</a> { <a class="el" href="#ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598">BlendMode::Alpha</a>
+, <a class="el" href="#ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459">BlendMode::Premultiplied</a>
+, <a class="el" href="#ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb">BlendMode::Replace</a>
+ }</td></tr>
+<tr class="memdesc:gab862907ee575802a8271da3923d1f76c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Color-blending mode used by <span class="tt">IRenderer</span> draw calls.  <a href="#gab862907ee575802a8271da3923d1f76c">More...</a><br /></td></tr>
 <tr class="memitem:gaa4d6ce73648fe3085851e0e7bfd42f32" id="r_gaa4d6ce73648fe3085851e0e7bfd42f32"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa4d6ce73648fe3085851e0e7bfd42f32">ZenitUI::LayoutType</a> { <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>
 , <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">LayoutType::Vertical</a>
 , <a class="el" href="#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f">LayoutType::Horizontal</a>
@@ -346,6 +351,38 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e" name="gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e"></a>End&#160;</td><td class="fielddoc"><p>Pack at the trailing edge. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560" name="gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560"></a>Stretch&#160;</td><td class="fielddoc"><p>Stretch to fill the cross axis. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="gab862907ee575802a8271da3923d1f76c" name="gab862907ee575802a8271da3923d1f76c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab862907ee575802a8271da3923d1f76c">&#9670;&#160;</a></span>BlendMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#gab862907ee575802a8271da3923d1f76c">ZenitUI::BlendMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Color-blending mode used by <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html" title="Abstract 2D rendering backend.">IRenderer</a></span> draw calls. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598" name="ggab862907ee575802a8271da3923d1f76ca6132295fcf5570fb8b0a944ef322a598"></a>Alpha&#160;</td><td class="fielddoc"><p>Standard straight-alpha compositing (default). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459" name="ggab862907ee575802a8271da3923d1f76ca39a960b9c0fdfe58f8963d9ee2399459"></a>Premultiplied&#160;</td><td class="fielddoc"><p>Premultiplied-alpha compositing for multi-draw cached FBO layers. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb" name="ggab862907ee575802a8271da3923d1f76ca0ebe6df8a3ac338e0512acc741823fdb"></a>Replace&#160;</td><td class="fielddoc"><p>Overwrite destination RGBA directly without blending (single-quad filter passes). </p>
 </td></tr>
 </table>
 

@@ -146,6 +146,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <tr class="memdesc:a4d960a076b2f535e159965cf2a583be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind shader effect <span class="tt">e</span> and push it onto the effect stack (used when <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span> is supported).  <br /></td></tr>
 <tr class="memitem:a044030afb96f74ca04b4ee007d5d7817" id="r_a044030afb96f74ca04b4ee007d5d7817"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a044030afb96f74ca04b4ee007d5d7817">popEffect</a> ()=0</td></tr>
 <tr class="memdesc:a044030afb96f74ca04b4ee007d5d7817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the active shader effect and restore the previous one (if any).  <br /></td></tr>
+<tr class="memitem:ac7e7515808eec251aafa58a4a29684d4" id="r_ac7e7515808eec251aafa58a4a29684d4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7e7515808eec251aafa58a4a29684d4">setBlendMode</a> (<a class="el" href="group__grp__core.html#gab862907ee575802a8271da3923d1f76c">BlendMode</a>)</td></tr>
+<tr class="memdesc:ac7e7515808eec251aafa58a4a29684d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch the active color-blending mode.  <br /></td></tr>
 <tr class="memitem:aa40df2c3b70f02e44c7cb13044f9a371" id="r_aa40df2c3b70f02e44c7cb13044f9a371"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa40df2c3b70f02e44c7cb13044f9a371">pushClip</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r)=0</td></tr>
 <tr class="memdesc:aa40df2c3b70f02e44c7cb13044f9a371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push a local-space clip rectangle <span class="tt">r</span>, intersecting it with the current clip.  <br /></td></tr>
 <tr class="memitem:afaf9ede39c833e2262a861b7b1f16f25" id="r_afaf9ede39c833e2262a861b7b1f16f25"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afaf9ede39c833e2262a861b7b1f16f25">popClip</a> ()=0</td></tr>
@@ -1098,6 +1100,36 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <p>Push a 2D pivot-based transform onto the transform stack. </p>
 
 <p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aed0977a3b16e3b71722c6e5183382c86">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a0aa73b9b9ab461eb110c9d01fcb89485">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#ae0f19825cde4aff8a6786a195dcd4834">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
+<a id="ac7e7515808eec251aafa58a4a29684d4" name="ac7e7515808eec251aafa58a4a29684d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7e7515808eec251aafa58a4a29684d4">&#9670;&#160;</a></span>setBlendMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IRenderer::setBlendMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#gab862907ee575802a8271da3923d1f76c">BlendMode</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Switch the active color-blending mode. </p>
+<p>Implementations must flush any pending geometry batch before changing GPU blend state. Backends that do not support <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span> may keep the default no-op. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a2d209c1ee9243747879896306dc52085">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a076920a7af39800281fb5969659d4c5a">ZenitUI::SDL3Renderer</a>.</p>
 
 </div>
 </div>

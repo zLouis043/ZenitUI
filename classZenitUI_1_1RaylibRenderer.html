@@ -169,6 +169,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6606fd3d42892bf41ba834f683e46579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind shader effect <span class="tt">e</span> and push it onto the effect stack (used when <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span> is supported).  <br /></td></tr>
 <tr class="memitem:a7d5066252774b815ba2ec0b854bfdc4d" id="r_a7d5066252774b815ba2ec0b854bfdc4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d5066252774b815ba2ec0b854bfdc4d">popEffect</a> () override</td></tr>
 <tr class="memdesc:a7d5066252774b815ba2ec0b854bfdc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the active shader effect and restore the previous one (if any).  <br /></td></tr>
+<tr class="memitem:a2d209c1ee9243747879896306dc52085" id="r_a2d209c1ee9243747879896306dc52085"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d209c1ee9243747879896306dc52085">setBlendMode</a> (<a class="el" href="group__grp__core.html#gab862907ee575802a8271da3923d1f76c">BlendMode</a> mode) override</td></tr>
+<tr class="memdesc:a2d209c1ee9243747879896306dc52085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch the active color-blending mode.  <br /></td></tr>
 <tr id="pub-methods-6" class="groupHeader"><td colspan="2"><div class="groupHeader">Shader Uniforms</div></td></tr>
 <tr class="memitem:a17c233b501afeb22e129bc7f84a84084" id="r_a17c233b501afeb22e129bc7f84a84084"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17c233b501afeb22e129bc7f84a84084">setEffectFloat</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, float value) override</td></tr>
 <tr class="memdesc:a17c233b501afeb22e129bc7f84a84084"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a <span class="tt">float</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
@@ -1180,6 +1182,36 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <p>Push a 2D pivot-based transform onto the transform stack. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#a8ce877d4bad538b62df8d32177a7e9c2">ZenitUI::IRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a2d209c1ee9243747879896306dc52085" name="a2d209c1ee9243747879896306dc52085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d209c1ee9243747879896306dc52085">&#9670;&#160;</a></span>setBlendMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ZenitUI::RaylibRenderer::setBlendMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#gab862907ee575802a8271da3923d1f76c">BlendMode</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Switch the active color-blending mode. </p>
+<p>Implementations must flush any pending geometry batch before changing GPU blend state. Backends that do not support <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916" title="Supports fragment shaders (pushEffect, popEffect, setEffect*).">Feature::Effects</a></span> may keep the default no-op. </p>
+
+<p>Reimplemented from <a class="el" href="classZenitUI_1_1IRenderer.html#ac7e7515808eec251aafa58a4a29684d4">ZenitUI::IRenderer</a>.</p>
 
 </div>
 </div>

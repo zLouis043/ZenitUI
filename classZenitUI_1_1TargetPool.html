@@ -113,6 +113,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>trim</b> (<a class="e
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> (<a class="el" href="classZenitUI_1_1IRenderer.html">IRenderer</a> &amp;r, <a class="el" href="structZenitUI_1_1RenderStats.html">RenderStats</a> *stats=nullptr)</td></tr>
 <tr class="memitem:a62d9eb68ceb41b00218a1be2b9449de8" id="r_a62d9eb68ceb41b00218a1be2b9449de8"><td class="memItemLeft" align="right" valign="top"><a id="a62d9eb68ceb41b00218a1be2b9449de8" name="a62d9eb68ceb41b00218a1be2b9449de8"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>liveCount</b> () const</td></tr>
+<tr class="memitem:a3564dea1979714f26eb6a0dda673ade3" id="r_a3564dea1979714f26eb6a0dda673ade3"><td class="memItemLeft" align="right" valign="top"><a id="a3564dea1979714f26eb6a0dda673ade3" name="a3564dea1979714f26eb6a0dda673ade3"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>generation</b> () const</td></tr>
+<tr class="memdesc:a3564dea1979714f26eb6a0dda673ade3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Monotonic generation counter incremented whenever <span class="tt">clear()</span> destroys all targets. <br /></td></tr>
+<tr class="memitem:ada1033d9539a4fdeac0f46b4fa5f1e01" id="r_ada1033d9539a4fdeac0f46b4fa5f1e01"><td class="memItemLeft" align="right" valign="top"><a id="ada1033d9539a4fdeac0f46b4fa5f1e01" name="ada1033d9539a4fdeac0f46b4fa5f1e01"></a>
+uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>frameIndex</b> () const</td></tr>
+<tr class="memdesc:ada1033d9539a4fdeac0f46b4fa5f1e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current frame counter advanced once per <span class="tt">trim()</span> call. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
