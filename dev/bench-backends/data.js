@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795641728029,
+  "lastUpdate": 1795643510431,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -369,6 +369,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 1752.37,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "0ef8a54aff3357dd11b4f584ce33434d22fb119b",
+          "message": "perf(render): fast-path animated layer cache checks and avoid filter arg allocations\n\nAdds a scalar pre-check and upfront animation check in Layout::drawLayer to skip subtree fingerprinting on animated nodes, defers Silhouette offset parsing to cache-bake frames only, replaces std::string/std::stof length parsing with a zero-allocation parser, and guards registerBuiltinFilters() with a static flag.",
+          "timestamp": "2026-11-25T22:45:56+01:00",
+          "tree_id": "abb5ae168a2a9db87805e7f0682905f5bab2aa5c",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/0ef8a54aff3357dd11b4f584ce33434d22fb119b"
+        },
+        "date": 1795643508533,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 5977.85,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 5887.89,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 3462.04,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 5740.71,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 3312.44,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 5733.71,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 4996.56,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 3180.78,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 5078.74,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 3124.46,
             "unit": "us"
           }
         ]
