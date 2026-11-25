@@ -531,6 +531,7 @@ void main() {
 		bool vboBound{false};
 		bool activeTexUnit0{false};
 		bool scissorEnabled{false};
+		BlendMode blendMode{BlendMode::Alpha};
 		int scissorBox[4]{0, 0, 0, 0};
 		int cachedVpW{0};
 		int cachedVpH{0};
@@ -997,6 +998,7 @@ void main() {
 		impl_->vboBound = false;
 		impl_->activeTexUnit0 = false;
 		impl_->scissorEnabled = false;
+		impl_->blendMode = BlendMode::Alpha;
 		impl_->cachedVpW = 0;
 		impl_->cachedVpH = 0;
 		impl_->cachedProjW = -1.0f;
@@ -1011,6 +1013,7 @@ void main() {
 			return;
 		impl_->flush();
 		impl_->disableScissor();
+		setBlendMode(BlendMode::Alpha);
 	}
 
 	// ---- 2D vector primitives ----
@@ -1285,6 +1288,30 @@ void main() {
 			return;
 		impl_->flush();
 		impl_->effectStack.pop_back();
+	}
+
+	void SDL3Renderer::setBlendMode(BlendMode mode)
+	{
+		if (!impl_->ready || impl_->blendMode == mode)
+			return;
+		impl_->flush();
+		impl_->blendMode = mode;
+		switch (mode)
+		{
+		case BlendMode::Alpha:
+			glEnable(GL_BLEND);
+			impl_->gl.BlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+										GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			break;
+		case BlendMode::Premultiplied:
+			glEnable(GL_BLEND);
+			impl_->gl.BlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+										GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			break;
+		case BlendMode::Replace:
+			glDisable(GL_BLEND);
+			break;
+		}
 	}
 
 	// ---- Shader uniforms ----

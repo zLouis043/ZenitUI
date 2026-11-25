@@ -176,6 +176,7 @@ namespace ZenitUI
 		Rect getClipRect() const override;
 		void pushEffect(EffectHandle e) override;
 		void popEffect() override;
+		void setBlendMode(BlendMode mode) override;
 		/// @}
 
 		/// \name Shader Uniforms

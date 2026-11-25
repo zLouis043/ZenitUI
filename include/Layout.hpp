@@ -168,6 +168,7 @@ namespace ZenitUI
 				ctx.topmostConsumer = nullptr;
 			if (ctx.hoverTarget == this)
 				ctx.hoverTarget = nullptr;
+			releaseLayerCache();
 		}
 
 		/**
@@ -538,6 +539,7 @@ namespace ZenitUI
 				rect = {0.0f, 0.0f, 0.0f, 0.0f};
 				measuredSize = {0.0f, 0.0f};
 				clearSubtreeInteractionOnHide();
+				releaseLayerCache();
 			}
 
 			markLayoutDirtyUpward();
@@ -996,6 +998,7 @@ namespace ZenitUI
 		{
 			bgTexture = tex;
 			bgPatchInfo = np;
+			invalidateLayerCache();
 		}
 		/**
 		 * \brief Set a custom shader effect applied to the node's content.
@@ -1008,6 +1011,28 @@ namespace ZenitUI
 		{
 			customEffect = shader;
 			hasShader = true;
+			invalidateLayerCache();
+		}
+
+		/**
+		 * \brief Mark any cached off-screen filter layer on this node and its
+		 *        ancestors as dirty so it is re-baked on the next draw pass.
+		 *
+		 * Subclasses whose visual output can change without modifying style or
+		 * layout (e.g. custom `Canvas` draws or blinking carets) should call
+		 * this whenever their rendered pixels change.
+		 */
+		void invalidateLayerCache()
+		{
+			if (layerCache_)
+				layerCache_->dirty = true;
+			auto p = parent.lock();
+			while (p)
+			{
+				if (p->layerCache_)
+					p->layerCache_->dirty = true;
+				p = p->parent.lock();
+			}
 		}
 
 	protected:
@@ -1065,11 +1090,15 @@ namespace ZenitUI
 		{
 			internal_.layoutDirty = 1;
 			internal_.subtreeDirty = 1;
+			if (layerCache_)
+				layerCache_->dirty = true;
 			auto p = parent.lock();
 			while (p)
 			{
 				p->internal_.layoutDirty = 1;
 				p->internal_.subtreeDirty = 1;
+				if (p->layerCache_)
+					p->layerCache_->dirty = true;
 				p = p->parent.lock();
 			}
 		}
@@ -1434,6 +1463,61 @@ namespace ZenitUI
 		static float clampSafe(float v, float lo, float hi);
 
 		std::unique_ptr<std::vector<std::shared_ptr<void>>> retainedObjects_;
+
+		/**
+		 * \struct LayerCache
+		 * \brief Lazily allocated cache holding the filtered off-screen target for a layer node.
+		 *
+		 * Populated after a filtered node stays visually identical across consecutive
+		 * frames so continuously animated nodes never pay extra off-screen passes.
+		 */
+		struct LayerCache
+		{
+			TargetHandle target{};       ///< Pooled off-screen target holding the final filtered output.
+			uint64_t poolGeneration{0};  ///< `TargetPool::generation()` when `target` was acquired.
+			Rect srcRect{0, 0, 0, 0};    ///< Active sub-rectangle inside `target` (logical pixels).
+			int tw{0};                   ///< Cached target content width in pixels.
+			int th{0};                   ///< Cached target content height in pixels.
+			uint64_t fingerprint{0};     ///< Fingerprint of the baked subtree, transform, and filters.
+			uint64_t lastFingerprint{0}; ///< Fingerprint observed on the previous frame for stability promotion.
+			uint64_t lastUsedFrame{0};   ///< `TargetPool::frameIndex()` of the most recent hit or bake.
+			uint8_t stableFrames{0};     ///< Consecutive unchanged frames before promoting to a cached target.
+			bool dirty{true};            ///< Explicit invalidation flag set by structural or content mutations.
+			bool premultiplied{false};   ///< `true` when `target` holds premultiplied RGBA (e.g. Silhouette filters).
+		};
+
+		/**
+		 * \brief Return any pooled render target held by `layerCache_` and reset its state.
+		 *
+		 * Safe to invoke during teardown even after `TargetPool::clear()` has run,
+		 * because the handle is only returned when pool generations still match.
+		 */
+		void releaseLayerCache()
+		{
+			if (!layerCache_)
+				return;
+			if (layerCache_->target.valid())
+			{
+				auto &pool = UIContext::get().targetPool;
+				if (layerCache_->poolGeneration == pool.generation())
+					pool.release(layerCache_->target);
+				layerCache_->target = {};
+			}
+			layerCache_->stableFrames = 0;
+			layerCache_->dirty = true;
+			layerCache_->premultiplied = false;
+		}
+
+		/** \brief Evict `layerCache_` if the node stayed culled/unused beyond the pool grace window. */
+		void maybeEvictStaleLayerCache();
+
+		/** \brief Helper used by `drawLayer` to hash subtree visual state for cache validation. */
+		bool appendSubtreeFingerprint(const Layout &layerRoot,
+									  const ComputedStyle &nodeStyle,
+									  bool isRoot,
+									  uint64_t &hash) const;
+
+		std::unique_ptr<LayerCache> layerCache_;
 	};
 
 	/**

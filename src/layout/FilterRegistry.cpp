@@ -21,7 +21,10 @@ namespace ZenitUI
         {
             c.renderer->pushTarget(c.write_target);
             UIContext::get().renderStats.pushTargetCalls++;
+            // Copy raw RGBA into the freshly cleared off-screen target without re-blending.
+            c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
+            c.renderer->setBlendMode(BlendMode::Alpha);
             c.renderer->popTarget();
         }
         else
@@ -150,7 +153,10 @@ namespace ZenitUI
         {
             c.renderer->pushTarget(c.write_target);
             stats.pushTargetCalls++;
+            // Preserve exact shader RGBA in off-screen target to prevent double blending on blit.
+            c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
+            c.renderer->setBlendMode(BlendMode::Alpha);
             c.renderer->popTarget();
         }
         else
@@ -186,18 +192,20 @@ namespace ZenitUI
             acquiredMid = true;
         }
 
-        // Passata H: legge c.src (full-res) -> scrive midTarget (full o downscaled)
+        // Horizontal pass: read c.src (full-res) -> write midTarget (full or downscaled).
         c.renderer->pushTarget(midTarget);
         stats.pushTargetCalls++;
+        c.renderer->setBlendMode(BlendMode::Replace);
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, c.src));
         c.renderer->setEffectVec2(fx, "direction", {1.0f, 0.0f});
         c.renderer->drawTarget(c.src, c.dst, midDst, Colors::White);
         c.renderer->popEffect();
+        c.renderer->setBlendMode(BlendMode::Alpha);
         c.renderer->popTarget();
         stats.filterPasses++;
 
-        // Passata V: legge midTarget -> scrive write_target o schermo (upscale bilineare)
+        // Vertical pass: read midTarget -> write write_target or screen (bilinear upscale).
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, midTarget));
         c.renderer->setEffectVec2(fx, "direction", {0.0f, 1.0f});
@@ -206,7 +214,9 @@ namespace ZenitUI
         {
             c.renderer->pushTarget(c.write_target);
             stats.pushTargetCalls++;
+            c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(midTarget, midDst, c.dst, Colors::White);
+            c.renderer->setBlendMode(BlendMode::Alpha);
             c.renderer->popTarget();
         }
         else
@@ -241,6 +251,9 @@ namespace ZenitUI
         {
             c.renderer->pushTarget(c.write_target);
             stats.pushTargetCalls++;
+
+            // Composite foreground over shadow with separate alpha; output is premultiplied.
+            c.renderer->setBlendMode(BlendMode::Alpha);
 
             Rect shadowDst = {c.dst.x + dx, c.dst.y + dy,
                               c.dst.width, c.dst.height};

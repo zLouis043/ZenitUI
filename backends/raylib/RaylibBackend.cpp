@@ -270,12 +270,24 @@ namespace ZenitUI
 			rlPushMatrix();
 			rlScalef(dpiScale_, dpiScale_, 1.0f);
 		}
+
+		blendMode_ = BlendMode::Alpha;
+		rlEnableColorBlend();
+		rlSetBlendFactorsSeparate(RL_SRC_ALPHA, RL_ONE_MINUS_SRC_ALPHA,
+								  RL_ONE, RL_ONE_MINUS_SRC_ALPHA,
+								  RL_FUNC_ADD, RL_FUNC_ADD);
+		rlSetBlendMode(RL_BLEND_CUSTOM_SEPARATE);
 	}
 
 	void RaylibRenderer::endFrame()
 	{
 		if (dpiScale_ != 1.0f)
 			rlPopMatrix();
+
+		rlDrawRenderBatchActive();
+		blendMode_ = BlendMode::Alpha;
+		rlEnableColorBlend();
+		rlSetBlendMode(RL_BLEND_ALPHA);
 	}
 
 	// ---- 2D vector primitives ----
@@ -362,7 +374,10 @@ namespace ZenitUI
 		{
 			const ::NPatchInfo np = {
 				{0.0f, 0.0f, static_cast<float>(t.width), static_cast<float>(t.height)},
-				s.left, s.top, s.right, s.bottom,
+				s.left,
+				s.top,
+				s.right,
+				s.bottom,
 				NPATCH_NINE_PATCH};
 			DrawTextureNPatch(it->second, np, toRl(dst), {0.0f, 0.0f}, 0.0f, toRl(tint));
 		}
@@ -549,6 +564,32 @@ namespace ZenitUI
 		}
 	}
 
+	void RaylibRenderer::setBlendMode(BlendMode mode)
+	{
+		if (blendMode_ == mode)
+			return;
+		// Flush queued geometry before toggling GPU blend state.
+		rlDrawRenderBatchActive();
+		blendMode_ = mode;
+		switch (mode)
+		{
+		case BlendMode::Alpha:
+			rlEnableColorBlend();
+			rlSetBlendFactorsSeparate(RL_SRC_ALPHA, RL_ONE_MINUS_SRC_ALPHA,
+									  RL_ONE, RL_ONE_MINUS_SRC_ALPHA,
+									  RL_FUNC_ADD, RL_FUNC_ADD);
+			rlSetBlendMode(RL_BLEND_CUSTOM_SEPARATE);
+			break;
+		case BlendMode::Premultiplied:
+			rlEnableColorBlend();
+			rlSetBlendMode(RL_BLEND_ALPHA_PREMULTIPLY);
+			break;
+		case BlendMode::Replace:
+			rlDisableColorBlend();
+			break;
+		}
+	}
+
 	// ---- Shader uniforms ----
 
 	void RaylibRenderer::setEffectFloat(EffectHandle e, const char *name, float value)
@@ -659,14 +700,13 @@ namespace ZenitUI
 		if (insideTarget_)
 			EndTextureMode();
 
-		targetStates_.push_back({
-			currentTarget_,
-			clipActive_,
-			currentClip_,
-			std::move(clipStack_),
-			std::move(transformStack_),
-			currentTargetW_,
-			currentTargetH_});
+		targetStates_.push_back({currentTarget_,
+								 clipActive_,
+								 currentClip_,
+								 std::move(clipStack_),
+								 std::move(transformStack_),
+								 currentTargetW_,
+								 currentTargetH_});
 
 		clipActive_ = false;
 		clipStack_.clear();

@@ -212,6 +212,7 @@ namespace ZenitUI
 		Rect getClipRect() const override;
 		void pushEffect(EffectHandle e) override;
 		void popEffect() override;
+		void setBlendMode(BlendMode mode) override;
 		/// @}
 
 		/// \name Shader Uniforms
@@ -282,6 +283,7 @@ namespace ZenitUI
 		bool clipActive_{false};
 		Rect currentClip_{0, 0, 0, 0};
 		float dpiScale_{1.0f};
+		BlendMode blendMode_{BlendMode::Alpha}; ///< Cached GPU blend state for the active frame.
 
 		bool insideTarget_{false};
 		TargetHandle currentTarget_{};

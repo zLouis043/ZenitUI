@@ -71,6 +71,17 @@ namespace ZenitUI
 	};
 
 	/**
+	 * \enum BlendMode
+	 * \brief Color-blending mode used by `IRenderer` draw calls.
+	 */
+	enum class BlendMode
+	{
+		Alpha,         ///< Standard straight-alpha compositing (default).
+		Premultiplied, ///< Premultiplied-alpha compositing for multi-draw cached FBO layers.
+		Replace        ///< Overwrite destination RGBA directly without blending (single-quad filter passes).
+	};
+
+	/**
 	 * \class IRenderer
 	 * \brief Abstract 2D rendering backend.
 	 *
@@ -257,6 +268,15 @@ namespace ZenitUI
 
 		/** \brief Pop the active shader effect and restore the previous one (if any). */
 		virtual void popEffect() = 0;
+
+		/**
+		 * \brief Switch the active color-blending mode.
+		 *
+		 * Implementations must flush any pending geometry batch before changing
+		 * GPU blend state. Backends that do not support `Feature::Effects` may
+		 * keep the default no-op.
+		 */
+		virtual void setBlendMode(BlendMode /*mode*/) {}
 
 		/**
 		 * \brief Push a local-space clip rectangle `r`, intersecting it with the current clip.
@@ -673,9 +693,16 @@ namespace ZenitUI
 			}
 			entries_.clear();
 			frameIndex_ = 0;
+			generation_++;
 		}
 
 		size_t liveCount() const { return entries_.size(); }
+
+		/** \brief Monotonic generation counter incremented whenever `clear()` destroys all targets. */
+		uint64_t generation() const { return generation_; }
+
+		/** \brief Current frame counter advanced once per `trim()` call. */
+		uint64_t frameIndex() const { return frameIndex_; }
 
 	private:
 		struct Entry
@@ -686,6 +713,7 @@ namespace ZenitUI
 		};
 		std::vector<Entry> entries_;
 		uint64_t frameIndex_{0};
+		uint64_t generation_{1};
 	};
 
 	/**

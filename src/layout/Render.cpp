@@ -3,8 +3,240 @@
 #include "StyleAttr.hpp"
 #include "FilterRegistry.hpp"
 
+#include <cstdint>
+#include <cstring>
+
 namespace ZenitUI
 {
+	namespace
+	{
+		constexpr uint64_t kFnvOffset = 14695981039346656037ull;
+		constexpr uint64_t kFnvPrime = 1099511628211ull;
+		constexpr uint64_t kLayerEvictGraceFrames = 120;
+
+		inline void hashBytes(uint64_t &h, const void *data, size_t len) noexcept
+		{
+			const auto *p = static_cast<const uint8_t *>(data);
+			for (size_t i = 0; i < len; ++i)
+			{
+				h ^= p[i];
+				h *= kFnvPrime;
+			}
+		}
+
+		template <typename T>
+		inline void hashPod(uint64_t &h, const T &v) noexcept
+		{
+			hashBytes(h, &v, sizeof(T));
+		}
+
+		inline void hashFloat(uint64_t &h, float v) noexcept
+		{
+			// Normalize -0.0f so signed zeros hash identically.
+			if (v == 0.0f)
+				v = 0.0f;
+			uint32_t bits = 0;
+			std::memcpy(&bits, &v, sizeof(bits));
+			hashPod(h, bits);
+		}
+
+		inline void hashColor(uint64_t &h, const Color &c) noexcept
+		{
+			const uint32_t packed = (static_cast<uint32_t>(c.r) << 24) |
+									(static_cast<uint32_t>(c.g) << 16) |
+									(static_cast<uint32_t>(c.b) << 8) |
+									static_cast<uint32_t>(c.a);
+			hashPod(h, packed);
+		}
+
+		inline void hashString(uint64_t &h, const std::string &s) noexcept
+		{
+			const uint64_t sz = s.size();
+			hashPod(h, sz);
+			if (!s.empty())
+				hashBytes(h, s.data(), s.size());
+		}
+
+		inline void hashFilters(uint64_t &h, const std::vector<FilterRef> &filters) noexcept
+		{
+			const uint64_t count = filters.size();
+			hashPod(h, count);
+			for (const auto &f : filters)
+			{
+				hashString(h, f.name);
+				const uint64_t argc = f.args.size();
+				hashPod(h, argc);
+				for (const auto &arg : f.args)
+					hashString(h, arg);
+			}
+		}
+
+		inline float parseFilterLength(const std::string &s)
+		{
+			std::string t = s;
+			if (t.size() > 2 && t.compare(t.size() - 2, 2, "px") == 0)
+				t.resize(t.size() - 2);
+			try
+			{
+				return std::stof(t);
+			}
+			catch (...)
+			{
+				return 0.0f;
+			}
+		}
+
+		inline Color premultipliedWhite(float opacity)
+		{
+			const uint8_t v = static_cast<uint8_t>(
+				std::lround(std::clamp(opacity, 0.0f, 1.0f) * 255.0f));
+			return Color{v, v, v, v};
+		}
+
+		inline void blitCachedLayer(IRenderer *renderer,
+									TargetHandle target,
+									const Rect &srcRect,
+									const Rect &region,
+									float globalOp,
+									bool premultiplied)
+		{
+			const Rect dst{region.x, region.y, srcRect.width, srcRect.height};
+			if (premultiplied)
+			{
+				renderer->setBlendMode(BlendMode::Premultiplied);
+				renderer->drawTarget(target, srcRect, dst, premultipliedWhite(globalOp));
+				renderer->setBlendMode(BlendMode::Alpha);
+			}
+			else
+			{
+				renderer->drawTarget(target, srcRect, dst, Colors::White.withAlpha(globalOp));
+			}
+		}
+	} // namespace
+
+	void Layout::maybeEvictStaleLayerCache()
+	{
+		if (!layerCache_ || !layerCache_->target.valid())
+			return;
+
+		const auto &pool = UIContext::get().targetPool;
+		if (layerCache_->poolGeneration != pool.generation())
+		{
+			layerCache_->target = {};
+			layerCache_->stableFrames = 0;
+			layerCache_->dirty = true;
+			return;
+		}
+
+		const uint64_t now = pool.frameIndex();
+		if (now >= layerCache_->lastUsedFrame &&
+			(now - layerCache_->lastUsedFrame) >= kLayerEvictGraceFrames)
+		{
+			releaseLayerCache();
+		}
+	}
+
+	bool Layout::appendSubtreeFingerprint(const Layout &layerRoot,
+										  const ComputedStyle &st,
+										  bool isRoot,
+										  uint64_t &h) const
+	{
+		// Skip caching while any node in the subtree is actively animating.
+		if (anim_.hasActive(*this))
+			return false;
+
+		// Include node identity, interaction state, and relative geometry.
+		const uintptr_t selfPtr = reinterpret_cast<uintptr_t>(this);
+		hashPod(h, selfPtr);
+
+		const uint8_t stateBits = static_cast<uint8_t>(
+			(state.hovered ? 1u : 0u) |
+			(state.pressed ? 2u : 0u) |
+			(state.focused ? 4u : 0u) |
+			(state.checked ? 8u : 0u) |
+			(config.enabled ? 16u : 0u));
+		hashPod(h, stateBits);
+
+		const float w = rect.width;
+		const float hPx = rect.height;
+		if (!isRoot)
+		{
+			hashFloat(h, rect.x - layerRoot.rect.x);
+			hashFloat(h, rect.y - layerRoot.rect.y);
+		}
+		hashFloat(h, w);
+		hashFloat(h, hPx);
+
+		// Scroll offset and active transition progress.
+		hashFloat(h, scroll_.state.offset.x);
+		hashFloat(h, scroll_.state.offset.y);
+		hashFloat(h, style_.transitionTimer);
+
+		// Visual style properties.
+		hashColor(h, st.background);
+		hashColor(h, st.color);
+		hashColor(h, st.borderColor);
+		hashColor(h, st.tint);
+		hashFloat(h, st.opacity);
+
+		const float maxRadius = std::min(w, hPx) * 0.5f;
+		const float refDim = maxRadius * 2.0f;
+		hashFloat(h, st.radius.resolveH(refDim, refDim));
+		hashFloat(h, st.borderWidth.left.resolveH(refDim, refDim));
+		hashFloat(h, st.borderWidth.right.resolveH(refDim, refDim));
+		hashFloat(h, st.borderWidth.top.resolveH(refDim, refDim));
+		hashFloat(h, st.borderWidth.bottom.resolveH(refDim, refDim));
+		hashFloat(h, st.fontSize.resolveH(w, hPx));
+		hashFloat(h, st.letterSpacing.resolveH(w, hPx));
+		hashPod(h, st.textAlign);
+		hashPod(h, st.overflowX);
+		hashPod(h, st.overflowY);
+
+		hashPod(h, st.boxShadow.enabled);
+		if (st.boxShadow.enabled)
+		{
+			hashColor(h, st.boxShadow.color);
+			hashFloat(h, st.boxShadow.x.resolveSelfH(w, hPx));
+			hashFloat(h, st.boxShadow.y.resolveSelfV(w, hPx));
+			hashFloat(h, st.boxShadow.blur.resolveSelfH(w, hPx));
+		}
+
+		// Background texture and attached shaders.
+		hashPod(h, bgTexture.id);
+		hashPod(h, bgPatchInfo);
+		hashString(h, st.backgroundTexture.name);
+		hashPod(h, st.backgroundTexture.left);
+		hashPod(h, st.backgroundTexture.top);
+		hashPod(h, st.backgroundTexture.right);
+		hashPod(h, st.backgroundTexture.bottom);
+		hashPod(h, hasShader);
+		hashPod(h, customEffect.id);
+		hashPod(h, currentEffect_.id);
+		hashString(h, st.effect);
+
+		if (!isRoot)
+		{
+			hashFloat(h, st.translateX.resolveSelfH(w, hPx));
+			hashFloat(h, st.translateY.resolveSelfV(w, hPx));
+			hashFloat(h, st.rotation);
+			hashFloat(h, st.scale);
+			hashFilters(h, st.filters);
+		}
+
+		// Recurse into visible non-portal children in tree order.
+		uint32_t visibleChildren = 0;
+		for (const auto &child : children)
+		{
+			if (!child || !child->isVisible() || child->isPortal())
+				continue;
+			++visibleChildren;
+			if (!child->appendSubtreeFingerprint(layerRoot, child->style_.currentStyle, false, h))
+				return false;
+		}
+		hashPod(h, visibleChildren);
+		return true;
+	}
+
 	void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
 	{
 		auto renderer = UIContext::get().renderer;
@@ -15,7 +247,10 @@ namespace ZenitUI
 
 		float globalOp = renderStyle.opacity * parentOpacity;
 		if (globalOp <= 0.001f)
+		{
+			maybeEvictStaleLayerCache();
 			return;
+		}
 
 		const bool isLayer =
 			!renderStyle.filters.empty() &&
@@ -24,9 +259,15 @@ namespace ZenitUI
 			(!renderer->inTarget() || renderer->supports(Feature::NestedTargets));
 
 		if (isLayer)
+		{
 			drawLayer(renderStyle, globalOp);
+		}
 		else
+		{
+			if (renderStyle.filters.empty())
+				releaseLayerCache();
 			drawInline(renderStyle, globalOp);
+		}
 
 		scroll_.drawScrollbar(*this, parentOpacity);
 	}
@@ -54,7 +295,10 @@ namespace ZenitUI
 				rect.x + rect.width < clip.x - m ||
 				rect.y > clip.y + clip.height + m ||
 				rect.y + rect.height < clip.y - m)
+			{
+				maybeEvictStaleLayerCache();
 				return;
+			}
 		}
 
 		if (anim_.css.empty())
@@ -150,16 +394,23 @@ namespace ZenitUI
 		region.height = std::max(0.0f, bottom - region.y);
 
 		if (region.width < 1.0f || region.height < 1.0f)
+		{
+			maybeEvictStaleLayerCache();
 			return;
+		}
 
 		const int tw = (int)std::ceil(region.width);
 		const int th = (int)std::ceil(region.height);
 		if (tw <= 0 || th <= 0)
+		{
+			maybeEvictStaleLayerCache();
 			return;
+		}
 
 		constexpr int MAX_TARGET_DIM = TargetPool::MAX_DIM;
 		if (tw > MAX_TARGET_DIM || th > MAX_TARGET_DIM)
 		{
+			releaseLayerCache();
 			drawInline(renderStyle, globalOp);
 			return;
 		}
@@ -168,6 +419,130 @@ namespace ZenitUI
 		auto &registry = FilterRegistry::get();
 		auto &stats = ctxUI.renderStats;
 		auto &pool = ctxUI.targetPool;
+
+		const size_t numFilters = renderStyle.filters.size();
+		const FilterDef *lastDef = (numFilters > 0)
+									   ? registry.find(renderStyle.filters.back().name)
+									   : nullptr;
+		const bool lastIsSilhouette = lastDef && lastDef->pattern == FilterPattern::Silhouette;
+		int extraW = 0;
+		int extraH = 0;
+		bool negativeShadowOffset = false;
+		if (lastIsSilhouette)
+		{
+			float dx = 2.0f;
+			float dy = 2.0f;
+			const auto &lastRef = renderStyle.filters.back();
+			for (const auto &p : lastDef->params)
+			{
+				if (p.uniform == "dx" && p.argIndex < static_cast<int>(lastRef.args.size()))
+					dx = parseFilterLength(lastRef.args[p.argIndex]);
+				if (p.uniform == "dy" && p.argIndex < static_cast<int>(lastRef.args.size()))
+					dy = parseFilterLength(lastRef.args[p.argIndex]);
+			}
+			if (dx < 0.0f || dy < 0.0f)
+			{
+				negativeShadowOffset = true;
+			}
+			else
+			{
+				extraW = static_cast<int>(std::ceil(dx));
+				extraH = static_cast<int>(std::ceil(dy));
+			}
+		}
+
+		const int outW = tw + extraW;
+		const int outH = th + extraH;
+		const bool allowCache = !renderer->inTarget() &&
+								!renderStyle.filters.empty() &&
+								!negativeShadowOffset &&
+								outW <= MAX_TARGET_DIM &&
+								outH <= MAX_TARGET_DIM;
+								
+		bool saveToCache = false;
+		uint64_t fingerprint = kFnvOffset;
+
+		if (allowCache)
+		{
+			// Key covers everything that changes the baked pixels while keeping pure
+			// translation/scroll a cache hit whenever the clipped region offset stays identical.
+			hashFloat(fingerprint, ctxUI.dpiScale);
+			hashPod(fingerprint, ctxUI.viewportGeneration);
+			hashPod(fingerprint, Theme::get().version);
+			hashFloat(fingerprint, currTr.rotationDeg);
+			hashFloat(fingerprint, currTr.scale);
+			hashFloat(fingerprint, globalOp);
+			hashFloat(fingerprint, region.x - transformedRect.x);
+			hashFloat(fingerprint, region.y - transformedRect.y);
+			hashFloat(fingerprint, region.width);
+			hashFloat(fingerprint, region.height);
+			hashPod(fingerprint, tw);
+			hashPod(fingerprint, th);
+			hashFilters(fingerprint, renderStyle.filters);
+
+			const bool cacheable = appendSubtreeFingerprint(*this, renderStyle, true, fingerprint);
+			if (!cacheable)
+			{
+				releaseLayerCache();
+			}
+			else
+			{
+				if (!layerCache_)
+					layerCache_ = std::make_unique<LayerCache>();
+
+				auto &cache = *layerCache_;
+				const uint64_t poolGen = pool.generation();
+
+				// Drop stale handle if TargetPool::clear() wiped all pooled targets.
+				if (cache.target.valid() && cache.poolGeneration != poolGen)
+				{
+					cache.target = {};
+					cache.stableFrames = 0;
+					cache.dirty = true;
+				}
+
+				// Fast path: reuse the previously baked filtered target.
+				if (cache.target.valid() &&
+					!cache.dirty &&
+					cache.tw == tw &&
+					cache.th == th &&
+					cache.fingerprint == fingerprint)
+				{
+					cache.lastUsedFrame = pool.frameIndex();
+					blitCachedLayer(renderer, cache.target, cache.srcRect, region,
+									globalOp, cache.premultiplied);
+					return;
+				}
+
+				// Promote to cached target only after observing one identical static frame.
+				// This keeps single-frame draws and continuously animated nodes on the
+				// zero-overhead direct path.
+				const bool stableMatch = !cache.dirty &&
+										 cache.stableFrames >= 1 &&
+										 cache.lastFingerprint == fingerprint;
+
+				if (cache.target.valid())
+				{
+					pool.release(cache.target);
+					cache.target = {};
+				}
+
+				if (stableMatch)
+				{
+					saveToCache = true;
+				}
+				else
+				{
+					cache.lastFingerprint = fingerprint;
+					cache.stableFrames = 1;
+					cache.dirty = false;
+				}
+			}
+		}
+		else
+		{
+			releaseLayerCache();
+		}
 
 		TargetHandle mainTarget = pool.acquire(*renderer, tw, th, &stats);
 		if (!mainTarget.valid())
@@ -216,8 +591,14 @@ namespace ZenitUI
 			return;
 		}
 
-		const size_t numFilters = renderStyle.filters.size();
-		const bool needsScratch = (numFilters >= 2);
+		const bool singleSeparable =
+			(numFilters == 1) &&
+			([&]()
+			 {
+				 const auto *def = registry.find(renderStyle.filters[0].name);
+				 return def && def->pattern == FilterPattern::Separable;
+			 }());
+		const bool needsScratch = (numFilters >= 2) || (saveToCache && !singleSeparable);
 		bool needsSeparable = false;
 		for (const auto &fref : renderStyle.filters)
 		{
@@ -237,7 +618,9 @@ namespace ZenitUI
 
 		if (needsScratch)
 		{
-			scratchTarget = pool.acquire(*renderer, tw, th, &stats);
+			const int sw = (saveToCache && lastIsSilhouette && numFilters == 1) ? outW : tw;
+			const int sh = (saveToCache && lastIsSilhouette && numFilters == 1) ? outH : th;
+			scratchTarget = pool.acquire(*renderer, sw, sh, &stats);
 			if (!scratchTarget.valid())
 			{
 				pool.release(mainTarget);
@@ -271,19 +654,46 @@ namespace ZenitUI
 		for (size_t i = 0; i < numFilters; ++i)
 		{
 			const bool isLast = (i == numFilters - 1);
+			const bool writeOffscreen = saveToCache || !isLast;
+			const auto *def = registry.find(renderStyle.filters[i].name);
+			// Separable filters read src only in pass 1 (into the intermediate target)
+			// and read only the intermediate in pass 2, so writing pass 2 back into
+			// currentRead avoids allocating a 3rd full-size FBO.
+			const bool writeInPlace =
+				writeOffscreen && !currentWrite.valid() &&
+				def && def->pattern == FilterPattern::Separable;
 
 			ctx.ref = &renderStyle.filters[i];
 			ctx.src = currentRead;
 			ctx.texSize = {(float)currentRead.width, (float)currentRead.height};
-			ctx.write_target = isLast ? TargetHandle{} : currentWrite;
 
-			if (const auto *def = registry.find(ctx.ref->name))
+			if (isLast && saveToCache && lastIsSilhouette &&
+				(currentWrite.width < outW || currentWrite.height < outH))
+			{
+				if (currentWrite.valid())
+					pool.release(currentWrite);
+				currentWrite = pool.acquire(*renderer, outW, outH, &stats);
+				if (!currentWrite.valid())
+				{
+					if (separableTarget.valid())
+						pool.release(separableTarget);
+					pool.release(currentRead);
+					return;
+				}
+			}
+
+			ctx.write_target = writeOffscreen
+								   ? (writeInPlace ? currentRead : currentWrite)
+								   : TargetHandle{};
+			ctx.opacity = writeOffscreen ? 1.0f : globalOp;
+
+			if (def)
 			{
 				applyFilter(*def, ctx);
 			}
 			else
 			{
-				if (isLast)
+				if (!writeOffscreen)
 				{
 					renderer->drawTarget(currentRead, ctx.dst, region,
 										 Colors::White.withAlpha(globalOp));
@@ -292,12 +702,14 @@ namespace ZenitUI
 				{
 					renderer->pushTarget(currentWrite);
 					stats.pushTargetCalls++;
+					renderer->setBlendMode(BlendMode::Replace);
 					renderer->drawTarget(currentRead, ctx.dst, ctx.dst, Colors::White);
+					renderer->setBlendMode(BlendMode::Alpha);
 					renderer->popTarget();
 				}
 			}
 
-			if (!isLast)
+			if (writeOffscreen && !writeInPlace)
 			{
 				std::swap(currentRead, currentWrite);
 			}
@@ -305,6 +717,30 @@ namespace ZenitUI
 
 		if (separableTarget.valid())
 			pool.release(separableTarget);
+
+		if (saveToCache && layerCache_)
+		{
+			if (currentWrite.valid())
+				pool.release(currentWrite);
+
+			auto &cache = *layerCache_;
+			cache.target = currentRead;
+			cache.poolGeneration = pool.generation();
+			cache.srcRect = {0.0f, 0.0f, static_cast<float>(outW), static_cast<float>(outH)};
+			cache.tw = tw;
+			cache.th = th;
+			cache.fingerprint = fingerprint;
+			cache.lastFingerprint = fingerprint;
+			cache.lastUsedFrame = pool.frameIndex();
+			cache.stableFrames = 2;
+			cache.premultiplied = lastIsSilhouette;
+			cache.dirty = false;
+
+			blitCachedLayer(renderer, cache.target, cache.srcRect, region,
+							globalOp, cache.premultiplied);
+			return;
+		}
+
 		if (scratchTarget.valid())
 			pool.release(scratchTarget);
 		pool.release(mainTarget);
