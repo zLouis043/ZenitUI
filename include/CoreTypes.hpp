@@ -107,6 +107,20 @@ namespace ZenitUI
         inline constexpr Color LightGray{200, 200, 200, 255};
     }
 
+    /**
+     * \brief Interleaved 2D vertex passed to `IRenderer::drawGeometry`.
+     *
+     * Coordinates are in logical pixels. For untextured geometry, set `uv` to
+     * `{0.5f, 0.5f}` so backends binding a 1x1 white texture sample cleanly.
+     */
+    struct Vertex2D
+    {
+        Vec2 pos{};
+        Vec2 uv{0.5f, 0.5f};
+        Color color{255, 255, 255, 255};
+    };
+    static_assert(sizeof(Vertex2D) == 20, "Vertex2D must stay tightly packed (20 bytes)");
+
     /** \brief Opaque handle to a GPU/software texture owned by the asset provider. */
     struct TextureHandle
     {

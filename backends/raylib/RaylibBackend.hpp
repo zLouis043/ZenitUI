@@ -185,7 +185,9 @@ namespace ZenitUI
 		void fillRoundedRect(Rect r, float radiusPx, Color c) override;
 		void fillCircle(Vec2 center, float radius, Color c) override;
 		void strokeRect(Rect r, float thickness, Color c) override;
-		void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) override;
+		void drawGeometry(std::span<const Vertex2D> vertices,
+                  std::span<const uint32_t> indices,
+                  TextureHandle tex = {}) override;
 		/// @}
 
 		/// \name Textures & Nine-Slice

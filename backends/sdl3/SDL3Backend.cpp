@@ -46,8 +46,6 @@ namespace ZenitUI
 	// =========================================================================
 	namespace
 	{
-		constexpr int kRoundedCornerSegments = 12;
-		constexpr int kCircleSegments = 32;
 		constexpr size_t kMaxBatchVertices = 16384;
 
 		struct GLProcs
@@ -882,168 +880,42 @@ void main() {
 
 	// ---- 2D vector primitives ----
 
-	void SDL3Renderer::fillRect(Rect r, Color c)
+	void SDL3Renderer::drawGeometry(std::span<const Vertex2D> vertices,
+									std::span<const uint32_t> indices,
+									TextureHandle tex)
 	{
-		impl_->pushQuad(r, 0.0f, 0.0f, 1.0f, 1.0f, c, impl_->whiteTex);
-	}
-
-	void SDL3Renderer::fillRoundedRect(Rect r, float radiusPx, Color c)
-	{
-		if (r.width <= 0.0f || r.height <= 0.0f || c.a == 0)
+		if (vertices.empty() || indices.size() < 3)
 			return;
 
-		const float maxR = std::min(r.width, r.height) * 0.5f;
-		const float rad = std::clamp(radiusPx, 0.0f, maxR);
-		if (rad <= 0.01f)
+		GLuint glTex = impl_->whiteTex;
+		if (tex.valid())
 		{
-			fillRect(r, c);
-			return;
+			auto it = impl_->textures.find(tex.id);
+			if (it == impl_->textures.end() || it->second.glId == 0 ||
+				it->second.width <= 0 || it->second.height <= 0)
+				return;
+			glTex = it->second.glId;
 		}
 
-		constexpr int segs = kRoundedCornerSegments;
-		constexpr float kHalfPi = 1.5707963267948966f;
-		constexpr float kStep = kHalfPi / static_cast<float>(segs);
-		constexpr float kStartAngles[4] = {-kHalfPi, 0.0f, kHalfPi, 2.0f * kHalfPi};
-		constexpr int kRingPts = 4 * (segs + 1);
+		const size_t totalIndices = indices.size() - (indices.size() % 3);
+		constexpr size_t kChunk = kMaxBatchVertices - (kMaxBatchVertices % 3);
 
-		const Vec2 centers[4] = {
-			{r.x + r.width - rad, r.y + rad},
-			{r.x + r.width - rad, r.y + r.height - rad},
-			{r.x + rad,           r.y + r.height - rad},
-			{r.x + rad,           r.y + rad}};
-
-		Vec2 ring[kRingPts];
-		int idx = 0;
-		for (int corner = 0; corner < 4; ++corner)
+		for (size_t offset = 0; offset < totalIndices; offset += kChunk)
 		{
-			for (int s = 0; s <= segs; ++s)
+			const size_t count = std::min(kChunk, totalIndices - offset);
+			impl_->ensureBatch(glTex, count);
+
+			for (size_t i = 0; i < count; ++i)
 			{
-				const float a = kStartAngles[corner] + kStep * static_cast<float>(s);
-				ring[idx++] = {centers[corner].x + std::cos(a) * rad,
-							   centers[corner].y + std::sin(a) * rad};
-			}
-		}
-
-		const Vec2 center{r.x + r.width * 0.5f, r.y + r.height * 0.5f};
-		impl_->ensureBatch(impl_->whiteTex, static_cast<size_t>(kRingPts) * 3);
-		for (int i = 0; i < kRingPts; ++i)
-		{
-			const int next = (i + 1) % kRingPts;
-			impl_->pushVertex(center, 0.5f, 0.5f, c);
-			impl_->pushVertex(ring[next], 0.5f, 0.5f, c);
-			impl_->pushVertex(ring[i], 0.5f, 0.5f, c);
-		}
-	}
-
-	void SDL3Renderer::fillCircle(Vec2 center, float radius, Color c)
-	{
-		if (radius <= 0.0f || c.a == 0)
-			return;
-
-		constexpr int segs = kCircleSegments;
-		constexpr float kTwoPi = 6.2831853071795864f;
-		constexpr float kStep = kTwoPi / static_cast<float>(segs);
-
-		impl_->ensureBatch(impl_->whiteTex, static_cast<size_t>(segs) * 3);
-		for (int i = 0; i < segs; ++i)
-		{
-			const float a0 = kStep * static_cast<float>(i);
-			const float a1 = kStep * static_cast<float>(i + 1);
-			impl_->pushVertex(center, 0.5f, 0.5f, c);
-			impl_->pushVertex({center.x + std::cos(a1) * radius, center.y + std::sin(a1) * radius}, 0.5f, 0.5f, c);
-			impl_->pushVertex({center.x + std::cos(a0) * radius, center.y + std::sin(a0) * radius}, 0.5f, 0.5f, c);
-		}
-	}
-
-	void SDL3Renderer::strokeRect(Rect r, float thickness, Color c)
-	{
-		if (thickness <= 0.0f || r.width <= 0.0f || r.height <= 0.0f || c.a == 0)
-			return;
-		const float t = std::min(thickness, std::min(r.width, r.height) * 0.5f);
-		fillBorder(r, {t, t, t, t}, c);
-	}
-
-	void SDL3Renderer::strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
-	{
-		if (c.a == 0)
-			return;
-
-		const auto ring = Geometry2D::buildRoundedBorderRing(r, radiusPx, thickness);
-		if (ring.empty)
-			return;
-		if (ring.isSolidFill)
-		{
-			fillRoundedRect(r, radiusPx, c);
-			return;
-		}
-
-		constexpr int kRingPts = Geometry2D::kRoundedRingPoints;
-		impl_->ensureBatch(impl_->whiteTex, static_cast<size_t>(kRingPts) * 6);
-		for (int i = 0; i < kRingPts; ++i)
-		{
-			const int next = (i + 1) % kRingPts;
-			impl_->pushVertex(ring.outer[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(ring.inner[next], 0.5f, 0.5f, c);
-			impl_->pushVertex(ring.outer[next], 0.5f, 0.5f, c);
-
-			impl_->pushVertex(ring.outer[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(ring.inner[i], 0.5f, 0.5f, c);
-			impl_->pushVertex(ring.inner[next], 0.5f, 0.5f, c);
-		}
-	}
-
-	// ---- Textures & nine-slice ----
-
-	void SDL3Renderer::drawTexture(TextureHandle t, Rect src, Rect dst, Color tint)
-	{
-		auto it = impl_->textures.find(t.id);
-		if (it == impl_->textures.end() || it->second.width <= 0 || it->second.height <= 0)
-			return;
-		const float tw = static_cast<float>(it->second.width);
-		const float th = static_cast<float>(it->second.height);
-		impl_->pushQuad(dst,
-						src.x / tw,
-						src.y / th,
-						(src.x + src.width) / tw,
-						(src.y + src.height) / th,
-						tint,
-						it->second.glId);
-	}
-
-	void SDL3Renderer::drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint)
-	{
-		auto it = impl_->textures.find(t.id);
-		if (it == impl_->textures.end() || it->second.width <= 0 || it->second.height <= 0)
-			return;
-
-		const float tw = static_cast<float>(it->second.width);
-		const float th = static_cast<float>(it->second.height);
-
-		const float sl = std::clamp(static_cast<float>(s.left), 0.0f, tw);
-		const float sr = std::clamp(static_cast<float>(s.right), 0.0f, tw - sl);
-		const float st = std::clamp(static_cast<float>(s.top), 0.0f, th);
-		const float sb = std::clamp(static_cast<float>(s.bottom), 0.0f, th - st);
-
-		const float dl = std::min(sl, dst.width * 0.5f);
-		const float dr = std::min(sr, dst.width - dl);
-		const float dt = std::min(st, dst.height * 0.5f);
-		const float db = std::min(sb, dst.height - dt);
-
-		const float xs[4] = {dst.x, dst.x + dl, dst.x + dst.width - dr, dst.x + dst.width};
-		const float ys[4] = {dst.y, dst.y + dt, dst.y + dst.height - db, dst.y + dst.height};
-		const float us[4] = {0.0f, sl / tw, (tw - sr) / tw, 1.0f};
-		const float vs[4] = {0.0f, st / th, (th - sb) / th, 1.0f};
-
-		for (int row = 0; row < 3; ++row)
-		{
-			for (int col = 0; col < 3; ++col)
-			{
-				const Rect cell{xs[col], ys[row], xs[col + 1] - xs[col], ys[row + 1] - ys[row]};
-				impl_->pushQuad(cell, us[col], vs[row], us[col + 1], vs[row + 1], tint, it->second.glId);
+				const uint32_t idx = indices[offset + i];
+				if (idx >= vertices.size())
+					continue;
+				const Vertex2D &v = vertices[idx];
+				impl_->pushVertex(v.pos, v.uv.x, v.uv.y, v.color);
 			}
 		}
 	}
-
+	
 	// ---- Text rendering & metrics ----
 
 	void SDL3Renderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)

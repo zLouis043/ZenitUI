@@ -93,6 +93,9 @@ namespace ZenitUI::Test
 		int activeTargetDepth{0};
 		int lastCreatedTargetW{0};
 		int lastCreatedTargetH{0};
+		int drawGeometryCalls{0};
+		size_t verticesSubmitted{0};
+		size_t indicesSubmitted{0};
 
 		EffectHandle lastPushedEffect{};
 		Rect lastDrawTargetSrc{};
@@ -125,6 +128,9 @@ namespace ZenitUI::Test
 			activeTargetDepth = 0;
 			lastCreatedTargetW = 0;
 			lastCreatedTargetH = 0;
+			drawGeometryCalls = 0; 
+			verticesSubmitted = 0; 
+			indicesSubmitted = 0;
 
 			lastPushedEffect = {};
 			lastDrawTargetSrc = {};
@@ -177,6 +183,16 @@ namespace ZenitUI::Test
 		void strokeRoundedRect(Rect, float, float, Color) override {}
 		void drawTexture(TextureHandle, Rect, Rect, Color) override {}
 		void drawNineSlice(TextureHandle, NineSlice, Rect, Color) override {}
+
+		void drawGeometry(std::span<const Vertex2D> vertices,
+						  std::span<const uint32_t> indices,
+						  TextureHandle /*tex*/ = {}) override
+		{
+			++drawGeometryCalls;
+			verticesSubmitted += vertices.size();
+			indicesSubmitted += indices.size();
+		}
+
 		/// @}
 
 		/// \name Text Rendering & Metrics

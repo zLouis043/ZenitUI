@@ -155,17 +155,9 @@ namespace ZenitUI
 
 		/// \name 2D Vector Primitives
 		/// @{
-		void fillRect(Rect r, Color c) override;
-		void fillRoundedRect(Rect r, float radiusPx, Color c) override;
-		void fillCircle(Vec2 center, float radius, Color c) override;
-		void strokeRect(Rect r, float thickness, Color c) override;
-		void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) override;
-		/// @}
-
-		/// \name Textures & Nine-Slice
-		/// @{
-		void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) override;
-		void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) override;
+		void drawGeometry(std::span<const Vertex2D> vertices,
+						  std::span<const uint32_t> indices,
+						  TextureHandle tex = {}) override;
 		/// @}
 
 		/// \name Text Rendering & Metrics

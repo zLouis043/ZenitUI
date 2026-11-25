@@ -27,8 +27,10 @@
  */
 
 #include "Common.hpp"
-
 #include "CoreTypes.hpp"
+#include "Geometry2D.hpp"
+
+#include <span>
 
 namespace ZenitUI
 {
@@ -84,17 +86,50 @@ namespace ZenitUI
 	public:
 		virtual ~IRenderer() = default;
 
+		/// \name Low-Level Indexed Geometry
+		/// @{
+
+		/**
+		 * \brief Draw an indexed triangle list in logical screen coordinates.
+		 *
+		 * This is the single mandatory geometry primitive for backends. When
+		 * `tex.valid()` is `false`, backends should sample a 1x1 opaque white
+		 * texture so solid-colored vertices render unmodified.
+		 *
+		 * Triangles are emitted counter-clockwise in NDC (Y-down screen space)
+		 * by all `Geometry2D` builders.
+		 */
+		virtual void drawGeometry(std::span<const Vertex2D> vertices,
+								  std::span<const uint32_t> indices,
+								  TextureHandle tex = {}) = 0;
+		/// @}
+
 		/// \name Shape Primitives
 		/// @{
 
 		/** \brief Fill an axis-aligned rectangle `r` with solid color `c`. */
-		virtual void fillRect(Rect r, Color c) = 0;
+		virtual void fillRect(Rect r, Color c)
+		{
+			const auto m = Geometry2D::buildQuad(r, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
+		}
 
 		/** \brief Fill a rectangle `r` with corner radius `radiusPx` (clamped to half the shorter side). */
-		virtual void fillRoundedRect(Rect r, float radiusPx, Color c) = 0;
+		virtual void fillRoundedRect(Rect r, float radiusPx, Color c)
+		{
+			const auto m = Geometry2D::buildRoundedRectFill(r, radiusPx, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
+		}
 
 		/** \brief Fill a circle centered at `center` with the given logical `radius`. */
-		virtual void fillCircle(Vec2 center, float radius, Color c) = 0;
+		virtual void fillCircle(Vec2 center, float radius, Color c)
+		{
+			const auto m = Geometry2D::buildCircle(center, radius, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
+		}
 
 		/**
 		 * \brief Stroke a rectangular border strictly **inside** `r` (CSS border-box).
@@ -102,36 +137,34 @@ namespace ZenitUI
 		 * Drawing inward keeps the border flush against `fillRect(r, ...)` without
 		 * anti-aliasing seams or layout overflow.
 		 */
-		virtual void strokeRect(Rect r, float thickness, Color c) = 0;
+		virtual void strokeRect(Rect r, float thickness, Color c)
+		{
+			const auto m = Geometry2D::buildRectStroke(r, thickness, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
+		}
 
 		/**
 		 * \brief Stroke a rounded border strictly **inside** `r` (CSS border-box).
 		 *
-		 * Outer radius is `radiusPx`; inner radius should shrink by `thickness`
+		 * Outer radius is `radiusPx`; inner radius shrinks by `thickness`
 		 * (clamped at 0) so the border stays flush against `fillRoundedRect(r, ...)`.
 		 */
-		virtual void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c) = 0;
+		virtual void strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
+		{
+			const auto m = Geometry2D::buildRoundedRectStroke(r, radiusPx, thickness, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
+		}
 
 		/**
-		 * \brief Draw a rectangular ring with per-edge widths by filling the four edges.
-		 *
-		 * Default implementation issues up to four `fillRect` calls. Backends
-		 * that can draw per-edge borders in a single draw call may override.
+		 * \brief Draw a rectangular ring with per-edge widths in a single indexed draw call.
 		 */
 		virtual void fillBorder(Rect r, EdgeInsets sides, Color c)
 		{
-			if (sides.top > 0.0f)
-				fillRect({r.x, r.y, r.width, sides.top}, c);
-			if (sides.bottom > 0.0f)
-				fillRect({r.x, r.y + r.height - sides.bottom, r.width, sides.bottom}, c);
-			float innerH = r.height - sides.top - sides.bottom;
-			if (innerH > 0.0f)
-			{
-				if (sides.left > 0.0f)
-					fillRect({r.x, r.y + sides.top, sides.left, innerH}, c);
-				if (sides.right > 0.0f)
-					fillRect({r.x + r.width - sides.right, r.y + sides.top, sides.right, innerH}, c);
-			}
+			const auto m = Geometry2D::buildBorder(r, sides, c);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan());
 		}
 		/// @}
 
@@ -139,10 +172,20 @@ namespace ZenitUI
 		/// @{
 
 		/** \brief Draw sub-rectangle `src` (texture pixels) of texture `t` into logical rect `dst`, multiplied by `tint`. */
-		virtual void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) = 0;
+		virtual void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint)
+		{
+			const auto m = Geometry2D::buildTexturedQuad(t, src, dst, tint);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan(), t);
+		}
 
 		/** \brief Draw texture `t` stretched into `dst` using the 9-slice insets `s` (fixed corners, stretched edges/center). */
-		virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) = 0;
+		virtual void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint)
+		{
+			const auto m = Geometry2D::buildNineSlice(t, s, dst, tint);
+			if (!m.empty())
+				drawGeometry(m.vertexSpan(), m.indexSpan(), t);
+		}
 		/// @}
 
 		/// \name Text Rendering & Metrics

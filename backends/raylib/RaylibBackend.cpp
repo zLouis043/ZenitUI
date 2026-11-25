@@ -306,45 +306,46 @@ namespace ZenitUI
 		DrawRectangleLinesEx(toRl(r), thickness, toRl(c));
 	}
 
-	void RaylibRenderer::strokeRoundedRect(Rect r, float radiusPx, float thickness, Color c)
+	void RaylibRenderer::drawGeometry(std::span<const Vertex2D> vertices,
+									  std::span<const uint32_t> indices,
+									  TextureHandle tex)
 	{
-		if (c.a == 0)
+		if (vertices.empty() || indices.size() < 3)
 			return;
 
-		const auto ring = Geometry2D::buildRoundedBorderRing(r, radiusPx, thickness);
-		if (ring.empty)
-			return;
-		if (ring.isSolidFill)
+		unsigned int glTexId = 0;
+		if (tex.valid() && res_)
 		{
-			fillRoundedRect(r, radiusPx, c);
-			return;
+			if (auto it = res_->textures.find(tex.id); it != res_->textures.end())
+				glTexId = it->second.id;
+			else
+				return;
 		}
 
-		// Emit counter-clockwise triangles in screen space (Y-down) for OpenGL back-face culling.
-		constexpr int kRingPts = Geometry2D::kRoundedRingPoints;
-		rlCheckRenderBatchLimit(kRingPts * 6);
-		rlSetTexture(0);
-		rlBegin(RL_TRIANGLES);
-		rlColor4ub(c.r, c.g, c.b, c.a);
+		// Split into chunks of up to 1024 triangles (3072 vertices) to stay safely inside rlgl's batch limit.
+		constexpr size_t kMaxChunkIndices = 3072;
+		const size_t totalIndices = indices.size() - (indices.size() % 3);
 
-		for (int i = 0; i < kRingPts; ++i)
+		for (size_t offset = 0; offset < totalIndices; offset += kMaxChunkIndices)
 		{
-			const int next = (i + 1) % kRingPts;
-			const Vec2 &o0 = ring.outer[i];
-			const Vec2 &o1 = ring.outer[next];
-			const Vec2 &i0 = ring.inner[i];
-			const Vec2 &i1 = ring.inner[next];
+			const size_t count = std::min(kMaxChunkIndices, totalIndices - offset);
+			rlCheckRenderBatchLimit(static_cast<int>(count));
+			rlSetTexture(glTexId);
+			rlBegin(RL_TRIANGLES);
 
-			rlVertex2f(o0.x, o0.y);
-			rlVertex2f(i1.x, i1.y);
-			rlVertex2f(o1.x, o1.y);
+			for (size_t i = 0; i < count; ++i)
+			{
+				const uint32_t idx = indices[offset + i];
+				if (idx >= vertices.size())
+					continue;
+				const Vertex2D &v = vertices[idx];
+				rlColor4ub(v.color.r, v.color.g, v.color.b, v.color.a);
+				rlTexCoord2f(v.uv.x, v.uv.y);
+				rlVertex2f(v.pos.x, v.pos.y);
+			}
 
-			rlVertex2f(o0.x, o0.y);
-			rlVertex2f(i0.x, i0.y);
-			rlVertex2f(i1.x, i1.y);
+			rlEnd();
 		}
-
-		rlEnd();
 	}
 
 	// ---- Textures & nine-slice ----
