@@ -108,6 +108,13 @@ bench:
 bench-run: bench
 	@./$(BUILD_DIR)/benchmarks/bin/bench$(EXE)
 
+bench-backend:
+	$(call configure,-DZENITUI_BUILD_BENCHMARKS=ON -DZENITUI_BUILD_TESTS=OFF -DZENITUI_BENCH_BACKEND=$(BACKEND))
+	@$(BUILD_CMD) --target ZenitBenchmarksBackend
+
+bench-backend-run: bench-backend
+	@./$(BUILD_DIR)/benchmarks/bin/bench_$(BACKEND)$(EXE)
+
 bench-update: bench
 	@./$(BUILD_DIR)/benchmarks/bin/bench$(EXE) --update
 
@@ -126,4 +133,4 @@ docs:
 	cmake -P docs/gen_backends.cmake
 	doxygen Doxyfile
 
-.PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-update clean rebuild dist docs
+.PHONY: all libzenit tests test-verbose test examples run-% bench bench-run bench-backend bench-backend-run bench-update clean rebuild dist docs

@@ -64,3 +64,85 @@ jobs:
           alert-threshold: '150%'
           fail-on-alert: false
           summary-always: true
+          
+  bench-backends:
+    name: Run real-backend benchmarks (Raylib & SDL3)
+    needs: bench
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build, Xvfb & Mesa software GL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake ninja-build pkg-config python3 \
+            xvfb mesa-utils libgl1-mesa-dev libgl1-mesa-dri \
+            libx11-dev libxext-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxkbcommon-dev
+
+      - name: Build Raylib backend benchmark
+        run: make -j4 bench-backend BACKEND=raylib
+
+      - name: Run Raylib backend benchmark (Xvfb + llvmpipe)
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          GALLIUM_DRIVER: llvmpipe
+        run: |
+          xvfb-run -a -s "-screen 0 1280x720x24" \
+            ./build/benchmarks/bin/bench_raylib --json > bench-raylib.json
+
+      - name: Build SDL3 backend benchmark
+        run: make -j4 bench-backend BACKEND=sdl3
+
+      - name: Run SDL3 backend benchmark (Xvfb + llvmpipe)
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          GALLIUM_DRIVER: llvmpipe
+          SDL_VIDEODRIVER: x11
+        run: |
+          xvfb-run -a -s "-screen 0 1280x720x24" \
+            ./build/benchmarks/bin/bench_sdl3 --json > bench-sdl3.json
+
+      - name: Merge backend benchmark JSONs
+        run: |
+          python3 -c '
+          import json
+          merged = json.load(open("bench-raylib.json")) + json.load(open("bench-sdl3.json"))
+          with open("benchmark-backends-output.json", "w") as f:
+              json.dump(merged, f, indent=2)
+          '
+          cat benchmark-backends-output.json
+
+      - name: Store backend benchmark result (push)
+        if: github.event_name == 'push'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ZenitUI backend benchmarks (Raylib & SDL3)
+          tool: 'customSmallerIsBetter'
+          output-file-path: benchmark-backends-output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench-backends
+
+      - name: Store backend benchmark result (PR comment)
+        if: github.event_name == 'pull_request'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ZenitUI backend benchmarks (Raylib & SDL3)
+          tool: 'customSmallerIsBetter'
+          output-file-path: benchmark-backends-output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: false
+          comment-on-alert: true
+          alert-threshold: '150%'
+          fail-on-alert: false
+          summary-always: true
