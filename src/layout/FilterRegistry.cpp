@@ -3,6 +3,8 @@
 #include "UIContext.hpp"
 #include "StyleAttr.hpp"
 
+#include <cstdlib>
+
 namespace ZenitUI
 {
 
@@ -60,20 +62,51 @@ namespace ZenitUI
         return it == defs_.end() ? nullptr : &it->second;
     }
 
-
-    static float parseLengthArg(const std::string &s)
+    static float parseLengthArg(const std::string &s) noexcept
     {
-        std::string t = s;
-        if (t.size() > 2 && t.substr(t.size() - 2) == "px")
-            t = t.substr(0, t.size() - 2);
-        try
-        {
-            return std::stof(t);
-        }
-        catch (...)
-        {
+        const char *p = s.data();
+        const char *end = p + s.size();
+        while (p < end && (*p == ' ' || *p == '\t'))
+            ++p;
+        if (p == end)
             return 0.0f;
+
+        float sign = 1.0f;
+        if (*p == '-')
+        {
+            sign = -1.0f;
+            ++p;
         }
+        else if (*p == '+')
+        {
+            ++p;
+        }
+
+        float val = 0.0f;
+        bool hasDigits = false;
+        while (p < end && *p >= '0' && *p <= '9')
+        {
+            val = val * 10.0f + static_cast<float>(*p - '0');
+            hasDigits = true;
+            ++p;
+        }
+        if (p < end && *p == '.')
+        {
+            ++p;
+            float scale = 0.1f;
+            while (p < end && *p >= '0' && *p <= '9')
+            {
+                val += static_cast<float>(*p - '0') * scale;
+                scale *= 0.1f;
+                hasDigits = true;
+                ++p;
+            }
+        }
+        if (!hasDigits)
+            return 0.0f;
+        if (p < end && (*p == 'e' || *p == 'E'))
+            return std::strtof(s.c_str(), nullptr);
+        return sign * val;
     }
 
     static void setParams(IRenderer *r, EffectHandle fx,
@@ -141,7 +174,6 @@ namespace ZenitUI
             }
         }
     }
-
 
     static void applySinglePass(const FilterContext &c, EffectHandle fx)
     {
@@ -326,9 +358,13 @@ namespace ZenitUI
         }
     }
 
-
     void registerBuiltinFilters()
     {
+        static bool registered = false;
+        if (registered)
+            return;
+        registered = true;
+        
         auto &reg = FilterRegistry::get();
         if (reg.find("blur"))
             return;

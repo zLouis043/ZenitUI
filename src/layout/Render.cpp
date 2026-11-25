@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
 
 namespace ZenitUI
 {
@@ -71,19 +72,51 @@ namespace ZenitUI
 			}
 		}
 
-		inline float parseFilterLength(const std::string &s)
+		inline float parseFilterLength(const std::string &s) noexcept
 		{
-			std::string t = s;
-			if (t.size() > 2 && t.compare(t.size() - 2, 2, "px") == 0)
-				t.resize(t.size() - 2);
-			try
-			{
-				return std::stof(t);
-			}
-			catch (...)
-			{
+			const char *p = s.data();
+			const char *end = p + s.size();
+			while (p < end && (*p == ' ' || *p == '\t'))
+				++p;
+			if (p == end)
 				return 0.0f;
+
+			float sign = 1.0f;
+			if (*p == '-')
+			{
+				sign = -1.0f;
+				++p;
 			}
+			else if (*p == '+')
+			{
+				++p;
+			}
+
+			float val = 0.0f;
+			bool hasDigits = false;
+			while (p < end && *p >= '0' && *p <= '9')
+			{
+				val = val * 10.0f + static_cast<float>(*p - '0');
+				hasDigits = true;
+				++p;
+			}
+			if (p < end && *p == '.')
+			{
+				++p;
+				float scale = 0.1f;
+				while (p < end && *p >= '0' && *p <= '9')
+				{
+					val += static_cast<float>(*p - '0') * scale;
+					scale *= 0.1f;
+					hasDigits = true;
+					++p;
+				}
+			}
+			if (!hasDigits)
+				return 0.0f;
+			if (p < end && (*p == 'e' || *p == 'E'))
+				return std::strtof(s.c_str(), nullptr);
+			return sign * val;
 		}
 
 		inline Color premultipliedWhite(float opacity)
@@ -136,18 +169,15 @@ namespace ZenitUI
 		}
 	}
 
-	bool Layout::appendSubtreeFingerprint(const Layout &layerRoot,
+	void Layout::appendSubtreeFingerprint(const Layout &layerRoot,
 										  const ComputedStyle &st,
 										  bool isRoot,
 										  uint64_t &h) const
 	{
-		// Skip caching while any node in the subtree is actively animating.
-		if (anim_.hasActive(*this))
-			return false;
-
 		// Include node identity, interaction state, and relative geometry.
 		const uintptr_t selfPtr = reinterpret_cast<uintptr_t>(this);
 		hashPod(h, selfPtr);
+
 
 		const uint8_t stateBits = static_cast<uint8_t>(
 			(state.hovered ? 1u : 0u) |
@@ -230,11 +260,9 @@ namespace ZenitUI
 			if (!child || !child->isVisible() || child->isPortal())
 				continue;
 			++visibleChildren;
-			if (!child->appendSubtreeFingerprint(layerRoot, child->style_.currentStyle, false, h))
-				return false;
+			child->appendSubtreeFingerprint(layerRoot, child->style_.currentStyle, false, h);
 		}
 		hashPod(h, visibleChildren);
-		return true;
 	}
 
 	void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
@@ -415,98 +443,94 @@ namespace ZenitUI
 			return;
 		}
 
-		registerBuiltinFilters();
-		auto &registry = FilterRegistry::get();
 		auto &stats = ctxUI.renderStats;
 		auto &pool = ctxUI.targetPool;
 
-		const size_t numFilters = renderStyle.filters.size();
-		const FilterDef *lastDef = (numFilters > 0)
-									   ? registry.find(renderStyle.filters.back().name)
-									   : nullptr;
-		const bool lastIsSilhouette = lastDef && lastDef->pattern == FilterPattern::Silhouette;
-		int extraW = 0;
-		int extraH = 0;
-		bool negativeShadowOffset = false;
-		if (lastIsSilhouette)
-		{
-			float dx = 2.0f;
-			float dy = 2.0f;
-			const auto &lastRef = renderStyle.filters.back();
-			for (const auto &p : lastDef->params)
-			{
-				if (p.uniform == "dx" && p.argIndex < static_cast<int>(lastRef.args.size()))
-					dx = parseFilterLength(lastRef.args[p.argIndex]);
-				if (p.uniform == "dy" && p.argIndex < static_cast<int>(lastRef.args.size()))
-					dy = parseFilterLength(lastRef.args[p.argIndex]);
-			}
-			if (dx < 0.0f || dy < 0.0f)
-			{
-				negativeShadowOffset = true;
-			}
-			else
-			{
-				extraW = static_cast<int>(std::ceil(dx));
-				extraH = static_cast<int>(std::ceil(dy));
-			}
-		}
-
-		const int outW = tw + extraW;
-		const int outH = th + extraH;
+		// Only cache top-level layers when no animation is active anywhere in the subtree.
+		// Checking upfront avoids hashing or filter-arg parsing on animated nodes.
 		const bool allowCache = !renderer->inTarget() &&
 								!renderStyle.filters.empty() &&
-								!negativeShadowOffset &&
-								outW <= MAX_TARGET_DIM &&
-								outH <= MAX_TARGET_DIM;
-								
+								!hasActiveAnimations();
+
 		bool saveToCache = false;
 		uint64_t fingerprint = kFnvOffset;
 
 		if (allowCache)
 		{
-			// Key covers everything that changes the baked pixels while keeping pure
-			// translation/scroll a cache hit whenever the clipped region offset stays identical.
-			hashFloat(fingerprint, ctxUI.dpiScale);
-			hashPod(fingerprint, ctxUI.viewportGeneration);
-			hashPod(fingerprint, Theme::get().version);
-			hashFloat(fingerprint, currTr.rotationDeg);
-			hashFloat(fingerprint, currTr.scale);
-			hashFloat(fingerprint, globalOp);
-			hashFloat(fingerprint, region.x - transformedRect.x);
-			hashFloat(fingerprint, region.y - transformedRect.y);
-			hashFloat(fingerprint, region.width);
-			hashFloat(fingerprint, region.height);
-			hashPod(fingerprint, tw);
-			hashPod(fingerprint, th);
-			hashFilters(fingerprint, renderStyle.filters);
+			if (!layerCache_)
+				layerCache_ = std::make_unique<LayerCache>();
 
-			const bool cacheable = appendSubtreeFingerprint(*this, renderStyle, true, fingerprint);
-			if (!cacheable)
+			auto &cache = *layerCache_;
+			const uint64_t poolGen = pool.generation();
+
+			// Drop stale handle if TargetPool::clear() wiped all pooled targets.
+			if (cache.target.valid() && cache.poolGeneration != poolGen)
 			{
-				releaseLayerCache();
+				cache.target = {};
+				cache.stableFrames = 0;
+				cache.dirty = true;
+			}
+
+			const float regOffX = region.x - transformedRect.x;
+			const float regOffY = region.y - transformedRect.y;
+			const uint32_t themeVer = Theme::get().version;
+
+			// Cheap scalar pre-check: skip subtree fingerprinting completely while
+			// transform, size, clip offset, opacity, or global generations are changing.
+			const bool cheapMatch =
+				cache.stableFrames >= 1 &&
+				!cache.dirty &&
+				cache.tw == tw &&
+				cache.th == th &&
+				cache.lastRotation == currTr.rotationDeg &&
+				cache.lastScale == currTr.scale &&
+				cache.lastOpacity == globalOp &&
+				cache.lastRegionOffX == regOffX &&
+				cache.lastRegionOffY == regOffY &&
+				cache.lastDpiScale == ctxUI.dpiScale &&
+				cache.lastViewportGen == ctxUI.viewportGeneration &&
+				cache.lastThemeVer == themeVer;
+
+			if (!cheapMatch)
+			{
+				if (cache.target.valid())
+				{
+					pool.release(cache.target);
+					cache.target = {};
+				}
+				cache.tw = tw;
+				cache.th = th;
+				cache.lastRotation = currTr.rotationDeg;
+				cache.lastScale = currTr.scale;
+				cache.lastOpacity = globalOp;
+				cache.lastRegionOffX = regOffX;
+				cache.lastRegionOffY = regOffY;
+				cache.lastDpiScale = ctxUI.dpiScale;
+				cache.lastViewportGen = ctxUI.viewportGeneration;
+				cache.lastThemeVer = themeVer;
+				cache.stableFrames = 1;
+				cache.dirty = false;
 			}
 			else
 			{
-				if (!layerCache_)
-					layerCache_ = std::make_unique<LayerCache>();
-
-				auto &cache = *layerCache_;
-				const uint64_t poolGen = pool.generation();
-
-				// Drop stale handle if TargetPool::clear() wiped all pooled targets.
-				if (cache.target.valid() && cache.poolGeneration != poolGen)
-				{
-					cache.target = {};
-					cache.stableFrames = 0;
-					cache.dirty = true;
-				}
+				// Root scalars are stable: compute full subtree fingerprint.
+				hashFloat(fingerprint, ctxUI.dpiScale);
+				hashPod(fingerprint, ctxUI.viewportGeneration);
+				hashPod(fingerprint, themeVer);
+				hashFloat(fingerprint, currTr.rotationDeg);
+				hashFloat(fingerprint, currTr.scale);
+				hashFloat(fingerprint, globalOp);
+				hashFloat(fingerprint, regOffX);
+				hashFloat(fingerprint, regOffY);
+				hashFloat(fingerprint, region.width);
+				hashFloat(fingerprint, region.height);
+				hashPod(fingerprint, tw);
+				hashPod(fingerprint, th);
+				hashFilters(fingerprint, renderStyle.filters);
+				appendSubtreeFingerprint(*this, renderStyle, true, fingerprint);
 
 				// Fast path: reuse the previously baked filtered target.
-				if (cache.target.valid() &&
-					!cache.dirty &&
-					cache.tw == tw &&
-					cache.th == th &&
-					cache.fingerprint == fingerprint)
+				if (cache.target.valid() && cache.fingerprint == fingerprint)
 				{
 					cache.lastUsedFrame = pool.frameIndex();
 					blitCachedLayer(renderer, cache.target, cache.srcRect, region,
@@ -514,12 +538,10 @@ namespace ZenitUI
 					return;
 				}
 
-				// Promote to cached target only after observing one identical static frame.
-				// This keeps single-frame draws and continuously animated nodes on the
-				// zero-overhead direct path.
-				const bool stableMatch = !cache.dirty &&
-										 cache.stableFrames >= 1 &&
-										 cache.lastFingerprint == fingerprint;
+				// Promote to a cached target once two consecutive full fingerprints agree.
+				const bool stableMatch =
+					cache.stableFrames >= 2 &&
+					cache.lastFingerprint == fingerprint;
 
 				if (cache.target.valid())
 				{
@@ -534,14 +556,52 @@ namespace ZenitUI
 				else
 				{
 					cache.lastFingerprint = fingerprint;
-					cache.stableFrames = 1;
-					cache.dirty = false;
+					cache.stableFrames = 2;
 				}
 			}
 		}
 		else
 		{
 			releaseLayerCache();
+		}
+
+		registerBuiltinFilters();
+		auto &registry = FilterRegistry::get();
+
+		const size_t numFilters = renderStyle.filters.size();
+		bool lastIsSilhouette = false;
+		int outW = tw;
+		int outH = th;
+
+		// Parse silhouette shadow extents only on the single frame that bakes into the cache.
+		if (saveToCache && numFilters > 0)
+		{
+			const FilterDef *lastDef = registry.find(renderStyle.filters.back().name);
+			if (lastDef && lastDef->pattern == FilterPattern::Silhouette)
+			{
+				lastIsSilhouette = true;
+				float dx = 2.0f;
+				float dy = 2.0f;
+				const auto &lastRef = renderStyle.filters.back();
+				for (const auto &p : lastDef->params)
+				{
+					if (p.uniform == "dx" && p.argIndex < static_cast<int>(lastRef.args.size()))
+						dx = parseFilterLength(lastRef.args[p.argIndex]);
+					if (p.uniform == "dy" && p.argIndex < static_cast<int>(lastRef.args.size()))
+						dy = parseFilterLength(lastRef.args[p.argIndex]);
+				}
+				if (dx < 0.0f || dy < 0.0f)
+				{
+					saveToCache = false;
+				}
+				else
+				{
+					outW = tw + static_cast<int>(std::ceil(dx));
+					outH = th + static_cast<int>(std::ceil(dy));
+					if (outW > MAX_TARGET_DIM || outH > MAX_TARGET_DIM)
+						saveToCache = false;
+				}
+			}
 		}
 
 		TargetHandle mainTarget = pool.acquire(*renderer, tw, th, &stats);
@@ -732,7 +792,7 @@ namespace ZenitUI
 			cache.fingerprint = fingerprint;
 			cache.lastFingerprint = fingerprint;
 			cache.lastUsedFrame = pool.frameIndex();
-			cache.stableFrames = 2;
+			cache.stableFrames = 3;
 			cache.premultiplied = lastIsSilhouette;
 			cache.dirty = false;
 

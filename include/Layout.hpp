@@ -1469,7 +1469,8 @@ namespace ZenitUI
 		 * \brief Lazily allocated cache holding the filtered off-screen target for a layer node.
 		 *
 		 * Populated after a filtered node stays visually identical across consecutive
-		 * frames so continuously animated nodes never pay extra off-screen passes.
+		 * frames so continuously animated nodes never pay extra off-screen passes or
+		 * subtree fingerprinting costs.
 		 */
 		struct LayerCache
 		{
@@ -1478,12 +1479,20 @@ namespace ZenitUI
 			Rect srcRect{0, 0, 0, 0};    ///< Active sub-rectangle inside `target` (logical pixels).
 			int tw{0};                   ///< Cached target content width in pixels.
 			int th{0};                   ///< Cached target content height in pixels.
+			float lastRotation{0.0f};    ///< Rotation (degrees) observed on the previous frame.
+			float lastScale{1.0f};       ///< Scale factor observed on the previous frame.
+			float lastOpacity{1.0f};     ///< Global opacity observed on the previous frame.
+			float lastRegionOffX{0.0f};  ///< Horizontal clip offset observed on the previous frame.
+			float lastRegionOffY{0.0f};  ///< Vertical clip offset observed on the previous frame.
+			float lastDpiScale{1.0f};    ///< DPI scale observed on the previous frame.
+			uint32_t lastViewportGen{0}; ///< `UIContext::viewportGeneration` observed on the previous frame.
+			uint32_t lastThemeVer{0};    ///< `Theme::version` observed on the previous frame.
 			uint64_t fingerprint{0};     ///< Fingerprint of the baked subtree, transform, and filters.
 			uint64_t lastFingerprint{0}; ///< Fingerprint observed on the previous frame for stability promotion.
 			uint64_t lastUsedFrame{0};   ///< `TargetPool::frameIndex()` of the most recent hit or bake.
 			uint8_t stableFrames{0};     ///< Consecutive unchanged frames before promoting to a cached target.
-			bool dirty{true};            ///< Explicit invalidation flag set by structural or content mutations.
 			bool premultiplied{false};   ///< `true` when `target` holds premultiplied RGBA (e.g. Silhouette filters).
+			bool dirty{true};            ///< Explicit invalidation flag set by structural or content mutations.
 		};
 
 		/**
@@ -1512,7 +1521,7 @@ namespace ZenitUI
 		void maybeEvictStaleLayerCache();
 
 		/** \brief Helper used by `drawLayer` to hash subtree visual state for cache validation. */
-		bool appendSubtreeFingerprint(const Layout &layerRoot,
+		void appendSubtreeFingerprint(const Layout &layerRoot,
 									  const ComputedStyle &nodeStyle,
 									  bool isRoot,
 									  uint64_t &hash) const;
