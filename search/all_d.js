@@ -51,10 +51,9 @@ var searchData=
   ['isregionalindicator_48',['isRegionalIndicator',['../group__grp__backends.html#ga44d44e5a8676d95ce62cf53580bf3eb9',1,'ZenitUI::Utf8']]],
   ['isscrollcontainer_49',['isScrollContainer',['../classZenitUI_1_1Layout.html#ad81b905d7691d3e19f18fe36b1597ceb',1,'ZenitUI::Layout']]],
   ['issimple_50',['isSimple',['../structZenitUI_1_1Value.html#ab8f151538a7dbe0f69ad0be41d6608a3',1,'ZenitUI::Value']]],
-  ['issolidfill_51',['isSolidFill',['../structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html#a06e05501676372194fa0a0bed1616253',1,'ZenitUI::Geometry2D::RoundedBorderRing']]],
-  ['isstackingcontext_52',['isStackingContext',['../classZenitUI_1_1Layout.html#a2e303ff831b79316b2ef5c100d5e5b30',1,'ZenitUI::Layout']]],
-  ['isvalidclick_53',['isValidClick',['../structZenitUI_1_1UIContext.html#a6d48c76abbdb32a5566711ee5ab9f318',1,'ZenitUI::UIContext']]],
-  ['isvalidcodepoint_54',['isValidCodepoint',['../group__grp__backends.html#ga0da4297aad7dd24abbe31122461b114a',1,'ZenitUI::Utf8']]],
-  ['iswordchar_55',['isWordChar',['../group__grp__backends.html#ga3402c4dd831fa041e44906585680f754',1,'ZenitUI::Utf8']]],
-  ['itemfactory_56',['ItemFactory',['../classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39',1,'ZenitUI::UI::VirtualView']]]
+  ['isstackingcontext_51',['isStackingContext',['../classZenitUI_1_1Layout.html#a2e303ff831b79316b2ef5c100d5e5b30',1,'ZenitUI::Layout']]],
+  ['isvalidclick_52',['isValidClick',['../structZenitUI_1_1UIContext.html#a6d48c76abbdb32a5566711ee5ab9f318',1,'ZenitUI::UIContext']]],
+  ['isvalidcodepoint_53',['isValidCodepoint',['../group__grp__backends.html#ga0da4297aad7dd24abbe31122461b114a',1,'ZenitUI::Utf8']]],
+  ['iswordchar_54',['isWordChar',['../group__grp__backends.html#ga3402c4dd831fa041e44906585680f754',1,'ZenitUI::Utf8']]],
+  ['itemfactory_55',['ItemFactory',['../classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39',1,'ZenitUI::UI::VirtualView']]]
 ];

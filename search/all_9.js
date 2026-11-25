@@ -7,7 +7,7 @@ var searchData=
   ['effecthandle_4',['EffectHandle',['../structZenitUI_1_1EffectHandle.html',1,'ZenitUI']]],
   ['effects_5',['Effects',['../group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea527e4752a2eecd45e2d54bad52433916',1,'ZenitUI']]],
   ['element_6',['Element',['../structZenitUI_1_1ZMarkup_1_1Element.html',1,'ZenitUI::ZMarkup']]],
-  ['empty_7',['empty',['../structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html#a717f353f55c3ca79c1ccd130ef699e65',1,'ZenitUI::Geometry2D::RoundedBorderRing::empty'],['../classZenitUI_1_1SmallVector.html#a75a9d4b19cd3e0671a26d8757bbcf26f',1,'ZenitUI::SmallVector::empty()'],['../classZenitUI_1_1CodepointSet.html#ad7cfbec55ae016d6c617372fcc30b16a',1,'ZenitUI::CodepointSet::empty()']]],
+  ['empty_7',['empty',['../classZenitUI_1_1SmallVector.html#a75a9d4b19cd3e0671a26d8757bbcf26f',1,'ZenitUI::SmallVector::empty()'],['../classZenitUI_1_1CodepointSet.html#ad7cfbec55ae016d6c617372fcc30b16a',1,'ZenitUI::CodepointSet::empty()']]],
   ['enabled_8',['enabled',['../structZenitUI_1_1NodeConfig.html#aaac3414f82138fe9ce5661e90d0a5afb',1,'ZenitUI::NodeConfig']]],
   ['encode_9',['encode',['../group__grp__backends.html#ga9947128365e1e347f0429ff763ec6de4',1,'ZenitUI::Utf8::encode(uint32_t cp, std::string &amp;out)'],['../group__grp__backends.html#ga3d8d611ca62ead5cfc396eb733698fe6',1,'ZenitUI::Utf8::encode(uint32_t cp)']]],
   ['end_10',['End',['../group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e',1,'EndZenitUI'],['../group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e',1,'EndZenitUI']]],

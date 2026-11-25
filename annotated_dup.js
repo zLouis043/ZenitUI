@@ -21,7 +21,8 @@ var annotated_dup =
         [ "VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html", "classZenitUI_1_1UI_1_1VirtualView" ]
       ] ],
       [ "Geometry2D", null, [
-        [ "RoundedBorderRing", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing" ]
+        [ "StaticMesh", "structZenitUI_1_1Geometry2D_1_1StaticMesh.html", null ],
+        [ "RoundedBorderRing", "structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html", null ]
       ] ],
       [ "ZMarkup", null, [
         [ "Declaration", "structZenitUI_1_1ZMarkup_1_1Declaration.html", null ],
@@ -61,6 +62,7 @@ var annotated_dup =
       [ "Rect", "structZenitUI_1_1Rect.html", "structZenitUI_1_1Rect" ],
       [ "EdgeInsets", "structZenitUI_1_1EdgeInsets.html", null ],
       [ "Color", "structZenitUI_1_1Color.html", "structZenitUI_1_1Color" ],
+      [ "Vertex2D", "structZenitUI_1_1Vertex2D.html", null ],
       [ "TextureHandle", "structZenitUI_1_1TextureHandle.html", null ],
       [ "FontHandle", "structZenitUI_1_1FontHandle.html", null ],
       [ "EffectHandle", "structZenitUI_1_1EffectHandle.html", null ],

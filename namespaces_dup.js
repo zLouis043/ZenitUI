@@ -25,6 +25,7 @@ var namespaces_dup =
       [ "Rect", "structZenitUI_1_1Rect.html", "structZenitUI_1_1Rect" ],
       [ "EdgeInsets", "structZenitUI_1_1EdgeInsets.html", null ],
       [ "Color", "structZenitUI_1_1Color.html", "structZenitUI_1_1Color" ],
+      [ "Vertex2D", "structZenitUI_1_1Vertex2D.html", null ],
       [ "TextureHandle", "structZenitUI_1_1TextureHandle.html", null ],
       [ "FontHandle", "structZenitUI_1_1FontHandle.html", null ],
       [ "EffectHandle", "structZenitUI_1_1EffectHandle.html", null ],

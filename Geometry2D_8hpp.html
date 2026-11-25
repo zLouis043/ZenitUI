@@ -102,18 +102,64 @@ $(function(){initNavTree('Geometry2D_8hpp.html','',''); });
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 </div>
 <p><a href="Geometry2D_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:ZenitUI_3A_3AGeometry2D_3A_3AStaticMesh_3C_20MaxVertices_2C_20MaxIndices_20_3E" id="r_ZenitUI_3A_3AGeometry2D_3A_3AStaticMesh_3C_20MaxVertices_2C_20MaxIndices_20_3E"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">ZenitUI::Geometry2D::StaticMesh&lt; MaxVertices, MaxIndices &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed-capacity stack mesh returned by <span class="tt">Geometry2D</span> builders.  <a href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AGeometry2D_3A_3ARoundedBorderRing" id="r_ZenitUI_3A_3AGeometry2D_3A_3ARoundedBorderRing"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">ZenitUI::Geometry2D::RoundedBorderRing</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer and inner vertex loops of a CSS border-box rounded stroke.  <a href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga277039a739fb3a82502687907fea1c88" id="r_ga277039a739fb3a82502687907fea1c88"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::QuadMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;4, 6&gt;</td></tr>
+<tr class="memitem:gaf48a85ebd8b04d6dafc9539b7a9941f9" id="r_gaf48a85ebd8b04d6dafc9539b7a9941f9"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::RectStrokeMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;8, 24&gt;</td></tr>
+<tr class="memitem:ga666bae43e74b1aad458bf7550e306ebc" id="r_ga666bae43e74b1aad458bf7550e306ebc"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::BorderMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;16, 24&gt;</td></tr>
+<tr class="memitem:gadce95a481439ef5bd52fc5a246d2e534" id="r_gadce95a481439ef5bd52fc5a246d2e534"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::NineSliceMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;16, 54&gt;</td></tr>
+<tr class="memitem:ga177ab01d9570528d6e007d5cd7f44b52" id="r_ga177ab01d9570528d6e007d5cd7f44b52"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::CircleMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;kCircleMaxSegments + 1, kCircleMaxSegments * 3&gt;</td></tr>
+<tr class="memitem:ga0a8440eaa0199d9012b18de6356c1bf5" id="r_ga0a8440eaa0199d9012b18de6356c1bf5"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::RoundedFillMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;kRoundedRingPoints + 1, kRoundedRingPoints * 3&gt;</td></tr>
+<tr class="memitem:ga869b5b1cd2b9db95e4320fc07ef0b330" id="r_ga869b5b1cd2b9db95e4320fc07ef0b330"><td class="memItemLeft" align="right" valign="top">
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::RoundedStrokeMesh</b> = <a class="el" href="structZenitUI_1_1Geometry2D_1_1StaticMesh.html">StaticMesh</a>&lt;kRoundedRingPoints * 2, kRoundedRingPoints * 6&gt;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaee6db3cba2c125dec508b716e4f85f76" id="r_gaee6db3cba2c125dec508b716e4f85f76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">RoundedBorderRing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__grp__backends.html#gaee6db3cba2c125dec508b716e4f85f76">ZenitUI::Geometry2D::buildRoundedBorderRing</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness)</td></tr>
-<tr class="memdesc:gaee6db3cba2c125dec508b716e4f85f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the inward-extruded rounded ring for <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html#a5629420bd6bb7fadc1537aa2e1dfff93" title="Stroke a rounded border strictly inside r (CSS border-box).">IRenderer::strokeRoundedRect</a></span>.  <br /></td></tr>
+<tr class="memitem:gaee6db3cba2c125dec508b716e4f85f76" id="r_gaee6db3cba2c125dec508b716e4f85f76"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="structZenitUI_1_1Geometry2D_1_1RoundedBorderRing.html">RoundedBorderRing</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildRoundedBorderRing</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness)</td></tr>
+<tr class="memdesc:gaee6db3cba2c125dec508b716e4f85f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the inward-extruded rounded ring for <span class="tt"><a class="el" href="classZenitUI_1_1IRenderer.html#a191e36731fc459c3c7f75ba9e2dfbf2f" title="Stroke a rounded border strictly inside r (CSS border-box).">IRenderer::strokeRoundedRect</a></span>. <br /></td></tr>
+<tr class="memitem:ga861247496a697be06c5775c2918b90a8" id="r_ga861247496a697be06c5775c2918b90a8"><td class="memItemLeft" align="right" valign="top">
+QuadMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildQuad</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ga861247496a697be06c5775c2918b90a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a solid-color axis-aligned quad. <br /></td></tr>
+<tr class="memitem:gafb42f2d54dbd3623a7f8e6f21ad5c952" id="r_gafb42f2d54dbd3623a7f8e6f21ad5c952"><td class="memItemLeft" align="right" valign="top">
+QuadMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildTexturedQuad</b> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> src, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)</td></tr>
+<tr class="memdesc:gafb42f2d54dbd3623a7f8e6f21ad5c952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a textured quad mapping pixel sub-rect <span class="tt">src</span> onto logical <span class="tt">dst</span>. <br /></td></tr>
+<tr class="memitem:ga078628cc588689ac37625f1b7a5e0924" id="r_ga078628cc588689ac37625f1b7a5e0924"><td class="memItemLeft" align="right" valign="top">
+NineSliceMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildNineSlice</b> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> s, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)</td></tr>
+<tr class="memdesc:ga078628cc588689ac37625f1b7a5e0924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a 9-slice mesh (up to 9 quads, single indexed draw call). <br /></td></tr>
+<tr class="memitem:ga0b36f20a7836d71f9986653a0d3e6f26" id="r_ga0b36f20a7836d71f9986653a0d3e6f26"><td class="memItemLeft" align="right" valign="top">
+RectStrokeMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildRectStroke</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ga0b36f20a7836d71f9986653a0d3e6f26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a CSS border-box rectangular stroke strictly inside <span class="tt">r</span> without corner overdraw. <br /></td></tr>
+<tr class="memitem:ga42d55468109f420713eaebb1333a86a1" id="r_ga42d55468109f420713eaebb1333a86a1"><td class="memItemLeft" align="right" valign="top">
+BorderMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildBorder</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a> sides, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ga42d55468109f420713eaebb1333a86a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build per-edge rectangular borders in a single indexed draw call. <br /></td></tr>
+<tr class="memitem:ga231661f60e3502f0dc3fa16d23c8d2bb" id="r_ga231661f60e3502f0dc3fa16d23c8d2bb"><td class="memItemLeft" align="right" valign="top">
+RoundedFillMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildRoundedRectFill</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ga231661f60e3502f0dc3fa16d23c8d2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a filled rounded rectangle (fast-paths to a 4-vertex quad when <span class="tt">radiusPx &lt;= 0.01</span>). <br /></td></tr>
+<tr class="memitem:gac773e2eb93cee37497619a47b44d005f" id="r_gac773e2eb93cee37497619a47b44d005f"><td class="memItemLeft" align="right" valign="top">
+RoundedStrokeMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildRoundedRectStroke</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:gac773e2eb93cee37497619a47b44d005f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a CSS border-box rounded stroke mesh strictly inside <span class="tt">r</span>. <br /></td></tr>
+<tr class="memitem:ga835d0156271063944332f198dbaf6f28" id="r_ga835d0156271063944332f198dbaf6f28"><td class="memItemLeft" align="right" valign="top">
+CircleMesh&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::buildCircle</b> (<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> center, float radius, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ga835d0156271063944332f198dbaf6f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a filled circle with adaptive segment count (<span class="tt">16..kCircleMaxSegments</span>). <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -121,9 +167,12 @@ Variables</h2></td></tr>
 constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::kRoundedCornerSegments</b> = 12</td></tr>
 <tr class="memitem:gac9a3048696a43913233648c1dd3c2618" id="r_gac9a3048696a43913233648c1dd3c2618"><td class="memItemLeft" align="right" valign="top">
 constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::kRoundedRingPoints</b> = 4 * (kRoundedCornerSegments + 1)</td></tr>
+<tr class="memitem:ga6285966e2fbf91e33795f026fdfb7410" id="r_ga6285966e2fbf91e33795f026fdfb7410"><td class="memItemLeft" align="right" valign="top">
+constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::Geometry2D::kCircleMaxSegments</b> = 48</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Shared zero-allocation 2D tessellation helpers for <span class="tt">IRenderer</span> backends. </p>
+<p>Every builder emits counter-clockwise triangles in NDC (Y-down logical screen space) so backends with OpenGL back-face culling enabled render consistently without winding mismatches. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

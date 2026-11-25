@@ -108,32 +108,36 @@ Inheritance diagram for ZenitUI::IRenderer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Shape Primitives</div></td></tr>
-<tr class="memitem:aab06167f2aab0e10722ff6e5e0276164" id="r_aab06167f2aab0e10722ff6e5e0276164"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab06167f2aab0e10722ff6e5e0276164">fillRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
-<tr class="memdesc:aab06167f2aab0e10722ff6e5e0276164"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill an axis-aligned rectangle <span class="tt">r</span> with solid color <span class="tt">c</span>.  <br /></td></tr>
-<tr class="memitem:a31cef99fcb0c9df65712b78406790e2a" id="r_a31cef99fcb0c9df65712b78406790e2a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31cef99fcb0c9df65712b78406790e2a">fillRoundedRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
-<tr class="memdesc:a31cef99fcb0c9df65712b78406790e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a rectangle <span class="tt">r</span> with corner radius <span class="tt">radiusPx</span> (clamped to half the shorter side).  <br /></td></tr>
-<tr class="memitem:aa7318452be1493d1fdb301aea7338ee4" id="r_aa7318452be1493d1fdb301aea7338ee4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7318452be1493d1fdb301aea7338ee4">fillCircle</a> (<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> center, float radius, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
-<tr class="memdesc:aa7318452be1493d1fdb301aea7338ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a circle centered at <span class="tt">center</span> with the given logical <span class="tt">radius</span>.  <br /></td></tr>
-<tr class="memitem:a14a943f0fddf8c662ee280f987f0a1ca" id="r_a14a943f0fddf8c662ee280f987f0a1ca"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14a943f0fddf8c662ee280f987f0a1ca">strokeRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
-<tr class="memdesc:a14a943f0fddf8c662ee280f987f0a1ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke a rectangular border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box).  <br /></td></tr>
-<tr class="memitem:a5629420bd6bb7fadc1537aa2e1dfff93" id="r_a5629420bd6bb7fadc1537aa2e1dfff93"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5629420bd6bb7fadc1537aa2e1dfff93">strokeRoundedRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
-<tr class="memdesc:a5629420bd6bb7fadc1537aa2e1dfff93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke a rounded border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box).  <br /></td></tr>
-<tr class="memitem:a44c53d1018dbe2f3b6d1d0fd7872bfc9" id="r_a44c53d1018dbe2f3b6d1d0fd7872bfc9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44c53d1018dbe2f3b6d1d0fd7872bfc9">fillBorder</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a> sides, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
-<tr class="memdesc:a44c53d1018dbe2f3b6d1d0fd7872bfc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangular ring with per-edge widths by filling the four edges.  <br /></td></tr>
-<tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Textures &amp; Nine-Slice</div></td></tr>
-<tr class="memitem:ad954023fcbcb05167dd13d2ddaea35e0" id="r_ad954023fcbcb05167dd13d2ddaea35e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad954023fcbcb05167dd13d2ddaea35e0">drawTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> src, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)=0</td></tr>
-<tr class="memdesc:ad954023fcbcb05167dd13d2ddaea35e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw sub-rectangle <span class="tt">src</span> (texture pixels) of texture <span class="tt">t</span> into logical rect <span class="tt">dst</span>, multiplied by <span class="tt">tint</span>.  <br /></td></tr>
-<tr class="memitem:af9164d19809e294b28a1298a3545379f" id="r_af9164d19809e294b28a1298a3545379f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9164d19809e294b28a1298a3545379f">drawNineSlice</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> s, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)=0</td></tr>
-<tr class="memdesc:af9164d19809e294b28a1298a3545379f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw texture <span class="tt">t</span> stretched into <span class="tt">dst</span> using the 9-slice insets <span class="tt">s</span> (fixed corners, stretched edges/center).  <br /></td></tr>
-<tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">Text Rendering &amp; Metrics</div></td></tr>
+<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Low-Level Indexed Geometry</div></td></tr>
+<tr class="memitem:af4ebb9c5ecf1e584f1055cfbf016f8a0" id="r_af4ebb9c5ecf1e584f1055cfbf016f8a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4ebb9c5ecf1e584f1055cfbf016f8a0">drawGeometry</a> (std::span&lt; const <a class="el" href="structZenitUI_1_1Vertex2D.html">Vertex2D</a> &gt; vertices, std::span&lt; const uint32_t &gt; indices, <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> tex={})=0</td></tr>
+<tr class="memdesc:af4ebb9c5ecf1e584f1055cfbf016f8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an indexed triangle list in logical screen coordinates.  <br /></td></tr>
+<tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Shape Primitives</div></td></tr>
+<tr class="memitem:ab76054196e33d8c4cc80201ba4ddd287" id="r_ab76054196e33d8c4cc80201ba4ddd287"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab76054196e33d8c4cc80201ba4ddd287">fillRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ab76054196e33d8c4cc80201ba4ddd287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill an axis-aligned rectangle <span class="tt">r</span> with solid color <span class="tt">c</span>.  <br /></td></tr>
+<tr class="memitem:acd2744bad40be96ac498bab3db614a65" id="r_acd2744bad40be96ac498bab3db614a65"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd2744bad40be96ac498bab3db614a65">fillRoundedRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:acd2744bad40be96ac498bab3db614a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a rectangle <span class="tt">r</span> with corner radius <span class="tt">radiusPx</span> (clamped to half the shorter side).  <br /></td></tr>
+<tr class="memitem:a194fe9a1a59cf525aad8c48d4c9f9910" id="r_a194fe9a1a59cf525aad8c48d4c9f9910"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194fe9a1a59cf525aad8c48d4c9f9910">fillCircle</a> (<a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> center, float radius, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:a194fe9a1a59cf525aad8c48d4c9f9910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a circle centered at <span class="tt">center</span> with the given logical <span class="tt">radius</span>.  <br /></td></tr>
+<tr class="memitem:ab5bb0606807cd1eef5b464920425aaac" id="r_ab5bb0606807cd1eef5b464920425aaac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5bb0606807cd1eef5b464920425aaac">strokeRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:ab5bb0606807cd1eef5b464920425aaac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke a rectangular border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box).  <br /></td></tr>
+<tr class="memitem:a191e36731fc459c3c7f75ba9e2dfbf2f" id="r_a191e36731fc459c3c7f75ba9e2dfbf2f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a191e36731fc459c3c7f75ba9e2dfbf2f">strokeRoundedRect</a> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, float radiusPx, float thickness, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:a191e36731fc459c3c7f75ba9e2dfbf2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stroke a rounded border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box).  <br /></td></tr>
+<tr class="memitem:a44c53d1018dbe2f3b6d1d0fd7872bfc9" id="r_a44c53d1018dbe2f3b6d1d0fd7872bfc9"><td class="memItemLeft" align="right" valign="top"><a id="a44c53d1018dbe2f3b6d1d0fd7872bfc9" name="a44c53d1018dbe2f3b6d1d0fd7872bfc9"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b> (<a class="el" href="structZenitUI_1_1Rect.html">Rect</a> r, <a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a> sides, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)</td></tr>
+<tr class="memdesc:a44c53d1018dbe2f3b6d1d0fd7872bfc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a rectangular ring with per-edge widths in a single indexed draw call. <br /></td></tr>
+<tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">Textures &amp; Nine-Slice</div></td></tr>
+<tr class="memitem:a5b9c0f3e87559663649f443a60ae0b48" id="r_a5b9c0f3e87559663649f443a60ae0b48"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b9c0f3e87559663649f443a60ae0b48">drawTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> src, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)</td></tr>
+<tr class="memdesc:a5b9c0f3e87559663649f443a60ae0b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw sub-rectangle <span class="tt">src</span> (texture pixels) of texture <span class="tt">t</span> into logical rect <span class="tt">dst</span>, multiplied by <span class="tt">tint</span>.  <br /></td></tr>
+<tr class="memitem:a886cea810324dd6ba7c26cbe157648b1" id="r_a886cea810324dd6ba7c26cbe157648b1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a886cea810324dd6ba7c26cbe157648b1">drawNineSlice</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> s, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)</td></tr>
+<tr class="memdesc:a886cea810324dd6ba7c26cbe157648b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw texture <span class="tt">t</span> stretched into <span class="tt">dst</span> using the 9-slice insets <span class="tt">s</span> (fixed corners, stretched edges/center).  <br /></td></tr>
+<tr id="pub-methods-3" class="groupHeader"><td colspan="2"><div class="groupHeader">Text Rendering &amp; Metrics</div></td></tr>
 <tr class="memitem:a1e75849b6a55976ea8bdba679fcc5819" id="r_a1e75849b6a55976ea8bdba679fcc5819"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e75849b6a55976ea8bdba679fcc5819">drawText</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, std::string_view s, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> pos, float size, float spacing, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
 <tr class="memdesc:a1e75849b6a55976ea8bdba679fcc5819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw UTF-8 text <span class="tt">s</span> at logical top-left <span class="tt">pos</span> using font <span class="tt">f</span>, font size <span class="tt">size</span>, and letter spacing <span class="tt">spacing</span>.  <br /></td></tr>
 <tr class="memitem:a56fc660402893d6885e92e82efd59a14" id="r_a56fc660402893d6885e92e82efd59a14"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56fc660402893d6885e92e82efd59a14">measureText</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, std::string_view s, float size, float spacing)=0</td></tr>
 <tr class="memdesc:a56fc660402893d6885e92e82efd59a14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure the logical <span class="tt">{width, height}</span> of UTF-8 text <span class="tt">s</span> rendered with <span class="tt">f</span>, <span class="tt">size</span>, and <span class="tt">spacing</span>.  <br /></td></tr>
 <tr class="memitem:a63f46fd8c1353d714f26a4e21ca3e2a0" id="r_a63f46fd8c1353d714f26a4e21ca3e2a0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63f46fd8c1353d714f26a4e21ca3e2a0">measureCodepoint</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, uint32_t codepoint, float size, float spacing)</td></tr>
 <tr class="memdesc:a63f46fd8c1353d714f26a4e21ca3e2a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure the advance width and height of a single Unicode codepoint.  <br /></td></tr>
-<tr id="pub-methods-3" class="groupHeader"><td colspan="2"><div class="groupHeader">State Stacks</div></td></tr>
+<tr id="pub-methods-4" class="groupHeader"><td colspan="2"><div class="groupHeader">State Stacks</div></td></tr>
 <tr class="memitem:a8ce877d4bad538b62df8d32177a7e9c2" id="r_a8ce877d4bad538b62df8d32177a7e9c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ce877d4bad538b62df8d32177a7e9c2">pushTransform</a> (const <a class="el" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t)=0</td></tr>
 <tr class="memdesc:a8ce877d4bad538b62df8d32177a7e9c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push a 2D pivot-based transform onto the transform stack.  <br /></td></tr>
 <tr class="memitem:afe53ab701dd29a7539c91106f0cfd4fc" id="r_afe53ab701dd29a7539c91106f0cfd4fc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe53ab701dd29a7539c91106f0cfd4fc">popTransform</a> ()=0</td></tr>
@@ -148,7 +152,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:afaf9ede39c833e2262a861b7b1f16f25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the current clip rectangle and restore the previous scissor region.  <br /></td></tr>
 <tr class="memitem:a372926a078b1767d0fda229c0ddaf9dc" id="r_a372926a078b1767d0fda229c0ddaf9dc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1Rect.html">Rect</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a372926a078b1767d0fda229c0ddaf9dc">getClipRect</a> () const =0</td></tr>
 <tr class="memdesc:a372926a078b1767d0fda229c0ddaf9dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the active screen-space clip rectangle in logical pixels (used for culling).  <br /></td></tr>
-<tr id="pub-methods-4" class="groupHeader"><td colspan="2"><div class="groupHeader">Off-Screen Render Targets</div></td></tr>
+<tr id="pub-methods-5" class="groupHeader"><td colspan="2"><div class="groupHeader">Off-Screen Render Targets</div></td></tr>
 <tr class="memitem:ad9854c7ce0e7c8d937e5c1047ef7cf36" id="r_ad9854c7ce0e7c8d937e5c1047ef7cf36"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9854c7ce0e7c8d937e5c1047ef7cf36">createTarget</a> (int w, int h)=0</td></tr>
 <tr class="memdesc:ad9854c7ce0e7c8d937e5c1047ef7cf36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate an off-screen RGBA render target of <span class="tt">w x h</span> pixels (used when <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688" title="Supports off-screen render targets (createTarget, pushTarget, popTarget, drawTarget).">Feature::NestedTargets</a></span> is supported).  <br /></td></tr>
 <tr class="memitem:a47eeb87e814518b0759a4c6a085cb8e4" id="r_a47eeb87e814518b0759a4c6a085cb8e4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47eeb87e814518b0759a4c6a085cb8e4">destroyTarget</a> (<a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a> t)=0</td></tr>
@@ -165,7 +169,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a39809c7484f01987360e6297afbf3abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear render target <span class="tt">t</span> to solid color <span class="tt">c</span>.  <br /></td></tr>
 <tr class="memitem:a303122b1a9eb61b07cbf0a7de2fe7e32" id="r_a303122b1a9eb61b07cbf0a7de2fe7e32"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a303122b1a9eb61b07cbf0a7de2fe7e32">inTarget</a> () const =0</td></tr>
 <tr class="memdesc:a303122b1a9eb61b07cbf0a7de2fe7e32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <span class="tt">true</span> while a <span class="tt"><a class="el" href="#acc46deb233eeebcbd37bc891ce9c74e7" title="Redirect subsequent draw calls to target t and clear it to transparent black.">pushTarget</a></span> is active without a matching <span class="tt"><a class="el" href="#a124e6678b735c4b3e7b5553e644531db" title="Finish drawing into the active target and restore the previous target (or main framebuffer) and stack...">popTarget</a></span>.  <br /></td></tr>
-<tr id="pub-methods-5" class="groupHeader"><td colspan="2"><div class="groupHeader">Shader Uniforms</div></td></tr>
+<tr id="pub-methods-6" class="groupHeader"><td colspan="2"><div class="groupHeader">Shader Uniforms</div></td></tr>
 <tr class="memitem:a9a081c5c757acd806f9473e16701cb7e" id="r_a9a081c5c757acd806f9473e16701cb7e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a081c5c757acd806f9473e16701cb7e">setEffectFloat</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, float value)=0</td></tr>
 <tr class="memdesc:a9a081c5c757acd806f9473e16701cb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a <span class="tt">float</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
 <tr class="memitem:af30e5b154656044710f16200dcfbf0b8" id="r_af30e5b154656044710f16200dcfbf0b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af30e5b154656044710f16200dcfbf0b8">setEffectVec2</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> value)=0</td></tr>
@@ -176,7 +180,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aaf7bcdb058f642332c4b715cbdfbbd42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a <span class="tt">vec4</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
 <tr class="memitem:ab3128b62fe468f8c70c49e38531a7cc1" id="r_ab3128b62fe468f8c70c49e38531a7cc1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3128b62fe468f8c70c49e38531a7cc1">setEffectVec4</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, <a class="el" href="structZenitUI_1_1Color.html">Color</a> value)=0</td></tr>
 <tr class="memdesc:ab3128b62fe468f8c70c49e38531a7cc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a normalized RGBA <span class="tt">vec4</span> uniform (0..1 per channel) named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
-<tr id="pub-methods-6" class="groupHeader"><td colspan="2"><div class="groupHeader">Capabilities &amp; Frame Lifecycle</div></td></tr>
+<tr id="pub-methods-7" class="groupHeader"><td colspan="2"><div class="groupHeader">Capabilities &amp; Frame Lifecycle</div></td></tr>
 <tr class="memitem:a2f516b76d539008019ed2838f54ebff6" id="r_a2f516b76d539008019ed2838f54ebff6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f516b76d539008019ed2838f54ebff6">supports</a> (<a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce">Feature</a> f) const =0</td></tr>
 <tr class="memdesc:a2f516b76d539008019ed2838f54ebff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query whether this backend implements an optional <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities queried via IRenderer::supports.">Feature</a></span>.  <br /></td></tr>
 <tr class="memitem:a6c17f3037f2d441990c410a6e8f351ae" id="r_a6c17f3037f2d441990c410a6e8f351ae"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c17f3037f2d441990c410a6e8f351ae">shaderLanguage</a> () const</td></tr>
@@ -318,8 +322,48 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af9164d19809e294b28a1298a3545379f" name="af9164d19809e294b28a1298a3545379f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9164d19809e294b28a1298a3545379f">&#9670;&#160;</a></span>drawNineSlice()</h2>
+<a id="af4ebb9c5ecf1e584f1055cfbf016f8a0" name="af4ebb9c5ecf1e584f1055cfbf016f8a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ebb9c5ecf1e584f1055cfbf016f8a0">&#9670;&#160;</a></span>drawGeometry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IRenderer::drawGeometry </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; const <a class="el" href="structZenitUI_1_1Vertex2D.html">Vertex2D</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const uint32_t &gt;</td>          <td class="paramname"><span class="paramname"><em>indices</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></td>          <td class="paramname"><span class="paramname"><em>tex</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw an indexed triangle list in logical screen coordinates. </p>
+<p>This is the single mandatory geometry primitive for backends. When <span class="tt">tex.valid()</span> is <span class="tt">false</span>, backends should sample a 1x1 opaque white texture so solid-colored vertices render unmodified.</p>
+<p>Triangles are emitted counter-clockwise in NDC (Y-down screen space) by all <span class="tt">Geometry2D</span> builders. </p>
+
+<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a2b1b58b04f87ac247cbd09ef63179e70">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#aeab04fadafe092a7adf016b2dfa672c4">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a5558e0bc74a6c8bd6fd92441c4d8e4b9">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a886cea810324dd6ba7c26cbe157648b1" name="a886cea810324dd6ba7c26cbe157648b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a886cea810324dd6ba7c26cbe157648b1">&#9670;&#160;</a></span>drawNineSlice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -350,14 +394,14 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Draw texture <span class="tt">t</span> stretched into <span class="tt">dst</span> using the 9-slice insets <span class="tt">s</span> (fixed corners, stretched edges/center). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a0a0645e448aefe373d21fc8c37305381">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a5118e38b835a98c642510ed879d6f486">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a0a0645e448aefe373d21fc8c37305381">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
@@ -497,8 +541,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad954023fcbcb05167dd13d2ddaea35e0" name="ad954023fcbcb05167dd13d2ddaea35e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad954023fcbcb05167dd13d2ddaea35e0">&#9670;&#160;</a></span>drawTexture()</h2>
+<a id="a5b9c0f3e87559663649f443a60ae0b48" name="a5b9c0f3e87559663649f443a60ae0b48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b9c0f3e87559663649f443a60ae0b48">&#9670;&#160;</a></span>drawTexture()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -529,14 +573,14 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Draw sub-rectangle <span class="tt">src</span> (texture pixels) of texture <span class="tt">t</span> into logical rect <span class="tt">dst</span>, multiplied by <span class="tt">tint</span>. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a8783ddf43d59ee5b227dffcc978a7cb3">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#aab09e46db817bbbdaaa9a742bcf3199f">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a2ba1e6e732a973f12536beb718cca24b">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a8783ddf43d59ee5b227dffcc978a7cb3">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a2ba1e6e732a973f12536beb718cca24b">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
@@ -569,45 +613,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a44c53d1018dbe2f3b6d1d0fd7872bfc9" name="a44c53d1018dbe2f3b6d1d0fd7872bfc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44c53d1018dbe2f3b6d1d0fd7872bfc9">&#9670;&#160;</a></span>fillBorder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void ZenitUI::IRenderer::fillBorder </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1EdgeInsets.html">EdgeInsets</a></td>          <td class="paramname"><span class="paramname"><em>sides</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Color.html">Color</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Draw a rectangular ring with per-edge widths by filling the four edges. </p>
-<p>Default implementation issues up to four <span class="tt"><a class="el" href="#aab06167f2aab0e10722ff6e5e0276164" title="Fill an axis-aligned rectangle r with solid color c.">fillRect</a></span> calls. Backends that can draw per-edge borders in a single draw call may override. </p>
-
-</div>
-</div>
-<a id="aa7318452be1493d1fdb301aea7338ee4" name="aa7318452be1493d1fdb301aea7338ee4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7318452be1493d1fdb301aea7338ee4">&#9670;&#160;</a></span>fillCircle()</h2>
+<a id="a194fe9a1a59cf525aad8c48d4c9f9910" name="a194fe9a1a59cf525aad8c48d4c9f9910"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a194fe9a1a59cf525aad8c48d4c9f9910">&#9670;&#160;</a></span>fillCircle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -633,19 +640,19 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Fill a circle centered at <span class="tt">center</span> with the given logical <span class="tt">radius</span>. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aa057066f1e5147f7ef4b59c5114c37d5">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a3868f48dd598f0126c6b57c01e90a5a4">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#ae8e31fa9bbf816087b31d8d32f7f454b">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aa057066f1e5147f7ef4b59c5114c37d5">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#ae8e31fa9bbf816087b31d8d32f7f454b">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
-<a id="aab06167f2aab0e10722ff6e5e0276164" name="aab06167f2aab0e10722ff6e5e0276164"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab06167f2aab0e10722ff6e5e0276164">&#9670;&#160;</a></span>fillRect()</h2>
+<a id="ab76054196e33d8c4cc80201ba4ddd287" name="ab76054196e33d8c4cc80201ba4ddd287"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab76054196e33d8c4cc80201ba4ddd287">&#9670;&#160;</a></span>fillRect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -666,19 +673,19 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Fill an axis-aligned rectangle <span class="tt">r</span> with solid color <span class="tt">c</span>. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aa149120cfec95e92ccdc6151d79d0311">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a98e595cc75aabc21819380647d9775b8">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a0bef83b9b8d0b2959c56ccc3b7145160">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aa149120cfec95e92ccdc6151d79d0311">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a0bef83b9b8d0b2959c56ccc3b7145160">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
-<a id="a31cef99fcb0c9df65712b78406790e2a" name="a31cef99fcb0c9df65712b78406790e2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31cef99fcb0c9df65712b78406790e2a">&#9670;&#160;</a></span>fillRoundedRect()</h2>
+<a id="acd2744bad40be96ac498bab3db614a65" name="acd2744bad40be96ac498bab3db614a65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd2744bad40be96ac498bab3db614a65">&#9670;&#160;</a></span>fillRoundedRect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -704,14 +711,14 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Fill a rectangle <span class="tt">r</span> with corner radius <span class="tt">radiusPx</span> (clamped to half the shorter side). </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#ae573fa3fadba24a13597a675bca248d2">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a912eb17c8c2d51d0f1fc026cd77592b9">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a5fb39f5b46e0546c57e340a300a75786">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#ae573fa3fadba24a13597a675bca248d2">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a5fb39f5b46e0546c57e340a300a75786">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
@@ -1342,8 +1349,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a14a943f0fddf8c662ee280f987f0a1ca" name="a14a943f0fddf8c662ee280f987f0a1ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14a943f0fddf8c662ee280f987f0a1ca">&#9670;&#160;</a></span>strokeRect()</h2>
+<a id="ab5bb0606807cd1eef5b464920425aaac" name="ab5bb0606807cd1eef5b464920425aaac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5bb0606807cd1eef5b464920425aaac">&#9670;&#160;</a></span>strokeRect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1369,7 +1376,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1377,12 +1384,12 @@ Public Member Functions</h2></td></tr>
 <p>Stroke a rectangular border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box). </p>
 <p>Drawing inward keeps the border flush against <span class="tt">fillRect(r, ...)</span> without anti-aliasing seams or layout overflow. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aceb5b6e0016a18192ba9c798c245cf8c">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a52c59540dfb11622aaeb59ac20b70be9">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a3f4ad26579a7e69b4416da5c15f9b33c">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aceb5b6e0016a18192ba9c798c245cf8c">ZenitUI::RaylibRenderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a3f4ad26579a7e69b4416da5c15f9b33c">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
-<a id="a5629420bd6bb7fadc1537aa2e1dfff93" name="a5629420bd6bb7fadc1537aa2e1dfff93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5629420bd6bb7fadc1537aa2e1dfff93">&#9670;&#160;</a></span>strokeRoundedRect()</h2>
+<a id="a191e36731fc459c3c7f75ba9e2dfbf2f" name="a191e36731fc459c3c7f75ba9e2dfbf2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a191e36731fc459c3c7f75ba9e2dfbf2f">&#9670;&#160;</a></span>strokeRoundedRect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1413,15 +1420,15 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Stroke a rounded border strictly <b>inside</b> <span class="tt">r</span> (CSS border-box). </p>
-<p>Outer radius is <span class="tt">radiusPx</span>; inner radius should shrink by <span class="tt">thickness</span> (clamped at 0) so the border stays flush against <span class="tt">fillRoundedRect(r, ...)</span>. </p>
+<p>Outer radius is <span class="tt">radiusPx</span>; inner radius shrinks by <span class="tt">thickness</span> (clamped at 0) so the border stays flush against <span class="tt">fillRoundedRect(r, ...)</span>. </p>
 
-<p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#aba5b2d3eff82e509fd6063daa554da83">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#aa7dc95f550871a0bea672eb9e7402689">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a45d2d5adec1be66b113fbc7301dfcf29">ZenitUI::Test::MockRenderer</a>.</p>
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a45d2d5adec1be66b113fbc7301dfcf29">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>

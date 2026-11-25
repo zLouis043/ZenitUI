@@ -199,252 +199,263 @@ $(function(){initNavTree('CoreTypes_8hpp_source.html','',''); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
 </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
-<div class="foldopen" id="foldopen00111" data-start="{" data-end="};">
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="structZenitUI_1_1TextureHandle.html">  111</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordtype">int</span> width{0}, height{0};</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordtype">bool</span> valid()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keywordtype">id</span> != 0; }</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    };</div>
+<div class="foldopen" id="foldopen00116" data-start="{" data-end="};">
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="structZenitUI_1_1Vertex2D.html">  116</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1Vertex2D.html">Vertex2D</a></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    {</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pos{};</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> uv{0.5f, 0.5f};</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <a class="code hl_struct" href="structZenitUI_1_1Color.html">Color</a> color{255, 255, 255, 255};</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    };</div>
 </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
-<div class="foldopen" id="foldopen00119" data-start="{" data-end="};">
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="structZenitUI_1_1FontHandle.html">  119</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1FontHandle.html">FontHandle</a></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    };</div>
-</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structZenitUI_1_1Vertex2D.html">Vertex2D</a>) == 20, <span class="stringliteral">&quot;Vertex2D must stay tightly packed (20 bytes)&quot;</span>);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span></div>
 <div class="foldopen" id="foldopen00125" data-start="{" data-end="};">
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="structZenitUI_1_1EffectHandle.html">  125</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="structZenitUI_1_1TextureHandle.html">  125</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    {</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordtype">bool</span> valid()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keywordtype">id</span> != 0; }</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    };</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordtype">int</span> width{0}, height{0};</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordtype">bool</span> valid()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keywordtype">id</span> != 0; }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    };</div>
 </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span></div>
-<div class="foldopen" id="foldopen00138" data-start="{" data-end="};">
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="structZenitUI_1_1TargetHandle.html">  138</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    {</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <span class="keywordtype">int</span> width{0}, height{0};</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span></div>
+<div class="foldopen" id="foldopen00133" data-start="{" data-end="};">
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="structZenitUI_1_1FontHandle.html">  133</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1FontHandle.html">FontHandle</a></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    };</div>
+</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span></div>
+<div class="foldopen" id="foldopen00139" data-start="{" data-end="};">
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="structZenitUI_1_1EffectHandle.html">  139</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    {</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="keywordtype">bool</span> valid()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keywordtype">id</span> != 0; }</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    };</div>
 </div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
-<div class="foldopen" id="foldopen00146" data-start="{" data-end="};">
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="structZenitUI_1_1NineSlice.html">  146</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1NineSlice.html">NineSlice</a></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    {</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keywordtype">int</span> left{0}, top{0}, right{0}, bottom{0};</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    };</div>
+<div class="foldopen" id="foldopen00152" data-start="{" data-end="};">
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="structZenitUI_1_1TargetHandle.html">  152</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        uint32_t <span class="keywordtype">id</span>{0};</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="keywordtype">int</span> width{0}, height{0};</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordtype">bool</span> valid()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keywordtype">id</span> != 0; }</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    };</div>
 </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
-<div class="foldopen" id="foldopen00161" data-start="{" data-end="};">
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="structZenitUI_1_1Transform2D.html">  161</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a></div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pivot;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> translate;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keywordtype">float</span> rotationDeg{0.0f};</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordtype">float</span> scale{1.0f};</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    };</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span></div>
+<div class="foldopen" id="foldopen00160" data-start="{" data-end="};">
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="structZenitUI_1_1NineSlice.html">  160</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1NineSlice.html">NineSlice</a></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keywordtype">int</span> left{0}, top{0}, right{0}, bottom{0};</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    };</div>
 </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span></div>
-<div class="foldopen" id="foldopen00174" data-start="{" data-end="};">
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="structZenitUI_1_1FontStack.html">  174</a></span>    <span class="keyword">struct </span>FontStack : SmallVector&lt;std::string, 3&gt;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    {</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        FontStack() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keyword">using </span>SmallVector&lt;std::string, 3&gt;::SmallVector;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        FontStack(<span class="keyword">const</span> <span class="keywordtype">char</span> *s)</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            : SmallVector&lt;std::string, 3&gt;{std::string(s)} {}</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        FontStack(std::string s)</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            : SmallVector&lt;std::string, 3&gt;{std::move(s)} {}</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        FontStack(std::string_view s)</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            : SmallVector&lt;std::string, 3&gt;{std::string(s)} {}</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    };</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span></div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="};">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="structZenitUI_1_1Transform2D.html">  175</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    {</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pivot;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> translate;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordtype">float</span> rotationDeg{0.0f};</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <span class="keywordtype">float</span> scale{1.0f};</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    };</div>
 </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span></div>
 <div class="foldopen" id="foldopen00188" data-start="{" data-end="};">
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">  188</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> : uint8_t</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="structZenitUI_1_1FontStack.html">  188</a></span>    <span class="keyword">struct </span>FontStack : SmallVector&lt;std::string, 3&gt;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    {</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        Left,</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        Right,</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        Middle,</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        Count</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    };</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        FontStack() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keyword">using </span>SmallVector&lt;std::string, 3&gt;::SmallVector;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        FontStack(<span class="keyword">const</span> <span class="keywordtype">char</span> *s)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            : SmallVector&lt;std::string, 3&gt;{std::string(s)} {}</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        FontStack(std::string s)</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            : SmallVector&lt;std::string, 3&gt;{std::move(s)} {}</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        FontStack(std::string_view s)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            : SmallVector&lt;std::string, 3&gt;{std::string(s)} {}</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    };</div>
 </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span></div>
-<div class="foldopen" id="foldopen00197" data-start="{" data-end="};">
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html">  197</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">  199</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">down</a>{<span class="keyword">false</span>};     </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">  200</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">pressed</a>{<span class="keyword">false</span>};  </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">  201</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">released</a>{<span class="keyword">false</span>}; </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    };</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span></div>
+<div class="foldopen" id="foldopen00202" data-start="{" data-end="};">
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">  202</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> : uint8_t</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        Left,</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        Right,</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        Middle,</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        Count</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    };</div>
 </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span></div>
-<div class="foldopen" id="foldopen00205" data-start="{" data-end="};">
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="structZenitUI_1_1PointerState.html">  205</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1PointerState.html">PointerState</a></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pos;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordtype">float</span> wheelY{0.0f};</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        std::array&lt;<a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a>, (size_t)MouseButton::Count&gt; buttons{};</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a> &amp;operator[](<a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b) { <span class="keywordflow">return</span> buttons[(size_t)b]; }</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a> &amp;operator[](<a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> buttons[(size_t)b]; }</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    };</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span></div>
+<div class="foldopen" id="foldopen00211" data-start="{" data-end="};">
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html">  211</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">  213</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">down</a>{<span class="keyword">false</span>};     </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">  214</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">pressed</a>{<span class="keyword">false</span>};  </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">  215</a></span>        <span class="keywordtype">bool</span> <a class="code hl_variable" href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">released</a>{<span class="keyword">false</span>}; </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    };</div>
 </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span></div>
-<div class="foldopen" id="foldopen00217" data-start="{" data-end="};">
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ModifierState.html">  217</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1ModifierState.html">ModifierState</a></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    {</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordtype">bool</span> shift{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="keywordtype">bool</span> ctrl{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordtype">bool</span> alt{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordtype">bool</span> super{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    };</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span></div>
+<div class="foldopen" id="foldopen00219" data-start="{" data-end="};">
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="structZenitUI_1_1PointerState.html">  219</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1PointerState.html">PointerState</a></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> pos;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordtype">float</span> wheelY{0.0f};</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        std::array&lt;<a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a>, (size_t)MouseButton::Count&gt; buttons{};</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a> &amp;operator[](<a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b) { <span class="keywordflow">return</span> buttons[(size_t)b]; }</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1ButtonState.html">ButtonState</a> &amp;operator[](<a class="code hl_enumeration" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> buttons[(size_t)b]; }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    };</div>
 </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span></div>
-<div class="foldopen" id="foldopen00226" data-start="{" data-end="};">
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno"><a class="line" href="structZenitUI_1_1Metrics.html">  226</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1Metrics.html">Metrics</a></div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    {</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> viewport{1280.0f, 720.0f};</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    };</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span></div>
+<div class="foldopen" id="foldopen00231" data-start="{" data-end="};">
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="structZenitUI_1_1ModifierState.html">  231</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1ModifierState.html">ModifierState</a></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    {</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="keywordtype">bool</span> shift{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordtype">bool</span> ctrl{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keywordtype">bool</span> alt{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keywordtype">bool</span> super{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    };</div>
 </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span></div>
-<div class="foldopen" id="foldopen00238" data-start="{" data-end="}">
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="namespaceZenitUI_1_1Key.html">  238</a></span>    <span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1Key.html">Key</a></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Backspace = 1;</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Delete = 2;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Enter = 3;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Escape = 4;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Left = 5;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Right = 6;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Home = 7;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> End = 8;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Tab = 9;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Space = 10;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Up = 11;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Down = 12;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> A = 65;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> C = 67;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> V = 86;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> X = 88;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Y = 89;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Z = 90;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    }</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span></div>
+<div class="foldopen" id="foldopen00240" data-start="{" data-end="};">
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno"><a class="line" href="structZenitUI_1_1Metrics.html">  240</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1Metrics.html">Metrics</a></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> viewport{1280.0f, 720.0f};</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    };</div>
 </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span></div>
-<div class="foldopen" id="foldopen00264" data-start="{" data-end="};">
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html">  264</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1InputEvents.html">InputEvents</a></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    {</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">  266</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">chars</a>; </div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">  267</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">keys</a>;  </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">  268</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">held</a>;  </div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    };</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span></div>
+<div class="foldopen" id="foldopen00252" data-start="{" data-end="}">
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno"><a class="line" href="namespaceZenitUI_1_1Key.html">  252</a></span>    <span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceZenitUI_1_1Key.html">Key</a></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    {</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Backspace = 1;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Delete = 2;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Enter = 3;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Escape = 4;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Left = 5;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Right = 6;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Home = 7;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> End = 8;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Tab = 9;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Space = 10;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Up = 11;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Down = 12;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> A = 65;</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> C = 67;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> V = 86;</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> X = 88;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Y = 89;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">constexpr</span> <span class="keywordtype">int</span> Z = 90;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    }</div>
 </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span></div>
-<div class="foldopen" id="foldopen00272" data-start="{" data-end="};">
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">  272</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    {</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb">  274</a></span>        Auto,   </div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">  275</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Start</a>,  </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">  276</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Center</a>, </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">  277</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">End</a>,    </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">  278</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">Stretch</a> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    };</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span></div>
+<div class="foldopen" id="foldopen00278" data-start="{" data-end="};">
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html">  278</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structZenitUI_1_1InputEvents.html">InputEvents</a></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">  280</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">chars</a>; </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">  281</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">keys</a>;  </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">  282</a></span>        std::vector&lt;int&gt; <a class="code hl_variable" href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">held</a>;  </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    };</div>
 </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span></div>
-<div class="foldopen" id="foldopen00282" data-start="{" data-end="};">
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">  282</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">Justify</a></div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    {</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0aa6122a65eaa676f700ae68d393054a37">  284</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Start</a>,       </div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a4f1f6016fc9f3f2353c0cc7c67b292bd">  285</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Center</a>,      </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e">  286</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">End</a>,         </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">  287</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">SpaceBetween</a> </div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    };</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span></div>
+<div class="foldopen" id="foldopen00286" data-start="{" data-end="};">
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">  286</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    {</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb">  288</a></span>        Auto,   </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">  289</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Start</a>,  </div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">  290</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Center</a>, </div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">  291</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">End</a>,    </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">  292</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">Stretch</a> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    };</div>
 </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span></div>
-<div class="foldopen" id="foldopen00296" data-start="{" data-end="}">
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">  296</a></span>    <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">applyTransform</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t, <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> p)</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span></div>
+<div class="foldopen" id="foldopen00296" data-start="{" data-end="};">
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno"><a class="line" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">  296</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">Justify</a></div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    {</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        <span class="keywordtype">float</span> dx = p.x - t.pivot.x;</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        <span class="keywordtype">float</span> dy = p.y - t.pivot.y;</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        dx *= t.scale;</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        dy *= t.scale;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="keywordtype">float</span> rad = t.rotationDeg * 3.14159265358979323846f / 180.0f;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordtype">float</span> c = std::cos(rad), s = std::sin(rad);</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        <span class="keywordtype">float</span> rx = dx * c - dy * s;</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordtype">float</span> ry = dx * s + dy * c;</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <span class="keywordflow">return</span> {rx + t.pivot.x + t.translate.x, ry + t.pivot.y + t.translate.y};</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    }</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0aa6122a65eaa676f700ae68d393054a37">  298</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Start</a>,       </div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a4f1f6016fc9f3f2353c0cc7c67b292bd">  299</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Center</a>,      </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0a87557f11575c0ad78e4e28abedc13b6e">  300</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">End</a>,         </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">  301</a></span>        <a class="code hl_enumvalue" href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">SpaceBetween</a> </div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    };</div>
 </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span></div>
-<div class="foldopen" id="foldopen00319" data-start="{" data-end="}">
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno"><a class="line" href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">  319</a></span>    <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">applyInverseTransform</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t, <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> p)</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    {</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        p.x -= t.translate.x;</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        p.y -= t.translate.y;</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="keywordtype">float</span> dx = p.x - t.pivot.x, dy = p.y - t.pivot.y;</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="keywordtype">float</span> rad = -t.rotationDeg * 3.14159265358979323846f / 180.0f;</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordtype">float</span> c = std::cos(rad), s = std::sin(rad);</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <span class="keywordtype">float</span> rx = dx * c - dy * s;</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keywordtype">float</span> ry = dx * s + dy * c;</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        rx /= t.scale;</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        ry /= t.scale;</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keywordflow">return</span> {rx + t.pivot.x, ry + t.pivot.y};</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span></div>
+<div class="foldopen" id="foldopen00310" data-start="{" data-end="}">
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno"><a class="line" href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">  310</a></span>    <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">applyTransform</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t, <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> p)</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    {</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keywordtype">float</span> dx = p.x - t.pivot.x;</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordtype">float</span> dy = p.y - t.pivot.y;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        dx *= t.scale;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        dy *= t.scale;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="keywordtype">float</span> rad = t.rotationDeg * 3.14159265358979323846f / 180.0f;</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="keywordtype">float</span> c = std::cos(rad), s = std::sin(rad);</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordtype">float</span> rx = dx * c - dy * s;</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="keywordtype">float</span> ry = dx * s + dy * c;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        <span class="keywordflow">return</span> {rx + t.pivot.x + t.translate.x, ry + t.pivot.y + t.translate.y};</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    }</div>
 </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span></div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>}</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span></div>
+<div class="foldopen" id="foldopen00333" data-start="{" data-end="}">
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">  333</a></span>    <span class="keyword">inline</span> <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> <a class="code hl_function" href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">applyInverseTransform</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t, <a class="code hl_struct" href="structZenitUI_1_1Vec2.html">Vec2</a> p)</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    {</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        p.x -= t.translate.x;</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        p.y -= t.translate.y;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="keywordtype">float</span> dx = p.x - t.pivot.x, dy = p.y - t.pivot.y;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="keywordtype">float</span> rad = -t.rotationDeg * 3.14159265358979323846f / 180.0f;</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <span class="keywordtype">float</span> c = std::cos(rad), s = std::sin(rad);</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordtype">float</span> rx = dx * c - dy * s;</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordtype">float</span> ry = dx * s + dy * c;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        rx /= t.scale;</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        ry /= t.scale;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keywordflow">return</span> {rx + t.pivot.x, ry + t.pivot.y};</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    }</div>
+</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>}</div>
 <div class="ttc" id="aCommon_8hpp_html"><div class="ttname"><a href="Common_8hpp.html">Common.hpp</a></div><div class="ttdoc">Centralized standard library includes used throughout ZenitUI.</div></div>
 <div class="ttc" id="aSmallVector_8hpp_html"><div class="ttname"><a href="SmallVector_8hpp.html">SmallVector.hpp</a></div><div class="ttdoc">Fixed-capacity inline-storage vector with heap fallback.</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga0f6a074d868a17d846a8e99282b084a5"><div class="ttname"><a href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">ZenitUI::Align</a></div><div class="ttdeci">Align</div><div class="ttdoc">Cross-axis alignment for flex items and content.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:273</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga83c77986199d7a5f4201d6a3d1482b75"><div class="ttname"><a href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">ZenitUI::MouseButton</a></div><div class="ttdeci">MouseButton</div><div class="ttdoc">Mouse buttons tracked by the input system.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:189</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga89eb7866ba43696b07adaac980a2a5b0"><div class="ttname"><a href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">ZenitUI::Justify</a></div><div class="ttdeci">Justify</div><div class="ttdoc">Main-axis distribution for flex containers.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:283</div></div>
-<div class="ttc" id="agroup__grp__core_html_gaa0a5aa40122e6e04d83da4ba6adadb31"><div class="ttname"><a href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">ZenitUI::applyInverseTransform</a></div><div class="ttdeci">Vec2 applyInverseTransform(const Transform2D &amp;t, Vec2 p)</div><div class="ttdoc">Invert a Transform2D and apply it to a point.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:319</div></div>
-<div class="ttc" id="agroup__grp__core_html_gaed05b39d9355d400bb04a40e87845ccf"><div class="ttname"><a href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">ZenitUI::applyTransform</a></div><div class="ttdeci">Vec2 applyTransform(const Transform2D &amp;t, Vec2 p)</div><div class="ttdoc">Apply a Transform2D to a point.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:296</div></div>
-<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:276</div></div>
-<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">ZenitUI::Align::End</a></div><div class="ttdeci">@ End</div><div class="ttdoc">Pack at the trailing edge.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:277</div></div>
-<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">ZenitUI::Align::Start</a></div><div class="ttdeci">@ Start</div><div class="ttdoc">Pack at the leading edge.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:275</div></div>
-<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">ZenitUI::Align::Stretch</a></div><div class="ttdeci">@ Stretch</div><div class="ttdoc">Stretch to fill the cross axis.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:278</div></div>
-<div class="ttc" id="agroup__grp__core_html_gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119"><div class="ttname"><a href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">ZenitUI::Justify::SpaceBetween</a></div><div class="ttdeci">@ SpaceBetween</div><div class="ttdoc">Distribute leftover space between items.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:287</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga0f6a074d868a17d846a8e99282b084a5"><div class="ttname"><a href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">ZenitUI::Align</a></div><div class="ttdeci">Align</div><div class="ttdoc">Cross-axis alignment for flex items and content.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:287</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga83c77986199d7a5f4201d6a3d1482b75"><div class="ttname"><a href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">ZenitUI::MouseButton</a></div><div class="ttdeci">MouseButton</div><div class="ttdoc">Mouse buttons tracked by the input system.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:203</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga89eb7866ba43696b07adaac980a2a5b0"><div class="ttname"><a href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">ZenitUI::Justify</a></div><div class="ttdeci">Justify</div><div class="ttdoc">Main-axis distribution for flex containers.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:297</div></div>
+<div class="ttc" id="agroup__grp__core_html_gaa0a5aa40122e6e04d83da4ba6adadb31"><div class="ttname"><a href="group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31">ZenitUI::applyInverseTransform</a></div><div class="ttdeci">Vec2 applyInverseTransform(const Transform2D &amp;t, Vec2 p)</div><div class="ttdoc">Invert a Transform2D and apply it to a point.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:333</div></div>
+<div class="ttc" id="agroup__grp__core_html_gaed05b39d9355d400bb04a40e87845ccf"><div class="ttname"><a href="group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf">ZenitUI::applyTransform</a></div><div class="ttdeci">Vec2 applyTransform(const Transform2D &amp;t, Vec2 p)</div><div class="ttdoc">Apply a Transform2D to a point.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:310</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">ZenitUI::Align::Center</a></div><div class="ttdeci">@ Center</div><div class="ttdoc">Center within the available space.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:290</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a87557f11575c0ad78e4e28abedc13b6e">ZenitUI::Align::End</a></div><div class="ttdeci">@ End</div><div class="ttdoc">Pack at the trailing edge.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:291</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">ZenitUI::Align::Start</a></div><div class="ttdeci">@ Start</div><div class="ttdoc">Pack at the leading edge.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:289</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5afbb09a82eafab60150d0996e8fe46560">ZenitUI::Align::Stretch</a></div><div class="ttdeci">@ Stretch</div><div class="ttdoc">Stretch to fill the cross axis.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:292</div></div>
+<div class="ttc" id="agroup__grp__core_html_gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119"><div class="ttname"><a href="group__grp__core.html#gga89eb7866ba43696b07adaac980a2a5b0afa2f3f8f296dcb6e5c287d69eae1c119">ZenitUI::Justify::SpaceBetween</a></div><div class="ttdeci">@ SpaceBetween</div><div class="ttdoc">Distribute leftover space between items.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:301</div></div>
 <div class="ttc" id="anamespaceZenitUI_1_1Colors_html"><div class="ttname"><a href="namespaceZenitUI_1_1Colors.html">ZenitUI::Colors</a></div><div class="ttdoc">Named color constants.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:95</div></div>
-<div class="ttc" id="anamespaceZenitUI_1_1Key_html"><div class="ttname"><a href="namespaceZenitUI_1_1Key.html">ZenitUI::Key</a></div><div class="ttdoc">Platform-agnostic key constants.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:239</div></div>
-<div class="ttc" id="astructZenitUI_1_1ButtonState_html"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html">ZenitUI::ButtonState</a></div><div class="ttdoc">Per-button state snapshot for the current frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:198</div></div>
-<div class="ttc" id="astructZenitUI_1_1ButtonState_html_a1a0338234a9b14cb58ec78af31eeb341"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">ZenitUI::ButtonState::down</a></div><div class="ttdeci">bool down</div><div class="ttdoc">Button is currently held.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:199</div></div>
-<div class="ttc" id="astructZenitUI_1_1ButtonState_html_aba063f55356a7eae2bd833dd3e7bf665"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">ZenitUI::ButtonState::released</a></div><div class="ttdeci">bool released</div><div class="ttdoc">Button transitioned from down to up this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:201</div></div>
-<div class="ttc" id="astructZenitUI_1_1ButtonState_html_acd77bb542f265c9b91e02eb9f318153a"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">ZenitUI::ButtonState::pressed</a></div><div class="ttdeci">bool pressed</div><div class="ttdoc">Button transitioned from up to down this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:200</div></div>
+<div class="ttc" id="anamespaceZenitUI_1_1Key_html"><div class="ttname"><a href="namespaceZenitUI_1_1Key.html">ZenitUI::Key</a></div><div class="ttdoc">Platform-agnostic key constants.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:253</div></div>
+<div class="ttc" id="astructZenitUI_1_1ButtonState_html"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html">ZenitUI::ButtonState</a></div><div class="ttdoc">Per-button state snapshot for the current frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:212</div></div>
+<div class="ttc" id="astructZenitUI_1_1ButtonState_html_a1a0338234a9b14cb58ec78af31eeb341"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#a1a0338234a9b14cb58ec78af31eeb341">ZenitUI::ButtonState::down</a></div><div class="ttdeci">bool down</div><div class="ttdoc">Button is currently held.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:213</div></div>
+<div class="ttc" id="astructZenitUI_1_1ButtonState_html_aba063f55356a7eae2bd833dd3e7bf665"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#aba063f55356a7eae2bd833dd3e7bf665">ZenitUI::ButtonState::released</a></div><div class="ttdeci">bool released</div><div class="ttdoc">Button transitioned from down to up this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:215</div></div>
+<div class="ttc" id="astructZenitUI_1_1ButtonState_html_acd77bb542f265c9b91e02eb9f318153a"><div class="ttname"><a href="structZenitUI_1_1ButtonState.html#acd77bb542f265c9b91e02eb9f318153a">ZenitUI::ButtonState::pressed</a></div><div class="ttdeci">bool pressed</div><div class="ttdoc">Button transitioned from up to down this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:214</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html_a123f6dae1f352d31f6c3923e9a5c8796"><div class="ttname"><a href="structZenitUI_1_1Color.html#a123f6dae1f352d31f6c3923e9a5c8796">ZenitUI::Color::withAlpha</a></div><div class="ttdeci">Color withAlpha(float k) const</div><div class="ttdoc">Return a copy with the alpha channel scaled by k.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:84</div></div>
 <div class="ttc" id="astructZenitUI_1_1EdgeInsets_html"><div class="ttname"><a href="structZenitUI_1_1EdgeInsets.html">ZenitUI::EdgeInsets</a></div><div class="ttdoc">Four-sided edge inset (used for padding, margin, borders).</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:61</div></div>
-<div class="ttc" id="astructZenitUI_1_1EffectHandle_html"><div class="ttname"><a href="structZenitUI_1_1EffectHandle.html">ZenitUI::EffectHandle</a></div><div class="ttdoc">Opaque handle to a shader/effect owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:126</div></div>
-<div class="ttc" id="astructZenitUI_1_1FontHandle_html"><div class="ttname"><a href="structZenitUI_1_1FontHandle.html">ZenitUI::FontHandle</a></div><div class="ttdoc">Opaque handle to a font loaded by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:120</div></div>
-<div class="ttc" id="astructZenitUI_1_1InputEvents_html"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html">ZenitUI::InputEvents</a></div><div class="ttdoc">One frame&#39;s worth of keyboard input.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:265</div></div>
-<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a16968299a5c32e56b1a5199d1e4563af"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">ZenitUI::InputEvents::keys</a></div><div class="ttdeci">std::vector&lt; int &gt; keys</div><div class="ttdoc">Keys pressed this frame (edge-triggered).</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:267</div></div>
-<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a28c419560be2d41d95e7b5cc1d2df4fa"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">ZenitUI::InputEvents::chars</a></div><div class="ttdeci">std::vector&lt; int &gt; chars</div><div class="ttdoc">Printable characters typed this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:266</div></div>
-<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a9daefc371fab631fc45231c4a2a37f70"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">ZenitUI::InputEvents::held</a></div><div class="ttdeci">std::vector&lt; int &gt; held</div><div class="ttdoc">Keys currently held (level-triggered).</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:268</div></div>
-<div class="ttc" id="astructZenitUI_1_1Metrics_html"><div class="ttname"><a href="structZenitUI_1_1Metrics.html">ZenitUI::Metrics</a></div><div class="ttdoc">Global viewport metrics, updated once per frame from the platform.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:227</div></div>
-<div class="ttc" id="astructZenitUI_1_1ModifierState_html"><div class="ttname"><a href="structZenitUI_1_1ModifierState.html">ZenitUI::ModifierState</a></div><div class="ttdoc">Keyboard modifier snapshot.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:218</div></div>
-<div class="ttc" id="astructZenitUI_1_1NineSlice_html"><div class="ttname"><a href="structZenitUI_1_1NineSlice.html">ZenitUI::NineSlice</a></div><div class="ttdoc">Nine-slice inset values for scalable textures.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:147</div></div>
-<div class="ttc" id="astructZenitUI_1_1PointerState_html"><div class="ttname"><a href="structZenitUI_1_1PointerState.html">ZenitUI::PointerState</a></div><div class="ttdoc">Pointer position, wheel delta, and per-button state for one frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:206</div></div>
+<div class="ttc" id="astructZenitUI_1_1EffectHandle_html"><div class="ttname"><a href="structZenitUI_1_1EffectHandle.html">ZenitUI::EffectHandle</a></div><div class="ttdoc">Opaque handle to a shader/effect owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:140</div></div>
+<div class="ttc" id="astructZenitUI_1_1FontHandle_html"><div class="ttname"><a href="structZenitUI_1_1FontHandle.html">ZenitUI::FontHandle</a></div><div class="ttdoc">Opaque handle to a font loaded by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:134</div></div>
+<div class="ttc" id="astructZenitUI_1_1InputEvents_html"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html">ZenitUI::InputEvents</a></div><div class="ttdoc">One frame&#39;s worth of keyboard input.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:279</div></div>
+<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a16968299a5c32e56b1a5199d1e4563af"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a16968299a5c32e56b1a5199d1e4563af">ZenitUI::InputEvents::keys</a></div><div class="ttdeci">std::vector&lt; int &gt; keys</div><div class="ttdoc">Keys pressed this frame (edge-triggered).</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:281</div></div>
+<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a28c419560be2d41d95e7b5cc1d2df4fa"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa">ZenitUI::InputEvents::chars</a></div><div class="ttdeci">std::vector&lt; int &gt; chars</div><div class="ttdoc">Printable characters typed this frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:280</div></div>
+<div class="ttc" id="astructZenitUI_1_1InputEvents_html_a9daefc371fab631fc45231c4a2a37f70"><div class="ttname"><a href="structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70">ZenitUI::InputEvents::held</a></div><div class="ttdeci">std::vector&lt; int &gt; held</div><div class="ttdoc">Keys currently held (level-triggered).</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:282</div></div>
+<div class="ttc" id="astructZenitUI_1_1Metrics_html"><div class="ttname"><a href="structZenitUI_1_1Metrics.html">ZenitUI::Metrics</a></div><div class="ttdoc">Global viewport metrics, updated once per frame from the platform.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:241</div></div>
+<div class="ttc" id="astructZenitUI_1_1ModifierState_html"><div class="ttname"><a href="structZenitUI_1_1ModifierState.html">ZenitUI::ModifierState</a></div><div class="ttdoc">Keyboard modifier snapshot.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:232</div></div>
+<div class="ttc" id="astructZenitUI_1_1NineSlice_html"><div class="ttname"><a href="structZenitUI_1_1NineSlice.html">ZenitUI::NineSlice</a></div><div class="ttdoc">Nine-slice inset values for scalable textures.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:161</div></div>
+<div class="ttc" id="astructZenitUI_1_1PointerState_html"><div class="ttname"><a href="structZenitUI_1_1PointerState.html">ZenitUI::PointerState</a></div><div class="ttdoc">Pointer position, wheel delta, and per-button state for one frame.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:220</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html"><div class="ttname"><a href="structZenitUI_1_1Rect.html">ZenitUI::Rect</a></div><div class="ttdoc">Axis-aligned rectangle in screen coordinates.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:45</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html_a2b32951b74dfff574c86135c1da8e757"><div class="ttname"><a href="structZenitUI_1_1Rect.html#a2b32951b74dfff574c86135c1da8e757">ZenitUI::Rect::center</a></div><div class="ttdeci">Vec2 center() const</div><div class="ttdoc">Center point of the rectangle.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:54</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html_a3a909e504ed52a817077018a68af2868"><div class="ttname"><a href="structZenitUI_1_1Rect.html#a3a909e504ed52a817077018a68af2868">ZenitUI::Rect::size</a></div><div class="ttdeci">Vec2 size() const</div><div class="ttdoc">Same data as a Vec2.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:56</div></div>
 <div class="ttc" id="astructZenitUI_1_1Rect_html_ab500e50eacbf6e5f205522fb13eef1d3"><div class="ttname"><a href="structZenitUI_1_1Rect.html#ab500e50eacbf6e5f205522fb13eef1d3">ZenitUI::Rect::contains</a></div><div class="ttdeci">bool contains(Vec2 p) const</div><div class="ttdoc">Inclusive point-in-rect test.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:49</div></div>
-<div class="ttc" id="astructZenitUI_1_1TargetHandle_html"><div class="ttname"><a href="structZenitUI_1_1TargetHandle.html">ZenitUI::TargetHandle</a></div><div class="ttdoc">Opaque handle to an off-screen render target.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:139</div></div>
-<div class="ttc" id="astructZenitUI_1_1TextureHandle_html"><div class="ttname"><a href="structZenitUI_1_1TextureHandle.html">ZenitUI::TextureHandle</a></div><div class="ttdoc">Opaque handle to a GPU/software texture owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:112</div></div>
-<div class="ttc" id="astructZenitUI_1_1Transform2D_html"><div class="ttname"><a href="structZenitUI_1_1Transform2D.html">ZenitUI::Transform2D</a></div><div class="ttdoc">2D affine transform stored as pivot + translate + rotation + scale.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:162</div></div>
+<div class="ttc" id="astructZenitUI_1_1TargetHandle_html"><div class="ttname"><a href="structZenitUI_1_1TargetHandle.html">ZenitUI::TargetHandle</a></div><div class="ttdoc">Opaque handle to an off-screen render target.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:153</div></div>
+<div class="ttc" id="astructZenitUI_1_1TextureHandle_html"><div class="ttname"><a href="structZenitUI_1_1TextureHandle.html">ZenitUI::TextureHandle</a></div><div class="ttdoc">Opaque handle to a GPU/software texture owned by the asset provider.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:126</div></div>
+<div class="ttc" id="astructZenitUI_1_1Transform2D_html"><div class="ttname"><a href="structZenitUI_1_1Transform2D.html">ZenitUI::Transform2D</a></div><div class="ttdoc">2D affine transform stored as pivot + translate + rotation + scale.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:176</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec2_html"><div class="ttname"><a href="structZenitUI_1_1Vec2.html">ZenitUI::Vec2</a></div><div class="ttdoc">2D vector with component-wise arithmetic.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:24</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec3_html"><div class="ttname"><a href="structZenitUI_1_1Vec3.html">ZenitUI::Vec3</a></div><div class="ttdoc">3D vector.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:33</div></div>
 <div class="ttc" id="astructZenitUI_1_1Vec4_html"><div class="ttname"><a href="structZenitUI_1_1Vec4.html">ZenitUI::Vec4</a></div><div class="ttdoc">4D vector with an implicit w = 1 default.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:39</div></div>
+<div class="ttc" id="astructZenitUI_1_1Vertex2D_html"><div class="ttname"><a href="structZenitUI_1_1Vertex2D.html">ZenitUI::Vertex2D</a></div><div class="ttdoc">Interleaved 2D vertex passed to IRenderer::drawGeometry.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:117</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

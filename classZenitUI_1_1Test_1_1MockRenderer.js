@@ -5,6 +5,7 @@ var classZenitUI_1_1Test_1_1MockRenderer =
     [ "clearTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a34ef8c31cadad2b9f0d6c0781b5e0aff", null ],
     [ "createTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#aadd29413b6b2ea4e3e3827a9962bb7d1", null ],
     [ "destroyTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ab18dbad3f320f40e7614bc0c980e4c5b", null ],
+    [ "drawGeometry", "classZenitUI_1_1Test_1_1MockRenderer.html#a5558e0bc74a6c8bd6fd92441c4d8e4b9", null ],
     [ "drawNineSlice", "classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b", null ],
     [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a80f3cf4c9c97de19ab69d1d1bb957bde", null ],
     [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ae0cc438e52f973dec62fd3a8e30d3ded", null ],

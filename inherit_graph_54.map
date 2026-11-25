@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classZenitUI_1_1SmallVector.html" title="A vector whose first N elements live inside the object." alt="" coords="5,5,161,50"/>
+<area shape="rect" id="Node000000" href="$classZenitUI_1_1SmallVector.html" title=" " alt="" coords="5,5,161,50"/>
+<area shape="rect" id="Node000001" href="$structZenitUI_1_1FontStack.html" title="Ordered list of font family names to try, first match wins." alt="" coords="209,14,350,42"/>
+<area shape="poly" id="edge52_Node000000_Node000001" title=" " alt="" coords="176,25,211,27,206,28,176,30"/>
 </map>

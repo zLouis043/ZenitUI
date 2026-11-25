@@ -10,6 +10,14 @@ var searchData=
   ['box_7',['Box',['../group__grp__widgets.html#gae0c53a867aed43cff14c742574f493de',1,'ZenitUI::UI']]],
   ['btn_8',['Btn',['../group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd',1,'ZenitUI::UI']]],
   ['build_9',['build',['../classZenitUI_1_1CodepointSet.html#a23e36e629f9b35695b81454435706fdb',1,'ZenitUI::CodepointSet']]],
-  ['buildroundedborderring_10',['buildRoundedBorderRing',['../group__grp__backends.html#gaee6db3cba2c125dec508b716e4f85f76',1,'ZenitUI::Geometry2D']]],
-  ['button_11',['Button',['../group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button']]]
+  ['buildborder_10',['buildBorder',['../group__grp__backends.html#ga42d55468109f420713eaebb1333a86a1',1,'ZenitUI::Geometry2D']]],
+  ['buildcircle_11',['buildCircle',['../group__grp__backends.html#ga835d0156271063944332f198dbaf6f28',1,'ZenitUI::Geometry2D']]],
+  ['buildnineslice_12',['buildNineSlice',['../group__grp__backends.html#ga078628cc588689ac37625f1b7a5e0924',1,'ZenitUI::Geometry2D']]],
+  ['buildquad_13',['buildQuad',['../group__grp__backends.html#ga861247496a697be06c5775c2918b90a8',1,'ZenitUI::Geometry2D']]],
+  ['buildrectstroke_14',['buildRectStroke',['../group__grp__backends.html#ga0b36f20a7836d71f9986653a0d3e6f26',1,'ZenitUI::Geometry2D']]],
+  ['buildroundedborderring_15',['buildRoundedBorderRing',['../group__grp__backends.html#gaee6db3cba2c125dec508b716e4f85f76',1,'ZenitUI::Geometry2D']]],
+  ['buildroundedrectfill_16',['buildRoundedRectFill',['../group__grp__backends.html#ga231661f60e3502f0dc3fa16d23c8d2bb',1,'ZenitUI::Geometry2D']]],
+  ['buildroundedrectstroke_17',['buildRoundedRectStroke',['../group__grp__backends.html#gac773e2eb93cee37497619a47b44d005f',1,'ZenitUI::Geometry2D']]],
+  ['buildtexturedquad_18',['buildTexturedQuad',['../group__grp__backends.html#gafb42f2d54dbd3623a7f8e6f21ad5c952',1,'ZenitUI::Geometry2D']]],
+  ['button_19',['Button',['../group__grp__widgets.html#ga0a956aa7442e0c791e6051c5cecbd8c8',1,'ZenitUI::UI::Button']]]
 ];
