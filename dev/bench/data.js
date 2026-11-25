@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795641615469,
+  "lastUpdate": 1795643326308,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -16716,6 +16716,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 102.967,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "0ef8a54aff3357dd11b4f584ce33434d22fb119b",
+          "message": "perf(render): fast-path animated layer cache checks and avoid filter arg allocations\n\nAdds a scalar pre-check and upfront animation check in Layout::drawLayer to skip subtree fingerprinting on animated nodes, defers Silhouette offset parsing to cache-bake frames only, replaces std::string/std::stof length parsing with a zero-allocation parser, and guards registerBuiltinFilters() with a static flag.",
+          "timestamp": "2026-11-25T22:45:56+01:00",
+          "tree_id": "abb5ae168a2a9db87805e7f0682905f5bab2aa5c",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/0ef8a54aff3357dd11b4f584ce33434d22fb119b"
+        },
+        "date": 1795643324618,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 250.95,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.03979,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00463509,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.033387,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0239902,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.579948,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.73151,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.656841,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.321993,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.990941,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 32.9906,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 36.2044,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 11.7669,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 13.1745,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 30.5726,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00327291,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 41.6582,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 137.515,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 43.6967,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 104.312,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 82.8236,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 64.6009,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 100.609,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 472.529,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 465.647,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 39.8061,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 101.664,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 87.9559,
             "unit": "us"
           }
         ]
