@@ -473,7 +473,6 @@ void main() {
 			GLuint glTex{0};
 			float baseSize{48.0f};
 			float ascentPx{0.0f};
-			Vec2 whiteUv{0.5f, 0.5f};
 			std::unordered_map<uint32_t, GlyphInfo> glyphs;
 		};
 
@@ -539,10 +538,6 @@ void main() {
 		float cachedProjH{-1.0f};
 		uint64_t projectionVersion{1};
 		float activeProjection[16]{};
-
-		// Font atlas white-pixel coalescing for untextured UI shapes.
-		GLuint preferredFontTex{0};
-		Vec2 preferredFontWhiteUv{0.5f, 0.5f};
 
 		uint32_t nextId{1};
 		std::unordered_map<uint32_t, TextureObj> textures;
@@ -1028,9 +1023,6 @@ void main() {
 			return;
 
 		GLuint glTex = impl_->whiteTex;
-		bool overrideWhiteUv = false;
-		Vec2 whiteUv{0.5f, 0.5f};
-
 		if (tex.valid())
 		{
 			auto it = impl_->textures.find(tex.id);
@@ -1039,13 +1031,6 @@ void main() {
 				return;
 			glTex = it->second.glId;
 		}
-		else if (impl_->effectStack.empty() && impl_->preferredFontTex != 0)
-		{
-			// Coalesce untextured UI primitives into the active font atlas batch.
-			glTex = impl_->preferredFontTex;
-			whiteUv = impl_->preferredFontWhiteUv;
-			overrideWhiteUv = true;
-		}
 
 		const size_t totalIndices = indices.size() - (indices.size() % 3);
 
@@ -1053,9 +1038,8 @@ void main() {
 		{
 			impl_->ensureBatch(glTex, vertices.size(), totalIndices);
 			const uint32_t base = static_cast<uint32_t>(impl_->vertexBatch.size());
-			const bool hasTransform = !impl_->transformStack.empty();
 
-			if (!hasTransform && !overrideWhiteUv)
+			if (impl_->transformStack.empty())
 			{
 				const size_t oldSize = impl_->vertexBatch.size();
 				impl_->vertexBatch.resize(oldSize + vertices.size());
@@ -1063,18 +1047,12 @@ void main() {
 							vertices.data(),
 							vertices.size() * sizeof(Vertex2D));
 			}
-			else if (!hasTransform)
-			{
-				for (const Vertex2D &v : vertices)
-					impl_->vertexBatch.push_back(Vertex2D{v.pos, whiteUv, v.color});
-			}
 			else
 			{
 				for (const Vertex2D &v : vertices)
 				{
 					const Vec2 p = impl_->transformPoint(v.pos);
-					const Vec2 uv = overrideWhiteUv ? whiteUv : v.uv;
-					impl_->vertexBatch.push_back(Vertex2D{p, uv, v.color});
+					impl_->vertexBatch.push_back(Vertex2D{p, v.uv, v.color});
 				}
 			}
 
@@ -1099,8 +1077,7 @@ void main() {
 			{
 				const uint32_t idx = indices[offset + i];
 				const Vertex2D &v = (idx < vertices.size()) ? vertices[idx] : vertices[0];
-				const Vec2 uv = overrideWhiteUv ? whiteUv : v.uv;
-				impl_->pushVertex(v.pos, uv.x, uv.y, v.color);
+				impl_->pushVertex(v.pos, v.uv.x, v.uv.y, v.color);
 				impl_->indexBatch.push_back(base + static_cast<uint32_t>(i));
 			}
 		}
@@ -1122,8 +1099,6 @@ void main() {
 		}
 
 		const auto &font = it->second;
-		impl_->preferredFontTex = font.glTex;
-		impl_->preferredFontWhiteUv = font.whiteUv;
 		const float ratio = size / font.baseSize;
 		const float startX = std::round(pos.x);
 		float cursorX = startX;
@@ -1698,7 +1673,6 @@ void main() {
 			ranges[r].chardata_for_range = packed.data() + runs[r].offset;
 		}
 
-		constexpr int kWhiteStrip = 4;
 		int atlasDim = 512;
 		std::vector<unsigned char> alpha;
 		bool packedOk = false;
@@ -1706,13 +1680,7 @@ void main() {
 		{
 			alpha.assign(static_cast<size_t>(atlasDim) * static_cast<size_t>(atlasDim), 0);
 			stbtt_pack_context pc{};
-			if (!stbtt_PackBegin(&pc,
-								 alpha.data() + static_cast<size_t>(kWhiteStrip) * static_cast<size_t>(atlasDim),
-								 atlasDim,
-								 atlasDim - kWhiteStrip,
-								 atlasDim,
-								 1,
-								 nullptr))
+			if (!stbtt_PackBegin(&pc, alpha.data(), atlasDim, atlasDim, 0, 1, nullptr))
 				continue;
 			stbtt_PackSetOversampling(&pc, 1, 1);
 			packedOk = stbtt_PackFontRanges(&pc, ttfData, 0, ranges.data(), static_cast<int>(ranges.size())) != 0;
@@ -1726,11 +1694,6 @@ void main() {
 			logError("SDL3Renderer", "", 0, 0, "Failed to pack font atlas up to 4096x4096");
 			return {};
 		}
-
-		// Stamp a 3x3 opaque white block in the top-left corner so solid shapes share the font batch.
-		for (int y = 0; y < 3; ++y)
-			for (int x = 0; x < 3; ++x)
-				alpha[static_cast<size_t>(y) * static_cast<size_t>(atlasDim) + static_cast<size_t>(x)] = 255;
 
 		// Expand single-channel coverage to white RGBA so the standard shader tints text cleanly.
 		std::vector<unsigned char> rgba(alpha.size() * 4);
@@ -1765,27 +1728,20 @@ void main() {
 		font.glyphs.reserve(cps.size());
 
 		const float invAtlas = 1.0f / static_cast<float>(atlasDim);
-		font.whiteUv = {1.5f * invAtlas, 1.5f * invAtlas};
 		for (size_t i = 0; i < cps.size(); ++i)
 		{
 			const stbtt_packedchar &pc = packed[i];
 			Impl::GlyphInfo g;
 			g.u0 = static_cast<float>(pc.x0) * invAtlas;
-			g.v0 = static_cast<float>(pc.y0 + kWhiteStrip) * invAtlas;
+			g.v0 = static_cast<float>(pc.y0) * invAtlas;
 			g.u1 = static_cast<float>(pc.x1) * invAtlas;
-			g.v1 = static_cast<float>(pc.y1 + kWhiteStrip) * invAtlas;
+			g.v1 = static_cast<float>(pc.y1) * invAtlas;
 			g.xoff = pc.xoff;
 			g.yoff = pc.yoff;
 			g.w = pc.xoff2 - pc.xoff;
 			g.h = pc.yoff2 - pc.yoff;
 			g.xadvance = pc.xadvance;
 			font.glyphs[static_cast<uint32_t>(cps[i])] = g;
-		}
-
-		if (impl_->preferredFontTex == 0)
-		{
-			impl_->preferredFontTex = glTex;
-			impl_->preferredFontWhiteUv = font.whiteUv;
 		}
 
 		const uint32_t id = impl_->nextId++;
@@ -1805,16 +1761,9 @@ void main() {
 			}
 			if (impl_->boundTexture == tex)
 				impl_->boundTexture = 0;
-			if (impl_->preferredFontTex == tex)
-				impl_->preferredFontTex = 0;
 			if (tex)
 				glDeleteTextures(1, &tex);
 			impl_->fonts.erase(it);
-			if (impl_->preferredFontTex == 0 && !impl_->fonts.empty())
-			{
-				impl_->preferredFontTex = impl_->fonts.begin()->second.glTex;
-				impl_->preferredFontWhiteUv = impl_->fonts.begin()->second.whiteUv;
-			}
 		}
 	}
 
