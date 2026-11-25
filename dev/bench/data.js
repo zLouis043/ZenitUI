@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795632779922,
+  "lastUpdate": 1795641615469,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -16552,6 +16552,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 63.7306,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "5a4e720df44e49644e610020da1b1a028c110dbf",
+          "message": "perf(render): cache static filtered layers and add renderer BlendMode\n\nCaches off-screen filtered layer outputs in Layout::drawLayer after one stable frame using subtree fingerprinting and TargetPool generation tracking. Adds IRenderer::setBlendMode (Alpha, Premultiplied, Replace) in SDL3 and Raylib backends so off-screen filter passes preserve straight alpha and Silhouette filters (drop-shadow) composite without double blending or clipping.",
+          "timestamp": "2026-11-25T22:18:25+01:00",
+          "tree_id": "5597bce72514ec233d2ebaefdc389864b25cd178",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/5a4e720df44e49644e610020da1b1a028c110dbf"
+        },
+        "date": 1795641614196,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 247.723,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.05468,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00382397,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0338624,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0230991,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.58395,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.736108,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.66721,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.333708,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.999288,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 35.3533,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 34.6788,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 11.899,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 12.6985,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 30.5806,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00328655,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 38.9212,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 137.791,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 41.0792,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 101.857,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 78.7957,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 60.4535,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 98.2393,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 434.856,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 445.539,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 42.3765,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 130.472,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 102.967,
             "unit": "us"
           }
         ]
