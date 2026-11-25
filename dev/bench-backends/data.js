@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795632971249,
+  "lastUpdate": 1795641728029,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -295,6 +295,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 11619.2,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "5a4e720df44e49644e610020da1b1a028c110dbf",
+          "message": "perf(render): cache static filtered layers and add renderer BlendMode\n\nCaches off-screen filtered layer outputs in Layout::drawLayer after one stable frame using subtree fingerprinting and TargetPool generation tracking. Adds IRenderer::setBlendMode (Alpha, Premultiplied, Replace) in SDL3 and Raylib backends so off-screen filter passes preserve straight alpha and Silhouette filters (drop-shadow) composite without double blending or clipping.",
+          "timestamp": "2026-11-25T22:18:25+01:00",
+          "tree_id": "5597bce72514ec233d2ebaefdc389864b25cd178",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/5a4e720df44e49644e610020da1b1a028c110dbf"
+        },
+        "date": 1795641726052,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 3181.32,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 3174.02,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 1840.36,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 3184.45,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 1779.63,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 2871.46,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 2850.33,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 1700.33,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 2827.36,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 1752.37,
             "unit": "us"
           }
         ]
