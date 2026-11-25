@@ -87,6 +87,14 @@ namespace ZenitUI
 			rlDisableFramebuffer();
 			return target;
 		}
+
+		void raylibLogToStderr(int logLevel, const char *text, va_list args)
+		{
+			if (logLevel < LOG_WARNING)
+				return;
+			std::vfprintf(stderr, text, args);
+			std::fputc('\n', stderr);
+		}
 	} // namespace
 
 	// =========================================================================
@@ -993,6 +1001,9 @@ namespace ZenitUI
 			flags |= FLAG_VSYNC_HINT;
 
 		SetConfigFlags(flags);
+
+		SetTraceLogCallback(raylibLogToStderr);
+
 		InitWindow(config.width, config.height, config.title.c_str());
 		if (!IsWindowReady())
 			return false;

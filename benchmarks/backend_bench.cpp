@@ -32,6 +32,7 @@ static std::unique_ptr<ZenitUI::IBackend> createBenchBackend()
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
 
 namespace Bench
 {
@@ -230,12 +231,15 @@ namespace
 int main(int argc, char **argv)
 {
     bool json = false;
+    std::string outPath;
     int repeats = 5;
 
     for (int i = 1; i < argc; ++i)
     {
         if (std::strcmp(argv[i], "--json") == 0)
             json = true;
+        else if (std::strcmp(argv[i], "--out") == 0 && i + 1 < argc)
+            outPath = argv[++i];
         else if (std::strcmp(argv[i], "--repeats") == 0 && i + 1 < argc)
             repeats = std::max(1, std::atoi(argv[++i]));
     }
@@ -373,8 +377,21 @@ int main(int argc, char **argv)
 
         runner.runAll(json ? std::cerr : std::cout);
 
-        if (json)
+        if (!outPath.empty())
+        {
+            std::ofstream ofs(outPath);
+            if (!ofs)
+            {
+                std::fprintf(stderr, "[bench_%s] Failed to open '%s' for writing\n",
+                             kBackendTag, outPath.c_str());
+                return 1;
+            }
+            runner.printJson(ofs);
+        }
+        else if (json)
+        {
             runner.printJson(std::cout);
+        }
         else
         {
             runner.printHuman(std::cout);

@@ -97,7 +97,7 @@ jobs:
           GALLIUM_DRIVER: llvmpipe
         run: |
           xvfb-run -a -s "-screen 0 1280x720x24" \
-            ./build/benchmarks/bin/bench_raylib --json > bench-raylib.json
+            ./build/benchmarks/bin/bench_raylib --json --out bench-raylib.json
 
       - name: Build SDL3 backend benchmark
         run: make -j4 bench-backend BACKEND=sdl3
@@ -109,7 +109,7 @@ jobs:
           SDL_VIDEODRIVER: x11
         run: |
           xvfb-run -a -s "-screen 0 1280x720x24" \
-            ./build/benchmarks/bin/bench_sdl3 --json > bench-sdl3.json
+            ./build/benchmarks/bin/bench_sdl3 --json --out bench-sdl3.json
 
       - name: Merge backend benchmark JSONs
         run: |
