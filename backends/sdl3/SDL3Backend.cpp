@@ -38,6 +38,8 @@
 #include <mutex>
 #include <sstream>
 #include <vector>
+#include <cstring>
+#include <type_traits>
 
 namespace ZenitUI
 {
@@ -47,6 +49,9 @@ namespace ZenitUI
 	namespace
 	{
 		constexpr size_t kMaxBatchVertices = 16384;
+		constexpr size_t kMaxBatchIndices = 49152;
+		constexpr size_t kVboRingVertices = 65536;
+		constexpr size_t kEboRingIndices = 196608;
 
 		struct GLProcs
 		{
@@ -91,6 +96,7 @@ namespace ZenitUI
 			PFNGLBINDFRAMEBUFFERPROC BindFramebuffer{nullptr};
 			PFNGLFRAMEBUFFERTEXTURE2DPROC FramebufferTexture2D{nullptr};
 			PFNGLCHECKFRAMEBUFFERSTATUSPROC CheckFramebufferStatus{nullptr};
+			PFNGLDRAWELEMENTSBASEVERTEXPROC DrawElementsBaseVertex{nullptr};
 
 			template <typename Fn>
 			static bool loadOne(Fn &out, const char *name)
@@ -152,6 +158,7 @@ namespace ZenitUI
 				ok &= loadOne(BindFramebuffer, "glBindFramebuffer");
 				ok &= loadOne(FramebufferTexture2D, "glFramebufferTexture2D");
 				ok &= loadOne(CheckFramebufferStatus, "glCheckFramebufferStatus");
+				ok &= loadOne(DrawElementsBaseVertex, "glDrawElementsBaseVertex");
 				return ok;
 			}
 		};
@@ -423,7 +430,6 @@ void main() {
 		return impl_->input.drainEvents(std::move(held));
 	}
 
-
 	void SDL3Platform::setClipboardText(const std::string &text)
 	{
 		SDL_SetClipboardText(text.c_str());
@@ -445,12 +451,8 @@ void main() {
 
 	struct SDL3Renderer::Impl
 	{
-		struct Vertex
-		{
-			float x, y;
-			float u, v;
-			uint8_t r, g, b, a;
-		};
+		static_assert(std::is_trivially_copyable_v<Vertex2D>,
+					  "Vertex2D must be trivially copyable for fast batch upload");
 
 		struct TextureObj
 		{
@@ -471,6 +473,7 @@ void main() {
 			GLuint glTex{0};
 			float baseSize{48.0f};
 			float ascentPx{0.0f};
+			Vec2 whiteUv{0.5f, 0.5f};
 			std::unordered_map<uint32_t, GlyphInfo> glyphs;
 		};
 
@@ -483,6 +486,7 @@ void main() {
 			GLint locProjection{-1};
 			GLint locTexture0{-1};
 			GLint locColDiffuse{-1};
+			uint64_t uploadedProjVersion{0};
 			UniformCache uniforms;
 		};
 
@@ -511,13 +515,34 @@ void main() {
 
 		GLuint vao{0};
 		GLuint vbo{0};
+		GLuint ebo{0};
 		GLuint whiteTex{0};
 		ShaderObj defaultShader{};
 
-		std::vector<Vertex> batch;
+		std::vector<Vertex2D> vertexBatch;
+		std::vector<uint32_t> indexBatch;
 		GLuint batchTex{0};
-		GLuint activeProgram{0};
+		size_t vboWriteOffset{0};
+		size_t eboWriteOffset{0};
+
+		// Cached GL state (invalidated at beginFrame).
+		GLuint boundProgram{0};
+		GLuint boundTexture{0};
+		bool vaoBound{false};
+		bool vboBound{false};
+		bool activeTexUnit0{false};
+		bool scissorEnabled{false};
+		int scissorBox[4]{0, 0, 0, 0};
+		int cachedVpW{0};
+		int cachedVpH{0};
+		float cachedProjW{-1.0f};
+		float cachedProjH{-1.0f};
+		uint64_t projectionVersion{1};
 		float activeProjection[16]{};
+
+		// Font atlas white-pixel coalescing for untextured UI shapes.
+		GLuint preferredFontTex{0};
+		Vec2 preferredFontWhiteUv{0.5f, 0.5f};
 
 		uint32_t nextId{1};
 		std::unordered_map<uint32_t, TextureObj> textures;
@@ -594,6 +619,17 @@ void main() {
 			obj.locProjection = gl.GetUniformLocation(prog, "uProjection");
 			obj.locTexture0 = gl.GetUniformLocation(prog, "texture0");
 			obj.locColDiffuse = gl.GetUniformLocation(prog, "colDiffuse");
+
+			// Static defaults uploaded once at link time instead of on every flush.
+			gl.UseProgram(prog);
+			boundProgram = prog;
+			if (obj.locTexture0 >= 0)
+				gl.Uniform1i(obj.locTexture0, 0);
+			if (obj.locColDiffuse >= 0)
+			{
+				constexpr float kWhite[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+				gl.Uniform4fv(obj.locColDiffuse, 1, kWhite);
+			}
 			return obj;
 		}
 
@@ -606,7 +642,7 @@ void main() {
 			return loc;
 		}
 
-		const ShaderObj &currentShaderObj() const
+		ShaderObj &currentShaderObj()
 		{
 			if (!effectStack.empty())
 			{
@@ -618,62 +654,121 @@ void main() {
 
 		void bindActiveProgramUniforms()
 		{
-			const ShaderObj &sh = currentShaderObj();
-			activeProgram = sh.program;
-			gl.UseProgram(activeProgram);
-			if (sh.locProjection >= 0)
-				gl.UniformMatrix4fv(sh.locProjection, 1, GL_FALSE, activeProjection);
-			if (sh.locTexture0 >= 0)
-				gl.Uniform1i(sh.locTexture0, 0);
-			if (sh.locColDiffuse >= 0)
+			ShaderObj &sh = currentShaderObj();
+			if (boundProgram != sh.program)
 			{
-				constexpr float kWhite[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-				gl.Uniform4fv(sh.locColDiffuse, 1, kWhite);
+				gl.UseProgram(sh.program);
+				boundProgram = sh.program;
+			}
+			if (sh.uploadedProjVersion != projectionVersion)
+			{
+				if (sh.locProjection >= 0)
+					gl.UniformMatrix4fv(sh.locProjection, 1, GL_FALSE, activeProjection);
+				sh.uploadedProjVersion = projectionVersion;
 			}
 		}
 
 		void updateProjectionAndViewport()
 		{
-			if (insideTarget)
+			const int vpW = insideTarget ? currentTargetW : fbWidth;
+			const int vpH = insideTarget ? currentTargetH : fbHeight;
+			const float projW = insideTarget ? static_cast<float>(currentTargetW)
+											 : (static_cast<float>(fbWidth) / dpiScale);
+			const float projH = insideTarget ? static_cast<float>(currentTargetH)
+											 : (static_cast<float>(fbHeight) / dpiScale);
+
+			if (cachedVpW != vpW || cachedVpH != vpH)
 			{
-				glViewport(0, 0, currentTargetW, currentTargetH);
-				makeOrthoTopDown(static_cast<float>(currentTargetW),
-								 static_cast<float>(currentTargetH),
-								 activeProjection);
+				glViewport(0, 0, vpW, vpH);
+				cachedVpW = vpW;
+				cachedVpH = vpH;
 			}
-			else
+			if (cachedProjW != projW || cachedProjH != projH)
 			{
-				glViewport(0, 0, fbWidth, fbHeight);
-				makeOrthoTopDown(static_cast<float>(fbWidth) / dpiScale,
-								 static_cast<float>(fbHeight) / dpiScale,
-								 activeProjection);
+				makeOrthoTopDown(projW, projH, activeProjection);
+				cachedProjW = projW;
+				cachedProjH = projH;
+				++projectionVersion;
 			}
-			bindActiveProgramUniforms();
 		}
 
 		void flush()
 		{
-			if (batch.empty() || !ready)
+			if (indexBatch.empty() || vertexBatch.empty() || !ready)
 				return;
 
 			bindActiveProgramUniforms();
-			gl.ActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, batchTex ? batchTex : whiteTex);
 
-			gl.BindVertexArray(vao);
-			gl.BindBuffer(GL_ARRAY_BUFFER, vbo);
+			const GLuint targetTex = batchTex ? batchTex : whiteTex;
+			if (!activeTexUnit0)
+			{
+				gl.ActiveTexture(GL_TEXTURE0);
+				activeTexUnit0 = true;
+			}
+			if (boundTexture != targetTex)
+			{
+				glBindTexture(GL_TEXTURE_2D, targetTex);
+				boundTexture = targetTex;
+			}
+
+			if (!vaoBound)
+			{
+				gl.BindVertexArray(vao);
+				vaoBound = true;
+			}
+			if (!vboBound)
+			{
+				gl.BindBuffer(GL_ARRAY_BUFFER, vbo);
+				vboBound = true;
+			}
+
+			const size_t vCount = vertexBatch.size();
+			if (vboWriteOffset + vCount > kVboRingVertices)
+			{
+				gl.BufferData(GL_ARRAY_BUFFER,
+							  static_cast<GLsizeiptr>(kVboRingVertices * sizeof(Vertex2D)),
+							  nullptr,
+							  GL_STREAM_DRAW);
+				vboWriteOffset = 0;
+			}
 			gl.BufferSubData(GL_ARRAY_BUFFER,
-							 0,
-							 static_cast<GLsizeiptr>(batch.size() * sizeof(Vertex)),
-							 batch.data());
-			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(batch.size()));
-			batch.clear();
+							 static_cast<GLsizeiptr>(vboWriteOffset * sizeof(Vertex2D)),
+							 static_cast<GLsizeiptr>(vCount * sizeof(Vertex2D)),
+							 vertexBatch.data());
+
+			const size_t iCount = indexBatch.size();
+			if (eboWriteOffset + iCount > kEboRingIndices)
+			{
+				gl.BufferData(GL_ELEMENT_ARRAY_BUFFER,
+							  static_cast<GLsizeiptr>(kEboRingIndices * sizeof(uint32_t)),
+							  nullptr,
+							  GL_STREAM_DRAW);
+				eboWriteOffset = 0;
+			}
+			gl.BufferSubData(GL_ELEMENT_ARRAY_BUFFER,
+							 static_cast<GLsizeiptr>(eboWriteOffset * sizeof(uint32_t)),
+							 static_cast<GLsizeiptr>(iCount * sizeof(uint32_t)),
+							 indexBatch.data());
+
+			gl.DrawElementsBaseVertex(
+				GL_TRIANGLES,
+				static_cast<GLsizei>(iCount),
+				GL_UNSIGNED_INT,
+				reinterpret_cast<const void *>(eboWriteOffset * sizeof(uint32_t)),
+				static_cast<GLint>(vboWriteOffset));
+
+			vboWriteOffset += vCount;
+			eboWriteOffset += iCount;
+			vertexBatch.clear();
+			indexBatch.clear();
 		}
 
-		void ensureBatch(GLuint tex, size_t vertexCount)
+		void ensureBatch(GLuint tex, size_t addVerts, size_t addIndices)
 		{
 			const GLuint resolved = tex ? tex : whiteTex;
-			if (batchTex != resolved || batch.size() + vertexCount > kMaxBatchVertices)
+			if (batchTex != resolved ||
+				vertexBatch.size() + addVerts > kMaxBatchVertices ||
+				indexBatch.size() + addIndices > kMaxBatchIndices)
 			{
 				flush();
 				batchTex = resolved;
@@ -691,27 +786,27 @@ void main() {
 		{
 			if (!transformStack.empty())
 				p = transformPoint(p);
-			batch.push_back({p.x, p.y, u, v, c.r, c.g, c.b, c.a});
+			vertexBatch.push_back(Vertex2D{p, {u, v}, c});
 		}
 
 		void pushQuad(Rect dst, float u0, float v0, float u1, float v1, Color c, GLuint tex)
 		{
 			if (dst.width <= 0.0f || dst.height <= 0.0f || c.a == 0)
 				return;
-			ensureBatch(tex, 6);
+			ensureBatch(tex, 4, 6);
 
-			const Vec2 tl{dst.x, dst.y};
-			const Vec2 tr{dst.x + dst.width, dst.y};
-			const Vec2 br{dst.x + dst.width, dst.y + dst.height};
-			const Vec2 bl{dst.x, dst.y + dst.height};
+			const uint32_t base = static_cast<uint32_t>(vertexBatch.size());
+			pushVertex({dst.x, dst.y}, u0, v0, c);
+			pushVertex({dst.x + dst.width, dst.y}, u1, v0, c);
+			pushVertex({dst.x + dst.width, dst.y + dst.height}, u1, v1, c);
+			pushVertex({dst.x, dst.y + dst.height}, u0, v1, c);
 
-			pushVertex(tl, u0, v0, c);
-			pushVertex(bl, u0, v1, c);
-			pushVertex(br, u1, v1, c);
-
-			pushVertex(tl, u0, v0, c);
-			pushVertex(br, u1, v1, c);
-			pushVertex(tr, u1, v0, c);
+			indexBatch.push_back(base + 0);
+			indexBatch.push_back(base + 3);
+			indexBatch.push_back(base + 2);
+			indexBatch.push_back(base + 0);
+			indexBatch.push_back(base + 2);
+			indexBatch.push_back(base + 1);
 		}
 
 		Rect transformClipToScreen(const Rect &local) const
@@ -737,9 +832,17 @@ void main() {
 			return {minX, minY, maxX - minX, maxY - minY};
 		}
 
+		void disableScissor()
+		{
+			if (scissorEnabled)
+			{
+				glDisable(GL_SCISSOR_TEST);
+				scissorEnabled = false;
+			}
+		}
+
 		void applyScissor(const Rect &clip)
 		{
-			flush();
 			const float scale = insideTarget ? 1.0f : dpiScale;
 			const int targetH = insideTarget ? currentTargetH : fbHeight;
 
@@ -747,12 +850,27 @@ void main() {
 			const int y = static_cast<int>(std::floor(clip.y * scale));
 			const int w = static_cast<int>(std::ceil(clip.width * scale));
 			const int h = static_cast<int>(std::ceil(clip.height * scale));
+			const int sx = (w <= 0 || h <= 0) ? 0 : x;
+			const int sy = (w <= 0 || h <= 0) ? 0 : (targetH - (y + h));
+			const int sw = (w <= 0 || h <= 0) ? 0 : w;
+			const int sh = (w <= 0 || h <= 0) ? 0 : h;
 
-			glEnable(GL_SCISSOR_TEST);
-			if (w <= 0 || h <= 0)
-				glScissor(0, 0, 0, 0);
-			else
-				glScissor(x, targetH - (y + h), w, h);
+			if (scissorEnabled &&
+				scissorBox[0] == sx && scissorBox[1] == sy &&
+				scissorBox[2] == sw && scissorBox[3] == sh)
+				return;
+
+			flush();
+			if (!scissorEnabled)
+			{
+				glEnable(GL_SCISSOR_TEST);
+				scissorEnabled = true;
+			}
+			glScissor(sx, sy, sw, sh);
+			scissorBox[0] = sx;
+			scissorBox[1] = sy;
+			scissorBox[2] = sw;
+			scissorBox[3] = sh;
 		}
 	};
 
@@ -768,25 +886,32 @@ void main() {
 
 		impl_->gl.GenVertexArrays(1, &impl_->vao);
 		impl_->gl.GenBuffers(1, &impl_->vbo);
+		impl_->gl.GenBuffers(1, &impl_->ebo);
+
 		impl_->gl.BindVertexArray(impl_->vao);
 		impl_->gl.BindBuffer(GL_ARRAY_BUFFER, impl_->vbo);
 		impl_->gl.BufferData(GL_ARRAY_BUFFER,
-							 static_cast<GLsizeiptr>(kMaxBatchVertices * sizeof(Impl::Vertex)),
+							 static_cast<GLsizeiptr>(kVboRingVertices * sizeof(Vertex2D)),
+							 nullptr,
+							 GL_STREAM_DRAW);
+
+		impl_->gl.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, impl_->ebo);
+		impl_->gl.BufferData(GL_ELEMENT_ARRAY_BUFFER,
+							 static_cast<GLsizeiptr>(kEboRingIndices * sizeof(uint32_t)),
 							 nullptr,
 							 GL_STREAM_DRAW);
 
 		impl_->gl.EnableVertexAttribArray(0);
-		impl_->gl.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Impl::Vertex),
-									  reinterpret_cast<void *>(offsetof(Impl::Vertex, x)));
+		impl_->gl.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+									  reinterpret_cast<void *>(offsetof(Vertex2D, pos)));
 		impl_->gl.EnableVertexAttribArray(1);
-		impl_->gl.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Impl::Vertex),
-									  reinterpret_cast<void *>(offsetof(Impl::Vertex, u)));
+		impl_->gl.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+									  reinterpret_cast<void *>(offsetof(Vertex2D, uv)));
 		impl_->gl.EnableVertexAttribArray(2);
-		impl_->gl.VertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Impl::Vertex),
-									  reinterpret_cast<void *>(offsetof(Impl::Vertex, r)));
+		impl_->gl.VertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex2D),
+									  reinterpret_cast<void *>(offsetof(Vertex2D, color)));
 		impl_->gl.BindVertexArray(0);
 
-		// 1x1 opaque white texture so untextured primitives share the exact same shader pipeline.
 		const uint8_t whitePixel[4] = {255, 255, 255, 255};
 		glGenTextures(1, &impl_->whiteTex);
 		glBindTexture(GL_TEXTURE_2D, impl_->whiteTex);
@@ -797,7 +922,8 @@ void main() {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		impl_->batch.reserve(kMaxBatchVertices);
+		impl_->vertexBatch.reserve(kMaxBatchVertices);
+		impl_->indexBatch.reserve(kMaxBatchIndices);
 		impl_->ready = true;
 	}
 
@@ -832,6 +958,8 @@ void main() {
 			glDeleteTextures(1, &impl_->whiteTex);
 		if (impl_->defaultShader.program)
 			impl_->gl.DeleteProgram(impl_->defaultShader.program);
+		if (impl_->ebo)
+			impl_->gl.DeleteBuffers(1, &impl_->ebo);
 		if (impl_->vbo)
 			impl_->gl.DeleteBuffers(1, &impl_->vbo);
 		if (impl_->vao)
@@ -867,6 +995,18 @@ void main() {
 		impl_->gl.BlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
 									GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+		// Reset cached GL state at frame boundary in case external code touched GL.
+		impl_->boundProgram = 0;
+		impl_->boundTexture = 0;
+		impl_->vaoBound = false;
+		impl_->vboBound = false;
+		impl_->activeTexUnit0 = false;
+		impl_->scissorEnabled = false;
+		impl_->cachedVpW = 0;
+		impl_->cachedVpH = 0;
+		impl_->cachedProjW = -1.0f;
+		impl_->cachedProjH = -1.0f;
+
 		impl_->updateProjectionAndViewport();
 	}
 
@@ -875,7 +1015,7 @@ void main() {
 		if (!impl_->ready)
 			return;
 		impl_->flush();
-		glDisable(GL_SCISSOR_TEST);
+		impl_->disableScissor();
 	}
 
 	// ---- 2D vector primitives ----
@@ -888,6 +1028,9 @@ void main() {
 			return;
 
 		GLuint glTex = impl_->whiteTex;
+		bool overrideWhiteUv = false;
+		Vec2 whiteUv{0.5f, 0.5f};
+
 		if (tex.valid())
 		{
 			auto it = impl_->textures.find(tex.id);
@@ -896,26 +1039,73 @@ void main() {
 				return;
 			glTex = it->second.glId;
 		}
+		else if (impl_->effectStack.empty() && impl_->preferredFontTex != 0)
+		{
+			// Coalesce untextured UI primitives into the active font atlas batch.
+			glTex = impl_->preferredFontTex;
+			whiteUv = impl_->preferredFontWhiteUv;
+			overrideWhiteUv = true;
+		}
 
 		const size_t totalIndices = indices.size() - (indices.size() % 3);
-		constexpr size_t kChunk = kMaxBatchVertices - (kMaxBatchVertices % 3);
 
+		if (vertices.size() <= kMaxBatchVertices && totalIndices <= kMaxBatchIndices)
+		{
+			impl_->ensureBatch(glTex, vertices.size(), totalIndices);
+			const uint32_t base = static_cast<uint32_t>(impl_->vertexBatch.size());
+			const bool hasTransform = !impl_->transformStack.empty();
+
+			if (!hasTransform && !overrideWhiteUv)
+			{
+				const size_t oldSize = impl_->vertexBatch.size();
+				impl_->vertexBatch.resize(oldSize + vertices.size());
+				std::memcpy(impl_->vertexBatch.data() + oldSize,
+							vertices.data(),
+							vertices.size() * sizeof(Vertex2D));
+			}
+			else if (!hasTransform)
+			{
+				for (const Vertex2D &v : vertices)
+					impl_->vertexBatch.push_back(Vertex2D{v.pos, whiteUv, v.color});
+			}
+			else
+			{
+				for (const Vertex2D &v : vertices)
+				{
+					const Vec2 p = impl_->transformPoint(v.pos);
+					const Vec2 uv = overrideWhiteUv ? whiteUv : v.uv;
+					impl_->vertexBatch.push_back(Vertex2D{p, uv, v.color});
+				}
+			}
+
+			const uint32_t vCount = static_cast<uint32_t>(vertices.size());
+			for (size_t i = 0; i < totalIndices; ++i)
+			{
+				const uint32_t idx = indices[i];
+				impl_->indexBatch.push_back(base + (idx < vCount ? idx : 0u));
+			}
+			return;
+		}
+
+		// Fallback for oversized custom meshes exceeding single-batch limits.
+		constexpr size_t kChunk = kMaxBatchVertices - (kMaxBatchVertices % 3);
 		for (size_t offset = 0; offset < totalIndices; offset += kChunk)
 		{
 			const size_t count = std::min(kChunk, totalIndices - offset);
-			impl_->ensureBatch(glTex, count);
+			impl_->ensureBatch(glTex, count, count);
+			const uint32_t base = static_cast<uint32_t>(impl_->vertexBatch.size());
 
 			for (size_t i = 0; i < count; ++i)
 			{
 				const uint32_t idx = indices[offset + i];
-				if (idx >= vertices.size())
-					continue;
-				const Vertex2D &v = vertices[idx];
-				impl_->pushVertex(v.pos, v.uv.x, v.uv.y, v.color);
+				const Vertex2D &v = (idx < vertices.size()) ? vertices[idx] : vertices[0];
+				const Vec2 uv = overrideWhiteUv ? whiteUv : v.uv;
+				impl_->pushVertex(v.pos, uv.x, uv.y, v.color);
+				impl_->indexBatch.push_back(base + static_cast<uint32_t>(i));
 			}
 		}
 	}
-	
+
 	// ---- Text rendering & metrics ----
 
 	void SDL3Renderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)
@@ -932,6 +1122,8 @@ void main() {
 		}
 
 		const auto &font = it->second;
+		impl_->preferredFontTex = font.glTex;
+		impl_->preferredFontWhiteUv = font.whiteUv;
 		const float ratio = size / font.baseSize;
 		const float startX = std::round(pos.x);
 		float cursorX = startX;
@@ -1084,7 +1276,7 @@ void main() {
 		{
 			impl_->flush();
 			impl_->clipActive = false;
-			glDisable(GL_SCISSOR_TEST);
+			impl_->disableScissor();
 			return;
 		}
 		impl_->applyScissor(impl_->currentClip);
@@ -1110,7 +1302,6 @@ void main() {
 			return;
 		impl_->flush();
 		impl_->effectStack.push_back(e);
-		impl_->bindActiveProgramUniforms();
 	}
 
 	void SDL3Renderer::popEffect()
@@ -1119,7 +1310,6 @@ void main() {
 			return;
 		impl_->flush();
 		impl_->effectStack.pop_back();
-		impl_->bindActiveProgramUniforms();
 	}
 
 	// ---- Shader uniforms ----
@@ -1132,9 +1322,14 @@ void main() {
 		const GLint loc = impl_->uniformLoc(it->second, name);
 		if (loc < 0)
 			return;
-		impl_->gl.UseProgram(it->second.program);
+		if (!impl_->effectStack.empty() && impl_->effectStack.back().id == e.id)
+			impl_->flush();
+		if (impl_->boundProgram != it->second.program)
+		{
+			impl_->gl.UseProgram(it->second.program);
+			impl_->boundProgram = it->second.program;
+		}
 		impl_->gl.Uniform1f(loc, value);
-		impl_->gl.UseProgram(impl_->activeProgram);
 	}
 
 	void SDL3Renderer::setEffectVec2(EffectHandle e, const char *name, Vec2 value)
@@ -1145,10 +1340,15 @@ void main() {
 		const GLint loc = impl_->uniformLoc(it->second, name);
 		if (loc < 0)
 			return;
+		if (!impl_->effectStack.empty() && impl_->effectStack.back().id == e.id)
+			impl_->flush();
 		const float arr[2] = {value.x, value.y};
-		impl_->gl.UseProgram(it->second.program);
+		if (impl_->boundProgram != it->second.program)
+		{
+			impl_->gl.UseProgram(it->second.program);
+			impl_->boundProgram = it->second.program;
+		}
 		impl_->gl.Uniform2fv(loc, 1, arr);
-		impl_->gl.UseProgram(impl_->activeProgram);
 	}
 
 	void SDL3Renderer::setEffectVec3(EffectHandle e, const char *name, Vec3 value)
@@ -1159,10 +1359,15 @@ void main() {
 		const GLint loc = impl_->uniformLoc(it->second, name);
 		if (loc < 0)
 			return;
+		if (!impl_->effectStack.empty() && impl_->effectStack.back().id == e.id)
+			impl_->flush();
 		const float arr[3] = {value.x, value.y, value.z};
-		impl_->gl.UseProgram(it->second.program);
+		if (impl_->boundProgram != it->second.program)
+		{
+			impl_->gl.UseProgram(it->second.program);
+			impl_->boundProgram = it->second.program;
+		}
 		impl_->gl.Uniform3fv(loc, 1, arr);
-		impl_->gl.UseProgram(impl_->activeProgram);
 	}
 
 	void SDL3Renderer::setEffectVec4f(EffectHandle e, const char *name, Vec4 value)
@@ -1173,10 +1378,15 @@ void main() {
 		const GLint loc = impl_->uniformLoc(it->second, name);
 		if (loc < 0)
 			return;
+		if (!impl_->effectStack.empty() && impl_->effectStack.back().id == e.id)
+			impl_->flush();
 		const float arr[4] = {value.x, value.y, value.z, value.w};
-		impl_->gl.UseProgram(it->second.program);
+		if (impl_->boundProgram != it->second.program)
+		{
+			impl_->gl.UseProgram(it->second.program);
+			impl_->boundProgram = it->second.program;
+		}
 		impl_->gl.Uniform4fv(loc, 1, arr);
-		impl_->gl.UseProgram(impl_->activeProgram);
 	}
 
 	void SDL3Renderer::setEffectVec4(EffectHandle e, const char *name, Color value)
@@ -1187,11 +1397,16 @@ void main() {
 		const GLint loc = impl_->uniformLoc(it->second, name);
 		if (loc < 0)
 			return;
+		if (!impl_->effectStack.empty() && impl_->effectStack.back().id == e.id)
+			impl_->flush();
 		const float arr[4] = {
 			value.r / 255.0f, value.g / 255.0f, value.b / 255.0f, value.a / 255.0f};
-		impl_->gl.UseProgram(it->second.program);
+		if (impl_->boundProgram != it->second.program)
+		{
+			impl_->gl.UseProgram(it->second.program);
+			impl_->boundProgram = it->second.program;
+		}
 		impl_->gl.Uniform4fv(loc, 1, arr);
-		impl_->gl.UseProgram(impl_->activeProgram);
 	}
 
 	// ---- Off-screen render targets ----
@@ -1212,6 +1427,7 @@ void main() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
+		impl_->boundTexture = 0;
 
 		GLuint fbo = 0;
 		impl_->gl.GenFramebuffers(1, &fbo);
@@ -1246,6 +1462,13 @@ void main() {
 	{
 		if (auto it = impl_->targets.find(t.id); it != impl_->targets.end())
 		{
+			if (impl_->batchTex == it->second.colorTex)
+			{
+				impl_->flush();
+				impl_->batchTex = 0;
+			}
+			if (impl_->boundTexture == it->second.colorTex)
+				impl_->boundTexture = 0;
 			if (it->second.colorTex)
 				glDeleteTextures(1, &it->second.colorTex);
 			if (it->second.fbo)
@@ -1261,17 +1484,15 @@ void main() {
 			return;
 
 		impl_->flush();
-		if (impl_->clipActive)
-			glDisable(GL_SCISSOR_TEST);
+		impl_->disableScissor();
 
-		impl_->targetStates.push_back({
-			impl_->currentTarget,
-			impl_->clipActive,
-			impl_->currentClip,
-			std::move(impl_->clipStack),
-			std::move(impl_->transformStack),
-			impl_->currentTargetW,
-			impl_->currentTargetH});
+		impl_->targetStates.push_back({impl_->currentTarget,
+									   impl_->clipActive,
+									   impl_->currentClip,
+									   std::move(impl_->clipStack),
+									   std::move(impl_->transformStack),
+									   impl_->currentTargetW,
+									   impl_->currentTargetH});
 
 		impl_->clipActive = false;
 		impl_->clipStack.clear();
@@ -1292,8 +1513,7 @@ void main() {
 	void SDL3Renderer::popTarget()
 	{
 		impl_->flush();
-		if (impl_->clipActive)
-			glDisable(GL_SCISSOR_TEST);
+		impl_->disableScissor();
 
 		if (!impl_->targetStates.empty())
 		{
@@ -1370,8 +1590,7 @@ void main() {
 			return;
 		impl_->flush();
 		const bool wasScissor = impl_->clipActive;
-		if (wasScissor)
-			glDisable(GL_SCISSOR_TEST);
+		impl_->disableScissor();
 
 		impl_->gl.BindFramebuffer(GL_FRAMEBUFFER, it->second.fbo);
 		glClearColor(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f, c.a / 255.0f);
@@ -1405,6 +1624,7 @@ void main() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
 		glBindTexture(GL_TEXTURE_2D, 0);
+		impl_->boundTexture = 0;
 
 		const uint32_t id = impl_->nextId++;
 		impl_->textures[id] = {tex, width, height};
@@ -1415,6 +1635,13 @@ void main() {
 	{
 		if (auto it = impl_->textures.find(h.id); it != impl_->textures.end())
 		{
+			if (impl_->batchTex == it->second.glId)
+			{
+				impl_->flush();
+				impl_->batchTex = 0;
+			}
+			if (impl_->boundTexture == it->second.glId)
+				impl_->boundTexture = 0;
 			if (it->second.glId)
 				glDeleteTextures(1, &it->second.glId);
 			impl_->textures.erase(it);
@@ -1471,6 +1698,7 @@ void main() {
 			ranges[r].chardata_for_range = packed.data() + runs[r].offset;
 		}
 
+		constexpr int kWhiteStrip = 4;
 		int atlasDim = 512;
 		std::vector<unsigned char> alpha;
 		bool packedOk = false;
@@ -1478,7 +1706,13 @@ void main() {
 		{
 			alpha.assign(static_cast<size_t>(atlasDim) * static_cast<size_t>(atlasDim), 0);
 			stbtt_pack_context pc{};
-			if (!stbtt_PackBegin(&pc, alpha.data(), atlasDim, atlasDim, 0, 1, nullptr))
+			if (!stbtt_PackBegin(&pc,
+								 alpha.data() + static_cast<size_t>(kWhiteStrip) * static_cast<size_t>(atlasDim),
+								 atlasDim,
+								 atlasDim - kWhiteStrip,
+								 atlasDim,
+								 1,
+								 nullptr))
 				continue;
 			stbtt_PackSetOversampling(&pc, 1, 1);
 			packedOk = stbtt_PackFontRanges(&pc, ttfData, 0, ranges.data(), static_cast<int>(ranges.size())) != 0;
@@ -1492,6 +1726,11 @@ void main() {
 			logError("SDL3Renderer", "", 0, 0, "Failed to pack font atlas up to 4096x4096");
 			return {};
 		}
+
+		// Stamp a 3x3 opaque white block in the top-left corner so solid shapes share the font batch.
+		for (int y = 0; y < 3; ++y)
+			for (int x = 0; x < 3; ++x)
+				alpha[static_cast<size_t>(y) * static_cast<size_t>(atlasDim) + static_cast<size_t>(x)] = 255;
 
 		// Expand single-channel coverage to white RGBA so the standard shader tints text cleanly.
 		std::vector<unsigned char> rgba(alpha.size() * 4);
@@ -1513,6 +1752,7 @@ void main() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, atlasDim, atlasDim, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
 		glBindTexture(GL_TEXTURE_2D, 0);
+		impl_->boundTexture = 0;
 
 		int ascent = 0, descent = 0, lineGap = 0;
 		stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
@@ -1525,20 +1765,27 @@ void main() {
 		font.glyphs.reserve(cps.size());
 
 		const float invAtlas = 1.0f / static_cast<float>(atlasDim);
+		font.whiteUv = {1.5f * invAtlas, 1.5f * invAtlas};
 		for (size_t i = 0; i < cps.size(); ++i)
 		{
 			const stbtt_packedchar &pc = packed[i];
 			Impl::GlyphInfo g;
 			g.u0 = static_cast<float>(pc.x0) * invAtlas;
-			g.v0 = static_cast<float>(pc.y0) * invAtlas;
+			g.v0 = static_cast<float>(pc.y0 + kWhiteStrip) * invAtlas;
 			g.u1 = static_cast<float>(pc.x1) * invAtlas;
-			g.v1 = static_cast<float>(pc.y1) * invAtlas;
+			g.v1 = static_cast<float>(pc.y1 + kWhiteStrip) * invAtlas;
 			g.xoff = pc.xoff;
 			g.yoff = pc.yoff;
 			g.w = pc.xoff2 - pc.xoff;
 			g.h = pc.yoff2 - pc.yoff;
 			g.xadvance = pc.xadvance;
 			font.glyphs[static_cast<uint32_t>(cps[i])] = g;
+		}
+
+		if (impl_->preferredFontTex == 0)
+		{
+			impl_->preferredFontTex = glTex;
+			impl_->preferredFontWhiteUv = font.whiteUv;
 		}
 
 		const uint32_t id = impl_->nextId++;
@@ -1550,9 +1797,24 @@ void main() {
 	{
 		if (auto it = impl_->fonts.find(h.id); it != impl_->fonts.end())
 		{
-			if (it->second.glTex)
-				glDeleteTextures(1, &it->second.glTex);
+			const GLuint tex = it->second.glTex;
+			if (impl_->batchTex == tex)
+			{
+				impl_->flush();
+				impl_->batchTex = 0;
+			}
+			if (impl_->boundTexture == tex)
+				impl_->boundTexture = 0;
+			if (impl_->preferredFontTex == tex)
+				impl_->preferredFontTex = 0;
+			if (tex)
+				glDeleteTextures(1, &tex);
 			impl_->fonts.erase(it);
+			if (impl_->preferredFontTex == 0 && !impl_->fonts.empty())
+			{
+				impl_->preferredFontTex = impl_->fonts.begin()->second.glTex;
+				impl_->preferredFontWhiteUv = impl_->fonts.begin()->second.whiteUv;
+			}
 		}
 	}
 
@@ -1572,12 +1834,13 @@ void main() {
 	{
 		if (auto it = impl_->shaders.find(h.id); it != impl_->shaders.end())
 		{
+			if (impl_->boundProgram == it->second.program)
+				impl_->boundProgram = 0;
 			if (it->second.program)
 				impl_->gl.DeleteProgram(it->second.program);
 			impl_->shaders.erase(it);
 		}
 	}
-
 	// =========================================================================
 	// 3. SDL3AssetProvider (IAssetProvider)
 	// =========================================================================
