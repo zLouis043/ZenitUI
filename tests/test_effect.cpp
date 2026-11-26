@@ -56,6 +56,7 @@ TEST(Filter_vec4, values_are_not_scaled_to_255)
     ref.args = {"0.5", "0.25", "0.75", "1.0"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.src = {};
@@ -91,6 +92,7 @@ TEST(Filter_vec3, values_are_not_scaled_to_255)
     ref.args = {"0.1", "0.2", "0.3"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};
@@ -123,6 +125,7 @@ TEST(Filter_float, value_parsed_and_px_stripped)
     ref.args = {"12px"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};
@@ -151,6 +154,7 @@ TEST(Filter_float, default_used_when_no_arg)
     ref.args = {};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};
@@ -178,6 +182,7 @@ TEST(Filter_vec2, consumes_two_args)
     ref.args = {"2px", "8px"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};
@@ -215,6 +220,7 @@ TEST(Filter_color, hex_parsed)
     ref.args = {"#FF8000FF"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};
@@ -246,6 +252,7 @@ TEST(Filter_color, named_color_parsed)
     ref.args = {"red"};
 
     FilterContext ctx;
+    ctx.ui = &UIContext::get();
     ctx.renderer = &env.renderer;
     ctx.ref = &ref;
     ctx.dst = {0, 0, 100, 100};

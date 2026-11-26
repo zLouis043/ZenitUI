@@ -6,15 +6,16 @@
  *
  * A "filter" is a named post-processing effect applied to a node's rendered
  * layer (the off-screen target produced by `Layout::drawLayer`). Filters are
- * declared in CSS via `filter: blur(4px) drop-shadow(2, 2, 4, black)` and
- * resolved at draw time through this registry.
+ * declared in CSS via `filter: blur(4px), drop-shadow(2px, 2px, #000)` and
+ * resolved at draw time through the active `UIContext::filters` registry.
  *
  * Four execution patterns are supported:
  *
  *  - **SinglePass**: one shader, one draw. Used for effects that need only
- *    the source target (`drop-shadow` with a single offset, custom blurs, …).
+ *    the source target (color matrices, vignettes, custom shaders, …).
  *  - **Separable**: two passes (horizontal then vertical). Efficient for
- *    Gaussian-style blurs. Uses `scratch` as the intermediate target.
+ *    Gaussian-style blurs. Uses `scratch` (or a downscaled pooled target) as
+ *    the intermediate target.
  *  - **Silhouette**: draw the source offset by `dx/dy` through a colour
  *    shader, then the source on top. Used by `drop-shadow`.
  *  - **Custom**: a `std::function` invoked directly.
@@ -35,6 +36,7 @@ namespace ZenitUI
 
     class Layout;
     class IRenderer;
+    struct UIContext;
 
     /** \brief Execution pattern for a filter definition. */
     enum class FilterPattern
@@ -87,16 +89,17 @@ namespace ZenitUI
      */
     struct FilterContext
     {
-        IRenderer *renderer{nullptr};
-        Layout *node{nullptr};
-        TargetHandle src{};
-        TargetHandle scratch{};
-        TargetHandle write_target{};
-        Rect region{};
-        Rect dst{};
-        Vec2 texSize{};
-        float opacity{1.0f};
-        const FilterRef *ref{nullptr};
+        UIContext *ui{nullptr};       ///< Owning UI context (assets, target pool, render stats).
+        IRenderer *renderer{nullptr}; ///< Active renderer backend.
+        Layout *node{nullptr};        ///< Filtered node currently being rendered.
+        TargetHandle src{};           ///< Source off-screen target for this pass.
+        TargetHandle scratch{};       ///< Intermediate target for full-res separable/custom passes.
+        TargetHandle write_target{};  ///< Destination off-screen target, or invalid when drawing to screen.
+        Rect region{};                ///< Screen-space destination rectangle.
+        Rect dst{};                   ///< Logical content sub-rectangle inside off-screen targets.
+        Vec2 texSize{};               ///< Backing texture dimensions of `src` in logical pixels.
+        float opacity{1.0f};          ///< Final compositing opacity (applied on the screen pass).
+        const FilterRef *ref{nullptr};///< Parsed CSS filter reference supplying parameter arguments.
     };
 
     /** \brief Callback signature for `FilterPattern::Custom` filters. */
@@ -118,13 +121,16 @@ namespace ZenitUI
 
     /**
      * \class FilterRegistry
-     * \brief Global name → `FilterDef` map.
+     * \brief Per-context map from CSS filter name to `FilterDef`.
+     *
+     * Owned by `UIContext::filters`. Default construction automatically
+     * registers the builtin filters (`blur`, `drop-shadow`).
      */
     class FilterRegistry
     {
     public:
-        /** \brief Return the global singleton registry. */
-        static FilterRegistry &get();
+        /** \brief Construct the registry and populate builtin filters. */
+        FilterRegistry();
 
         /** \brief Register or replace a filter definition. */
         void add(FilterDef def);
@@ -132,21 +138,28 @@ namespace ZenitUI
         /** \brief Register a custom (shader-less) filter. */
         void addCustom(std::string name, FilterCustomFn fn);
 
-        /** \brief Look up a filter by name. */
+        /** \brief Look up a filter by name; returns `nullptr` if not found. */
         const FilterDef *find(const std::string &name) const;
+
+        /** \brief Register the builtin filters (`blur`, `drop-shadow`) if absent. */
+        void registerBuiltins();
+
+        /** \brief Remove all registered filters, including builtins. */
+        void clear();
+
+        /** \brief Clear all filters and re-register only the builtins. */
+        void reset();
 
     private:
         std::unordered_map<std::string, FilterDef> defs_;
     };
 
     /**
-     * \brief Ensure the builtin filters (`blur`, `drop-shadow`) are registered.
-     */
-    void registerBuiltinFilters();
-
-    /**
      * \brief Execute one filter against the given context.
+     * \param def Filter definition to execute.
+     * \param ctx Invocation context providing renderer, targets, and `UIContext`.
      */
     void applyFilter(const FilterDef &def, const FilterContext &ctx);
+
     /** @} */
 } // namespace ZenitUI

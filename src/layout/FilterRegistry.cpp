@@ -22,7 +22,8 @@ namespace ZenitUI
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            UIContext::get().renderStats.pushTargetCalls++;
+            if (c.ui)
+                c.ui->renderStats.pushTargetCalls++;
             // Copy raw RGBA into the freshly cleared off-screen target without re-blending.
             c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
@@ -36,10 +37,9 @@ namespace ZenitUI
         }
     }
 
-    FilterRegistry &FilterRegistry::get()
+    FilterRegistry::FilterRegistry()
     {
-        static FilterRegistry r;
-        return r;
+        registerBuiltins();
     }
 
     void FilterRegistry::add(FilterDef def)
@@ -60,6 +60,40 @@ namespace ZenitUI
     {
         auto it = defs_.find(name);
         return it == defs_.end() ? nullptr : &it->second;
+    }
+
+    void FilterRegistry::clear()
+    {
+        defs_.clear();
+    }
+
+    void FilterRegistry::reset()
+    {
+        defs_.clear();
+        registerBuiltins();
+    }
+
+    void FilterRegistry::registerBuiltins()
+    {
+        if (!find("blur"))
+        {
+            add({.name = "blur",
+                 .shader = "blur",
+                 .pattern = FilterPattern::Separable,
+                 .params = {
+                     FilterParam{"radius", FilterParamType::Float, 0, 4.0f}}});
+        }
+
+        if (!find("drop-shadow"))
+        {
+            add({.name = "drop-shadow",
+                 .shader = "dropShadow",
+                 .pattern = FilterPattern::Silhouette,
+                 .params = {
+                     FilterParam{"dx", FilterParamType::Float, 0, 2.0f},
+                     FilterParam{"dy", FilterParamType::Float, 1, 2.0f},
+                     FilterParam{"shadowColor", FilterParamType::Color, 2, Color{0, 0, 0, 180}}}});
+        }
     }
 
     static float parseLengthArg(const std::string &s) noexcept
@@ -177,14 +211,15 @@ namespace ZenitUI
 
     static void applySinglePass(const FilterContext &c, EffectHandle fx)
     {
-        auto &stats = UIContext::get().renderStats;
+        RenderStats *stats = c.ui ? &c.ui->renderStats : nullptr;
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, c.src));
 
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            stats.pushTargetCalls++;
+            if (stats)
+                stats->pushTargetCalls++;
             // Preserve exact shader RGBA in off-screen target to prevent double blending on blit.
             c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(c.src, c.dst, c.dst, Colors::White);
@@ -197,16 +232,15 @@ namespace ZenitUI
                                    Colors::White.withAlpha(c.opacity));
         }
 
-        stats.filterPasses++;
+        if (stats)
+            stats->filterPasses++;
         c.renderer->popEffect();
     }
 
     static void applySeparable(const FilterContext &c, EffectHandle fx,
                                const FilterDef &def)
     {
-        auto &ctxUI = UIContext::get();
-        auto &stats = ctxUI.renderStats;
-
+        RenderStats *stats = c.ui ? &c.ui->renderStats : nullptr;
         const int ds = (def.downscale >= 4) ? 4 : (def.downscale >= 2 ? 2 : 1);
 
         TargetHandle midTarget = c.scratch;
@@ -215,9 +249,11 @@ namespace ZenitUI
 
         if (ds > 1)
         {
+            if (!c.ui)
+                return;
             const int dw = std::max(1, (int)std::ceil(c.dst.width / (float)ds));
             const int dh = std::max(1, (int)std::ceil(c.dst.height / (float)ds));
-            midTarget = ctxUI.targetPool.acquire(*c.renderer, dw, dh, &stats);
+            midTarget = c.ui->targetPool.acquire(*c.renderer, dw, dh, stats);
             if (!midTarget.valid())
                 return;
             midDst = {0.0f, 0.0f, (float)dw, (float)dh};
@@ -226,7 +262,8 @@ namespace ZenitUI
 
         // Horizontal pass: read c.src (full-res) -> write midTarget (full or downscaled).
         c.renderer->pushTarget(midTarget);
-        stats.pushTargetCalls++;
+        if (stats)
+            stats->pushTargetCalls++;
         c.renderer->setBlendMode(BlendMode::Replace);
         c.renderer->pushEffect(fx);
         c.renderer->setEffectVec2(fx, "texSize", resolveTexSize(c, c.src));
@@ -235,7 +272,8 @@ namespace ZenitUI
         c.renderer->popEffect();
         c.renderer->setBlendMode(BlendMode::Alpha);
         c.renderer->popTarget();
-        stats.filterPasses++;
+        if (stats)
+            stats->filterPasses++;
 
         // Vertical pass: read midTarget -> write write_target or screen (bilinear upscale).
         c.renderer->pushEffect(fx);
@@ -245,7 +283,8 @@ namespace ZenitUI
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            stats.pushTargetCalls++;
+            if (stats)
+                stats->pushTargetCalls++;
             c.renderer->setBlendMode(BlendMode::Replace);
             c.renderer->drawTarget(midTarget, midDst, c.dst, Colors::White);
             c.renderer->setBlendMode(BlendMode::Alpha);
@@ -257,17 +296,18 @@ namespace ZenitUI
                                    Colors::White.withAlpha(c.opacity));
         }
 
-        stats.filterPasses++;
+        if (stats)
+            stats->filterPasses++;
         c.renderer->popEffect();
 
         if (acquiredMid)
-            ctxUI.targetPool.release(midTarget);
+            c.ui->targetPool.release(midTarget);
     }
 
     static void applySilhouette(const FilterContext &c, EffectHandle fx,
                                 const FilterDef &def)
     {
-        auto &stats = UIContext::get().renderStats;
+        RenderStats *stats = c.ui ? &c.ui->renderStats : nullptr;
         float dx = 2.0f, dy = 2.0f;
         for (const auto &p : def.params)
         {
@@ -282,7 +322,8 @@ namespace ZenitUI
         if (c.write_target.valid())
         {
             c.renderer->pushTarget(c.write_target);
-            stats.pushTargetCalls++;
+            if (stats)
+                stats->pushTargetCalls++;
 
             // Composite foreground over shadow with separate alpha; output is premultiplied.
             c.renderer->setBlendMode(BlendMode::Alpha);
@@ -311,7 +352,8 @@ namespace ZenitUI
             c.renderer->drawTarget(c.src, c.dst, c.region,
                                    Colors::White.withAlpha(c.opacity));
         }
-        stats.filterPasses++;
+        if (stats)
+            stats->filterPasses++;
     }
 
     void applyFilter(const FilterDef &def, const FilterContext &ctx)
@@ -321,12 +363,13 @@ namespace ZenitUI
             if (def.custom)
             {
                 def.custom(ctx);
-                UIContext::get().renderStats.filterPasses++;
+                if (ctx.ui)
+                    ctx.ui->renderStats.filterPasses++;
             }
             return;
         }
 
-        auto *assets = UIContext::get().assets;
+        IAssetProvider *assets = ctx.ui ? ctx.ui->assets : nullptr;
         if (!assets)
         {
             drawUnmodified(ctx);
@@ -356,32 +399,6 @@ namespace ZenitUI
         case FilterPattern::Custom:
             break;
         }
-    }
-
-    void registerBuiltinFilters()
-    {
-        static bool registered = false;
-        if (registered)
-            return;
-        registered = true;
-        
-        auto &reg = FilterRegistry::get();
-        if (reg.find("blur"))
-            return;
-
-        reg.add({.name = "blur",
-                 .shader = "blur",
-                 .pattern = FilterPattern::Separable,
-                 .params = {
-                     FilterParam{"radius", FilterParamType::Float, 0, 4.0f}}});
-
-        reg.add({.name = "drop-shadow",
-                 .shader = "dropShadow",
-                 .pattern = FilterPattern::Silhouette,
-                 .params = {
-                     FilterParam{"dx", FilterParamType::Float, 0, 2.0f},
-                     FilterParam{"dy", FilterParamType::Float, 1, 2.0f},
-                     FilterParam{"shadowColor", FilterParamType::Color, 2, Color{0, 0, 0, 180}}}});
     }
 
 } // namespace ZenitUI

@@ -34,9 +34,8 @@ int main()
     // Load fragment shaders used by the built-in and custom filters
     assets.loadEffect("blur", "assets/shaders/blur.fs");
     assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
-
-    registerBuiltinFilters();
-    FilterRegistry::get().add(FilterDef{
+    ;
+    UIContext::get().filters.add(FilterDef{
         .name = "blur-fast",
         .shader = "blur",
         .pattern = FilterPattern::Separable,

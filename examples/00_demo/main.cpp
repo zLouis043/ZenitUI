@@ -66,7 +66,7 @@ int main()
     assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
     // 3. Register the custom `sepia` filter in FilterRegistry.
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,

@@ -86,7 +86,7 @@ int main()
     //  Register the sepia filter. `blur` and `drop-shadow` are built-in
     //  (registered lazily on first use); `sepia` is user-defined.
     // -----------------------------------------------------------------------
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,

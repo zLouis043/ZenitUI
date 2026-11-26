@@ -29,6 +29,7 @@
 #include "Common.hpp"
 #include "CoreTypes.hpp"
 #include "Geometry2D.hpp"
+#include "FilterRegistry.hpp"
 
 #include <span>
 
@@ -746,6 +747,8 @@ namespace ZenitUI
 		InputEvents inputEvents;
 		std::weak_ptr<Layout> focusedNode;
 		std::weak_ptr<Layout> pointerCapture;
+
+		FilterRegistry filters; ///< Per-context post-processing filter definitions (preloaded with builtins).
 
 		uint32_t viewportGeneration{0};
 

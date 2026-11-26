@@ -271,7 +271,7 @@ int main(int argc, char **argv)
     assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
     assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,

@@ -579,6 +579,7 @@ namespace ZenitUI::Test
 			ctx.platform = nullptr;
 			ctx.assets = nullptr;
 			UIContext::get().viewport = {1920.0f, 1080.0f};
+			UIContext::get().filters.reset();
 		}
 
 		/** \brief Reset global `UIContext`, `Theme`, and mock backend state. */
@@ -605,6 +606,7 @@ namespace ZenitUI::Test
 			ctx.renderStats.resetAll();
 
 			UIContext::get().viewport = {1920.0f, 1080.0f};
+			UIContext::get().filters.reset();
 
 			platform.reset();
 			renderer.reset();

@@ -567,8 +567,7 @@ namespace ZenitUI
 			releaseLayerCache();
 		}
 
-		registerBuiltinFilters();
-		auto &registry = FilterRegistry::get();
+		auto &registry = ctxUI.filters;
 
 		const size_t numFilters = renderStyle.filters.size();
 		bool lastIsSilhouette = false;
@@ -702,6 +701,7 @@ namespace ZenitUI
 		}
 
 		FilterContext ctx;
+		ctx.ui = &ctxUI;
 		ctx.renderer = renderer;
 		ctx.node = this;
 		ctx.scratch = separableTarget;

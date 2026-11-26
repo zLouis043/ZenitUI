@@ -68,9 +68,9 @@ TEST(Filter_chaining, two_filters_ping_pong_through_targets)
     env.assets.registerEffect("fx1");
     env.assets.registerEffect("fx2");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "fx1", .shader = "fx1", .pattern = FilterPattern::SinglePass, .params = {}});
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "fx2", .shader = "fx2", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
@@ -93,7 +93,7 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     env.renderer.supportsEffects = true;
     env.assets.registerEffect("fx");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
@@ -149,7 +149,7 @@ TEST(Filter_nested, falls_back_to_inline_when_nested_targets_unsupported)
     env.renderer.supportsNestedTargets = false;
     env.assets.registerEffect("fx");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto outer = std::make_shared<Layout>(LayoutType::Stack);
@@ -179,7 +179,7 @@ TEST(Filter_nested, renders_nested_layer_when_supported)
     env.renderer.supportsNestedTargets = true;
     env.assets.registerEffect("fx");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto outer = std::make_shared<Layout>(LayoutType::Stack);
@@ -430,7 +430,7 @@ TEST(Filter_perf, texSize_equals_bucket_and_dst_equals_region)
 
     Rect seenDst{};
     Vec2 seenTexSize{};
-    FilterRegistry::get().addCustom("inspect_tex", [&](const FilterContext &c)
+    UIContext::get().filters.addCustom("inspect_tex", [&](const FilterContext &c)
     {
         seenDst = c.dst;
         seenTexSize = c.texSize;
@@ -462,7 +462,7 @@ TEST(Filter_perf, separable_downscale_allocates_half_res_intermediate)
     env.renderer.supportsTargetSubRect = true;
     env.assets.registerEffect("blur");
 
-    FilterRegistry::get().add(FilterDef{
+    UIContext::get().filters.add(FilterDef{
         .name = "blur-fast",
         .shader = "blur",
         .pattern = FilterPattern::Separable,
