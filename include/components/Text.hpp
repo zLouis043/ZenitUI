@@ -151,7 +151,7 @@ namespace ZenitUI::UI
             if (applyEllipsis)
             {
                 truncatedText = buildEllipsisText(lines[0].text, availW, f, fs, sp);
-                truncatedSize = UIContext::get().renderer->measureText(
+                truncatedSize = context().renderer->measureText(
                     f, truncatedText, fs, sp);
             }
 
@@ -170,7 +170,7 @@ namespace ZenitUI::UI
             else if (style.verticalAlign == Align::End)
                 pos.y += availH - totalTextH;
 
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             r->pushClip(rect);
 
             if (applyEllipsis)
@@ -268,7 +268,7 @@ namespace ZenitUI::UI
         void wrapText(float availW, float fs, float sp, FontHandle f)
         {
             lines.clear();
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r)
                 return;
 
@@ -402,7 +402,7 @@ namespace ZenitUI::UI
         std::string buildEllipsisText(std::string_view src, float availW,
                                       FontHandle f, float fs, float sp)
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r)
                 return std::string(src);
 
@@ -454,7 +454,7 @@ namespace ZenitUI::UI
                 fs != cachedFs || sp != cachedSp || cachedSize.y == 0.0f ||
                 cachedWrapW >= 0.0f)
             {
-                auto r = UIContext::get().renderer;
+                auto r = context().renderer;
                 lines.clear();
 
                 // Split on explicit '\n' even without wrapping. This makes

@@ -88,7 +88,7 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             const Vec2 vp = viewportSize();
             Style boxStyle = partStyle("box");
             Style markStyle = partStyle("mark");

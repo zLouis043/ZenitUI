@@ -94,7 +94,7 @@ namespace ZenitUI
         if (!acceptsAnyInput(st) || node.getEffectiveLayoutType() == LayoutType::Stack)
             return;
 
-        auto &ctx = UIContext::get();
+        auto &ctx = node.context();
         auto &pointer = ctx.pointer;
         const Rect &rect = node.rect;
 
@@ -226,7 +226,7 @@ namespace ZenitUI
         if (!wantV && !wantH)
             return;
 
-        auto r = UIContext::get().renderer;
+        auto r = node.context().renderer;
         if (!r)
             return;
 

@@ -84,16 +84,16 @@ namespace ZenitUI
 	 */
 	struct NodeConfig
 	{
-		uint32_t interactive : 1;        ///< Receives pointer hover/click events.
-		uint32_t blocksRaycast : 1;      ///< Stops hit-testing even when not interactive.
-		uint32_t enabled : 1;            ///< Enabled state (false triggers `:disabled`).
-		uint32_t visible : 1;            ///< Visibility (`false` behaves like `display: none`).
-		uint32_t focusable : 1;          ///< Can acquire keyboard focus and participate in Tab cycle.
-		uint32_t focusScope : 1;         ///< Traps Tab focus cycling inside this subtree.
-		uint32_t keyboardActivates : 1;  ///< Enter / Space trigger `onClick` while focused.
+		uint32_t interactive : 1;		 ///< Receives pointer hover/click events.
+		uint32_t blocksRaycast : 1;		 ///< Stops hit-testing even when not interactive.
+		uint32_t enabled : 1;			 ///< Enabled state (false triggers `:disabled`).
+		uint32_t visible : 1;			 ///< Visibility (`false` behaves like `display: none`).
+		uint32_t focusable : 1;			 ///< Can acquire keyboard focus and participate in Tab cycle.
+		uint32_t focusScope : 1;		 ///< Traps Tab focus cycling inside this subtree.
+		uint32_t keyboardActivates : 1;	 ///< Enter / Space trigger `onClick` while focused.
 		uint32_t updateWhenDisabled : 1; ///< Still runs `onUpdate` while disabled.
-		uint32_t portal : 1;             ///< Rendered at the root above clip rects.
-		uint32_t passThrough : 1;        ///< Forwards press/click events to ancestor nodes.
+		uint32_t portal : 1;			 ///< Rendered at the root above clip rects.
+		uint32_t passThrough : 1;		 ///< Forwards press/click events to ancestor nodes.
 	};
 
 	/**
@@ -105,14 +105,14 @@ namespace ZenitUI
 	 */
 	struct NodeInternal
 	{
-		uint32_t subtreeDirty : 1;           ///< Subtree needs re-measure/re-arrange.
-		uint32_t styleInitialized : 1;       ///< Initial style resolution has run at least once.
-		uint32_t pendingTransition : 1;      ///< Style must be re-resolved on next update.
+		uint32_t subtreeDirty : 1;			 ///< Subtree needs re-measure/re-arrange.
+		uint32_t styleInitialized : 1;		 ///< Initial style resolution has run at least once.
+		uint32_t pendingTransition : 1;		 ///< Style must be re-resolved on next update.
 		uint32_t hadLocalAnimationsLast : 1; ///< Active local animations in the previous frame.
-		uint32_t wantsRemoval : 1;           ///< Deferred removal requested via `removeFromParent()`.
-		uint32_t pressedInChain : 1;         ///< Reserved press-chain tracking flag.
-		uint32_t hadRemovedChildren : 1;     ///< At least one child was removed since last measure.
-		uint32_t layoutDirty : 1;            ///< Structural layout change forces re-measure.
+		uint32_t wantsRemoval : 1;			 ///< Deferred removal requested via `removeFromParent()`.
+		uint32_t pressedInChain : 1;		 ///< Reserved press-chain tracking flag.
+		uint32_t hadRemovedChildren : 1;	 ///< At least one child was removed since last measure.
+		uint32_t layoutDirty : 1;			 ///< Structural layout change forces re-measure.
 	};
 
 	/**
@@ -159,16 +159,24 @@ namespace ZenitUI
 		 */
 		virtual ~Layout()
 		{
-			auto &ctx = UIContext::get();
-			if (ctx.pressTarget == this)
-				ctx.pressTarget = nullptr;
-			if (ctx.releaseTarget == this)
-				ctx.releaseTarget = nullptr;
-			if (ctx.topmostConsumer == this)
-				ctx.topmostConsumer = nullptr;
-			if (ctx.hoverTarget == this)
-				ctx.hoverTarget = nullptr;
-			releaseLayerCache();
+			if (ctx_)
+			{
+				detachContext();
+			}
+			else
+			{
+				// Step 4 fallback for nodes never mounted on an explicit UIContext.
+				auto &ctx = context();
+				if (ctx.pressTarget == this)
+					ctx.pressTarget = nullptr;
+				if (ctx.releaseTarget == this)
+					ctx.releaseTarget = nullptr;
+				if (ctx.topmostConsumer == this)
+					ctx.topmostConsumer = nullptr;
+				if (ctx.hoverTarget == this)
+					ctx.hoverTarget = nullptr;
+				releaseLayerCache();
+			}
 		}
 
 		/**
@@ -362,7 +370,16 @@ namespace ZenitUI
 				return;
 			}
 
+			if (child->ctx_)
+			{
+				if (child->ctx_ == ctx_)
+					ctx_->unregisterRoot(child.get());
+				else
+					child->detachContext();
+			}
 			child->parent = weak_from_this();
+			if (ctx_ && child->ctx_ != ctx_)
+				child->attachContext(ctx_);
 			children.push_back(std::move(child));
 			internal_.pendingTransition = 1;
 		}
@@ -382,13 +399,57 @@ namespace ZenitUI
 				return;
 			}
 
+			if (child->ctx_)
+			{
+				if (child->ctx_ == ctx_)
+					ctx_->unregisterRoot(child.get());
+				else
+					child->detachContext();
+			}
+
 			child->parent = weak_from_this();
+			if (ctx_ && child->ctx_ != ctx_)
+				child->attachContext(ctx_);
+
 			auto it = std::find_if(children.begin(), children.end(),
 								   [anchor](const std::shared_ptr<Layout> &c)
 								   { return c.get() == anchor; });
 			children.insert(it, std::move(child));
 			internal_.pendingTransition = 1;
 			markLayoutDirtyUpward();
+		}
+
+		/**
+		 * \brief Reposition an existing direct child immediately before \p anchor
+		 *        (or at the end if \p anchor is not found) without detaching its `UIContext`.
+		 * \return `true` if \p child was found among direct children.
+		 */
+		bool moveChildBefore(const Layout *anchor, const Layout *child)
+		{
+			if (!child)
+				return false;
+			auto it = std::find_if(children.begin(), children.end(),
+								   [child](const std::shared_ptr<Layout> &c)
+								   { return c.get() == child; });
+			if (it == children.end())
+				return false;
+			if (anchor == child)
+				return true;
+
+			auto anchorIt = std::find_if(children.begin(), children.end(),
+										 [anchor](const std::shared_ptr<Layout> &c)
+										 { return c.get() == anchor; });
+			if (std::next(it) == anchorIt)
+				return true;
+
+			if (it < anchorIt)
+				std::rotate(it, std::next(it), anchorIt);
+			else
+				std::rotate(anchorIt, it, std::next(it));
+
+			internal_.pendingTransition = 1;
+			markLayoutDirtyUpward();
+			return true;
 		}
 
 		/**
@@ -404,6 +465,7 @@ namespace ZenitUI
 								   { return c.get() == child; });
 			if (it == children.end())
 				return false;
+			(*it)->detachContext();
 			(*it)->parent.reset();
 			children.erase(it);
 			internal_.hadRemovedChildren = 1;
@@ -440,8 +502,13 @@ namespace ZenitUI
 		virtual void removeAllChildren()
 		{
 			for (auto &c : children)
+			{
 				if (c)
+				{
+					c->detachContext();
 					c->parent.reset();
+				}
+			}
 			children.clear();
 			internal_.pendingTransition = 1;
 		}
@@ -507,7 +574,7 @@ namespace ZenitUI
 
 			if (!e)
 			{
-				auto &ctx = UIContext::get();
+				auto &ctx = context();
 				if (ctx.focusedNode.lock().get() == this)
 					ctx.focusedNode.reset();
 				if (ctx.pointerCapture.lock().get() == this)
@@ -707,12 +774,12 @@ namespace ZenitUI
 		 */
 		void capturePointer()
 		{
-			UIContext::get().pointerCapture = shared_from_this();
+			context().pointerCapture = shared_from_this();
 		}
 		/** \brief Release the pointer capture if this node owns it. */
 		void releasePointer()
 		{
-			auto &ctx = UIContext::get();
+			auto &ctx = context();
 			auto sp = ctx.pointerCapture.lock();
 			if (sp.get() == this)
 				ctx.pointerCapture.reset();
@@ -720,7 +787,7 @@ namespace ZenitUI
 		/** \brief `true` if this node currently holds the pointer capture. */
 		bool hasPointerCapture() const
 		{
-			return UIContext::get().pointerCapture.lock().get() == this;
+			return context().pointerCapture.lock().get() == this;
 		}
 
 		void setKeyboardActivates(bool v) { config.keyboardActivates = v ? 1 : 0; }
@@ -746,9 +813,9 @@ namespace ZenitUI
 		 */
 		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {})
 		{
-			if (style.font.empty() || !UIContext::get().assets)
+			if (style.font.empty() || !context().assets)
 				return fallback;
-			FontHandle h = UIContext::get().assets->getFont(style.font);
+			FontHandle h = context().assets->getFont(style.font);
 			return h.id != 0 ? h : fallback;
 		}
 
@@ -772,7 +839,7 @@ namespace ZenitUI
 		{
 			if (!style.backgroundTexture.name.empty())
 			{
-				auto *a = UIContext::get().assets;
+				auto *a = context().assets;
 				if (a)
 				{
 					TextureHandle h = a->getTexture(style.backgroundTexture.name);
@@ -959,11 +1026,25 @@ namespace ZenitUI
 		Vec2 getMeasuredSize() const { return measuredSize; }
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		/** \brief Return the stylesheet theme of the active `UIContext`. */
-		const Theme &theme() const { return UIContext::get().theme; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
-		/** \brief Return the logical viewport size of the active `UIContext`. */
-		Vec2 viewportSize() const { return UIContext::get().viewport; }
+		/** \brief Return the `UIContext` this node is attached to, or `nullptr` if unmounted. */
+		UIContext *contextPtr() const { return ctx_; }
+
+		/** \brief Return the active `UIContext` for this node (falls back to `context()` while unmounted). */
+		UIContext &context() const { return ctx_ ? *ctx_ : UIContext::get(); }
+
+		/** \brief Attach this node and its subtree to \p newCtx. */
+		void attachContext(UIContext *newCtx);
+
+		/** \brief Detach this node and its subtree from its current `UIContext`. */
+		void detachContext();
+
+		/** \brief Return the logical viewport size of this node's `UIContext`. */
+		Vec2 viewportSize() const { return context().viewport; }
+
+		/** \brief Return the stylesheet theme of this node's `UIContext`. */
+		const Theme &theme() const { return context().theme; }
 
 		// ---- Public callback hooks ----
 
@@ -1041,7 +1122,7 @@ namespace ZenitUI
 		}
 
 	protected:
-	/// \cond INTERNAL
+		/// \cond INTERNAL
 		// ---- Internal state ----
 
 		LayoutType type;
@@ -1114,7 +1195,7 @@ namespace ZenitUI
 			state.pressed = 0;
 			state.focused = 0;
 
-			auto &ctx = UIContext::get();
+			auto &ctx = context();
 			if (ctx.focusedNode.lock().get() == this)
 				ctx.focusedNode.reset();
 			if (ctx.pointerCapture.lock().get() == this)
@@ -1132,7 +1213,7 @@ namespace ZenitUI
 				if (c)
 					c->clearSubtreeInteractionOnHide();
 		}
-		
+
 		/// \endcond
 
 		/**
@@ -1246,7 +1327,7 @@ namespace ZenitUI
 		 */
 		virtual void renderChrome(float op, const ComputedStyle &style)
 		{
-			auto r = UIContext::get().renderer;
+			auto r = context().renderer;
 			if (!r)
 				return;
 			if (rect.width <= 0 || rect.height <= 0)
@@ -1471,6 +1552,7 @@ namespace ZenitUI
 		static float clampSafe(float v, float lo, float hi);
 
 		std::unique_ptr<std::vector<std::shared_ptr<void>>> retainedObjects_;
+		UIContext *ctx_{nullptr};
 
 		/**
 		 * \struct LayerCache
@@ -1482,25 +1564,25 @@ namespace ZenitUI
 		 */
 		struct LayerCache
 		{
-			TargetHandle target{};       ///< Pooled off-screen target holding the final filtered output.
-			uint64_t poolGeneration{0};  ///< `TargetPool::generation()` when `target` was acquired.
-			Rect srcRect{0, 0, 0, 0};    ///< Active sub-rectangle inside `target` (logical pixels).
-			int tw{0};                   ///< Cached target content width in pixels.
-			int th{0};                   ///< Cached target content height in pixels.
-			float lastRotation{0.0f};    ///< Rotation (degrees) observed on the previous frame.
-			float lastScale{1.0f};       ///< Scale factor observed on the previous frame.
-			float lastOpacity{1.0f};     ///< Global opacity observed on the previous frame.
-			float lastRegionOffX{0.0f};  ///< Horizontal clip offset observed on the previous frame.
-			float lastRegionOffY{0.0f};  ///< Vertical clip offset observed on the previous frame.
-			float lastDpiScale{1.0f};    ///< DPI scale observed on the previous frame.
+			TargetHandle target{};		 ///< Pooled off-screen target holding the final filtered output.
+			uint64_t poolGeneration{0};	 ///< `TargetPool::generation()` when `target` was acquired.
+			Rect srcRect{0, 0, 0, 0};	 ///< Active sub-rectangle inside `target` (logical pixels).
+			int tw{0};					 ///< Cached target content width in pixels.
+			int th{0};					 ///< Cached target content height in pixels.
+			float lastRotation{0.0f};	 ///< Rotation (degrees) observed on the previous frame.
+			float lastScale{1.0f};		 ///< Scale factor observed on the previous frame.
+			float lastOpacity{1.0f};	 ///< Global opacity observed on the previous frame.
+			float lastRegionOffX{0.0f};	 ///< Horizontal clip offset observed on the previous frame.
+			float lastRegionOffY{0.0f};	 ///< Vertical clip offset observed on the previous frame.
+			float lastDpiScale{1.0f};	 ///< DPI scale observed on the previous frame.
 			uint32_t lastViewportGen{0}; ///< `UIContext::viewportGeneration` observed on the previous frame.
-			uint32_t lastThemeVer{0};    ///< `Theme::version` observed on the previous frame.
-			uint64_t fingerprint{0};     ///< Fingerprint of the baked subtree, transform, and filters.
+			uint32_t lastThemeVer{0};	 ///< `Theme::version` observed on the previous frame.
+			uint64_t fingerprint{0};	 ///< Fingerprint of the baked subtree, transform, and filters.
 			uint64_t lastFingerprint{0}; ///< Fingerprint observed on the previous frame for stability promotion.
-			uint64_t lastUsedFrame{0};   ///< `TargetPool::frameIndex()` of the most recent hit or bake.
-			uint8_t stableFrames{0};     ///< Consecutive unchanged frames before promoting to a cached target.
-			bool premultiplied{false};   ///< `true` when `target` holds premultiplied RGBA (e.g. Silhouette filters).
-			bool dirty{true};            ///< Explicit invalidation flag set by structural or content mutations.
+			uint64_t lastUsedFrame{0};	 ///< `TargetPool::frameIndex()` of the most recent hit or bake.
+			uint8_t stableFrames{0};	 ///< Consecutive unchanged frames before promoting to a cached target.
+			bool premultiplied{false};	 ///< `true` when `target` holds premultiplied RGBA (e.g. Silhouette filters).
+			bool dirty{true};			 ///< Explicit invalidation flag set by structural or content mutations.
 		};
 
 		/**
@@ -1515,7 +1597,7 @@ namespace ZenitUI
 				return;
 			if (layerCache_->target.valid())
 			{
-				auto &pool = UIContext::get().targetPool;
+				auto &pool = context().targetPool;
 				if (layerCache_->poolGeneration == pool.generation())
 					pool.release(layerCache_->target);
 				layerCache_->target = {};
@@ -1708,6 +1790,6 @@ namespace ZenitUI
 		}
 		return i < 0;
 	}
-	
+
 	/** @} */
 }

@@ -21,7 +21,7 @@ namespace ZenitUI
 
 		initStyleIfNeeded();
 
-		uint32_t gen = UIContext::get().viewportGeneration;
+		uint32_t gen = context().viewportGeneration;
 		bool viewportChanged = (gen != lastViewportGen_);
 		if (viewportChanged)
 		{
@@ -107,6 +107,7 @@ namespace ZenitUI
 		{
 			if ((*it)->internal_.wantsRemoval)
 			{
+				(*it)->detachContext();
 				(*it)->parent.reset();
 				it = children.erase(it);
 				removed = true;
@@ -178,7 +179,7 @@ namespace ZenitUI
 
 	void Layout::updateTree(float dt)
 	{
-		auto &ctx = UIContext::get();
+		auto &ctx = context();
 
 		auto captured = ctx.pointerCapture.lock();
 		if (!captured || !captured->getEnabled() || !captured->isVisible())
@@ -285,24 +286,72 @@ namespace ZenitUI
 
 	void Layout::runFrame(float dt)
 	{
-		UIContext::get().beginFrame(dt);
-		updateTree(dt);
-		const Vec2 vp = viewportSize();
-		measure(vp.x, vp.y);
-		arrange({0, 0, vp.x, vp.y});
+		context().runFrame(*this, dt);
 	}
 
 	void Layout::renderFrame()
 	{
-		auto &ctx = UIContext::get();
-		auto *r = ctx.renderer;
-		if (!r)
-			return;
-		r->beginFrame();
-		draw();
-		ctx.endFrame();
-		r->endFrame();
+		context().renderFrame(*this);
 	}
+
+	void Layout::attachContext(UIContext *newCtx)
+	{
+		if (!newCtx)
+		{
+			detachContext();
+			return;
+		}
+		if (ctx_ == newCtx)
+		{
+			if (!hasParent())
+				newCtx->registerRoot(this);
+			return;
+		}
+		if (ctx_)
+			detachContext();
+
+		ctx_ = newCtx;
+		if (!hasParent())
+			newCtx->registerRoot(this);
+
+		style_.invalidateCache();
+		internal_.pendingTransition = 1;
+		lastViewportGen_ = 0;
+
+		for (auto &c : children)
+			if (c)
+				c->attachContext(newCtx);
+	}
+
+	void Layout::detachContext()
+	{
+		if (!ctx_)
+			return;
+
+		UIContext *oldCtx = ctx_;
+		oldCtx->unregisterRoot(this);
+
+		if (oldCtx->pressTarget == this)
+			oldCtx->pressTarget = nullptr;
+		if (oldCtx->releaseTarget == this)
+			oldCtx->releaseTarget = nullptr;
+		if (oldCtx->topmostConsumer == this)
+			oldCtx->topmostConsumer = nullptr;
+		if (oldCtx->hoverTarget == this)
+			oldCtx->hoverTarget = nullptr;
+		if (oldCtx->focusedNode.lock().get() == this)
+			oldCtx->focusedNode.reset();
+		if (oldCtx->pointerCapture.lock().get() == this)
+			oldCtx->pointerCapture.reset();
+
+		releaseLayerCache();
+		ctx_ = nullptr;
+
+		for (auto &c : children)
+			if (c)
+				c->detachContext();
+	}
+
 } // namespace ZenitUI
 
 namespace ZenitUI
@@ -313,5 +362,50 @@ namespace ZenitUI
 			focusedNode = n;
 		else
 			focusedNode.reset();
+	}
+
+	UIContext::~UIContext()
+	{
+		detachAllRoots();
+		detachBackend();
+	}
+
+	void UIContext::detachAllRoots()
+	{
+		while (!attachedRoots_.empty())
+			attachedRoots_.back()->detachContext();
+	}
+
+	void UIContext::mount(Layout &root)
+	{
+		root.attachContext(this);
+	}
+
+	void UIContext::unmount(Layout &root)
+	{
+		if (root.contextPtr() == this)
+			root.detachContext();
+	}
+
+	void UIContext::runFrame(Layout &root, float dt)
+	{
+		if (root.contextPtr() != this)
+			root.attachContext(this);
+		beginFrame(dt);
+		root.updateTree(dt);
+		root.measure(viewport.x, viewport.y);
+		root.arrange({0.0f, 0.0f, viewport.x, viewport.y});
+	}
+
+	void UIContext::renderFrame(Layout &root)
+	{
+		if (root.contextPtr() != this)
+			root.attachContext(this);
+		if (!renderer)
+			return;
+		renderer->beginFrame();
+		root.draw();
+		endFrame();
+		renderer->endFrame();
 	}
 }

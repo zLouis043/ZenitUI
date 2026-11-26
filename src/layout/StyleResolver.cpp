@@ -32,7 +32,7 @@ namespace ZenitUI
 			};
 
 			mix(theme.version);
-			mix((uint64_t)UIContext::get().viewportGeneration);
+			mix((uint64_t)node.context().viewportGeneration);
 			mix((uint64_t)reinterpret_cast<uintptr_t>(&node));
 			mix(node.getEnabled() ? 1u : 0u);
 			mix((uint32_t)node.isHoveredState());
@@ -267,7 +267,7 @@ namespace ZenitUI
 			target.unresolvedProps.clear();
 		}
 
-		double now = UIContext::get().time;
+		double now = node.context().time;
 		auto &st = partTransitions[partName];
 
 		if (!st.initialized)

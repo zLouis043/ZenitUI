@@ -22,7 +22,7 @@
  *       scrollbars. If you need those, use a plain `Layout` with `effect`
  *       instead of a `CanvasLayout`.
  *
- * \warning The destructor dereferences `UIContext::get().renderer` without a
+ * \warning The destructor dereferences `context().renderer` without a
  *          null check after `target.valid()` returns true. If the renderer
  *          has already been destroyed when the canvas is destroyed (a
  *          shutdown-order bug), this will crash. Ensure canvases outlive
@@ -64,14 +64,14 @@ namespace ZenitUI::UI
         /**
          * \brief Destroy the off-screen target if one was created.
          *
-         * \warning Does not check `UIContext::get().renderer` for null. See
+         * \warning Does not check `context().renderer` for null. See
          *          the class-level warning about shutdown order.
          */
         ~CanvasLayout()
         {
             if (target.valid())
             {
-                if (auto *r = UIContext::get().renderer)
+                if (auto *r = context().renderer)
                     r->destroyTarget(target);
                 target = {};
             }
@@ -98,7 +98,7 @@ namespace ZenitUI::UI
          */
         void draw(float parentOp) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (rect.width <= 0 || rect.height <= 0)
                 return;
             if (!target.valid() || target.width != (int)rect.width || target.height != (int)rect.height)

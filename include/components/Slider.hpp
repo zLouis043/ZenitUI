@@ -94,7 +94,7 @@ namespace ZenitUI::UI
         {
             if (state.focused)
             {
-                auto &ev = UIContext::get().inputEvents;
+                auto &ev = context().inputEvents;
                 constexpr float STEP = 0.05f;
                 constexpr float STEP_FINE = 0.01f;
 
@@ -108,7 +108,7 @@ namespace ZenitUI::UI
                     if (delta == 0.0f)
                         continue;
 
-                    if (UIContext::get().modifiers.shift)
+                    if (context().modifiers.shift)
                         delta *= (STEP_FINE / STEP);
                     float nv = std::clamp(value + delta, 0.0f, 1.0f);
                     if (nv != value)
@@ -139,7 +139,7 @@ namespace ZenitUI::UI
 
                 if (innerW > 0.0f)
                 {
-                    float px = UIContext::get().pointer.pos.x;
+                    float px = context().pointer.pos.x;
                     float percent = std::clamp((px - innerX) / innerW, 0.0f, 1.0f);
                     if (percent != value)
                     {
@@ -159,7 +159,7 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             const Vec2 vp = viewportSize();
 
             Style trackStyle = partStyle("track");

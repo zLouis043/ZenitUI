@@ -7,7 +7,7 @@ namespace ZenitUI
 
 	void InputController::updateFlags(Layout &node, bool selfBlocked, bool scrolling)
 	{
-		auto &ctx = UIContext::get();
+		auto &ctx = node.context();
 		auto &pointer = ctx.pointer;
 
 		if (scrolling)
@@ -63,7 +63,7 @@ namespace ZenitUI
 
 		void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
 	{
-		auto &ctx = UIContext::get();
+		auto &ctx = node.context();
 		auto &pointer = ctx.pointer;
 
 		if (stateChanged)
@@ -147,7 +147,7 @@ namespace ZenitUI
 		if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
 			return;
 
-		auto &ev = UIContext::get().inputEvents;
+		auto &ev = node.context().inputEvents;
 		for (int k : ev.keys)
 		{
 			if (k == Key::Enter || k == Key::Space)

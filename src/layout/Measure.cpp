@@ -940,8 +940,8 @@ namespace ZenitUI
 
 		if (!hasParent())
 		{
-			for (auto it = UIContext::get().activePortals.rbegin();
-				 it != UIContext::get().activePortals.rend(); ++it)
+			for (auto it = context().activePortals.rbegin();
+				 it != context().activePortals.rend(); ++it)
 			{
 				auto sp = it->lock();
 				if (!sp)

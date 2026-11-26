@@ -149,7 +149,7 @@ namespace ZenitUI::UI
         {
             if (!isOpen_)
                 return;
-            auto &ctx = UIContext::get();
+            auto &ctx = context();
             const Vec2 vp = viewportSize();
 
             Vec2 size = computePopupSize();
@@ -230,7 +230,7 @@ namespace ZenitUI::UI
             beginTransition();
             if (content_)
                 content_->beginTransition();
-            UIContext::get().requestFocus(shared_from_this());
+            context().requestFocus(shared_from_this());
             if (onOpen)
                 onOpen();
         }

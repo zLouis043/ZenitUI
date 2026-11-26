@@ -574,6 +574,7 @@ namespace ZenitUI::Test
 		~Env()
 		{
 			auto &ctx = UIContext::get();
+			ctx.detachAllRoots();
 			ctx.targetPool.clear(renderer, &ctx.renderStats);
 			ctx.renderer = nullptr;
 			ctx.platform = nullptr;
@@ -600,6 +601,7 @@ namespace ZenitUI::Test
 			ctx.activePortals.clear();
 			ctx.framePortals.clear();
 			ctx.cullingClipStack.clear();
+			ctx.detachAllRoots();
 			ctx.targetPool.clear(renderer, &ctx.renderStats);
 			ctx.renderStats.resetAll();
 
@@ -615,6 +617,7 @@ namespace ZenitUI::Test
 		void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
 		{
 			auto &ctx = UIContext::get();
+			if (root && root->contextPtr() != &ctx) root->attachContext(&ctx);
 			ctx.beginFrame(dt);
 			root->updateTree(dt);
 			root->measure(platform.viewport.x, platform.viewport.y);
@@ -658,9 +661,7 @@ namespace ZenitUI::Test
 
 		void shutdown() override
 		{
-			auto &ctx = UIContext::get();
-			ctx.targetPool.clear(mockRenderer, &ctx.renderStats);
-			unbindFromContext();
+			unbind();
 			running_ = false;
 		}
 

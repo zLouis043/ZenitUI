@@ -55,7 +55,7 @@ namespace ZenitUI::UI
         void renderContent(float op, const ComputedStyle &style) override
         {
             if (tex.valid())
-                UIContext::get().renderer->drawTexture(
+                context().renderer->drawTexture(
                     tex,
                     {0, 0, (float)tex.width, (float)tex.height},
                     rect,

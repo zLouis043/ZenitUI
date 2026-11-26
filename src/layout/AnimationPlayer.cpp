@@ -226,7 +226,7 @@ bool AnimationPlayer::tickImperative(Layout& node, float dt)
 void AnimationPlayer::syncCss(Layout& node)
 {
     const auto& refs = node.style_.targetStyle.animations;
-    Anim::syncRefs(css, refs, UIContext::get().time);
+    Anim::syncRefs(css, refs, node.context().time);
 }
 
 void AnimationPlayer::tickCss(Layout& node, float dt)
@@ -241,7 +241,7 @@ void AnimationPlayer::applyCssToPart(Layout& node, const std::string& partName, 
         : std::vector<AnimationRef>{};
 
     auto& anims = parts[partName];
-    const double now = UIContext::get().time;
+    const double now = node.context().time;
     const auto& activeTheme = node.theme();
 
     Anim::syncRefs(anims, refs, now);

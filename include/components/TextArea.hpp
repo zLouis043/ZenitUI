@@ -153,7 +153,7 @@ namespace ZenitUI::UI
             const Vec2 vp = viewportSize();
             float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float charW = 0.0f;
-            if (auto r = UIContext::get().renderer)
+            if (auto r = context().renderer)
                 charW = r->measureText(f, "M", fs, 0.0f).x;
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
@@ -176,12 +176,12 @@ namespace ZenitUI::UI
         /** \brief Handle pointer selection, wheel scrolling, keyboard editing, and auto-scroll. */
         void onUpdate(float dt) override
         {
-            hasFocusCache = UIContext::get().hasFocus(this);
+            hasFocusCache = context().hasFocus(this);
             cursorBlink += dt;
             if (cursorBlink > 1.0f)
                 cursorBlink -= 1.0f;
 
-            auto &ctx = UIContext::get();
+            auto &ctx = context();
             auto &ev = ctx.inputEvents;
             const Vec2 vp = viewportSize();
             bool changed = false;
@@ -225,7 +225,7 @@ namespace ZenitUI::UI
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
-                UIContext::get().requestFocus(shared_from_this());
+                context().requestFocus(shared_from_this());
 
                 double now = ctx.platform->time();
                 clickCount = (now - lastClickTime < 0.4) ? (clickCount + 1) : 1;
@@ -373,7 +373,7 @@ namespace ZenitUI::UI
                 if (targetLine == curLine)
                     return;
 
-                auto r = UIContext::get().renderer;
+                auto r = context().renderer;
                 float curX = 0.0f;
                 if (r)
                 {
@@ -534,7 +534,7 @@ namespace ZenitUI::UI
                     keepCursorInView = true;
                     break;
                 case Key::Escape:
-                    UIContext::get().releaseFocus();
+                    context().releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
@@ -607,7 +607,7 @@ namespace ZenitUI::UI
         /** \brief Render placeholder or wrapped lines, selection rects, caret, and internal scrollbar. */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r)
                 return;
 
@@ -733,11 +733,11 @@ namespace ZenitUI::UI
         }
 
     private:
-        static std::vector<VisualLine> wrapString(const std::string &src, float availW,
+        std::vector<VisualLine> wrapString(const std::string &src, float availW,
                                                   FontHandle f, float fs, float sp)
         {
             std::vector<VisualLine> out;
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             auto measure = [&](size_t a, size_t b) -> float
             {
                 if (!r || b <= a)
@@ -850,7 +850,7 @@ namespace ZenitUI::UI
 
         int closestIndexInLine(int lineIdx, float targetX, FontHandle f, float fs, float sp) const
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             const auto &ln = visualLines[lineIdx];
             if (!r)
                 return ln.start;

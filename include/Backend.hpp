@@ -80,26 +80,33 @@ namespace ZenitUI
 		/** \brief Access the underlying asset provider. */
 		virtual IAssetProvider &assets() = 0;
 
-		/** \brief Attach this backend's adapters to `UIContext::get()`. */
-		void bindToContext()
+		/** \brief Attach this backend's adapters to \p ctx, unbinding any previous context. */
+		void bindTo(UIContext &ctx)
 		{
-			auto &ctx = UIContext::get();
-			ctx.platform = &platform();
-			ctx.renderer = &renderer();
-			ctx.assets = &assets();
+			if (boundCtx_ == &ctx)
+				return;
+			unbind();
+			ctx.attachBackend(&renderer(), &platform(), &assets(), &boundCtx_);
 		}
 
-		/** \brief Clear `UIContext::get()` pointers if they still reference this backend. */
-		void unbindFromContext()
+		/** \brief Flush pooled targets and detach this backend from its bound context. */
+		void unbind()
 		{
-			auto &ctx = UIContext::get();
-			if (ctx.platform == &platform())
-				ctx.platform = nullptr;
-			if (ctx.renderer == &renderer())
-				ctx.renderer = nullptr;
-			if (ctx.assets == &assets())
-				ctx.assets = nullptr;
+			if (boundCtx_)
+				boundCtx_->detachBackend();
 		}
+
+		/** \brief Return the currently bound `UIContext`, or `nullptr` if unbound. */
+		UIContext *boundContext() const { return boundCtx_; }
+
+		/** \brief Temporary Step 4 wrapper forwarding to `bindTo(UIContext::get())`. */
+		void bindToContext() { bindTo(UIContext::get()); }
+
+		/** \brief Temporary Step 4 wrapper forwarding to `unbind()`. */
+		void unbindFromContext() { unbind(); }
+
+	protected:
+		UIContext *boundCtx_{nullptr};
 	};
 
 	/** @} */

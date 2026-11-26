@@ -724,10 +724,52 @@ namespace ZenitUI
 	 */
 	struct UIContext
 	{
+
+		UIContext() = default;
+		~UIContext();
+
+		UIContext(const UIContext &) = delete;
+		UIContext &operator=(const UIContext &) = delete;
+		UIContext(UIContext &&) = delete;
+		UIContext &operator=(UIContext &&) = delete;
+
 		// ---- Backends ----
 		IRenderer *renderer{nullptr};
 		IPlatform *platform{nullptr};
 		IAssetProvider *assets{nullptr};
+
+		/**
+		 * \brief Attach renderer, platform, and asset backends to this context.
+		 * \param ownerSlot Optional pointer to an `IBackend::boundCtx_` slot kept in sync on detach.
+		 */
+		void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a,
+						   UIContext **ownerSlot = nullptr)
+		{
+			detachBackend();
+			renderer = r;
+			platform = p;
+			assets = a;
+			backendOwnerSlot_ = ownerSlot;
+			if (backendOwnerSlot_)
+				*backendOwnerSlot_ = this;
+		}
+
+		/**
+		 * \brief Flush pooled render targets while the renderer is still valid and clear backend pointers.
+		 */
+		void detachBackend()
+		{
+			if (renderer)
+				targetPool.clear(*renderer, &renderStats);
+			renderer = nullptr;
+			platform = nullptr;
+			assets = nullptr;
+			if (backendOwnerSlot_)
+			{
+				*backendOwnerSlot_ = nullptr;
+				backendOwnerSlot_ = nullptr;
+			}
+		}
 
 		// ---- Per-frame state ----
 		PointerState pointer;
@@ -866,6 +908,32 @@ namespace ZenitUI
 
 		/** \brief Set \p n as the focused node; null clears focus. */
 		void requestFocus(std::shared_ptr<Layout> n);
+
+		/** \brief Attach a root `Layout` subtree to this context. */
+		void mount(Layout &root);
+		void mount(const std::shared_ptr<Layout> &root)
+		{
+			if (root)
+				mount(*root);
+		}
+
+		/** \brief Detach a previously mounted root `Layout` subtree from this context. */
+		void unmount(Layout &root);
+		void unmount(const std::shared_ptr<Layout> &root)
+		{
+			if (root)
+				unmount(*root);
+		}
+
+		/** \brief Detach every root currently attached to this context. */
+		void detachAllRoots();
+
+		/** \brief Run one full update/measure/arrange frame on \p root using this context. */
+		void runFrame(Layout &root, float dt);
+
+		/** \brief Render \p root (beginFrame, draw, endFrame) using this context. */
+		void renderFrame(Layout &root);
+
 		/** \brief Clear focus. */
 		void releaseFocus() { focusedNode.reset(); }
 		/** \brief `true` if \p n is the current focused node. */
@@ -881,6 +949,26 @@ namespace ZenitUI
 			static UIContext instance;
 			return instance;
 		}
+	private:
+		friend class Layout;
+
+		void registerRoot(Layout *root)
+		{
+			if (!root)
+				return;
+			if (std::find(attachedRoots_.begin(), attachedRoots_.end(), root) == attachedRoots_.end())
+				attachedRoots_.push_back(root);
+		}
+
+		void unregisterRoot(Layout *root)
+		{
+			auto it = std::find(attachedRoots_.begin(), attachedRoots_.end(), root);
+			if (it != attachedRoots_.end())
+				attachedRoots_.erase(it);
+		}
+
+		std::vector<Layout *> attachedRoots_;
+		UIContext **backendOwnerSlot_{nullptr};
 	};
 
 	/** @} */

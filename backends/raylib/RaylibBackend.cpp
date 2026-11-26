@@ -1067,12 +1067,7 @@ namespace ZenitUI
 	{
 		if (!initialized_)
 			return;
-
-		auto &ctx = UIContext::get();
-		if (renderer_)
-			ctx.targetPool.clear(*renderer_, &ctx.renderStats);
-
-		unbindFromContext();
+		unbind();
 		assets_.reset();
 		renderer_.reset();
 		platform_.reset();

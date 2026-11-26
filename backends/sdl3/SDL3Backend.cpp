@@ -2042,12 +2042,7 @@ void main() {
 	{
 		if (!initialized_ && !window_ && !glContext_)
 			return;
-
-		auto &ctx = UIContext::get();
-		if (renderer_)
-			ctx.targetPool.clear(*renderer_, &ctx.renderStats);
-
-		unbindFromContext();
+		unbind();
 		assets_.reset();
 		renderer_.reset();
 		platform_.reset();

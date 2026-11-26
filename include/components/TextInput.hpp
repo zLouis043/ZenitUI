@@ -29,7 +29,7 @@
  * \note This component dereferences `UIContext::platform` in `onUpdate`
  *       (for `time()` and clipboard access) without a null check. If you
  *       use `TextInput` in a headless test or without a platform backend,
- *       you must set `UIContext::get().platform` to a valid mock, or the
+ *       you must set `context().platform` to a valid mock, or the
  *       first `onUpdate` after the field is focused will crash.
  */
 
@@ -155,7 +155,7 @@ namespace ZenitUI::UI
             const Vec2 vp = viewportSize();
             float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float charW = 0.0f;
-            if (auto r = UIContext::get().renderer)
+            if (auto r = context().renderer)
                 charW = r->measureText(f, "M", fs, 0.0f).x;
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
@@ -211,12 +211,12 @@ namespace ZenitUI::UI
          */
         void onUpdate(float dt) override
         {
-            hasFocusCache = UIContext::get().hasFocus(this);
+            hasFocusCache = context().hasFocus(this);
             cursorBlink += dt;
             if (cursorBlink > 1.0f)
                 cursorBlink -= 1.0f;
 
-            auto &ctx = UIContext::get();
+            auto &ctx = context();
             auto &ev = ctx.inputEvents;
             const Vec2 vp = viewportSize();
             bool changed = false;
@@ -230,7 +230,7 @@ namespace ZenitUI::UI
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
-                UIContext::get().requestFocus(shared_from_this());
+                context().requestFocus(shared_from_this());
 
                 double now = ctx.platform->time();
                 if (now - lastClickTime < 0.4)
@@ -481,12 +481,12 @@ namespace ZenitUI::UI
                 case Key::Enter:
                     if (onSubmit)
                         onSubmit(text);
-                    UIContext::get().releaseFocus();
+                    context().releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
                 case Key::Escape:
-                    UIContext::get().releaseFocus();
+                    context().releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
@@ -524,7 +524,7 @@ namespace ZenitUI::UI
             }
 
             {
-                auto r = UIContext::get().renderer;
+                auto r = context().renderer;
                 const Vec2 vp = viewportSize();
                 if (!r)
                     return;
@@ -556,7 +556,7 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             const Vec2 vp = viewportSize();
             FontHandle f = resolveFont(style, defaultFont);
             float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
@@ -662,7 +662,7 @@ namespace ZenitUI::UI
          */
         int cursorIndexFromX(float localX)
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r)
                 return cursorPos;
             const Vec2 vp = viewportSize();
@@ -786,11 +786,11 @@ namespace ZenitUI::UI
             }
         }
 
-        static std::vector<std::string_view> wrapPlaceholderLines(const std::string &src, float availW,
+        std::vector<std::string_view> wrapPlaceholderLines(const std::string &src, float availW,
                                                                   FontHandle f, float fs, float sp)
         {
             std::vector<std::string_view> out;
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r || availW <= 1.0f || src.empty())
             {
                 if (!src.empty())
@@ -875,10 +875,10 @@ namespace ZenitUI::UI
             return out;
         }
 
-        static std::string truncatePlaceholder(const std::string &src, float maxW,
+        std::string truncatePlaceholder(const std::string &src, float maxW,
                                                FontHandle f, float fs, float sp)
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             if (!r || maxW <= 1.0f || src.empty())
                 return src;
             if (r->measureText(f, src, fs, sp).x <= maxW)

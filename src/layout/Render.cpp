@@ -152,7 +152,7 @@ namespace ZenitUI
 		if (!layerCache_ || !layerCache_->target.valid())
 			return;
 
-		const auto &pool = UIContext::get().targetPool;
+		const auto &pool = context().targetPool;
 		if (layerCache_->poolGeneration != pool.generation())
 		{
 			layerCache_->target = {};
@@ -269,7 +269,7 @@ namespace ZenitUI
 
 	void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
 	{
-		auto renderer = UIContext::get().renderer;
+		auto renderer = context().renderer;
 		if (!renderer)
 			return;
 
@@ -309,17 +309,17 @@ namespace ZenitUI
 
 		if (config.portal)
 		{
-			UIContext::get().framePortals.push_back(weak_from_this());
+			context().framePortals.push_back(weak_from_this());
 			return;
 		}
 
-		auto renderer = UIContext::get().renderer;
+		auto renderer = context().renderer;
 		if (!renderer)
 			return;
 
 		if (rect.width > 0.0f && rect.height > 0.0f)
 		{
-			Rect clip = UIContext::get().getCullingClip();
+			Rect clip = context().getCullingClip();
 			float m = 40.0f;
 			if (rect.x > clip.x + clip.width + m ||
 				rect.x + rect.width < clip.x - m ||
@@ -344,7 +344,7 @@ namespace ZenitUI
 
 		if (!hasParent())
 		{
-			auto portals = UIContext::get().framePortals;
+			auto portals = context().framePortals;
 			for (auto &wp : portals)
 			{
 				auto sp = wp.lock();
@@ -360,7 +360,7 @@ namespace ZenitUI
 
 	void Layout::drawInline(const ComputedStyle &renderStyle, float globalOp)
 	{
-		auto renderer = UIContext::get().renderer;
+		auto renderer = context().renderer;
 
 		Transform2D tr = currentTransform(renderStyle);
 		const bool identity =
@@ -396,7 +396,7 @@ namespace ZenitUI
 
 	void Layout::drawLayer(const ComputedStyle &renderStyle, float globalOp)
 	{
-		auto &ctxUI = UIContext::get();
+		auto &ctxUI = context();
 		auto *renderer = ctxUI.renderer;
 
 		Transform2D currTr = currentTransform(renderStyle);
@@ -856,7 +856,7 @@ namespace ZenitUI
 			return;
 
 		effectName_ = style.effect;
-		if (auto *assets = UIContext::get().assets)
+		if (auto *assets = context().assets)
 			currentEffect_ = assets->getEffect(style.effect);
 		else
 			currentEffect_ = {};

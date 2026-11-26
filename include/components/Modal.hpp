@@ -49,7 +49,7 @@ namespace ZenitUI::UI
          *
          * Fires `onShow`. Note: this does not request focus; if the modal is
          * meant to be modal-with-focus, add a focusable child and call
-         * `UIContext::get().requestFocus(child)` in `onShow`.
+         * `context().requestFocus(child)` in `onShow`.
          */
         void show()
         {

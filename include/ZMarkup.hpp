@@ -570,14 +570,26 @@ namespace ZenitUI::ZMarkup
 
             if (!sameOrder)
             {
+                std::unordered_set<const Layout *> keepSet;
+                keepSet.reserve(nextNodes.size());
+                for (const auto &n : nextNodes)
+                    keepSet.insert(n.get());
+
                 for (auto &oldWp : binding.spawnedNodes)
                 {
                     if (auto oldNode = oldWp.lock())
-                        parent->removeChild(oldNode.get());
+                    {
+                        if (keepSet.find(oldNode.get()) == keepSet.end())
+                            parent->removeChild(oldNode.get());
+                    }
                 }
+
                 for (auto &newNode : nextNodes)
                 {
-                    parent->insertChildBefore(anchor.get(), newNode);
+                    if (newNode->getParent().get() == parent.get())
+                        parent->moveChildBefore(anchor.get(), newNode.get());
+                    else
+                        parent->insertChildBefore(anchor.get(), newNode);
                 }
             }
 

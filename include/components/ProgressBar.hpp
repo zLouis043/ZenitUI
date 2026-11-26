@@ -72,7 +72,7 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = UIContext::get().renderer;
+            auto r = context().renderer;
             const Vec2 vp = viewportSize();
             Style trackStyle = partStyle("track");
             Style fillStyle = partStyle("fill");

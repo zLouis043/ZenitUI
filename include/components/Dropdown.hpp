@@ -182,7 +182,7 @@ namespace ZenitUI::UI
             if (isOpen)
                 internal_.pendingTransition = 1;
 
-            auto &ctx = UIContext::get();
+            auto &ctx = context();
 
             if (ctx.hasFocus(this))
             {
@@ -286,7 +286,7 @@ namespace ZenitUI::UI
 
             button = Btn("", [this]()
                          {
-                UIContext::get().requestFocus(shared_from_this());
+                context().requestFocus(shared_from_this());
                 toggleOpen(); });
             button->cls("dropdown-trigger");
             button->setFocusable(false);
@@ -414,7 +414,7 @@ namespace ZenitUI::UI
 
                 item->onClick = [this, idx]()
                 {
-                    UIContext::get().requestFocus(shared_from_this());
+                    context().requestFocus(shared_from_this());
                     setSelected(idx);
                     setOpen(false);
                 };
