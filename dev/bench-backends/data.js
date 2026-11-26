@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795734423291,
+  "lastUpdate": 1795735424575,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -1109,6 +1109,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 2563.08,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "c99afdf55f78acac344a5c405fbfe9f0b2a4d2f8",
+          "message": "refactor(widgets): integrate TextEngine into UIContext and migrate Text, TextInput, TextArea\n\nOwns TextEngine per UIContext with automatic DPI sync and atlas cleanup on detachBackend(), resolves fonts through UIContext::textEngine in Layout::resolveFont(), adds local-space vertical line culling to TextEngine::draw(), and migrates Text, TextInput, and TextArea to delegate shaping, wrapping, ellipsis, hit-testing, caret/selection geometry, and rendering to TextEngine.",
+          "timestamp": "2026-11-27T00:17:43+01:00",
+          "tree_id": "a69a0d84eb9e6af0e899efd0ebbe5b15788b40e9",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/c99afdf55f78acac344a5c405fbfe9f0b2a4d2f8"
+        },
+        "date": 1795735422584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 6085.99,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 5902.74,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 3452.78,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 5840.84,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 3277.11,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 5226.46,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 5052.67,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 3166.7,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 5135.84,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 3161.68,
             "unit": "us"
           }
         ]
