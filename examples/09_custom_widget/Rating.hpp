@@ -61,10 +61,11 @@ protected:
     //  size the widget would like if it has no explicit width/height.
     Vec2 computeIntrinsicSize(float, float) override
     {
+        const Vec2 vp = viewportSize();
         float fs = style_.currentStyle.fontSize.resolveV(
-            Metrics::viewport.x, Metrics::viewport.y);
+            vp.x, vp.y, vp);
         float starSize = fs * 1.4f;
-        float gap = getStyle().gap.resolveH(0, 0);
+        float gap = getStyle().gap.resolveH(0, 0,vp);
         float totalW = starSize * maxStars_ + gap * (maxStars_ - 1);
         return { totalW, starSize };
     }
@@ -76,10 +77,10 @@ protected:
     {
         auto r = UIContext::get().renderer;
         if (!r) return;
-
-        float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+        const Vec2 vp = viewportSize();
+        float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
         float starSize = fs * 1.4f;
-        float gap = style.gap.resolveH(rect.width, rect.height);
+        float gap = style.gap.resolveH(rect.width, rect.height, vp);
         float totalW = starSize * maxStars_ + gap * (maxStars_ - 1);
         float startX = rect.x + (rect.width - totalW) * 0.5f;
         float centerY = rect.center().y;
@@ -130,10 +131,12 @@ protected:
         if (ctx.topmostConsumer != this) return;
         if (rect.width <= 0.0f) return;
 
+        const Vec2 vp = viewportSize();
+
         float fs = style_.currentStyle.fontSize.resolveV(
-            Metrics::viewport.x, Metrics::viewport.y);
+            vp.x, vp.y, vp);
         float starSize = fs * 1.4f;
-        float gap = style_.currentStyle.gap.resolveH(rect.width, rect.height);
+        float gap = style_.currentStyle.gap.resolveH(rect.width, rect.height, vp);
         float totalW = starSize * maxStars_ + gap * (maxStars_ - 1);
         float startX = rect.x + (rect.width - totalW) * 0.5f;
 

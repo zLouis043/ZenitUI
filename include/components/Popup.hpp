@@ -150,6 +150,7 @@ namespace ZenitUI::UI
             if (!isOpen_)
                 return;
             auto &ctx = UIContext::get();
+            const Vec2 vp = viewportSize();
 
             Vec2 size = computePopupSize();
             float x = pos_.x, y = pos_.y;
@@ -167,7 +168,7 @@ namespace ZenitUI::UI
                 else
                 {
                     y = a.y + a.height + offsetBelow;
-                    if (y + size.y > Metrics::viewport.y)
+                    if (y + size.y > vp.y)
                         y = a.y - size.y - offsetBelow;
                 }
             }
@@ -176,10 +177,10 @@ namespace ZenitUI::UI
                 x = 0.0f;
             if (y < 0.0f)
                 y = 0.0f;
-            if (x + size.x > Metrics::viewport.x)
-                x = Metrics::viewport.x - size.x;
-            if (y + size.y > Metrics::viewport.y)
-                y = Metrics::viewport.y - size.y;
+            if (x + size.x > vp.x)
+                x = vp.x - size.x;
+            if (y + size.y > vp.y)
+                y = vp.y - size.y;
 
             rect = {x, y, size.x, size.y};
             arrangeInto(rect);
@@ -247,16 +248,17 @@ namespace ZenitUI::UI
                 return {100.0f, 40.0f};
 
             Vec2 s = content_->getMeasuredSize();
+            const Vec2 vp = viewportSize();
             if (s.x <= 0.0f && s.y <= 0.0f)
             {
                 content_->measure(1000.0f, 1000.0f);
                 s = content_->getMeasuredSize();
             }
 
-            float pl = style_.currentStyle.padding.left.resolveH(0.0f, 0.0f);
-            float pr = style_.currentStyle.padding.right.resolveH(0.0f, 0.0f);
-            float pt = style_.currentStyle.padding.top.resolveV(0.0f, 0.0f);
-            float pb = style_.currentStyle.padding.bottom.resolveV(0.0f, 0.0f);
+            float pl = style_.currentStyle.padding.left.resolveH(0.0f, 0.0f, vp);
+            float pr = style_.currentStyle.padding.right.resolveH(0.0f, 0.0f, vp);
+            float pt = style_.currentStyle.padding.top.resolveV(0.0f, 0.0f, vp);
+            float pb = style_.currentStyle.padding.bottom.resolveV(0.0f, 0.0f, vp);
             return {s.x + pl + pr, s.y + pt + pb};
         }
     };

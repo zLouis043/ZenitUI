@@ -57,7 +57,8 @@ namespace ZenitUI::UI
          */
         Vec2 computeIntrinsicSize(float, float) override
         {
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             return {120.0f, std::max(16.0f, fs * 0.8f)};
         }
 
@@ -72,18 +73,19 @@ namespace ZenitUI::UI
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;
+            const Vec2 vp = viewportSize();
             Style trackStyle = partStyle("track");
             Style fillStyle = partStyle("fill");
 
-            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
-            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
-            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
-            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
+            float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
 
             float innerX = rect.x + pl;
             float innerY = rect.y + pt;
@@ -97,8 +99,8 @@ namespace ZenitUI::UI
                 trackColor = trackStyle.background.value;
 
             float rPx = trackStyle.radius.is_set
-                            ? std::clamp(trackStyle.radius.value.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR)
-                            : std::clamp(style.radius.resolveH(maxR * 2.0f, maxR * 2.0f), 0.0f, maxR);
+                            ? std::clamp(trackStyle.radius.value.resolveH(maxR * 2.0f, maxR * 2.0f, vp), 0.0f, maxR)
+                            : std::clamp(style.radius.resolveH(maxR * 2.0f, maxR * 2.0f, vp), 0.0f, maxR);
 
             r->fillRoundedRect(innerRect, rPx, trackColor.withAlpha(op));
 

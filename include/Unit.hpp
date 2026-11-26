@@ -150,79 +150,79 @@ namespace ZenitUI
 
     private:
         /// \brief Resolve argument \p idx of the AST in the given axis mode.
-        float resolveArg(size_t idx, float pw, float ph, float autoV, int mode) const
+        float resolveArg(size_t idx, float pw, float ph, Vec2 viewport, float autoV, int mode) const
         {
             if (!args || idx >= args->size())
                 return 0.0f;
             const auto &a = args->at(idx);
             if (mode == 0)
-                return a.resolveH(pw, ph, autoV);
+                return a.resolveH(pw, ph, viewport, autoV);
             if (mode == 1)
-                return a.resolveV(pw, ph, autoV);
+                return a.resolveV(pw, ph, viewport, autoV);
             if (mode == 2)
-                return a.resolveSelfH(pw, ph);
-            return a.resolveSelfV(pw, ph);
+                return a.resolveSelfH(pw, ph, viewport);
+            return a.resolveSelfV(pw, ph, viewport);
         }
 
         /// \brief Evaluate the AST with the given operator.
-        float resolveAST(float pw, float ph, float autoV, int mode) const
+        float resolveAST(float pw, float ph, Vec2 viewport, float autoV, int mode) const
         {
             if (!args)
                 return 0.0f;
             switch (op)
             {
             case ValueOp::Add:
-                return resolveArg(0, pw, ph, autoV, mode) + resolveArg(1, pw, ph, autoV, mode);
+                return resolveArg(0, pw, ph, viewport, autoV, mode) + resolveArg(1, pw, ph, viewport, autoV, mode);
             case ValueOp::Sub:
-                return resolveArg(0, pw, ph, autoV, mode) - resolveArg(1, pw, ph, autoV, mode);
+                return resolveArg(0, pw, ph, viewport, autoV, mode) - resolveArg(1, pw, ph, viewport, autoV, mode);
             case ValueOp::Mul:
-                return resolveArg(0, pw, ph, autoV, mode) * resolveArg(1, pw, ph, autoV, mode);
+                return resolveArg(0, pw, ph, viewport, autoV, mode) * resolveArg(1, pw, ph, viewport, autoV, mode);
             case ValueOp::Div:
             {
-                float b = resolveArg(1, pw, ph, autoV, mode);
-                return b != 0.0f ? resolveArg(0, pw, ph, autoV, mode) / b : 0.0f;
+                float b = resolveArg(1, pw, ph, viewport, autoV, mode);
+                return b != 0.0f ? resolveArg(0, pw, ph, viewport, autoV, mode) / b : 0.0f;
             }
             case ValueOp::Min:
             {
                 if (args->empty())
                     return 0.0f;
-                float r = resolveArg(0, pw, ph, autoV, mode);
+                float r = resolveArg(0, pw, ph, viewport, autoV, mode);
                 for (size_t i = 1; i < args->size(); ++i)
-                    r = std::min(r, resolveArg(i, pw, ph, autoV, mode));
+                    r = std::min(r, resolveArg(i, pw, ph, viewport, autoV, mode));
                 return r;
             }
             case ValueOp::Max:
             {
                 if (args->empty())
                     return 0.0f;
-                float r = resolveArg(0, pw, ph, autoV, mode);
+                float r = resolveArg(0, pw, ph, viewport, autoV, mode);
                 for (size_t i = 1; i < args->size(); ++i)
-                    r = std::max(r, resolveArg(i, pw, ph, autoV, mode));
+                    r = std::max(r, resolveArg(i, pw, ph, viewport, autoV, mode));
                 return r;
             }
             case ValueOp::Clamp:
             {
                 if (args->size() >= 3)
                 {
-                    float minV = resolveArg(0, pw, ph, autoV, mode);
-                    float valV = resolveArg(1, pw, ph, autoV, mode);
-                    float maxV = resolveArg(2, pw, ph, autoV, mode);
+                    float minV = resolveArg(0, pw, ph, viewport, autoV, mode);
+                    float valV = resolveArg(1, pw, ph, viewport, autoV, mode);
+                    float maxV = resolveArg(2, pw, ph, viewport, autoV, mode);
                     return std::clamp(valV, minV, maxV);
                 }
                 return 0.0f;
             }
             case ValueOp::Round:
-                return args->empty() ? 0.0f : std::round(resolveArg(0, pw, ph, autoV, mode));
+                return args->empty() ? 0.0f : std::round(resolveArg(0, pw, ph, viewport, autoV, mode));
             case ValueOp::Floor:
-                return args->empty() ? 0.0f : std::floor(resolveArg(0, pw, ph, autoV, mode));
+                return args->empty() ? 0.0f : std::floor(resolveArg(0, pw, ph, viewport, autoV, mode));
             case ValueOp::Ceil:
-                return args->empty() ? 0.0f : std::ceil(resolveArg(0, pw, ph, autoV, mode));
+                return args->empty() ? 0.0f : std::ceil(resolveArg(0, pw, ph, viewport, autoV, mode));
             case ValueOp::Mod:
             {
                 if (args->size() >= 2)
                 {
-                    float a = resolveArg(0, pw, ph, autoV, mode);
-                    float b = resolveArg(1, pw, ph, autoV, mode);
+                    float a = resolveArg(0, pw, ph, viewport, autoV, mode);
+                    float b = resolveArg(1, pw, ph, viewport, autoV, mode);
                     return b != 0.0f ? std::fmod(a, b) : 0.0f;
                 }
                 return 0.0f;
@@ -235,11 +235,15 @@ namespace ZenitUI
     public:
         /**
          * \brief Resolve the value along the horizontal axis.
+         * \param parentW   Parent width in logical pixels.
+         * \param parentH   Parent height in logical pixels.
+         * \param viewport  Active context viewport size in logical pixels (for `vw`/`vh`).
+         * \param autoValue Fallback value returned when `isAuto()` is true.
          */
-        float resolveH(float parentW, float parentH, float autoValue = 0.0f) const
+        float resolveH(float parentW, float parentH, Vec2 viewport, float autoValue = 0.0f) const
         {
             if (op != ValueOp::None)
-                return resolveAST(parentW, parentH, autoValue, 0);
+                return resolveAST(parentW, parentH, viewport, autoValue, 0);
             if (terms.empty())
                 return autoValue;
             float result = 0.0f;
@@ -263,10 +267,10 @@ namespace ZenitUI
                     result += t.coeff * 0.01f * parentH;
                     break;
                 case Unit::VW:
-                    result += t.coeff * 0.01f * Metrics::viewport.x;
+                    result += t.coeff * 0.01f * viewport.x;
                     break;
                 case Unit::VH:
-                    result += t.coeff * 0.01f * Metrics::viewport.y;
+                    result += t.coeff * 0.01f * viewport.y;
                     break;
                 default:
                     break;
@@ -277,11 +281,15 @@ namespace ZenitUI
 
         /**
          * \brief Resolve the value along the vertical axis.
+         * \param parentW   Parent width in logical pixels.
+         * \param parentH   Parent height in logical pixels.
+         * \param viewport  Active context viewport size in logical pixels (for `vw`/`vh`).
+         * \param autoValue Fallback value returned when `isAuto()` is true.
          */
-        float resolveV(float parentW, float parentH, float autoValue = 0.0f) const
+        float resolveV(float parentW, float parentH, Vec2 viewport, float autoValue = 0.0f) const
         {
             if (op != ValueOp::None)
-                return resolveAST(parentW, parentH, autoValue, 0);
+                return resolveAST(parentW, parentH, viewport, autoValue, 1);
             if (terms.empty())
                 return autoValue;
             float result = 0.0f;
@@ -305,10 +313,10 @@ namespace ZenitUI
                     result += t.coeff * 0.01f * parentH;
                     break;
                 case Unit::VW:
-                    result += t.coeff * 0.01f * Metrics::viewport.x;
+                    result += t.coeff * 0.01f * viewport.x;
                     break;
                 case Unit::VH:
-                    result += t.coeff * 0.01f * Metrics::viewport.y;
+                    result += t.coeff * 0.01f * viewport.y;
                     break;
                 default:
                     break;
@@ -319,11 +327,14 @@ namespace ZenitUI
 
         /**
          * \brief Resolve the value against the node's own size (horizontal axis).
+         * \param selfW    Node width in logical pixels.
+         * \param selfH    Node height in logical pixels.
+         * \param viewport Active context viewport size in logical pixels (for `vw`/`vh`).
          */
-        float resolveSelfH(float selfW, float selfH) const
+        float resolveSelfH(float selfW, float selfH, Vec2 viewport) const
         {
             if (op != ValueOp::None)
-                return resolveAST(selfW, selfH, 0.0f, 2);
+                return resolveAST(selfW, selfH, viewport, 0.0f, 2);
             if (terms.empty())
                 return 0.0f;
             float result = 0.0f;
@@ -347,10 +358,10 @@ namespace ZenitUI
                     result += t.coeff * 0.01f * selfH;
                     break;
                 case Unit::VW:
-                    result += t.coeff * 0.01f * Metrics::viewport.x;
+                    result += t.coeff * 0.01f * viewport.x;
                     break;
                 case Unit::VH:
-                    result += t.coeff * 0.01f * Metrics::viewport.y;
+                    result += t.coeff * 0.01f * viewport.y;
                     break;
                 default:
                     break;
@@ -361,11 +372,14 @@ namespace ZenitUI
 
         /**
          * \brief Resolve the value against the node's own size (vertical axis).
+         * \param selfW    Node width in logical pixels.
+         * \param selfH    Node height in logical pixels.
+         * \param viewport Active context viewport size in logical pixels (for `vw`/`vh`).
          */
-        float resolveSelfV(float selfW, float selfH) const
+        float resolveSelfV(float selfW, float selfH, Vec2 viewport) const
         {
             if (op != ValueOp::None)
-                return resolveAST(selfW, selfH, 0.0f, 3);
+                return resolveAST(selfW, selfH, viewport, 0.0f, 3);
             if (terms.empty())
                 return 0.0f;
             float result = 0.0f;
@@ -389,10 +403,10 @@ namespace ZenitUI
                     result += t.coeff * 0.01f * selfH;
                     break;
                 case Unit::VW:
-                    result += t.coeff * 0.01f * Metrics::viewport.x;
+                    result += t.coeff * 0.01f * viewport.x;
                     break;
                 case Unit::VH:
-                    result += t.coeff * 0.01f * Metrics::viewport.y;
+                    result += t.coeff * 0.01f * viewport.y;
                     break;
                 default:
                     break;

@@ -431,7 +431,9 @@ namespace ZenitUI::UI
             const float btnScreenX = btnRect.x - scrollX;
             const float btnScreenY = btnRect.y - scrollY;
 
-            const Rect clip = {0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+            const Vec2 vp = viewportSize();
+
+            const Rect clip = {0.0f, 0.0f, vp.x, vp.y};
 
             float listH = listContainer->getMeasuredSize().y;
             float desiredY = btnScreenY + btnRect.height + 4.0f;

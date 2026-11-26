@@ -174,7 +174,7 @@ TEST(Style_lerp, value_same_shape) {
     Value a = Px(0.0f);
     Value b = Px(100.0f);
     Value c = lerpProp(a, b, 0.5f);
-    CHECK_NEAR(c.resolveH(0, 0), 50.0f, 1e-6);
+    CHECK_NEAR(c.resolveH(0, 0, {1280.0f, 720.0f}), 50.0f, 1e-6);
 }
 
 TEST(Style_lerp, value_different_shapes_unions_units) {
@@ -182,7 +182,7 @@ TEST(Style_lerp, value_different_shapes_unions_units) {
     Value b = PW(100.0f) - PH(80.0f);
     Value mid = lerpProp(a, b, 0.5f);
 
-    CHECK_NEAR(mid.resolveH(100, 50), 35.0f, 1e-4);
+    CHECK_NEAR(mid.resolveH(100, 50, {1280.0f, 720.0f}), 35.0f, 1e-4);
 }
 
 TEST(Style_lerp, value_auto_snaps) {
@@ -197,10 +197,10 @@ TEST(Style_lerp, spacing) {
     Spacing a(Px(0.0f));
     Spacing b(Px(10.0f));
     Spacing c = lerpProp(a, b, 0.5f);
-    CHECK_NEAR(c.top.resolveV(0, 0),    5.0f, 1e-6);
-    CHECK_NEAR(c.right.resolveH(0, 0),  5.0f, 1e-6);
-    CHECK_NEAR(c.bottom.resolveV(0, 0), 5.0f, 1e-6);
-    CHECK_NEAR(c.left.resolveH(0, 0),   5.0f, 1e-6);
+    CHECK_NEAR(c.top.resolveV(0, 0, {1280.0f, 720.0f}),    5.0f, 1e-6);
+    CHECK_NEAR(c.right.resolveH(0, 0, {1280.0f, 720.0f}),  5.0f, 1e-6);
+    CHECK_NEAR(c.bottom.resolveV(0, 0, {1280.0f, 720.0f}), 5.0f, 1e-6);
+    CHECK_NEAR(c.left.resolveH(0, 0, {1280.0f, 720.0f}),   5.0f, 1e-6);
 }
 
 TEST(Style_lerp, enum_snaps) {

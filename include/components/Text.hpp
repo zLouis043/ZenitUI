@@ -120,18 +120,20 @@ namespace ZenitUI::UI
 
             FontHandle f = resolveFont(style, defaultFont);
 
-            float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
 
-            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
-            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
-            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
+            float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
+            float sp = style.letterSpacing.resolveH(vp.x, vp.y, vp);
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
-            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
+
+            float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
 
             float availW = std::max(0.0f, rect.width - pl - pr);
             float availH = std::max(0.0f, rect.height - pt - pb);
@@ -211,20 +213,21 @@ namespace ZenitUI::UI
          */
         void onLayout() override
         {
+            const Vec2 vp = viewportSize();
             if (!wrap_ || style_.currentStyle.whiteSpace == WhiteSpace::Nowrap)
                 return;
 
-            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height);
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height) + bwr;
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
             float newAvailW = std::max(0.0f, rect.width - pl - pr);
 
             if (newAvailW > 0.0f && newAvailW != cachedWrapW)
             {
                 FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-                float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-                float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+                float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
+                float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
 
                 wrapText(newAvailW, fs, sp, f);
                 cachedFs = fs;
@@ -443,8 +446,9 @@ namespace ZenitUI::UI
          */
         Vec2 measureSingleLine(FontHandle f)
         {
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
+            float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
 
             if (text_dirty || f.id != cachedFontId ||
                 fs != cachedFs || sp != cachedSp || cachedSize.y == 0.0f ||
@@ -497,8 +501,9 @@ namespace ZenitUI::UI
          */
         Vec2 measureWrapped(float availW, FontHandle f)
         {
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
+            float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
 
             if (text_dirty || f.id != cachedFontId ||
                 fs != cachedFs || sp != cachedSp || availW != cachedWrapW ||

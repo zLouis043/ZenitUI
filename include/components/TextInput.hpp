@@ -152,7 +152,8 @@ namespace ZenitUI::UI
         Vec2 computeIntrinsicSize(float availW, float) override
         {
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float charW = 0.0f;
             if (auto r = UIContext::get().renderer)
                 charW = r->measureText(f, "M", fs, 0.0f).x;
@@ -164,7 +165,7 @@ namespace ZenitUI::UI
 
             if (placeholderWrap && text.empty() && !placeholder.empty() && availW > 1.0f)
             {
-                float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+                float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
                 auto lines = wrapPlaceholderLines(placeholder, availW, f, fs, sp);
                 float wrappedH = static_cast<float>(lines.size()) * (fs * 1.35f);
                 h = std::max(h, wrappedH);
@@ -217,12 +218,13 @@ namespace ZenitUI::UI
 
             auto &ctx = UIContext::get();
             auto &ev = ctx.inputEvents;
+            const Vec2 vp = viewportSize();
             bool changed = false;
 
-            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height);
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height) + bwr;
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
             float availW = std::max(0.0f, rect.width - pl - pr - 4.0f);
 
             if (state.pressed && !hasPointerCapture())
@@ -523,11 +525,12 @@ namespace ZenitUI::UI
 
             {
                 auto r = UIContext::get().renderer;
+                const Vec2 vp = viewportSize();
                 if (!r)
                     return;
                 FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-                float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-                float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
+                float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
+                float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
 
                 std::string prefix = text.substr(0, cursorPos);
                 Vec2 prefixSize = r->measureText(f, prefix, fs, sp);
@@ -554,18 +557,19 @@ namespace ZenitUI::UI
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;
+            const Vec2 vp = viewportSize();
             FontHandle f = resolveFont(style, defaultFont);
-            float fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = style.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
-            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
-            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
+            float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
+            float sp = style.letterSpacing.resolveH(vp.x, vp.y, vp);
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
-            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
+            float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
 
             float innerW = std::max(0.0f, rect.width - pl - pr);
             float innerH = std::max(0.0f, rect.height - pt - pb);
@@ -596,14 +600,14 @@ namespace ZenitUI::UI
                 Style phStyle = partStyle("placeholder");
                 Color phColor = phStyle.color.is_set ? phStyle.color.value : Color{115, 115, 125, 255};
 
-                float phPl = style.padding.left.resolveH(rect.width, rect.height) +
-                             style.borderWidth.left.resolveH(rect.width, rect.height);
-                float phPr = style.padding.right.resolveH(rect.width, rect.height) +
-                             style.borderWidth.right.resolveH(rect.width, rect.height);
-                float phPt = style.padding.top.resolveV(rect.width, rect.height) +
-                             style.borderWidth.top.resolveV(rect.width, rect.height);
-                float phPb = style.padding.bottom.resolveV(rect.width, rect.height) +
-                             style.borderWidth.bottom.resolveV(rect.width, rect.height);
+                float phPl = style.padding.left.resolveH(rect.width, rect.height, vp) +
+                             style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+                float phPr = style.padding.right.resolveH(rect.width, rect.height, vp) +
+                             style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+                float phPt = style.padding.top.resolveV(rect.width, rect.height, vp) +
+                             style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+                float phPb = style.padding.bottom.resolveV(rect.width, rect.height, vp) +
+                             style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
                 float phInnerW = std::max(0.0f, rect.width - phPl - phPr);
                 float phInnerH = std::max(0.0f, rect.height - phPt - phPb);
 
@@ -637,7 +641,7 @@ namespace ZenitUI::UI
                 Style cursorStyle = partStyle("cursor");
                 Color cursorColor = cursorStyle.color.is_set ? cursorStyle.color.value : textColor;
                 float cursorW = cursorStyle.borderWidth.is_set
-                                    ? cursorStyle.borderWidth.value.left.resolveH(fs, fs)
+                                    ? cursorStyle.borderWidth.value.left.resolveH(fs, fs, vp)
                                     : 2.0f;
                 float cx = pos.x + r->measureText(f, text.substr(0, cursorPos), fs, sp).x;
                 r->fillRect({cx, pos.y, cursorW, fs}, cursorColor.withAlpha(op));
@@ -661,11 +665,12 @@ namespace ZenitUI::UI
             auto r = UIContext::get().renderer;
             if (!r)
                 return cursorPos;
+            const Vec2 vp = viewportSize();
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
-            float sp = style_.currentStyle.letterSpacing.resolveH(Metrics::viewport.x, Metrics::viewport.y);
-            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
+            float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
+            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
             float targetX = localX - pl + scrollX;
 
             auto bounds = Utf8::clusterBoundaries(text);

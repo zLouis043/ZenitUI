@@ -77,7 +77,8 @@ namespace ZenitUI::UI
          */
         Vec2 computeIntrinsicSize(float, float) override
         {
-            float fs = style_.currentStyle.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);
+            const Vec2 vp = viewportSize();
+            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             return {120.0f, std::max(24.0f, fs * 1.2f)};
         }
 
@@ -124,12 +125,14 @@ namespace ZenitUI::UI
                 capturePointer();
             }
 
+            const Vec2 vp = viewportSize();
+
             if (hasPointerCapture() && rect.width > 0.0f)
             {
-                float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height);
-                float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height);
-                float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height) + bwl;
-                float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height) + bwr;
+                float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
+                float bwr = style_.currentStyle.borderWidth.right.resolveH(rect.width, rect.height, vp);
+                float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+                float pr = style_.currentStyle.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
 
                 float innerX = rect.x + pl;
                 float innerW = std::max(0.0f, rect.width - pl - pr);
@@ -157,19 +160,21 @@ namespace ZenitUI::UI
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto r = UIContext::get().renderer;
+            const Vec2 vp = viewportSize();
+
             Style trackStyle = partStyle("track");
             Style fillStyle = partStyle("fill");
             Style knobStyle = partStyle("knob");
 
-            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height);
-            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height);
-            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height);
-            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height);
+            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height) + bwl;
-            float pr = style.padding.right.resolveH(rect.width, rect.height) + bwr;
-            float pt = style.padding.top.resolveV(rect.width, rect.height) + bwt;
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height) + bwb;
+            float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
+            float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
+            float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
 
             float innerX = rect.x + pl;
             float innerY = rect.y + pt;
@@ -183,7 +188,7 @@ namespace ZenitUI::UI
             if (trackStyle.background.is_set)
                 trackColor = trackStyle.background.value;
             float trackRadius = trackStyle.radius.is_set
-                                    ? trackStyle.radius.value.resolveH(th * 0.5f, th * 0.5f)
+                                    ? trackStyle.radius.value.resolveH(th * 0.5f, th * 0.5f, vp)
                                     : 4.0f;
             r->fillRoundedRect(trackRect, trackRadius, trackColor.withAlpha(op));
 
@@ -197,7 +202,7 @@ namespace ZenitUI::UI
             if (knobStyle.color.is_set)
                 knobColor = knobStyle.color.value;
             float knobR = knobStyle.radius.is_set
-                              ? knobStyle.radius.value.resolveH(innerH * 0.5f, innerH * 0.5f)
+                              ? knobStyle.radius.value.resolveH(innerH * 0.5f, innerH * 0.5f, vp)
                               : innerH * 0.5f;
             r->fillCircle({innerX + innerW * value, innerY + innerH * 0.5f},
                           knobR, knobColor.withAlpha(op));

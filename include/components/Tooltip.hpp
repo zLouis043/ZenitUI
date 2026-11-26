@@ -157,6 +157,9 @@ namespace ZenitUI::UI
                     setTargetOpacity(1.0f);
                 }
             }
+
+            const Vec2 vp = viewportSize();
+
             if (anchor_)
             {
                 Rect a = anchor_->getRect();
@@ -168,16 +171,16 @@ namespace ZenitUI::UI
 
                     if (targetX < 0.0f)
                         targetX = 0.0f;
-                    if (targetX + ms.x > Metrics::viewport.x)
-                        targetX = Metrics::viewport.x - ms.x;
+                    if (targetX + ms.x > vp.x)
+                        targetX = vp.x - ms.x;
 
                     if (targetY < 0.0f)
                     {
                         targetY = a.y + a.height + 6.0f;
                     }
-                    if (targetY + ms.y > Metrics::viewport.y)
+                    if (targetY + ms.y > vp.y)
                     {
-                        targetY = Metrics::viewport.y - ms.y;
+                        targetY = vp.y - ms.y;
                     }
 
                     rect = {targetX, targetY, ms.x, ms.y};

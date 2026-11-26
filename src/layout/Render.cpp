@@ -178,6 +178,8 @@ namespace ZenitUI
 		const uintptr_t selfPtr = reinterpret_cast<uintptr_t>(this);
 		hashPod(h, selfPtr);
 
+		const Vec2 vp = layerRoot.viewportSize();
+
 
 		const uint8_t stateBits = static_cast<uint8_t>(
 			(state.hovered ? 1u : 0u) |
@@ -211,13 +213,13 @@ namespace ZenitUI
 
 		const float maxRadius = std::min(w, hPx) * 0.5f;
 		const float refDim = maxRadius * 2.0f;
-		hashFloat(h, st.radius.resolveH(refDim, refDim));
-		hashFloat(h, st.borderWidth.left.resolveH(refDim, refDim));
-		hashFloat(h, st.borderWidth.right.resolveH(refDim, refDim));
-		hashFloat(h, st.borderWidth.top.resolveH(refDim, refDim));
-		hashFloat(h, st.borderWidth.bottom.resolveH(refDim, refDim));
-		hashFloat(h, st.fontSize.resolveH(w, hPx));
-		hashFloat(h, st.letterSpacing.resolveH(w, hPx));
+		hashFloat(h, st.radius.resolveH(refDim, refDim, vp));
+		hashFloat(h, st.borderWidth.left.resolveH(refDim, refDim, vp));
+		hashFloat(h, st.borderWidth.right.resolveH(refDim, refDim, vp));
+		hashFloat(h, st.borderWidth.top.resolveH(refDim, refDim, vp));
+		hashFloat(h, st.borderWidth.bottom.resolveH(refDim, refDim, vp));
+		hashFloat(h, st.fontSize.resolveH(w, hPx, vp));
+		hashFloat(h, st.letterSpacing.resolveH(w, hPx, vp));
 		hashPod(h, st.textAlign);
 		hashPod(h, st.overflowX);
 		hashPod(h, st.overflowY);
@@ -226,9 +228,9 @@ namespace ZenitUI
 		if (st.boxShadow.enabled)
 		{
 			hashColor(h, st.boxShadow.color);
-			hashFloat(h, st.boxShadow.x.resolveSelfH(w, hPx));
-			hashFloat(h, st.boxShadow.y.resolveSelfV(w, hPx));
-			hashFloat(h, st.boxShadow.blur.resolveSelfH(w, hPx));
+			hashFloat(h, st.boxShadow.x.resolveSelfH(w, hPx, vp));
+			hashFloat(h, st.boxShadow.y.resolveSelfV(w, hPx, vp));
+			hashFloat(h, st.boxShadow.blur.resolveSelfH(w, hPx, vp));
 		}
 
 		// Background texture and attached shaders.
@@ -246,8 +248,8 @@ namespace ZenitUI
 
 		if (!isRoot)
 		{
-			hashFloat(h, st.translateX.resolveSelfH(w, hPx));
-			hashFloat(h, st.translateY.resolveSelfV(w, hPx));
+			hashFloat(h, st.translateX.resolveSelfH(w, hPx, vp));
+			hashFloat(h, st.translateY.resolveSelfV(w, hPx, vp));
 			hashFloat(h, st.rotation);
 			hashFloat(h, st.scale);
 			hashFilters(h, st.filters);

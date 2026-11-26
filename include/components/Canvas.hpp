@@ -109,6 +109,8 @@ namespace ZenitUI::UI
             }
             float op = style_.currentStyle.opacity * parentOp;
 
+            const Vec2 vp = viewportSize();
+
             Transform2D offsetTr;
             offsetTr.pivot = {0.0f, 0.0f};
             offsetTr.translate = {-rect.x, -rect.y};
@@ -127,8 +129,8 @@ namespace ZenitUI::UI
             Transform2D tr;
             tr.pivot = rect.center();
             tr.translate = {
-                style_.currentStyle.translateX.resolveSelfH(rect.width, rect.height),
-                style_.currentStyle.translateY.resolveSelfV(rect.width, rect.height)};
+                style_.currentStyle.translateX.resolveSelfH(rect.width, rect.height, vp),
+                style_.currentStyle.translateY.resolveSelfV(rect.width, rect.height, vp)};
             tr.rotationDeg = style_.currentStyle.rotation;
             tr.scale = style_.currentStyle.scale;
 

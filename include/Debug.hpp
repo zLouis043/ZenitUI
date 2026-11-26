@@ -584,7 +584,7 @@ namespace ZenitUI::Debug
             {
                 if (r.part != name)
                     continue;
-                if (ruleMatches(r, &node))
+                if (ruleMatches(r, &node, node.viewportSize()))
                     matchCount++;
             }
             if (matchCount > 0)

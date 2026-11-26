@@ -8,7 +8,7 @@ TEST(Unit, default_is_auto) {
     Value v;
     CHECK(v.isAuto());
     CHECK(v.terms.empty());
-    CHECK_NEAR(v.resolveH(100, 100), 0.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(100, 100, {1280.0f, 720.0f}), 0.0f, 1e-6);
 }
 
 TEST(Unit, px_is_simple) {
@@ -23,44 +23,44 @@ TEST(Unit, px_is_simple) {
 
 TEST(Unit, resolve_px) {
     Value v = Px(42.0f);
-    CHECK_NEAR(v.resolveH(200, 100), 42.0f, 1e-6);
-    CHECK_NEAR(v.resolveV(200, 100), 42.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(200, 100, {1280.0f, 720.0f}), 42.0f, 1e-6);
+    CHECK_NEAR(v.resolveV(200, 100, {1280.0f, 720.0f}), 42.0f, 1e-6);
 }
 
 TEST(Unit, resolve_percent_is_axis_dependent) {
     Value v = Percent(50.0f);
-    CHECK_NEAR(v.resolveH(200, 100), 100.0f, 1e-6);
-    CHECK_NEAR(v.resolveV(200, 100), 50.0f,  1e-6);
+    CHECK_NEAR(v.resolveH(200, 100, {1280.0f, 720.0f}), 100.0f, 1e-6);
+    CHECK_NEAR(v.resolveV(200, 100, {1280.0f, 720.0f}), 50.0f,  1e-6);
 }
 
 TEST(Unit, resolve_pw_always_width) {
     Value v = PW(25.0f);
-    CHECK_NEAR(v.resolveH(200, 100), 50.0f, 1e-6);
-    CHECK_NEAR(v.resolveV(200, 100), 50.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(200, 100, {1280.0f, 720.0f}), 50.0f, 1e-6);
+    CHECK_NEAR(v.resolveV(200, 100, {1280.0f, 720.0f}), 50.0f, 1e-6);
 }
 
 TEST(Unit, resolve_ph_always_height) {
     Value v = PH(25.0f);
-    CHECK_NEAR(v.resolveH(200, 100), 25.0f, 1e-6);
-    CHECK_NEAR(v.resolveV(200, 100), 25.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(200, 100, {1280.0f, 720.0f}), 25.0f, 1e-6);
+    CHECK_NEAR(v.resolveV(200, 100, {1280.0f, 720.0f}), 25.0f, 1e-6);
 }
 
 TEST(Unit, resolve_vw_against_viewport) {
     Value v = VW(50.0f);
-    CHECK_NEAR(v.resolveH(100, 100), 960.0f, 1e-4);
-    CHECK_NEAR(v.resolveV(100, 100), 960.0f, 1e-4);
+    CHECK_NEAR(v.resolveH(100, 100, {1920.0f, 1080.0f}), 960.0f, 1e-4);
+    CHECK_NEAR(v.resolveV(100, 100, {1920.0f, 1080.0f}), 960.0f, 1e-4);
 }
 
 TEST(Unit, resolve_vh_against_viewport) {
     Value v = VH(10.0f);
-    CHECK_NEAR(v.resolveH(100, 100), 108.0f, 1e-4);
-    CHECK_NEAR(v.resolveV(100, 100), 108.0f, 1e-4);
+    CHECK_NEAR(v.resolveH(100, 100, {1920.0f, 1080.0f}), 108.0f, 1e-4);
+    CHECK_NEAR(v.resolveV(100, 100, {1920.0f, 1080.0f}), 108.0f, 1e-4);
 }
 
 TEST(Unit, resolveSelf_percent_uses_self) {
     Value v = Percent(50.0f);
-    CHECK_NEAR(v.resolveSelfH(200.0f, 100.0f), 100.0f, 1e-6);
-    CHECK_NEAR(v.resolveSelfV(200.0f, 100.0f), 50.0f,  1e-6);
+    CHECK_NEAR(v.resolveSelfH(200.0f, 100.0f, {1280.0f, 720.0f}), 100.0f, 1e-6);
+    CHECK_NEAR(v.resolveSelfV(200.0f, 100.0f, {1280.0f, 720.0f}), 50.0f,  1e-6);
 }
 
 
@@ -73,12 +73,12 @@ TEST(Unit, add_same_unit_collapses) {
 TEST(Unit, add_mixed_units_keeps_both_terms) {
     Value c = Px(10.0f) + Percent(50.0f);
     CHECK(c.terms.size() == 2);
-    CHECK_NEAR(c.resolveH(200, 100), 110.0f, 1e-6);
+    CHECK_NEAR(c.resolveH(200, 100, {1280.0f, 720.0f}), 110.0f, 1e-6);
 }
 
 TEST(Unit, sub_two_units) {
     Value c = PW(100.0f) - PH(80.0f);
-    CHECK_NEAR(c.resolveH(100, 50), 60.0f, 1e-4);
+    CHECK_NEAR(c.resolveH(100, 50, {1280.0f, 720.0f}), 60.0f, 1e-4);
 }
 
 TEST(Unit, negate) {
@@ -90,12 +90,12 @@ TEST(Unit, negate) {
 
 TEST(Unit, mul_by_scalar) {
     Value v = Percent(50.0f) * 2.0f;
-    CHECK_NEAR(v.resolveH(100, 100), 100.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(100, 100, {1280.0f, 720.0f}), 100.0f, 1e-6);
 }
 
 TEST(Unit, div_by_scalar) {
     Value v = Px(10.0f) / 2.0f;
-    CHECK_NEAR(v.resolveH(0, 0), 5.0f, 1e-6);
+    CHECK_NEAR(v.resolveH(0, 0, {1280.0f, 720.0f}), 5.0f, 1e-6);
 }
 
 TEST(Unit, normalize_combines_same_units) {
@@ -128,19 +128,19 @@ TEST(Unit, mulWith_number_on_right) {
     Value a = Percent(50.0f);
     Value b = Value::number(2.0f);
     Value c = a.mulWith(b);
-    CHECK_NEAR(c.resolveH(100, 100), 100.0f, 1e-6);
+    CHECK_NEAR(c.resolveH(100, 100, {1280.0f, 720.0f}), 100.0f, 1e-6);
 }
 
 TEST(Unit, mulWith_number_on_left) {
     Value a = Value::number(2.0f);
     Value b = Percent(50.0f);
     Value c = a.mulWith(b);
-    CHECK_NEAR(c.resolveH(100, 100), 100.0f, 1e-6);
+    CHECK_NEAR(c.resolveH(100, 100, {1280.0f, 720.0f}), 100.0f, 1e-6);
 }
 
 TEST(Unit, divWith_number) {
     Value a = Percent(100.0f);
     Value b = Value::number(4.0f);
     Value c = a.divWith(b);
-    CHECK_NEAR(c.resolveH(100, 100), 25.0f, 1e-6);
+    CHECK_NEAR(c.resolveH(100, 100, {1280.0f, 720.0f}), 25.0f, 1e-6);
 }

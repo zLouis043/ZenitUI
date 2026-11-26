@@ -960,6 +960,9 @@ namespace ZenitUI
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
+		/** \brief Return the logical viewport size of the active `UIContext`. */
+		Vec2 viewportSize() const { return UIContext::get().viewport; }
+
 		// ---- Public callback hooks ----
 
 		std::function<void()> onHoverEnter, onHoverExit, onPress, onRelease, onClick;
@@ -1247,15 +1250,17 @@ namespace ZenitUI
 			if (rect.width <= 0 || rect.height <= 0)
 				return;
 
+			const Vec2 vp = viewportSize();
+
 			float maxRadius = std::min(rect.width, rect.height) * 0.5f;
-			float rPx = std::clamp(style.radius.resolveH(maxRadius * 2.0f, maxRadius * 2.0f), 0.0f, maxRadius);
+			float rPx = std::clamp(style.radius.resolveH(maxRadius * 2.0f, maxRadius * 2.0f, vp), 0.0f, maxRadius);
 
 			if (style.boxShadow.enabled)
 			{
 				const auto &sh = style.boxShadow;
-				float sx = sh.x.resolveSelfH(rect.width, rect.height);
-				float sy = sh.y.resolveSelfV(rect.width, rect.height);
-				float blur = sh.blur.resolveSelfH(rect.width, rect.height);
+				float sx = sh.x.resolveSelfH(rect.width, rect.height, vp);
+				float sy = sh.y.resolveSelfV(rect.width, rect.height, vp);
+				float blur = sh.blur.resolveSelfH(rect.width, rect.height, vp);
 
 				Rect shadowRect = {
 					rect.x + sx,
@@ -1315,10 +1320,10 @@ namespace ZenitUI
 			Color bc = style.borderColor.withAlpha(op);
 			const auto &bws = style.borderWidth;
 			float bwRef = maxRadius * 2.0f;
-			float bwl = bws.left.resolveH(bwRef, bwRef);
-			float bwr = bws.right.resolveH(bwRef, bwRef);
-			float bwt = bws.top.resolveH(bwRef, bwRef);
-			float bwb = bws.bottom.resolveH(bwRef, bwRef);
+			float bwl = bws.left.resolveH(bwRef, bwRef, vp);
+			float bwr = bws.right.resolveH(bwRef, bwRef, vp);
+			float bwt = bws.top.resolveH(bwRef, bwRef, vp);
+			float bwb = bws.bottom.resolveH(bwRef, bwRef, vp);
 
 			const bool anyBorder = (bwl > 0.0f || bwr > 0.0f || bwt > 0.0f || bwb > 0.0f);
 			const bool uniform = (bwl == bwr && bwr == bwb && bwb == bwt);
@@ -1356,11 +1361,12 @@ namespace ZenitUI
 		 */
 		Transform2D currentTransform(const ComputedStyle &style) const
 		{
+			const Vec2 vp = viewportSize();
 			Transform2D tr;
 			tr.pivot = rect.center();
 			tr.translate = {
-				style.translateX.resolveSelfH(rect.width, rect.height),
-				style.translateY.resolveSelfV(rect.width, rect.height)};
+				style.translateX.resolveSelfH(rect.width, rect.height, vp),
+				style.translateY.resolveSelfV(rect.width, rect.height, vp)};
 			tr.rotationDeg = style.rotation;
 			tr.scale = style.scale;
 			return tr;
@@ -1677,15 +1683,15 @@ namespace ZenitUI
 	 * combinators are supported; child (`>`) and sibling (`+`, `~`) combinators
 	 * are not.
 	 *
-	 * \note Media queries on the rule are evaluated against the current
-	 *       `Metrics::viewport` at call time, so a viewport change naturally
-	 *       re-evaluates all rules on the next frame.
+	 * \param r        Stylesheet rule to test.
+	 * \param node     Target node.
+	 * \param viewport Active logical viewport size used to evaluate `@media` queries.
 	 */
-	inline bool ruleMatches(const ThemeRule &r, const Layout *node)
+	inline bool ruleMatches(const ThemeRule &r, const Layout *node, Vec2 viewport)
 	{
 		if (r.chain.empty() || !node)
 			return false;
-		if (r.media.has_value() && !evaluateMedia(*r.media, Metrics::viewport))
+		if (r.media.has_value() && !evaluateMedia(*r.media, viewport))
 			return false;
 		if (!nodeMatchesSimple(node, r.chain.back()))
 			return false;

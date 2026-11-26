@@ -736,6 +736,7 @@ namespace ZenitUI
 		ModifierState modifiers;
 		bool wheelConsumedThisFrame{false};
 		std::array<bool, (size_t)MouseButton::Count> buttonConsumed{};
+		Vec2 viewport{1280.0f, 720.0f}; ///< Current logical viewport dimensions.
 
 		/** \brief Mark \p b as consumed; subsequent handlers in the same frame will skip it. */
 		void consumeClick(MouseButton b) { buttonConsumed[(size_t)b] = true; }
@@ -784,7 +785,7 @@ namespace ZenitUI
 			if (!cullingClipStack.empty())
 				return cullingClipStack.front();
 			return renderer ? renderer->getClipRect()
-							: Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+							: Rect{0.0f, 0.0f, viewport.x, viewport.y};
 		}
 
 		/** \brief Push an off-screen target while preserving the root screen-space culling clip. */
@@ -833,12 +834,12 @@ namespace ZenitUI
 			{
 				Vec2 newVp = platform->viewportSize();
 				EdgeInsets newSafe = platform->safeArea();
-				if (newVp.x != Metrics::viewport.x || newVp.y != Metrics::viewport.y ||
+				if (newVp.x != viewport.x || newVp.y != viewport.y ||
 					newSafe != safeArea)
 				{
 					viewportGeneration++;
 				}
-				Metrics::viewport = newVp;
+				viewport = newVp;
 				safeArea = newSafe;
 				pointer = platform->pointer();
 				modifiers = platform->modifiers();

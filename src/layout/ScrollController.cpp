@@ -36,11 +36,12 @@ namespace ZenitUI
     Rect ScrollController::computeArrangeSpace(const Layout &node, Rect space) const
     {
         const auto &st = node.style_.currentStyle;
+        const Vec2 vp = node.viewportSize();
 
-        float pl = st.padding.left.resolveH(space.width, space.height);
-        float pr = st.padding.right.resolveH(space.width, space.height);
-        float pt = st.padding.top.resolveV(space.width, space.height);
-        float pb = st.padding.bottom.resolveV(space.width, space.height);
+        float pl = st.padding.left.resolveH(space.width, space.height, vp);
+        float pr = st.padding.right.resolveH(space.width, space.height, vp);
+        float pt = st.padding.top.resolveV(space.width, space.height, vp);
+        float pb = st.padding.bottom.resolveV(space.width, space.height, vp);
 
         Rect arranged = space;
 
@@ -73,11 +74,12 @@ namespace ZenitUI
     void ScrollController::updateMaxScroll(const Layout &node, Rect space)
     {
         const auto &st = node.style_.currentStyle;
+        const Vec2 vp = node.viewportSize();
 
-        float pl = st.padding.left.resolveH(space.width, space.height);
-        float pr = st.padding.right.resolveH(space.width, space.height);
-        float pt = st.padding.top.resolveV(space.width, space.height);
-        float pb = st.padding.bottom.resolveV(space.width, space.height);
+        float pl = st.padding.left.resolveH(space.width, space.height, vp);
+        float pr = st.padding.right.resolveH(space.width, space.height, vp);
+        float pt = st.padding.top.resolveV(space.width, space.height, vp);
+        float pb = st.padding.bottom.resolveV(space.width, space.height, vp);
 
         float contentW = contentSize.x + pl + pr;
         float contentH = contentSize.y + pt + pb;

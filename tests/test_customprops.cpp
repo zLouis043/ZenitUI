@@ -84,7 +84,7 @@ TEST(CustomProps_resolve, width_from_var)
         {"--w", "200px"}};
     Style out = resolveUnresolvedProps(unresolved, props);
     CHECK(out.width.is_set);
-    CHECK_NEAR(out.width.value.resolveH(0, 0), 200.0f, 1e-4);
+    CHECK_NEAR(out.width.value.resolveH(0, 0, {1280.0f, 720.0f}), 200.0f, 1e-4);
 }
 
 TEST(CustomProps_resolve, unknown_var_leaves_unset)

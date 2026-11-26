@@ -14,6 +14,7 @@ namespace ZenitUI
 	ComputedStyle StyleResolver::resolveFor(Layout &node)
 	{
 		auto &theme = Theme::get();
+		const Vec2 vp = node.viewportSize();
 
 		const auto parent = node.getParent();
 		const bool cacheable =
@@ -109,7 +110,7 @@ namespace ZenitUI
 				for (size_t idx : it->second)
 				{
 					const auto &r = theme.rules[idx];
-					if (ruleMatches(r, &node))
+					if (ruleMatches(r, &node, vp))
 						matches.push_back({&r});
 				}
 			}
@@ -117,7 +118,7 @@ namespace ZenitUI
 			for (size_t idx : theme.rulesNoTag)
 			{
 				const auto &r = theme.rules[idx];
-				if (ruleMatches(r, &node))
+				if (ruleMatches(r, &node, vp))
 					matches.push_back({&r});
 			}
 		}
@@ -239,7 +240,7 @@ namespace ZenitUI
 		{
 			if (r.part != partName)
 				continue;
-			if (!ruleMatches(r, &node))
+			if (!ruleMatches(r, &node, node.viewportSize()))
 				continue;
 			matches.push_back(&r);
 		}

@@ -534,11 +534,11 @@ namespace ZenitUI
 			const auto &root = targetStates_.front();
 			return root.clipActive
 					   ? root.currentClip
-					   : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+					   : Rect{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
 		}
 		return clipActive_
 				   ? currentClip_
-				   : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+				   : Rect{0.0f, 0.0f, static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
 	}
 
 	void RaylibRenderer::pushEffect(EffectHandle e)

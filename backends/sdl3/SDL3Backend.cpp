@@ -1262,16 +1262,16 @@ void main() {
 
 	Rect SDL3Renderer::getClipRect() const
 	{
+		const Rect fbBounds{
+			0.0f, 0.0f,
+			static_cast<float>(impl_->fbWidth) / impl_->dpiScale,
+			static_cast<float>(impl_->fbHeight) / impl_->dpiScale};
 		if (impl_->insideTarget && !impl_->targetStates.empty())
 		{
 			const auto &root = impl_->targetStates.front();
-			return root.clipActive
-					   ? root.currentClip
-					   : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+			return root.clipActive ? root.currentClip : fbBounds;
 		}
-		return impl_->clipActive
-				   ? impl_->currentClip
-				   : Rect{0.0f, 0.0f, Metrics::viewport.x, Metrics::viewport.y};
+		return impl_->clipActive ? impl_->currentClip : fbBounds;
 	}
 
 	void SDL3Renderer::pushEffect(EffectHandle e)

@@ -81,7 +81,7 @@ TEST(Parser_calc, percent_minus_px) {
     auto& w = t.rules[0].style.width;
     CHECK(w.is_set);
     CHECK(w.value.terms.size() == 2);
-    CHECK_NEAR(w.value.resolveH(200, 100), 180.0f, 1e-4);
+    CHECK_NEAR(w.value.resolveH(200, 100, {1280.0f, 720.0f}), 180.0f, 1e-4);
 }
 
 TEST(Parser_keyframes, percent_frames) {
@@ -164,9 +164,9 @@ TEST(Parser_boxshadow, x_y_blur_color) {
     const auto& s = t.rules[0].style.boxShadow;
     CHECK(s.is_set);
     CHECK(s.value.enabled);
-    CHECK_NEAR(s.value.x.resolveSelfH(0, 0), 4.0f, 1e-4);
-    CHECK_NEAR(s.value.y.resolveSelfV(0, 0), 4.0f, 1e-4);
-    CHECK_NEAR(s.value.blur.resolveSelfH(0, 0), 8.0f, 1e-4);
+    CHECK_NEAR(s.value.x.resolveSelfH(0, 0, {1280.0f, 720.0f}), 4.0f, 1e-4);
+    CHECK_NEAR(s.value.y.resolveSelfV(0, 0, {1280.0f, 720.0f}), 4.0f, 1e-4);
+    CHECK_NEAR(s.value.blur.resolveSelfH(0, 0, {1280.0f, 720.0f}), 8.0f, 1e-4);
     CHECK((s.value.color == Color{0, 0, 0, 0x80}));
 }
 

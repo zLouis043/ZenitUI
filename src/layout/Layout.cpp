@@ -4,7 +4,6 @@
 namespace ZenitUI
 {
 
-
 	void Layout::update(float dt, bool ancestorBlocked, bool ancestorScrolling)
 	{
 		auto selfGuard = weak_from_this().lock();
@@ -96,7 +95,7 @@ namespace ZenitUI
 		{
 			internal_.styleInitialized = 1;
 			style_.currentStyle = style_.targetStyle = style_.transitionStartStyle = style_.resolveFor(*this);
-			style_.transitionDirtyMask_ = 0; 
+			style_.transitionDirtyMask_ = 0;
 			internal_.pendingTransition = 0;
 			anim_.syncCss(*this);
 		}
@@ -135,8 +134,8 @@ namespace ZenitUI
 		bool inTransition = (style_.transitionTimer < 1.0f);
 
 		internal_.subtreeDirty = wasPending || internal_.pendingTransition ||
-		                 anyChildDirty || styleChanged || inTransition ||
-		                 internal_.hadRemovedChildren || internal_.layoutDirty;
+								 anyChildDirty || styleChanged || inTransition ||
+								 internal_.hadRemovedChildren || internal_.layoutDirty;
 		internal_.hadRemovedChildren = 0;
 		internal_.layoutDirty = 0;
 	}
@@ -149,7 +148,7 @@ namespace ZenitUI
 		{
 			if (!r.part.empty())
 				continue;
-			if (ruleMatches(r, this))
+			if (ruleMatches(r, this, viewportSize()))
 				out.push_back(&r);
 		}
 		return out;
@@ -288,8 +287,9 @@ namespace ZenitUI
 	{
 		UIContext::get().beginFrame(dt);
 		updateTree(dt);
-		measure(Metrics::viewport.x, Metrics::viewport.y);
-		arrange({0, 0, Metrics::viewport.x, Metrics::viewport.y});
+		const Vec2 vp = viewportSize();
+		measure(vp.x, vp.y);
+		arrange({0, 0, vp.x, vp.y});
 	}
 
 	void Layout::renderFrame()

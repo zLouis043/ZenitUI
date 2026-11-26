@@ -237,10 +237,10 @@ namespace ZenitUI
     };
 
     /** \brief Global viewport metrics, updated once per frame from the platform. */
-    struct Metrics
+    /*struct Metrics
     {
         static inline Vec2 viewport{1280.0f, 720.0f};
-    };
+    };*/
 
     /**
      * \brief Platform-agnostic key constants.
