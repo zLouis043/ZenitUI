@@ -246,3 +246,44 @@ TEST(MultiContext, backend_and_context_teardown_order_independent)
         backend.shutdown();
     }
 }
+
+TEST(MultiContext, mounted_primary_root_short_overloads)
+{
+    Env env;
+    env.platform.viewport = {640.0f, 480.0f};
+
+    {
+        auto root = std::make_shared<Layout>(LayoutType::Stack);
+        root->size(Percent(100), Percent(100));
+        root->getInlineBase().background = Colors::Red;
+
+        CHECK(env.ctx.mountedRoot() == nullptr);
+        env.ctx.mount(root);
+        CHECK(env.ctx.mountedRoot() == root.get());
+
+        env.ctx.runFrame(1.0f / 60.0f);
+        env.ctx.renderFrame();
+
+        CHECK_NEAR(root->getRect().width, 640.0f, 0.5f);
+        CHECK_NEAR(root->getRect().height, 480.0f, 0.5f);
+        CHECK(env.renderer.fillRectCount > 0);
+
+        env.ctx.unmount();
+        CHECK(env.ctx.mountedRoot() == nullptr);
+        CHECK(root->context() == nullptr);
+
+        // No-op when no root is mounted.
+        env.renderer.fillRectCount = 0;
+        env.ctx.runFrame(1.0f / 60.0f);
+        env.ctx.renderFrame();
+        CHECK(env.renderer.fillRectCount == 0);
+
+        // Re-mount and let root go out of scope: primaryRoot_ must clear automatically.
+        env.ctx.mount(root);
+        CHECK(env.ctx.mountedRoot() == root.get());
+    }
+
+    CHECK(env.ctx.mountedRoot() == nullptr);
+    env.ctx.runFrame(1.0f / 60.0f);
+    env.ctx.renderFrame();
+}

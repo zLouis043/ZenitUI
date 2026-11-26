@@ -15,9 +15,10 @@
  *    `ctx.attachBackend(...)` (or `IBackend::bindTo(ctx)`), and mount your root
  *    tree with `ctx.mount(root)`.
  * 3. **Four-pass frame cycle:**
- *    - `ctx.runFrame(*root, dt)` runs `update` (input, style transitions,
- *      animations), `measure` (bottom-up), and `arrange` (top-down).
- *    - `ctx.renderFrame(*root)` runs `beginFrame`, `draw` (clips, layers,
+ *    - `ctx.runFrame(dt)` runs `update` (input, style transitions,
+ *      animations), `measure` (bottom-up), and `arrange` (top-down) on the
+ *      mounted root.
+ *    - `ctx.renderFrame()` runs `beginFrame`, `draw` (clips, layers,
  *      portals), and `endFrame`.
  * 4. **Imperative or declarative — same tree:** build nodes with the fluent C++
  *    API or with ZMarkup (`ZMarkup::build`, `ZMarkup::instantiate`), and style

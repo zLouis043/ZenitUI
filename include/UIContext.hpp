@@ -909,7 +909,7 @@ namespace ZenitUI
 		/** \brief Set \p n as the focused node; null clears focus. */
 		void requestFocus(std::shared_ptr<Layout> n);
 
-		/** \brief Attach a root `Layout` subtree to this context. */
+		/** \brief Attach a root `Layout` subtree to this context and set it as the primary root. */
 		void mount(Layout &root);
 		void mount(const std::shared_ptr<Layout> &root)
 		{
@@ -925,13 +925,25 @@ namespace ZenitUI
 				unmount(*root);
 		}
 
+		/** \brief Detach the currently mounted primary root, if any. */
+		void unmount();
+
+		/** \brief Return the primary root set by `mount()`, or `nullptr` if none. */
+		Layout *mountedRoot() const { return primaryRoot_; }
+
 		/** \brief Detach every root currently attached to this context. */
 		void detachAllRoots();
+
+		/** \brief Run one full update/measure/arrange frame on the mounted primary root. */
+		void runFrame(float dt);
+
+		/** \brief Render the mounted primary root (`beginFrame`, `draw`, `endFrame`). */
+		void renderFrame();
 
 		/** \brief Run one full update/measure/arrange frame on \p root using this context. */
 		void runFrame(Layout &root, float dt);
 
-		/** \brief Render \p root (beginFrame, draw, endFrame) using this context. */
+		/** \brief Render \p root (`beginFrame`, `draw`, `endFrame`) using this context. */
 		void renderFrame(Layout &root);
 
 		/** \brief Clear focus. */
@@ -955,12 +967,15 @@ namespace ZenitUI
 
 		void unregisterRoot(Layout *root)
 		{
+			if (primaryRoot_ == root)
+				primaryRoot_ = nullptr;
 			auto it = std::find(attachedRoots_.begin(), attachedRoots_.end(), root);
 			if (it != attachedRoots_.end())
 				attachedRoots_.erase(it);
 		}
 
 		std::vector<Layout *> attachedRoots_;
+		Layout *primaryRoot_{nullptr};
 		UIContext **backendOwnerSlot_{nullptr};
 	};
 

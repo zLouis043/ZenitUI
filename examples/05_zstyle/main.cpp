@@ -131,11 +131,11 @@ int main()
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        ctx.runFrame(*page, GetFrameTime());
+        ctx.runFrame(GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        ctx.renderFrame(*page);
+        ctx.renderFrame();
         EndDrawing();
     }
 

@@ -96,10 +96,10 @@ int main()
         smoothedDt = smoothedDt * 0.9f + dt * 0.1f;
         const int fps = (smoothedDt > 0.0001f) ? static_cast<int>(std::lround(1.0f / smoothedDt)) : 0;
 
-        ctx.runFrame(*root, dt);
+        ctx.runFrame(dt);
 
         backend->beginDraw(kClearColor);
-        ctx.renderFrame(*root);
+        ctx.renderFrame();
         backend->endDraw();
 
         app.tickStats(fps, dt * 1000.0f);

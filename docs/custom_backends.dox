@@ -34,8 +34,8 @@
  * // Main loop
  * while (running) {
  *     float dt = computeDeltaTime();
- *     ctx.runFrame(*root, dt);
- *     ctx.renderFrame(*root);
+ *     ctx.runFrame(dt);
+ *     ctx.renderFrame();
  * }
  *
  * // Flush pooled off-screen targets while the graphics context is still alive.

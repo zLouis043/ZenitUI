@@ -182,7 +182,8 @@ namespace ZenitUI
 	void Layout::updateTree(float dt)
 	{
 		auto *ctx = context();
-		if (!ctx) return;
+		if (!ctx)
+			return;
 		auto captured = ctx->pointerCapture.lock();
 		if (!captured || !captured->getEnabled() || !captured->isVisible())
 		{
@@ -272,7 +273,7 @@ namespace ZenitUI
 			{
 				int n = (int)focusables.size();
 				next = ctx->modifiers.shift ? (idx - 1 + n) % n
-										   : (idx + 1) % n;
+											: (idx + 1) % n;
 			}
 			ctx->requestFocus(focusables[next]->shared_from_this());
 			notifyFocusAncestors(ctx->focusedNode.lock().get());
@@ -288,12 +289,14 @@ namespace ZenitUI
 
 	void Layout::runFrame(float dt)
 	{
-		if (auto *ctx = context()) ctx->runFrame(*this, dt);
+		if (auto *ctx = context())
+			ctx->runFrame(*this, dt);
 	}
 
 	void Layout::renderFrame()
 	{
-		if (auto *ctx = context()) ctx->renderFrame(*this);
+		if (auto *ctx = context())
+			ctx->renderFrame(*this);
 	}
 
 	void Layout::attachContext(UIContext *newCtx)
@@ -376,17 +379,39 @@ namespace ZenitUI
 	{
 		while (!attachedRoots_.empty())
 			attachedRoots_.back()->detachContext();
+		primaryRoot_ = nullptr;
 	}
 
 	void UIContext::mount(Layout &root)
 	{
 		root.attachContext(this);
+		primaryRoot_ = &root;
 	}
 
 	void UIContext::unmount(Layout &root)
 	{
+		if (primaryRoot_ == &root)
+			primaryRoot_ = nullptr;
 		if (root.context() == this)
 			root.detachContext();
+	}
+
+	void UIContext::unmount()
+	{
+		if (primaryRoot_)
+			unmount(*primaryRoot_);
+	}
+
+	void UIContext::runFrame(float dt)
+	{
+		if (primaryRoot_)
+			runFrame(*primaryRoot_, dt);
+	}
+
+	void UIContext::renderFrame()
+	{
+		if (primaryRoot_)
+			renderFrame(*primaryRoot_);
 	}
 
 	void UIContext::runFrame(Layout &root, float dt)

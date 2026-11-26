@@ -245,11 +245,11 @@ int main()
 
     while (!WindowShouldClose())
     {
-        ctx.runFrame(*wrapper, GetFrameTime());
+        ctx.runFrame(GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        ctx.renderFrame(*wrapper);
+        ctx.renderFrame();
         EndDrawing();
     }
 

@@ -65,11 +65,11 @@ int main()
     // -------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        ctx.runFrame(*root, GetFrameTime()); // logic
+        ctx.runFrame(GetFrameTime()); // logic
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        ctx.renderFrame(*root);// draw
+        ctx.renderFrame();// draw
         EndDrawing();
     }
 

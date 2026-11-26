@@ -221,7 +221,7 @@ int main()
 
         BeginDrawing();
         ClearBackground({18, 18, 22, 255});
-        ctx.renderFrame(*root);
+        ctx.renderFrame();
         EndDrawing();
 
         const auto &st = ctx.renderStats;

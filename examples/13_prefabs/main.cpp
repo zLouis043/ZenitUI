@@ -103,7 +103,7 @@ int main(void)
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        ctx.renderFrame(*root);
+        ctx.renderFrame();
         EndDrawing();
     }
 
