@@ -71,6 +71,7 @@ var classZenitUI_1_1Layout =
     [ "setVisible", "classZenitUI_1_1Layout.html#acdce17e5c2c657ae7a9d6408ea5ba917", null ],
     [ "size", "classZenitUI_1_1Layout.html#a88311603f8b652a7ff11457c5b90a061", null ],
     [ "stopCssAnimation", "classZenitUI_1_1Layout.html#acb2acc20c0edff07a46aeab329f1ceea", null ],
+    [ "theme", "classZenitUI_1_1Layout.html#a2e2ca6777f50166ddaccb6d965fc0643", null ],
     [ "translateSubtree", "classZenitUI_1_1Layout.html#a7e36c2d73ad2298c4cf330a86715c2e7", null ],
     [ "update", "classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305", null ],
     [ "updateTree", "classZenitUI_1_1Layout.html#abbc59a92125d89a5b1600c8d2a4e156e", null ],

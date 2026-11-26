@@ -140,6 +140,7 @@ var group__grp__core =
       [ "setVisible", "classZenitUI_1_1Layout.html#acdce17e5c2c657ae7a9d6408ea5ba917", null ],
       [ "size", "classZenitUI_1_1Layout.html#a88311603f8b652a7ff11457c5b90a061", null ],
       [ "stopCssAnimation", "classZenitUI_1_1Layout.html#acb2acc20c0edff07a46aeab329f1ceea", null ],
+      [ "theme", "classZenitUI_1_1Layout.html#a2e2ca6777f50166ddaccb6d965fc0643", null ],
       [ "translateSubtree", "classZenitUI_1_1Layout.html#a7e36c2d73ad2298c4cf330a86715c2e7", null ],
       [ "update", "classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305", null ],
       [ "updateTree", "classZenitUI_1_1Layout.html#abbc59a92125d89a5b1600c8d2a4e156e", null ],
@@ -279,6 +280,7 @@ var group__grp__core =
       [ "requestFocus", "structZenitUI_1_1UIContext.html#a1d74768d6e555ac06c84c3025acb364a", null ],
       [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ],
       [ "filters", "structZenitUI_1_1UIContext.html#a1251c63242025549325c6993af6edb7e", null ],
+      [ "theme", "structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d", null ],
       [ "viewport", "structZenitUI_1_1UIContext.html#a9169b6dd2baa66f81ac2c41ede5bc0c4", null ]
     ] ],
     [ "ZenitUI::Value", "structZenitUI_1_1Value.html", [

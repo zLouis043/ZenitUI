@@ -74,8 +74,7 @@ var group__grp__zstyle =
       [ "SymbolKeyHash", "structZenitUI_1_1Theme_1_1SymbolKeyHash.html", null ],
       [ "addKeyframes", "classZenitUI_1_1Theme.html#a0df0dfbbb75ad9c1d6a2353c62f550b7", null ],
       [ "addRule", "classZenitUI_1_1Theme.html#a0d0d9645a498d38fe61c6de979cf96f7", null ],
-      [ "clear", "classZenitUI_1_1Theme.html#ae9eb2a8fb4f501da96b923654e81ee2f", null ],
-      [ "get", "classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce", null ]
+      [ "clear", "classZenitUI_1_1Theme.html#ae9eb2a8fb4f501da96b923654e81ee2f", null ]
     ] ],
     [ "ZenitUI::DiagnosticCode", "group__grp__zstyle.html#gadfc0f636085619f9baa90bebd758bf71", null ],
     [ "ZenitUI::DiagnosticSeverity", "group__grp__zstyle.html#ga33499078caccb3f383cf6da856c7a7dc", null ],
@@ -95,8 +94,8 @@ var group__grp__zstyle =
     [ "ZenitUI::isInheritedProp", "group__grp__zstyle.html#gab7c403369c75e598e59e5cc6898b6344", null ],
     [ "ZenitUI::lerpStyle", "group__grp__zstyle.html#gab9004245831dea5272eddf65d174a15f", null ],
     [ "ZenitUI::lerpStyleTimed", "group__grp__zstyle.html#ga3a7892a2012328b31f68e60cb9ff691f", null ],
-    [ "ZenitUI::ZMarkup::loadStyleFile", "group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0", null ],
-    [ "ZenitUI::ZMarkup::loadStyleString", "group__grp__zstyle.html#ga7637d632d654e44425b626f2b940cf6c", null ],
+    [ "ZenitUI::ZMarkup::loadStyleFile", "group__grp__zstyle.html#gade664a5d3be01bd4f924caba5a3fc00d", null ],
+    [ "ZenitUI::ZMarkup::loadStyleString", "group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9", null ],
     [ "ZenitUI::makeDiagnostic", "group__grp__zstyle.html#gac36fae417b5e1911cd3e1b3a6f4af72a", null ],
     [ "ZenitUI::ZMarkup::normalizeKeyframes", "group__grp__zstyle.html#ga77d30165c1ff680d89b64166035db1c1", null ],
     [ "ZenitUI::operator<<", "group__grp__zstyle.html#ga53324f6e27109570911e0e8f4d1e25f4", null ],

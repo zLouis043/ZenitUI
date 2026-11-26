@@ -151,7 +151,7 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AThemeRule" id="r_ZenitUI_3A_3AThemeRule"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1ThemeRule.html">ZenitUI::ThemeRule</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single selector-plus-declarations entry in the stylesheet.  <a href="structZenitUI_1_1ThemeRule.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3ATheme" id="r_ZenitUI_3A_3ATheme"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Theme.html">ZenitUI::Theme</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global stylesheet: rules, keyframes, and root style.  <a href="classZenitUI_1_1Theme.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-context stylesheet: rules, keyframes, and root style.  <a href="classZenitUI_1_1Theme.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -338,18 +338,18 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::
 <tr class="memitem:ga77d30165c1ff680d89b64166035db1c1" id="r_ga77d30165c1ff680d89b64166035db1c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga77d30165c1ff680d89b64166035db1c1">ZenitUI::ZMarkup::normalizeKeyframes</a> (<a class="el" href="structZenitUI_1_1KeyframeAnimation.html">KeyframeAnimation</a> &amp;anim, const <a class="el" href="structZenitUI_1_1SourceSpan.html">SourceSpan</a> &amp;loc)</td></tr>
 <tr class="memdesc:ga77d30165c1ff680d89b64166035db1c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill missing properties in every keyframe from neighbouring frames.  <br /></td></tr>
 <tr class="memitem:ga31e7bcce043b4e53143199100a15eeb3" id="r_ga31e7bcce043b4e53143199100a15eeb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga31e7bcce043b4e53143199100a15eeb3">ZenitUI::ZMarkup::applyStyleSheet</a> (const <a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html">StyleSheet</a> &amp;sheet, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme, <a class="el" href="classZenitUI_1_1DiagnosticSink.html">DiagnosticSink</a> *sink=nullptr, bool strict=false)</td></tr>
-<tr class="memdesc:ga31e7bcce043b4e53143199100a15eeb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a parsed <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html" title="Intermediate representation: parsed rules, keyframes and root vars.">StyleSheet</a></span> to a <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html" title="Global stylesheet: rules, keyframes, and root style.">Theme</a></span>.  <br /></td></tr>
-<tr class="memitem:ga7637d632d654e44425b626f2b940cf6c" id="r_ga7637d632d654e44425b626f2b940cf6c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7637d632d654e44425b626f2b940cf6c">ZenitUI::ZMarkup::loadStyleString</a> (std::string_view src, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme=<a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce">Theme::get</a>(), const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</td></tr>
-<tr class="memdesc:ga7637d632d654e44425b626f2b940cf6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse <code class="param">src</code> and apply it to <code class="param">theme</code>.  <br /></td></tr>
-<tr class="memitem:gae718ac5f540d56ab4777e5f9f563f7a0" id="r_gae718ac5f540d56ab4777e5f9f563f7a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae718ac5f540d56ab4777e5f9f563f7a0">ZenitUI::ZMarkup::loadStyleFile</a> (const std::filesystem::path &amp;path, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme=<a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce">Theme::get</a>(), <a class="el" href="classZenitUI_1_1DiagnosticSink.html">DiagnosticSink</a> *sink=nullptr, bool strict=false)</td></tr>
-<tr class="memdesc:gae718ac5f540d56ab4777e5f9f563f7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a stylesheet from a file and apply it to <code class="param">theme</code>.  <br /></td></tr>
+<tr class="memdesc:ga31e7bcce043b4e53143199100a15eeb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a parsed <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html" title="Intermediate representation: parsed rules, keyframes and root vars.">StyleSheet</a></span> to a <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html" title="Per-context stylesheet: rules, keyframes, and root style.">Theme</a></span>.  <br /></td></tr>
+<tr class="memitem:gafe7c99c73e3ea499452731da8fcabcd9" id="r_gafe7c99c73e3ea499452731da8fcabcd9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafe7c99c73e3ea499452731da8fcabcd9">ZenitUI::ZMarkup::loadStyleString</a> (std::string_view src, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme, const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</td></tr>
+<tr class="memdesc:gafe7c99c73e3ea499452731da8fcabcd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse <code class="param">src</code> and apply it to <code class="param">theme</code>.  <br /></td></tr>
+<tr class="memitem:gade664a5d3be01bd4f924caba5a3fc00d" id="r_gade664a5d3be01bd4f924caba5a3fc00d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gade664a5d3be01bd4f924caba5a3fc00d">ZenitUI::ZMarkup::loadStyleFile</a> (const std::filesystem::path &amp;path, <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;theme, <a class="el" href="classZenitUI_1_1DiagnosticSink.html">DiagnosticSink</a> *sink=nullptr, bool strict=false)</td></tr>
+<tr class="memdesc:gade664a5d3be01bd4f924caba5a3fc00d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a stylesheet from a file and apply it to <code class="param">theme</code>.  <br /></td></tr>
 <tr class="memitem:ga4a4e4c4428a9d695815f5a9343e5f64f" id="r_ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="memItemLeft" align="right" valign="top"><a id="ga4a4e4c4428a9d695815f5a9343e5f64f" name="ga4a4e4c4428a9d695815f5a9343e5f64f"></a>
 <a class="el" href="structZenitUI_1_1Specificity.html">Specificity</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::computeSpecificity</b> (const std::vector&lt; <a class="el" href="structZenitUI_1_1SimpleSelector.html">SimpleSelector</a> &gt; &amp;chain)</td></tr>
 <tr class="memdesc:ga4a4e4c4428a9d695815f5a9343e5f64f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the specificity of a full selector chain. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>CSS-like style cascade, <span class="tt">.zstyle</span> parser, custom properties, and media queries. </p>
-<p>Load stylesheets into <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce" title="Return the global singleton theme.">Theme::get()</a></span> via <span class="tt"><a class="el" href="#gae718ac5f540d56ab4777e5f9f563f7a0" title="Load a stylesheet from a file and apply it to theme.">ZMarkup::loadStyleFile</a></span> or <span class="tt"><a class="el" href="#ga7637d632d654e44425b626f2b940cf6c" title="Parse src and apply it to theme.">ZMarkup::loadStyleString</a></span>. Resolution follows specificity (<span class="tt">#id</span> &gt; <span class="tt">.class</span> </p><blockquote class="doxtable">
+<p>Load stylesheets into <span class="tt">Theme::get()</span> via <span class="tt"><a class="el" href="#gade664a5d3be01bd4f924caba5a3fc00d" title="Load a stylesheet from a file and apply it to theme.">ZMarkup::loadStyleFile</a></span> or <span class="tt"><a class="el" href="#gafe7c99c73e3ea499452731da8fcabcd9" title="Parse src and apply it to theme.">ZMarkup::loadStyleString</a></span>. Resolution follows specificity (<span class="tt">#id</span> &gt; <span class="tt">.class</span> </p><blockquote class="doxtable">
 <p><span class="tt">Tag</span>), supports descendant combinators (<span class="tt">A B</span>), interaction pseudo-classes (<span class="tt">:hover</span>, <span class="tt">:pressed</span>, <span class="tt">:focus</span>, <span class="tt">:checked</span>, <span class="tt">:disabled</span>), custom properties (<span class="tt">--token</span> / <span class="tt">var(--token)</span>), <span class="tt">@media</span> queries, and structured diagnostics with typo suggestions. </p>
 </blockquote>
 <p><b>Live examples:</b> <a class="el" href="05_zstyle_2main_8cpp-example.html">05_zstyle</a></p>
@@ -555,7 +555,7 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::
       </table>
 </div><div class="memdoc">
 
-<p>Apply a parsed <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html" title="Intermediate representation: parsed rules, keyframes and root vars.">StyleSheet</a></span> to a <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html" title="Global stylesheet: rules, keyframes, and root style.">Theme</a></span>. </p>
+<p>Apply a parsed <span class="tt"><a class="el" href="structZenitUI_1_1ZMarkup_1_1StyleSheet.html" title="Intermediate representation: parsed rules, keyframes and root vars.">StyleSheet</a></span> to a <span class="tt"><a class="el" href="classZenitUI_1_1Theme.html" title="Per-context stylesheet: rules, keyframes, and root style.">Theme</a></span>. </p>
 <p>Order of operations:</p><ol type="1">
 <li>Merge <span class="tt">rootDecls</span> into <span class="tt">theme.root</span>.</li>
 <li>For each rule, build a <span class="tt"><a class="el" href="structZenitUI_1_1ThemeRule.html" title="A single selector-plus-declarations entry in the stylesheet.">ThemeRule</a></span> (selector chain + part + media) by applying its declarations to a fresh <span class="tt"><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a></span>, then <span class="tt">addRule</span>.</li>
@@ -729,8 +729,8 @@ mean" hints; strings of length &gt; 100 are rare in this codebase. </p>
 
 </div>
 </div>
-<a id="gae718ac5f540d56ab4777e5f9f563f7a0" name="gae718ac5f540d56ab4777e5f9f563f7a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae718ac5f540d56ab4777e5f9f563f7a0">&#9670;&#160;</a></span>loadStyleFile()</h2>
+<a id="gade664a5d3be01bd4f924caba5a3fc00d" name="gade664a5d3be01bd4f924caba5a3fc00d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade664a5d3be01bd4f924caba5a3fc00d">&#9670;&#160;</a></span>loadStyleFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -743,7 +743,7 @@ mean" hints; strings of length &gt; 100 are rare in this codebase. </p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>theme</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce">Theme::get</a>()</span>, </td>
+          <td class="paramtype"><a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>theme</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -765,8 +765,8 @@ mean" hints; strings of length &gt; 100 are rare in this codebase. </p>
 
 </div>
 </div>
-<a id="ga7637d632d654e44425b626f2b940cf6c" name="ga7637d632d654e44425b626f2b940cf6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7637d632d654e44425b626f2b940cf6c">&#9670;&#160;</a></span>loadStyleString()</h2>
+<a id="gafe7c99c73e3ea499452731da8fcabcd9" name="gafe7c99c73e3ea499452731da8fcabcd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafe7c99c73e3ea499452731da8fcabcd9">&#9670;&#160;</a></span>loadStyleString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -779,7 +779,7 @@ mean" hints; strings of length &gt; 100 are rare in this codebase. </p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>theme</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="classZenitUI_1_1Theme.html#af91808172c61449468476966f380fbce">Theme::get</a>()</span>, </td>
+          <td class="paramtype"><a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>theme</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

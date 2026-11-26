@@ -135,7 +135,7 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets = &amp;backendAssets;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Inline styling for Toggle (its intrinsic size is 0x0 until styled).</span></div>
-<div class="line">    <a id="_a4" name="_a4"></a><a class="code hl_function" href="group__grp__zstyle.html#ga7637d632d654e44425b626f2b940cf6c">ZMarkup::loadStyleString</a>(R<span class="stringliteral">&quot;(</span></div>
+<div class="line">    <a id="_a4" name="_a4"></a><a class="code hl_function" href="group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9">ZMarkup::loadStyleString</a>(R<span class="stringliteral">&quot;(</span></div>
 <div class="line"><span class="stringliteral">        Toggle {</span></div>
 <div class="line"><span class="stringliteral">            width: 50px;</span></div>
 <div class="line"><span class="stringliteral">            height: 26px;</span></div>
@@ -155,7 +155,7 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">            transition: left 0.18s ease-out-cubic;</span></div>
 <div class="line"><span class="stringliteral">        }</span></div>
 <div class="line"><span class="stringliteral">        Toggle:checked .toggle-knob { left: 26px; }</span></div>
-<div class="line"><span class="stringliteral">    )&quot;);</span></div>
+<div class="line"><span class="stringliteral">    )&quot;, <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().theme);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">    </span><span class="comment">// Register a reusable prefab: children passed to `SettingRow { ... }`</span></div>
 <div class="line">    <span class="comment">// are injected where `Slot` appears.</span></div>
@@ -213,8 +213,8 @@ $(function(){initNavTree('13_prefabs_2main_8cpp-example.html','',''); });
 <div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:309</div></div>
 <div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:102</div></div>
 <div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:144</div></div>
-<div class="ttc" id="agroup__grp__zstyle_html_ga7637d632d654e44425b626f2b940cf6c"><div class="ttname"><a href="group__grp__zstyle.html#ga7637d632d654e44425b626f2b940cf6c">ZenitUI::ZMarkup::loadStyleString</a></div><div class="ttdeci">bool loadStyleString(std::string_view src, Theme &amp;theme=Theme::get(), const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Parse src and apply it to theme.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:877</div></div>
+<div class="ttc" id="agroup__grp__zstyle_html_gafe7c99c73e3ea499452731da8fcabcd9"><div class="ttname"><a href="group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9">ZenitUI::ZMarkup::loadStyleString</a></div><div class="ttdeci">bool loadStyleString(std::string_view src, Theme &amp;theme, const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Parse src and apply it to theme.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:879</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

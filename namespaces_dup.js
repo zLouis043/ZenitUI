@@ -2,11 +2,11 @@ var namespaces_dup =
 [
     [ "ZenitUI", null, [
       [ "Anim", "namespaceZenitUI_1_1Anim.html", [
-        [ "overlayCssComputed", "namespaceZenitUI_1_1Anim.html#aad1a44922ba5f8a0f3332846ce943b9c", null ],
-        [ "overlayCssStyle", "namespaceZenitUI_1_1Anim.html#ad26bc73fa9faed2b9b6ba876ae4d05e5", null ],
+        [ "overlayCssComputed", "namespaceZenitUI_1_1Anim.html#a691df8a2a11e0213da7066913bfa97b6", null ],
+        [ "overlayCssStyle", "namespaceZenitUI_1_1Anim.html#a11b4cb8768a260c958c56c2909573d8e", null ],
         [ "syncRefs", "namespaceZenitUI_1_1Anim.html#a6d9a8ebff50b85bcca27a9df8d17bdf2", null ],
-        [ "tickAbsolute", "namespaceZenitUI_1_1Anim.html#a79db6afedbc1374e01605aeb65971474", null ],
-        [ "tickIncremental", "namespaceZenitUI_1_1Anim.html#a82d9800df4eeab1bbba738127e8b1402", null ]
+        [ "tickAbsolute", "namespaceZenitUI_1_1Anim.html#a5583d64023f0b7e84b60d510cea905dc", null ],
+        [ "tickIncremental", "namespaceZenitUI_1_1Anim.html#add1b0d0b7a09d8df52497e90e05fa86c", null ]
       ] ],
       [ "Colors", "namespaceZenitUI_1_1Colors.html", null ],
       [ "Key", "namespaceZenitUI_1_1Key.html", null ],

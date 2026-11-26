@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classZenitUI_1_1Theme.html" target="_top" xlink:title="Global stylesheet: rules, keyframes, and root style.">
+<g id="a_Node000000"><a xlink:href="classZenitUI_1_1Theme.html" target="_top" xlink:title="Per&#45;context stylesheet: rules, keyframes, and root style.">
 <polygon fill="white" stroke="#666666" points="91.75,-20.75 0,-20.75 0,0 91.75,0 91.75,-20.75"/>
 <text xml:space="preserve" text-anchor="middle" x="45.88" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::Theme</text>
 </a>
