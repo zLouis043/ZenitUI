@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795728581107,
+  "lastUpdate": 1795728928345,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -813,6 +813,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 1775.96,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "24fda5dfafa2eb652cdb6138aa0ffa984af88c46",
+          "message": "fix(docs): Fixed README.md",
+          "timestamp": "2026-11-26T22:30:51+01:00",
+          "tree_id": "35f62dfcd7471d98684500dca3db9be90395a89d",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/24fda5dfafa2eb652cdb6138aa0ffa984af88c46"
+        },
+        "date": 1795728927005,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 6224.34,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 6033.51,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 3543.57,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 5971.25,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 3420.4,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 5132.9,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 5064.24,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 3187.9,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 5097.73,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 3184.12,
             "unit": "us"
           }
         ]
