@@ -1,5 +1,14 @@
 var NAVTREEINDEX2 =
 {
+"classZenitUI_1_1SDL3Renderer.html#aeab04fadafe092a7adf016b2dfa672c4":[1,5,20,5],
+"classZenitUI_1_1SDL3Renderer.html#aeffad60cd4cda56e7304f612bac9d396":[1,5,20,14],
+"classZenitUI_1_1SDL3Renderer.html#af60bfa8d36b6d7355bf19613cae28622":[1,5,20,2],
+"classZenitUI_1_1SmallVector.html":[1,0,28],
+"classZenitUI_1_1SmallVector.html#a2e2852f7f4595aaec684ea3b08742ffd":[1,0,28,6],
+"classZenitUI_1_1SmallVector.html#a75a9d4b19cd3e0671a26d8757bbcf26f":[1,0,28,2],
+"classZenitUI_1_1SmallVector.html#a837ee5fb1e2e5a1cdef0b8a978bedcd6":[1,0,28,1],
+"classZenitUI_1_1SmallVector.html#a86b41dd893635719afa3544515f42e3d":[1,0,28,0],
+"classZenitUI_1_1SmallVector.html#a885bdee4e9c6f6b6b02f191769138cc9":[1,0,28,5],
 "classZenitUI_1_1SmallVector.html#aac9e125bd1b103789aba6a422b9f8cc3":[1,0,28,4],
 "classZenitUI_1_1SmallVector.html#abd9ec9adf2cc1d7a207beb58298f2f7d":[1,0,28,3],
 "classZenitUI_1_1SmallVector.html#acdf99d5c506d47fc9c74d7ed8c42c0e8":[1,0,28,7],
@@ -240,14 +249,5 @@ var NAVTREEINDEX2 =
 "classZenitUI_1_1ZMarkup_1_1Registry.html":[1,2,9],
 "classZenitUI_1_1ZMarkup_1_1Registry.html#a013a54a40f7c104c58cfe2c962df5d62":[1,2,9,6],
 "classZenitUI_1_1ZMarkup_1_1Registry.html#a07ef31339ca0718244dc5f87cb52b664":[1,2,9,2],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a0ff5034e849978c2e91ce39a7e89451d":[1,2,9,1],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a13bf232f0125020865e07a227aad5aeb":[1,2,9,0],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a3336c5d336c97ba427b8277e09a7c3cf":[1,2,9,7],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a4dda9c70f7cff1d6ad70976676fdac21":[1,2,9,3],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#ac21b3fd27f876aa788e14c4b4fc7edb4":[1,2,9,5],
-"classZenitUI_1_1ZMarkup_1_1Registry.html#ac633f7dec3d0a142d4de7347447fa844":[1,2,9,4],
-"classZenitUI_1_1ZMarkup_1_1StyleParser.html":[1,3,21],
-"classZenitUI_1_1ZMarkup_1_1StyleParser.html#a5a85b7fb61b1464c5b5882cf8fadd61d":[1,3,21,1],
-"classZenitUI_1_1ZMarkup_1_1StyleParser.html#ad9d09d17776a5950465f3115fa636b64":[1,3,21,2],
-"classZenitUI_1_1ZMarkup_1_1StyleParser.html#ae5bcf6f4ed334ae3c600b65779ff3efe":[1,3,21,0]
+"classZenitUI_1_1ZMarkup_1_1Registry.html#a0ff5034e849978c2e91ce39a7e89451d":[1,2,9,1]
 };

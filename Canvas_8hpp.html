@@ -118,7 +118,7 @@ Classes</h2></td></tr>
 </ul>
 <p>The target is created lazily on first draw and re-created only when the canvas size changes. It is destroyed in the destructor.</p>
 <dl class="section note"><dt>Note</dt><dd><span class="tt">CanvasLayout::draw</span> overrides the base implementation entirely: it does <b>not</b> apply CSS animations to the chrome (background, border, shadow), does not apply filters from the style, and does not draw scrollbars. If you need those, use a plain <span class="tt">Layout</span> with <span class="tt">effect</span> instead of a <span class="tt">CanvasLayout</span>.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>The destructor dereferences <span class="tt">UIContext::get().renderer</span> without a null check after <span class="tt">target.valid()</span> returns true. If the renderer has already been destroyed when the canvas is destroyed (a shutdown-order bug), this will crash. Ensure canvases outlive their renderer or explicitly destroy them before tearing down the backend. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The destructor dereferences <span class="tt">context().renderer</span> without a null check after <span class="tt">target.valid()</span> returns true. If the renderer has already been destroyed when the canvas is destroyed (a shutdown-order bug), this will crash. Ensure canvases outlive their renderer or explicitly destroy them before tearing down the backend. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

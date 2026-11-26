@@ -6,5 +6,7 @@ var searchData=
   ['measuretext_3',['measureText',['../classZenitUI_1_1IRenderer.html#a56fc660402893d6885e92e82efd59a14',1,'ZenitUI::IRenderer::measureText()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#ae106a467fb5bc0f2444ee474ad783e45',1,'ZenitUI::Test::MockRenderer::measureText()'],['../classZenitUI_1_1RaylibRenderer.html#a99a47e5d000fbaa8eedda2eaf5cee77b',1,'ZenitUI::RaylibRenderer::measureText()'],['../classZenitUI_1_1SDL3Renderer.html#aeffad60cd4cda56e7304f612bac9d396',1,'ZenitUI::SDL3Renderer::measureText()']]],
   ['merge_4',['merge',['../classZenitUI_1_1CodepointSet.html#a7375eea7aad39fd80c0cef6818c1a3fb',1,'ZenitUI::CodepointSet']]],
   ['modifiers_5',['modifiers',['../classZenitUI_1_1IPlatform.html#a1ac863a3b940b2f9f5e1eacf22496711',1,'ZenitUI::IPlatform::modifiers()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d',1,'ZenitUI::Test::MockPlatform::modifiers()'],['../classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2',1,'ZenitUI::RaylibPlatform::modifiers()'],['../classZenitUI_1_1SDL3Platform.html#af77fd4454f19d4f1505c6cbf0c94f770',1,'ZenitUI::SDL3Platform::modifiers()']]],
-  ['mulwith_6',['mulWith',['../structZenitUI_1_1Value.html#a5837ad30a7c229c660bdf50720410f26',1,'ZenitUI::Value']]]
+  ['mount_6',['mount',['../structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e',1,'ZenitUI::UIContext']]],
+  ['movechildbefore_7',['moveChildBefore',['../classZenitUI_1_1Layout.html#a07dd7bec58ecfc2d4789468329831673',1,'ZenitUI::Layout']]],
+  ['mulwith_8',['mulWith',['../structZenitUI_1_1Value.html#a5837ad30a7c229c660bdf50720410f26',1,'ZenitUI::Value']]]
 ];

@@ -1,5 +1,14 @@
 var NAVTREEINDEX3 =
 {
+"classZenitUI_1_1ZMarkup_1_1Registry.html#a13bf232f0125020865e07a227aad5aeb":[1,2,9,0],
+"classZenitUI_1_1ZMarkup_1_1Registry.html#a3336c5d336c97ba427b8277e09a7c3cf":[1,2,9,7],
+"classZenitUI_1_1ZMarkup_1_1Registry.html#a4dda9c70f7cff1d6ad70976676fdac21":[1,2,9,3],
+"classZenitUI_1_1ZMarkup_1_1Registry.html#ac21b3fd27f876aa788e14c4b4fc7edb4":[1,2,9,5],
+"classZenitUI_1_1ZMarkup_1_1Registry.html#ac633f7dec3d0a142d4de7347447fa844":[1,2,9,4],
+"classZenitUI_1_1ZMarkup_1_1StyleParser.html":[1,3,21],
+"classZenitUI_1_1ZMarkup_1_1StyleParser.html#a5a85b7fb61b1464c5b5882cf8fadd61d":[1,3,21,1],
+"classZenitUI_1_1ZMarkup_1_1StyleParser.html#ad9d09d17776a5950465f3115fa636b64":[1,3,21,2],
+"classZenitUI_1_1ZMarkup_1_1StyleParser.html#ae5bcf6f4ed334ae3c600b65779ff3efe":[1,3,21,0],
 "classZenitUI_1_1ZMarkup_1_1StyleParser.html#afbcd0984a297efc504d75639f309b019":[1,3,21,3],
 "classZenitUI_1_1ZMarkup_1_1UINode.html":[1,2,10],
 "classZenitUI_1_1ZMarkup_1_1UINode.html#a0b04cdc7ebc5953f76fca7cfd416a48e":[1,2,10,1],
@@ -240,14 +249,5 @@ var NAVTREEINDEX3 =
 "page_available_backends.html":[0,5,4],
 "page_available_backends.html#sec_backend_mock":[0,5,4,0],
 "page_available_backends.html#sec_backend_raylib":[0,5,4,1],
-"page_available_backends.html#sec_backend_sdl3":[0,5,4,2],
-"page_custom_backends.html":[0,5],
-"page_custom_backends.html#sec_backend_invariants":[0,5,2],
-"page_custom_backends.html#sec_backend_minimum":[0,5,1],
-"page_custom_backends.html#sec_backend_refs":[0,5,3],
-"page_custom_backends.html#sec_backend_wiring":[0,5,0],
-"pages.html":[],
-"structZenitUI_1_1ActiveCssAnimation.html":[1,4,6],
-"structZenitUI_1_1AnimState.html":[1,4,3],
-"structZenitUI_1_1AnimationPlayer.html":[1,4,1]
+"page_available_backends.html#sec_backend_sdl3":[0,5,4,2]
 };

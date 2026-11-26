@@ -103,6 +103,19 @@ $(function(){initNavTree('structZenitUI_1_1UIContext.html','','structZenitUI_1_1
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ac82784aa12dba3054f362dc30f4acac8" id="r_ac82784aa12dba3054f362dc30f4acac8"><td class="memItemLeft" align="right" valign="top"><a id="ac82784aa12dba3054f362dc30f4acac8" name="ac82784aa12dba3054f362dc30f4acac8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UIContext</b> (const UIContext &amp;)=delete</td></tr>
+<tr class="memitem:ae30c840abd1828eb5013195501a8e2b5" id="r_ae30c840abd1828eb5013195501a8e2b5"><td class="memItemLeft" align="right" valign="top"><a id="ae30c840abd1828eb5013195501a8e2b5" name="ae30c840abd1828eb5013195501a8e2b5"></a>
+UIContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const UIContext &amp;)=delete</td></tr>
+<tr class="memitem:a0cc959278cac93060672c050bd2aa0df" id="r_a0cc959278cac93060672c050bd2aa0df"><td class="memItemLeft" align="right" valign="top"><a id="a0cc959278cac93060672c050bd2aa0df" name="a0cc959278cac93060672c050bd2aa0df"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UIContext</b> (UIContext &amp;&amp;)=delete</td></tr>
+<tr class="memitem:aab0d531474e1574e861e8a7f667dc38b" id="r_aab0d531474e1574e861e8a7f667dc38b"><td class="memItemLeft" align="right" valign="top"><a id="aab0d531474e1574e861e8a7f667dc38b" name="aab0d531474e1574e861e8a7f667dc38b"></a>
+UIContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (UIContext &amp;&amp;)=delete</td></tr>
+<tr class="memitem:a74fa4dface75bab1e6a3e9c274939c7f" id="r_a74fa4dface75bab1e6a3e9c274939c7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74fa4dface75bab1e6a3e9c274939c7f">attachBackend</a> (<a class="el" href="classZenitUI_1_1IRenderer.html">IRenderer</a> *r, <a class="el" href="classZenitUI_1_1IPlatform.html">IPlatform</a> *p, <a class="el" href="classZenitUI_1_1IAssetProvider.html">IAssetProvider</a> *a, UIContext **ownerSlot=nullptr)</td></tr>
+<tr class="memdesc:a74fa4dface75bab1e6a3e9c274939c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach renderer, platform, and asset backends to this context.  <br /></td></tr>
+<tr class="memitem:a06a3a3e21c6249d6fd298c9a84b1dd81" id="r_a06a3a3e21c6249d6fd298c9a84b1dd81"><td class="memItemLeft" align="right" valign="top"><a id="a06a3a3e21c6249d6fd298c9a84b1dd81" name="a06a3a3e21c6249d6fd298c9a84b1dd81"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>detachBackend</b> ()</td></tr>
+<tr class="memdesc:a06a3a3e21c6249d6fd298c9a84b1dd81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush pooled render targets while the renderer is still valid and clear backend pointers. <br /></td></tr>
 <tr class="memitem:a214e0406e09b6432835da164d5032635" id="r_a214e0406e09b6432835da164d5032635"><td class="memItemLeft" align="right" valign="top"><a id="a214e0406e09b6432835da164d5032635" name="a214e0406e09b6432835da164d5032635"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>consumeClick</b> (<a class="el" href="group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75">MouseButton</a> b)</td></tr>
 <tr class="memdesc:a214e0406e09b6432835da164d5032635"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark <code class="param">b</code> as consumed; subsequent handlers in the same frame will skip it. <br /></td></tr>
@@ -113,7 +126,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>wasConsumed</b> (<a c
 void&#160;</td><td class="memItemRight" valign="bottom"><b>invalidateStyles</b> ()</td></tr>
 <tr class="memdesc:a5de7e7bb4e67c89f789afec6350bc8b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force style-cache invalidation across the tree. <br /></td></tr>
 <tr class="memitem:afeddbe732b94c595f2c3b917e97677ff" id="r_afeddbe732b94c595f2c3b917e97677ff"><td class="memItemLeft" align="right" valign="top"><a id="afeddbe732b94c595f2c3b917e97677ff" name="afeddbe732b94c595f2c3b917e97677ff"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPressTarget</b> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *n) const</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPressTarget</b> (const Layout *n) const</td></tr>
 <tr class="memdesc:afeddbe732b94c595f2c3b917e97677ff"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">n</code> is the current press target. <br /></td></tr>
 <tr class="memitem:a6d48c76abbdb32a5566711ee5ab9f318" id="r_a6d48c76abbdb32a5566711ee5ab9f318"><td class="memItemLeft" align="right" valign="top"><a id="a6d48c76abbdb32a5566711ee5ab9f318" name="a6d48c76abbdb32a5566711ee5ab9f318"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isValidClick</b> () const</td></tr>
@@ -133,19 +146,38 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>popLayerTarget</b> ()
 void&#160;</td><td class="memItemRight" valign="bottom"><b>endFrame</b> ()</td></tr>
 <tr class="memdesc:a6c789023ad9f0c5e9960e3d62050beec"><td class="mdescLeft">&#160;</td><td class="mdescRight">End-of-frame housekeeping (trims idle pooled render targets). <br /></td></tr>
 <tr class="memitem:a1d74768d6e555ac06c84c3025acb364a" id="r_a1d74768d6e555ac06c84c3025acb364a"><td class="memItemLeft" align="right" valign="top"><a id="a1d74768d6e555ac06c84c3025acb364a" name="a1d74768d6e555ac06c84c3025acb364a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>requestFocus</b> (std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; n)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>requestFocus</b> (std::shared_ptr&lt; Layout &gt; n)</td></tr>
 <tr class="memdesc:a1d74768d6e555ac06c84c3025acb364a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <code class="param">n</code> as the focused node; null clears focus. <br /></td></tr>
+<tr class="memitem:a060d4a5bd680b7dd632a06b08177145e" id="r_a060d4a5bd680b7dd632a06b08177145e"><td class="memItemLeft" align="right" valign="top"><a id="a060d4a5bd680b7dd632a06b08177145e" name="a060d4a5bd680b7dd632a06b08177145e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mount</b> (Layout &amp;root)</td></tr>
+<tr class="memdesc:a060d4a5bd680b7dd632a06b08177145e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a root <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">Layout</a></span> subtree to this context. <br /></td></tr>
+<tr class="memitem:a39e9e22ade08e5d643a4c34c17b684c8" id="r_a39e9e22ade08e5d643a4c34c17b684c8"><td class="memItemLeft" align="right" valign="top"><a id="a39e9e22ade08e5d643a4c34c17b684c8" name="a39e9e22ade08e5d643a4c34c17b684c8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mount</b> (const std::shared_ptr&lt; Layout &gt; &amp;root)</td></tr>
+<tr class="memitem:a35d7e7331aa90603d52036941bb75446" id="r_a35d7e7331aa90603d52036941bb75446"><td class="memItemLeft" align="right" valign="top"><a id="a35d7e7331aa90603d52036941bb75446" name="a35d7e7331aa90603d52036941bb75446"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unmount</b> (Layout &amp;root)</td></tr>
+<tr class="memdesc:a35d7e7331aa90603d52036941bb75446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detach a previously mounted root <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">Layout</a></span> subtree from this context. <br /></td></tr>
+<tr class="memitem:a4a3d014df49ba007c7159c542de8321e" id="r_a4a3d014df49ba007c7159c542de8321e"><td class="memItemLeft" align="right" valign="top"><a id="a4a3d014df49ba007c7159c542de8321e" name="a4a3d014df49ba007c7159c542de8321e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unmount</b> (const std::shared_ptr&lt; Layout &gt; &amp;root)</td></tr>
+<tr class="memitem:a89695a2fabc5b4cccdb883a604405800" id="r_a89695a2fabc5b4cccdb883a604405800"><td class="memItemLeft" align="right" valign="top"><a id="a89695a2fabc5b4cccdb883a604405800" name="a89695a2fabc5b4cccdb883a604405800"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>detachAllRoots</b> ()</td></tr>
+<tr class="memdesc:a89695a2fabc5b4cccdb883a604405800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detach every root currently attached to this context. <br /></td></tr>
+<tr class="memitem:aa8db3965f90fa983ed6d7f23fb343343" id="r_aa8db3965f90fa983ed6d7f23fb343343"><td class="memItemLeft" align="right" valign="top"><a id="aa8db3965f90fa983ed6d7f23fb343343" name="aa8db3965f90fa983ed6d7f23fb343343"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>runFrame</b> (Layout &amp;root, float dt)</td></tr>
+<tr class="memdesc:aa8db3965f90fa983ed6d7f23fb343343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one full update/measure/arrange frame on <code class="param">root</code> using this context. <br /></td></tr>
+<tr class="memitem:ab18c777821167f1d49bf2788e22dd76f" id="r_ab18c777821167f1d49bf2788e22dd76f"><td class="memItemLeft" align="right" valign="top"><a id="ab18c777821167f1d49bf2788e22dd76f" name="ab18c777821167f1d49bf2788e22dd76f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>renderFrame</b> (Layout &amp;root)</td></tr>
+<tr class="memdesc:ab18c777821167f1d49bf2788e22dd76f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render <code class="param">root</code> (beginFrame, draw, endFrame) using this context. <br /></td></tr>
 <tr class="memitem:a4787a68f0c89cbe5527f010d579f22e9" id="r_a4787a68f0c89cbe5527f010d579f22e9"><td class="memItemLeft" align="right" valign="top"><a id="a4787a68f0c89cbe5527f010d579f22e9" name="a4787a68f0c89cbe5527f010d579f22e9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseFocus</b> ()</td></tr>
 <tr class="memdesc:a4787a68f0c89cbe5527f010d579f22e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear focus. <br /></td></tr>
 <tr class="memitem:ad6a585461c24f02be608e55513feeec8" id="r_ad6a585461c24f02be608e55513feeec8"><td class="memItemLeft" align="right" valign="top"><a id="ad6a585461c24f02be608e55513feeec8" name="ad6a585461c24f02be608e55513feeec8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasFocus</b> (const <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *n) const</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasFocus</b> (const Layout *n) const</td></tr>
 <tr class="memdesc:ad6a585461c24f02be608e55513feeec8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">n</code> is the current focused node. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa513e462386818e7c4c1e1efc6cc87c0" id="r_aa513e462386818e7c4c1e1efc6cc87c0"><td class="memItemLeft" align="right" valign="top"><a id="aa513e462386818e7c4c1e1efc6cc87c0" name="aa513e462386818e7c4c1e1efc6cc87c0"></a>
-static <a class="el" href="structZenitUI_1_1UIContext.html">UIContext</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()</td></tr>
+static UIContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()</td></tr>
 <tr class="memdesc:aa513e462386818e7c4c1e1efc6cc87c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the global singleton context. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -178,9 +210,9 @@ std::array&lt; bool,(size_t) MouseButton::Count &gt;&#160;</td><td class="memIte
 <tr class="memitem:acc594917d36c1e26af2809599fbf4578" id="r_acc594917d36c1e26af2809599fbf4578"><td class="memItemLeft" align="right" valign="top"><a id="acc594917d36c1e26af2809599fbf4578" name="acc594917d36c1e26af2809599fbf4578"></a>
 <a class="el" href="structZenitUI_1_1InputEvents.html">InputEvents</a>&#160;</td><td class="memItemRight" valign="bottom"><b>inputEvents</b></td></tr>
 <tr class="memitem:a9d526c77ba8299610183541aa2fa0f56" id="r_a9d526c77ba8299610183541aa2fa0f56"><td class="memItemLeft" align="right" valign="top"><a id="a9d526c77ba8299610183541aa2fa0f56" name="a9d526c77ba8299610183541aa2fa0f56"></a>
-std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>focusedNode</b></td></tr>
+std::weak_ptr&lt; Layout &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>focusedNode</b></td></tr>
 <tr class="memitem:ab095515bca37c6a9a9a29db972fd14c7" id="r_ab095515bca37c6a9a9a29db972fd14c7"><td class="memItemLeft" align="right" valign="top"><a id="ab095515bca37c6a9a9a29db972fd14c7" name="ab095515bca37c6a9a9a29db972fd14c7"></a>
-std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pointerCapture</b></td></tr>
+std::weak_ptr&lt; Layout &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pointerCapture</b></td></tr>
 <tr class="memitem:a1251c63242025549325c6993af6edb7e" id="r_a1251c63242025549325c6993af6edb7e"><td class="memItemLeft" align="right" valign="top"><a id="a1251c63242025549325c6993af6edb7e" name="a1251c63242025549325c6993af6edb7e"></a>
 <a class="el" href="classZenitUI_1_1FilterRegistry.html">FilterRegistry</a>&#160;</td><td class="memItemRight" valign="bottom"><b>filters</b></td></tr>
 <tr class="memdesc:a1251c63242025549325c6993af6edb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-context post-processing filter definitions (preloaded with builtins). <br /></td></tr>
@@ -190,17 +222,17 @@ std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &g
 <tr class="memitem:a64041df094260bfe090c76cea55064ed" id="r_a64041df094260bfe090c76cea55064ed"><td class="memItemLeft" align="right" valign="top"><a id="a64041df094260bfe090c76cea55064ed" name="a64041df094260bfe090c76cea55064ed"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>viewportGeneration</b> {0}</td></tr>
 <tr class="memitem:a2914098fda89a1c4b7b018e5dd7ded8f" id="r_a2914098fda89a1c4b7b018e5dd7ded8f"><td class="memItemLeft" align="right" valign="top"><a id="a2914098fda89a1c4b7b018e5dd7ded8f" name="a2914098fda89a1c4b7b018e5dd7ded8f"></a>
-<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>topmostConsumer</b> {nullptr}</td></tr>
+Layout *&#160;</td><td class="memItemRight" valign="bottom"><b>topmostConsumer</b> {nullptr}</td></tr>
 <tr class="memitem:af34fe60562291c8f7dd14206eb99dc32" id="r_af34fe60562291c8f7dd14206eb99dc32"><td class="memItemLeft" align="right" valign="top"><a id="af34fe60562291c8f7dd14206eb99dc32" name="af34fe60562291c8f7dd14206eb99dc32"></a>
-<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>hoverTarget</b> {nullptr}</td></tr>
+Layout *&#160;</td><td class="memItemRight" valign="bottom"><b>hoverTarget</b> {nullptr}</td></tr>
 <tr class="memitem:a023fc57dc8dc78b9cfd62da71f1564cd" id="r_a023fc57dc8dc78b9cfd62da71f1564cd"><td class="memItemLeft" align="right" valign="top"><a id="a023fc57dc8dc78b9cfd62da71f1564cd" name="a023fc57dc8dc78b9cfd62da71f1564cd"></a>
-<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pressTarget</b> {nullptr}</td></tr>
+Layout *&#160;</td><td class="memItemRight" valign="bottom"><b>pressTarget</b> {nullptr}</td></tr>
 <tr class="memitem:aa0f0481ccef86cb35c1d80922075378f" id="r_aa0f0481ccef86cb35c1d80922075378f"><td class="memItemLeft" align="right" valign="top"><a id="aa0f0481ccef86cb35c1d80922075378f" name="aa0f0481ccef86cb35c1d80922075378f"></a>
-<a class="el" href="classZenitUI_1_1Layout.html">Layout</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>releaseTarget</b> {nullptr}</td></tr>
+Layout *&#160;</td><td class="memItemRight" valign="bottom"><b>releaseTarget</b> {nullptr}</td></tr>
 <tr class="memitem:acca44e6bb997a339c891108400732c0c" id="r_acca44e6bb997a339c891108400732c0c"><td class="memItemLeft" align="right" valign="top"><a id="acca44e6bb997a339c891108400732c0c" name="acca44e6bb997a339c891108400732c0c"></a>
-std::vector&lt; std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>activePortals</b></td></tr>
+std::vector&lt; std::weak_ptr&lt; Layout &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>activePortals</b></td></tr>
 <tr class="memitem:a5421f0369c7398161320a898cdb93793" id="r_a5421f0369c7398161320a898cdb93793"><td class="memItemLeft" align="right" valign="top"><a id="a5421f0369c7398161320a898cdb93793" name="a5421f0369c7398161320a898cdb93793"></a>
-std::vector&lt; std::weak_ptr&lt; <a class="el" href="classZenitUI_1_1Layout.html">Layout</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>framePortals</b></td></tr>
+std::vector&lt; std::weak_ptr&lt; Layout &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>framePortals</b></td></tr>
 <tr class="memitem:ae4f6cf8ab0ff269b28e3a6312682b3d2" id="r_ae4f6cf8ab0ff269b28e3a6312682b3d2"><td class="memItemLeft" align="right" valign="top"><a id="ae4f6cf8ab0ff269b28e3a6312682b3d2" name="ae4f6cf8ab0ff269b28e3a6312682b3d2"></a>
 std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><b>rng</b></td></tr>
 <tr class="memitem:a8fd4fdf4e4193850e61455283229a846" id="r_a8fd4fdf4e4193850e61455283229a846"><td class="memItemLeft" align="right" valign="top"><a id="a8fd4fdf4e4193850e61455283229a846" name="a8fd4fdf4e4193850e61455283229a846"></a>
@@ -209,10 +241,62 @@ std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><b>rng</b></td><
 <a class="el" href="classZenitUI_1_1TargetPool.html">TargetPool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>targetPool</b></td></tr>
 <tr class="memitem:a13231bfe325b6c90e924f3dbb34655e4" id="r_a13231bfe325b6c90e924f3dbb34655e4"><td class="memItemLeft" align="right" valign="top"><a id="a13231bfe325b6c90e924f3dbb34655e4" name="a13231bfe325b6c90e924f3dbb34655e4"></a>
 std::vector&lt; <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cullingClipStack</b></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:ac902f1ffeb3ca8ce28827888af71848b" id="r_ac902f1ffeb3ca8ce28827888af71848b"><td class="memItemLeft" align="right" valign="top"><a id="ac902f1ffeb3ca8ce28827888af71848b" name="ac902f1ffeb3ca8ce28827888af71848b"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Layout</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-application singleton: backends, frame state, and routing. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a74fa4dface75bab1e6a3e9c274939c7f" name="a74fa4dface75bab1e6a3e9c274939c7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74fa4dface75bab1e6a3e9c274939c7f">&#9670;&#160;</a></span>attachBackend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ZenitUI::UIContext::attachBackend </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classZenitUI_1_1IRenderer.html">IRenderer</a> *</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classZenitUI_1_1IPlatform.html">IPlatform</a> *</td>          <td class="paramname"><span class="paramname"><em>p</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classZenitUI_1_1IAssetProvider.html">IAssetProvider</a> *</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UIContext **</td>          <td class="paramname"><span class="paramname"><em>ownerSlot</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attach renderer, platform, and asset backends to this context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ownerSlot</td><td>Optional pointer to an <span class="tt">IBackend::boundCtx_</span> slot kept in sync on detach. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ac65b879662445e21ba0c08c1ff693422" name="ac65b879662445e21ba0c08c1ff693422"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac65b879662445e21ba0c08c1ff693422">&#9670;&#160;</a></span>beginFrame()</h2>
 
