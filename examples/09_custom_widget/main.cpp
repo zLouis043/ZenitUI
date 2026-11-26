@@ -61,7 +61,7 @@ int main()
     UIContext::get().platform = &platform;
     UIContext::get().assets   = &assets;
 
-    ZMarkup::loadStyleFile("examples/09_custom_widget/theme.zstyle");
+    ZMarkup::loadStyleFile("examples/09_custom_widget/theme.zstyle", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Root + page

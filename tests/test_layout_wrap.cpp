@@ -5,7 +5,7 @@
 using namespace ZenitUI;
 
 static void freshTheme() {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 }
 
 static std::shared_ptr<Layout> makeBox(float w, float h) {

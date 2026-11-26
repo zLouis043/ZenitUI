@@ -103,7 +103,7 @@ int main()
         }
         .card-title { color: #f3f4f6; font-size: 15px; }
         .card-sub   { color: #9ca3af; font-size: 12px; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->cls("root");

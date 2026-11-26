@@ -169,7 +169,7 @@ int main()
             transition: left 0.18s ease-out-cubic;
         }
         Toggle:checked .toggle-knob { left: 26px; }
-    )");
+    )", UIContext::get().theme);
 
     // ---- Model ----
     Bindable<float>       volume{0.5f};

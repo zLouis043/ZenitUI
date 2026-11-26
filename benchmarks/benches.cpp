@@ -127,8 +127,8 @@ namespace Bench
               /*setup=*/[] {},
               /*body=*/[]
               {
-              ZMarkup::loadStyleString(makeCss(200));
-              Theme::get().clear(); });
+              ZMarkup::loadStyleString(makeCss(200), UIContext::get().theme);
+              UIContext::get().theme.clear(); });
 
         R.add("parse.zmarkup.100elements", "parsing",
               /*iterations=*/200,
@@ -253,18 +253,18 @@ namespace Bench
               /*iterations=*/200'000,
               /*setup=*/[]
               {
-              Theme::get().clear();
+              UIContext::get().theme.clear();
               ZMarkup::loadStyleString(R"(
                   @keyframes k {
                       0%   { opacity: 0.0; scale: 1.0; }
                       50%  { opacity: 1.0; scale: 1.2; }
                       100% { opacity: 0.0; scale: 1.0; }
                   }
-              )"); },
+              )", UIContext::get().theme); },
               /*body=*/[]
               {
               static int i = 0;
-              const auto& anim = Theme::get().keyframes.at("k");
+              const auto& anim = UIContext::get().theme.keyframes.at("k");
               float t = (float)(i++ & 0xFF) / 255.0f;
               Style s = evaluateKeyframes(anim, t, TransitionFunction::Linear);
               g_sink += s.opacity.is_set ? s.opacity.value : 0.0f; });
@@ -273,10 +273,10 @@ namespace Bench
               /*iterations=*/1000,
               /*setup=*/[]
               {
-              Theme::get().clear();
+              UIContext::get().theme.clear();
               ZMarkup::loadStyleString(R"(
                   @keyframes k { 0% { opacity: 0.0; } 100% { opacity: 1.0; } }
-              )");
+              )", UIContext::get().theme);
               // Reset the shared vector to 100 fresh animations.
               auto& anims = sharedTickCssAnims();
               anims.clear();
@@ -291,17 +291,17 @@ namespace Bench
               } },
               /*body=*/[]
               {
-              Anim::tickIncremental(sharedTickCssAnims(), 1.0f / 60.0f);
+              Anim::tickIncremental(sharedTickCssAnims(), 1.0f / 60.0f, UIContext::get().theme);
               g_sink += (float)sharedTickCssAnims().size(); });
 
         R.add("micro.tickCssAndOverlay.100", "animation",
               /*iterations=*/1000,
               /*setup=*/[]
               {
-          Theme::get().clear();
+          UIContext::get().theme.clear();
           ZMarkup::loadStyleString(R"(
               @keyframes k { 0% { opacity: 0.0; } 100% { opacity: 1.0; } }
-          )");
+          )", UIContext::get().theme);
           auto& anims = sharedTickCssAnims();
           anims.clear();
           for (int i = 0; i < 100; ++i)
@@ -317,10 +317,10 @@ namespace Bench
               {
           auto& anims = sharedTickCssAnims();
           // Tick: advances elapsed and populates the cache.
-          Anim::tickIncremental(anims, 1.0f / 60.0f);
+          Anim::tickIncremental(anims, 1.0f / 60.0f, UIContext::get().theme);
           // Overlay: reads the cache instead of recomputing sampleActive.
           ComputedStyle out;
-          Anim::overlayCssComputed(out, anims);
+          Anim::overlayCssComputed(out, anims, UIContext::get().theme);
           g_sink += (float)anims.size(); });
 
         R.add("micro.tickImperative.100", "animation",
@@ -438,7 +438,7 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
                   root = makeFlatTree(100);
                   for (int i = 0; i < 5; ++i) env.frame(root); },
                   /*body=*/[&]
@@ -456,8 +456,8 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  Theme::get().clear();
-                  ZMarkup::loadStyleString(makeCss(200));
+                  UIContext::get().theme.clear();
+                  ZMarkup::loadStyleString(makeCss(200), UIContext::get().theme);
                   root = makeFlatTree(100);
                   for (int i = 0; i < 5; ++i) env.frame(root); },
                   /*body=*/[&]
@@ -479,12 +479,12 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       .row { background: #202020ff;
                              transition: background 0.2s linear; }
                       .row:hover { background: #4a9effff; }
-                  )");
+                  )", UIContext::get().theme);
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 100; ++i)
@@ -515,13 +515,13 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       @keyframes pulse { 0% { opacity: 0.5; }
                                          50% { opacity: 1.0; }
                                          100% { opacity: 0.5; } }
                       .pulse { animation: pulse 1s linear infinite; }
-                  )");
+                  )", UIContext::get().theme);
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 100; ++i)
@@ -547,7 +547,7 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
                   root = std::make_shared<Layout>(LayoutType::Stack);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 200; ++i)
@@ -582,7 +582,7 @@ namespace Bench
                       /*setup=*/[&]
                       {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
 
                   root = std::make_shared<Layout>(LayoutType::Stack);
                   root->size(Percent(100), Percent(100));
@@ -621,7 +621,7 @@ namespace Bench
                       /*setup=*/[&]
                       {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       @keyframes pulse {
                           0%   { opacity: 0.7; }
@@ -631,7 +631,7 @@ namespace Bench
                       .pulse { animation: pulse 1s linear infinite; }
                       .row { background: #202020ff; }
                       .row:hover { background: #4a9effff; }
-                  )");
+                  )", UIContext::get().theme);
 
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
@@ -679,7 +679,7 @@ namespace Bench
                       /*setup=*/[&]
                       {
                   env.reset();
-                  Theme::get().clear();
+                  UIContext::get().theme.clear();
 
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
@@ -706,11 +706,11 @@ namespace Bench
                       /*setup=*/[&]
                       {
               env.reset();
-              Theme::get().clear();
+              UIContext::get().theme.clear();
               ZMarkup::loadStyleString(R"(
                   .btn { position: absolute; width: 10px; height: 10px; }
                   .panel .btn { left: 100px; }
-              )");
+              )", UIContext::get().theme);
 
               root = std::make_shared<Layout>(LayoutType::Stack);
               root->size(Percent(100), Percent(100));

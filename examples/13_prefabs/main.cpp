@@ -56,7 +56,7 @@ int main(void)
             transition: left 0.18s ease-out-cubic;
         }
         Toggle:checked .toggle-knob { left: 26px; }
-    )");
+    )", UIContext::get().theme);
 
     // Register a reusable prefab: children passed to `SettingRow { ... }`
     // are injected where `Slot` appears.

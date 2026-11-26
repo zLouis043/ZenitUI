@@ -81,7 +81,7 @@ int main()
     UIContext::get().platform = &platform;
     UIContext::get().assets   = &assets;
 
-    ZMarkup::loadStyleFile("examples/06_zmarkup/ui.zstyle");
+    ZMarkup::loadStyleFile("examples/06_zmarkup/ui.zstyle", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Build the tree. ZMarkup::build parses the string, constructs every

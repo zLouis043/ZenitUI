@@ -143,8 +143,8 @@ namespace ZenitUI
 	std::vector<const ThemeRule *> Layout::getMatchingRules() const
 	{
 		std::vector<const ThemeRule *> out;
-		auto &theme = Theme::get();
-		for (const auto &r : theme.rules)
+		const auto &t = theme();
+		for (const auto &r : t.rules)
 		{
 			if (!r.part.empty())
 				continue;

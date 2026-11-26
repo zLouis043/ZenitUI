@@ -538,10 +538,8 @@ namespace ZenitUI::Debug
      * \brief Dump the global theme: rule count, keyframe list, and every rule
      *        with its specificity and style.
      */
-    inline void dumpTheme(std::ostream &os = std::cerr)
+    inline void dumpTheme(const Theme &theme, std::ostream &os = std::cerr)
     {
-        auto &theme = Theme::get();
-
         os << "=== Theme ===\n";
         os << "Rules    : " << theme.rules.size() << "\n";
         os << "Keyframes: " << theme.keyframes.size() << "\n";
@@ -568,6 +566,12 @@ namespace ZenitUI::Debug
         os << "\n";
     }
 
+    /** \brief Dump the active `UIContext::theme`. */
+    inline void dumpTheme(std::ostream &os = std::cerr)
+    {
+        dumpTheme(UIContext::get().theme, os);
+    }
+
     /**
      * \brief Dump the well-known pseudo-elements that have at least one matching rule.
      */
@@ -576,9 +580,9 @@ namespace ZenitUI::Debug
         static const char *candidates[] = {
             "track", "fill", "knob", "box", "mark", "cursor"};
         os << "=== Parts of " << node.getStyleTag() << " ===\n";
+        const auto &theme = node.theme();
         for (auto *name : candidates)
         {
-            auto &theme = Theme::get();
             int matchCount = 0;
             for (const auto &r : theme.rules)
             {
@@ -628,6 +632,7 @@ namespace ZenitUI::Debug
     // No-op fallbacks. Kept as inline functions so the symbols always exist.
     inline void dumpStyle(const Layout &, std::ostream & = std::cerr) {}
     inline void dumpTree(const Layout &, std::ostream & = std::cerr, int = -1, int = 0) {}
+    inline void dumpTheme(const Theme &, std::ostream & = std::cerr) {}
     inline void dumpTheme(std::ostream & = std::cerr) {}
     inline void dumpParts(const Layout &, std::ostream & = std::cerr) {}
     inline std::string renderStatsToString(const RenderStats & = UIContext::get().renderStats) { return {}; }

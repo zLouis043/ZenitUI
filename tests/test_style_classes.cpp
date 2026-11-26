@@ -129,10 +129,10 @@ TEST(Widget_classes, clearStyleClasses_on_empty_is_noop)
 TEST(Widget_classes, removeClass_triggers_style_recompute)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .highlight { background: #ff0000ff; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->size(Px(100), Px(100));
@@ -153,10 +153,10 @@ TEST(Widget_classes, removeClass_triggers_style_recompute)
 TEST(Widget_classes, addClass_triggers_style_recompute)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .highlight { background: #00ff00ff; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->size(Px(100), Px(100));

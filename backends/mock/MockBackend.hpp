@@ -585,8 +585,6 @@ namespace ZenitUI::Test
 		/** \brief Reset global `UIContext`, `Theme`, and mock backend state. */
 		void reset()
 		{
-			Theme::get().clear();
-
 			auto &ctx = UIContext::get();
 			ctx.focusedNode.reset();
 			ctx.pointerCapture.reset();
@@ -607,6 +605,7 @@ namespace ZenitUI::Test
 
 			UIContext::get().viewport = {1920.0f, 1080.0f};
 			UIContext::get().filters.reset();
+			UIContext::get().theme.clear();
 
 			platform.reset();
 			renderer.reset();

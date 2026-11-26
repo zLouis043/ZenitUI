@@ -130,7 +130,7 @@ int main()
         Slider:hover::knob {
             animation: knobGlow 0.7s ease-in-out infinite;
         }
-    )");
+    )", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Root

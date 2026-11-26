@@ -25,7 +25,7 @@ public:
 TEST(CssAnim_hasActive, false_without_animation)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->size(Px(100), Px(100));
@@ -41,7 +41,7 @@ TEST(CssAnim_hasActive, false_without_animation)
 TEST(CssAnim_hasActive, true_while_running)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes pulse {
             0%   { opacity: 0.0; }
@@ -49,7 +49,7 @@ TEST(CssAnim_hasActive, true_while_running)
             100% { opacity: 0.0; }
         }
         .pulse { animation: pulse 0.3s linear infinite; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("pulse");
@@ -66,14 +66,14 @@ TEST(CssAnim_hasActive, true_while_running)
 TEST(CssAnim_hasActive, infinite_stays_active_forever)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes spin {
             0%   { rotation: 0; }
             100% { rotation: 360; }
         }
         .spin { animation: spin 0.1s linear infinite; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("spin");
@@ -90,14 +90,14 @@ TEST(CssAnim_hasActive, infinite_stays_active_forever)
 TEST(CssAnim_hasActive, finite_removes_after_finish)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
         .fade { animation: fade 0.1s linear; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("fade");
@@ -114,14 +114,14 @@ TEST(CssAnim_hasActive, finite_removes_after_finish)
 TEST(CssAnim_hasActive, forwards_stays_active_after_finish)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
         .fade { animation: fade 0.1s linear forwards; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("fade");
@@ -138,13 +138,13 @@ TEST(CssAnim_hasActive, forwards_stays_active_after_finish)
 
 TEST(CssAnim_overlay, applies_at_midpoint)
 {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
-    )");
+    )", UIContext::get().theme);
 
     ActiveCssAnimation a;
     a.name      = "fade";
@@ -155,7 +155,7 @@ TEST(CssAnim_overlay, applies_at_midpoint)
 
     Style s;
     std::vector<ActiveCssAnimation> anims = { a };
-    Anim::overlayCssStyle(s, anims);
+    Anim::overlayCssStyle(s, anims, UIContext::get().theme);
 
     CHECK(s.opacity.is_set);
     CHECK_NEAR(s.opacity.value, 0.5f, 0.05f);
@@ -163,13 +163,13 @@ TEST(CssAnim_overlay, applies_at_midpoint)
 
 TEST(CssAnim_overlay, skips_finished_non_forwards)
 {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
-    )");
+    )", UIContext::get().theme);
 
     ActiveCssAnimation a;
     a.name      = "fade";
@@ -180,20 +180,20 @@ TEST(CssAnim_overlay, skips_finished_non_forwards)
 
     Style s;
     std::vector<ActiveCssAnimation> anims = { a };
-    Anim::overlayCssStyle(s, anims);
+    Anim::overlayCssStyle(s, anims, UIContext::get().theme);
 
     CHECK(!s.opacity.is_set);
 }
 
 TEST(CssAnim_overlay, applies_finished_with_forwards)
 {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
-    )");
+    )", UIContext::get().theme);
 
     ActiveCssAnimation a;
     a.name      = "fade";
@@ -204,7 +204,7 @@ TEST(CssAnim_overlay, applies_finished_with_forwards)
 
     Style s;
     std::vector<ActiveCssAnimation> anims = { a };
-    Anim::overlayCssStyle(s, anims);
+    Anim::overlayCssStyle(s, anims, UIContext::get().theme);
 
     CHECK(s.opacity.is_set);
     CHECK_NEAR(s.opacity.value, 1.0f, 0.05f);
@@ -212,13 +212,13 @@ TEST(CssAnim_overlay, applies_finished_with_forwards)
 
 TEST(CssAnim_overlay, alternate_reverses_at_odd_iterations)
 {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
-    )");
+    )", UIContext::get().theme);
 
     ActiveCssAnimation a;
     a.name      = "fade";
@@ -230,7 +230,7 @@ TEST(CssAnim_overlay, alternate_reverses_at_odd_iterations)
 
     Style s;
     std::vector<ActiveCssAnimation> anims = { a };
-    Anim::overlayCssStyle(s, anims);
+    Anim::overlayCssStyle(s, anims, UIContext::get().theme);
 
     CHECK(s.opacity.is_set);
     CHECK_NEAR(s.opacity.value, 0.25f, 0.05f);
@@ -238,13 +238,13 @@ TEST(CssAnim_overlay, alternate_reverses_at_odd_iterations)
 
 TEST(CssAnim_overlay, alternate_does_not_reverse_at_even_iterations)
 {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes fade {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
-    )");
+    )", UIContext::get().theme);
 
     ActiveCssAnimation a;
     a.name      = "fade";
@@ -256,7 +256,7 @@ TEST(CssAnim_overlay, alternate_does_not_reverse_at_even_iterations)
 
     Style s;
     std::vector<ActiveCssAnimation> anims = { a };
-    Anim::overlayCssStyle(s, anims);
+    Anim::overlayCssStyle(s, anims, UIContext::get().theme);
 
     CHECK(s.opacity.is_set);
     CHECK_NEAR(s.opacity.value, 0.75f, 0.05f);
@@ -266,7 +266,7 @@ TEST(CssAnim_overlay, alternate_does_not_reverse_at_even_iterations)
 TEST(CssAnim_part, animation_overlays_part_style)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes glow {
             0%   { color: #ff0000ff; }
@@ -276,7 +276,7 @@ TEST(CssAnim_part, animation_overlays_part_style)
             color: #000000ff;
             animation: glow 1s linear infinite;
         }
-    )");
+    )", UIContext::get().theme);
 
     auto w = TestWidget::create();
     w->size(Px(100), Px(100));

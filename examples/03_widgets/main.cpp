@@ -141,7 +141,7 @@ int main()
             height: auto;
             font-size: 16px;
         }
-    )");
+    )", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Root: a ScrollView so the gallery is scrollable if it grows.

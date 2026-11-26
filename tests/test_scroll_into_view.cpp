@@ -20,10 +20,10 @@ static ScrollScene makeScrollScene(Env& env,
 {
     ScrollScene s;
 
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow-y: scroll; }
-    )");
+    )", UIContext::get().theme);
 
     s.root = std::make_shared<Layout>(LayoutType::Stack);
     s.root->size(Percent(100), Percent(100));
@@ -65,10 +65,10 @@ TEST(Widget_scrollIntoView, already_visible_is_noop)
 {
     Env env;
 
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow-y: scroll; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));

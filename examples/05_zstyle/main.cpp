@@ -70,7 +70,7 @@ int main()
     //  Load the external stylesheet. Path is relative to the current
     //  working directory, which must be the repository root.
     // -----------------------------------------------------------------------
-    if (!ZMarkup::loadStyleFile("examples/05_zstyle/theme.zstyle")) {
+    if (!ZMarkup::loadStyleFile("examples/05_zstyle/theme.zstyle", UIContext::get().theme)) {
         std::fprintf(stderr, "Failed to load theme.zstyle\n");
         return 1;
     }

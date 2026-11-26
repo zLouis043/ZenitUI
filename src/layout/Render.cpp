@@ -338,7 +338,7 @@ namespace ZenitUI
 		else
 		{
 			ComputedStyle renderStyle = style_.currentStyle;
-			Anim::overlayCssComputed(renderStyle, anim_.css);
+			Anim::overlayCssComputed(renderStyle, anim_.css, theme());
 			drawWithStyle(renderStyle, parentOpacity);
 		}
 
@@ -475,7 +475,7 @@ namespace ZenitUI
 
 			const float regOffX = region.x - transformedRect.x;
 			const float regOffY = region.y - transformedRect.y;
-			const uint32_t themeVer = Theme::get().version;
+			const uint32_t themeVer = ctxUI.theme.version;
 
 			// Cheap scalar pre-check: skip subtree fingerprinting completely while
 			// transform, size, clip offset, opacity, or global generations are changing.

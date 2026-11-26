@@ -265,7 +265,7 @@ namespace ZenitUI::ZMarkup
      * \return `false` if the sink reported any error.
      */
     bool loadStyleString(std::string_view src,
-                         Theme &theme = Theme::get(),
+                         Theme &theme,
                          const std::string &fileName = "<string>",
                          DiagnosticSink *sink = nullptr,
                          bool strict = false);
@@ -275,7 +275,7 @@ namespace ZenitUI::ZMarkup
      * \return `false` if the file could not be read or a parse error occurred.
      */
     bool loadStyleFile(const std::filesystem::path &path,
-                       Theme &theme = Theme::get(),
+                       Theme &theme,
                        DiagnosticSink *sink = nullptr,
                        bool strict = false);
         /** @} */

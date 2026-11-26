@@ -156,7 +156,7 @@ int main()
         Button:hover { background: #7bc0ff; }
         .btn-danger { background: #be2137; }
         .btn-danger:hover { background: #e62937; }
-    )");
+    )", UIContext::get().theme);
 
     // Build the initial tree.
     auto ui = ZMarkup::build(kInitialMarkup);

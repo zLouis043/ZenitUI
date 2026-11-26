@@ -96,7 +96,7 @@ int main()
     // -----------------------------------------------------------------------
     //  Stylesheet.
     // -----------------------------------------------------------------------
-    ZMarkup::loadStyleFile("examples/07_effects/theme.zstyle");
+    ZMarkup::loadStyleFile("examples/07_effects/theme.zstyle", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Tree.

@@ -7,7 +7,7 @@
 using namespace ZenitUI;
 
 static void freshTheme() {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 }
 
 

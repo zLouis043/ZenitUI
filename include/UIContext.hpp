@@ -30,6 +30,7 @@
 #include "CoreTypes.hpp"
 #include "Geometry2D.hpp"
 #include "FilterRegistry.hpp"
+#include "Theme.hpp"
 
 #include <span>
 
@@ -749,6 +750,7 @@ namespace ZenitUI
 		std::weak_ptr<Layout> pointerCapture;
 
 		FilterRegistry filters; ///< Per-context post-processing filter definitions (preloaded with builtins).
+		Theme theme; ///< Per-context stylesheet (rules, keyframes, and `:root` style).
 
 		uint32_t viewportGeneration{0};
 

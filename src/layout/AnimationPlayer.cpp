@@ -53,15 +53,15 @@ void Anim::syncRefs(std::vector<ActiveCssAnimation>& anims,
     }
 }
 
-void Anim::tickIncremental(std::vector<ActiveCssAnimation>& anims, float dt)
+void Anim::tickIncremental(std::vector<ActiveCssAnimation>& anims, float dt, const Theme& theme)
 {
     for (auto& anim : anims)
     {
         if (anim.finished)
             continue;
         anim.elapsed += dt;
-        auto it = Theme::get().keyframes.find(anim.name);
-        if (it == Theme::get().keyframes.end())
+        auto it = theme.keyframes.find(anim.name);
+        if (it == theme.keyframes.end())
         {
             anim.finished = true;
             continue;
@@ -79,15 +79,15 @@ void Anim::tickIncremental(std::vector<ActiveCssAnimation>& anims, float dt)
         anims.end());
 }
 
-void Anim::tickAbsolute(std::vector<ActiveCssAnimation>& anims, double now)
+void Anim::tickAbsolute(std::vector<ActiveCssAnimation>& anims, double now, const Theme& theme)
 {
     for (auto& anim : anims)
     {
         if (anim.finished)
             continue;
         anim.elapsed = (float)(now - anim.startTime);
-        auto it = Theme::get().keyframes.find(anim.name);
-        if (it == Theme::get().keyframes.end())
+        auto it = theme.keyframes.find(anim.name);
+        if (it == theme.keyframes.end())
         {
             anim.finished = true;
             continue;
@@ -105,12 +105,12 @@ void Anim::tickAbsolute(std::vector<ActiveCssAnimation>& anims, double now)
         anims.end());
 }
 
-void Anim::overlayCssStyle(Style& out, const std::vector<ActiveCssAnimation>& anims)
+void Anim::overlayCssStyle(Style& out, const std::vector<ActiveCssAnimation>& anims, const Theme& theme)
 {
     for (const auto& anim : anims)
     {
-        auto it = Theme::get().keyframes.find(anim.name);
-        if (it == Theme::get().keyframes.end())
+        auto it = theme.keyframes.find(anim.name);
+        if (it == theme.keyframes.end())
             continue;
         bool fin = false;
         float localT = sampleActiveCached(anim, fin);
@@ -121,12 +121,12 @@ void Anim::overlayCssStyle(Style& out, const std::vector<ActiveCssAnimation>& an
     }
 }
 
-void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAnimation>& anims)
+void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAnimation>& anims, const Theme& theme)
 {
     for (const auto& anim : anims)
     {
-        auto it = Theme::get().keyframes.find(anim.name);
-        if (it == Theme::get().keyframes.end())
+        auto it = theme.keyframes.find(anim.name);
+        if (it == theme.keyframes.end())
             continue;
         bool fin = false;
         float localT = sampleActiveCached(anim, fin);
@@ -136,7 +136,6 @@ void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAni
         overlayComputed(out, frame);
     }
 }
-
 
 void AnimationPlayer::play(Layout& node, const std::string& name, bool playReverse)
 {
@@ -230,13 +229,12 @@ void AnimationPlayer::syncCss(Layout& node)
     Anim::syncRefs(css, refs, UIContext::get().time);
 }
 
-void AnimationPlayer::tickCss(Layout& /*node*/, float dt)
+void AnimationPlayer::tickCss(Layout& node, float dt)
 {
-    Anim::tickIncremental(css, dt);
+    Anim::tickIncremental(css, dt, node.theme());
 }
 
-
-void AnimationPlayer::applyCssToPart(Layout& /*node*/, const std::string& partName, Style& out)
+void AnimationPlayer::applyCssToPart(Layout& node, const std::string& partName, Style& out)
 {
     const auto& refs = out.animations.is_set
         ? out.animations.value
@@ -244,10 +242,11 @@ void AnimationPlayer::applyCssToPart(Layout& /*node*/, const std::string& partNa
 
     auto& anims = parts[partName];
     const double now = UIContext::get().time;
+    const auto& activeTheme = node.theme();
 
     Anim::syncRefs(anims, refs, now);
-    Anim::tickAbsolute(anims, now);
-    Anim::overlayCssStyle(out, anims);
+    Anim::tickAbsolute(anims, now, activeTheme);
+    Anim::overlayCssStyle(out, anims, activeTheme);
 }
 
 } // namespace ZenitUI

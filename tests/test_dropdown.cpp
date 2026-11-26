@@ -20,11 +20,11 @@ static DropdownScene makeDropdown(Env& env,
 {
     DropdownScene s;
 
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         Dropdown { width: 200px; height: 40px; }
         .dropdown-trigger { min-height: 30px; }
-    )");
+    )", UIContext::get().theme);
 
     s.dd = Dropdown::create(std::move(options), initial);
 

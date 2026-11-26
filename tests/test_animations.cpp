@@ -163,14 +163,14 @@ TEST(Anim_callback, imperative_finished_fires) {
 }
 
 TEST(Anim_callback, css_finished_fires) {
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         @keyframes blink {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
         .blink { animation: blink 0.05s linear; }
-    )");
+    )", UIContext::get().theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("blink");

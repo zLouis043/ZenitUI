@@ -13,7 +13,7 @@ namespace ZenitUI
 
 	ComputedStyle StyleResolver::resolveFor(Layout &node)
 	{
-		auto &theme = Theme::get();
+		const auto &theme = node.theme();
 		const Vec2 vp = node.viewportSize();
 
 		const auto parent = node.getParent();
@@ -233,7 +233,7 @@ namespace ZenitUI
 
 	Style StyleResolver::partFor(Layout &node, const std::string &partName)
 	{
-		auto &theme = Theme::get();
+		const auto &theme = node.theme();
 
 		std::vector<const ThemeRule *> matches;
 		for (const auto &r : theme.rules)

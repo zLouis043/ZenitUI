@@ -85,7 +85,7 @@ TEST(ZMarkupBuild, nested_layout) {
 
 TEST(ZMarkupBuild, toggle_arranges_with_size) {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         Toggle { width: 100px; height: 50px; }
@@ -95,7 +95,7 @@ TEST(ZMarkupBuild, toggle_arranges_with_size) {
             top: 10px; left: 10px;
         }
         Toggle:checked .toggle-knob { left: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto ui = ZMarkup::build(R"(Toggle#t checked=true)");
     auto toggle = ui.find("t");
@@ -118,10 +118,10 @@ TEST(ZMarkupBuild, toggle_arranges_with_size) {
 TEST(Widget_dropdown, css_can_override_trigger_height)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .dropdown-trigger { height: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto dd = UI::Dropdown::create(
         std::vector<std::string>{"A", "B"}, 0);

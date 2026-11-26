@@ -188,7 +188,7 @@ TEST(Portal_timing, last_registered_portal_wins_overlap)
 TEST(Popup_callbacks, onOpen_fires)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     auto popup = UI::Popup::create();
     auto content = std::make_shared<Layout>(LayoutType::Stack);

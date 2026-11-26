@@ -288,7 +288,7 @@ TEST(Interaction_zindex, higher_z_wins) {
 
 TEST(Interaction_subtree, checked_propagates_to_children) {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         Toggle { width: 100px; height: 50px; }
@@ -298,7 +298,7 @@ TEST(Interaction_subtree, checked_propagates_to_children) {
             top: 10px; left: 10px;
         }
         Toggle:checked .toggle-knob { left: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto ui = ZMarkup::build(R"(Toggle#t)");
     auto toggle = ui.find("t");
@@ -354,10 +354,10 @@ TEST(Interaction_hover, exit_does_not_fire_on_press) {
 
 TEST(Interaction_scroll, reset_on_overflow_change_only) {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow: scroll; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -386,10 +386,10 @@ TEST(Interaction_scroll, reset_on_overflow_change_only) {
 
 TEST(Interaction_scroll, portal_does_not_move_with_scroll) {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow: scroll; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -418,11 +418,11 @@ TEST(Interaction_scroll, portal_does_not_move_with_scroll) {
 
 TEST(Interaction_scroll, dropdown_list_follows_trigger) {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow: scroll; }
         Dropdown { width: 150px; height: 40px; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -497,7 +497,7 @@ TEST(Interaction_focus, click_fires_on_descendant_focused)
 TEST(Interaction_modal, hidden_modal_does_not_block_click)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     int clicks = 0;
 
@@ -538,7 +538,7 @@ TEST(Interaction_modal, hidden_modal_does_not_block_click)
 TEST(Interaction_modal, show_and_hide_callbacks)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     auto modal = UI::Modal::create();
     int showCount = 0;
@@ -740,14 +740,14 @@ TEST(Interaction_lifetime, removeFromParent_during_onClick_does_not_dangle)
 TEST(Interaction_scroll, container_shrinks_after_child_removal)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller {
             overflow-y: auto;
             max-height: 100px;
             width: 200px;
         }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->size(Percent(100), Percent(100));
@@ -813,7 +813,7 @@ TEST(Interaction_tooltip, clamps_to_viewport_and_flips_below) {
 TEST(Interaction_subtree, class_change_propagates_to_children)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         Toggle { width: 100px; height: 50px; }
@@ -823,7 +823,7 @@ TEST(Interaction_subtree, class_change_propagates_to_children)
             top: 10px; left: 10px;
         }
         Toggle.active .toggle-knob { left: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto ui = ZMarkup::build(R"(Toggle#t)");
     auto toggle = ui.find("t");
@@ -844,12 +844,12 @@ TEST(Interaction_subtree, class_change_propagates_to_children)
 TEST(Style_reverseDep, unrelated_class_does_not_trigger_reresolve)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         .knob { position: absolute; }
         .active .knob { left: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -885,12 +885,12 @@ TEST(Style_reverseDep, unrelated_class_does_not_trigger_reresolve)
 TEST(Style_reverseDep, class_change_reresolves_knob_with_relevant_ancestor_class)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         .knob { position: absolute; }
         .active .knob { left: 60px; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -922,12 +922,12 @@ TEST(Style_reverseDep, class_change_reresolves_knob_with_relevant_ancestor_class
 TEST(Style_reverseDep, class_mentioned_only_in_unmatched_rules_still_invalidates)
 {
     Env env;
-    Theme::get().clear();
+    UIContext::get().theme.clear();
 
     ZMarkup::loadStyleString(R"(
         .bar { position: absolute; }
         .foo .bar { left: 50px; }
-    )");
+    )", UIContext::get().theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));

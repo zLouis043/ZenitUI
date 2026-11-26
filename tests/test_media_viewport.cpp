@@ -17,13 +17,13 @@ static MediaScene makeMediaScene(Env& env, float initialW)
 {
     MediaScene s;
 
-    Theme::get().clear();
+    UIContext::get().theme.clear();
     ZMarkup::loadStyleString(R"(
         .target { background: #000000ff; }
         @media (min-width: 600px) {
             .target { background: #ff0000ff; }
         }
-    )");
+    )", UIContext::get().theme);
 
     s.node = std::make_shared<Layout>(LayoutType::Stack);
     s.node->cls("target");

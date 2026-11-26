@@ -74,7 +74,7 @@ int main()
     });
 
     // 4. Load the showcase stylesheet (co-located with the example).
-    if (!ZMarkup::loadStyleFile("examples/00_demo/theme.zstyle"))
+    if (!ZMarkup::loadStyleFile("examples/00_demo/theme.zstyle", UIContext::get().theme))
     {
         std::fprintf(stderr, "[00_demo] Failed to load examples/00_demo/theme.zstyle\n");
         backend->shutdown();

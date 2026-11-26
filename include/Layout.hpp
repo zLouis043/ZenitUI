@@ -958,6 +958,8 @@ namespace ZenitUI
 		Rect getRect() const { return rect; }
 		Vec2 getMeasuredSize() const { return measuredSize; }
 		const ComputedStyle &getStyle() const { return style_.currentStyle; }
+		/** \brief Return the stylesheet theme of the active `UIContext`. */
+		const Theme &theme() const { return UIContext::get().theme; }
 		std::vector<const ThemeRule *> getMatchingRules() const;
 
 		/** \brief Return the logical viewport size of the active `UIContext`. */
@@ -1142,7 +1144,7 @@ namespace ZenitUI
 		 */
 		void invalidateIfRelevant(SimpleSelector::Kind kind, std::string_view name)
 		{
-			if (relevantThemeVersion_ != Theme::get().version)
+			if (relevantThemeVersion_ != theme().version)
 			{
 				invalidateStyleCacheRecursive();
 				return;

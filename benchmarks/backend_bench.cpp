@@ -291,8 +291,8 @@ int main(int argc, char **argv)
             activeRoot.reset();
             auto &ctx = UIContext::get();
             ctx.targetPool.clear(backend->renderer(), &ctx.renderStats);
-            Theme::get().clear();
-            ZenitUI::ZMarkup::loadStyleString(kBenchStyle);
+            UIContext::get().theme.clear();
+            ZenitUI::ZMarkup::loadStyleString(kBenchStyle, UIContext::get().theme);
         };
 
         Bench::Runner runner(repeats);

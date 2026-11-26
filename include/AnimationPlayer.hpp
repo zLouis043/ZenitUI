@@ -34,6 +34,7 @@ namespace ZenitUI
      */
 
     class Layout;
+    class Theme;
 
     /** \brief Internal helpers; called from `AnimationPlayer` and from `Layout::draw`. */
     namespace Anim
@@ -49,26 +50,18 @@ namespace ZenitUI
                       const std::vector<AnimationRef> &refs,
                       double now);
 
-        /**
-         * \brief Advance CSS animations by \p dt seconds, and drop finished non-filling ones.
-         */
-        void tickIncremental(std::vector<ActiveCssAnimation> &anims, float dt);
+        /** \brief Advance active CSS animations incrementally by \p dt seconds. */
+		void tickIncremental(std::vector<ActiveCssAnimation> &anims, float dt, const Theme &theme);
 
-        /**
-         * \brief Advance CSS animations by setting `elapsed = now - startTime`.
-         */
-        void tickAbsolute(std::vector<ActiveCssAnimation> &anims, double now);
+		/** \brief Update active CSS animations against absolute timestamp \p now. */
+		void tickAbsolute(std::vector<ActiveCssAnimation> &anims, double now, const Theme &theme);
 
-        /**
-         * \brief Overlay every active CSS animation onto a sparse `Style`.
-         */
-        void overlayCssStyle(Style &out, const std::vector<ActiveCssAnimation> &anims);
+		/** \brief Overlay active CSS keyframe frames onto a sparse `Style`. */
+		void overlayCssStyle(Style &out, const std::vector<ActiveCssAnimation> &anims, const Theme &theme);
 
-        /**
-         * \brief Overlay every active CSS animation onto a dense `ComputedStyle`.
-         */
-        void overlayCssComputed(ComputedStyle &out, const std::vector<ActiveCssAnimation> &anims);
-    }
+		/** \brief Overlay active CSS keyframe frames onto a `ComputedStyle`. */
+		void overlayCssComputed(ComputedStyle &out, const std::vector<ActiveCssAnimation> &anims, const Theme &theme);
+	}
 
     /**
      * \struct AnimationPlayer

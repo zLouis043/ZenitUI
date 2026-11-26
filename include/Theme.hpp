@@ -11,9 +11,8 @@
  *  - a monotonically increasing `version` used to invalidate caches.
  *
  * `StyleParser` populates a `Theme` via `addRule` / `addKeyframes`. The
- * `StyleResolver` reads it to compute per-node styles. Multiple `Theme`
- * instances are technically supported, but the resolver and most components
- * reference `Theme::get()` (the global).
+ * `StyleResolver` and `AnimationPlayer` read the active context's
+ * `UIContext::theme` to compute per-node styles and evaluate `@keyframes`.
  */
 
 #include "Common.hpp"
@@ -102,7 +101,9 @@ namespace ZenitUI
 
     /**
      * \class Theme
-     * \brief Global stylesheet: rules, keyframes, and root style.
+     * \brief Per-context stylesheet: rules, keyframes, and root style.
+     *
+     * Owned by `UIContext::theme`.
      */
     class Theme
     {
@@ -136,14 +137,7 @@ namespace ZenitUI
         std::vector<size_t> rulesNoTag;
         std::unordered_map<SymbolKey, std::vector<uint32_t>, SymbolKeyHash> rulesByLastSymbol;
         uint32_t version{0};
-
-        /** \brief Return the global singleton theme. */
-        static Theme &get()
-        {
-            static Theme instance;
-            return instance;
-        }
-
+        
         /**
          * \brief Insert a rule into the theme.
          */

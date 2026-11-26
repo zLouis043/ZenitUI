@@ -71,7 +71,7 @@ int main()
     UIContext::get().platform = &platform;
     UIContext::get().assets = &assets;
 
-    ZMarkup::loadStyleFile("examples/08_portals/theme.zstyle");
+    ZMarkup::loadStyleFile("examples/08_portals/theme.zstyle", UIContext::get().theme);
 
     // -----------------------------------------------------------------------
     //  Root: a Stack that fills the viewport. Two children — the page and
