@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"classZenitUI_1_1InputAccumulator.html#a9fa0a2a749dde92b6442d911003bc047":[1,5,4,5],
+"classZenitUI_1_1InputAccumulator.html#ac91def571e29dfcbee36f5e3fc89b836":[1,5,4,2],
 "classZenitUI_1_1InputAccumulator.html#ae9207e4c2fd271c0963a10f4725e0f5a":[1,5,4,7],
 "classZenitUI_1_1InputAccumulator.html#aeced62009381411a15648cfb05542d62":[1,5,4,9],
 "classZenitUI_1_1Layout.html":[1,0,24],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "classZenitUI_1_1SDL3Renderer.html#a8273cf9a889930e3bdef52897300663d":[1,5,20,19],
 "classZenitUI_1_1SDL3Renderer.html#a8acbf9bf5a542148bfe4823e6cdb6fc9":[1,5,20,21],
 "classZenitUI_1_1SDL3Renderer.html#a963adffe75e82d80c42f476f9bb9fb1a":[1,5,20,17],
-"classZenitUI_1_1SDL3Renderer.html#a9aaa10c6354704bb613c36ec961571da":[1,5,20,26],
-"classZenitUI_1_1SDL3Renderer.html#aa45f3921bcef0060c10625614b8cb8c3":[1,5,20,1],
-"classZenitUI_1_1SDL3Renderer.html#ab270999ace7a64c7f306c03ebdb40413":[1,5,20,18]
+"classZenitUI_1_1SDL3Renderer.html#a9aaa10c6354704bb613c36ec961571da":[1,5,20,26]
 };

@@ -1,0 +1,27 @@
+var classZenitUI_1_1TextEngine =
+[
+    [ "caretRect", "classZenitUI_1_1TextEngine.html#ab5bec94313cfea4512b8d3acc5f7c038", null ],
+    [ "caretXOnLine", "classZenitUI_1_1TextEngine.html#a0dc9daff6741d0a45fc81438670ba7ca", null ],
+    [ "clearAtlas", "classZenitUI_1_1TextEngine.html#a889e4d17d7c464fb02fc0eeacc97ef9a", null ],
+    [ "clearLayoutCache", "classZenitUI_1_1TextEngine.html#a662b8ff5cfacedf10e20f9f6daa3c61e", null ],
+    [ "defaultFont", "classZenitUI_1_1TextEngine.html#ac85fadb5eb648af5bb0eb4c259a22888", null ],
+    [ "draw", "classZenitUI_1_1TextEngine.html#a453ec70de35eb3cb9a88e87240aa66d5", null ],
+    [ "fontMetrics", "classZenitUI_1_1TextEngine.html#af0a740e0bb33ecbb73534bea4324b37c", null ],
+    [ "getFont", "classZenitUI_1_1TextEngine.html#afc8f58517eb7c6783a3acfc9517afa4f", null ],
+    [ "hitTestLine", "classZenitUI_1_1TextEngine.html#a7169372696e43ffd9f313f3715eb7fc1", null ],
+    [ "hitTestPoint", "classZenitUI_1_1TextEngine.html#a8a206acf0608ae05076b6d85fb0f21f7", null ],
+    [ "layout", "classZenitUI_1_1TextEngine.html#a32bd9d90836fd3639faf5a474af6cd48", null ],
+    [ "layoutCached", "classZenitUI_1_1TextEngine.html#a03393226f7169ab6a37d3bfbd0eb0ba0", null ],
+    [ "lineIndexForByte", "classZenitUI_1_1TextEngine.html#a883613bc90fad1b8527906566dd08041", null ],
+    [ "loadFont", "classZenitUI_1_1TextEngine.html#a9dabd909e72513c33490b572b0360a01", null ],
+    [ "loadFontFromMemory", "classZenitUI_1_1TextEngine.html#a656a6aee57229d4bca96d9308fb2ca34", null ],
+    [ "measureText", "classZenitUI_1_1TextEngine.html#aa302f6c8e447f60bd8756bc342689094", null ],
+    [ "resolveFont", "classZenitUI_1_1TextEngine.html#aeec6fac82d127f9fd18f702877d2220f", null ],
+    [ "selectionRects", "classZenitUI_1_1TextEngine.html#ab2dd0f72e78572b2074e6d743ec13357", null ],
+    [ "setDefaultFont", "classZenitUI_1_1TextEngine.html#a002d03c26dfa1e15eba050190d01df90", null ],
+    [ "setDpiScale", "classZenitUI_1_1TextEngine.html#ac105d6659f0b6a17eea00f4c064490c6", null ],
+    [ "setFallbackCharWidth", "classZenitUI_1_1TextEngine.html#adbb2a75d77c5a082bc58e851ba185aed", null ],
+    [ "setLayoutCacheCapacity", "classZenitUI_1_1TextEngine.html#a2a0e2dfc00a5a4726ae063983d78ed36", null ],
+    [ "stats", "classZenitUI_1_1TextEngine.html#ad174fc8555523f38fa53c144495cbff2", null ],
+    [ "unloadFont", "classZenitUI_1_1TextEngine.html#ab8db2891349f7f073282d8b387c32647", null ]
+];

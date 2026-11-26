@@ -24,10 +24,16 @@ var searchData=
   ['focusable_21',['focusable',['../structZenitUI_1_1NodeConfig.html#a3be90b4e8d1ff6a5a04a444777d9e924',1,'ZenitUI::NodeConfig']]],
   ['focused_22',['focused',['../structZenitUI_1_1NodeState.html#ad7b90a7cdea9ce6864283982fa01a620',1,'ZenitUI::NodeState']]],
   ['focusscope_23',['focusScope',['../structZenitUI_1_1NodeConfig.html#a9fd2ed37ee4bcda325df82fb782c6781',1,'ZenitUI::NodeConfig']]],
-  ['fonthandle_24',['FontHandle',['../structZenitUI_1_1FontHandle.html',1,'ZenitUI']]],
-  ['fontstack_25',['FontStack',['../structZenitUI_1_1FontStack.html',1,'ZenitUI']]],
-  ['formatdiagnostic_26',['formatDiagnostic',['../group__grp__zstyle.html#gaf55ddf295107f5af3151fd38ba624d05',1,'ZenitUI']]],
-  ['frame_27',['frame',['../structZenitUI_1_1Test_1_1Env.html#a0bc8add604f47e2e17edffec5923088b',1,'ZenitUI::Test::Env']]],
-  ['frameindex_28',['frameIndex',['../classZenitUI_1_1TargetPool.html#ada1033d9539a4fdeac0f46b4fa5f1e01',1,'ZenitUI::TargetPool']]],
-  ['from_29',['from',['../structZenitUI_1_1ComputedStyle.html#a5e12447215f93ec4dc6b155549612a7d',1,'ZenitUI::ComputedStyle']]]
+  ['font_24',['font',['../structZenitUI_1_1TextMeasureSpec.html#a1bed6dc795fdba7e85b0a1262202a69f',1,'ZenitUI::TextMeasureSpec']]],
+  ['fonthandle_25',['FontHandle',['../structZenitUI_1_1FontHandle.html',1,'ZenitUI']]],
+  ['fontid_26',['fontId',['../structZenitUI_1_1ShapedGlyph.html#ad6c72cfa26ce0fac1093c34ea46efd1c',1,'ZenitUI::ShapedGlyph']]],
+  ['fontmetrics_27',['FontMetrics',['../structZenitUI_1_1FontMetrics.html',1,'ZenitUI']]],
+  ['fontmetrics_28',['fontMetrics',['../classZenitUI_1_1TextEngine.html#af0a740e0bb33ecbb73534bea4324b37c',1,'ZenitUI::TextEngine']]],
+  ['fontsize_29',['fontSize',['../structZenitUI_1_1TextMeasureSpec.html#ae806d1cd0ef84f9ccdd756452bf74ca2',1,'ZenitUI::TextMeasureSpec']]],
+  ['fontstack_30',['FontStack',['../structZenitUI_1_1FontStack.html',1,'ZenitUI']]],
+  ['fontstack_31',['fontStack',['../structZenitUI_1_1TextMeasureSpec.html#a9500692631bed662250157b2382f6c59',1,'ZenitUI::TextMeasureSpec']]],
+  ['formatdiagnostic_32',['formatDiagnostic',['../group__grp__zstyle.html#gaf55ddf295107f5af3151fd38ba624d05',1,'ZenitUI']]],
+  ['frame_33',['frame',['../structZenitUI_1_1Test_1_1Env.html#a0bc8add604f47e2e17edffec5923088b',1,'ZenitUI::Test::Env']]],
+  ['frameindex_34',['frameIndex',['../classZenitUI_1_1TargetPool.html#ada1033d9539a4fdeac0f46b4fa5f1e01',1,'ZenitUI::TargetPool']]],
+  ['from_35',['from',['../structZenitUI_1_1ComputedStyle.html#a5e12447215f93ec4dc6b155549612a7d',1,'ZenitUI::ComputedStyle']]]
 ];

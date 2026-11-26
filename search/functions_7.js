@@ -14,6 +14,8 @@ var searchData=
   ['hasprefab_11',['hasPrefab',['../classZenitUI_1_1ZMarkup_1_1Registry.html#a4dda9c70f7cff1d6ad70976676fdac21',1,'ZenitUI::ZMarkup::Registry']]],
   ['hide_12',['hide',['../classZenitUI_1_1UI_1_1Modal.html#a508b9522d9aff9be7bc4ad8ff78e9d70',1,'ZenitUI::UI::Modal::hide()'],['../classZenitUI_1_1UI_1_1Tooltip.html#a3b26e0609ec2354a361c3602db96b211',1,'ZenitUI::UI::Tooltip::hide()']]],
   ['hittest_13',['hitTest',['../classZenitUI_1_1Layout.html#a9acdbf51a8b976f4f46ff9b9d6ad709f',1,'ZenitUI::Layout']]],
-  ['horizontalthumb_14',['horizontalThumb',['../structZenitUI_1_1ScrollController.html#a91adcacaa7e90116c259f17873c0a0df',1,'ZenitUI::ScrollController']]],
-  ['hstack_15',['HStack',['../group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8',1,'ZenitUI::UI']]]
+  ['hittestline_14',['hitTestLine',['../classZenitUI_1_1TextEngine.html#a7169372696e43ffd9f313f3715eb7fc1',1,'ZenitUI::TextEngine']]],
+  ['hittestpoint_15',['hitTestPoint',['../classZenitUI_1_1TextEngine.html#a8a206acf0608ae05076b6d85fb0f21f7',1,'ZenitUI::TextEngine']]],
+  ['horizontalthumb_16',['horizontalThumb',['../structZenitUI_1_1ScrollController.html#a91adcacaa7e90116c259f17873c0a0df',1,'ZenitUI::ScrollController']]],
+  ['hstack_17',['HStack',['../group__grp__widgets.html#gab7c2e63fd323f4eaa177e7066f415db8',1,'ZenitUI::UI']]]
 ];

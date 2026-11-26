@@ -44,7 +44,7 @@ var searchData=
   ['resolveactiveeffect_41',['resolveActiveEffect',['../classZenitUI_1_1Layout.html#aa4183e338b497b9aaf84b41efeab2748',1,'ZenitUI::Layout']]],
   ['resolvebgtexture_42',['resolveBgTexture',['../classZenitUI_1_1Layout.html#ab8584d86d03975d3bd75e18134f6b318',1,'ZenitUI::Layout']]],
   ['resolvedbgtexture_43',['ResolvedBgTexture',['../structZenitUI_1_1Layout_1_1ResolvedBgTexture.html',1,'ZenitUI::Layout']]],
-  ['resolvefont_44',['resolveFont',['../classZenitUI_1_1Layout.html#a70810adfe3681d62ae8ccaaf3827b76a',1,'ZenitUI::Layout']]],
+  ['resolvefont_44',['resolveFont',['../classZenitUI_1_1Layout.html#a70810adfe3681d62ae8ccaaf3827b76a',1,'ZenitUI::Layout::resolveFont()'],['../classZenitUI_1_1TextEngine.html#aeec6fac82d127f9fd18f702877d2220f',1,'ZenitUI::TextEngine::resolveFont()']]],
   ['resolvefor_45',['resolveFor',['../structZenitUI_1_1StyleResolver.html#a3c2aa9709f8eae36cb105f0476bb13a0',1,'ZenitUI::StyleResolver']]],
   ['resolveh_46',['resolveH',['../structZenitUI_1_1Value.html#a91d0c64361d391c6e333a276901849bc',1,'ZenitUI::Value']]],
   ['resolvependingtransition_47',['resolvePendingTransition',['../structZenitUI_1_1StyleResolver.html#ad1c52be1e4bc73c56b45331a62519867',1,'ZenitUI::StyleResolver']]],

@@ -1,9 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classZenitUI_1_1IAssetProvider.html" title="Abstract name&#45;based lookup and runtime lifecycle for fonts, textures, and shaders." alt="" coords="5,57,177,85"/>
-<area shape="rect" id="Node000001" href="$classZenitUI_1_1RaylibAssetProvider.html" title="Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name." alt="" coords="225,5,433,33"/>
-<area shape="poly" id="edge39_Node000000_Node000001" title=" " alt="" coords="172,51,264,32,260,35,173,56"/>
-<area shape="rect" id="Node000002" href="$classZenitUI_1_1SDL3AssetProvider.html" title="Reference IAssetProvider loading fonts (stb_truetype), textures (stb_image), and GLSL 330 shaders int..." alt="" coords="229,57,429,85"/>
-<area shape="poly" id="edge40_Node000000_Node000002" title=" " alt="" coords="192,69,231,71,226,72,193,74"/>
-<area shape="rect" id="Node000003" href="$classZenitUI_1_1Test_1_1MockAssetProvider.html" title="In&#45;memory IAssetProvider that mints synthetic font and shader handles without touching the filesystem..." alt="" coords="238,109,420,154"/>
-<area shape="poly" id="edge41_Node000000_Node000003" title=" " alt="" coords="164,87,240,108,235,109,163,92"/>
+<area shape="rect" id="Node000000" href="$structZenitUI_1_1Geometry2D_1_1StaticMesh.html" title="Fixed&#45;capacity stack mesh returned by Geometry2D builders." alt="" coords="5,5,206,67"/>
 </map>

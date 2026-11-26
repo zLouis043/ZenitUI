@@ -7,8 +7,9 @@ var searchData=
   ['filterregistry_4',['FilterRegistry',['../classZenitUI_1_1FilterRegistry.html#a1e372e1877ccc1a275cece6f7cdc0fe8',1,'ZenitUI::FilterRegistry']]],
   ['find_5',['find',['../classZenitUI_1_1FilterRegistry.html#afcb92b95979164c621df176e30fe1872',1,'ZenitUI::FilterRegistry::find()'],['../classZenitUI_1_1ZMarkup_1_1UINode.html#a0b04cdc7ebc5953f76fca7cfd416a48e',1,'ZenitUI::ZMarkup::UINode::find(const std::string &amp;id) const'],['../classZenitUI_1_1ZMarkup_1_1UINode.html#a4004efbc99863197b2f693020b8cf927',1,'ZenitUI::ZMarkup::UINode::find(const std::string &amp;id) const']]],
   ['firecallbacks_6',['fireCallbacks',['../structZenitUI_1_1InputController.html#af54c02682642c3ab8508ef3b8bc88e85',1,'ZenitUI::InputController']]],
-  ['formatdiagnostic_7',['formatDiagnostic',['../group__grp__zstyle.html#gaf55ddf295107f5af3151fd38ba624d05',1,'ZenitUI']]],
-  ['frame_8',['frame',['../structZenitUI_1_1Test_1_1Env.html#a0bc8add604f47e2e17edffec5923088b',1,'ZenitUI::Test::Env']]],
-  ['frameindex_9',['frameIndex',['../classZenitUI_1_1TargetPool.html#ada1033d9539a4fdeac0f46b4fa5f1e01',1,'ZenitUI::TargetPool']]],
-  ['from_10',['from',['../structZenitUI_1_1ComputedStyle.html#a5e12447215f93ec4dc6b155549612a7d',1,'ZenitUI::ComputedStyle']]]
+  ['fontmetrics_7',['fontMetrics',['../classZenitUI_1_1TextEngine.html#af0a740e0bb33ecbb73534bea4324b37c',1,'ZenitUI::TextEngine']]],
+  ['formatdiagnostic_8',['formatDiagnostic',['../group__grp__zstyle.html#gaf55ddf295107f5af3151fd38ba624d05',1,'ZenitUI']]],
+  ['frame_9',['frame',['../structZenitUI_1_1Test_1_1Env.html#a0bc8add604f47e2e17edffec5923088b',1,'ZenitUI::Test::Env']]],
+  ['frameindex_10',['frameIndex',['../classZenitUI_1_1TargetPool.html#ada1033d9539a4fdeac0f46b4fa5f1e01',1,'ZenitUI::TargetPool']]],
+  ['from_11',['from',['../structZenitUI_1_1ComputedStyle.html#a5e12447215f93ec4dc6b155549612a7d',1,'ZenitUI::ComputedStyle']]]
 ];

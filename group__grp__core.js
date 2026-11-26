@@ -197,6 +197,76 @@ var group__grp__core =
       [ "reserve", "classZenitUI_1_1SmallVector.html#a2e2852f7f4595aaec684ea3b08742ffd", null ],
       [ "size", "classZenitUI_1_1SmallVector.html#acdf99d5c506d47fc9c74d7ed8c42c0e8", null ]
     ] ],
+    [ "ZenitUI::FontMetrics", "structZenitUI_1_1FontMetrics.html", [
+      [ "ascent", "structZenitUI_1_1FontMetrics.html#abd0703f03d1803016a5014f6d1c7d8ea", null ],
+      [ "descent", "structZenitUI_1_1FontMetrics.html#adad4295bacd8ad5f9957f048d0b2a89f", null ],
+      [ "lineHeight", "structZenitUI_1_1FontMetrics.html#adaf22c56f6d833bf2bea7c2eb69a7458", null ]
+    ] ],
+    [ "ZenitUI::TextMeasureSpec", "structZenitUI_1_1TextMeasureSpec.html", [
+      [ "font", "structZenitUI_1_1TextMeasureSpec.html#a1bed6dc795fdba7e85b0a1262202a69f", null ],
+      [ "fontSize", "structZenitUI_1_1TextMeasureSpec.html#ae806d1cd0ef84f9ccdd756452bf74ca2", null ],
+      [ "fontStack", "structZenitUI_1_1TextMeasureSpec.html#a9500692631bed662250157b2382f6c59", null ],
+      [ "letterSpacing", "structZenitUI_1_1TextMeasureSpec.html#aa11cb9a0d29f133952c6e233530ab4e4", null ],
+      [ "lineHeight", "structZenitUI_1_1TextMeasureSpec.html#adb62af42f68a88f8694ccc16e35de829", null ]
+    ] ],
+    [ "ZenitUI::TextLayoutOptions", "structZenitUI_1_1TextLayoutOptions.html", [
+      [ "ellipsis", "structZenitUI_1_1TextLayoutOptions.html#a53dbdbf031addcb1a9fcf8a1fa894ee4", null ],
+      [ "ellipsisText", "structZenitUI_1_1TextLayoutOptions.html#aad0a5abb98724ce0317a68562c3e7eb1", null ],
+      [ "maxLines", "structZenitUI_1_1TextLayoutOptions.html#a9bbb522bba6d9ba51a3dde7d96b48cd8", null ],
+      [ "maxWidth", "structZenitUI_1_1TextLayoutOptions.html#a8e0517e7aa3366c3965fcea65bc05a58", null ],
+      [ "preserveSpaces", "structZenitUI_1_1TextLayoutOptions.html#aa8a5a74f7a8c0dc9cafcf479a1dbaaf0", null ],
+      [ "wrap", "structZenitUI_1_1TextLayoutOptions.html#a28bfd876363b4b900695feb7b3eb27af", null ]
+    ] ],
+    [ "ZenitUI::ShapedGlyph", "structZenitUI_1_1ShapedGlyph.html", [
+      [ "cluster", "structZenitUI_1_1ShapedGlyph.html#a7013c9a13a5b4f99341719eef59f99b6", null ],
+      [ "fontId", "structZenitUI_1_1ShapedGlyph.html#ad6c72cfa26ce0fac1093c34ea46efd1c", null ],
+      [ "glyphId", "structZenitUI_1_1ShapedGlyph.html#ab393efa9784f5961c5d9628b0489a36e", null ],
+      [ "x", "structZenitUI_1_1ShapedGlyph.html#a7a6cd30dff30455e6000157841337db6", null ],
+      [ "xAdvance", "structZenitUI_1_1ShapedGlyph.html#a63c9f5612c386a0d6c0afcdb34f4f255", null ],
+      [ "xOffset", "structZenitUI_1_1ShapedGlyph.html#aa6d4493d3f7bc3c81d58f88a88cd9315", null ],
+      [ "yOffset", "structZenitUI_1_1ShapedGlyph.html#aeefc5e30312f9fb3fb76bfe320ad6a8f", null ]
+    ] ],
+    [ "ZenitUI::TextLine", "structZenitUI_1_1TextLine.html", [
+      [ "baselineOffset", "structZenitUI_1_1TextLine.html#aa2bfd73f6c9b4f7a4b9bb7f7e4f08452", null ],
+      [ "byteEnd", "structZenitUI_1_1TextLine.html#a3d051f4f3a137a6bc247728efa422ae0", null ],
+      [ "byteStart", "structZenitUI_1_1TextLine.html#aa81b32b6b413781e9c2684ce85f4351b", null ],
+      [ "ellipsized", "structZenitUI_1_1TextLine.html#afb3915758da1d8ebf8b8d570b1590908", null ],
+      [ "hardBreak", "structZenitUI_1_1TextLine.html#a890f3570fbdac1602e39412eaadd5c46", null ],
+      [ "height", "structZenitUI_1_1TextLine.html#a95f333a949f22b7306b5089123515ed6", null ],
+      [ "width", "structZenitUI_1_1TextLine.html#a5da6f531f417ac5b8005012c7060fc1c", null ],
+      [ "yOffset", "structZenitUI_1_1TextLine.html#a5aefa6e246417ce2a648ec88437f7425", null ]
+    ] ],
+    [ "ZenitUI::TextLayout", "structZenitUI_1_1TextLayout.html", [
+      [ "ellipsizedText", "structZenitUI_1_1TextLayout.html#a4e4390ca9e3b335ac82eddb459c2197d", null ],
+      [ "synthetic", "structZenitUI_1_1TextLayout.html#a81b84f02022e50191e6b22cee2f13cd7", null ]
+    ] ],
+    [ "ZenitUI::TextAtlasStats", "structZenitUI_1_1TextAtlasStats.html", null ],
+    [ "ZenitUI::TextEngine", "classZenitUI_1_1TextEngine.html", [
+      [ "caretRect", "classZenitUI_1_1TextEngine.html#ab5bec94313cfea4512b8d3acc5f7c038", null ],
+      [ "caretXOnLine", "classZenitUI_1_1TextEngine.html#a0dc9daff6741d0a45fc81438670ba7ca", null ],
+      [ "clearAtlas", "classZenitUI_1_1TextEngine.html#a889e4d17d7c464fb02fc0eeacc97ef9a", null ],
+      [ "clearLayoutCache", "classZenitUI_1_1TextEngine.html#a662b8ff5cfacedf10e20f9f6daa3c61e", null ],
+      [ "defaultFont", "classZenitUI_1_1TextEngine.html#ac85fadb5eb648af5bb0eb4c259a22888", null ],
+      [ "draw", "classZenitUI_1_1TextEngine.html#a453ec70de35eb3cb9a88e87240aa66d5", null ],
+      [ "fontMetrics", "classZenitUI_1_1TextEngine.html#af0a740e0bb33ecbb73534bea4324b37c", null ],
+      [ "getFont", "classZenitUI_1_1TextEngine.html#afc8f58517eb7c6783a3acfc9517afa4f", null ],
+      [ "hitTestLine", "classZenitUI_1_1TextEngine.html#a7169372696e43ffd9f313f3715eb7fc1", null ],
+      [ "hitTestPoint", "classZenitUI_1_1TextEngine.html#a8a206acf0608ae05076b6d85fb0f21f7", null ],
+      [ "layout", "classZenitUI_1_1TextEngine.html#a32bd9d90836fd3639faf5a474af6cd48", null ],
+      [ "layoutCached", "classZenitUI_1_1TextEngine.html#a03393226f7169ab6a37d3bfbd0eb0ba0", null ],
+      [ "lineIndexForByte", "classZenitUI_1_1TextEngine.html#a883613bc90fad1b8527906566dd08041", null ],
+      [ "loadFont", "classZenitUI_1_1TextEngine.html#a9dabd909e72513c33490b572b0360a01", null ],
+      [ "loadFontFromMemory", "classZenitUI_1_1TextEngine.html#a656a6aee57229d4bca96d9308fb2ca34", null ],
+      [ "measureText", "classZenitUI_1_1TextEngine.html#aa302f6c8e447f60bd8756bc342689094", null ],
+      [ "resolveFont", "classZenitUI_1_1TextEngine.html#aeec6fac82d127f9fd18f702877d2220f", null ],
+      [ "selectionRects", "classZenitUI_1_1TextEngine.html#ab2dd0f72e78572b2074e6d743ec13357", null ],
+      [ "setDefaultFont", "classZenitUI_1_1TextEngine.html#a002d03c26dfa1e15eba050190d01df90", null ],
+      [ "setDpiScale", "classZenitUI_1_1TextEngine.html#ac105d6659f0b6a17eea00f4c064490c6", null ],
+      [ "setFallbackCharWidth", "classZenitUI_1_1TextEngine.html#adbb2a75d77c5a082bc58e851ba185aed", null ],
+      [ "setLayoutCacheCapacity", "classZenitUI_1_1TextEngine.html#a2a0e2dfc00a5a4726ae063983d78ed36", null ],
+      [ "stats", "classZenitUI_1_1TextEngine.html#ad174fc8555523f38fa53c144495cbff2", null ],
+      [ "unloadFont", "classZenitUI_1_1TextEngine.html#ab8db2891349f7f073282d8b387c32647", null ]
+    ] ],
     [ "ZenitUI::IRenderer", "classZenitUI_1_1IRenderer.html", [
       [ "beginFrame", "classZenitUI_1_1IRenderer.html#a7877e2c0869b8d61ed144cfca069e2bd", null ],
       [ "clearTarget", "classZenitUI_1_1IRenderer.html#a39809c7484f01987360e6297afbf3abc", null ],

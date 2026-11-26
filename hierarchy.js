@@ -75,6 +75,7 @@ var hierarchy =
     [ "ZenitUI::FilterRef", "structZenitUI_1_1FilterRef.html", null ],
     [ "ZenitUI::FilterRegistry", "classZenitUI_1_1FilterRegistry.html", null ],
     [ "ZenitUI::FontHandle", "structZenitUI_1_1FontHandle.html", null ],
+    [ "ZenitUI::FontMetrics", "structZenitUI_1_1FontMetrics.html", null ],
     [ "ZenitUI::IAssetProvider", "classZenitUI_1_1IAssetProvider.html", [
       [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", null ],
       [ "ZenitUI::SDL3AssetProvider", "classZenitUI_1_1SDL3AssetProvider.html", null ],
@@ -147,6 +148,7 @@ var hierarchy =
         [ "ZenitUI::UI::VirtualView", "classZenitUI_1_1UI_1_1VirtualView.html", null ]
       ] ]
     ] ],
+    [ "ZenitUI::ShapedGlyph", "structZenitUI_1_1ShapedGlyph.html", null ],
     [ "ZenitUI::SimpleSelector", "structZenitUI_1_1SimpleSelector.html", null ],
     [ "ZenitUI::ZMarkup::SlotFrame", "structZenitUI_1_1ZMarkup_1_1SlotFrame.html", null ],
     [ "ZenitUI::SmallVector&lt; T, N &gt;", "classZenitUI_1_1SmallVector.html", null ],
@@ -167,6 +169,12 @@ var hierarchy =
     [ "ZenitUI::TargetHandle", "structZenitUI_1_1TargetHandle.html", null ],
     [ "ZenitUI::TargetPool", "classZenitUI_1_1TargetPool.html", null ],
     [ "ZenitUI::Value::Term", "structZenitUI_1_1Value_1_1Term.html", null ],
+    [ "ZenitUI::TextAtlasStats", "structZenitUI_1_1TextAtlasStats.html", null ],
+    [ "ZenitUI::TextEngine", "classZenitUI_1_1TextEngine.html", null ],
+    [ "ZenitUI::TextLayout", "structZenitUI_1_1TextLayout.html", null ],
+    [ "ZenitUI::TextLayoutOptions", "structZenitUI_1_1TextLayoutOptions.html", null ],
+    [ "ZenitUI::TextLine", "structZenitUI_1_1TextLine.html", null ],
+    [ "ZenitUI::TextMeasureSpec", "structZenitUI_1_1TextMeasureSpec.html", null ],
     [ "ZenitUI::TextureHandle", "structZenitUI_1_1TextureHandle.html", null ],
     [ "ZenitUI::TextureRef", "structZenitUI_1_1TextureRef.html", null ],
     [ "ZenitUI::Theme", "classZenitUI_1_1Theme.html", null ],

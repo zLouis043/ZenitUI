@@ -6,5 +6,6 @@ var searchData=
   ['filterref_3',['FilterRef',['../structZenitUI_1_1FilterRef.html',1,'ZenitUI']]],
   ['filterregistry_4',['FilterRegistry',['../classZenitUI_1_1FilterRegistry.html',1,'ZenitUI']]],
   ['fonthandle_5',['FontHandle',['../structZenitUI_1_1FontHandle.html',1,'ZenitUI']]],
-  ['fontstack_6',['FontStack',['../structZenitUI_1_1FontStack.html',1,'ZenitUI']]]
+  ['fontmetrics_6',['FontMetrics',['../structZenitUI_1_1FontMetrics.html',1,'ZenitUI']]],
+  ['fontstack_7',['FontStack',['../structZenitUI_1_1FontStack.html',1,'ZenitUI']]]
 ];

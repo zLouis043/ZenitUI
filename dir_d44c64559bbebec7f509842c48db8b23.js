@@ -24,6 +24,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "StyleAttr.hpp", "StyleAttr_8hpp.html", "StyleAttr_8hpp" ],
     [ "StyleParser.hpp", "StyleParser_8hpp.html", "StyleParser_8hpp" ],
     [ "StyleResolver.hpp", "StyleResolver_8hpp.html", "StyleResolver_8hpp" ],
+    [ "TextEngine.hpp", "TextEngine_8hpp.html", null ],
     [ "Theme.hpp", "Theme_8hpp.html", "Theme_8hpp" ],
     [ "UIContext.hpp", "UIContext_8hpp.html", "UIContext_8hpp" ],
     [ "UIEnums.hpp", "UIEnums_8hpp.html", "UIEnums_8hpp" ],
