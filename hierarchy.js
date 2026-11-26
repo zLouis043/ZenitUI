@@ -192,7 +192,6 @@ var hierarchy =
     [ "ZenitUI::Vec3", "structZenitUI_1_1Vec3.html", null ],
     [ "ZenitUI::Vec4", "structZenitUI_1_1Vec4.html", null ],
     [ "ZenitUI::Vertex2D", "structZenitUI_1_1Vertex2D.html", null ],
-    [ "ZenitUI::UI::TextArea::VisualLine", "structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html", null ],
     [ "ZenitUI::ZMarkup::WeakUINode", "classZenitUI_1_1ZMarkup_1_1WeakUINode.html", null ],
     [ "ZenitUI::WindowConfig", "structZenitUI_1_1WindowConfig.html", null ],
     [ "ZenitUI::ZIndex", "structZenitUI_1_1ZIndex.html", null ],

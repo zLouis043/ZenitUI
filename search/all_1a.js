@@ -14,7 +14,6 @@ var searchData=
   ['virtualview_11',['VirtualView',['../classZenitUI_1_1UI_1_1VirtualView.html',1,'ZenitUI::UI::VirtualView'],['../classZenitUI_1_1UI_1_1VirtualView.html#a13f42c7a4fc1882d77e7f82802e4ae72',1,'ZenitUI::UI::VirtualView::VirtualView()']]],
   ['virtualview_2ehpp_12',['VirtualView.hpp',['../VirtualView_8hpp.html',1,'']]],
   ['visible_13',['visible',['../structZenitUI_1_1NodeConfig.html#a291de93b8ac0afaab6fae6f84d73573c',1,'ZenitUI::NodeConfig']]],
-  ['visualline_14',['VisualLine',['../structZenitUI_1_1UI_1_1TextArea_1_1VisualLine.html',1,'ZenitUI::UI::TextArea']]],
-  ['vs_20optional_20features_15',['2. Minimum Viable Backend vs Optional Features',['../page_custom_backends.html#sec_backend_minimum',1,'']]],
-  ['vstack_16',['VStack',['../group__grp__widgets.html#gaac4e85376513ca6e4bf89008d4385e79',1,'ZenitUI::UI']]]
+  ['vs_20optional_20features_14',['2. Minimum Viable Backend vs Optional Features',['../page_custom_backends.html#sec_backend_minimum',1,'']]],
+  ['vstack_15',['VStack',['../group__grp__widgets.html#gaac4e85376513ca6e4bf89008d4385e79',1,'ZenitUI::UI']]]
 ];

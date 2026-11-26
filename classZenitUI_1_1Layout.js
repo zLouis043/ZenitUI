@@ -58,7 +58,7 @@ var classZenitUI_1_1Layout =
     [ "renderFrame", "classZenitUI_1_1Layout.html#a01ab125b033e17669efc48de5d581176", null ],
     [ "resolveActiveEffect", "classZenitUI_1_1Layout.html#aa4183e338b497b9aaf84b41efeab2748", null ],
     [ "resolveBgTexture", "classZenitUI_1_1Layout.html#ab8584d86d03975d3bd75e18134f6b318", null ],
-    [ "resolveFont", "classZenitUI_1_1Layout.html#a70810adfe3681d62ae8ccaaf3827b76a", null ],
+    [ "resolveFont", "classZenitUI_1_1Layout.html#a34219f43f42687f41ab1ea7e754d86ed", null ],
     [ "retainObject", "classZenitUI_1_1Layout.html#a5448d53fa04b95bf0ea6d7770c3fa234", null ],
     [ "runFrame", "classZenitUI_1_1Layout.html#a79b315b1be72aab5b323df07cff4732d", null ],
     [ "scrollIntoView", "classZenitUI_1_1Layout.html#a9c6fd879072b00e5f1b9550bd94b0857", null ],

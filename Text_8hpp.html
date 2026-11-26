@@ -96,11 +96,10 @@ $(function(){initNavTree('Text_8hpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>A text-rendering node with optional wrapping and ellipsis.  
+<p>A read-only text node backed by <span class="tt">UIContext::textEngine</span>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="Common_8hpp_source.html">Common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Utf8_8hpp_source.html">Utf8.hpp</a>&quot;</code><br />
 </div>
 <p><a href="Text_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -116,14 +115,8 @@ std::shared_ptr&lt; <a class="el" href="classZenitUI_1_1UI_1_1Text.html">Text</a
 <tr class="memdesc:ga78ec9788f5e751cb9d9ef38e5a694f67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience factory: a <span class="tt"><a class="el" href="classZenitUI_1_1UI_1_1Text.html" title="A read-only text node.">Text</a></span> node. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A text-rendering node with optional wrapping and ellipsis. </p>
-<p>Text layout is done in one of two modes:</p>
-<ul>
-<li><b>Single line</b> (<span class="tt">wrap_ == false</span>, or <span class="tt">white-space: nowrap</span>): each explicit <span class="tt">\n</span> starts a new line; the node's intrinsic width is the widest of those lines.</li>
-<li><b>Wrapped</b> (<span class="tt">wrap_ == true</span>, default <span class="tt">white-space: normal</span>): each logical line (split on <span class="tt">\n</span>) is further broken at spaces, and a single word that is wider than the available width is broken into chunks via binary search over prefix lengths.</li>
-</ul>
-<p>Both modes are cached: <span class="tt">measureSingleLine</span> / <span class="tt">measureWrapped</span> keep the wrapped <span class="tt">lines</span> vector and a <span class="tt">cachedSize</span> until <span class="tt">text_dirty</span> or a relevant style value changes. <span class="tt">onLayout</span> re-wraps when the available width changes, which can happen after the first <span class="tt">arrange</span> — this is why <span class="tt">Text</span> overrides <span class="tt">onLayout</span> at all: measurement can use one width, layout uses another.</p>
-<p>Ellipsis (<span class="tt">text-overflow: ellipsis</span>) is applied at <b>draw time only</b>, in <span class="tt">renderContent</span>: it does not change the layout box. This matches CSS and means <span class="tt">getRect()</span> is unaffected by truncation. </p>
+<div class="textblock"><p>A read-only text node backed by <span class="tt">UIContext::textEngine</span>. </p>
+<p>Wrapping, ellipsis truncation, shaping, and batched rendering are delegated to <span class="tt">TextEngine</span>. Ellipsis (<span class="tt">text-overflow: ellipsis</span>) is applied at draw time only, leaving the layout box unaffected. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

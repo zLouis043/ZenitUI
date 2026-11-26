@@ -324,8 +324,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>getKeyboardActivates<
 <a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getLayoutType</b> () const</td></tr>
 <tr class="memitem:aae24a9107e7f424291f7448aad42fc84 inherit pub_methods_classZenitUI_1_1Layout" id="r_aae24a9107e7f424291f7448aad42fc84"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getEffectiveLayoutType</b> () const</td></tr>
-<tr class="memitem:a70810adfe3681d62ae8ccaaf3827b76a inherit pub_methods_classZenitUI_1_1Layout" id="r_a70810adfe3681d62ae8ccaaf3827b76a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Layout.html#a70810adfe3681d62ae8ccaaf3827b76a">resolveFont</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> fallback={})</td></tr>
-<tr class="memdesc:a70810adfe3681d62ae8ccaaf3827b76a inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span> from the node's style font stack.  <br /></td></tr>
+<tr class="memitem:a34219f43f42687f41ab1ea7e754d86ed inherit pub_methods_classZenitUI_1_1Layout" id="r_a34219f43f42687f41ab1ea7e754d86ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Layout.html#a34219f43f42687f41ab1ea7e754d86ed">resolveFont</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> fallback={}) const</td></tr>
+<tr class="memdesc:a34219f43f42687f41ab1ea7e754d86ed inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span> from the node's style font stack.  <br /></td></tr>
 <tr class="memitem:ab8584d86d03975d3bd75e18134f6b318 inherit pub_methods_classZenitUI_1_1Layout" id="r_ab8584d86d03975d3bd75e18134f6b318"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="structZenitUI_1_1Layout_1_1ResolvedBgTexture.html">ResolvedBgTexture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>resolveBgTexture</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> fallbackTex={}, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> fallbackSlice={0, 0, 0, 0})</td></tr>
 <tr class="memdesc:ab8584d86d03975d3bd75e18134f6b318 inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the background texture from the style, falling back to explicit parameters if the style has no <span class="tt">background-texture</span>. <br /></td></tr>
@@ -403,11 +403,11 @@ const <a class="el" href="classZenitUI_1_1Theme.html">Theme</a> &amp;&#160;</td>
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4d4ec62a4d3007e0d54484236ac4e65b" id="r_a4d4ec62a4d3007e0d54484236ac4e65b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d4ec62a4d3007e0d54484236ac4e65b">computeIntrinsicSize</a> (float availW, float) override</td></tr>
-<tr class="memdesc:a4d4ec62a4d3007e0d54484236ac4e65b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the intrinsic size for the current content.  <br /></td></tr>
+<tr class="memdesc:a4d4ec62a4d3007e0d54484236ac4e65b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the intrinsic size, excluding padding and border.  <br /></td></tr>
 <tr class="memitem:ad6d49d75f683d06ef320aed7fffadc74" id="r_ad6d49d75f683d06ef320aed7fffadc74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6d49d75f683d06ef320aed7fffadc74">renderContent</a> (float op, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style) override</td></tr>
-<tr class="memdesc:ad6d49d75f683d06ef320aed7fffadc74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the text, applying ellipsis if configured.  <br /></td></tr>
+<tr class="memdesc:ad6d49d75f683d06ef320aed7fffadc74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the node's content (text, images, custom geometry).  <br /></td></tr>
 <tr class="memitem:a9073b080c8d4b8f9758781172613a5e0" id="r_a9073b080c8d4b8f9758781172613a5e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9073b080c8d4b8f9758781172613a5e0">onLayout</a> () override</td></tr>
-<tr class="memdesc:a9073b080c8d4b8f9758781172613a5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-wrap when the available width differs from the cached one.  <br /></td></tr>
+<tr class="memdesc:a9073b080c8d4b8f9758781172613a5e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ac88ab6799cd704ea27a86a2e05b62155" title="Assign a screen rect to this node and lay out its children.">arrange</a></span> assigns the node's rect.  <br /></td></tr>
 <tr class="inherit_header pro_methods_classZenitUI_1_1TLayout"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classZenitUI_1_1TLayout')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout&lt; Text &gt;</a></td></tr>
 <tr class="memitem:a2c2d04d1bcdf383f75e355dc2b3f2730 inherit pro_methods_classZenitUI_1_1TLayout" id="r_a2c2d04d1bcdf383f75e355dc2b3f2730"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onBuild</b> ()</td></tr>
@@ -493,7 +493,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
         <tr>
           <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::UI::Text::computeIntrinsicSize </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>availW</em></span>, </td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -508,8 +508,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
 </table>
 </div><div class="memdoc">
 
-<p>Compute the intrinsic size for the current content. </p>
-<p>Wrapping requires an available width; if none is given (<span class="tt">availW &lt;= 0</span>), falls back to single-line measurement. The wrap flag is combined with <span class="tt">white-space: nowrap</span>, so a <span class="tt">nowrap</span> style wins over a <span class="tt">setWrap(true)</span> call. </p>
+<p>Compute the intrinsic size, excluding padding and border. </p>
+<p>Called from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ae0d08a4a3bf9d9110d1c08684a8f4c0e" title="Compute the intrinsic size given available space.">measure</a></span> with the available <em>inner</em> size. Subclasses override to report content-dependent sizing (text extents, image dimensions, etc.). Default: <span class="tt">{0, 0}</span> (size to zero content). </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a64992532175cef48e851af91864b7216">ZenitUI::Layout</a>.</p>
 
@@ -538,8 +538,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
 </table>
 </div><div class="memdoc">
 
-<p>Re-wrap when the available width differs from the cached one. </p>
-<p>Measurement uses whatever width the parent passes at measure time, but the final rect is assigned in <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ac88ab6799cd704ea27a86a2e05b62155" title="Assign a screen rect to this node and lay out its children.">arrange</a></span>, and the two can differ (e.g. a <span class="tt">percent(100)</span> parent measured against a larger hypothetical and then arranged against the real parent). This hook reconciles the two. </p>
+<p>Called after <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ac88ab6799cd704ea27a86a2e05b62155" title="Assign a screen rect to this node and lay out its children.">arrange</a></span> assigns the node's rect. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a37b10893c349caf045cfc6f6c79bf559">ZenitUI::Layout</a>.</p>
 
@@ -557,12 +556,12 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
         <tr>
           <td class="memname">void ZenitUI::UI::Text::renderContent </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>style</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -572,9 +571,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
 </table>
 </div><div class="memdoc">
 
-<p>Draw the text, applying ellipsis if configured. </p>
-<p>The clip rect is the node's full rect, not the inner content box, so overshooting glyphs (accents, italics, emoji) are visible even when the text bounds report otherwise. Padding and border are subtracted from the text origin, not from the clip.</p>
-<dl class="section note"><dt>Note</dt><dd><span class="tt">align-items</span> (or <span class="tt">text-align</span> if set) controls horizontal alignment within the content box; <span class="tt">vertical-align</span> controls vertical alignment of the text block as a whole. </dd></dl>
+<p>Draw the node's content (text, images, custom geometry). </p>
+<p>Called after <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a521a1fadcadc81270eb004db6127c445" title="Draw the node&#39;s background, border, and shadow.">renderChrome</a></span> (background, border, shadow) and before children are drawn. The clip rect is already pushed if overflow requires it. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a717d10c9b181272661ee155eb6418f1a">ZenitUI::Layout</a>.</p>
 

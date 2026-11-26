@@ -96,7 +96,7 @@ $(function(){initNavTree('TextInput_8hpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>A single-line editable text field.  
+<p>A single-line UTF-8 editable text field backed by <span class="tt">UIContext::textEngine</span>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="Common_8hpp_source.html">Common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Layout_8hpp_source.html">Layout.hpp</a>&quot;</code><br />
@@ -111,22 +111,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single-line text editor.  <a href="classZenitUI_1_1UI_1_1TextInput.html#details">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A single-line editable text field. </p>
-<p>The input is a <span class="tt">Stack</span> with a single text cursor (no child <span class="tt">Text</span> node). All visual is drawn directly by <span class="tt">renderContent</span>: the text, the cursor caret (blinking at 1 Hz), and the selection highlight.</p>
-<p>Editing model:</p><ul>
-<li>The text is stored as a <span class="tt">std::string</span>; the cursor is a byte offset (not a grapheme index). This is simple and correct for ASCII, but multi-byte UTF-8 codepoints are treated as multiple "characters" — arrows move by byte, backspace deletes one byte. Not Unicode-aware.</li>
-<li>Only printable ASCII (32..126) can be inserted; pasted text is filtered to that range.</li>
-</ul>
-<p>Interaction:</p><ul>
-<li>Click to place the cursor; double-click selects a word; triple-click selects all.</li>
-<li>Drag to extend the selection.</li>
-<li>Shift+arrows extend the selection; Ctrl+A selects all.</li>
-<li>Ctrl+C/X/V: copy / cut / paste via <span class="tt">IPlatform</span> clipboard.</li>
-<li>Ctrl+Z/Y: undo / redo (50-step history).</li>
-<li>Enter: submits and releases focus; Escape: releases focus.</li>
-<li>Home / End: jump to start / end; Shift extends.</li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>This component dereferences <span class="tt">UIContext::platform</span> in <span class="tt">onUpdate</span> (for <span class="tt">time()</span> and clipboard access) without a null check. If you use <span class="tt">TextInput</span> in a headless test or without a platform backend, you must set <span class="tt">context().platform</span> to a valid mock, or the first <span class="tt">onUpdate</span> after the field is focused will crash. </dd></dl>
+<div class="textblock"><p>A single-line UTF-8 editable text field backed by <span class="tt">UIContext::textEngine</span>. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

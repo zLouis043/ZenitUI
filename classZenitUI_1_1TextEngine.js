@@ -5,7 +5,7 @@ var classZenitUI_1_1TextEngine =
     [ "clearAtlas", "classZenitUI_1_1TextEngine.html#a889e4d17d7c464fb02fc0eeacc97ef9a", null ],
     [ "clearLayoutCache", "classZenitUI_1_1TextEngine.html#a662b8ff5cfacedf10e20f9f6daa3c61e", null ],
     [ "defaultFont", "classZenitUI_1_1TextEngine.html#ac85fadb5eb648af5bb0eb4c259a22888", null ],
-    [ "draw", "classZenitUI_1_1TextEngine.html#a453ec70de35eb3cb9a88e87240aa66d5", null ],
+    [ "draw", "classZenitUI_1_1TextEngine.html#aee46618af7392747aa44c4b1f60abb17", null ],
     [ "fontMetrics", "classZenitUI_1_1TextEngine.html#af0a740e0bb33ecbb73534bea4324b37c", null ],
     [ "getFont", "classZenitUI_1_1TextEngine.html#afc8f58517eb7c6783a3acfc9517afa4f", null ],
     [ "hitTestLine", "classZenitUI_1_1TextEngine.html#a7169372696e43ffd9f313f3715eb7fc1", null ],

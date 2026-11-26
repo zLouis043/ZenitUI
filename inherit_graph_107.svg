@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfFrame.html" target="_top" xlink:title="One from/to/N% frame inside @keyframes.">
+<g id="a_Node000000"><a xlink:href="structZenitUI_1_1ZMarkup_1_1StyleSheet_1_1KfRule.html" target="_top" xlink:title="One @keyframes name { ... } block.">
 <polygon fill="white" stroke="#666666" points="159.25,-33.5 0,-33.5 0,0 159.25,0 159.25,-33.5"/>
 <text xml:space="preserve" text-anchor="start" x="8" y="-20" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::ZMarkup::StyleSheet</text>
-<text xml:space="preserve" text-anchor="middle" x="79.62" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">::KfFrame</text>
+<text xml:space="preserve" text-anchor="middle" x="79.62" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">::KfRule</text>
 </a>
 </g>
 </g>

@@ -110,8 +110,9 @@ Inheritance diagram for ZenitUI::UI::TextInput:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f7f752aa08cc4418961e1b1e483274e" id="r_a3f7f752aa08cc4418961e1b1e483274e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f7f752aa08cc4418961e1b1e483274e">TextInput</a> (std::string initial=&quot;&quot;)</td></tr>
 <tr class="memdesc:a3f7f752aa08cc4418961e1b1e483274e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with initial text.  <br /></td></tr>
-<tr class="memitem:a2234fdf450f0863956d9e1cd288b9dbd" id="r_a2234fdf450f0863956d9e1cd288b9dbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2234fdf450f0863956d9e1cd288b9dbd">setText</a> (std::string t)</td></tr>
-<tr class="memdesc:a2234fdf450f0863956d9e1cd288b9dbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the content and move the cursor to the end.  <br /></td></tr>
+<tr class="memitem:a2234fdf450f0863956d9e1cd288b9dbd" id="r_a2234fdf450f0863956d9e1cd288b9dbd"><td class="memItemLeft" align="right" valign="top"><a id="a2234fdf450f0863956d9e1cd288b9dbd" name="a2234fdf450f0863956d9e1cd288b9dbd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setText</b> (std::string t)</td></tr>
+<tr class="memdesc:a2234fdf450f0863956d9e1cd288b9dbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace the content, snap cursor to a valid UTF-8 boundary, clear selection, and save undo history. <br /></td></tr>
 <tr class="memitem:a1716ef2a473b64183e7124114f034f98" id="r_a1716ef2a473b64183e7124114f034f98"><td class="memItemLeft" align="right" valign="top"><a id="a1716ef2a473b64183e7124114f034f98" name="a1716ef2a473b64183e7124114f034f98"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getText</b> () const</td></tr>
 <tr class="memdesc:a1716ef2a473b64183e7124114f034f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current content. <br /></td></tr>
@@ -338,8 +339,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>getKeyboardActivates<
 <a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getLayoutType</b> () const</td></tr>
 <tr class="memitem:aae24a9107e7f424291f7448aad42fc84 inherit pub_methods_classZenitUI_1_1Layout" id="r_aae24a9107e7f424291f7448aad42fc84"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="group__grp__core.html#gaa4d6ce73648fe3085851e0e7bfd42f32">LayoutType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getEffectiveLayoutType</b> () const</td></tr>
-<tr class="memitem:a70810adfe3681d62ae8ccaaf3827b76a inherit pub_methods_classZenitUI_1_1Layout" id="r_a70810adfe3681d62ae8ccaaf3827b76a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Layout.html#a70810adfe3681d62ae8ccaaf3827b76a">resolveFont</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> fallback={})</td></tr>
-<tr class="memdesc:a70810adfe3681d62ae8ccaaf3827b76a inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span> from the node's style font stack.  <br /></td></tr>
+<tr class="memitem:a34219f43f42687f41ab1ea7e754d86ed inherit pub_methods_classZenitUI_1_1Layout" id="r_a34219f43f42687f41ab1ea7e754d86ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1Layout.html#a34219f43f42687f41ab1ea7e754d86ed">resolveFont</a> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> fallback={}) const</td></tr>
+<tr class="memdesc:a34219f43f42687f41ab1ea7e754d86ed inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve a <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span> from the node's style font stack.  <br /></td></tr>
 <tr class="memitem:ab8584d86d03975d3bd75e18134f6b318 inherit pub_methods_classZenitUI_1_1Layout" id="r_ab8584d86d03975d3bd75e18134f6b318"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="structZenitUI_1_1Layout_1_1ResolvedBgTexture.html">ResolvedBgTexture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>resolveBgTexture</b> (const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style, <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> fallbackTex={}, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> fallbackSlice={0, 0, 0, 0})</td></tr>
 <tr class="memdesc:ab8584d86d03975d3bd75e18134f6b318 inherit pub_methods_classZenitUI_1_1Layout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve the background texture from the style, falling back to explicit parameters if the style has no <span class="tt">background-texture</span>. <br /></td></tr>
@@ -456,13 +457,13 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ref</b></td></
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae3fee144b0744c66b2f25e1355dd4ca8" id="r_ae3fee144b0744c66b2f25e1355dd4ca8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3fee144b0744c66b2f25e1355dd4ca8">computeIntrinsicSize</a> (float availW, float) override</td></tr>
-<tr class="memdesc:ae3fee144b0744c66b2f25e1355dd4ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intrinsic size: roughly 12 glyphs wide, <span class="tt">1.6 * fontSize</span> tall.  <br /></td></tr>
+<tr class="memdesc:ae3fee144b0744c66b2f25e1355dd4ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the intrinsic size, excluding padding and border.  <br /></td></tr>
 <tr class="memitem:a203b2e0a2b95ed00e0915b481ea7910c" id="r_a203b2e0a2b95ed00e0915b481ea7910c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a203b2e0a2b95ed00e0915b481ea7910c">onEnabledChanged</a> (bool nowEnabled) override</td></tr>
-<tr class="memdesc:a203b2e0a2b95ed00e0915b481ea7910c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset editing state when the field is disabled.  <br /></td></tr>
+<tr class="memdesc:a203b2e0a2b95ed00e0915b481ea7910c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ab4c284e13f7a59d99dbcabf616b51960" title="Enable or disable the node.">setEnabled</a></span> after the state change.  <br /></td></tr>
 <tr class="memitem:a11d8dcd8c45236eead15c8176b14b91d" id="r_a11d8dcd8c45236eead15c8176b14b91d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11d8dcd8c45236eead15c8176b14b91d">onUpdate</a> (float dt) override</td></tr>
-<tr class="memdesc:a11d8dcd8c45236eead15c8176b14b91d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main per-frame edit loop.  <br /></td></tr>
+<tr class="memdesc:a11d8dcd8c45236eead15c8176b14b91d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every frame from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305" title="Per-frame update: input, style, animation, then recurse into children.">update</a></span>, after input dispatch.  <br /></td></tr>
 <tr class="memitem:a345367408a05564aec1ef6284629c597" id="r_a345367408a05564aec1ef6284629c597"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a345367408a05564aec1ef6284629c597">renderContent</a> (float op, const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;style) override</td></tr>
-<tr class="memdesc:a345367408a05564aec1ef6284629c597"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw selection, text, and cursor.  <br /></td></tr>
+<tr class="memdesc:a345367408a05564aec1ef6284629c597"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the node's content (text, images, custom geometry).  <br /></td></tr>
 <tr class="inherit_header pro_methods_classZenitUI_1_1TLayout"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classZenitUI_1_1TLayout')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout&lt; TextInput &gt;</a></td></tr>
 <tr class="memitem:a2c2d04d1bcdf383f75e355dc2b3f2730 inherit pro_methods_classZenitUI_1_1TLayout" id="r_a2c2d04d1bcdf383f75e355dc2b3f2730"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onBuild</b> ()</td></tr>
@@ -500,8 +501,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A single-line text editor. </p>
-<p><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a> tag: <span class="tt">"<a class="el" href="classZenitUI_1_1UI_1_1TextInput.html" title="A single-line text editor.">TextInput</a>"</span>. Focusable, interactive. Parts: <span class="tt">::selection</span> (selection background), <span class="tt">::cursor</span> (caret colour and width — the width comes from <span class="tt">borderWidth.left</span> if set).</p>
-<p>The intrinsic width is sized to roughly 12 "M" glyphs at the current font size, and the intrinsic height to <span class="tt">1.6 * fontSize</span>. </p>
+<p><a class="el" href="structZenitUI_1_1Style.html" title="Sparse style: every property is Opt&lt;T&gt;, unset by default.">Style</a> tag: <span class="tt">"<a class="el" href="classZenitUI_1_1UI_1_1TextInput.html" title="A single-line text editor.">TextInput</a>"</span>. Focusable, interactive. Parts: <span class="tt">::selection</span>, <span class="tt">::cursor</span>, <span class="tt">::placeholder</span>. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a13">00_demo/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a9">06_zmarkup/main.cpp</a>, and <a class="el" href="12_bindable_2main_8cpp-example.html#_a10">12_bindable/main.cpp</a>.</dd>
 </dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -551,7 +551,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::UI::TextInput::computeIntrinsicSize </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>availW</em></span>, </td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -566,8 +566,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Intrinsic size: roughly 12 glyphs wide, <span class="tt">1.6 * fontSize</span> tall. </p>
-<p>Measures the <span class="tt">"M"</span> glyph to estimate the average character width. Falls back to <span class="tt">0.6 * fontSize</span> if the renderer is not available (headless tests). </p>
+<p>Compute the intrinsic size, excluding padding and border. </p>
+<p>Called from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ae0d08a4a3bf9d9110d1c08684a8f4c0e" title="Compute the intrinsic size given available space.">measure</a></span> with the available <em>inner</em> size. Subclasses override to report content-dependent sizing (text extents, image dimensions, etc.). Default: <span class="tt">{0, 0}</span> (size to zero content). </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a64992532175cef48e851af91864b7216">ZenitUI::Layout</a>.</p>
 
@@ -585,7 +585,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void ZenitUI::UI::TextInput::onEnabledChanged </td>
           <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>nowEnabled</em></span></td><td>)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -596,8 +596,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reset editing state when the field is disabled. </p>
-<p>Clears focus cache, repeat state, cursor blink, and selection. Does not clear the text. </p>
+<p>Called from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#ab4c284e13f7a59d99dbcabf616b51960" title="Enable or disable the node.">setEnabled</a></span> after the state change. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a38ab4c6131814fc85495a00241641d9f">ZenitUI::Layout</a>.</p>
 
@@ -615,7 +614,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void ZenitUI::UI::TextInput::onUpdate </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>dt</em></span></td><td>)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -626,19 +625,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>The main per-frame edit loop. </p>
-<p>Sequence:</p><ol type="1">
-<li>Refresh <span class="tt">hasFocusCache</span> and advance the cursor blink timer.</li>
-<li>Handle pointer down: capture pointer, request focus, detect double/triple click, set cursor from x position, start selection.</li>
-<li>Handle pointer drag while captured (<span class="tt">clickCount == 1</span>): move cursor to follow pointer.</li>
-<li>If not focused, clear repeat state and return.</li>
-<li>Handle Ctrl/Cmd chords (A, C, X, V, Z, Y).</li>
-<li>Handle typed UTF-8 codepoints (<span class="tt"><a class="el" href="group__grp__backends.html#ga34c1cd69883f294c0919a1e276c2c4d8" title="true if cp is a printable Unicode scalar value accepted by text inputs.">Utf8::isPrintable</a></span>).</li>
-<li>Handle key repeat for Backspace, Delete, Left, Right (plus Ctrl word jumps).</li>
-<li>Handle Enter (submit + blur) and Escape (blur), Home, End.</li>
-<li>If content changed, fire <span class="tt"><a class="el" href="#a53a9f48a7720621160c1079dd44cdcc5" title="Fired on every content change (typing, paste, delete, cut).">onTextChanged</a></span>.</li>
-<li>Update horizontal scroll so the cursor stays visible. </li>
-</ol>
+<p>Called every frame from <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305" title="Per-frame update: input, style, animation, then recurse into children.">update</a></span>, after input dispatch. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#abf2e395c9c951d1c5343ddd082da23f3">ZenitUI::Layout</a>.</p>
 
@@ -656,12 +643,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void ZenitUI::UI::TextInput::renderContent </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>style</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="structZenitUI_1_1ComputedStyle.html">ComputedStyle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -671,38 +658,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Draw selection, text, and cursor. </p>
-<p>The content is clipped to the inner rect (so overflowing text disappears rather than spilling out). Selection is drawn first, then the text, then the caret on top. The caret is hidden when there is an active selection (<span class="tt">selectionStart != cursorPos</span>) — this matches most native widgets. </p>
+<p>Draw the node's content (text, images, custom geometry). </p>
+<p>Called after <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#a521a1fadcadc81270eb004db6127c445" title="Draw the node&#39;s background, border, and shadow.">renderChrome</a></span> (background, border, shadow) and before children are drawn. The clip rect is already pushed if overflow requires it. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1Layout.html#a717d10c9b181272661ee155eb6418f1a">ZenitUI::Layout</a>.</p>
-
-</div>
-</div>
-<a id="a2234fdf450f0863956d9e1cd288b9dbd" name="a2234fdf450f0863956d9e1cd288b9dbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2234fdf450f0863956d9e1cd288b9dbd">&#9670;&#160;</a></span>setText()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::UI::TextInput::setText </td>
-          <td>(</td>
-          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>t</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Replace the content and move the cursor to the end. </p>
-<p>Clamps the previous cursor position to the new size if it was past the end. Clears the selection. Marks the style as pending and pushes the change to the undo history. </p>
 
 </div>
 </div>

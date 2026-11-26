@@ -166,8 +166,8 @@ std::shared_ptr&lt; const <a class="el" href="structZenitUI_1_1TextLayout.html">
 <tr class="memitem:aa302f6c8e447f60bd8756bc342689094" id="r_aa302f6c8e447f60bd8756bc342689094"><td class="memItemLeft" align="right" valign="top"><a id="aa302f6c8e447f60bd8756bc342689094" name="aa302f6c8e447f60bd8756bc342689094"></a>
 <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><b>measureText</b> (std::string_view text, const <a class="el" href="structZenitUI_1_1TextMeasureSpec.html">TextMeasureSpec</a> &amp;spec) const</td></tr>
 <tr class="memdesc:aa302f6c8e447f60bd8756bc342689094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure a single line (no wrapping, splits on <span class="tt">\n</span>) and return its <span class="tt">{width, height}</span>. <br /></td></tr>
-<tr class="memitem:a453ec70de35eb3cb9a88e87240aa66d5" id="r_a453ec70de35eb3cb9a88e87240aa66d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a453ec70de35eb3cb9a88e87240aa66d5">draw</a> (<a class="el" href="classZenitUI_1_1IRenderer.html">IRenderer</a> &amp;renderer, const <a class="el" href="structZenitUI_1_1TextLayout.html">TextLayout</a> &amp;<a class="el" href="#a32bd9d90836fd3639faf5a474af6cd48">layout</a>, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> bounds, <a class="el" href="structZenitUI_1_1Color.html">Color</a> color, const <a class="el" href="structZenitUI_1_1TextMeasureSpec.html">TextMeasureSpec</a> &amp;spec, <a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a> align=<a class="el" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Align::Start</a>)</td></tr>
-<tr class="memdesc:a453ec70de35eb3cb9a88e87240aa66d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterize any missing glyphs into the atlas and emit batched <span class="tt">drawGeometry</span> calls.  <br /></td></tr>
+<tr class="memitem:aee46618af7392747aa44c4b1f60abb17" id="r_aee46618af7392747aa44c4b1f60abb17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee46618af7392747aa44c4b1f60abb17">draw</a> (<a class="el" href="classZenitUI_1_1IRenderer.html">IRenderer</a> &amp;renderer, const <a class="el" href="structZenitUI_1_1TextLayout.html">TextLayout</a> &amp;<a class="el" href="#a32bd9d90836fd3639faf5a474af6cd48">layout</a>, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> bounds, <a class="el" href="structZenitUI_1_1Color.html">Color</a> color, const <a class="el" href="structZenitUI_1_1TextMeasureSpec.html">TextMeasureSpec</a> &amp;spec, <a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a> align=<a class="el" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Align::Start</a>, std::string_view fallbackText={}, const <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> *cullRect=nullptr)</td></tr>
+<tr class="memdesc:aee46618af7392747aa44c4b1f60abb17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rasterize any missing glyphs into the atlas and emit batched <span class="tt">drawGeometry</span> calls.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -192,8 +192,8 @@ static std::vector&lt; <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> 
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-context font store, HarfBuzz shaper, FreeType glyph atlas, and layout engine. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a453ec70de35eb3cb9a88e87240aa66d5" name="a453ec70de35eb3cb9a88e87240aa66d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a453ec70de35eb3cb9a88e87240aa66d5">&#9670;&#160;</a></span>draw()</h2>
+<a id="aee46618af7392747aa44c4b1f60abb17" name="aee46618af7392747aa44c4b1f60abb17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee46618af7392747aa44c4b1f60abb17">&#9670;&#160;</a></span>draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +226,17 @@ static std::vector&lt; <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a></td>          <td class="paramname"><span class="paramname"><em>align</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Align::Start</a></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">Align</a></td>          <td class="paramname"><span class="paramname"><em>align</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5aa6122a65eaa676f700ae68d393054a37">Align::Start</a></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>fallbackText</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> *</td>          <td class="paramname"><span class="paramname"><em>cullRect</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -240,6 +250,8 @@ static std::vector&lt; <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> 
     <tr><td class="paramname">color</td><td>Text color (including opacity). </td></tr>
     <tr><td class="paramname">spec</td><td>Font size used to select physical glyph pixel size. </td></tr>
     <tr><td class="paramname">align</td><td>Horizontal alignment within <span class="tt">bounds.width</span>. </td></tr>
+    <tr><td class="paramname">fallbackText</td><td>Source UTF-8 text used only in synthetic headless fallback mode (when no TTF/OTF font is loaded in <span class="tt"><a class="el" href="classZenitUI_1_1TextEngine.html" title="Per-context font store, HarfBuzz shaper, FreeType glyph atlas, and layout engine.">TextEngine</a></span>). </td></tr>
+    <tr><td class="paramname">cullRect</td><td>Optional layout-local clip rectangle; lines completely outside its vertical range are skipped before rasterization and submission. </td></tr>
   </table>
   </dd>
 </dl>
