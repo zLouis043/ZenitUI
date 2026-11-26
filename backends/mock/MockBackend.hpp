@@ -111,6 +111,20 @@ namespace ZenitUI::Test
 		std::vector<CapturedVec3> capturedVec3;
 		std::vector<CapturedVec4> capturedVec4f;
 		std::vector<CapturedColor> capturedColor;
+
+		struct DynamicTexture
+		{
+			int width{0};
+			int height{0};
+			std::vector<uint8_t> pixels;
+		};
+
+		int createTextureCount{0};
+		int updateTextureCount{0};
+		int destroyTextureCount{0};
+		int liveTextures{0};
+		std::unordered_map<uint32_t, DynamicTexture> dynamicTextures;
+
 		/// @}
 
 		/** \brief Clear all counters, histories, and feature flags to defaults. */
@@ -150,6 +164,12 @@ namespace ZenitUI::Test
 			capturedVec3.clear();
 			capturedVec4f.clear();
 			capturedColor.clear();
+
+			createTargetCount = 0;
+			updateTextureCount = 0;
+			destroyTargetCount = 0;
+			liveTextures = 0;
+			dynamicTextures.clear();
 		}
 
 		/// \name Frame Lifecycle & Capabilities
@@ -193,6 +213,62 @@ namespace ZenitUI::Test
 			indicesSubmitted += indices.size();
 		}
 
+		TextureHandle createTexture(int w, int h, const uint8_t *rgbaPixels = nullptr) override
+		{
+			if (w <= 0 || h <= 0)
+				return {};
+			const uint32_t id = nextTextureId_++;
+			DynamicTexture tex;
+			tex.width = w;
+			tex.height = h;
+			const size_t bytes = static_cast<size_t>(w) * static_cast<size_t>(h) * 4u;
+			if (rgbaPixels)
+				tex.pixels.assign(rgbaPixels, rgbaPixels + bytes);
+			else
+				tex.pixels.assign(bytes, 0u);
+			dynamicTextures[id] = std::move(tex);
+			++createTextureCount;
+			++liveTextures;
+			return TextureHandle{id, w, h};
+		}
+
+		void updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels) override
+		{
+			if (!t.valid() || !rgbaPixels)
+				return;
+			auto it = dynamicTextures.find(t.id);
+			if (it == dynamicTextures.end())
+				return;
+			auto &tex = it->second;
+			const int rx = static_cast<int>(region.x);
+			const int ry = static_cast<int>(region.y);
+			const int rw = static_cast<int>(region.width);
+			const int rh = static_cast<int>(region.height);
+			if (rx < 0 || ry < 0 || rw <= 0 || rh <= 0 ||
+				rx + rw > tex.width || ry + rh > tex.height)
+				return;
+			for (int row = 0; row < rh; ++row)
+			{
+				const uint8_t *src = rgbaPixels + static_cast<size_t>(row) * static_cast<size_t>(rw) * 4u;
+				uint8_t *dst = tex.pixels.data() +
+							   (static_cast<size_t>(ry + row) * static_cast<size_t>(tex.width) + static_cast<size_t>(rx)) * 4u;
+				std::copy_n(src, static_cast<size_t>(rw) * 4u, dst);
+			}
+			++updateTextureCount;
+		}
+
+		void destroyTexture(TextureHandle t) override
+		{
+			if (!t.valid())
+				return;
+			if (dynamicTextures.erase(t.id) > 0)
+			{
+				++destroyTextureCount;
+				if (liveTextures > 0)
+					--liveTextures;
+			}
+		}
+		
 		/// @}
 
 		/// \name Text Rendering & Metrics
@@ -331,6 +407,7 @@ namespace ZenitUI::Test
 
 	private:
 		uint32_t nextTargetId_{1000};
+		uint32_t nextTextureId_{2000};
 	};
 
 	// =========================================================================

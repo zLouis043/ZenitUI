@@ -158,6 +158,9 @@ namespace ZenitUI
 		void drawGeometry(std::span<const Vertex2D> vertices,
 						  std::span<const uint32_t> indices,
 						  TextureHandle tex = {}) override;
+		TextureHandle createTexture(int w, int h, const uint8_t *rgbaPixels = nullptr) override;
+		void updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels) override;
+		void destroyTexture(TextureHandle h) override;
 		/// @}
 
 		/// \name Text Rendering & Metrics
@@ -203,7 +206,7 @@ namespace ZenitUI
 		/// \name Resource Creation Helpers (used by `SDL3AssetProvider`)
 		/// @{
 		TextureHandle createTextureRGBA(int width, int height, const unsigned char *rgbaPixels);
-		void destroyTexture(TextureHandle h);
+
 
 		FontHandle createFontFromTTF(const unsigned char *ttfData,
 									 size_t ttfSize,

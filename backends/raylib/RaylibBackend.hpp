@@ -194,6 +194,9 @@ namespace ZenitUI
 		/// @{
 		void drawTexture(TextureHandle t, Rect src, Rect dst, Color tint) override;
 		void drawNineSlice(TextureHandle t, NineSlice s, Rect dst, Color tint) override;
+		TextureHandle createTexture(int w, int h, const uint8_t *rgbaPixels = nullptr) override;
+		void updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels) override;
+		void destroyTexture(TextureHandle t) override;
 		/// @}
 
 		/// \name Text Rendering & Metrics

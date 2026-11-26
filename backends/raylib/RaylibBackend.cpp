@@ -383,6 +383,48 @@ namespace ZenitUI
 		}
 	}
 
+	TextureHandle RaylibRenderer::createTexture(int w, int h, const uint8_t *rgbaPixels)
+	{
+		if (w <= 0 || h <= 0)
+			return {};
+
+		std::vector<uint8_t> zeros;
+		const void *data = rgbaPixels;
+		if (!data)
+		{
+			zeros.assign(static_cast<size_t>(w) * static_cast<size_t>(h) * 4u, 0u);
+			data = zeros.data();
+		}
+
+		::Texture2D tex{};
+		tex.id = rlLoadTexture(data, w, h, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
+		if (tex.id == 0)
+			return {};
+		tex.width = w;
+		tex.height = h;
+		tex.mipmaps = 1;
+		tex.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+		SetTextureFilter(tex, TEXTURE_FILTER_BILINEAR);
+		SetTextureWrap(tex, TEXTURE_WRAP_CLAMP);
+		return registerTexture(tex);
+	}
+
+	void RaylibRenderer::updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels)
+	{
+		if (!t.valid() || !rgbaPixels || region.width <= 0.0f || region.height <= 0.0f)
+			return;
+		auto it = res_->textures.find(t.id);
+		if (it == res_->textures.end())
+			return;
+		rlDrawRenderBatchActive();
+		UpdateTextureRec(it->second, toRl(region), rgbaPixels);
+	}
+
+	void RaylibRenderer::destroyTexture(TextureHandle t)
+	{
+		unregisterTexture(t);
+	}
+
 	// ---- Text rendering & metrics ----
 
 	void RaylibRenderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)

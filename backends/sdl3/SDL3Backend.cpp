@@ -1086,6 +1086,38 @@ void main() {
 		}
 	}
 
+	TextureHandle SDL3Renderer::createTexture(int w, int h, const uint8_t *rgbaPixels)
+	{
+		if (!impl_->ready || w <= 0 || h <= 0)
+			return {};
+		if (rgbaPixels)
+			return createTextureRGBA(w, h, rgbaPixels);
+		std::vector<unsigned char> zeros(static_cast<size_t>(w) * static_cast<size_t>(h) * 4u, 0u);
+		return createTextureRGBA(w, h, zeros.data());
+	}
+
+	void SDL3Renderer::updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels)
+	{
+		if (!impl_->ready || !t.valid() || !rgbaPixels)
+			return;
+		auto it = impl_->textures.find(t.id);
+		if (it == impl_->textures.end() || it->second.glId == 0)
+			return;
+		const int rx = static_cast<int>(region.x);
+		const int ry = static_cast<int>(region.y);
+		const int rw = static_cast<int>(region.width);
+		const int rh = static_cast<int>(region.height);
+		if (rx < 0 || ry < 0 || rw <= 0 || rh <= 0 ||
+			rx + rw > it->second.width || ry + rh > it->second.height)
+			return;
+
+		impl_->flush();
+		glBindTexture(GL_TEXTURE_2D, it->second.glId);
+		impl_->boundTexture = it->second.glId;
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, rx, ry, rw, rh, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
+	}
+
 	// ---- Text rendering & metrics ----
 
 	void SDL3Renderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)

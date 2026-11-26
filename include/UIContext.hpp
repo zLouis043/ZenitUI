@@ -199,6 +199,28 @@ namespace ZenitUI
 			if (!m.empty())
 				drawGeometry(m.vertexSpan(), m.indexSpan(), t);
 		}
+
+		/**
+		 * \brief Allocate a dynamic RGBA8 2D texture of \p w x \p h pixels.
+		 *
+		 * When \p rgbaPixels is `nullptr`, the texture is initialized to transparent black.
+		 * Used by `TextEngine` to manage dynamic glyph atlas pages.
+		 */
+		virtual TextureHandle createTexture(int /*w*/, int /*h*/, const uint8_t * /*rgbaPixels*/ = nullptr)
+		{
+			return {};
+		}
+
+		/**
+		 * \brief Upload tightly-packed RGBA8 pixels into sub-rectangle \p region of texture \p t.
+		 *
+		 * Implementations must flush any pending draw batch referencing \p t before mutating texels.
+		 */
+		virtual void updateTexture(TextureHandle /*t*/, Rect /*region*/, const uint8_t * /*rgbaPixels*/) {}
+
+		/** \brief Release a dynamic texture previously created by `createTexture`. */
+		virtual void destroyTexture(TextureHandle /*t*/) {}
+
 		/// @}
 
 		/// \name Text Rendering & Metrics

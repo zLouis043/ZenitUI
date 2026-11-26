@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ZenitUI VERSION 0.1.0 LANGUAGES CXX)
+project(ZenitUI VERSION 0.1.0 LANGUAGES C CXX)
 
 option(ZENITUI_BUILD_TESTS    "Build ZenitUI unit tests"   ON)
 option(ZENITUI_BUILD_BACKEND  "Build the Raylib backend"   OFF)
@@ -19,6 +19,48 @@ file(GLOB ZENITUI_SOURCES CONFIGURE_DEPENDS
 
 add_library(ZenitUI STATIC ${ZENITUI_SOURCES})
 add_library(ZenitUI::ZenitUI ALIAS ZenitUI)
+
+include(FetchContent)
+
+# ---- FreeType (minimal rasterizer & metrics, no circular HB / image deps) ----
+set(FT_DISABLE_ZLIB     ON  CACHE BOOL "" FORCE)
+set(FT_DISABLE_BZIP2    ON  CACHE BOOL "" FORCE)
+set(FT_DISABLE_PNG      ON  CACHE BOOL "" FORCE)
+set(FT_DISABLE_HARFBUZZ ON  CACHE BOOL "" FORCE)
+set(FT_DISABLE_BROTLI   ON  CACHE BOOL "" FORCE)
+set(SKIP_INSTALL_ALL    ON  CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG        VER-2-13-3
+    GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(freetype)
+
+# ---- HarfBuzz (minimal hb-ot OpenType shaper, cross-platform deterministic) ----
+set(HB_HAVE_FREETYPE    OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_GLIB        OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_ICU         OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_GOBJECT     OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_GRAPHITE2   OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_CORETEXT    OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_DIRECTWRITE OFF CACHE BOOL "" FORCE)
+set(HB_HAVE_GDI         OFF CACHE BOOL "" FORCE)
+set(HB_BUILD_SUBSET     OFF CACHE BOOL "" FORCE)
+set(HB_BUILD_UTILS      OFF CACHE BOOL "" FORCE)
+set(HB_BUILD_TESTS      OFF CACHE BOOL "" FORCE)
+set(HB_BUILD_BENCHMARK  OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    harfbuzz
+    GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
+    GIT_TAG        10.4.0
+    GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(harfbuzz)
+
+target_link_libraries(ZenitUI PRIVATE freetype harfbuzz)
 
 target_compile_features(ZenitUI PUBLIC cxx_std_20)
 
@@ -132,6 +174,12 @@ if(ZENITUI_INSTALL)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+
+    install(TARGETS freetype harfbuzz
+        EXPORT ZenitUITargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
     install(DIRECTORY include/
