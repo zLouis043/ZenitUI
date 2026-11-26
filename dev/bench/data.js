@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795692610447,
+  "lastUpdate": 1795701920311,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -17044,6 +17044,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 105.888,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "1a5072dab9404e14a78248f33be5bf8feb7f999e",
+          "message": "refactor(filters): move FilterRegistry into UIContext\n\nReplaces the FilterRegistry::get() singleton and registerBuiltinFilters() free function with a value member UIContext::filters whose constructor pre-registers builtin filters. Passes UIContext* through FilterContext so FilterRegistry.cpp no longer calls UIContext::get(), resets filters in MockBackend Env teardown/reset, and updates filter tests and callers.",
+          "timestamp": "2026-11-26T15:02:29+01:00",
+          "tree_id": "0156b6d6c881ee07f8293f73f89d2908a0535f2e",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/1a5072dab9404e14a78248f33be5bf8feb7f999e"
+        },
+        "date": 1795701918630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 224.855,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 3.6716,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.0028483,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0191623,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0163686,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.483717,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.623512,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.584378,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.282936,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.795448,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 31.2555,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 30.3782,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 10.6299,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 7.85752,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 27.7093,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00208202,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 38.6031,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 117.858,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 40.3025,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 87.1575,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 79.538,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 58.112,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 93.9483,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 685.477,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 696.089,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 36.1432,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 83.5819,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 70.767,
             "unit": "us"
           }
         ]
