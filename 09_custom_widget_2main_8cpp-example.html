@@ -162,10 +162,11 @@ Rating.hpp</h3>
 <div class="line">    <span class="comment">//  size the widget would like if it has no explicit width/height.</span></div>
 <div class="line">    Vec2 computeIntrinsicSize(<span class="keywordtype">float</span>, <span class="keywordtype">float</span>)<span class="keyword"> override</span></div>
 <div class="line"><span class="keyword">    </span>{</div>
+<div class="line">        <span class="keyword">const</span> Vec2 vp = viewportSize();</div>
 <div class="line">        <span class="keywordtype">float</span> fs = style_.currentStyle.fontSize.resolveV(</div>
-<div class="line">            Metrics::viewport.x, Metrics::viewport.y);</div>
+<div class="line">            vp.x, vp.y, vp);</div>
 <div class="line">        <span class="keywordtype">float</span> starSize = fs * 1.4f;</div>
-<div class="line">        <span class="keywordtype">float</span> gap = getStyle().gap.resolveH(0, 0);</div>
+<div class="line">        <span class="keywordtype">float</span> gap = getStyle().gap.resolveH(0, 0,vp);</div>
 <div class="line">        <span class="keywordtype">float</span> totalW = starSize * maxStars_ + gap * (maxStars_ - 1);</div>
 <div class="line">        <span class="keywordflow">return</span> { totalW, starSize };</div>
 <div class="line">    }</div>
@@ -177,10 +178,10 @@ Rating.hpp</h3>
 <div class="line"><span class="keyword">    </span>{</div>
 <div class="line">        <span class="keyword">auto</span> r = UIContext::get().renderer;</div>
 <div class="line">        <span class="keywordflow">if</span> (!r) <span class="keywordflow">return</span>;</div>
-<div class="line"> </div>
-<div class="line">        <span class="keywordtype">float</span> fs = style.fontSize.resolveV(Metrics::viewport.x, Metrics::viewport.y);</div>
+<div class="line">        <span class="keyword">const</span> Vec2 vp = viewportSize();</div>
+<div class="line">        <span class="keywordtype">float</span> fs = style.fontSize.resolveV(vp.x, vp.y, vp);</div>
 <div class="line">        <span class="keywordtype">float</span> starSize = fs * 1.4f;</div>
-<div class="line">        <span class="keywordtype">float</span> gap = style.gap.resolveH(rect.width, rect.height);</div>
+<div class="line">        <span class="keywordtype">float</span> gap = style.gap.resolveH(rect.width, rect.height, vp);</div>
 <div class="line">        <span class="keywordtype">float</span> totalW = starSize * maxStars_ + gap * (maxStars_ - 1);</div>
 <div class="line">        <span class="keywordtype">float</span> startX = rect.x + (rect.width - totalW) * 0.5f;</div>
 <div class="line">        <span class="keywordtype">float</span> centerY = rect.center().y;</div>
@@ -231,10 +232,12 @@ Rating.hpp</h3>
 <div class="line">        <span class="keywordflow">if</span> (ctx.topmostConsumer != <span class="keyword">this</span>) <span class="keywordflow">return</span>;</div>
 <div class="line">        <span class="keywordflow">if</span> (rect.width &lt;= 0.0f) <span class="keywordflow">return</span>;</div>
 <div class="line"> </div>
+<div class="line">        <span class="keyword">const</span> Vec2 vp = viewportSize();</div>
+<div class="line"> </div>
 <div class="line">        <span class="keywordtype">float</span> fs = style_.currentStyle.fontSize.resolveV(</div>
-<div class="line">            Metrics::viewport.x, Metrics::viewport.y);</div>
+<div class="line">            vp.x, vp.y, vp);</div>
 <div class="line">        <span class="keywordtype">float</span> starSize = fs * 1.4f;</div>
-<div class="line">        <span class="keywordtype">float</span> gap = style_.currentStyle.gap.resolveH(rect.width, rect.height);</div>
+<div class="line">        <span class="keywordtype">float</span> gap = style_.currentStyle.gap.resolveH(rect.width, rect.height, vp);</div>
 <div class="line">        <span class="keywordtype">float</span> totalW = starSize * maxStars_ + gap * (maxStars_ - 1);</div>
 <div class="line">        <span class="keywordtype">float</span> startX = rect.x + (rect.width - totalW) * 0.5f;</div>
 <div class="line"> </div>
@@ -502,9 +505,9 @@ main.cpp</h3>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a06ce2a25e5d12c166a36f654dbea6012">ZenitUI::LayoutType::Vertical</a></div><div class="ttdeci">@ Vertical</div><div class="ttdoc">Children flow top-to-bottom (column flex semantics).</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:29</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:28</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32ac1b5fa03ecdb95d4a45dd1c40b02527f">ZenitUI::LayoutType::Horizontal</a></div><div class="ttdeci">@ Horizontal</div><div class="ttdoc">Children flow left-to-right (row flex semantics).</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:30</div></div>
-<div class="ttc" id="agroup__grp__widgets_html_ga78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:538</div></div>
+<div class="ttc" id="agroup__grp__widgets_html_ga78ec9788f5e751cb9d9ef38e5a694f67"><div class="ttname"><a href="group__grp__widgets.html#ga78ec9788f5e751cb9d9ef38e5a694f67">ZenitUI::UI::Label</a></div><div class="ttdeci">std::shared_ptr&lt; Text &gt; Label(std::string t)</div><div class="ttdoc">Convenience factory: a Text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:543</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gae718ac5f540d56ab4777e5f9f563f7a0"><div class="ttname"><a href="group__grp__zstyle.html#gae718ac5f540d56ab4777e5f9f563f7a0">ZenitUI::ZMarkup::loadStyleFile</a></div><div class="ttdeci">bool loadStyleFile(const std::filesystem::path &amp;path, Theme &amp;theme=Theme::get(), DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Load a stylesheet from a file and apply it to theme.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:873</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:874</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

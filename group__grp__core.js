@@ -29,7 +29,6 @@ var group__grp__core =
     ] ],
     [ "ZenitUI::PointerState", "structZenitUI_1_1PointerState.html", null ],
     [ "ZenitUI::ModifierState", "structZenitUI_1_1ModifierState.html", null ],
-    [ "ZenitUI::Metrics", "structZenitUI_1_1Metrics.html", null ],
     [ "ZenitUI::InputEvents", "structZenitUI_1_1InputEvents.html", [
       [ "chars", "structZenitUI_1_1InputEvents.html#a28c419560be2d41d95e7b5cc1d2df4fa", null ],
       [ "held", "structZenitUI_1_1InputEvents.html#a9daefc371fab631fc45231c4a2a37f70", null ],
@@ -144,6 +143,7 @@ var group__grp__core =
       [ "translateSubtree", "classZenitUI_1_1Layout.html#a7e36c2d73ad2298c4cf330a86715c2e7", null ],
       [ "update", "classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305", null ],
       [ "updateTree", "classZenitUI_1_1Layout.html#abbc59a92125d89a5b1600c8d2a4e156e", null ],
+      [ "viewportSize", "classZenitUI_1_1Layout.html#a8b65e2088cdcf44f38b4b684e32c70d3", null ],
       [ "with", "classZenitUI_1_1Layout.html#a6d457c84747e2a521ecda3e7b98e85c0", null ],
       [ "children", "classZenitUI_1_1Layout.html#a688b24f754064e75c00763f2a623c598", null ],
       [ "nodeId", "classZenitUI_1_1Layout.html#a4aa89657fd5cc6063d01533a539a56ff", null ],
@@ -277,7 +277,8 @@ var group__grp__core =
       [ "pushLayerTarget", "structZenitUI_1_1UIContext.html#a90dcd34dfd0f306b6db8080481be96f2", null ],
       [ "releaseFocus", "structZenitUI_1_1UIContext.html#a4787a68f0c89cbe5527f010d579f22e9", null ],
       [ "requestFocus", "structZenitUI_1_1UIContext.html#a1d74768d6e555ac06c84c3025acb364a", null ],
-      [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ]
+      [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ],
+      [ "viewport", "structZenitUI_1_1UIContext.html#a9169b6dd2baa66f81ac2c41ede5bc0c4", null ]
     ] ],
     [ "ZenitUI::Value", "structZenitUI_1_1Value.html", [
       [ "Term", "structZenitUI_1_1Value_1_1Term.html", null ],
@@ -295,10 +296,10 @@ var group__grp__core =
       [ "operator-", "structZenitUI_1_1Value.html#af9b44545b81a6994c26ac7856f75586f", null ],
       [ "operator-", "structZenitUI_1_1Value.html#a454f8a2253feab025b923d624ac4e276", null ],
       [ "operator/", "structZenitUI_1_1Value.html#aff02d4183f5abe5802251ba0c0ab7a99", null ],
-      [ "resolveH", "structZenitUI_1_1Value.html#a95465b127ef0785073c50729b55f5486", null ],
-      [ "resolveSelfH", "structZenitUI_1_1Value.html#a4425b72385b68bf55a60b8d60d367e47", null ],
-      [ "resolveSelfV", "structZenitUI_1_1Value.html#a3f86f8d5948f8d37290ddb22906e5368", null ],
-      [ "resolveV", "structZenitUI_1_1Value.html#af512ec6504bb415fc314db744e1c9747", null ]
+      [ "resolveH", "structZenitUI_1_1Value.html#a91d0c64361d391c6e333a276901849bc", null ],
+      [ "resolveSelfH", "structZenitUI_1_1Value.html#ad1e52fb5dbef55a6618ef39e5ae2a44c", null ],
+      [ "resolveSelfV", "structZenitUI_1_1Value.html#a679031814f2d5311a5ba3f9be663cf54", null ],
+      [ "resolveV", "structZenitUI_1_1Value.html#aae62774a8ee82bf7443c7b5a0b96465d", null ]
     ] ],
     [ "ZenitUI::Align", "group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5", [
       [ "ZenitUI::Align::Auto", "group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb", null ],
@@ -349,5 +350,5 @@ var group__grp__core =
     [ "ZenitUI::applyInverseTransform", "group__grp__core.html#gaa0a5aa40122e6e04d83da4ba6adadb31", null ],
     [ "ZenitUI::applyTransform", "group__grp__core.html#gaed05b39d9355d400bb04a40e87845ccf", null ],
     [ "ZenitUI::nodeMatchesSimple", "group__grp__core.html#ga2589cc2fb5af6f324e0567ede1affa4e", null ],
-    [ "ZenitUI::ruleMatches", "group__grp__core.html#ga0aa539a44b3721db73bf405528db4e79", null ]
+    [ "ZenitUI::ruleMatches", "group__grp__core.html#ga726d61167fb87085933d4f51ecb6007c", null ]
 ];

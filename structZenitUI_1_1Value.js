@@ -15,8 +15,8 @@ var structZenitUI_1_1Value =
     [ "operator-", "structZenitUI_1_1Value.html#af9b44545b81a6994c26ac7856f75586f", null ],
     [ "operator-", "structZenitUI_1_1Value.html#a454f8a2253feab025b923d624ac4e276", null ],
     [ "operator/", "structZenitUI_1_1Value.html#aff02d4183f5abe5802251ba0c0ab7a99", null ],
-    [ "resolveH", "structZenitUI_1_1Value.html#a95465b127ef0785073c50729b55f5486", null ],
-    [ "resolveSelfH", "structZenitUI_1_1Value.html#a4425b72385b68bf55a60b8d60d367e47", null ],
-    [ "resolveSelfV", "structZenitUI_1_1Value.html#a3f86f8d5948f8d37290ddb22906e5368", null ],
-    [ "resolveV", "structZenitUI_1_1Value.html#af512ec6504bb415fc314db744e1c9747", null ]
+    [ "resolveH", "structZenitUI_1_1Value.html#a91d0c64361d391c6e333a276901849bc", null ],
+    [ "resolveSelfH", "structZenitUI_1_1Value.html#ad1e52fb5dbef55a6618ef39e5ae2a44c", null ],
+    [ "resolveSelfV", "structZenitUI_1_1Value.html#a679031814f2d5311a5ba3f9be663cf54", null ],
+    [ "resolveV", "structZenitUI_1_1Value.html#aae62774a8ee82bf7443c7b5a0b96465d", null ]
 ];

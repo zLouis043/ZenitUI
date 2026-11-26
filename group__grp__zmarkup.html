@@ -151,7 +151,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::ZMarkup::has
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Declarative UI construction, reusable components, and reactive bindings. </p>
-<p><a class="el" href="namespaceZenitUI_1_1Key.html" title="Platform-agnostic key constants.">Key</a> concepts:</p><ul>
+<p><a class="el" href="namespaceZenitUI_1_1Key.html" title="Global viewport metrics, updated once per frame from the platform.">Key</a> concepts:</p><ul>
 <li><b>Building trees:</b> parse inline strings with <span class="tt">ZMarkup::build</span> or files with <span class="tt">ZMarkup::loadMarkupFile</span>.</li>
 <li><b>Addressing nodes:</b> use <span class="tt">#id</span> for global CSS/lookup IDs (<span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#a0b04cdc7ebc5953f76fca7cfd416a48e" title="Look up a node by its #id.">UINode::find</a></span>) and <span class="tt">@ref</span> for local template handles (<span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#ac9e4d8da8aa26ff83e017930f36056c5" title="Look up a live node by @ref.">UINode::ref</a></span>, <span class="tt"><a class="el" href="classZenitUI_1_1ZMarkup_1_1UINode.html#a7ba05db650a0082b2fdc5e55a3cbed2b" title="Return every live node sharing the given @ref.">UINode::refAll</a></span>).</li>
 <li><b>Prefabs &amp; slots:</b> register reusable templates with <span class="tt">ZMarkup::registerPrefab</span> and inject caller children via anonymous or named <span class="tt">&lt;Slot&gt;</span> elements.</li>

@@ -112,7 +112,6 @@ var hierarchy =
     [ "ZenitUI::LogMessage", "structZenitUI_1_1LogMessage.html", null ],
     [ "ZenitUI::MediaCondition", "structZenitUI_1_1MediaCondition.html", null ],
     [ "ZenitUI::MediaQuery", "structZenitUI_1_1MediaQuery.html", null ],
-    [ "ZenitUI::Metrics", "structZenitUI_1_1Metrics.html", null ],
     [ "ZenitUI::ModifierState", "structZenitUI_1_1ModifierState.html", null ],
     [ "ZenitUI::NineSlice", "structZenitUI_1_1NineSlice.html", null ],
     [ "ZenitUI::NodeConfig", "structZenitUI_1_1NodeConfig.html", null ],

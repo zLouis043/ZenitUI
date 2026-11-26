@@ -13,5 +13,6 @@ var structZenitUI_1_1UIContext =
     [ "pushLayerTarget", "structZenitUI_1_1UIContext.html#a90dcd34dfd0f306b6db8080481be96f2", null ],
     [ "releaseFocus", "structZenitUI_1_1UIContext.html#a4787a68f0c89cbe5527f010d579f22e9", null ],
     [ "requestFocus", "structZenitUI_1_1UIContext.html#a1d74768d6e555ac06c84c3025acb364a", null ],
-    [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ]
+    [ "wasConsumed", "structZenitUI_1_1UIContext.html#a03704ff1e8843dc3b4ee0f7c13030d09", null ],
+    [ "viewport", "structZenitUI_1_1UIContext.html#a9169b6dd2baa66f81ac2c41ede5bc0c4", null ]
 ];

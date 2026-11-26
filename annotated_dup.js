@@ -73,7 +73,6 @@ var annotated_dup =
       [ "ButtonState", "structZenitUI_1_1ButtonState.html", "structZenitUI_1_1ButtonState" ],
       [ "PointerState", "structZenitUI_1_1PointerState.html", null ],
       [ "ModifierState", "structZenitUI_1_1ModifierState.html", null ],
-      [ "Metrics", "structZenitUI_1_1Metrics.html", null ],
       [ "InputEvents", "structZenitUI_1_1InputEvents.html", "structZenitUI_1_1InputEvents" ],
       [ "SourceSpan", "structZenitUI_1_1SourceSpan.html", null ],
       [ "ZStyleDiagnostic", "structZenitUI_1_1ZStyleDiagnostic.html", null ],
