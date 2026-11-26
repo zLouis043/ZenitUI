@@ -2,35 +2,7 @@
 
 /**
  * \file TextInput.hpp
- * \brief A single-line editable text field.
- *
- * The input is a `Stack` with a single text cursor (no child `Text` node).
- * All visual is drawn directly by `renderContent`: the text, the cursor
- * caret (blinking at 1 Hz), and the selection highlight.
- *
- * Editing model:
- *  - The text is stored as a `std::string`; the cursor is a byte offset
- *    (not a grapheme index). This is simple and correct for ASCII, but
- *    multi-byte UTF-8 codepoints are treated as multiple "characters" —
- *    arrows move by byte, backspace deletes one byte. Not Unicode-aware.
- *  - Only printable ASCII (32..126) can be inserted; pasted text is
- *    filtered to that range.
- *
- * Interaction:
- *  - Click to place the cursor; double-click selects a word; triple-click
- *    selects all.
- *  - Drag to extend the selection.
- *  - Shift+arrows extend the selection; Ctrl+A selects all.
- *  - Ctrl+C/X/V: copy / cut / paste via `IPlatform` clipboard.
- *  - Ctrl+Z/Y: undo / redo (50-step history).
- *  - Enter: submits and releases focus; Escape: releases focus.
- *  - Home / End: jump to start / end; Shift extends.
- *
- * \note This component dereferences `UIContext::platform` in `onUpdate`
- *       (for `time()` and clipboard access) without a null check. If you
- *       use `TextInput` in a headless test or without a platform backend,
- *       you must set `context().platform` to a valid mock, or the
- *       first `onUpdate` after the field is focused will crash.
+ * \brief A single-line UTF-8 editable text field backed by `UIContext::textEngine`.
  */
 
 #include "Common.hpp"
@@ -48,12 +20,8 @@ namespace ZenitUI::UI
      * \class TextInput
      * \brief A single-line text editor.
      *
-     * Style tag: `"TextInput"`. Focusable, interactive. Parts: `::selection`
-     * (selection background), `::cursor` (caret colour and width — the width
-     * comes from `borderWidth.left` if set).
-     *
-     * The intrinsic width is sized to roughly 12 "M" glyphs at the current
-     * font size, and the intrinsic height to `1.6 * fontSize`.
+     * Style tag: `"TextInput"`. Focusable, interactive. Parts: `::selection`,
+     * `::cursor`, `::placeholder`.
      */
     class TextInput : public TLayout<TextInput>
     {
@@ -79,20 +47,13 @@ namespace ZenitUI::UI
             internal_.pendingTransition = 1;
         }
 
-        /**
-         * \brief Replace the content and move the cursor to the end.
-         *
-         * Clamps the previous cursor position to the new size if it was past
-         * the end. Clears the selection. Marks the style as pending and
-         * pushes the change to the undo history.
-         */
+        /** \brief Replace the content, snap cursor to a valid UTF-8 boundary, clear selection, and save undo history. */
         void setText(std::string t)
         {
             text = std::move(t);
             cursorPos = static_cast<int>(
                 Utf8::snapFloor(text, std::min<size_t>(static_cast<size_t>(std::max(0, cursorPos)), text.size())));
             selectionStart = -1;
-            text_dirty = true;
             internal_.pendingTransition = 1;
             saveHistory();
         }
@@ -142,47 +103,34 @@ namespace ZenitUI::UI
         std::function<void(const std::string &)> onSubmit;
 
     protected:
-        /**
-         * \brief Intrinsic size: roughly 12 glyphs wide, `1.6 * fontSize` tall.
-         *
-         * Measures the `"M"` glyph to estimate the average character width.
-         * Falls back to `0.6 * fontSize` if the renderer is not available
-         * (headless tests).
-         */
         Vec2 computeIntrinsicSize(float availW, float) override
         {
             auto *ctx = context();
             if (!ctx)
                 return {0.0f, 0.0f};
-            FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-            const Vec2 vp = viewportSize();
-            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
-            float charW = 0.0f;
-            if (auto r = ctx->renderer)
-                charW = r->measureText(f, "M", fs, 0.0f).x;
+
+            TextMeasureSpec mSpec = makeSpec(style_.currentStyle);
+            mSpec.letterSpacing = 0.0f;
+            float charW = ctx->textEngine.measureText("M", mSpec).x;
             if (charW <= 0.0f)
-                charW = fs * 0.6f;
+                charW = mSpec.fontSize * 0.6f;
 
             float w = std::max(120.0f, charW * 12.0f);
-            float h = fs * 1.6f;
+            float h = mSpec.fontSize * 1.6f;
 
             if (placeholderWrap && text.empty() && !placeholder.empty() && availW > 1.0f)
             {
-                float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
-                auto lines = wrapPlaceholderLines(placeholder, availW, f, fs, sp);
-                float wrappedH = static_cast<float>(lines.size()) * (fs * 1.35f);
-                h = std::max(h, wrappedH);
+                TextMeasureSpec phSpec = makeSpec(style_.currentStyle, mSpec.fontSize * 1.35f);
+                TextLayoutOptions opts;
+                opts.wrap = true;
+                opts.maxWidth = availW;
+                auto phLo = ctx->textEngine.layoutCached(placeholder, phSpec, opts);
+                h = std::max(h, phLo->size.y);
             }
 
             return {w, h};
         }
 
-        /**
-         * \brief Reset editing state when the field is disabled.
-         *
-         * Clears focus cache, repeat state, cursor blink, and selection. Does
-         * not clear the text.
-         */
         void onEnabledChanged(bool nowEnabled) override
         {
             if (!nowEnabled)
@@ -194,24 +142,6 @@ namespace ZenitUI::UI
             }
         }
 
-        /**
-         * \brief The main per-frame edit loop.
-         *
-         * Sequence:
-         *  -# Refresh `hasFocusCache` and advance the cursor blink timer.
-         *  -# Handle pointer down: capture pointer, request focus, detect
-         *     double/triple click, set cursor from x position, start
-         *     selection.
-         *  -# Handle pointer drag while captured (`clickCount == 1`): move
-         *     cursor to follow pointer.
-         *  -# If not focused, clear repeat state and return.
-         *  -# Handle Ctrl/Cmd chords (A, C, X, V, Z, Y).
-         *  -# Handle typed UTF-8 codepoints (`Utf8::isPrintable`).
-         *  -# Handle key repeat for Backspace, Delete, Left, Right (plus Ctrl word jumps).
-         *  -# Handle Enter (submit + blur) and Escape (blur), Home, End.
-         *  -# If content changed, fire `onTextChanged`.
-         *  -# Update horizontal scroll so the cursor stays visible.
-         */
         void onUpdate(float dt) override
         {
             auto *ctx = context();
@@ -237,15 +167,11 @@ namespace ZenitUI::UI
                 capturePointer();
                 ctx->requestFocus(shared_from_this());
 
-                double now = ctx->platform->time();
+                double now = ctx->platform ? ctx->platform->time() : ctx->time;
                 if (now - lastClickTime < 0.4)
-                {
                     clickCount++;
-                }
                 else
-                {
                     clickCount = 1;
-                }
                 lastClickTime = now;
 
                 cursorPos = cursorIndexFromX(ctx->pointer.pos.x - rect.x);
@@ -315,7 +241,8 @@ namespace ZenitUI::UI
                         {
                             int s1 = std::min(selectionStart, cursorPos);
                             int s2 = std::max(selectionStart, cursorPos);
-                            ctx->platform->setClipboardText(text.substr(s1, s2 - s1));
+                            if (ctx->platform)
+                                ctx->platform->setClipboardText(text.substr(s1, s2 - s1));
                             if (k == Key::X)
                             {
                                 deleteSelection();
@@ -326,7 +253,9 @@ namespace ZenitUI::UI
                     else if (k == Key::V)
                     {
                         deleteSelection();
-                        std::string clean = Utf8::sanitizeSingleLine(ctx->platform->getClipboardText());
+                        std::string clean = ctx->platform
+                                                ? Utf8::sanitizeSingleLine(ctx->platform->getClipboardText())
+                                                : std::string{};
                         if (!clean.empty())
                         {
                             text.insert(static_cast<size_t>(cursorPos), clean);
@@ -367,6 +296,7 @@ namespace ZenitUI::UI
                 if (inserted)
                     saveHistory();
             }
+
             auto doAction = [&](int key)
             {
                 bool actionChanged = false;
@@ -528,73 +458,60 @@ namespace ZenitUI::UI
                 internal_.pendingTransition = 1;
             }
 
+            if (ctx->renderer)
             {
-                auto r = ctx->renderer;
-                const Vec2 vp = viewportSize();
-                if (!r)
-                    return;
-                FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-                float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
-                float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
+                const TextMeasureSpec spec = makeSpec(style_.currentStyle);
+                auto lo = ctx->textEngine.layoutCached(text, spec);
+                const float prefixW = (!lo->lines.empty())
+                                          ? TextEngine::caretXOnLine(lo->lines[0], static_cast<size_t>(cursorPos))
+                                          : 0.0f;
+                const float fullW = lo->size.x;
 
-                std::string prefix = text.substr(0, cursorPos);
-                Vec2 prefixSize = r->measureText(f, prefix, fs, sp);
-                Vec2 fullSize = r->measureText(f, text, fs, sp);
-
-                if (prefixSize.x - scrollX > availW)
-                    scrollX = prefixSize.x - availW;
-                if (prefixSize.x - scrollX < 0.0f)
-                    scrollX = prefixSize.x;
-                float maxScroll = std::max(0.0f, fullSize.x - availW);
+                if (prefixW - scrollX > availW)
+                    scrollX = prefixW - availW;
+                if (prefixW - scrollX < 0.0f)
+                    scrollX = prefixW;
+                const float maxScroll = std::max(0.0f, fullW - availW);
                 scrollX = std::clamp(scrollX, 0.0f, maxScroll);
             }
         }
 
-        /**
-         * \brief Draw selection, text, and cursor.
-         *
-         * The content is clipped to the inner rect (so overflowing text
-         * disappears rather than spilling out). Selection is drawn first,
-         * then the text, then the caret on top. The caret is hidden when
-         * there is an active selection (`selectionStart != cursorPos`) — this
-         * matches most native widgets.
-         */
         void renderContent(float op, const ComputedStyle &style) override
         {
             auto *ctx = context();
-            if (!ctx)
+            auto *r = ctx ? ctx->renderer : nullptr;
+            if (!r)
                 return;
-            auto r = ctx->renderer;
+
             const Vec2 vp = viewportSize();
-            FontHandle f = resolveFont(style, defaultFont);
-            float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
-            float sp = style.letterSpacing.resolveH(vp.x, vp.y, vp);
-            float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
-            float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
-            float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
-            float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
+            const TextMeasureSpec spec = makeSpec(style);
+            const float fs = spec.fontSize;
 
-            float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
-            float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
-            float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
-            float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
+            const float bwl = style.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            const float bwr = style.borderWidth.right.resolveH(rect.width, rect.height, vp);
+            const float bwt = style.borderWidth.top.resolveV(rect.width, rect.height, vp);
+            const float bwb = style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
 
-            float innerW = std::max(0.0f, rect.width - pl - pr);
-            float innerH = std::max(0.0f, rect.height - pt - pb);
+            const float pl = style.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            const float pr = style.padding.right.resolveH(rect.width, rect.height, vp) + bwr;
+            const float pt = style.padding.top.resolveV(rect.width, rect.height, vp) + bwt;
+            const float pb = style.padding.bottom.resolveV(rect.width, rect.height, vp) + bwb;
 
-            Rect innerRect = {rect.x + pl, rect.y + pt, innerW, innerH};
+            const float innerW = std::max(0.0f, rect.width - pl - pr);
+            const float innerH = std::max(0.0f, rect.height - pt - pb);
+
+            const Rect innerRect = {rect.x + pl, rect.y + pt, innerW, innerH};
             r->pushClip(innerRect);
 
-            Vec2 pos = {rect.x + pl - scrollX, rect.y + pt + (innerH - fs) * 0.5f - fs * 0.1f};
+            const Vec2 pos = {rect.x + pl - scrollX, rect.y + pt + (innerH - fs) * 0.5f - fs * 0.1f};
+            auto lo = ctx->textEngine.layoutCached(text, spec);
 
-            if (hasFocusCache && selectionStart != -1 && selectionStart != cursorPos)
+            if (hasFocusCache && selectionStart != -1 && selectionStart != cursorPos && !lo->lines.empty())
             {
-                int s1 = std::min(selectionStart, cursorPos);
-                int s2 = std::max(selectionStart, cursorPos);
-                std::string pre = text.substr(0, s1);
-                std::string sel = text.substr(s1, s2 - s1);
-                float preW = r->measureText(f, pre, fs, sp).x;
-                float selW = r->measureText(f, sel, fs, sp).x;
+                const size_t s1 = static_cast<size_t>(std::min(selectionStart, cursorPos));
+                const size_t s2 = static_cast<size_t>(std::max(selectionStart, cursorPos));
+                const float preW = TextEngine::caretXOnLine(lo->lines[0], s1);
+                const float selW = TextEngine::caretXOnLine(lo->lines[0], s2) - preW;
 
                 Style selStyle = partStyle("selection");
                 Color selColor = selStyle.background.is_set ? selStyle.background.value : Color{50, 130, 220, 128};
@@ -602,56 +519,59 @@ namespace ZenitUI::UI
                 r->fillRect({pos.x + preW, pos.y, selW, fs * 1.2f}, selColor.withAlpha(op));
             }
 
-            Color textColor = config.enabled ? style.color : Color{120, 120, 125, 255};
+            const Color textColor = config.enabled ? style.color : Color{120, 120, 125, 255};
             if (text.empty() && !placeholder.empty())
             {
                 Style phStyle = partStyle("placeholder");
-                Color phColor = phStyle.color.is_set ? phStyle.color.value : Color{115, 115, 125, 255};
+                const Color phColor = phStyle.color.is_set ? phStyle.color.value : Color{115, 115, 125, 255};
 
-                float phPl = style.padding.left.resolveH(rect.width, rect.height, vp) +
-                             style.borderWidth.left.resolveH(rect.width, rect.height, vp);
-                float phPr = style.padding.right.resolveH(rect.width, rect.height, vp) +
-                             style.borderWidth.right.resolveH(rect.width, rect.height, vp);
-                float phPt = style.padding.top.resolveV(rect.width, rect.height, vp) +
-                             style.borderWidth.top.resolveV(rect.width, rect.height, vp);
-                float phPb = style.padding.bottom.resolveV(rect.width, rect.height, vp) +
-                             style.borderWidth.bottom.resolveV(rect.width, rect.height, vp);
-                float phInnerW = std::max(0.0f, rect.width - phPl - phPr);
-                float phInnerH = std::max(0.0f, rect.height - phPt - phPb);
-
-                if (placeholderWrap && phInnerW > 1.0f)
+                if (placeholderWrap && innerW > 1.0f)
                 {
-                    auto lines = wrapPlaceholderLines(placeholder, phInnerW, f, fs, sp);
-                    float lineH = fs * 1.35f;
-                    float totalH = (float)lines.size() * lineH;
-                    float startY = rect.y + phPt + std::max(0.0f, (phInnerH - totalH) * 0.5f);
-                    for (size_t i = 0; i < lines.size(); ++i)
-                    {
-                        float ly = startY + (float)i * lineH;
-                        if (ly > rect.y + phPt + phInnerH)
-                            break;
-                        r->drawText(f, lines[i], {rect.x + phPl, ly}, fs, sp, phColor.withAlpha(op));
-                    }
+                    TextMeasureSpec phSpec = spec;
+                    phSpec.lineHeight = fs * 1.35f;
+                    TextLayoutOptions phOpts;
+                    phOpts.wrap = true;
+                    phOpts.maxWidth = innerW;
+                    auto phLo = ctx->textEngine.layoutCached(placeholder, phSpec, phOpts);
+                    const float startY = rect.y + pt + std::max(0.0f, (innerH - phLo->size.y) * 0.5f);
+                    ctx->textEngine.draw(*r, *phLo,
+                                         {rect.x + pl, startY, innerW, innerH},
+                                         phColor.withAlpha(op),
+                                         phSpec, Align::Start, placeholder, &innerRect);
                 }
                 else
                 {
-                    std::string disp = truncatePlaceholder(placeholder, phInnerW, f, fs, sp);
-                    r->drawText(f, disp, pos, fs, sp, phColor.withAlpha(op));
+                    TextLayoutOptions phOpts;
+                    phOpts.wrap = false;
+                    phOpts.ellipsis = (innerW > 1.0f);
+                    phOpts.maxWidth = innerW;
+                    phOpts.ellipsisText = "...";
+                    auto phLo = ctx->textEngine.layoutCached(placeholder, spec, phOpts);
+                    ctx->textEngine.draw(*r, *phLo,
+                                         {pos.x, pos.y, innerW, fs},
+                                         phColor.withAlpha(op),
+                                         spec, Align::Start, placeholder);
                 }
             }
-            else
+            else if (!text.empty())
             {
-                r->drawText(f, text, pos, fs, sp, textColor.withAlpha(op));
+                ctx->textEngine.draw(*r, *lo,
+                                     {pos.x, pos.y, std::max(innerW, lo->size.x), fs},
+                                     textColor.withAlpha(op),
+                                     spec, Align::Start, text);
             }
 
-            if (hasFocusCache && config.enabled && cursorBlink < 0.5f && (selectionStart == -1 || selectionStart == cursorPos))
+            if (hasFocusCache && config.enabled && cursorBlink < 0.5f &&
+                (selectionStart == -1 || selectionStart == cursorPos))
             {
                 Style cursorStyle = partStyle("cursor");
-                Color cursorColor = cursorStyle.color.is_set ? cursorStyle.color.value : textColor;
-                float cursorW = cursorStyle.borderWidth.is_set
-                                    ? cursorStyle.borderWidth.value.left.resolveH(fs, fs, vp)
-                                    : 2.0f;
-                float cx = pos.x + r->measureText(f, text.substr(0, cursorPos), fs, sp).x;
+                const Color cursorColor = cursorStyle.color.is_set ? cursorStyle.color.value : textColor;
+                const float cursorW = cursorStyle.borderWidth.is_set
+                                          ? cursorStyle.borderWidth.value.left.resolveH(fs, fs, vp)
+                                          : 2.0f;
+                const float cx = pos.x + (!lo->lines.empty()
+                                              ? TextEngine::caretXOnLine(lo->lines[0], static_cast<size_t>(cursorPos))
+                                              : 0.0f);
                 r->fillRect({cx, pos.y, cursorW, fs}, cursorColor.withAlpha(op));
             }
 
@@ -659,49 +579,36 @@ namespace ZenitUI::UI
         }
 
     private:
-        /**
-         * \brief Map a local x coordinate (relative to the node's left edge)
-         *        to the closest cursor byte index.
-         *
-         * O(n²) in the text length: for each candidate cursor position, it
-         * measures the prefix. Fine for short fields, slow for very long
-         * strings. A linear-time implementation would precompute the
-         * cumulative glyph widths.
-         */
+        TextMeasureSpec makeSpec(const ComputedStyle &style, float lineHeight = 0.0f) const
+        {
+            const Vec2 vp = viewportSize();
+            TextMeasureSpec spec;
+            spec.fontStack = style.font;
+            spec.font = resolveFont(style, defaultFont);
+            spec.fontSize = style.fontSize.resolveV(vp.x, vp.y, vp);
+            spec.letterSpacing = style.letterSpacing.resolveH(vp.x, vp.y, vp);
+            spec.lineHeight = lineHeight;
+            return spec;
+        }
+
         int cursorIndexFromX(float localX)
         {
             auto *ctx = context();
-            if (!ctx)
-                return 0;
-            auto r = ctx->renderer;
-            if (!r)
+            if (!ctx || !ctx->renderer)
                 return cursorPos;
-            const Vec2 vp = viewportSize();
-            FontHandle f = resolveFont(style_.currentStyle, defaultFont);
-            float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
-            float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
-            float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
-            float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
-            float targetX = localX - pl + scrollX;
 
-            auto bounds = Utf8::clusterBoundaries(text);
-            int best = 0;
-            float bestDist = std::abs(targetX);
-            for (size_t bi = 1; bi < bounds.size(); ++bi)
-            {
-                size_t bytePos = bounds[bi];
-                float w = r->measureText(f, std::string_view(text).substr(0, bytePos), fs, sp).x;
-                float dist = std::abs(targetX - w);
-                if (dist < bestDist)
-                {
-                    bestDist = dist;
-                    best = static_cast<int>(bytePos);
-                }
-            }
-            return best;
+            const Vec2 vp = viewportSize();
+            const float bwl = style_.currentStyle.borderWidth.left.resolveH(rect.width, rect.height, vp);
+            const float pl = style_.currentStyle.padding.left.resolveH(rect.width, rect.height, vp) + bwl;
+            const float targetX = localX - pl + scrollX;
+
+            const TextMeasureSpec spec = makeSpec(style_.currentStyle);
+            auto lo = ctx->textEngine.layoutCached(text, spec);
+            if (lo->lines.empty())
+                return 0;
+            return static_cast<int>(TextEngine::hitTestLine(text, lo->lines[0], targetX, false));
         }
 
-        /** \brief One snapshot of (text, cursor) for undo/redo. */
         struct HistoryState
         {
             std::string text;
@@ -710,17 +617,6 @@ namespace ZenitUI::UI
         std::deque<HistoryState> undoStack;
         std::deque<HistoryState> redoStack;
 
-        /**
-         * \brief Push the current state onto the undo stack.
-         *
-         * No-op if the top of the undo stack already has the same text (so
-         * typing many characters one at a time does not push dozens of
-         * entries — wait, it does: each char is a change, each change is a
-         * save. The dedup only helps for "setText called with same content").
-         *
-         * Caps the stack at 50 entries; older entries are discarded.
-         * Clears the redo stack.
-         */
         void saveHistory()
         {
             if (!undoStack.empty() && undoStack.back().text == text)
@@ -731,7 +627,6 @@ namespace ZenitUI::UI
             redoStack.clear();
         }
 
-        /** \brief Restore the previous state. No-op if already at the oldest. */
         void undo()
         {
             if (undoStack.size() > 1)
@@ -745,7 +640,6 @@ namespace ZenitUI::UI
             }
         }
 
-        /** \brief Re-apply the last undone state. No-op if the redo stack is empty. */
         void redo()
         {
             if (!redoStack.empty())
@@ -759,14 +653,6 @@ namespace ZenitUI::UI
             }
         }
 
-        /**
-         * \brief Extend the selection to the word surrounding the cursor.
-         *
-         * "Word" is a run of characters for which `std::isalnum` is true and
-         * which is not a space. Note that `isalnum` already returns false for
-         * space, so `&& text[...] != ' '` is redundant. Underscores are
-         * treated as word breaks (they are not alphanumeric).
-         */
         void selectWordAtCursor()
         {
             if (text.empty())
@@ -797,137 +683,11 @@ namespace ZenitUI::UI
             }
         }
 
-        std::vector<std::string_view> wrapPlaceholderLines(const std::string &src, float availW,
-                                                           FontHandle f, float fs, float sp)
-        {
-            auto *ctx = context();
-            if (!ctx)
-                return {};
-            std::vector<std::string_view> out;
-            auto r = ctx->renderer;
-            if (!r || availW <= 1.0f || src.empty())
-            {
-                if (!src.empty())
-                    out.emplace_back(src);
-                return out;
-            }
-
-            auto measure = [&](size_t a, size_t b) -> float
-            {
-                if (b <= a)
-                    return 0.0f;
-                return r->measureText(f, std::string_view(src).substr(a, b - a), fs, sp).x;
-            };
-
-            size_t len = src.size();
-            size_t pStart = 0;
-            while (true)
-            {
-                size_t pEnd = pStart;
-                while (pEnd < len && src[pEnd] != '\n')
-                    ++pEnd;
-
-                if (pStart == pEnd)
-                {
-                    out.emplace_back();
-                }
-                else
-                {
-                    auto bounds = Utf8::clusterBoundaries(std::string_view(src).substr(pStart, pEnd - pStart));
-                    size_t lineStartIdx = 0;
-                    const size_t lastIdx = bounds.size() - 1;
-                    while (lineStartIdx < lastIdx)
-                    {
-                        size_t lineStart = pStart + bounds[lineStartIdx];
-                        if (measure(lineStart, pEnd) <= availW)
-                        {
-                            out.emplace_back(std::string_view(src).substr(lineStart, pEnd - lineStart));
-                            break;
-                        }
-
-                        size_t lo = lineStartIdx + 1;
-                        size_t hi = lastIdx;
-                        while (lo < hi)
-                        {
-                            size_t mid = lo + (hi - lo + 1) / 2;
-                            if (measure(lineStart, pStart + bounds[mid]) <= availW)
-                                lo = mid;
-                            else
-                                hi = mid - 1;
-                        }
-                        size_t fitIdx = std::max(lineStartIdx + 1, lo);
-                        size_t breakIdx = fitIdx;
-
-                        if (fitIdx < lastIdx && src[pStart + bounds[fitIdx]] == ' ')
-                        {
-                            breakIdx = fitIdx + 1;
-                        }
-                        else
-                        {
-                            for (size_t k = fitIdx - 1; k > lineStartIdx; --k)
-                            {
-                                if (src[pStart + bounds[k]] == ' ')
-                                {
-                                    breakIdx = k + 1;
-                                    break;
-                                }
-                            }
-                        }
-
-                        size_t visEnd = pStart + bounds[breakIdx];
-                        while (visEnd > lineStart && src[visEnd - 1] == ' ')
-                            --visEnd;
-                        out.emplace_back(std::string_view(src).substr(lineStart, visEnd - lineStart));
-                        lineStartIdx = breakIdx;
-                    }
-                }
-
-                if (pEnd >= len)
-                    break;
-                pStart = pEnd + 1;
-            }
-            return out;
-        }
-
-        std::string truncatePlaceholder(const std::string &src, float maxW,
-                                        FontHandle f, float fs, float sp)
-        {
-            auto *ctx = context();
-            if (!ctx)
-                return "";
-            auto r = ctx->renderer;
-            if (!r || maxW <= 1.0f || src.empty())
-                return src;
-            if (r->measureText(f, src, fs, sp).x <= maxW)
-                return src;
-
-            const std::string ell = "...";
-            float ellW = r->measureText(f, ell, fs, sp).x;
-            if (ellW >= maxW)
-                return "";
-
-            auto bounds = Utf8::clusterBoundaries(src);
-            size_t lo = 0, hi = bounds.size() - 1;
-            while (lo < hi)
-            {
-                size_t mid = lo + (hi - lo + 1) / 2;
-                if (r->measureText(f, std::string_view(src).substr(0, bounds[mid]), fs, sp).x + ellW <= maxW)
-                    lo = mid;
-                else
-                    hi = mid - 1;
-            }
-            size_t cut = bounds[lo];
-            while (cut > 0 && src[cut - 1] == ' ')
-                --cut;
-            return src.substr(0, cut) + ell;
-        }
-
         std::string text;
         std::string placeholder;
         bool placeholderWrap{false};
         int cursorPos{0};
         int selectionStart{-1};
-        bool text_dirty{true};
         bool hasFocusCache{false};
         float cursorBlink{0.0f};
         float scrollX{0.0f};
@@ -936,7 +696,6 @@ namespace ZenitUI::UI
         int clickCount{0};
         double lastClickTime{0.0};
 
-        /** \brief Repeat state for held keys (Backspace, Delete, Left, Right). */
         struct RepeatState
         {
             float holdTime{0.0f};

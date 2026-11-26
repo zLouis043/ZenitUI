@@ -251,19 +251,25 @@ namespace ZenitUI
 
         /**
          * \brief Rasterize any missing glyphs into the atlas and emit batched `drawGeometry` calls.
-         * \param renderer Destination renderer.
-         * \param layout   Previously computed `TextLayout`.
-         * \param bounds   Logical bounding box for alignment (x, y, width, height).
-         * \param color    Text color (including opacity).
-         * \param spec     Font size used to select physical glyph pixel size.
-         * \param align    Horizontal alignment within `bounds.width`.
+         * \param renderer     Destination renderer.
+         * \param layout       Previously computed `TextLayout`.
+         * \param bounds       Logical bounding box for alignment (x, y, width, height).
+         * \param color        Text color (including opacity).
+         * \param spec         Font size used to select physical glyph pixel size.
+         * \param align        Horizontal alignment within `bounds.width`.
+         * \param fallbackText Source UTF-8 text used only in synthetic headless fallback mode
+         *                     (when no TTF/OTF font is loaded in `TextEngine`).
+         * \param cullRect     Optional layout-local clip rectangle; lines completely outside
+         *                     its vertical range are skipped before rasterization and submission.
          */
         void draw(IRenderer &renderer,
                   const TextLayout &layout,
                   Rect bounds,
                   Color color,
                   const TextMeasureSpec &spec,
-                  Align align = Align::Start);
+                  Align align = Align::Start,
+                  std::string_view fallbackText = {},
+                  const Rect *cullRect = nullptr);
 
     private:
         struct Impl;

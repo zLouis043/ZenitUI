@@ -801,13 +801,21 @@ namespace ZenitUI
 		 * \param style    Computed style carrying the `font` field.
 		 * \param fallback Returned if the stack is empty or resolution fails.
 		 */
-		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {})
+		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {}) const
 		{
 			auto *ctx = context();
-			if (style.font.empty() || !ctx || !ctx->assets)
+			if (!ctx)
 				return fallback;
-			FontHandle h = ctx->assets->getFont(style.font);
-			return h.id != 0 ? h : fallback;
+			FontHandle h = ctx->textEngine.resolveFont(style.font, fallback);
+			if (h.id != 0)
+				return h;
+			if (!style.font.empty() && ctx->assets && ctx->textEngine.defaultFont().id == 0)
+			{
+				FontHandle ah = ctx->assets->getFont(style.font);
+				if (ah.id != 0)
+					return ah;
+			}
+			return fallback;
 		}
 
 		/** \struct ResolvedBgTexture

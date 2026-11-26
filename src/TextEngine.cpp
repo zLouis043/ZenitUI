@@ -1349,10 +1349,39 @@ namespace ZenitUI
                           Rect bounds,
                           Color color,
                           const TextMeasureSpec &spec,
-                          Align align)
+                          Align align,
+                          std::string_view fallbackText,
+                          const Rect *cullRect)
     {
-        if (color.a == 0 || layout.lines.empty() || layout.synthetic)
+        if (color.a == 0 || layout.lines.empty())
             return;
+
+        if (layout.synthetic)
+        {
+            if (fallbackText.empty() && !layout.truncated)
+                return;
+
+            const float boxW = (bounds.width > 0.0f) ? bounds.width : layout.size.x;
+            for (const auto &ln : layout.lines)
+            {
+                const float lineTop = bounds.y + ln.yOffset;
+                const float lineBot = lineTop + ln.height;
+                if (cullRect && (lineBot <= cullRect->y || lineTop >= cullRect->y + cullRect->height))
+                    continue;
+
+                std::string_view sv =
+                    ln.ellipsized
+                        ? std::string_view(layout.ellipsizedText)
+                        : (ln.byteEnd <= fallbackText.size()
+                               ? fallbackText.substr(ln.byteStart, ln.byteEnd - ln.byteStart)
+                               : std::string_view{});
+                if (sv.empty())
+                    continue;
+                const float lineX = bounds.x + alignOffsetX(boxW, ln.width, align);
+                renderer.drawText(spec.font, sv, {lineX, lineTop}, spec.fontSize, spec.letterSpacing, color);
+            }
+            return;
+        }
 
         const float invDpi = 1.0f / impl_->dpiScale;
         const uint16_t physPx = static_cast<uint16_t>(
@@ -1368,8 +1397,13 @@ namespace ZenitUI
 
         for (const auto &ln : layout.lines)
         {
+            const float lineTop = bounds.y + ln.yOffset;
+            const float lineBot = lineTop + ln.height;
+            if (cullRect && (lineBot <= cullRect->y || lineTop >= cullRect->y + cullRect->height))
+                continue;
+
             const float lineX = std::round(bounds.x + alignOffsetX(boxW, ln.width, align));
-            const float baselineY = std::round(bounds.y + ln.yOffset + ln.baselineOffset);
+            const float baselineY = std::round(lineTop + ln.baselineOffset);
 
             for (const auto &sg : ln.glyphs)
             {

@@ -31,6 +31,7 @@
 #include "Geometry2D.hpp"
 #include "FilterRegistry.hpp"
 #include "Theme.hpp"
+#include "TextEngine.hpp"
 
 #include <span>
 
@@ -782,7 +783,10 @@ namespace ZenitUI
 		void detachBackend()
 		{
 			if (renderer)
+			{
+				textEngine.clearAtlas(*renderer);
 				targetPool.clear(*renderer, &renderStats);
+			}
 			renderer = nullptr;
 			platform = nullptr;
 			assets = nullptr;
@@ -815,6 +819,7 @@ namespace ZenitUI
 
 		FilterRegistry filters; ///< Per-context post-processing filter definitions (preloaded with builtins).
 		Theme theme; ///< Per-context stylesheet (rules, keyframes, and `:root` style).
+		TextEngine textEngine; ///< Per-context FreeType/HarfBuzz shaper, glyph atlas, and layout cache.
 
 		uint32_t viewportGeneration{0};
 
@@ -914,6 +919,7 @@ namespace ZenitUI
 				modifiers = platform->modifiers();
 				inputEvents = platform->pollInputEvents();
 				dpiScale = platform->dpiScale();
+				textEngine.setDpiScale(dpiScale);
 				if (renderer)
 				{
 					renderer->setDpiScale(dpiScale);

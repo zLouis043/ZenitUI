@@ -677,6 +677,9 @@ namespace ZenitUI::Test
 			ctx.viewport = {1920.0f, 1080.0f};
 			ctx.filters.reset();
 			ctx.theme.clear();
+			ctx.textEngine.clearAtlas(renderer);
+			ctx.textEngine.clearLayoutCache();
+			ctx.textEngine.setFallbackCharWidth(renderer.charWidth);
 
 			platform.reset();
 			renderer.reset();
