@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795733721040,
+  "lastUpdate": 1795734423291,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -1035,6 +1035,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 2625.17,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "9b5940c4749dfafb238498d5588b38b06e7041af",
+          "message": "feat(text): implement FreeType + HarfBuzz TextEngine with glyph atlas and LRU cache\n\nAdds PIMPL-based TextEngine (FontStore, HarfBuzz hb-ot shaper with per-cluster font fallback, FreeType dynamic shelf-packed glyph atlas, O(N) UTF-8 word wrapping, ellipsis, hit-testing, caret/selection geometry, batched drawGeometry rendering, headless synthetic fallback, and per-instance layout LRU cache) along with unit tests in tests/test_text_engine.cpp.",
+          "timestamp": "2026-11-27T00:01:22+01:00",
+          "tree_id": "89aa5642d49cab6109124fd1fd1358e4e149cf1b",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/9b5940c4749dfafb238498d5588b38b06e7041af"
+        },
+        "date": 1795734421625,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 4865.96,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 4758.66,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2956.2,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 4709.97,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 2697.73,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 4091.24,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 4017.55,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 2553.82,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 4106.39,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 2563.08,
             "unit": "us"
           }
         ]
