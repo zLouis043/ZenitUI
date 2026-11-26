@@ -124,7 +124,7 @@ int main() {
     ctx.detachBackend();
     CloseWindow();
 }
-`
+```
 
 See [`examples/01_hello_world/main.cpp`](examples/01_hello_world/main.cpp) for a ready-to-run version, or run `make run-00_demo` to launch the full multi-view showcase.
 
