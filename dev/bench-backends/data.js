@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795692773258,
+  "lastUpdate": 1795702097895,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -517,6 +517,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 3187.29,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "1a5072dab9404e14a78248f33be5bf8feb7f999e",
+          "message": "refactor(filters): move FilterRegistry into UIContext\n\nReplaces the FilterRegistry::get() singleton and registerBuiltinFilters() free function with a value member UIContext::filters whose constructor pre-registers builtin filters. Passes UIContext* through FilterContext so FilterRegistry.cpp no longer calls UIContext::get(), resets filters in MockBackend Env teardown/reset, and updates filter tests and callers.",
+          "timestamp": "2026-11-26T15:02:29+01:00",
+          "tree_id": "0156b6d6c881ee07f8293f73f89d2908a0535f2e",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/1a5072dab9404e14a78248f33be5bf8feb7f999e"
+        },
+        "date": 1795702096612,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 6037.85,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 6068.24,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 3558.69,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 5886.49,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 3352.12,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 5246.56,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 5148.76,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 3194.47,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 5214.55,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 3162.4,
             "unit": "us"
           }
         ]
