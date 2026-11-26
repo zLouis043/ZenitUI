@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795730852750,
+  "lastUpdate": 1795733552054,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -18028,6 +18028,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 124.079,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "fb8a92677635079663ac6ac1d2a5024eecff46be",
+          "message": "build(text): integrate FreeType/HarfBuzz and add dynamic textures to IRenderer\n\nFetches minimal FreeType (2.13.3) and HarfBuzz (10.4.0, hb-ot) via FetchContent without circular build dependencies and exports them in ZenitUITargets. Adds createTexture/updateTexture/destroyTexture to IRenderer with implementations in MockRenderer, RaylibRenderer, and SDL3Renderer.",
+          "timestamp": "2026-11-26T23:49:59+01:00",
+          "tree_id": "b14ac667c4ec0921b60640286ecaea3bf2866132",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/fb8a92677635079663ac6ac1d2a5024eecff46be"
+        },
+        "date": 1795733550784,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 253.537,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 3.94819,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00466104,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0335517,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0255418,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.586661,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.733378,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.657481,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.319069,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.987916,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 32.9925,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 34.1172,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 11.4366,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 12.5768,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 31.4693,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00327454,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 39.2979,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 139.652,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 50.0079,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 101.245,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 77.6568,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 59.2558,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 97.9376,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 440.374,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 450.159,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 39.9343,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 101.415,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 88.1597,
             "unit": "us"
           }
         ]
