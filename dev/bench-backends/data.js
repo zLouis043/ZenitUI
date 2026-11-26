@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795728928345,
+  "lastUpdate": 1795731001633,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -887,6 +887,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 3184.12,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "750e7254662918e2bc5528e1567ec23ade821606",
+          "message": "feat(core): track primary mounted root for UIContext::runFrame/renderFrame overloads\n\nStores primaryRoot_ on UIContext when mount() is called (auto-cleared on unmount, detach, reparenting, or destruction), adds zero-root runFrame(dt)/renderFrame()/unmount()/mountedRoot() helpers, updates examples and docs to avoid repeating the root handle in the main loop, and adds unit test coverage in test_multi_context.cpp.",
+          "timestamp": "2026-11-26T23:05:23+01:00",
+          "tree_id": "dd291632280dc65bc1ec08f6a54eeac46063b743",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/750e7254662918e2bc5528e1567ec23ade821606"
+        },
+        "date": 1795730999986,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 4889.87,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 4732.22,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2915.32,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 4872.41,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 2633.26,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 4125.09,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 3964.17,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 2447.48,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 4003.17,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 2411.18,
             "unit": "us"
           }
         ]
