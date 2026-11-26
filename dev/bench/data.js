@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795728752124,
+  "lastUpdate": 1795730852750,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -17864,6 +17864,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 61.1204,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "750e7254662918e2bc5528e1567ec23ade821606",
+          "message": "feat(core): track primary mounted root for UIContext::runFrame/renderFrame overloads\n\nStores primaryRoot_ on UIContext when mount() is called (auto-cleared on unmount, detach, reparenting, or destruction), adds zero-root runFrame(dt)/renderFrame()/unmount()/mountedRoot() helpers, updates examples and docs to avoid repeating the root handle in the main loop, and adds unit test coverage in test_multi_context.cpp.",
+          "timestamp": "2026-11-26T23:05:23+01:00",
+          "tree_id": "dd291632280dc65bc1ec08f6a54eeac46063b743",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/750e7254662918e2bc5528e1567ec23ade821606"
+        },
+        "date": 1795730851410,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 340.358,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 5.33582,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00466607,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0363699,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0251257,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.784049,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.970926,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.909597,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.447246,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.672801,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 44.9302,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 53.0877,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 17.2097,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 14.2507,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 45.0094,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00373031,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 61.6335,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 196.759,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 76.2393,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 151.425,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 125.657,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 92.5598,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 147.446,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 655.6,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 668.162,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 54.266,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 144.212,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 124.079,
             "unit": "us"
           }
         ]
