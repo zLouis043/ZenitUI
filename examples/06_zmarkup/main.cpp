@@ -33,7 +33,7 @@ using namespace ZenitUI::UI;
 //  The UI, described declaratively.
 // ---------------------------------------------------------------------------
 
-static const char* kMarkup = R"(
+static const char *kMarkup = R"(
     VStack#page {
         VStack.card {
             Text.card-title "Account settings"
@@ -73,15 +73,14 @@ int main()
     InitWindow(800, 540, "ZenitUI — 06 ZMarkup");
     SetTargetFPS(60);
 
-    RaylibRenderer      renderer;
-    RaylibPlatform      platform;
+    RaylibRenderer renderer;
+    RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
-    ZMarkup::loadStyleFile("examples/06_zmarkup/ui.zstyle", UIContext::get().theme);
+    ZMarkup::loadStyleFile("examples/06_zmarkup/ui.zstyle", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Build the tree. ZMarkup::build parses the string, constructs every
@@ -90,7 +89,8 @@ int main()
     auto ui = ZMarkup::build(kMarkup);
     auto root = ui.root();
 
-    if (!root) {
+    if (!root)
+    {
         std::fprintf(stderr, "Failed to build markup\n");
         return 1;
     }
@@ -101,44 +101,48 @@ int main()
 
     // Live feedback between the slider and its label.
     auto volumeLabel = ui.find<Text>("volume-value");
-    ui.onValueChanged("volume", [volumeLabel](float v) {
+    ui.onValueChanged("volume", [volumeLabel](float v)
+                      {
         int pct = (int)(v * 100.0f + 0.5f);
-        volumeLabel->setText(std::to_string(pct) + "%");
-    });
+        volumeLabel->setText(std::to_string(pct) + "%"); });
 
     // Toggle.
-    ui.onToggle("audio", [](bool on) {
-        std::printf("audio: %s\n", on ? "on" : "off");
-    });
+    ui.onToggle("audio", [](bool on)
+                { std::printf("audio: %s\n", on ? "on" : "off"); });
 
     // Buttons.
-    ui.onClick("save", [] { std::printf("save clicked\n"); });
-    ui.onClick("reset", [volumeLabel] {
+    ui.onClick("save", []
+               { std::printf("save clicked\n"); });
+    ui.onClick("reset", [volumeLabel]
+               {
         std::printf("reset clicked\n");
-        volumeLabel->setText("65%");
-    });
+        volumeLabel->setText("65%"); });
 
     // Typed lookup: the TextInput's onSubmit fires on Enter.
     if (auto input = ui.find<TextInput>("username"))
     {
-        input->onSubmit = [](const std::string& s) {
+        input->onSubmit = [](const std::string &s)
+        {
             std::printf("username submitted: %s\n", s.c_str());
         };
     }
+
+    ctx.mount(*root);
 
     // -----------------------------------------------------------------------
     //  Main loop
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

@@ -151,11 +151,14 @@ namespace ZenitUI::UI
          */
         Vec2 computeIntrinsicSize(float availW, float) override
         {
+            auto *ctx = context();
+            if (!ctx)
+                return {0.0f, 0.0f};
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
             const Vec2 vp = viewportSize();
             float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float charW = 0.0f;
-            if (auto r = context().renderer)
+            if (auto r = ctx->renderer)
                 charW = r->measureText(f, "M", fs, 0.0f).x;
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
@@ -211,13 +214,15 @@ namespace ZenitUI::UI
          */
         void onUpdate(float dt) override
         {
-            hasFocusCache = context().hasFocus(this);
+            auto *ctx = context();
+            if (!ctx)
+                return;
+            hasFocusCache = ctx->hasFocus(this);
             cursorBlink += dt;
             if (cursorBlink > 1.0f)
                 cursorBlink -= 1.0f;
 
-            auto &ctx = context();
-            auto &ev = ctx.inputEvents;
+            auto &ev = ctx->inputEvents;
             const Vec2 vp = viewportSize();
             bool changed = false;
 
@@ -230,9 +235,9 @@ namespace ZenitUI::UI
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
-                context().requestFocus(shared_from_this());
+                ctx->requestFocus(shared_from_this());
 
-                double now = ctx.platform->time();
+                double now = ctx->platform->time();
                 if (now - lastClickTime < 0.4)
                 {
                     clickCount++;
@@ -243,7 +248,7 @@ namespace ZenitUI::UI
                 }
                 lastClickTime = now;
 
-                cursorPos = cursorIndexFromX(ctx.pointer.pos.x - rect.x);
+                cursorPos = cursorIndexFromX(ctx->pointer.pos.x - rect.x);
                 selectionStart = cursorPos;
 
                 if (clickCount == 2)
@@ -262,7 +267,7 @@ namespace ZenitUI::UI
 
             if (hasPointerCapture() && clickCount == 1)
             {
-                int newPos = cursorIndexFromX(ctx.pointer.pos.x - rect.x);
+                int newPos = cursorIndexFromX(ctx->pointer.pos.x - rect.x);
                 if (newPos != cursorPos)
                 {
                     cursorPos = newPos;
@@ -294,7 +299,7 @@ namespace ZenitUI::UI
                 return false;
             };
 
-            if (ctx.modifiers.ctrl || ctx.modifiers.super)
+            if (ctx->modifiers.ctrl || ctx->modifiers.super)
             {
                 for (int k : ev.keys)
                 {
@@ -310,7 +315,7 @@ namespace ZenitUI::UI
                         {
                             int s1 = std::min(selectionStart, cursorPos);
                             int s2 = std::max(selectionStart, cursorPos);
-                            ctx.platform->setClipboardText(text.substr(s1, s2 - s1));
+                            ctx->platform->setClipboardText(text.substr(s1, s2 - s1));
                             if (k == Key::X)
                             {
                                 deleteSelection();
@@ -321,7 +326,7 @@ namespace ZenitUI::UI
                     else if (k == Key::V)
                     {
                         deleteSelection();
-                        std::string clean = Utf8::sanitizeSingleLine(ctx.platform->getClipboardText());
+                        std::string clean = Utf8::sanitizeSingleLine(ctx->platform->getClipboardText());
                         if (!clean.empty())
                         {
                             text.insert(static_cast<size_t>(cursorPos), clean);
@@ -333,7 +338,7 @@ namespace ZenitUI::UI
                     }
                     else if (k == Key::Z)
                     {
-                        if (ctx.modifiers.shift)
+                        if (ctx->modifiers.shift)
                             redo();
                         else
                             undo();
@@ -365,7 +370,7 @@ namespace ZenitUI::UI
             auto doAction = [&](int key)
             {
                 bool actionChanged = false;
-                const bool wordJump = (ctx.modifiers.ctrl || ctx.modifiers.super);
+                const bool wordJump = (ctx->modifiers.ctrl || ctx->modifiers.super);
                 switch (key)
                 {
                 case Key::Backspace:
@@ -398,7 +403,7 @@ namespace ZenitUI::UI
                     }
                     break;
                 case Key::Left:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -415,7 +420,7 @@ namespace ZenitUI::UI
                     }
                     break;
                 case Key::Right:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -481,17 +486,17 @@ namespace ZenitUI::UI
                 case Key::Enter:
                     if (onSubmit)
                         onSubmit(text);
-                    context().releaseFocus();
+                    ctx->releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
                 case Key::Escape:
-                    context().releaseFocus();
+                    ctx->releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
                 case Key::Home:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -502,7 +507,7 @@ namespace ZenitUI::UI
                     internal_.pendingTransition = 1;
                     break;
                 case Key::End:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -524,7 +529,7 @@ namespace ZenitUI::UI
             }
 
             {
-                auto r = context().renderer;
+                auto r = ctx->renderer;
                 const Vec2 vp = viewportSize();
                 if (!r)
                     return;
@@ -556,7 +561,10 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return;
+            auto r = ctx->renderer;
             const Vec2 vp = viewportSize();
             FontHandle f = resolveFont(style, defaultFont);
             float fs = style.fontSize.resolveV(vp.x, vp.y, vp);
@@ -662,7 +670,10 @@ namespace ZenitUI::UI
          */
         int cursorIndexFromX(float localX)
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return 0;
+            auto r = ctx->renderer;
             if (!r)
                 return cursorPos;
             const Vec2 vp = viewportSize();
@@ -787,10 +798,13 @@ namespace ZenitUI::UI
         }
 
         std::vector<std::string_view> wrapPlaceholderLines(const std::string &src, float availW,
-                                                                  FontHandle f, float fs, float sp)
+                                                           FontHandle f, float fs, float sp)
         {
+            auto *ctx = context();
+            if (!ctx)
+                return {};
             std::vector<std::string_view> out;
-            auto r = context().renderer;
+            auto r = ctx->renderer;
             if (!r || availW <= 1.0f || src.empty())
             {
                 if (!src.empty())
@@ -876,9 +890,12 @@ namespace ZenitUI::UI
         }
 
         std::string truncatePlaceholder(const std::string &src, float maxW,
-                                               FontHandle f, float fs, float sp)
+                                        FontHandle f, float fs, float sp)
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return "";
+            auto r = ctx->renderer;
             if (!r || maxW <= 1.0f || src.empty())
                 return src;
             if (r->measureText(f, src, fs, sp).x <= maxW)

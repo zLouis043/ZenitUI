@@ -85,7 +85,7 @@ TEST(ZMarkupBuild, nested_layout) {
 
 TEST(ZMarkupBuild, toggle_arranges_with_size) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
 
     ZMarkup::loadStyleString(R"(
         Toggle { width: 100px; height: 50px; }
@@ -95,7 +95,7 @@ TEST(ZMarkupBuild, toggle_arranges_with_size) {
             top: 10px; left: 10px;
         }
         Toggle:checked .toggle-knob { left: 60px; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto ui = ZMarkup::build(R"(Toggle#t checked=true)");
     auto toggle = ui.find("t");
@@ -118,10 +118,10 @@ TEST(ZMarkupBuild, toggle_arranges_with_size) {
 TEST(Widget_dropdown, css_can_override_trigger_height)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .dropdown-trigger { height: 60px; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto dd = UI::Dropdown::create(
         std::vector<std::string>{"A", "B"}, 0);
@@ -1056,11 +1056,11 @@ TEST(Widget_layout, setVisible_false_skips_hitTest_draw_and_focus)
     root->addChild(btn);
     env.frame(root);
 
-    UIContext::get().requestFocus(btn);
-    CHECK(UIContext::get().hasFocus(btn.get()));
+    env.ctx.requestFocus(btn);
+    CHECK(env.ctx.hasFocus(btn.get()));
 
     btn->setVisible(false);
-    CHECK(!UIContext::get().hasFocus(btn.get()));
+    CHECK(!env.ctx.hasFocus(btn.get()));
 
     env.renderer.fillRectCount = 0;
     env.click(root, {50, 25});
@@ -1069,7 +1069,7 @@ TEST(Widget_layout, setVisible_false_skips_hitTest_draw_and_focus)
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(!UIContext::get().hasFocus(btn.get()));
+    CHECK(!env.ctx.hasFocus(btn.get()));
 }
 
 TEST(Widget_layout, insertChildBefore_and_removeChild_preserve_order)
@@ -1349,8 +1349,8 @@ TEST(ZMarkupBuild, each_syncEachKeyed_reuses_nodes_and_preserves_state_and_order
     CHECK(in2 != nullptr);
     in2->setText("user_typed");
     env.frame(root);
-    UIContext::get().requestFocus(in2);
-    CHECK(UIContext::get().hasFocus(in2.get()));
+    env.ctx.requestFocus(in2);
+    CHECK(env.ctx.hasFocus(in2.get()));
 
     creates = 0;
     updates = 0;
@@ -1365,7 +1365,7 @@ TEST(ZMarkupBuild, each_syncEachKeyed_reuses_nodes_and_preserves_state_and_order
     CHECK(list->children[4] == ui.ref("footer"));
 
     CHECK(in2->getText() == "user_typed");
-    CHECK(UIContext::get().hasFocus(in2.get()));
+    CHECK(env.ctx.hasFocus(in2.get()));
     auto lbl2 = std::dynamic_pointer_cast<Text>(list->children[0]->children[1]);
     CHECK(lbl2->getText() == "Two-Updated");
 }

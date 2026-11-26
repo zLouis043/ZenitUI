@@ -30,13 +30,12 @@ int main()
     InitWindow(640, 360, "ZenitUI — 01 Hello World");
     SetTargetFPS(60);
 
-    RaylibRenderer      renderer;
-    RaylibPlatform      platform;
+    RaylibRenderer renderer;
+    RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // -------------------------------------------------------------------
     //  Root layout: fills the viewport, centers its children
@@ -44,35 +43,37 @@ int main()
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
     root->getInlineBase().background = ZenitUI::Color{24, 24, 28, 255};
-    root->getInlineBase().itemsH     = Align::Center;
-    root->getInlineBase().itemsV     = Align::Center;
+    root->getInlineBase().itemsH = Align::Center;
+    root->getInlineBase().itemsV = Align::Center;
 
     // -------------------------------------------------------------------
     //  The button
     // -------------------------------------------------------------------
-    auto button = Btn("Click me", []{
-        std::printf("clicked!\n");
-    });
+    auto button = Btn("Click me", []
+                      { std::printf("clicked!\n"); });
 
     button->getInlineBase().background = ZenitUI::Color{60, 120, 220, 255};
-    button->getInlineBase().radius     = Px(8);
-    button->getInlineBase().padding    = Spacing(VH(1.5f), VW(3.0f));
+    button->getInlineBase().radius = Px(8);
+    button->getInlineBase().padding = Spacing(VH(1.5f), VW(3.0f));
 
     root->addChild(button);
+
+    ctx.mount(root);
 
     // -------------------------------------------------------------------
     //  Main loop
     // -------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());    // logic
+        ctx.runFrame(*root, GetFrameTime()); // logic
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();               // draw
+        ctx.renderFrame(*root);// draw
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

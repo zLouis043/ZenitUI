@@ -99,11 +99,14 @@ namespace ZenitUI
 		/** \brief Return the currently bound `UIContext`, or `nullptr` if unbound. */
 		UIContext *boundContext() const { return boundCtx_; }
 
-		/** \brief Temporary Step 4 wrapper forwarding to `bindTo(UIContext::get())`. */
-		void bindToContext() { bindTo(UIContext::get()); }
-
-		/** \brief Temporary Step 4 wrapper forwarding to `unbind()`. */
-		void unbindFromContext() { unbind(); }
+		/** \brief Initialize the backend and bind its adapters to \p ctx in one step. */
+		bool initAndBind(const WindowConfig &config, UIContext &ctx)
+		{
+			if (!init(config))
+				return false;
+			bindTo(ctx);
+			return true;
+		}
 
 	protected:
 		UIContext *boundCtx_{nullptr};

@@ -54,8 +54,11 @@ namespace ZenitUI::UI
          */
         void renderContent(float op, const ComputedStyle &style) override
         {
+            auto *ctx = context();
+            if (!ctx)
+                return;
             if (tex.valid())
-                context().renderer->drawTexture(
+                ctx->renderer->drawTexture(
                     tex,
                     {0, 0, (float)tex.width, (float)tex.height},
                     rect,

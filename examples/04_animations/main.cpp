@@ -24,16 +24,16 @@ using namespace ZenitUI::UI;
 //  Helpers
 // ---------------------------------------------------------------------------
 
-static std::shared_ptr<Layout> Row(const std::string& title,
+static std::shared_ptr<Layout> Row(const std::string &title,
                                    std::shared_ptr<Layout> content)
 {
     auto row = std::make_shared<Layout>(LayoutType::Horizontal);
-    row->getInlineBase().gap        = Px(16);
-    row->getInlineBase().itemsV     = Align::Center;
-    row->getInlineBase().padding    = Spacing(Px(14));
+    row->getInlineBase().gap = Px(16);
+    row->getInlineBase().itemsV = Align::Center;
+    row->getInlineBase().padding = Spacing(Px(14));
     row->getInlineBase().background = ZenitUI::Color{32, 32, 38, 255};
-    row->getInlineBase().radius     = Px(6);
-    row->getInlineBase().width      = Percent(100);
+    row->getInlineBase().radius = Px(6);
+    row->getInlineBase().width = Percent(100);
 
     auto label = Label(title);
     label->size(Px(220), Auto());
@@ -44,15 +44,15 @@ static std::shared_ptr<Layout> Row(const std::string& title,
     return row;
 }
 
-static std::shared_ptr<Layout> Swatch(const std::string& text,
-                                      const std::string& cls)
+static std::shared_ptr<Layout> Swatch(const std::string &text,
+                                      const std::string &cls)
 {
     auto box = std::make_shared<Layout>(LayoutType::Stack);
     box->cls(cls);
     box->getInlineBase().minWidth = Px(140);
-    box->getInlineBase().padding  = Spacing(Px(14), Px(20));
-    box->getInlineBase().itemsH   = Align::Center;
-    box->getInlineBase().itemsV   = Align::Center;
+    box->getInlineBase().padding = Spacing(Px(14), Px(20));
+    box->getInlineBase().itemsH = Align::Center;
+    box->getInlineBase().itemsV = Align::Center;
     box->addChild(Label(text));
     return box;
 }
@@ -66,13 +66,12 @@ int main()
     InitWindow(760, 480, "ZenitUI — 04 Animations");
     SetTargetFPS(60);
 
-    RaylibRenderer      renderer;
-    RaylibPlatform      platform;
+    RaylibRenderer renderer;
+    RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // -----------------------------------------------------------------------
     //  All animations live here. No C++ code drives them.
@@ -130,7 +129,7 @@ int main()
         Slider:hover::knob {
             animation: knobGlow 0.7s ease-in-out infinite;
         }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Root
@@ -138,8 +137,8 @@ int main()
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->size(Percent(100), Percent(100));
     root->getInlineBase().background = ZenitUI::Color{20, 20, 24, 255};
-    root->getInlineBase().padding    = Spacing(Px(20));
-    root->getInlineBase().gap        = Px(14);
+    root->getInlineBase().padding = Spacing(Px(20));
+    root->getInlineBase().gap = Px(14);
 
     // --- 1. Transition -----------------------------------------------------
     {
@@ -170,19 +169,22 @@ int main()
         root->addChild(Row("3. ::part animation (hover)", content));
     }
 
+    ctx.mount(root);
+
     // -----------------------------------------------------------------------
     //  Main loop
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

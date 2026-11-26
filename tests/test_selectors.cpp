@@ -9,10 +9,10 @@ using namespace ZenitUI::Test;
 
 TEST(Selectors_compound, tag_and_class_on_same_node) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Button.btn-primary { color: #ff0000; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = UI::Button::create(nullptr);
     btn->cls("btn-primary");
@@ -28,10 +28,10 @@ TEST(Selectors_compound, tag_and_class_on_same_node) {
 
 TEST(Selectors_compound, tag_matches_but_class_missing) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Button.btn-primary { color: #ff0000; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = UI::Button::create(nullptr);
 
@@ -46,10 +46,10 @@ TEST(Selectors_compound, tag_matches_but_class_missing) {
 
 TEST(Selectors_compound, class_matches_but_tag_missing) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Button.btn-primary { color: #ff0000; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto panel = UI::Panel::create();
     panel->cls("btn-primary");
@@ -65,10 +65,10 @@ TEST(Selectors_compound, class_matches_but_tag_missing) {
 
 TEST(Selectors_compound, two_classes_on_same_node) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .card.elevated { color: #00ff00; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("card");
@@ -85,10 +85,10 @@ TEST(Selectors_compound, two_classes_on_same_node) {
 
 TEST(Selectors_compound, two_classes_only_one_present) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .card.elevated { color: #00ff00; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("card");
@@ -104,10 +104,10 @@ TEST(Selectors_compound, two_classes_only_one_present) {
 
 TEST(Selectors_compound, id_and_tag) {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Button#save { color: #0000ff; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = UI::Button::create(nullptr);
     btn->id("save");

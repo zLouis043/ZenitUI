@@ -160,23 +160,7 @@ namespace ZenitUI
 		virtual ~Layout()
 		{
 			if (ctx_)
-			{
 				detachContext();
-			}
-			else
-			{
-				// Step 4 fallback for nodes never mounted on an explicit UIContext.
-				auto &ctx = context();
-				if (ctx.pressTarget == this)
-					ctx.pressTarget = nullptr;
-				if (ctx.releaseTarget == this)
-					ctx.releaseTarget = nullptr;
-				if (ctx.topmostConsumer == this)
-					ctx.topmostConsumer = nullptr;
-				if (ctx.hoverTarget == this)
-					ctx.hoverTarget = nullptr;
-				releaseLayerCache();
-			}
 		}
 
 		/**
@@ -574,11 +558,13 @@ namespace ZenitUI
 
 			if (!e)
 			{
-				auto &ctx = context();
-				if (ctx.focusedNode.lock().get() == this)
-					ctx.focusedNode.reset();
-				if (ctx.pointerCapture.lock().get() == this)
-					ctx.pointerCapture.reset();
+				if (auto *ctx = context())
+				{
+					if (ctx->focusedNode.lock().get() == this)
+						ctx->focusedNode.reset();
+					if (ctx->pointerCapture.lock().get() == this)
+						ctx->pointerCapture.reset();
+				}
 			}
 
 			onEnabledChanged(e);
@@ -774,20 +760,24 @@ namespace ZenitUI
 		 */
 		void capturePointer()
 		{
-			context().pointerCapture = shared_from_this();
+			if (auto *ctx = context())
+				ctx->pointerCapture = shared_from_this();
 		}
 		/** \brief Release the pointer capture if this node owns it. */
 		void releasePointer()
 		{
-			auto &ctx = context();
-			auto sp = ctx.pointerCapture.lock();
-			if (sp.get() == this)
-				ctx.pointerCapture.reset();
+			if (auto *ctx = context())
+			{
+				auto sp = ctx->pointerCapture.lock();
+				if (sp.get() == this)
+					ctx->pointerCapture.reset();
+			}
 		}
 		/** \brief `true` if this node currently holds the pointer capture. */
 		bool hasPointerCapture() const
 		{
-			return context().pointerCapture.lock().get() == this;
+			auto *ctx = context();
+			return ctx && ctx->pointerCapture.lock().get() == this;
 		}
 
 		void setKeyboardActivates(bool v) { config.keyboardActivates = v ? 1 : 0; }
@@ -813,9 +803,10 @@ namespace ZenitUI
 		 */
 		inline FontHandle resolveFont(const ComputedStyle &style, FontHandle fallback = {})
 		{
-			if (style.font.empty() || !context().assets)
+			auto *ctx = context();
+			if (style.font.empty() || !ctx || !ctx->assets)
 				return fallback;
-			FontHandle h = context().assets->getFont(style.font);
+			FontHandle h = ctx->assets->getFont(style.font);
 			return h.id != 0 ? h : fallback;
 		}
 
@@ -839,7 +830,8 @@ namespace ZenitUI
 		{
 			if (!style.backgroundTexture.name.empty())
 			{
-				auto *a = context().assets;
+				auto *ctx = context();
+				auto *a = ctx ? ctx->assets : nullptr;
 				if (a)
 				{
 					TextureHandle h = a->getTexture(style.backgroundTexture.name);
@@ -1031,8 +1023,8 @@ namespace ZenitUI
 		/** \brief Return the `UIContext` this node is attached to, or `nullptr` if unmounted. */
 		UIContext *contextPtr() const { return ctx_; }
 
-		/** \brief Return the active `UIContext` for this node (falls back to `context()` while unmounted). */
-		UIContext &context() const { return ctx_ ? *ctx_ : UIContext::get(); }
+		/** \brief Return the `UIContext` this node is attached to, or `nullptr` if unmounted. */
+		UIContext *context() const { return ctx_; }
 
 		/** \brief Attach this node and its subtree to \p newCtx. */
 		void attachContext(UIContext *newCtx);
@@ -1040,11 +1032,15 @@ namespace ZenitUI
 		/** \brief Detach this node and its subtree from its current `UIContext`. */
 		void detachContext();
 
-		/** \brief Return the logical viewport size of this node's `UIContext`. */
-		Vec2 viewportSize() const { return context().viewport; }
+		/** \brief Return the logical viewport size of this node's `UIContext` (or `{0, 0}` if unmounted). */
+		Vec2 viewportSize() const { return ctx_ ? ctx_->viewport : Vec2{0.0f, 0.0f}; }
 
-		/** \brief Return the stylesheet theme of this node's `UIContext`. */
-		const Theme &theme() const { return context().theme; }
+		/** \brief Return the stylesheet theme of this node's `UIContext` (or an empty theme if unmounted). */
+		const Theme &theme() const
+		{
+			static const Theme kEmptyTheme{};
+			return ctx_ ? ctx_->theme : kEmptyTheme;
+		}
 
 		// ---- Public callback hooks ----
 
@@ -1195,19 +1191,21 @@ namespace ZenitUI
 			state.pressed = 0;
 			state.focused = 0;
 
-			auto &ctx = context();
-			if (ctx.focusedNode.lock().get() == this)
-				ctx.focusedNode.reset();
-			if (ctx.pointerCapture.lock().get() == this)
-				ctx.pointerCapture.reset();
-			if (ctx.pressTarget == this)
-				ctx.pressTarget = nullptr;
-			if (ctx.releaseTarget == this)
-				ctx.releaseTarget = nullptr;
-			if (ctx.topmostConsumer == this)
-				ctx.topmostConsumer = nullptr;
-			if (ctx.hoverTarget == this)
-				ctx.hoverTarget = nullptr;
+			if (auto *ctx = context())
+			{
+				if (ctx->focusedNode.lock().get() == this)
+					ctx->focusedNode.reset();
+				if (ctx->pointerCapture.lock().get() == this)
+					ctx->pointerCapture.reset();
+				if (ctx->pressTarget == this)
+					ctx->pressTarget = nullptr;
+				if (ctx->releaseTarget == this)
+					ctx->releaseTarget = nullptr;
+				if (ctx->topmostConsumer == this)
+					ctx->topmostConsumer = nullptr;
+				if (ctx->hoverTarget == this)
+					ctx->hoverTarget = nullptr;
+			}
 
 			for (auto &c : children)
 				if (c)
@@ -1327,7 +1325,8 @@ namespace ZenitUI
 		 */
 		virtual void renderChrome(float op, const ComputedStyle &style)
 		{
-			auto r = context().renderer;
+			auto *ctx = context();
+			auto *r = ctx ? ctx->renderer : nullptr;
 			if (!r)
 				return;
 			if (rect.width <= 0 || rect.height <= 0)
@@ -1597,9 +1596,12 @@ namespace ZenitUI
 				return;
 			if (layerCache_->target.valid())
 			{
-				auto &pool = context().targetPool;
-				if (layerCache_->poolGeneration == pool.generation())
-					pool.release(layerCache_->target);
+				if (auto *ctx = context())
+				{
+					auto &pool = ctx->targetPool;
+					if (layerCache_->poolGeneration == pool.generation())
+						pool.release(layerCache_->target);
+				}
 				layerCache_->target = {};
 			}
 			layerCache_->stableFrames = 0;

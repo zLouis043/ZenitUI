@@ -1,4 +1,3 @@
-
 // @doc   GPU stress benchmark for 50 filtered cards testing TargetPool reuse, downscaled separable blur, and live RenderStats HUD.
 // @group grp_anim grp_backends
 
@@ -26,16 +25,14 @@ int main()
     RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    auto &ctx = UIContext::get();
-    ctx.renderer = &renderer;
-    ctx.platform = &platform;
-    ctx.assets = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // Load fragment shaders used by the built-in and custom filters
     assets.loadEffect("blur", "assets/shaders/blur.fs");
     assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
-    ;
-    UIContext::get().filters.add(FilterDef{
+
+    ctx.filters.add(FilterDef{
         .name = "blur-fast",
         .shader = "blur",
         .pattern = FilterPattern::Separable,
@@ -103,7 +100,7 @@ int main()
         }
         .card-title { color: #f3f4f6; font-size: 15px; }
         .card-sub   { color: #9ca3af; font-size: 12px; }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->cls("root");
@@ -192,6 +189,7 @@ int main()
 
     applyFilterMode();
     refreshBtns();
+    ctx.mount(root);
 
     float elapsed = 0.0f;
 
@@ -219,11 +217,11 @@ int main()
             }
         }
 
-        root->runFrame(dt);
+        ctx.runFrame(*root, dt);
 
         BeginDrawing();
         ClearBackground({18, 18, 22, 255});
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
 
         const auto &st = ctx.renderStats;
@@ -236,7 +234,7 @@ int main()
         hud->setText(buf);
     }
 
-    ctx.targetPool.clear(renderer, &ctx.renderStats);
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

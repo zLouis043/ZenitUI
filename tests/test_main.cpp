@@ -1,12 +1,9 @@
 #include "TestFramework.hpp"
-#include "UIContext.hpp"
 
 #include <cstring>
 #include <iostream>
 
 int main(int argc, char** argv) {
-    ZenitUI::UIContext::get().viewport = { 1920.0f, 1080.0f };
-
     for (int i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "--list") == 0) {
             Test::listMode = true;

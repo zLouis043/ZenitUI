@@ -561,35 +561,28 @@ namespace ZenitUI::Test
 		MockRenderer renderer;
 		MockPlatform platform;
 		MockAssetProvider assets;
+		UIContext ctx;
 
 		Env()
 		{
-			auto &ctx = UIContext::get();
-			ctx.renderer = &renderer;
-			ctx.platform = &platform;
-			ctx.assets = &assets;
+			ctx.attachBackend(&renderer, &platform, &assets);
 			reset();
 		}
 
 		~Env()
 		{
-			auto &ctx = UIContext::get();
 			ctx.detachAllRoots();
-			ctx.targetPool.clear(renderer, &ctx.renderStats);
-			ctx.renderer = nullptr;
-			ctx.platform = nullptr;
-			ctx.assets = nullptr;
-			UIContext::get().viewport = {1920.0f, 1080.0f};
-			UIContext::get().filters.reset();
+			ctx.detachBackend();
 		}
 
 		/** \brief Reset global `UIContext`, `Theme`, and mock backend state. */
 		void reset()
 		{
-			auto &ctx = UIContext::get();
+			ctx.detachAllRoots();
 			ctx.focusedNode.reset();
 			ctx.pointerCapture.reset();
 			ctx.topmostConsumer = nullptr;
+			ctx.hoverTarget = nullptr;
 			ctx.pressTarget = nullptr;
 			ctx.releaseTarget = nullptr;
 			ctx.buttonConsumed.fill(false);
@@ -601,13 +594,12 @@ namespace ZenitUI::Test
 			ctx.activePortals.clear();
 			ctx.framePortals.clear();
 			ctx.cullingClipStack.clear();
-			ctx.detachAllRoots();
 			ctx.targetPool.clear(renderer, &ctx.renderStats);
 			ctx.renderStats.resetAll();
 
-			UIContext::get().viewport = {1920.0f, 1080.0f};
-			UIContext::get().filters.reset();
-			UIContext::get().theme.clear();
+			ctx.viewport = {1920.0f, 1080.0f};
+			ctx.filters.reset();
+			ctx.theme.clear();
 
 			platform.reset();
 			renderer.reset();
@@ -616,8 +608,8 @@ namespace ZenitUI::Test
 		/** \brief Advance \p root through one complete update/layout/draw frame. */
 		void frame(std::shared_ptr<Layout> root, float dt = 1.0f / 60.0f)
 		{
-			auto &ctx = UIContext::get();
-			if (root && root->contextPtr() != &ctx) root->attachContext(&ctx);
+			if (root && root->context() != &ctx)
+				root->attachContext(&ctx);
 			ctx.beginFrame(dt);
 			root->updateTree(dt);
 			root->measure(platform.viewport.x, platform.viewport.y);
@@ -655,7 +647,6 @@ namespace ZenitUI::Test
 			mockPlatform.viewport = {static_cast<float>(config.width), static_cast<float>(config.height)};
 			framesPolled_ = 0;
 			running_ = true;
-			bindToContext();
 			return true;
 		}
 

@@ -43,7 +43,7 @@ namespace Showcase
             std::string message;
         };
 
-        ShowcaseApp()
+        explicit ShowcaseApp(UIContext &ctx) : ctx_(ctx)
         {
             seedCatalog();
             registerPrefabs();
@@ -67,7 +67,7 @@ namespace Showcase
                 return;
             statsTimer_ = 0.0f;
 
-            const auto &st = UIContext::get().renderStats;
+            const auto &st = ctx_.renderStats;
             char buf[160];
             std::snprintf(buf, sizeof(buf),
                           "FPS: %d (%.1f ms)\nTargets live: %u  Passes: %u",
@@ -79,6 +79,8 @@ namespace Showcase
         }
 
     private:
+        UIContext &ctx_;
+
         // ---- Reactive application state (Bindable<T>) -------------------------
         Bindable<bool> dirty_{false};
         Bindable<float> workload_{0.42f};
@@ -651,8 +653,8 @@ namespace Showcase
                      {
                          const auto &e = catalog_[filteredIndices_[contextRowIndex_]];
                          std::string text = "#" + std::to_string(e.id) + " [" + e.category + "] " + e.message;
-                         if (UIContext::get().platform)
-                             UIContext::get().platform->setClipboardText(text);
+                         if (ctx_.platform)
+                             ctx_.platform->setClipboardText(text);
                          explorerUi_->setTextRef("exp-status", "Copied to clipboard: " + text);
                      }
                  }},
@@ -692,7 +694,7 @@ namespace Showcase
                     {
                         contextRowIndex_ = idx;
                         if (rowContextMenu_)
-                            rowContextMenu_->openAt(UIContext::get().pointer.pos);
+                            rowContextMenu_->openAt(ctx_.pointer.pos);
                     };
                     return row;
                 },
@@ -912,11 +914,11 @@ namespace Showcase
             scene->addChild(Label("Composited RGB Scene")->cls("muted"));
             canvas->addChild(scene);
 
-            auto applyCanvasShader = [canvas](bool enabled)
+            auto applyCanvasShader = [this, canvas](bool enabled)
             {
-                if (!UIContext::get().assets)
+                if (!ctx_.assets)
                     return;
-                canvas->setShader(enabled ? UIContext::get().assets->getEffect("hueShift")
+                canvas->setShader(enabled ? ctx_.assets->getEffect("hueShift")
                                           : EffectHandle{});
             };
             applyCanvasShader(true);

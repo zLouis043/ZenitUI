@@ -6,7 +6,7 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
 
-static std::shared_ptr<Layout> makeFocusable(const std::string& id,
+static std::shared_ptr<ZenitUI::Layout> makeFocusable(const std::string& id,
                                                float w = 50.0f,
                                                float h = 30.0f)
 {
@@ -41,23 +41,23 @@ TEST(FocusScope_tab, tab_stays_within_scope)
 
     env.frame(root);
 
-    UIContext::get().requestFocus(a);
+    env.ctx.requestFocus(a);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(b.get()));
+    CHECK(env.ctx.hasFocus(b.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(b.get()));
+    CHECK(env.ctx.hasFocus(b.get()));
 
-    CHECK(!UIContext::get().hasFocus(outside.get()));
+    CHECK(!env.ctx.hasFocus(outside.get()));
 }
 
 TEST(FocusScope_tab, shift_tab_reverses_within_scope)
@@ -80,17 +80,17 @@ TEST(FocusScope_tab, shift_tab_reverses_within_scope)
 
     env.frame(root);
 
-    UIContext::get().requestFocus(b);
+    env.ctx.requestFocus(b);
     env.frame(root);
 
     env.platform.mods.shift = true;
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(c.get()));
+    CHECK(env.ctx.hasFocus(c.get()));
 }
 
 
@@ -121,19 +121,19 @@ TEST(FocusScope_nested, inner_scope_wins)
     root->addChild(outerScope);
     env.frame(root);
 
-    UIContext::get().requestFocus(ia);
+    env.ctx.requestFocus(ia);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(ia.get()));
+    CHECK(env.ctx.hasFocus(ia.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(ib.get()));
+    CHECK(env.ctx.hasFocus(ib.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(ia.get()));
+    CHECK(env.ctx.hasFocus(ia.get()));
 
-    CHECK(!UIContext::get().hasFocus(ob.get()));
+    CHECK(!env.ctx.hasFocus(ob.get()));
 }
 
 
@@ -149,14 +149,14 @@ TEST(FocusScope_release, click_outside_releases_focus)
 
     env.frame(root);
 
-    UIContext::get().requestFocus(a);
+    env.ctx.requestFocus(a);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     env.click(root, {500.0f, 500.0f});
     env.frame(root);
 
-    CHECK(!UIContext::get().hasFocus(a.get()));
+    CHECK(!env.ctx.hasFocus(a.get()));
 }
 
 TEST(FocusScope_release, disable_releases_focus)
@@ -171,14 +171,14 @@ TEST(FocusScope_release, disable_releases_focus)
 
     env.frame(root);
 
-    UIContext::get().requestFocus(a);
+    env.ctx.requestFocus(a);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     a->setEnabled(false);
     env.frame(root);
 
-    CHECK(!UIContext::get().hasFocus(a.get()));
+    CHECK(!env.ctx.hasFocus(a.get()));
 }
 
 
@@ -196,17 +196,17 @@ TEST(FocusScope_default, no_scope_uses_root)
 
     env.frame(root);
 
-    UIContext::get().requestFocus(a);
+    env.ctx.requestFocus(a);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(b.get()));
+    CHECK(env.ctx.hasFocus(b.get()));
 
     env.platform.pressKey(Key::Tab);
     env.frame(root);
-    CHECK(UIContext::get().hasFocus(a.get()));
+    CHECK(env.ctx.hasFocus(a.get()));
 }
 
 TEST(FocusScope_disabled, collect_skips_disabled_containers) {
@@ -229,6 +229,6 @@ TEST(FocusScope_disabled, collect_skips_disabled_containers) {
     env.platform.pressKey(Key::Tab);
     env.frame(root);
     
-    CHECK(!UIContext::get().hasFocus(btn1.get()));
-    CHECK(UIContext::get().hasFocus(btn2.get()));
+    CHECK(!env.ctx.hasFocus(btn1.get()));
+    CHECK(env.ctx.hasFocus(btn2.get()));
 }

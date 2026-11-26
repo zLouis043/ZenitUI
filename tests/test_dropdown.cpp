@@ -20,11 +20,11 @@ static DropdownScene makeDropdown(Env& env,
 {
     DropdownScene s;
 
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Dropdown { width: 200px; height: 40px; }
         .dropdown-trigger { min-height: 30px; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     s.dd = Dropdown::create(std::move(options), initial);
 
@@ -284,7 +284,7 @@ TEST(Dropdown_keyboard, navigation_and_escape) {
     Env env;
     auto s = makeDropdown(env, {"A", "B", "C"}, 0);
     
-    UIContext::get().requestFocus(s.dd);
+    env.ctx.requestFocus(s.dd);
     env.frame(s.root);
     
     env.platform.pressKey(Key::Down);

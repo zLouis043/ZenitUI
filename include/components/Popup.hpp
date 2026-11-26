@@ -149,7 +149,9 @@ namespace ZenitUI::UI
         {
             if (!isOpen_)
                 return;
-            auto &ctx = context();
+            auto *ctx = context();
+            if (!ctx)
+                return;
             const Vec2 vp = viewportSize();
 
             Vec2 size = computePopupSize();
@@ -185,21 +187,21 @@ namespace ZenitUI::UI
             rect = {x, y, size.x, size.y};
             arrangeInto(rect);
 
-            if (closeOnClickOutside && ctx.pointer[MouseButton::Left].pressed)
+            if (closeOnClickOutside && ctx->pointer[MouseButton::Left].pressed)
             {
-                if (!rect.contains(ctx.pointer.pos))
+                if (!rect.contains(ctx->pointer.pos))
                     close();
             }
 
-            if (closeOnClickOutside && ctx.pointer[MouseButton::Right].pressed)
+            if (closeOnClickOutside && ctx->pointer[MouseButton::Right].pressed)
             {
-                if (!rect.contains(ctx.pointer.pos))
+                if (!rect.contains(ctx->pointer.pos))
                     close();
             }
 
             if (closeOnEscape)
             {
-                for (int k : ctx.inputEvents.keys)
+                for (int k : ctx->inputEvents.keys)
                 {
                     if (k == Key::Escape)
                     {
@@ -223,6 +225,9 @@ namespace ZenitUI::UI
          */
         void openInternal()
         {
+            auto *ctx = context();
+            if (!ctx)
+                return;
             isOpen_ = true;
             above_ = (above_ && anchor_);
             setEnabled(true);
@@ -230,7 +235,7 @@ namespace ZenitUI::UI
             beginTransition();
             if (content_)
                 content_->beginTransition();
-            context().requestFocus(shared_from_this());
+            ctx->requestFocus(shared_from_this());
             if (onOpen)
                 onOpen();
         }

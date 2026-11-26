@@ -60,9 +60,8 @@ int main()
     RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // -----------------------------------------------------------------------
     //  Minimal styling for the built-in widgets.
@@ -141,7 +140,7 @@ int main()
             height: auto;
             font-size: 16px;
         }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Root: a ScrollView so the gallery is scrollable if it grows.
@@ -232,19 +231,22 @@ int main()
         scroller->addChild(Row("Dropdown", wrapper));
     }
 
+    ctx.mount(root);
+
     // -----------------------------------------------------------------------
     //  Main loop
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

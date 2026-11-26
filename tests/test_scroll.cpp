@@ -9,8 +9,8 @@ using namespace ZenitUI::Test;
 
 struct VScrollScene
 {
-    std::shared_ptr<Layout> root;
-    std::shared_ptr<Layout> sv;
+    std::shared_ptr<ZenitUI::Layout> root;
+    std::shared_ptr<ZenitUI::Layout> sv;
     float contentH{0.0f};
 };
 
@@ -22,10 +22,10 @@ static VScrollScene makeVScroll(Env& env,
     VScrollScene s;
     s.contentH = contentH;
 
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow-y: scroll; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     s.root = std::make_shared<Layout>(LayoutType::Stack);
     s.root->size(Percent(100), Percent(100));
@@ -167,10 +167,10 @@ TEST(Scroll_wheel, shift_switches_to_horizontal)
 {
     Env env;
 
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .hscroller { overflow-x: scroll; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -261,10 +261,10 @@ TEST(Scroll_nested, inner_consumes_wheel)
 {
     Env env;
 
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow-y: scroll; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -307,10 +307,10 @@ TEST(Scroll_nested, outer_consumes_wheel_outside_inner)
 {
     Env env;
 
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .scroller { overflow-y: scroll; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));

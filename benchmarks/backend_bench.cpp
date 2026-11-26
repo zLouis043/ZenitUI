@@ -215,14 +215,14 @@ namespace
         return root;
     }
 
-    void renderOneFrame(ZenitUI::IBackend &backend, Layout &root, bool runLogic)
+    void renderOneFrame(ZenitUI::IBackend &backend, UIContext &ctx, Layout &root, bool runLogic)
     {
         backend.pollFrame();
         if (runLogic)
-            root.runFrame(kFixedDt);
+            ctx.runFrame(root, kFixedDt);
 
         backend.beginDraw(kClearColor);
-        root.renderFrame();
+        ctx.renderFrame(root);
         backend.endDraw();
         Bench::g_sink += root.getRect().width;
     }
@@ -245,6 +245,7 @@ int main(int argc, char **argv)
     }
 
     auto backend = createBenchBackend();
+    UIContext ctx;
 
     ZenitUI::WindowConfig cfg;
     cfg.title = std::string("ZenitUI Bench (") + kBackendTag + ")";
@@ -255,7 +256,7 @@ int main(int argc, char **argv)
     cfg.vsync = false;
     cfg.msaa = false;
 
-    if (!backend->init(cfg))
+    if (!backend->initAndBind(cfg, ctx))
     {
         std::fprintf(stderr, "[bench_%s] Failed to initialize backend\n", kBackendTag);
         return 1;
@@ -271,7 +272,7 @@ int main(int argc, char **argv)
     assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
     assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
-    UIContext::get().filters.add(FilterDef{
+    ctx.filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,
@@ -289,10 +290,10 @@ int main(int argc, char **argv)
         {
             virtualList.reset();
             activeRoot.reset();
-            auto &ctx = UIContext::get();
+            ctx.detachAllRoots();
             ctx.targetPool.clear(backend->renderer(), &ctx.renderStats);
-            UIContext::get().theme.clear();
-            ZenitUI::ZMarkup::loadStyleString(kBenchStyle, UIContext::get().theme);
+            ctx.theme.clear();
+            ZenitUI::ZMarkup::loadStyleString(kBenchStyle, ctx.theme);
         };
 
         Bench::Runner runner(repeats);
@@ -305,10 +306,10 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildDashboardTree();
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, *activeRoot, true);
+                    renderOneFrame(*backend, ctx, *activeRoot, true);
             },
             /*body=*/[&]
-            { renderOneFrame(*backend, *activeRoot, true); });
+            { renderOneFrame(*backend, ctx, *activeRoot, true); });
 
         // 2. Render-only pass on static dashboard (isolates renderer/GL from update & layout).
         runner.add(
@@ -318,10 +319,10 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildDashboardTree();
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, *activeRoot, true);
+                    renderOneFrame(*backend, ctx, *activeRoot, true);
             },
             /*body=*/[&]
-            { renderOneFrame(*backend, *activeRoot, false); });
+            { renderOneFrame(*backend, ctx, *activeRoot, false); });
 
         // 3. 200 rounded cards with border + label (tessellation & batching stress).
         runner.add(
@@ -331,10 +332,10 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildRoundedCardsTree(200);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, *activeRoot, true);
+                    renderOneFrame(*backend, ctx, *activeRoot, true);
             },
             /*body=*/[&]
-            { renderOneFrame(*backend, *activeRoot, true); });
+            { renderOneFrame(*backend, ctx, *activeRoot, true); });
 
         // 4. 10,000-row VirtualView with continuous scrolling.
         runner.add(
@@ -345,14 +346,14 @@ int main(int argc, char **argv)
                 scrollStep = 0;
                 activeRoot = buildVirtualScrollTree(virtualList);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, *activeRoot, true);
+                    renderOneFrame(*backend, ctx, *activeRoot, true);
             },
             /*body=*/[&]
             {
                 scrollStep = (scrollStep + 7) % 9000;
                 if (virtualList)
                     virtualList->scrollToItem(scrollStep);
-                renderOneFrame(*backend, *activeRoot, true);
+                renderOneFrame(*backend, ctx, *activeRoot, true);
             });
 
         // 5. 10 cards with multi-pass filters (blur + drop-shadow FBO stress).
@@ -363,10 +364,10 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildFilteredCardsTree(10);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, *activeRoot, true);
+                    renderOneFrame(*backend, ctx, *activeRoot, true);
             },
             /*body=*/[&]
-            { renderOneFrame(*backend, *activeRoot, true); });
+            { renderOneFrame(*backend, ctx, *activeRoot, true); });
 
         if (!json)
         {

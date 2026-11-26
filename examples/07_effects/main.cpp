@@ -69,9 +69,8 @@ int main()
     RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // -----------------------------------------------------------------------
     //  Load shaders used by both `filter:` and `effect:`.
@@ -83,10 +82,10 @@ int main()
     assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
     // -----------------------------------------------------------------------
-    //  Register the sepia filter. `blur` and `drop-shadow` are built-in
-    //  (registered lazily on first use); `sepia` is user-defined.
+    //  Register the sepia filter. `blur` and `drop-shadow` are pre-registered
+    //  in `ctx.filters`; `sepia` is user-defined.
     // -----------------------------------------------------------------------
-    UIContext::get().filters.add(FilterDef{
+    ctx.filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,
@@ -96,7 +95,7 @@ int main()
     // -----------------------------------------------------------------------
     //  Stylesheet.
     // -----------------------------------------------------------------------
-    ZMarkup::loadStyleFile("examples/07_effects/theme.zstyle", UIContext::get().theme);
+    ZMarkup::loadStyleFile("examples/07_effects/theme.zstyle", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Tree.
@@ -126,20 +125,22 @@ int main()
                         Card("shadow -> blur", "filter-reversed")));
 
     page->addChild(panel);
+    ctx.mount(page);
 
     // -----------------------------------------------------------------------
     //  Main loop.
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        page->runFrame(GetFrameTime());
+        ctx.runFrame(*page, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        page->renderFrame();
+        ctx.renderFrame(*page);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

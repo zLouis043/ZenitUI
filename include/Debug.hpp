@@ -566,12 +566,6 @@ namespace ZenitUI::Debug
         os << "\n";
     }
 
-    /** \brief Dump the active `UIContext::theme`. */
-    inline void dumpTheme(std::ostream &os = std::cerr)
-    {
-        dumpTheme(UIContext::get().theme, os);
-    }
-
     /**
      * \brief Dump the well-known pseudo-elements that have at least one matching rule.
      */
@@ -601,7 +595,7 @@ namespace ZenitUI::Debug
     /**
      * \brief Format `RenderStats` as a single compact line (for overlays and logs).
      */
-    inline std::string renderStatsToString(const RenderStats &s = UIContext::get().renderStats)
+    inline std::string renderStatsToString(const RenderStats &s)
     {
         std::ostringstream os;
         os << "targets[created=" << s.targetsCreated
@@ -615,9 +609,17 @@ namespace ZenitUI::Debug
     /**
      * \brief Dump the current frame's `RenderStats` on one line.
      */
-    inline void dumpRenderStats(std::ostream &os = std::cerr)
+    inline void dumpRenderStats(const RenderStats &s, std::ostream &os = std::cerr)
     {
-        os << "[RenderStats] " << renderStatsToString() << "\n";
+        os << "[RenderStats] " << renderStatsToString(s) << "\n";
+    }
+
+    /**
+     * \brief Dump the current frame's `RenderStats` on one line.
+     */
+    inline void dumpRenderStats(const UIContext &ctx,  std::ostream &os = std::cerr)
+    {
+        dumpRenderStats(ctx.renderStats, os);
     }
     /** @} */
 } // namespace ZenitUI::Debug
@@ -632,11 +634,11 @@ namespace ZenitUI::Debug
     // No-op fallbacks. Kept as inline functions so the symbols always exist.
     inline void dumpStyle(const Layout &, std::ostream & = std::cerr) {}
     inline void dumpTree(const Layout &, std::ostream & = std::cerr, int = -1, int = 0) {}
-    inline void dumpTheme(const Theme &, std::ostream & = std::cerr) {}
     inline void dumpTheme(std::ostream & = std::cerr) {}
     inline void dumpParts(const Layout &, std::ostream & = std::cerr) {}
-    inline std::string renderStatsToString(const RenderStats & = UIContext::get().renderStats) { return {}; }
-    inline void dumpRenderStats(std::ostream & = std::cerr) {}
+    inline std::string renderStatsToString(const RenderStats &) { return {}; }
+    inline void dumpRenderStats(const RenderStats &, std::ostream & = std::cerr) {}
+    inline void dumpRenderStats(const UIContext &, std::ostream & = std::cerr) {}
 
 } // namespace ZenitUI::Debug
 

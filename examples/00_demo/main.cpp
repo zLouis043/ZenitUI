@@ -30,6 +30,7 @@ using namespace ZenitUI;
 int main()
 {
     auto backend = createDemoBackend();
+    UIContext ctx;
 
     WindowConfig cfg;
     cfg.title = "ZenitUI — Showcase (" + std::string(backend->name()) + ")";
@@ -42,7 +43,7 @@ int main()
     cfg.vsync = true;
     cfg.msaa = true;
 
-    if (!backend->init(cfg))
+    if (!backend->initAndBind(cfg, ctx))
     {
         std::fprintf(stderr, "[00_demo] Failed to initialize backend '%.*s'\n",
                      static_cast<int>(backend->name().size()), backend->name().data());
@@ -66,7 +67,7 @@ int main()
     assets.loadEffect("sepia", "assets/shaders/sepia.fs");
 
     // 3. Register the custom `sepia` filter in FilterRegistry.
-    UIContext::get().filters.add(FilterDef{
+    ctx.filters.add(FilterDef{
         .name = "sepia",
         .shader = "sepia",
         .pattern = FilterPattern::SinglePass,
@@ -74,7 +75,7 @@ int main()
     });
 
     // 4. Load the showcase stylesheet (co-located with the example).
-    if (!ZMarkup::loadStyleFile("examples/00_demo/theme.zstyle", UIContext::get().theme))
+    if (!ZMarkup::loadStyleFile("examples/00_demo/theme.zstyle", ctx.theme))
     {
         std::fprintf(stderr, "[00_demo] Failed to load examples/00_demo/theme.zstyle\n");
         backend->shutdown();
@@ -82,8 +83,9 @@ int main()
     }
 
     // 5. Build the multi-view showcase app and run the backend-agnostic loop.
-    ShowcaseApp app;
+    ShowcaseApp app(ctx);
     auto root = app.root();
+    ctx.mount(root);
 
     constexpr ZenitUI::Color kClearColor{0x11, 0x12, 0x17, 0xFF};
     float smoothedDt = 1.0f / 60.0f;
@@ -94,10 +96,10 @@ int main()
         smoothedDt = smoothedDt * 0.9f + dt * 0.1f;
         const int fps = (smoothedDt > 0.0001f) ? static_cast<int>(std::lround(1.0f / smoothedDt)) : 0;
 
-        root->runFrame(dt);
+        ctx.runFrame(*root, dt);
 
         backend->beginDraw(kClearColor);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         backend->endDraw();
 
         app.tickStats(fps, dt * 1000.0f);

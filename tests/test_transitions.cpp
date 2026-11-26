@@ -8,7 +8,7 @@ using namespace ZenitUI::Test;
 
 
 static void runFrames(Env& env,
-                       std::shared_ptr<Layout> root,
+                       std::shared_ptr<ZenitUI::Layout> root,
                        int n)
 {
     for (int i = 0; i < n; ++i)
@@ -19,14 +19,14 @@ static void runFrames(Env& env,
 TEST(Transitions_hover, interpolates_background_over_frames)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .btn {
             background: #000000ff;
             transition: background 0.2s ease-out;
         }
         .btn:hover { background: #ffffffff; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->cls("btn");
@@ -64,11 +64,11 @@ TEST(Transitions_hover, interpolates_background_over_frames)
 TEST(Transitions_hover, default_transition_time_is_instant)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .btn { background: #000000ff; }
         .btn:hover { background: #ff0000ff; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->cls("btn");
@@ -93,14 +93,14 @@ TEST(Transitions_hover, default_transition_time_is_instant)
 TEST(Transitions_hover, snap_when_transition_time_zero)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .btn {
             background: #000000ff;
             transition-time: 0s;
         }
         .btn:hover { background: #ff0000ff; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->cls("btn");
@@ -126,7 +126,7 @@ TEST(Transitions_hover, snap_when_transition_time_zero)
 TEST(Transitions_toggle, knob_transitions_on_checked)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         Toggle {
             width: 100px;
@@ -143,7 +143,7 @@ TEST(Transitions_toggle, knob_transitions_on_checked)
         Toggle:checked .toggle-knob {
             left: 60px;
         }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto ui = ZMarkup::build(R"(Toggle#t)");
     auto toggle = ui.find("t");
@@ -172,7 +172,7 @@ TEST(Transitions_toggle, knob_transitions_on_checked)
 TEST(Transitions_focus, border_color_changes_on_focus)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .input {
             width: 200px;
@@ -182,7 +182,7 @@ TEST(Transitions_focus, border_color_changes_on_focus)
             transition: border-color 0.2s ease-out;
         }
         .input:focus { border-color: #4a9effff; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto input = std::make_shared<Layout>(LayoutType::Stack);
     input->cls("input");
@@ -197,7 +197,7 @@ TEST(Transitions_focus, border_color_changes_on_focus)
     runFrames(env, root, 20);
     CHECK(input->getStyle().borderColor.r == 0x40);
 
-    UIContext::get().requestFocus(input);
+    env.ctx.requestFocus(input);
     env.frame(root);
     runFrames(env, root, 30);
 
@@ -209,7 +209,7 @@ TEST(Transitions_focus, border_color_changes_on_focus)
 TEST(Transitions_disabled, opacity_changes_on_disable)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .btn {
             background: #4a9effff;
@@ -217,7 +217,7 @@ TEST(Transitions_disabled, opacity_changes_on_disable)
             transition: opacity 0.2s ease-out;
         }
         .btn:disabled { opacity: 0.3; }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->cls("btn");
@@ -247,7 +247,7 @@ TEST(Transitions_disabled, opacity_changes_on_disable)
 TEST(Transitions_multi, faster_property_settles_first)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
     ZMarkup::loadStyleString(R"(
         .btn {
             background: #000000ff;
@@ -259,7 +259,7 @@ TEST(Transitions_multi, faster_property_settles_first)
             background: #ffffffff;
             scale: 2.0;
         }
-    )", UIContext::get().theme);
+    )", env.ctx.theme);
 
     auto btn = std::make_shared<Layout>(LayoutType::Stack);
     btn->cls("btn");

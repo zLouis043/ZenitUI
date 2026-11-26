@@ -940,18 +940,21 @@ namespace ZenitUI
 
 		if (!hasParent())
 		{
-			for (auto it = context().activePortals.rbegin();
-				 it != context().activePortals.rend(); ++it)
+			if (auto *ctx = context())
 			{
-				auto sp = it->lock();
-				if (!sp)
-					continue;
-				bool wasPortal = sp->isPortal();
-				sp->setPortal(false);
-				Layout *hit = sp->hitTest(p, false, nullptr);
-				sp->setPortal(wasPortal);
-				if (hit)
-					return hit;
+				for (auto it = ctx->activePortals.rbegin();
+					 it != ctx->activePortals.rend(); ++it)
+				{
+					auto sp = it->lock();
+					if (!sp)
+						continue;
+					bool wasPortal = sp->isPortal();
+					sp->setPortal(false);
+					Layout *hit = sp->hitTest(p, false, nullptr);
+					sp->setPortal(wasPortal);
+					if (hit)
+						return hit;
+				}
 			}
 		}
 		if (config.portal)
@@ -969,10 +972,12 @@ namespace ZenitUI
 		const Vec2 vp = viewportSize();
 		if (needsClip)
 		{
-			Rect base = clipLocal
-							? *clipLocal
-							: Rect{0, 0, vp.x, vp.y};
-			newClipStorage = intersectRect(base, rect);
+			if (clipLocal)
+				newClipStorage = intersectRect(*clipLocal, rect);
+			else if (vp.x > 0.0f && vp.y > 0.0f)
+				newClipStorage = intersectRect(Rect{0, 0, vp.x, vp.y}, rect);
+			else
+				newClipStorage = rect;
 			newClip = &newClipStorage;
 		}
 

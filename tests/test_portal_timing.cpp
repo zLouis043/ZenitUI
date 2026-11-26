@@ -7,11 +7,11 @@ using namespace ZenitUI;
 using namespace ZenitUI::Test;
 
 
-static std::shared_ptr<Layout> makeClickTargetAt(float x, float y,
+static std::shared_ptr<ZenitUI::Layout> makeClickTargetAt(float x, float y,
                                                   float w, float h,
                                                   int& counter)
 {
-    auto n = std::make_shared<Layout>(LayoutType::Stack);
+    auto n = std::make_shared<ZenitUI::Layout>(LayoutType::Stack);
     n->size(Px(w), Px(h));
     n->setInteractive(true);
     n->setBlocksRaycast(true);
@@ -22,7 +22,7 @@ static std::shared_ptr<Layout> makeClickTargetAt(float x, float y,
     return n;
 }
 
-static std::shared_ptr<Layout> makePortalAt(float x, float y,
+static std::shared_ptr<ZenitUI::Layout> makePortalAt(float x, float y,
                                               float w, float h,
                                               int& counter)
 {
@@ -188,7 +188,7 @@ TEST(Portal_timing, last_registered_portal_wins_overlap)
 TEST(Popup_callbacks, onOpen_fires)
 {
     Env env;
-    UIContext::get().theme.clear();
+    env.ctx.theme.clear();
 
     auto popup = UI::Popup::create();
     auto content = std::make_shared<Layout>(LayoutType::Stack);

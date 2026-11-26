@@ -101,9 +101,8 @@ int main() {
     RaylibPlatform      platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -111,18 +110,21 @@ int main() {
     root->getInlineBase().itemsV = Align::Center;
 
     root->addChild(Btn("Hello!", [] { std::printf("hi\n"); }));
+    ctx.mount(root);
 
     while (!WindowShouldClose()) {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
+
+    ctx.detachBackend();
     CloseWindow();
 }
-```
+`
 
 See [`examples/01_hello_world/main.cpp`](examples/01_hello_world/main.cpp) for a ready-to-run version, or run `make run-00_demo` to launch the full multi-view showcase.
 

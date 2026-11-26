@@ -3,7 +3,7 @@
  *
  * ZenitUI is rendering- and windowing-agnostic. To integrate it into a custom
  * engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan,
- * DirectX, etc.), implement three lightweight interfaces and bind them to
+ * DirectX, etc.), implement three lightweight interfaces and attach them to a
  * `ZenitUI::UIContext`:
  *
  * | Interface | Responsibility |
@@ -18,35 +18,28 @@
  *
  * \section sec_backend_wiring 1. Wiring a Backend into UIContext
  *
- * Bind your three instances once after creating your window/graphics context,
- * then drive the per-frame cycle inside your main loop:
+ * Attach your three instances to a `UIContext` after creating your
+ * window/graphics context, mount your root tree, and drive the per-frame cycle
+ * inside your main loop:
  *
  * \code{.cpp}
  * MyPlatform      platform;
  * MyRenderer      renderer;
  * MyAssetProvider assets(renderer);
  *
- * auto &ctx = ZenitUI::UIContext::get();
- * ctx.platform = &platform;
- * ctx.renderer = &renderer;
- * ctx.assets   = &assets;
+ * ZenitUI::UIContext ctx;
+ * ctx.attachBackend(&renderer, &platform, &assets);
+ * ctx.mount(root);
  *
  * // Main loop
  * while (running) {
  *     float dt = computeDeltaTime();
- *     ctx.beginFrame(dt);
- *
- *     root->updateTree(dt);
- *     auto vp = platform.viewportSize();
- *     root->measure(vp.x, vp.y);
- *     root->arrange({0.0f, 0.0f, vp.x, vp.y});
- *
- *     renderer.beginFrame();
- *     root->draw();
- *     renderer.endFrame();
- *
- *     ctx.endFrame();
+ *     ctx.runFrame(*root, dt);
+ *     ctx.renderFrame(*root);
  * }
+ *
+ * // Flush pooled off-screen targets while the graphics context is still alive.
+ * ctx.detachBackend();
  * \endcode
  *
  * ---

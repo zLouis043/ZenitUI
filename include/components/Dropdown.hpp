@@ -179,14 +179,16 @@ namespace ZenitUI::UI
          */
         void onUpdate(float) override
         {
+            auto *ctx = context();
+            if (!ctx)
+                return;
+
             if (isOpen)
                 internal_.pendingTransition = 1;
 
-            auto &ctx = context();
-
-            if (ctx.hasFocus(this))
+            if (ctx->hasFocus(this))
             {
-                for (int k : ctx.inputEvents.keys)
+                for (int k : ctx->inputEvents.keys)
                 {
                     if (k == Key::Escape)
                     {
@@ -256,10 +258,10 @@ namespace ZenitUI::UI
                 }
             }
 
-            if (ctx.pointer[MouseButton::Left].pressed || ctx.pointer[MouseButton::Right].pressed)
+            if (ctx->pointer[MouseButton::Left].pressed || ctx->pointer[MouseButton::Right].pressed)
             {
-                if (!rect.contains(ctx.pointer.pos) &&
-                    !listContainer->getRect().contains(ctx.pointer.pos))
+                if (!rect.contains(ctx->pointer.pos) &&
+                    !listContainer->getRect().contains(ctx->pointer.pos))
                 {
                     setOpen(false);
                 }
@@ -286,7 +288,9 @@ namespace ZenitUI::UI
 
             button = Btn("", [this]()
                          {
-                context().requestFocus(shared_from_this());
+                auto *ctx = context();
+                    if(!ctx) return;
+                ctx->requestFocus(shared_from_this());
                 toggleOpen(); });
             button->cls("dropdown-trigger");
             button->setFocusable(false);
@@ -414,7 +418,10 @@ namespace ZenitUI::UI
 
                 item->onClick = [this, idx]()
                 {
-                    context().requestFocus(shared_from_this());
+                    auto *ctx = context();
+                    if (!ctx)
+                        return;
+                    ctx->requestFocus(shared_from_this());
                     setSelected(idx);
                     setOpen(false);
                 };

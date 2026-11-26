@@ -35,7 +35,7 @@ using namespace ZenitUI::UI;
 //  Helpers
 // ---------------------------------------------------------------------------
 
-static std::shared_ptr<Layout> Row(const std::string& label,
+static std::shared_ptr<Layout> Row(const std::string &label,
                                    std::shared_ptr<Layout> content)
 {
     auto row = std::make_shared<Layout>(LayoutType::Horizontal);
@@ -58,19 +58,19 @@ int main()
     InitWindow(900, 620, "ZenitUI — 05 ZStyle");
     SetTargetFPS(60);
 
-    RaylibRenderer      renderer;
-    RaylibPlatform      platform;
+    RaylibRenderer renderer;
+    RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     // -----------------------------------------------------------------------
     //  Load the external stylesheet. Path is relative to the current
     //  working directory, which must be the repository root.
     // -----------------------------------------------------------------------
-    if (!ZMarkup::loadStyleFile("examples/05_zstyle/theme.zstyle", UIContext::get().theme)) {
+    if (!ZMarkup::loadStyleFile("examples/05_zstyle/theme.zstyle", ctx.theme))
+    {
         std::fprintf(stderr, "Failed to load theme.zstyle\n");
         return 1;
     }
@@ -99,7 +99,8 @@ int main()
     // 2. :checked + transition on knob -------------------------------------
     {
         auto t = Toggle::create(false);
-        t->onToggle = [](bool v){ std::printf("toggle: %d\n", v); };
+        t->onToggle = [](bool v)
+        { std::printf("toggle: %d\n", v); };
         panel->addChild(Row(":checked + transition", t));
     }
 
@@ -123,19 +124,22 @@ int main()
 
     page->addChild(panel);
 
+    ctx.mount(page);
+
     // -----------------------------------------------------------------------
     //  Main loop
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        page->runFrame(GetFrameTime());
+        ctx.runFrame(*page, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        page->renderFrame();
+        ctx.renderFrame(*page);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

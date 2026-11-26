@@ -1,3 +1,4 @@
+```cpp
 /**
  * \mainpage ZenitUI — Guide & API Reference
  *
@@ -9,12 +10,14 @@
  *
  * 1. **One node type:** every container and widget derives from
  *    ZenitUI::Layout (typically via the CRTP helper ZenitUI::TLayout).
- * 2. **Global frame state in UIContext:** attach your `IRenderer`, `IPlatform`,
- *    and `IAssetProvider` once to ZenitUI::UIContext::get().
+ * 2. **Per-instance state in UIContext:** create a ZenitUI::UIContext, attach
+ *    your `IRenderer`, `IPlatform`, and `IAssetProvider` via
+ *    `ctx.attachBackend(...)` (or `IBackend::bindTo(ctx)`), and mount your root
+ *    tree with `ctx.mount(root)`.
  * 3. **Four-pass frame cycle:**
- *    - `root->runFrame(dt)` runs `update` (input, style transitions,
+ *    - `ctx.runFrame(*root, dt)` runs `update` (input, style transitions,
  *      animations), `measure` (bottom-up), and `arrange` (top-down).
- *    - `root->renderFrame()` runs `beginFrame`, `draw` (clips, layers,
+ *    - `ctx.renderFrame(*root)` runs `beginFrame`, `draw` (clips, layers,
  *      portals), and `endFrame`.
  * 4. **Imperative or declarative — same tree:** build nodes with the fluent C++
  *    API or with ZMarkup (`ZMarkup::build`, `ZMarkup::instantiate`), and style
@@ -52,11 +55,10 @@
  * - \subpage page_custom_backends — Implement `IPlatform`, `IRenderer`, and
  *   `IAssetProvider` for your own engine or graphics API.
  */
- */
 
 /**
  * \defgroup grp_core Core, Layout & Lifecycle
- * \brief Base node types (`Layout`, `TLayout`), global context (`UIContext`), units, input, and scrolling.
+ * \brief Base node types (`Layout`, `TLayout`), per-instance context (`UIContext`), units, input, and scrolling.
  *
  * Every UI element is a `std::shared_ptr<ZenitUI::Layout>`. Always allocate
  * nodes through `TLayout<Derived>::create()` or `std::make_shared<Layout>` so
@@ -117,12 +119,13 @@
  * \defgroup grp_zstyle ZStyle, Theme & Diagnostics
  * \brief CSS-like style cascade, `.zstyle` parser, custom properties, and media queries.
  *
- * Load stylesheets into `Theme::get()` via `ZMarkup::loadStyleFile` or
- * `ZMarkup::loadStyleString`. Resolution follows specificity (`#id` > `.class`
- * > `Tag`), supports descendant combinators (`A B`), interaction pseudo-classes
- * (`:hover`, `:pressed`, `:focus`, `:checked`, `:disabled`), custom properties
- * (`--token` / `var(--token)`), `@media` queries, and structured diagnostics
- * with typo suggestions.
+ * Load stylesheets into a context's `UIContext::theme` via
+ * `ZMarkup::loadStyleFile(path, ctx.theme)` or
+ * `ZMarkup::loadStyleString(src, ctx.theme)`. Resolution follows specificity
+ * (`#id` > `.class` > `Tag`), supports descendant combinators (`A B`),
+ * interaction pseudo-classes (`:hover`, `:pressed`, `:focus`, `:checked`,
+ * `:disabled`), custom properties (`--token` / `var(--token)`), `@media`
+ * queries, and structured diagnostics with typo suggestions.
  *
  * **Live examples:** \ref 05_zstyle/main.cpp "05_zstyle"
  */
@@ -137,7 +140,7 @@
  * - **Keyframe & imperative animations:** declare `@keyframes` in `.zstyle` or
  *   register a `UIAnimation` via `Layout::addAnimation` / `playAnimation`.
  * - **Filters & shaders:** apply `filter: blur(...) drop-shadow(...)` or
- *   register custom post-processing passes in `FilterRegistry`. Off-screen
+ *   register custom post-processing passes in `UIContext::filters`. Off-screen
  *   targets are automatically pooled by `UIContext::targetPool`.
  *
  * **Live examples:** \ref 04_animations/main.cpp "04_animations" ·

@@ -347,14 +347,14 @@ TEST(Widget_textinput, enter_fires_onSubmit_and_releases_focus)
         submitted = t;
     };
 
-    CHECK(UIContext::get().hasFocus(s.ti.get()));
+    CHECK(env.ctx.hasFocus(s.ti.get()));
 
     env.platform.pressKey(Key::Enter);
     env.frame(s.root);
 
     CHECK(calls == 1);
     CHECK(submitted == "hello");
-    CHECK(!UIContext::get().hasFocus(s.ti.get()));
+    CHECK(!env.ctx.hasFocus(s.ti.get()));
 }
 
 TEST(Widget_textinput, escape_releases_focus_without_submit)
@@ -365,13 +365,13 @@ TEST(Widget_textinput, escape_releases_focus_without_submit)
     int calls = 0;
     s.ti->onSubmit = [&](const std::string&) { calls++; };
 
-    CHECK(UIContext::get().hasFocus(s.ti.get()));
+    CHECK(env.ctx.hasFocus(s.ti.get()));
 
     env.platform.pressKey(Key::Escape);
     env.frame(s.root);
 
     CHECK(calls == 0);
-    CHECK(!UIContext::get().hasFocus(s.ti.get()));
+    CHECK(!env.ctx.hasFocus(s.ti.get()));
 }
 
 

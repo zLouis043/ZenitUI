@@ -4,7 +4,7 @@
  * \file UIContext.hpp
  * \brief Per-application state: renderer, platform, pointer, focus, portals.
  *
- * `UIContext` is a singleton (`UIContext::get()`) that aggregates every piece
+ * `UIContext` aggregates every piece
  * of mutable per-frame state the framework needs but does not want to thread
  * through every call. It is the boundary between the platform layer (window,
  * input, clock) and the framework (layout, style, render).
@@ -941,13 +941,6 @@ namespace ZenitUI
 		{
 			auto sp = focusedNode.lock();
 			return sp && sp.get() == n;
-		}
-
-		/** \brief Return the global singleton context. */
-		static UIContext &get()
-		{
-			static UIContext instance;
-			return instance;
 		}
 	private:
 		friend class Layout;

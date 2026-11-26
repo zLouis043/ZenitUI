@@ -71,10 +71,6 @@ namespace
 
     void bindFilterBenchEnv(Env &env)
     {
-        auto &ctx = UIContext::get();
-        ctx.renderer = &env.renderer;
-        ctx.platform = &env.platform;
-        ctx.assets = &env.assets;
         env.reset();
         env.renderer.supportsEffects = true;
         env.renderer.supportsTargetSubRect = true;
@@ -86,6 +82,12 @@ namespace
     // Shared state for benchmarks whose body must operate on pre-built data.
     // The setup() callback rebuilds this state before every run; the body()
     // then measures only the operation of interest, not the construction.
+
+    Theme &sharedBenchTheme()
+    {
+        static Theme t;
+        return t;
+    }
 
     std::vector<ActiveCssAnimation> &sharedTickCssAnims()
     {
@@ -127,8 +129,9 @@ namespace Bench
               /*setup=*/[] {},
               /*body=*/[]
               {
-              ZMarkup::loadStyleString(makeCss(200), UIContext::get().theme);
-              UIContext::get().theme.clear(); });
+              auto &theme = sharedBenchTheme();
+              ZMarkup::loadStyleString(makeCss(200), theme);
+              theme.clear(); });
 
         R.add("parse.zmarkup.100elements", "parsing",
               /*iterations=*/200,
@@ -253,18 +256,19 @@ namespace Bench
               /*iterations=*/200'000,
               /*setup=*/[]
               {
-              UIContext::get().theme.clear();
+              auto &theme = sharedBenchTheme();
+              theme.clear();
               ZMarkup::loadStyleString(R"(
                   @keyframes k {
                       0%   { opacity: 0.0; scale: 1.0; }
                       50%  { opacity: 1.0; scale: 1.2; }
                       100% { opacity: 0.0; scale: 1.0; }
                   }
-              )", UIContext::get().theme); },
+              )", theme); },
               /*body=*/[]
               {
               static int i = 0;
-              const auto& anim = UIContext::get().theme.keyframes.at("k");
+              const auto& anim = sharedBenchTheme().keyframes.at("k");
               float t = (float)(i++ & 0xFF) / 255.0f;
               Style s = evaluateKeyframes(anim, t, TransitionFunction::Linear);
               g_sink += s.opacity.is_set ? s.opacity.value : 0.0f; });
@@ -273,10 +277,11 @@ namespace Bench
               /*iterations=*/1000,
               /*setup=*/[]
               {
-              UIContext::get().theme.clear();
+              auto &theme = sharedBenchTheme();
+              theme.clear();
               ZMarkup::loadStyleString(R"(
                   @keyframes k { 0% { opacity: 0.0; } 100% { opacity: 1.0; } }
-              )", UIContext::get().theme);
+              )", theme);
               // Reset the shared vector to 100 fresh animations.
               auto& anims = sharedTickCssAnims();
               anims.clear();
@@ -291,17 +296,18 @@ namespace Bench
               } },
               /*body=*/[]
               {
-              Anim::tickIncremental(sharedTickCssAnims(), 1.0f / 60.0f, UIContext::get().theme);
+              Anim::tickIncremental(sharedTickCssAnims(), 1.0f / 60.0f, sharedBenchTheme());
               g_sink += (float)sharedTickCssAnims().size(); });
 
         R.add("micro.tickCssAndOverlay.100", "animation",
               /*iterations=*/1000,
               /*setup=*/[]
               {
-          UIContext::get().theme.clear();
+          auto &theme = sharedBenchTheme();
+          theme.clear();
           ZMarkup::loadStyleString(R"(
               @keyframes k { 0% { opacity: 0.0; } 100% { opacity: 1.0; } }
-          )", UIContext::get().theme);
+          )", theme);
           auto& anims = sharedTickCssAnims();
           anims.clear();
           for (int i = 0; i < 100; ++i)
@@ -316,35 +322,42 @@ namespace Bench
               /*body=*/[]
               {
           auto& anims = sharedTickCssAnims();
+          const auto &theme = sharedBenchTheme();
           // Tick: advances elapsed and populates the cache.
-          Anim::tickIncremental(anims, 1.0f / 60.0f, UIContext::get().theme);
+          Anim::tickIncremental(anims, 1.0f / 60.0f, theme);
           // Overlay: reads the cache instead of recomputing sampleActive.
           ComputedStyle out;
-          Anim::overlayCssComputed(out, anims, UIContext::get().theme);
+          Anim::overlayCssComputed(out, anims, theme);
           g_sink += (float)anims.size(); });
 
-        R.add("micro.tickImperative.100", "animation",
-              /*iterations=*/500,
-              /*setup=*/[]
-              {
-              auto& nodes = sharedImperativeNodes();
-              nodes.clear();
-              nodes.reserve(100);
-              for (int i = 0; i < 100; ++i)
-              {
-                  auto n = std::make_shared<Layout>(LayoutType::Stack);
-                  auto anim = std::make_shared<UIAnimation>(1.0f);
-                  anim->addTrack<float>(0.0f, 1.0f,
-                      [](Layout* l, float v) { l->getInlineBase().opacity = v; });
-                  n->addAnimation("fade", anim);
-                  n->playAnimation("fade");
-                  nodes.push_back(n);
-              } },
-              /*body=*/[]
-              {
-              for (auto& n : sharedImperativeNodes())
-                  n->update(1.0f / 60.0f, false);
-              g_sink += (float)sharedImperativeNodes().size(); });
+        {
+            static UIContext imperativeCtx;
+
+            R.add("micro.tickImperative.100", "animation",
+                  /*iterations=*/500,
+                  /*setup=*/[&]
+                  {
+                  imperativeCtx.detachAllRoots();
+                  auto& nodes = sharedImperativeNodes();
+                  nodes.clear();
+                  nodes.reserve(100);
+                  for (int i = 0; i < 100; ++i)
+                  {
+                      auto n = std::make_shared<Layout>(LayoutType::Stack);
+                      imperativeCtx.mount(n);
+                      auto anim = std::make_shared<UIAnimation>(1.0f);
+                      anim->addTrack<float>(0.0f, 1.0f,
+                          [](Layout* l, float v) { l->getInlineBase().opacity = v; });
+                      n->addAnimation("fade", anim);
+                      n->playAnimation("fade");
+                      nodes.push_back(n);
+                  } },
+                  /*body=*/[]
+                  {
+                  for (auto& n : sharedImperativeNodes())
+                      n->update(1.0f / 60.0f, false);
+                  g_sink += (float)sharedImperativeNodes().size(); });
+        }
 
         // =======================================================================
         //  Tree
@@ -379,36 +392,42 @@ namespace Bench
               sharedTreeRemoveRoot()->removeAllChildren();
               g_sink += (float)sharedTreeRemoveRoot()->children.size(); });
 
-        R.add("micro.tree.drawChildren.500", "tree",
-              /*iterations=*/500,
-              /*setup=*/[]
-              {
-          // Root con 500 figli, tutti con z-index esplicito così
-          // finiscono nei bucket posZ/negZ (che sono i due vettori
-          // "nuovi" che vogliamo verificare).
-          auto& root = sharedTreeRemoveRoot();   // riusa lo slot già esistente
-          root = std::make_shared<Layout>(LayoutType::Stack);
-          root->size(Percent(100), Percent(100));
+        {
+            static Env drawEnv;
 
-          for (int i = 0; i < 500; ++i)
-          {
-              auto n = std::make_shared<Layout>(LayoutType::Stack);
-              n->size(Px(20), Px(20));
-              n->getInlineBase().position = Position::Relative;
-              n->getInlineBase().zIndex   = ZIndex(i % 10);
-              root->addChild(n);
-          }
+            R.add("micro.tree.drawChildren.500", "tree",
+                  /*iterations=*/500,
+                  /*setup=*/[&]
+                  {
+              drawEnv.reset();
+              // Root con 500 figli, tutti con z-index esplicito così
+              // finiscono nei bucket posZ/negZ (che sono i due vettori
+              // "nuovi" che vogliamo verificare).
+              auto& root = sharedTreeRemoveRoot();   // riusa lo slot già esistente
+              root = std::make_shared<Layout>(LayoutType::Stack);
+              root->size(Percent(100), Percent(100));
 
-          // Un measure+arrange preliminare, così draw non causa
-          // resize del subtree.
-          root->measure(800, 600);
-          root->arrange({0, 0, 800, 600}); },
-              /*body=*/[]
+              for (int i = 0; i < 500; ++i)
               {
-          auto& root = sharedTreeRemoveRoot();
-          // draw() chiama drawChildren() che riusa i vettori membri.
-          root->draw();
-          g_sink += (float)root->children.size(); });
+                  auto n = std::make_shared<Layout>(LayoutType::Stack);
+                  n->size(Px(20), Px(20));
+                  n->getInlineBase().position = Position::Relative;
+                  n->getInlineBase().zIndex   = ZIndex(i % 10);
+                  root->addChild(n);
+              }
+
+              drawEnv.ctx.mount(root);
+              // Un measure+arrange preliminare, così draw non causa
+              // resize del subtree.
+              root->measure(800, 600);
+              root->arrange({0, 0, 800, 600}); },
+                  /*body=*/[]
+                  {
+              auto& root = sharedTreeRemoveRoot();
+              // draw() chiama drawChildren() che riusa i vettori membri.
+              root->draw();
+              g_sink += (float)root->children.size(); });
+        }
 
         // =======================================================================
         //  SmallVector
@@ -438,7 +457,6 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  UIContext::get().theme.clear();
                   root = makeFlatTree(100);
                   for (int i = 0; i < 5; ++i) env.frame(root); },
                   /*body=*/[&]
@@ -456,8 +474,7 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  UIContext::get().theme.clear();
-                  ZMarkup::loadStyleString(makeCss(200), UIContext::get().theme);
+                  ZMarkup::loadStyleString(makeCss(200), env.ctx.theme);
                   root = makeFlatTree(100);
                   for (int i = 0; i < 5; ++i) env.frame(root); },
                   /*body=*/[&]
@@ -479,12 +496,11 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       .row { background: #202020ff;
                              transition: background 0.2s linear; }
                       .row:hover { background: #4a9effff; }
-                  )", UIContext::get().theme);
+                  )", env.ctx.theme);
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 100; ++i)
@@ -515,13 +531,12 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       @keyframes pulse { 0% { opacity: 0.5; }
                                          50% { opacity: 1.0; }
                                          100% { opacity: 0.5; } }
                       .pulse { animation: pulse 1s linear infinite; }
-                  )", UIContext::get().theme);
+                  )", env.ctx.theme);
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 100; ++i)
@@ -547,7 +562,6 @@ namespace Bench
                   /*setup=*/[&]
                   {
                   env.reset();
-                  UIContext::get().theme.clear();
                   root = std::make_shared<Layout>(LayoutType::Stack);
                   root->size(Percent(100), Percent(100));
                   for (int i = 0; i < 200; ++i)
@@ -563,26 +577,26 @@ namespace Bench
                   {
                   env.frame(root);
                   g_sink += (float)root->children.size(); });
+        }
 
-            // -----------------------------------------------------------------------
-            //  Frame — extra scenarios (added after review)
-            // -----------------------------------------------------------------------
+        // -----------------------------------------------------------------------
+        //  Frame — extra scenarios (added after review)
+        // -----------------------------------------------------------------------
 
-            {
-                // Layout stress: force a real re-measure + re-arrange every frame
-                // by changing the container width. This exercises the full layout
-                // algorithm (measure + arrange), not just the tree traversal
-                // (which is what system.frame.static100 measures).
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                static std::shared_ptr<Layout> container;
-                constexpr int FRAMES = 500;
+        {
+            // Layout stress: force a real re-measure + re-arrange every frame
+            // by changing the container width. This exercises the full layout
+            // algorithm (measure + arrange), not just the tree traversal
+            // (which is what system.frame.static100 measures).
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            static std::shared_ptr<Layout> container;
+            constexpr int FRAMES = 500;
 
-                R.add("system.frame.layout_stress", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
+            R.add("system.frame.layout_stress", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
                   env.reset();
-                  UIContext::get().theme.clear();
 
                   root = std::make_shared<Layout>(LayoutType::Stack);
                   root->size(Percent(100), Percent(100));
@@ -598,30 +612,29 @@ namespace Bench
                       container->addChild(n);
                   }
                   for (int i = 0; i < 5; ++i) env.frame(root); },
-                      /*body=*/[&]
-                      {
+                  /*body=*/[&]
+                  {
                   static int i = 0;
                   float w = 800.0f + (float)(i++ % 2);
                   container->getInlineBase().width = Px(w);
                   env.frame(root);
                   g_sink += (float)container->children.size(); });
-            }
+        }
 
-            {
-                // Mixed 200: 1 animated, 1 hovered, 10 dirty, 188 static.
-                // This is the shape of a real frame in an app that has one
-                // continuously animated element, one hovered control, and a
-                // handful of nodes whose content changed this frame.
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                static std::vector<std::shared_ptr<Layout>> dirtyNodes;
-                constexpr int FRAMES = 500;
+        {
+            // Mixed 200: 1 animated, 1 hovered, 10 dirty, 188 static.
+            // This is the shape of a real frame in an app that has one
+            // continuously animated element, one hovered control, and a
+            // handful of nodes whose content changed this frame.
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            static std::vector<std::shared_ptr<Layout>> dirtyNodes;
+            constexpr int FRAMES = 500;
 
-                R.add("system.frame.mixed200", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
+            R.add("system.frame.mixed200", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
                   env.reset();
-                  UIContext::get().theme.clear();
                   ZMarkup::loadStyleString(R"(
                       @keyframes pulse {
                           0%   { opacity: 0.7; }
@@ -631,7 +644,7 @@ namespace Bench
                       .pulse { animation: pulse 1s linear infinite; }
                       .row { background: #202020ff; }
                       .row:hover { background: #4a9effff; }
-                  )", UIContext::get().theme);
+                  )", env.ctx.theme);
 
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
@@ -656,30 +669,29 @@ namespace Bench
                   for (int i = 0; i < 5; ++i) env.frame(root);
                   env.platform.moveMouse({50.0f, 10.0f});      // hover on first
                   env.frame(root); },
-                      /*body=*/[&]
-                      {
+                  /*body=*/[&]
+                  {
                   static int i = 0;
                   float op = (i++ % 2) ? 1.0f : 0.95f;
                   for (auto& n : dirtyNodes)
                       n->getInlineBase().opacity = op;
                   env.frame(root);
                   g_sink += (float)root->children.size(); });
-            }
+        }
 
-            {
-                // Large 1000: an app with a long list. Frustum culling skips
-                // most of them. Measures the "iterate 1000 nodes, cache-hit
-                // measure, cull draw" path — the realistic case for a
-                // scrollable list of items.
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                constexpr int FRAMES = 200;
+        {
+            // Large 1000: an app with a long list. Frustum culling skips
+            // most of them. Measures the "iterate 1000 nodes, cache-hit
+            // measure, cull draw" path — the realistic case for a
+            // scrollable list of items.
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            constexpr int FRAMES = 200;
 
-                R.add("system.frame.large1000", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
+            R.add("system.frame.large1000", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
                   env.reset();
-                  UIContext::get().theme.clear();
 
                   root = std::make_shared<Layout>(LayoutType::Vertical);
                   root->size(Percent(100), Percent(100));
@@ -691,117 +703,115 @@ namespace Bench
                       root->addChild(n);
                   }
                   for (int i = 0; i < 5; ++i) env.frame(root); },
-                      /*body=*/[&]
-                      {
+                  /*body=*/[&]
+                  {
                   env.frame(root);
                   g_sink += (float)root->children.size(); });
-            }
+        }
 
-            {
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                constexpr int FRAMES = 200;
+        {
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            constexpr int FRAMES = 200;
 
-                R.add("system.frame.classChange.1000", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
-              env.reset();
-              UIContext::get().theme.clear();
-              ZMarkup::loadStyleString(R"(
-                  .btn { position: absolute; width: 10px; height: 10px; }
-                  .panel .btn { left: 100px; }
-              )", UIContext::get().theme);
+            R.add("system.frame.classChange.1000", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
+                  env.reset();
+                  ZMarkup::loadStyleString(R"(
+                      .btn { position: absolute; width: 10px; height: 10px; }
+                      .panel .btn { left: 100px; }
+                  )", env.ctx.theme);
 
-              root = std::make_shared<Layout>(LayoutType::Stack);
-              root->size(Percent(100), Percent(100));
+                  root = std::make_shared<Layout>(LayoutType::Stack);
+                  root->size(Percent(100), Percent(100));
 
-              for (int i = 0; i < 1000; ++i)
-              {
-                  auto n = std::make_shared<Layout>(LayoutType::Stack);
-                  n->size(Px(10), Px(10));
-                  if (i < 5)
-                      n->cls("btn");
-                  root->addChild(n);
-              }
-              for (int i = 0; i < 5; ++i)
-                  env.frame(root); },
-                      /*body=*/[&]
-                      {
-              static int i = 0;
-              if (i % 2 == 0) root->addClass("panel");
-              else            root->removeClass("panel");
-              ++i;
-              env.frame(root);
-              g_sink += (float)root->children.size(); });
-            }
+                  for (int i = 0; i < 1000; ++i)
+                  {
+                      auto n = std::make_shared<Layout>(LayoutType::Stack);
+                      n->size(Px(10), Px(10));
+                      if (i < 5)
+                          n->cls("btn");
+                      root->addChild(n);
+                  }
+                  for (int i = 0; i < 5; ++i)
+                      env.frame(root); },
+                  /*body=*/[&]
+                  {
+                  static int i = 0;
+                  if (i % 2 == 0) root->addClass("panel");
+                  else            root->removeClass("panel");
+                  ++i;
+                  env.frame(root);
+                  g_sink += (float)root->children.size(); });
+        }
 
-            {
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                constexpr int FRAMES = 200;
+        {
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            constexpr int FRAMES = 200;
 
-                R.add("system.frame.filtered50.static", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
-                          bindFilterBenchEnv(env);
-                          root = makeFiltered50Tree(/*withDropShadow=*/true);
-                          for (int i = 0; i < 5; ++i)
-                              env.frame(root);
-                      },
-                      /*body=*/[&]
-                      {
+            R.add("system.frame.filtered50.static", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
+                      bindFilterBenchEnv(env);
+                      root = makeFiltered50Tree(/*withDropShadow=*/true);
+                      for (int i = 0; i < 5; ++i)
                           env.frame(root);
-                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
-                      });
-            }
+                  },
+                  /*body=*/[&]
+                  {
+                      env.frame(root);
+                      g_sink += (float)env.ctx.renderStats.pushTargetCalls;
+                  });
+        }
 
-            {
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                constexpr int FRAMES = 200;
+        {
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            constexpr int FRAMES = 200;
 
-                R.add("system.frame.filtered50.scaleAnim", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
-                          bindFilterBenchEnv(env);
-                          root = makeFiltered50Tree(/*withDropShadow=*/true);
-                          for (int i = 0; i < 5; ++i)
-                              env.frame(root);
-                      },
-                      /*body=*/[&]
-                      {
-                          static int i = 0;
-                          float s = 1.0f + 0.15f * ((float)(i++ % 60) / 59.0f);
-                          for (auto &c : root->children)
-                              c->getInlineBase().scale = s;
+            R.add("system.frame.filtered50.scaleAnim", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
+                      bindFilterBenchEnv(env);
+                      root = makeFiltered50Tree(/*withDropShadow=*/true);
+                      for (int i = 0; i < 5; ++i)
                           env.frame(root);
-                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
-                      });
-            }
+                  },
+                  /*body=*/[&]
+                  {
+                      static int i = 0;
+                      float s = 1.0f + 0.15f * ((float)(i++ % 60) / 59.0f);
+                      for (auto &c : root->children)
+                          c->getInlineBase().scale = s;
+                      env.frame(root);
+                      g_sink += (float)env.ctx.renderStats.pushTargetCalls;
+                  });
+        }
 
-            {
-                static Env env;
-                static std::shared_ptr<Layout> root;
-                constexpr int FRAMES = 200;
+        {
+            static Env env;
+            static std::shared_ptr<Layout> root;
+            constexpr int FRAMES = 200;
 
-                R.add("system.frame.filtered50.rotAnim", "frame", FRAMES,
-                      /*setup=*/[&]
-                      {
-                          bindFilterBenchEnv(env);
-                          root = makeFiltered50Tree(/*withDropShadow=*/false);
-                          for (int i = 0; i < 5; ++i)
-                              env.frame(root);
-                      },
-                      /*body=*/[&]
-                      {
-                          static int i = 0;
-                          float r = (float)((i++ * 3) % 360);
-                          for (auto &c : root->children)
-                              c->getInlineBase().rotation = r;
+            R.add("system.frame.filtered50.rotAnim", "frame", FRAMES,
+                  /*setup=*/[&]
+                  {
+                      bindFilterBenchEnv(env);
+                      root = makeFiltered50Tree(/*withDropShadow=*/false);
+                      for (int i = 0; i < 5; ++i)
                           env.frame(root);
-                          g_sink += (float)UIContext::get().renderStats.pushTargetCalls;
-                      });
-            }
+                  },
+                  /*body=*/[&]
+                  {
+                      static int i = 0;
+                      float r = (float)((i++ * 3) % 360);
+                      for (auto &c : root->children)
+                          c->getInlineBase().rotation = r;
+                      env.frame(root);
+                      g_sink += (float)env.ctx.renderStats.pushTargetCalls;
+                  });
         }
     }
 

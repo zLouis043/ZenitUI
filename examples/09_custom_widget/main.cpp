@@ -57,11 +57,10 @@ int main()
     RaylibPlatform      platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
-    ZMarkup::loadStyleFile("examples/09_custom_widget/theme.zstyle", UIContext::get().theme);
+    ZMarkup::loadStyleFile("examples/09_custom_widget/theme.zstyle", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Root + page
@@ -110,6 +109,7 @@ int main()
 
     page->addChild(panel);
     root->addChild(page);
+    ctx.mount(root);
 
     // -----------------------------------------------------------------------
     //  ZMarkup registration
@@ -129,10 +129,10 @@ int main()
     //      );
     //  });
     //
-    //  auto el  = ZMarkup::parse(R"(Rating#stars max=5 value=3)");
-    //  auto ctx = std::make_shared<ZMarkup::BuildContext>();
-    //  auto node = reg.create(el, *ctx);
-    //  ZMarkup::UINode ui(node, ctx);
+    //  auto el   = ZMarkup::parse(R"(Rating#stars max=5 value=3)");
+    //  auto bctx = std::make_shared<ZMarkup::BuildContext>();
+    //  auto node = reg.create(el, *bctx);
+    //  ZMarkup::UINode ui(node, bctx);
     //
     //  ui.find<Rating>("stars")->onValueChanged = [](int v){ /* ... */ };
     //  panel->addChild(ui.root());
@@ -142,14 +142,15 @@ int main()
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

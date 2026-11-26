@@ -94,8 +94,10 @@ namespace ZenitUI
         if (!acceptsAnyInput(st) || node.getEffectiveLayoutType() == LayoutType::Stack)
             return;
 
-        auto &ctx = node.context();
-        auto &pointer = ctx.pointer;
+        auto *ctx = node.context();
+        if (!ctx)
+            return;
+        auto &pointer = ctx->pointer;
         const Rect &rect = node.rect;
 
         const bool canScrollY = state.maxScroll.y > 0.0f && st.overflowY != Overflow::Hidden;
@@ -104,8 +106,8 @@ namespace ZenitUI
         // Accept click and wheel only when topmostConsumer is this scroll container
         // or one of its descendants (respects z-index, modals, and portals).
         const bool pointerInsideScroll =
-            (ctx.topmostConsumer == &node) ||
-            (ctx.topmostConsumer && node.isAncestorOf(ctx.topmostConsumer));
+            (ctx->topmostConsumer == &node) ||
+            (ctx->topmostConsumer && node.isAncestorOf(ctx->topmostConsumer));
 
         if (!node.hasPointerCapture())
         {
@@ -193,25 +195,25 @@ namespace ZenitUI
             dragAxis = 0;
         }
 
-        if (!ctx.wheelConsumedThisFrame && node.config.interactive &&
+        if (!ctx->wheelConsumedThisFrame && node.config.interactive &&
             !node.hasPointerCapture() && pointerInsideScroll && rect.contains(pointer.pos))
         {
             if (pointer.wheelY != 0.0f)
             {
-                if (ctx.modifiers.shift && canScrollX)
+                if (ctx->modifiers.shift && canScrollX)
                 {
                     state.velocity.x -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
-                    ctx.wheelConsumedThisFrame = true;
+                    ctx->wheelConsumedThisFrame = true;
                 }
-                else if (!ctx.modifiers.shift && canScrollY)
+                else if (!ctx->modifiers.shift && canScrollY)
                 {
                     state.velocity.y -= pointer.wheelY * ScrollState::WHEEL_IMPULSE;
-                    ctx.wheelConsumedThisFrame = true;
+                    ctx->wheelConsumedThisFrame = true;
                 }
             }
         }
 
-        state.tickInertia(ctx.dt);
+        state.tickInertia(ctx->dt);
 
         scrolling = node.hasPointerCapture() || std::abs(state.velocity.x) > ScrollState::VELOCITY_MIN || std::abs(state.velocity.y) > ScrollState::VELOCITY_MIN;
     }
@@ -226,7 +228,8 @@ namespace ZenitUI
         if (!wantV && !wantH)
             return;
 
-        auto r = node.context().renderer;
+        auto *ctx = node.context();
+        auto *r = ctx ? ctx->renderer : nullptr;
         if (!r)
             return;
 

@@ -21,7 +21,9 @@ namespace ZenitUI
 
 		initStyleIfNeeded();
 
-		uint32_t gen = context().viewportGeneration;
+		auto *ctx = context();
+		uint32_t gen = ctx ? ctx->viewportGeneration : 0u;
+
 		bool viewportChanged = (gen != lastViewportGen_);
 		if (viewportChanged)
 		{
@@ -179,27 +181,27 @@ namespace ZenitUI
 
 	void Layout::updateTree(float dt)
 	{
-		auto &ctx = context();
-
-		auto captured = ctx.pointerCapture.lock();
+		auto *ctx = context();
+		if (!ctx) return;
+		auto captured = ctx->pointerCapture.lock();
 		if (!captured || !captured->getEnabled() || !captured->isVisible())
 		{
-			ctx.pointerCapture.reset();
-			ctx.topmostConsumer = hitTest(ctx.pointer.pos, false, nullptr);
+			ctx->pointerCapture.reset();
+			ctx->topmostConsumer = hitTest(ctx->pointer.pos, false, nullptr);
 		}
 		else
 		{
-			ctx.topmostConsumer = captured.get();
+			ctx->topmostConsumer = captured.get();
 		}
 
-		ctx.hoverTarget = ctx.topmostConsumer;
+		ctx->hoverTarget = ctx->topmostConsumer;
 
 		bool anyPressed = false;
 		bool anyReleased = false;
 		bool anyDown = false;
 		for (size_t i = 0; i < (size_t)MouseButton::Count; ++i)
 		{
-			const auto &b = ctx.pointer.buttons[i];
+			const auto &b = ctx->pointer.buttons[i];
 			if (b.pressed)
 				anyPressed = true;
 			if (b.released)
@@ -209,31 +211,31 @@ namespace ZenitUI
 		}
 
 		if (anyPressed)
-			ctx.pressTarget = ctx.hoverTarget;
+			ctx->pressTarget = ctx->hoverTarget;
 		if (anyReleased)
-			ctx.releaseTarget = ctx.hoverTarget;
+			ctx->releaseTarget = ctx->hoverTarget;
 
-		if (ctx.pointer[MouseButton::Left].pressed)
+		if (ctx->pointer[MouseButton::Left].pressed)
 		{
-			if (ctx.topmostConsumer && ctx.topmostConsumer->isFocusable())
+			if (ctx->topmostConsumer && ctx->topmostConsumer->isFocusable())
 			{
-				ctx.requestFocus(ctx.topmostConsumer->shared_from_this());
-				notifyFocusAncestors(ctx.focusedNode.lock().get());
+				ctx->requestFocus(ctx->topmostConsumer->shared_from_this());
+				notifyFocusAncestors(ctx->focusedNode.lock().get());
 			}
 			else
 			{
-				ctx.releaseFocus();
+				ctx->releaseFocus();
 			}
 		}
 
-		for (int k : ctx.inputEvents.keys)
+		for (int k : ctx->inputEvents.keys)
 		{
 			if (k != Key::Tab)
 				continue;
 
 			Layout *scope = this;
 			{
-				auto focused = ctx.focusedNode.lock();
+				auto focused = ctx->focusedNode.lock();
 				if (focused)
 				{
 					Layout *n = focused.get();
@@ -254,7 +256,7 @@ namespace ZenitUI
 			if (focusables.empty())
 				break;
 
-			auto cur = ctx.focusedNode.lock();
+			auto cur = ctx->focusedNode.lock();
 			Layout *curPtr = cur.get();
 
 			int idx = -1;
@@ -269,29 +271,29 @@ namespace ZenitUI
 			if (idx >= 0)
 			{
 				int n = (int)focusables.size();
-				next = ctx.modifiers.shift ? (idx - 1 + n) % n
+				next = ctx->modifiers.shift ? (idx - 1 + n) % n
 										   : (idx + 1) % n;
 			}
-			ctx.requestFocus(focusables[next]->shared_from_this());
-			notifyFocusAncestors(ctx.focusedNode.lock().get());
+			ctx->requestFocus(focusables[next]->shared_from_this());
+			notifyFocusAncestors(ctx->focusedNode.lock().get());
 		}
 
 		update(dt, false);
 
 		if (anyReleased)
-			ctx.pressTarget = nullptr;
-		if (!anyDown && !ctx.pointerCapture.expired())
-			ctx.pointerCapture.reset();
+			ctx->pressTarget = nullptr;
+		if (!anyDown && !ctx->pointerCapture.expired())
+			ctx->pointerCapture.reset();
 	}
 
 	void Layout::runFrame(float dt)
 	{
-		context().runFrame(*this, dt);
+		if (auto *ctx = context()) ctx->runFrame(*this, dt);
 	}
 
 	void Layout::renderFrame()
 	{
-		context().renderFrame(*this);
+		if (auto *ctx = context()) ctx->renderFrame(*this);
 	}
 
 	void Layout::attachContext(UIContext *newCtx)
@@ -383,13 +385,13 @@ namespace ZenitUI
 
 	void UIContext::unmount(Layout &root)
 	{
-		if (root.contextPtr() == this)
+		if (root.context() == this)
 			root.detachContext();
 	}
 
 	void UIContext::runFrame(Layout &root, float dt)
 	{
-		if (root.contextPtr() != this)
+		if (root.context() != this)
 			root.attachContext(this);
 		beginFrame(dt);
 		root.updateTree(dt);
@@ -399,7 +401,7 @@ namespace ZenitUI
 
 	void UIContext::renderFrame(Layout &root)
 	{
-		if (root.contextPtr() != this)
+		if (root.context() != this)
 			root.attachContext(this);
 		if (!renderer)
 			return;

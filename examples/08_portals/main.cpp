@@ -67,11 +67,10 @@ int main()
     RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
-    ZMarkup::loadStyleFile("examples/08_portals/theme.zstyle", UIContext::get().theme);
+    ZMarkup::loadStyleFile("examples/08_portals/theme.zstyle", ctx.theme);
 
     // -----------------------------------------------------------------------
     //  Root: a Stack that fills the viewport. Two children — the page and
@@ -150,9 +149,9 @@ int main()
         });
 
         target->addChild(menu);
-        target->onRightClick = [menu]
+        target->onRightClick = [menu, &ctx]
         {
-            Vec2 pos = UIContext::get().pointer.pos;
+            Vec2 pos = ctx.pointer.pos;
             menu->openAt(pos);
         };
 
@@ -203,20 +202,22 @@ int main()
     // -----------------------------------------------------------------------
     root->addChild(page);
     root->addChild(modal);
+    ctx.mount(root);
 
     // -----------------------------------------------------------------------
     //  Main loop
     // -----------------------------------------------------------------------
     while (!WindowShouldClose())
     {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

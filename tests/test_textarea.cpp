@@ -7,7 +7,7 @@ using namespace ZenitUI;
 using namespace ZenitUI::UI;
 using namespace ZenitUI::Test;
 
-static void tapHeldKey(Env &env, const std::shared_ptr<Layout> &root, int key)
+static void tapHeldKey(Env &env, const std::shared_ptr<ZenitUI::Layout> &root, int key)
 {
     env.platform.holdKey(key);
     env.frame(root);
@@ -55,12 +55,12 @@ TEST(TextArea, enter_inserts_newline_and_keeps_focus_escape_blurs)
     ta->onTextChanged = [&](const std::string &) { ++changeCount; };
 
     env.frame(root);
-    UIContext::get().requestFocus(ta);
+    env.ctx.requestFocus(ta);
 
     env.platform.pressKey(Key::Enter);
     env.frame(root);
 
-    CHECK(UIContext::get().hasFocus(ta.get()));
+    CHECK(env.ctx.hasFocus(ta.get()));
     CHECK(ta->getText() == "Uno\n");
     CHECK(changeCount == 1);
 
@@ -74,7 +74,7 @@ TEST(TextArea, enter_inserts_newline_and_keeps_focus_escape_blurs)
 
     env.platform.pressKey(Key::Escape);
     env.frame(root);
-    CHECK(!UIContext::get().hasFocus(ta.get()));
+    CHECK(!env.ctx.hasFocus(ta.get()));
 }
 
 TEST(TextArea, home_end_and_vertical_navigation_across_hard_lines)
@@ -89,7 +89,7 @@ TEST(TextArea, home_end_and_vertical_navigation_across_hard_lines)
     root->addChild(ta);
     env.frame(root);
 
-    UIContext::get().requestFocus(ta);
+    env.ctx.requestFocus(ta);
     
     CHECK(ta->getCursorPos() == 14);
 
@@ -125,7 +125,7 @@ TEST(TextArea, soft_wrap_splits_long_line_and_up_down_navigate_visual_lines)
 
     CHECK(env.renderer.drawnTexts.size() >= 2);
 
-    UIContext::get().requestFocus(ta);
+    env.ctx.requestFocus(ta);
     int endPos = ta->getCursorPos();
     CHECK(endPos == (int)ta->getText().size());
 
@@ -144,7 +144,7 @@ TEST(TextArea, selection_clipboard_and_undo_redo)
     root->addChild(ta);
     env.frame(root);
 
-    UIContext::get().requestFocus(ta);
+    env.ctx.requestFocus(ta);
 
     env.platform.mods.ctrl = true;
     env.platform.pressKey(Key::A);
@@ -245,12 +245,12 @@ TEST(TextArea, mouse_wheel_scrolls_lines_and_yields_at_bounds)
 
     env.platform.scrollWheel(+1.0f);
     env.frame(root);
-    CHECK(!UIContext::get().wheelConsumedThisFrame);
+    CHECK(!env.ctx.wheelConsumedThisFrame);
 
     env.renderer.drawnTexts.clear();
     env.platform.scrollWheel(-1.0f);
     env.frame(root);
-    CHECK(UIContext::get().wheelConsumedThisFrame);
+    CHECK(env.ctx.wheelConsumedThisFrame);
 
     for (int i = 0; i < 10; ++i)
     {
@@ -264,7 +264,7 @@ TEST(TextArea, mouse_wheel_scrolls_lines_and_yields_at_bounds)
 
     env.platform.scrollWheel(-1.0f);
     env.frame(root);
-    CHECK(!UIContext::get().wheelConsumedThisFrame);
+    CHECK(!env.ctx.wheelConsumedThisFrame);
 }
 
 TEST(TextArea, placeholder_wraps_by_default_and_hides_when_text_present)

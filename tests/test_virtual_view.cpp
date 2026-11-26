@@ -7,14 +7,14 @@ using namespace ZenitUI::Test;
 using namespace ZenitUI::UI;
 
 namespace {
-    std::shared_ptr<Layout> makeUniformRow()
+    std::shared_ptr<ZenitUI::Layout> makeUniformRow()
     {
-        return std::make_shared<Layout>(LayoutType::Stack);
+        return std::make_shared<ZenitUI::Layout>(LayoutType::Stack);
     }
 
-    std::shared_ptr<Layout> makeVariableRow(int i)
+    std::shared_ptr<ZenitUI::Layout> makeVariableRow(int i)
     {
-        auto row = std::make_shared<Layout>(LayoutType::Stack);
+        auto row = std::make_shared<ZenitUI::Layout>(LayoutType::Stack);
         row->size(Px(100), Px(i % 2 == 0 ? 24.0f : 48.0f));
         return row;
     }

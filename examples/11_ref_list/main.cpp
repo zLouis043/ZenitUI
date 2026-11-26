@@ -104,9 +104,8 @@ int main()
     RaylibPlatform platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     ZMarkup::loadStyleString(R"(
         #root {
@@ -156,13 +155,14 @@ int main()
         Button:hover { background: #7bc0ff; }
         .btn-danger { background: #be2137; }
         .btn-danger:hover { background: #e62937; }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     // Build the initial tree.
     auto ui = ZMarkup::build(kInitialMarkup);
     if (!ui.root())
     {
         std::fprintf(stderr, "Failed to build initial markup\n");
+        ctx.detachBackend();
         CloseWindow();
         return 1;
     }
@@ -175,6 +175,7 @@ int main()
     if (!list || !counter || !addBtn || !resetBtn)
     {
         std::fprintf(stderr, "Missing node handles — check the markup\n");
+        ctx.detachBackend();
         CloseWindow();
         return 1;
     }
@@ -240,17 +241,19 @@ int main()
     // runs the frame loop; the ZMarkup tree is its child.
     auto wrapper = CounterSync::create(list, counter);
     wrapper->addChild(ui.root());
+    ctx.mount(wrapper);
 
     while (!WindowShouldClose())
     {
-        wrapper->runFrame(GetFrameTime());
+        ctx.runFrame(*wrapper, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        wrapper->renderFrame();
+        ctx.renderFrame(*wrapper);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

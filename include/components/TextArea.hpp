@@ -149,11 +149,14 @@ namespace ZenitUI::UI
         /** \brief Compute intrinsic size from roughly 16 "M" glyphs and rows_ line heights. */
         Vec2 computeIntrinsicSize(float, float) override
         {
+            auto *ctx = context();
+            if (!ctx)
+                return {0.0f, 0.0f};
             FontHandle f = resolveFont(style_.currentStyle, defaultFont);
             const Vec2 vp = viewportSize();
             float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float charW = 0.0f;
-            if (auto r = context().renderer)
+            if (auto r = ctx->renderer)
                 charW = r->measureText(f, "M", fs, 0.0f).x;
             if (charW <= 0.0f)
                 charW = fs * 0.6f;
@@ -176,13 +179,15 @@ namespace ZenitUI::UI
         /** \brief Handle pointer selection, wheel scrolling, keyboard editing, and auto-scroll. */
         void onUpdate(float dt) override
         {
-            hasFocusCache = context().hasFocus(this);
+            auto *ctx = context();
+            if (!ctx)
+                return;
+            hasFocusCache = ctx->hasFocus(this);
             cursorBlink += dt;
             if (cursorBlink > 1.0f)
                 cursorBlink -= 1.0f;
 
-            auto &ctx = context();
-            auto &ev = ctx.inputEvents;
+            auto &ev = ctx->inputEvents;
             const Vec2 vp = viewportSize();
             bool changed = false;
 
@@ -211,27 +216,27 @@ namespace ZenitUI::UI
             scrollY = std::clamp(scrollY, 0.0f, maxScroll);
 
             // Scroll verticale con rotellina (cede allo scroll padre ai limiti)
-            if (!ctx.wheelConsumedThisFrame && ctx.topmostConsumer == this &&
-                rect.contains(ctx.pointer.pos) && ctx.pointer.wheelY != 0.0f && maxScroll > 0.0f)
+            if (!ctx->wheelConsumedThisFrame && ctx->topmostConsumer == this &&
+                rect.contains(ctx->pointer.pos) && ctx->pointer.wheelY != 0.0f && maxScroll > 0.0f)
             {
-                float nextScroll = std::clamp(scrollY - ctx.pointer.wheelY * lineH * 2.0f, 0.0f, maxScroll);
+                float nextScroll = std::clamp(scrollY - ctx->pointer.wheelY * lineH * 2.0f, 0.0f, maxScroll);
                 if (std::abs(nextScroll - scrollY) > 0.01f)
                 {
                     scrollY = nextScroll;
-                    ctx.wheelConsumedThisFrame = true;
+                    ctx->wheelConsumedThisFrame = true;
                 }
             }
 
             if (state.pressed && !hasPointerCapture())
             {
                 capturePointer();
-                context().requestFocus(shared_from_this());
+                ctx->requestFocus(shared_from_this());
 
-                double now = ctx.platform->time();
+                double now = ctx->platform->time();
                 clickCount = (now - lastClickTime < 0.4) ? (clickCount + 1) : 1;
                 lastClickTime = now;
 
-                cursorPos = cursorIndexFromPos(ctx.pointer.pos.x - rect.x, ctx.pointer.pos.y - rect.y,
+                cursorPos = cursorIndexFromPos(ctx->pointer.pos.x - rect.x, ctx->pointer.pos.y - rect.y,
                                                pl, pt, f, fs, sp, lineH);
                 selectionStart = cursorPos;
 
@@ -251,7 +256,7 @@ namespace ZenitUI::UI
 
             if (hasPointerCapture() && clickCount == 1)
             {
-                int newPos = cursorIndexFromPos(ctx.pointer.pos.x - rect.x, ctx.pointer.pos.y - rect.y,
+                int newPos = cursorIndexFromPos(ctx->pointer.pos.x - rect.x, ctx->pointer.pos.y - rect.y,
                                                 pl, pt, f, fs, sp, lineH);
                 if (newPos != cursorPos)
                 {
@@ -287,7 +292,7 @@ namespace ZenitUI::UI
 
             bool keepCursorInView = false;
 
-            if (ctx.modifiers.ctrl || ctx.modifiers.super)
+            if (ctx->modifiers.ctrl || ctx->modifiers.super)
             {
                 for (int k : ev.keys)
                 {
@@ -303,7 +308,7 @@ namespace ZenitUI::UI
                         {
                             int s1 = std::min(selectionStart, cursorPos);
                             int s2 = std::max(selectionStart, cursorPos);
-                            ctx.platform->setClipboardText(text.substr(s1, s2 - s1));
+                            ctx->platform->setClipboardText(text.substr(s1, s2 - s1));
                             if (k == Key::X)
                             {
                                 deleteSelection();
@@ -315,7 +320,7 @@ namespace ZenitUI::UI
                     else if (k == Key::V)
                     {
                         deleteSelection();
-                        std::string clean = Utf8::sanitizeMultiLine(ctx.platform->getClipboardText());
+                        std::string clean = Utf8::sanitizeMultiLine(ctx->platform->getClipboardText());
                         if (!clean.empty())
                         {
                             text.insert(static_cast<size_t>(cursorPos), clean);
@@ -331,7 +336,7 @@ namespace ZenitUI::UI
                     }
                     else if (k == Key::Z)
                     {
-                        if (ctx.modifiers.shift)
+                        if (ctx->modifiers.shift)
                             redo();
                         else
                             undo();
@@ -373,7 +378,7 @@ namespace ZenitUI::UI
                 if (targetLine == curLine)
                     return;
 
-                auto r = context().renderer;
+                auto r = ctx->renderer;
                 float curX = 0.0f;
                 if (r)
                 {
@@ -388,7 +393,7 @@ namespace ZenitUI::UI
             auto doAction = [&](int key)
             {
                 bool actionChanged = false;
-                const bool wordJump = (ctx.modifiers.ctrl || ctx.modifiers.super);
+                const bool wordJump = (ctx->modifiers.ctrl || ctx->modifiers.super);
                 switch (key)
                 {
                 case Key::Backspace:
@@ -417,7 +422,7 @@ namespace ZenitUI::UI
                     }
                     break;
                 case Key::Left:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -434,7 +439,7 @@ namespace ZenitUI::UI
                     }
                     break;
                 case Key::Right:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -451,7 +456,7 @@ namespace ZenitUI::UI
                     }
                     break;
                 case Key::Up:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -461,7 +466,7 @@ namespace ZenitUI::UI
                     moveVertical(-1);
                     break;
                 case Key::Down:
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -534,14 +539,14 @@ namespace ZenitUI::UI
                     keepCursorInView = true;
                     break;
                 case Key::Escape:
-                    context().releaseFocus();
+                    ctx->releaseFocus();
                     hasFocusCache = false;
                     repeatStates.clear();
                     return;
                 case Key::Home:
                 {
                     ensureLines(innerW, f, fs, sp);
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -557,7 +562,7 @@ namespace ZenitUI::UI
                 case Key::End:
                 {
                     ensureLines(innerW, f, fs, sp);
-                    if (ctx.modifiers.shift)
+                    if (ctx->modifiers.shift)
                     {
                         if (selectionStart == -1)
                             selectionStart = cursorPos;
@@ -607,7 +612,10 @@ namespace ZenitUI::UI
         /** \brief Render placeholder or wrapped lines, selection rects, caret, and internal scrollbar. */
         void renderContent(float op, const ComputedStyle &style) override
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return;
+            auto r = ctx->renderer;
             if (!r)
                 return;
 
@@ -734,10 +742,13 @@ namespace ZenitUI::UI
 
     private:
         std::vector<VisualLine> wrapString(const std::string &src, float availW,
-                                                  FontHandle f, float fs, float sp)
+                                           FontHandle f, float fs, float sp)
         {
+            auto *ctx = context();
+            if (!ctx)
+                return {};
             std::vector<VisualLine> out;
-            auto r = context().renderer;
+            auto r = ctx->renderer;
             auto measure = [&](size_t a, size_t b) -> float
             {
                 if (!r || b <= a)
@@ -850,7 +861,10 @@ namespace ZenitUI::UI
 
         int closestIndexInLine(int lineIdx, float targetX, FontHandle f, float fs, float sp) const
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return 0;
+            auto r = ctx->renderer;
             const auto &ln = visualLines[lineIdx];
             if (!r)
                 return ln.start;

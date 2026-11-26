@@ -85,9 +85,8 @@ int main()
     RaylibPlatform      platform;
     RaylibAssetProvider assets(renderer);
 
-    UIContext::get().renderer = &renderer;
-    UIContext::get().platform = &platform;
-    UIContext::get().assets   = &assets;
+    UIContext ctx;
+    ctx.attachBackend(&renderer, &platform, &assets);
 
     ZMarkup::loadStyleString(R"(
         #root {
@@ -169,7 +168,7 @@ int main()
             transition: left 0.18s ease-out-cubic;
         }
         Toggle:checked .toggle-knob { left: 26px; }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     // ---- Model ----
     Bindable<float>       volume{0.5f};
@@ -180,6 +179,7 @@ int main()
     auto ui = ZMarkup::build(kMarkup);
     if (!ui.root()) {
         std::fprintf(stderr, "Failed to build markup\n");
+        ctx.detachBackend();
         CloseWindow();
         return 1;
     }
@@ -197,6 +197,7 @@ int main()
     if (!slider || !trackInput || !muteToggle ||
         !trackLabel || !muteLabel || !removeBtn || !addBtn || !barsContainer) {
         std::fprintf(stderr, "Missing node handles — check the markup\n");
+        ctx.detachBackend();
         CloseWindow();
         return 1;
     }
@@ -255,16 +256,19 @@ int main()
         }
     };
 
+    ctx.mount(root);
+
     // ---- Frame loop ----
     while (!WindowShouldClose()) {
-        root->runFrame(GetFrameTime());
+        ctx.runFrame(*root, GetFrameTime());
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

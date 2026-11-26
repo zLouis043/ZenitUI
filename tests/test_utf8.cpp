@@ -76,7 +76,7 @@ TEST(Utf8, textinput_typing_cursor_backspace_delete_multibyte)
     root->addChild(ti);
     env.frame(root);
 
-    UIContext::get().requestFocus(ti);
+    env.ctx.requestFocus(ti);
 
     env.platform.typeChar('c');
     env.platform.typeChar('i');
@@ -113,7 +113,7 @@ TEST(Utf8, textinput_combining_cluster_single_backspace_and_paste)
     root->addChild(ti);
     env.frame(root);
 
-    UIContext::get().requestFocus(ti);
+    env.ctx.requestFocus(ti);
     CHECK(ti->getCursorPos() == 4);
 
     env.platform.holdKey(Key::Backspace);
@@ -152,7 +152,7 @@ TEST(Utf8, textarea_utf8_paste_wrap_and_navigation)
     root->addChild(ta);
     env.frame(root);
 
-    UIContext::get().requestFocus(ta);
+    env.ctx.requestFocus(ta);
 
     env.platform.setClipboardText("Citt\xC3\xA0\r\nPerch\xC3\xA9 \xE2\x82\xAC");
     env.platform.mods.ctrl = true;

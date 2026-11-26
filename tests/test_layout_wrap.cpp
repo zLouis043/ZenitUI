@@ -4,10 +4,6 @@
 
 using namespace ZenitUI;
 
-static void freshTheme() {
-    UIContext::get().theme.clear();
-}
-
 static std::shared_ptr<Layout> makeBox(float w, float h) {
     auto n = std::make_shared<Layout>(LayoutType::Stack);
     n->size(Px(w), Px(h));
@@ -17,7 +13,6 @@ static std::shared_ptr<Layout> makeBox(float w, float h) {
 
 
 TEST(Layout_wrap, no_wrap_overflows) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(100), Auto());
     root->getInlineBase().wrap = false;
@@ -37,7 +32,6 @@ TEST(Layout_wrap, no_wrap_overflows) {
 }
 
 TEST(Layout_wrap, wrap_moves_to_next_line) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(100), Auto());
     root->getInlineBase().wrap = true;
@@ -58,7 +52,6 @@ TEST(Layout_wrap, wrap_moves_to_next_line) {
 }
 
 TEST(Layout_wrap, wrap_measures_correct_height) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Auto(), Auto()); 
     root->getInlineBase().wrap = true;
@@ -75,7 +68,6 @@ TEST(Layout_wrap, wrap_measures_correct_height) {
 }
 
 TEST(Layout_wrap, wrap_multiple_lines_with_gap) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(100), Auto());
     root->getInlineBase().wrap = true;
@@ -103,7 +95,6 @@ TEST(Layout_wrap, wrap_multiple_lines_with_gap) {
 }
 
 TEST(Layout_wrap, wrap_justify_center) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(100), Auto());
     root->getInlineBase().wrap = true;
@@ -126,7 +117,6 @@ TEST(Layout_wrap, wrap_justify_center) {
 }
 
 TEST(Layout_wrap, wrap_cross_axis_alignment) {
-    freshTheme();
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(100), Auto());
     root->getInlineBase().wrap = true;

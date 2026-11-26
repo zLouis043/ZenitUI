@@ -4,15 +4,16 @@
 namespace ZenitUI
 {
 
-
 	void InputController::updateFlags(Layout &node, bool selfBlocked, bool scrolling)
 	{
-		auto &ctx = node.context();
-		auto &pointer = ctx.pointer;
+		auto *ctx = node.context();
+		if (!ctx)
+			return;
+		auto &pointer = ctx->pointer;
 
 		if (scrolling)
 		{
-			bool focusNow = ctx.hasFocus(&node);
+			bool focusNow = ctx->hasFocus(&node);
 			if (focusNow != node.state.focused)
 			{
 				node.state.focused = focusNow;
@@ -26,9 +27,9 @@ namespace ZenitUI
 			node.state.hovered = node.rect.contains(pointer.pos);
 
 		node.state.pressed = 0;
-		if (pointer[MouseButton::Left].down && ctx.pressTarget)
+		if (pointer[MouseButton::Left].down && ctx->pressTarget)
 		{
-			Layout *n = ctx.pressTarget;
+			Layout *n = ctx->pressTarget;
 			while (n)
 			{
 				if (n == &node)
@@ -42,7 +43,7 @@ namespace ZenitUI
 			}
 		}
 
-		bool focusNow = ctx.hasFocus(&node);
+		bool focusNow = ctx->hasFocus(&node);
 		if (focusNow != node.state.focused)
 		{
 			node.state.focused = focusNow;
@@ -61,10 +62,12 @@ namespace ZenitUI
 		return UIState::Idle;
 	}
 
-		void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
+	void InputController::fireCallbacks(Layout &node, UIState prevState, UIState nextState, bool stateChanged)
 	{
-		auto &ctx = node.context();
-		auto &pointer = ctx.pointer;
+		auto *ctx = node.context();
+		if (!ctx)
+			return;
+		auto &pointer = ctx->pointer;
 
 		if (stateChanged)
 		{
@@ -81,10 +84,10 @@ namespace ZenitUI
 		{
 			const auto &btn = pointer[button];
 
-			if (btn.pressed && !ctx.wasConsumed(button))
+			if (btn.pressed && !ctx->wasConsumed(button))
 			{
-				bool inPressPath = (ctx.pressTarget == &node) ||
-								   node.isAncestorOf(ctx.pressTarget);
+				bool inPressPath = (ctx->pressTarget == &node) ||
+								   node.isAncestorOf(ctx->pressTarget);
 				if (inPressPath)
 				{
 					if (isLeftLegacy && node.onPress)
@@ -92,17 +95,17 @@ namespace ZenitUI
 					if (node.onButtonPress)
 						node.onButtonPress(button);
 					if (!node.config.passThrough)
-						ctx.consumeClick(button);
+						ctx->consumeClick(button);
 				}
 			}
 
 			if (btn.released)
 			{
-				bool pressedHere  = (ctx.pressTarget == &node)   ||
-									node.isAncestorOf(ctx.pressTarget);
-				bool releasedHere = (ctx.releaseTarget == &node) ||
-									node.isAncestorOf(ctx.releaseTarget);
-				bool validClick   = pressedHere && releasedHere;
+				bool pressedHere = (ctx->pressTarget == &node) ||
+								   node.isAncestorOf(ctx->pressTarget);
+				bool releasedHere = (ctx->releaseTarget == &node) ||
+									node.isAncestorOf(ctx->releaseTarget);
+				bool validClick = pressedHere && releasedHere;
 
 				if (validClick)
 				{
@@ -111,20 +114,20 @@ namespace ZenitUI
 					if (node.onButtonRelease)
 						node.onButtonRelease(button);
 
-					if (!ctx.wasConsumed(button))
+					if (!ctx->wasConsumed(button))
 					{
 						if (isLeftLegacy && node.onClick)
 							node.onClick();
 						if (node.onButtonClick)
 							node.onButtonClick(button);
 						if (!node.config.passThrough)
-							ctx.consumeClick(button);
+							ctx->consumeClick(button);
 					}
 				}
 			}
 		};
 
-		fireClickButton(MouseButton::Left,   /*isLeftLegacy=*/true);
+		fireClickButton(MouseButton::Left, /*isLeftLegacy=*/true);
 		fireClickButton(MouseButton::Middle, /*isLeftLegacy=*/false);
 
 		{
@@ -132,11 +135,11 @@ namespace ZenitUI
 
 			if (btn.pressed && node.state.hovered && node.onRightClick)
 			{
-				if (!ctx.wasConsumed(MouseButton::Right))
+				if (!ctx->wasConsumed(MouseButton::Right))
 				{
 					node.onRightClick();
 					if (!node.config.passThrough)
-						ctx.consumeClick(MouseButton::Right);
+						ctx->consumeClick(MouseButton::Right);
 				}
 			}
 		}
@@ -147,7 +150,11 @@ namespace ZenitUI
 		if (!node.state.focused || !node.config.enabled || !node.config.keyboardActivates)
 			return;
 
-		auto &ev = node.context().inputEvents;
+		auto *ctx = node.context();
+		if (!ctx)
+			return;
+
+		auto &ev = ctx->inputEvents;
 		for (int k : ev.keys)
 		{
 			if (k == Key::Enter || k == Key::Space)

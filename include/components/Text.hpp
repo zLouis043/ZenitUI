@@ -118,6 +118,10 @@ namespace ZenitUI::UI
             if (lines.empty())
                 return;
 
+            auto *ctx = context();
+            if (!ctx)
+                return;
+
             FontHandle f = resolveFont(style, defaultFont);
 
             const Vec2 vp = viewportSize();
@@ -151,7 +155,7 @@ namespace ZenitUI::UI
             if (applyEllipsis)
             {
                 truncatedText = buildEllipsisText(lines[0].text, availW, f, fs, sp);
-                truncatedSize = context().renderer->measureText(
+                truncatedSize = ctx->renderer->measureText(
                     f, truncatedText, fs, sp);
             }
 
@@ -170,7 +174,7 @@ namespace ZenitUI::UI
             else if (style.verticalAlign == Align::End)
                 pos.y += availH - totalTextH;
 
-            auto r = context().renderer;
+            auto r = ctx->renderer;
             r->pushClip(rect);
 
             if (applyEllipsis)
@@ -267,8 +271,11 @@ namespace ZenitUI::UI
          */
         void wrapText(float availW, float fs, float sp, FontHandle f)
         {
+            auto *ctx = context();
+            if (!ctx)
+                return;
             lines.clear();
-            auto r = context().renderer;
+            auto r = ctx->renderer;
             if (!r)
                 return;
 
@@ -402,7 +409,10 @@ namespace ZenitUI::UI
         std::string buildEllipsisText(std::string_view src, float availW,
                                       FontHandle f, float fs, float sp)
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return "";
+            auto r = ctx->renderer;
             if (!r)
                 return std::string(src);
 
@@ -446,6 +456,9 @@ namespace ZenitUI::UI
          */
         Vec2 measureSingleLine(FontHandle f)
         {
+            auto *ctx = context();
+            if (!ctx)
+                return {0.0f, 0.0f};
             const Vec2 vp = viewportSize();
             float fs = style_.currentStyle.fontSize.resolveV(vp.x, vp.y, vp);
             float sp = style_.currentStyle.letterSpacing.resolveH(vp.x, vp.y, vp);
@@ -454,7 +467,7 @@ namespace ZenitUI::UI
                 fs != cachedFs || sp != cachedSp || cachedSize.y == 0.0f ||
                 cachedWrapW >= 0.0f)
             {
-                auto r = context().renderer;
+                auto r = ctx->renderer;
                 lines.clear();
 
                 // Split on explicit '\n' even without wrapping. This makes

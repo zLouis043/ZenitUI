@@ -2034,7 +2034,6 @@ void main() {
 		running_ = true;
 		initialized_ = true;
 
-		bindToContext();
 		return true;
 	}
 

@@ -71,7 +71,10 @@ namespace ZenitUI::UI
         {
             if (target.valid())
             {
-                if (auto *r = context().renderer)
+                auto *ctx = context();
+                if (!ctx)
+                    return;
+                if (auto *r = ctx->renderer)
                     r->destroyTarget(target);
                 target = {};
             }
@@ -98,7 +101,11 @@ namespace ZenitUI::UI
          */
         void draw(float parentOp) override
         {
-            auto r = context().renderer;
+            auto *ctx = context();
+            if (!ctx)
+                return;
+
+            auto r = ctx->renderer;
             if (rect.width <= 0 || rect.height <= 0)
                 return;
             if (!target.valid() || target.width != (int)rect.width || target.height != (int)rect.height)

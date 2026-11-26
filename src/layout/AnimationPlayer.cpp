@@ -4,249 +4,250 @@
 namespace ZenitUI
 {
 
-
-void Anim::syncRefs(std::vector<ActiveCssAnimation>& anims,
-                    const std::vector<AnimationRef>& refs,
-                    double now)
-{
-    anims.erase(
-        std::remove_if(anims.begin(), anims.end(),
-                       [&](const ActiveCssAnimation& a)
-                       {
-                           for (const auto& r : refs)
-                               if (r.name == a.name)
-                                   return false;
-                           return true;
-                       }),
-        anims.end());
-
-    for (const auto& r : refs)
+    void Anim::syncRefs(std::vector<ActiveCssAnimation> &anims,
+                        const std::vector<AnimationRef> &refs,
+                        double now)
     {
-        bool found = false;
-        for (auto& a : anims)
+        anims.erase(
+            std::remove_if(anims.begin(), anims.end(),
+                           [&](const ActiveCssAnimation &a)
+                           {
+                               for (const auto &r : refs)
+                                   if (r.name == a.name)
+                                       return false;
+                               return true;
+                           }),
+            anims.end());
+
+        for (const auto &r : refs)
         {
-            if (a.name == r.name)
+            bool found = false;
+            for (auto &a : anims)
             {
+                if (a.name == r.name)
+                {
+                    a.duration = r.duration;
+                    a.delay = r.delay;
+                    a.iterations = r.iterations;
+                    a.alternate = r.alternate;
+                    a.fillForwards = r.fillForwards;
+                    a.ease = r.ease;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                ActiveCssAnimation a;
+                a.name = r.name;
+                a.startTime = now;
                 a.duration = r.duration;
                 a.delay = r.delay;
                 a.iterations = r.iterations;
                 a.alternate = r.alternate;
                 a.fillForwards = r.fillForwards;
                 a.ease = r.ease;
-                found = true;
-                break;
+                anims.push_back(std::move(a));
             }
         }
-        if (!found)
+    }
+
+    void Anim::tickIncremental(std::vector<ActiveCssAnimation> &anims, float dt, const Theme &theme)
+    {
+        for (auto &anim : anims)
         {
-            ActiveCssAnimation a;
-            a.name = r.name;
-            a.startTime = now;
-            a.duration = r.duration;
-            a.delay = r.delay;
-            a.iterations = r.iterations;
-            a.alternate = r.alternate;
-            a.fillForwards = r.fillForwards;
-            a.ease = r.ease;
-            anims.push_back(std::move(a));
+            if (anim.finished)
+                continue;
+            anim.elapsed += dt;
+            auto it = theme.keyframes.find(anim.name);
+            if (it == theme.keyframes.end())
+            {
+                anim.finished = true;
+                continue;
+            }
+            bool fin = false;
+            (void)sampleActiveCached(anim, fin);
+            if (fin)
+                anim.finished = true;
+        }
+
+        anims.erase(
+            std::remove_if(anims.begin(), anims.end(),
+                           [](const ActiveCssAnimation &a)
+                           { return a.finished && !a.fillForwards; }),
+            anims.end());
+    }
+
+    void Anim::tickAbsolute(std::vector<ActiveCssAnimation> &anims, double now, const Theme &theme)
+    {
+        for (auto &anim : anims)
+        {
+            if (anim.finished)
+                continue;
+            anim.elapsed = (float)(now - anim.startTime);
+            auto it = theme.keyframes.find(anim.name);
+            if (it == theme.keyframes.end())
+            {
+                anim.finished = true;
+                continue;
+            }
+            bool fin = false;
+            (void)sampleActiveCached(anim, fin);
+            if (fin)
+                anim.finished = true;
+        }
+
+        anims.erase(
+            std::remove_if(anims.begin(), anims.end(),
+                           [](const ActiveCssAnimation &a)
+                           { return a.finished && !a.fillForwards; }),
+            anims.end());
+    }
+
+    void Anim::overlayCssStyle(Style &out, const std::vector<ActiveCssAnimation> &anims, const Theme &theme)
+    {
+        for (const auto &anim : anims)
+        {
+            auto it = theme.keyframes.find(anim.name);
+            if (it == theme.keyframes.end())
+                continue;
+            bool fin = false;
+            float localT = sampleActiveCached(anim, fin);
+            if (fin && !anim.fillForwards)
+                continue;
+            Style frame = evaluateKeyframes(it->second, localT, anim.ease);
+            out.overlay(frame);
         }
     }
-}
 
-void Anim::tickIncremental(std::vector<ActiveCssAnimation>& anims, float dt, const Theme& theme)
-{
-    for (auto& anim : anims)
+    void Anim::overlayCssComputed(ComputedStyle &out, const std::vector<ActiveCssAnimation> &anims, const Theme &theme)
     {
-        if (anim.finished)
-            continue;
-        anim.elapsed += dt;
-        auto it = theme.keyframes.find(anim.name);
-        if (it == theme.keyframes.end())
+        for (const auto &anim : anims)
         {
-            anim.finished = true;
-            continue;
+            auto it = theme.keyframes.find(anim.name);
+            if (it == theme.keyframes.end())
+                continue;
+            bool fin = false;
+            float localT = sampleActiveCached(anim, fin);
+            if (fin && !anim.fillForwards)
+                continue;
+            Style frame = evaluateKeyframes(it->second, localT, anim.ease);
+            overlayComputed(out, frame);
         }
-        bool fin = false;
-        (void)sampleActiveCached(anim, fin);
-        if (fin)
-            anim.finished = true;
     }
 
-    anims.erase(
-        std::remove_if(anims.begin(), anims.end(),
-                       [](const ActiveCssAnimation& a)
-                       { return a.finished && !a.fillForwards; }),
-        anims.end());
-}
-
-void Anim::tickAbsolute(std::vector<ActiveCssAnimation>& anims, double now, const Theme& theme)
-{
-    for (auto& anim : anims)
+    void AnimationPlayer::play(Layout &node, const std::string &name, bool playReverse)
     {
-        if (anim.finished)
-            continue;
-        anim.elapsed = (float)(now - anim.startTime);
-        auto it = theme.keyframes.find(anim.name);
-        if (it == theme.keyframes.end())
-        {
-            anim.finished = true;
-            continue;
-        }
-        bool fin = false;
-        (void)sampleActiveCached(anim, fin);
-        if (fin)
-            anim.finished = true;
+        (void)node;
+        auto it = imperative.find(name);
+        if (it == imperative.end())
+            return;
+
+        auto &state = it->second;
+        state.reverse = playReverse;
+        state.playing = 1;
+
+        if (!state.reverse && state.elapsed >= state.anim->duration)
+            state.elapsed = 0.0f;
+        else if (state.reverse && state.elapsed <= 0.0f)
+            state.elapsed = state.anim->duration;
+
+        state.delayElapsed = state.anim->delay;
     }
 
-    anims.erase(
-        std::remove_if(anims.begin(), anims.end(),
-                       [](const ActiveCssAnimation& a)
-                       { return a.finished && !a.fillForwards; }),
-        anims.end());
-}
-
-void Anim::overlayCssStyle(Style& out, const std::vector<ActiveCssAnimation>& anims, const Theme& theme)
-{
-    for (const auto& anim : anims)
+    bool AnimationPlayer::hasActive(const Layout &node) const
     {
-        auto it = theme.keyframes.find(anim.name);
-        if (it == theme.keyframes.end())
-            continue;
-        bool fin = false;
-        float localT = sampleActiveCached(anim, fin);
-        if (fin && !anim.fillForwards)
-            continue;
-        Style frame = evaluateKeyframes(it->second, localT, anim.ease);
-        out.overlay(frame);
-    }
-}
-
-void Anim::overlayCssComputed(ComputedStyle& out, const std::vector<ActiveCssAnimation>& anims, const Theme& theme)
-{
-    for (const auto& anim : anims)
-    {
-        auto it = theme.keyframes.find(anim.name);
-        if (it == theme.keyframes.end())
-            continue;
-        bool fin = false;
-        float localT = sampleActiveCached(anim, fin);
-        if (fin && !anim.fillForwards)
-            continue;
-        Style frame = evaluateKeyframes(it->second, localT, anim.ease);
-        overlayComputed(out, frame);
-    }
-}
-
-void AnimationPlayer::play(Layout& node, const std::string& name, bool playReverse)
-{
-    (void)node;
-    auto it = imperative.find(name);
-    if (it == imperative.end())
-        return;
-
-    auto& state = it->second;
-    state.reverse = playReverse;
-    state.playing = 1;
-
-    if (!state.reverse && state.elapsed >= state.anim->duration)
-        state.elapsed = 0.0f;
-    else if (state.reverse && state.elapsed <= 0.0f)
-        state.elapsed = state.anim->duration;
-
-    state.delayElapsed = state.anim->delay;
-}
-
-bool AnimationPlayer::hasActive(const Layout& node) const
-{
-    for (const auto& [n, s] : imperative)
-        if (s.playing)
+        for (const auto &[n, s] : imperative)
+            if (s.playing)
+                return true;
+        if (!css.empty())
             return true;
-    if (!css.empty())
-        return true;
-    if (hasActivePartAnims())
-        return true;
-
-    for (const auto& c : node.children)
-        if (c->hasActiveAnimations())
+        if (hasActivePartAnims())
             return true;
-    return false;
-}
 
-bool AnimationPlayer::tickImperative(Layout& node, float dt)
-{
-    bool localBlocks = false;
-
-    for (auto& [n, s] : imperative)
-    {
-        if (!s.playing)
-            continue;
-
-        if (s.anim->blocksInput)
-            localBlocks = true;
-
-        if (s.delayElapsed > 0.0f)
-        {
-            s.delayElapsed -= dt;
-            continue;
-        }
-
-        s.elapsed += (s.reverse ? -dt : dt);
-        bool justFinished = false;
-
-        if (s.elapsed <= 0.0f)
-        {
-            s.elapsed = 0.0f;
-            s.playing = false;
-        }
-        if (s.elapsed >= s.anim->duration)
-        {
-            s.elapsed = s.anim->duration;
-             if (s.playing && !s.reverse)
-                justFinished = true;
-            s.playing = false;
-        }
-
-        float t = (s.anim->duration > 0.0f) ? (s.elapsed / s.anim->duration) : 1.0f;
-        for (auto& track : s.anim->tracks)
-            track->apply(t, &node);
-
-        node.internal_.pendingTransition = 1;
-
-        if (justFinished)
-        {
-            auto cb = s.anim->onFinished;
-            if (cb) cb();
-        }
+        for (const auto &c : node.children)
+            if (c->hasActiveAnimations())
+                return true;
+        return false;
     }
 
-    return localBlocks;
-}
+    bool AnimationPlayer::tickImperative(Layout &node, float dt)
+    {
+        bool localBlocks = false;
 
+        for (auto &[n, s] : imperative)
+        {
+            if (!s.playing)
+                continue;
 
-void AnimationPlayer::syncCss(Layout& node)
-{
-    const auto& refs = node.style_.targetStyle.animations;
-    Anim::syncRefs(css, refs, node.context().time);
-}
+            if (s.anim->blocksInput)
+                localBlocks = true;
 
-void AnimationPlayer::tickCss(Layout& node, float dt)
-{
-    Anim::tickIncremental(css, dt, node.theme());
-}
+            if (s.delayElapsed > 0.0f)
+            {
+                s.delayElapsed -= dt;
+                continue;
+            }
 
-void AnimationPlayer::applyCssToPart(Layout& node, const std::string& partName, Style& out)
-{
-    const auto& refs = out.animations.is_set
-        ? out.animations.value
-        : std::vector<AnimationRef>{};
+            s.elapsed += (s.reverse ? -dt : dt);
+            bool justFinished = false;
 
-    auto& anims = parts[partName];
-    const double now = node.context().time;
-    const auto& activeTheme = node.theme();
+            if (s.elapsed <= 0.0f)
+            {
+                s.elapsed = 0.0f;
+                s.playing = false;
+            }
+            if (s.elapsed >= s.anim->duration)
+            {
+                s.elapsed = s.anim->duration;
+                if (s.playing && !s.reverse)
+                    justFinished = true;
+                s.playing = false;
+            }
 
-    Anim::syncRefs(anims, refs, now);
-    Anim::tickAbsolute(anims, now, activeTheme);
-    Anim::overlayCssStyle(out, anims, activeTheme);
-}
+            float t = (s.anim->duration > 0.0f) ? (s.elapsed / s.anim->duration) : 1.0f;
+            for (auto &track : s.anim->tracks)
+                track->apply(t, &node);
+
+            node.internal_.pendingTransition = 1;
+
+            if (justFinished)
+            {
+                auto cb = s.anim->onFinished;
+                if (cb)
+                    cb();
+            }
+        }
+
+        return localBlocks;
+    }
+
+    void AnimationPlayer::syncCss(Layout &node)
+    {
+        const auto &refs = node.style_.targetStyle.animations;
+        auto *ctx = node.context();
+        Anim::syncRefs(css, refs, ctx ? ctx->time : 0.0);
+    }
+
+    void AnimationPlayer::tickCss(Layout &node, float dt)
+    {
+        Anim::tickIncremental(css, dt, node.theme());
+    }
+
+    void AnimationPlayer::applyCssToPart(Layout &node, const std::string &partName, Style &out)
+    {
+        const auto &refs = out.animations.is_set
+                               ? out.animations.value
+                               : std::vector<AnimationRef>{};
+
+        auto &anims = parts[partName];
+        auto *ctx = node.context();
+        const double now = ctx ? ctx->time : 0.0;
+        const auto &activeTheme = node.theme();
+
+        Anim::syncRefs(anims, refs, now);
+        Anim::tickAbsolute(anims, now, activeTheme);
+        Anim::overlayCssStyle(out, anims, activeTheme);
+    }
 
 } // namespace ZenitUI

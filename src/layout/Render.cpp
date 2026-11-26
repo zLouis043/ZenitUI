@@ -152,7 +152,10 @@ namespace ZenitUI
 		if (!layerCache_ || !layerCache_->target.valid())
 			return;
 
-		const auto &pool = context().targetPool;
+		auto *ctx = context();
+		if (!ctx)
+			return;
+		const auto &pool = ctx->targetPool;
 		if (layerCache_->poolGeneration != pool.generation())
 		{
 			layerCache_->target = {};
@@ -179,7 +182,6 @@ namespace ZenitUI
 		hashPod(h, selfPtr);
 
 		const Vec2 vp = layerRoot.viewportSize();
-
 
 		const uint8_t stateBits = static_cast<uint8_t>(
 			(state.hovered ? 1u : 0u) |
@@ -269,7 +271,8 @@ namespace ZenitUI
 
 	void Layout::drawWithStyle(const ComputedStyle &renderStyle, float parentOpacity)
 	{
-		auto renderer = context().renderer;
+		auto *ctx = context();
+		auto *renderer = ctx ? ctx->renderer : nullptr;
 		if (!renderer)
 			return;
 
@@ -307,19 +310,23 @@ namespace ZenitUI
 		if (!config.visible)
 			return;
 
+		auto *ctx = context();
+		if (!ctx)
+			return;
+
 		if (config.portal)
 		{
-			context().framePortals.push_back(weak_from_this());
+			ctx->framePortals.push_back(weak_from_this());
 			return;
 		}
 
-		auto renderer = context().renderer;
+		auto renderer = ctx->renderer;
 		if (!renderer)
 			return;
 
 		if (rect.width > 0.0f && rect.height > 0.0f)
 		{
-			Rect clip = context().getCullingClip();
+			Rect clip = ctx->getCullingClip();
 			float m = 40.0f;
 			if (rect.x > clip.x + clip.width + m ||
 				rect.x + rect.width < clip.x - m ||
@@ -344,7 +351,7 @@ namespace ZenitUI
 
 		if (!hasParent())
 		{
-			auto portals = context().framePortals;
+			auto portals = ctx->framePortals;
 			for (auto &wp : portals)
 			{
 				auto sp = wp.lock();
@@ -360,7 +367,10 @@ namespace ZenitUI
 
 	void Layout::drawInline(const ComputedStyle &renderStyle, float globalOp)
 	{
-		auto renderer = context().renderer;
+		auto *ctx = context();
+		auto *renderer = ctx ? ctx->renderer : nullptr;
+		if (!renderer)
+			return;
 
 		Transform2D tr = currentTransform(renderStyle);
 		const bool identity =
@@ -396,8 +406,10 @@ namespace ZenitUI
 
 	void Layout::drawLayer(const ComputedStyle &renderStyle, float globalOp)
 	{
-		auto &ctxUI = context();
-		auto *renderer = ctxUI.renderer;
+		auto *ctxUI = context();
+		if (!ctxUI || !ctxUI->renderer)
+			return;
+		auto *renderer = ctxUI->renderer;
 
 		Transform2D currTr = currentTransform(renderStyle);
 
@@ -413,7 +425,7 @@ namespace ZenitUI
 
 		Rect transformedRect = {minX, minY, maxX - minX, maxY - minY};
 
-		Rect clip = ctxUI.getCullingClip();
+		Rect clip = ctxUI->getCullingClip();
 
 		Rect region;
 		region.x = std::max(transformedRect.x, clip.x);
@@ -445,8 +457,8 @@ namespace ZenitUI
 			return;
 		}
 
-		auto &stats = ctxUI.renderStats;
-		auto &pool = ctxUI.targetPool;
+		auto &stats = ctxUI->renderStats;
+		auto &pool = ctxUI->targetPool;
 
 		// Only cache top-level layers when no animation is active anywhere in the subtree.
 		// Checking upfront avoids hashing or filter-arg parsing on animated nodes.
@@ -475,7 +487,7 @@ namespace ZenitUI
 
 			const float regOffX = region.x - transformedRect.x;
 			const float regOffY = region.y - transformedRect.y;
-			const uint32_t themeVer = ctxUI.theme.version;
+			const uint32_t themeVer = ctxUI->theme.version;
 
 			// Cheap scalar pre-check: skip subtree fingerprinting completely while
 			// transform, size, clip offset, opacity, or global generations are changing.
@@ -489,8 +501,8 @@ namespace ZenitUI
 				cache.lastOpacity == globalOp &&
 				cache.lastRegionOffX == regOffX &&
 				cache.lastRegionOffY == regOffY &&
-				cache.lastDpiScale == ctxUI.dpiScale &&
-				cache.lastViewportGen == ctxUI.viewportGeneration &&
+				cache.lastDpiScale == ctxUI->dpiScale &&
+				cache.lastViewportGen == ctxUI->viewportGeneration &&
 				cache.lastThemeVer == themeVer;
 
 			if (!cheapMatch)
@@ -507,8 +519,8 @@ namespace ZenitUI
 				cache.lastOpacity = globalOp;
 				cache.lastRegionOffX = regOffX;
 				cache.lastRegionOffY = regOffY;
-				cache.lastDpiScale = ctxUI.dpiScale;
-				cache.lastViewportGen = ctxUI.viewportGeneration;
+				cache.lastDpiScale = ctxUI->dpiScale;
+				cache.lastViewportGen = ctxUI->viewportGeneration;
 				cache.lastThemeVer = themeVer;
 				cache.stableFrames = 1;
 				cache.dirty = false;
@@ -516,8 +528,8 @@ namespace ZenitUI
 			else
 			{
 				// Root scalars are stable: compute full subtree fingerprint.
-				hashFloat(fingerprint, ctxUI.dpiScale);
-				hashPod(fingerprint, ctxUI.viewportGeneration);
+				hashFloat(fingerprint, ctxUI->dpiScale);
+				hashPod(fingerprint, ctxUI->viewportGeneration);
 				hashPod(fingerprint, themeVer);
 				hashFloat(fingerprint, currTr.rotationDeg);
 				hashFloat(fingerprint, currTr.scale);
@@ -567,7 +579,7 @@ namespace ZenitUI
 			releaseLayerCache();
 		}
 
-		auto &registry = ctxUI.filters;
+		auto &registry = ctxUI->filters;
 
 		const size_t numFilters = renderStyle.filters.size();
 		bool lastIsSilhouette = false;
@@ -609,7 +621,7 @@ namespace ZenitUI
 		if (!mainTarget.valid())
 			return;
 
-		ctxUI.pushLayerTarget(mainTarget);
+		ctxUI->pushLayerTarget(mainTarget);
 
 		Transform2D offsetTr;
 		offsetTr.pivot = {0.0f, 0.0f};
@@ -640,7 +652,7 @@ namespace ZenitUI
 		if (!identity)
 			renderer->popTransform();
 
-		ctxUI.popLayerTarget();
+		ctxUI->popLayerTarget();
 
 		const Rect dstRect = {0, 0, (float)tw, (float)th};
 
@@ -657,8 +669,7 @@ namespace ZenitUI
 			([&]()
 			 {
 				 const auto *def = registry.find(renderStyle.filters[0].name);
-				 return def && def->pattern == FilterPattern::Separable;
-			 }());
+				 return def && def->pattern == FilterPattern::Separable; }());
 		const bool needsScratch = (numFilters >= 2) || (saveToCache && !singleSeparable);
 		bool needsSeparable = false;
 		for (const auto &fref : renderStyle.filters)
@@ -701,7 +712,7 @@ namespace ZenitUI
 		}
 
 		FilterContext ctx;
-		ctx.ui = &ctxUI;
+		ctx.ui = ctxUI;
 		ctx.renderer = renderer;
 		ctx.node = this;
 		ctx.scratch = separableTarget;
@@ -856,7 +867,8 @@ namespace ZenitUI
 			return;
 
 		effectName_ = style.effect;
-		if (auto *assets = context().assets)
+		auto *ctx = context(); 
+		if (auto *assets = ctx ? ctx->assets : nullptr)
 			currentEffect_ = assets->getEffect(style.effect);
 		else
 			currentEffect_ = {};

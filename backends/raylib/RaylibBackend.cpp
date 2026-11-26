@@ -1058,7 +1058,6 @@ namespace ZenitUI
 		renderer_ = std::make_unique<RaylibRenderer>();
 		assets_ = std::make_unique<RaylibAssetProvider>(*renderer_);
 
-		bindToContext();
 		initialized_ = true;
 		return true;
 	}

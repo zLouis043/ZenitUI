@@ -68,9 +68,9 @@ TEST(Filter_chaining, two_filters_ping_pong_through_targets)
     env.assets.registerEffect("fx1");
     env.assets.registerEffect("fx2");
 
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "fx1", .shader = "fx1", .pattern = FilterPattern::SinglePass, .params = {}});
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "fx2", .shader = "fx2", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
@@ -93,7 +93,7 @@ TEST(Filter_rotation, region_covers_rotated_bbox)
     env.renderer.supportsEffects = true;
     env.assets.registerEffect("fx");
 
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
@@ -149,7 +149,7 @@ TEST(Filter_nested, falls_back_to_inline_when_nested_targets_unsupported)
     env.renderer.supportsNestedTargets = false;
     env.assets.registerEffect("fx");
 
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto outer = std::make_shared<Layout>(LayoutType::Stack);
@@ -179,7 +179,7 @@ TEST(Filter_nested, renders_nested_layer_when_supported)
     env.renderer.supportsNestedTargets = true;
     env.assets.registerEffect("fx");
 
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "fx", .shader = "fx", .pattern = FilterPattern::SinglePass, .params = {}});
 
     auto outer = std::make_shared<Layout>(LayoutType::Stack);
@@ -221,8 +221,8 @@ TEST(Filter_perf, lazy_allocation_per_kind)
         root->addChild(node);
 
         env.frame(root);
-        CHECK(UIContext::get().renderStats.targetsCreated == (uint32_t)env.renderer.createTargetCount);
-        CHECK(UIContext::get().renderStats.liveTargets == (uint32_t)env.renderer.liveTargets);
+        CHECK(env.ctx.renderStats.targetsCreated == (uint32_t)env.renderer.createTargetCount);
+        CHECK(env.ctx.renderStats.liveTargets == (uint32_t)env.renderer.liveTargets);
         return env.renderer.createTargetCount;
     };
 
@@ -356,16 +356,16 @@ TEST(Filter_perf, pool_bounds_50_cards_and_trims_after_grace)
 
     env.frame(root);
     CHECK(env.renderer.liveTargets <= 3);
-    CHECK(UIContext::get().targetPool.liveCount() <= 3);
-    CHECK(UIContext::get().renderStats.liveTargets == (uint32_t)env.renderer.liveTargets);
+    CHECK(env.ctx.targetPool.liveCount() <= 3);
+    CHECK(env.ctx.renderStats.liveTargets == (uint32_t)env.renderer.liveTargets);
 
     root->removeAllChildren();
     for (int i = 0; i < 121; ++i)
         env.frame(root);
 
     CHECK(env.renderer.liveTargets == 0);
-    CHECK(UIContext::get().targetPool.liveCount() == 0);
-    CHECK(UIContext::get().renderStats.liveTargets == 0);
+    CHECK(env.ctx.targetPool.liveCount() == 0);
+    CHECK(env.ctx.renderStats.liveTargets == 0);
 }
 
 TEST(Filter_perf, pool_nested_layers_use_distinct_targets)
@@ -430,7 +430,7 @@ TEST(Filter_perf, texSize_equals_bucket_and_dst_equals_region)
 
     Rect seenDst{};
     Vec2 seenTexSize{};
-    UIContext::get().filters.addCustom("inspect_tex", [&](const FilterContext &c)
+    env.ctx.filters.addCustom("inspect_tex", [&](const FilterContext &c)
     {
         seenDst = c.dst;
         seenTexSize = c.texSize;
@@ -462,7 +462,7 @@ TEST(Filter_perf, separable_downscale_allocates_half_res_intermediate)
     env.renderer.supportsTargetSubRect = true;
     env.assets.registerEffect("blur");
 
-    UIContext::get().filters.add(FilterDef{
+    env.ctx.filters.add(FilterDef{
         .name = "blur-fast",
         .shader = "blur",
         .pattern = FilterPattern::Separable,

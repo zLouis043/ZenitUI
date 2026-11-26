@@ -6,13 +6,8 @@
 
 using namespace ZenitUI;
 
-static void freshTheme() {
-    UIContext::get().theme.clear();
-}
-
-
 TEST(Layout_measure, empty_stack_zero) {
-    freshTheme();
+    
     auto l = std::make_shared<Layout>(LayoutType::Stack);
     Vec2 s = l->measure(1000, 500);
     CHECK_NEAR(s.x, 0.0f, 1e-4);
@@ -20,7 +15,7 @@ TEST(Layout_measure, empty_stack_zero) {
 }
 
 TEST(Layout_measure, fixed_size) {
-    freshTheme();
+    
     auto l = std::make_shared<Layout>(LayoutType::Stack);
     l->size(Px(100), Px(50));
     Vec2 s = l->measure(1000, 500);
@@ -29,7 +24,7 @@ TEST(Layout_measure, fixed_size) {
 }
 
 TEST(Layout_measure, percent_size) {
-    freshTheme();
+    
     auto l = std::make_shared<Layout>(LayoutType::Stack);
     l->size(Percent(50), Percent(25));
     Vec2 s = l->measure(1000, 400);
@@ -38,7 +33,7 @@ TEST(Layout_measure, percent_size) {
 }
 
 TEST(Layout_measure, stack_from_children) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     auto c1 = std::make_shared<Layout>(LayoutType::Stack); c1->size(Px(100), Px(50));
     auto c2 = std::make_shared<Layout>(LayoutType::Stack); c2->size(Px(80),  Px(70));
@@ -50,7 +45,7 @@ TEST(Layout_measure, stack_from_children) {
 }
 
 TEST(Layout_measure, vertical_sums_heights) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     auto c1 = std::make_shared<Layout>(LayoutType::Stack); c1->size(Px(50), Px(20));
     auto c2 = std::make_shared<Layout>(LayoutType::Stack); c2->size(Px(50), Px(30));
@@ -62,7 +57,7 @@ TEST(Layout_measure, vertical_sums_heights) {
 }
 
 TEST(Layout_measure, horizontal_sums_widths) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     auto c1 = std::make_shared<Layout>(LayoutType::Stack); c1->size(Px(30), Px(20));
     auto c2 = std::make_shared<Layout>(LayoutType::Stack); c2->size(Px(50), Px(20));
@@ -74,7 +69,7 @@ TEST(Layout_measure, horizontal_sums_widths) {
 
 
 TEST(Layout_arrange, root_fills_space) {
-    freshTheme();
+    
     auto l = std::make_shared<Layout>(LayoutType::Stack);
     l->size(Percent(100), Percent(100));
     l->measure(800, 600);
@@ -87,7 +82,7 @@ TEST(Layout_arrange, root_fills_space) {
 }
 
 TEST(Layout_arrange, vertical_stacks_children) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->size(Px(200), Auto());
     auto c1 = std::make_shared<Layout>(LayoutType::Stack); c1->size(Px(100), Px(30));
@@ -105,7 +100,7 @@ TEST(Layout_arrange, vertical_stacks_children) {
 }
 
 TEST(Layout_arrange, horizontal_places_side_by_side) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(200), Auto());
     auto c1 = std::make_shared<Layout>(LayoutType::Stack); c1->size(Px(50), Px(30));
@@ -123,7 +118,7 @@ TEST(Layout_arrange, horizontal_places_side_by_side) {
 }
 
 TEST(Layout_arrange, gap_separates_children) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Horizontal);
     root->size(Px(200), Auto());
     root->getInlineBase().gap = Px(10);
@@ -141,7 +136,7 @@ TEST(Layout_arrange, gap_separates_children) {
 
 
 TEST(Layout_hitTest, point_inside_root) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(100), Px(100));
     root->measure(1000, 1000);
@@ -151,7 +146,7 @@ TEST(Layout_hitTest, point_inside_root) {
 }
 
 TEST(Layout_hitTest, point_outside_root) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(100), Px(100));
     root->measure(1000, 1000);
@@ -161,7 +156,7 @@ TEST(Layout_hitTest, point_outside_root) {
 }
 
 TEST(Layout_hitTest, child_wins_over_parent) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(200));
     auto child = std::make_shared<Layout>(LayoutType::Stack);
@@ -176,7 +171,7 @@ TEST(Layout_hitTest, child_wins_over_parent) {
 }
 
 TEST(Layout_hitTest, disabled_node_not_hit) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(100), Px(100));
     root->measure(1000, 1000);
@@ -187,7 +182,7 @@ TEST(Layout_hitTest, disabled_node_not_hit) {
 }
 
 TEST(Layout_dirtyTracking, measure_returns_cached_when_nothing_changed) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(100));
     auto child = std::make_shared<Layout>(LayoutType::Stack);
@@ -203,7 +198,7 @@ TEST(Layout_dirtyTracking, measure_returns_cached_when_nothing_changed) {
 }
 
 TEST(Layout_dirtyTracking, size_change_triggers_remeasure) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(100));
     root->measure(1000, 1000);
@@ -215,7 +210,7 @@ TEST(Layout_dirtyTracking, size_change_triggers_remeasure) {
 }
 
 TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
-    freshTheme();
+    
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(200), Px(100));
 
@@ -229,7 +224,7 @@ TEST(Layout_dirtyTracking, size_change_invalidates_cache) {
 }
 
 TEST(Layout_hitTest, clipped_area_not_hit) {
-    freshTheme();
+    
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Px(500), Px(200));
@@ -260,7 +255,7 @@ TEST(Layout_hitTest, clipped_area_not_hit) {
 
 TEST(Layout_hasId, true_when_matching)
 {
-    freshTheme();
+    
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->setId("save-button");
 
@@ -270,7 +265,7 @@ TEST(Layout_hasId, true_when_matching)
 
 TEST(Layout_hasId, false_when_no_id)
 {
-    freshTheme();
+    
     auto node = std::make_shared<Layout>(LayoutType::Stack);
 
     CHECK(!node->hasId("anything"));
@@ -279,7 +274,7 @@ TEST(Layout_hasId, false_when_no_id)
 
 TEST(Layout_hasId, empty_input_always_false)
 {
-    freshTheme();
+    
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->setId("");
 
@@ -289,7 +284,7 @@ TEST(Layout_hasId, empty_input_always_false)
 
 TEST(Layout_ref, setRef_updates_field)
 {
-    freshTheme();
+    
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     CHECK(node->ref.empty());
     node->setRef("delete");
@@ -298,7 +293,7 @@ TEST(Layout_ref, setRef_updates_field)
 
 TEST(Layout_ref, id_and_ref_are_independent)
 {
-    freshTheme();
+    
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->setId("unique");
     node->setRef("delete");
@@ -312,7 +307,7 @@ TEST(Layout_ref, id_and_ref_are_independent)
 
 TEST(Layout_ref, withRef_returns_fluent_shared_ptr)
 {
-    freshTheme();
+    
     auto btn = UI::Button::create(nullptr);
     CHECK(btn->ref.empty());
 
@@ -323,7 +318,7 @@ TEST(Layout_ref, withRef_returns_fluent_shared_ptr)
 
 TEST(Layout_ref, withRef_is_chainable)
 {
-    freshTheme();
+    
     auto btn = UI::Button::create(nullptr);
     auto chained = btn->withRef("save")->cls("btn-primary");
     CHECK(btn->ref == "save");
@@ -333,7 +328,7 @@ TEST(Layout_ref, withRef_is_chainable)
 
 TEST(Layout_arrange, border_subtracted_from_content_box)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->getInlineBase().width      = Px(200);
     parent->getInlineBase().height     = Px(200);
@@ -354,7 +349,7 @@ TEST(Layout_arrange, border_subtracted_from_content_box)
 
 TEST(Layout_measure, border_added_to_auto_width)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->getInlineBase().padding     = Spacing(5);
     parent->getInlineBase().borderWidth = Px(10);
@@ -372,7 +367,7 @@ TEST(Layout_measure, border_added_to_auto_width)
 
 TEST(Layout_align, align_items_explicit_start_on_vstack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().alignItems = Align::Start;
@@ -390,7 +385,7 @@ TEST(Layout_align, align_items_explicit_start_on_vstack)
 
 TEST(Layout_align, align_items_center_on_vstack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().alignItems = Align::Center;
@@ -407,7 +402,7 @@ TEST(Layout_align, align_items_center_on_vstack)
 
 TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().alignItems = Align::Start;
@@ -426,7 +421,7 @@ TEST(Layout_align, deprecated_items_h_on_hstack_is_noop)
 
 TEST(Layout_align, default_is_stretch_on_vstack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
@@ -443,7 +438,7 @@ TEST(Layout_align, default_is_stretch_on_vstack)
 
 TEST(Layout_align, default_is_stretch_on_hstack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
     parent->size(Px(200), Px(200));
 
@@ -460,7 +455,7 @@ TEST(Layout_align, default_is_stretch_on_hstack)
 
 TEST(Layout_align, default_is_start_on_stack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Stack);
     parent->size(Px(200), Px(200));
 
@@ -479,7 +474,7 @@ TEST(Layout_align, default_is_start_on_stack)
 
 TEST(Layout_align, explicit_align_items_stretch_on_stack)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Stack);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().alignItems = Align::Stretch;
@@ -499,7 +494,7 @@ TEST(Layout_align, explicit_align_items_stretch_on_stack)
 
 TEST(Layout_border, per_side_borders)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
     parent->getInlineBase().borderWidth =
@@ -518,7 +513,7 @@ TEST(Layout_border, per_side_borders)
 
 TEST(Layout_border, measure_with_per_side_borders)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->getInlineBase().borderWidth =
         Spacing(Px(5), Px(10), Px(15), Px(20));
@@ -536,7 +531,7 @@ TEST(Layout_border, measure_with_per_side_borders)
 
 TEST(Layout_border, uniform_border_renders_rounded)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(100), Px(100));
     parent->getInlineBase().borderWidth = Px(2);
@@ -549,7 +544,7 @@ TEST(Layout_border, uniform_border_renders_rounded)
 
 TEST(Layout_flex, min_height_auto_prevents_collapse)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(100));
 
@@ -570,7 +565,7 @@ TEST(Layout_flex, min_height_auto_prevents_collapse)
 
 TEST(Layout_flex, min_height_auto_respects_overflow_hidden)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(100));
 
@@ -592,7 +587,7 @@ TEST(Layout_flex, min_height_auto_respects_overflow_hidden)
 
 TEST(Layout_flex, min_width_auto_prevents_collapse)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Horizontal);
     parent->size(Px(100), Px(200));
 
@@ -613,7 +608,7 @@ TEST(Layout_flex, min_width_auto_prevents_collapse)
 
 TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
@@ -631,7 +626,7 @@ TEST(Layout_align, items_h_on_child_does_not_affect_self_alignment)
 
 TEST(Layout_align, stretch_respects_explicit_cross_size)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
@@ -648,7 +643,7 @@ TEST(Layout_align, stretch_respects_explicit_cross_size)
 
 TEST(Layout_align, explicit_align_h_on_child_overrides_parent_stretch)
 {
-    freshTheme();
+    
     auto parent = std::make_shared<Layout>(LayoutType::Vertical);
     parent->size(Px(200), Px(200));
 
@@ -712,7 +707,7 @@ TEST(Layout_margin, auto_margins_center_in_stack)
 
 TEST(Layout_flex, horizontal_shrink_remeasures_child_height)
 {
-    freshTheme();
+    
 
     struct WrappingBox : public Layout
     {

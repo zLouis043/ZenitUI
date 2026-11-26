@@ -26,14 +26,13 @@ int main(void)
     InitWindow(800, 600, "ZenitUI - UIPrefabs and Slots");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
-    // Bind the Raylib backend to UIContext.
+    // Bind the Raylib backend to a local UIContext.
     RaylibRenderer backendRenderer;
     RaylibPlatform backendPlatform;
     RaylibAssetProvider backendAssets(backendRenderer);
 
-    UIContext::get().renderer = &backendRenderer;
-    UIContext::get().platform = &backendPlatform;
-    UIContext::get().assets = &backendAssets;
+    UIContext ctx;
+    ctx.attachBackend(&backendRenderer, &backendPlatform, &backendAssets);
 
     // Inline styling for Toggle (its intrinsic size is 0x0 until styled).
     ZMarkup::loadStyleString(R"(
@@ -56,7 +55,7 @@ int main(void)
             transition: left 0.18s ease-out-cubic;
         }
         Toggle:checked .toggle-knob { left: 26px; }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     // Register a reusable prefab: children passed to `SettingRow { ... }`
     // are injected where `Slot` appears.
@@ -95,17 +94,20 @@ int main(void)
     ui.onToggle("toggle-fs", [](bool v) { std::printf("Fullscreen set to: %d\n", v); });
     ui.onValueChanged("slider-vol", [](float v) { std::printf("Volume set to: %.2f\n", v); });
 
+    ctx.mount(root);
+
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
-        root->runFrame(dt);
+        ctx.runFrame(*root, dt);
 
         BeginDrawing();
         ClearBackground(::BLACK);
-        root->renderFrame();
+        ctx.renderFrame(*root);
         EndDrawing();
     }
 
+    ctx.detachBackend();
     CloseWindow();
     return 0;
 }

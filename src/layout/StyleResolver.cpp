@@ -32,7 +32,8 @@ namespace ZenitUI
 			};
 
 			mix(theme.version);
-			mix((uint64_t)node.context().viewportGeneration);
+			auto *ctx = node.context();
+			mix((uint64_t)(ctx ? ctx->viewportGeneration : 0u));
 			mix((uint64_t)reinterpret_cast<uintptr_t>(&node));
 			mix(node.getEnabled() ? 1u : 0u);
 			mix((uint32_t)node.isHoveredState());
@@ -267,7 +268,8 @@ namespace ZenitUI
 			target.unresolvedProps.clear();
 		}
 
-		double now = node.context().time;
+		auto *ctx = node.context();
+		double now = ctx ? ctx->time : 0.0;
 		auto &st = partTransitions[partName];
 
 		if (!st.initialized)

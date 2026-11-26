@@ -163,17 +163,18 @@ TEST(Anim_callback, imperative_finished_fires) {
 }
 
 TEST(Anim_callback, css_finished_fires) {
-    UIContext::get().theme.clear();
+    UIContext ctx;
     ZMarkup::loadStyleString(R"(
         @keyframes blink {
             0%   { opacity: 0.0; }
             100% { opacity: 1.0; }
         }
         .blink { animation: blink 0.05s linear; }
-    )", UIContext::get().theme);
+    )", ctx.theme);
 
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->cls("blink");
+    ctx.mount(node);
 
     bool fired = false;
     node->onAnimationsFinished = [&fired]() { fired = true; };
@@ -187,7 +188,6 @@ TEST(Anim_callback, css_finished_fires) {
 TEST(Anim_imperative, drives_current_style_without_transition)
 {
     Env env;
-
     auto node = std::make_shared<Layout>(LayoutType::Stack);
     node->size(Px(100), Px(100));
     node->getInlineBase().opacity = 0.0f;
