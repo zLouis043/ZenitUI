@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795733552054,
+  "lastUpdate": 1795734236247,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -18192,6 +18192,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 88.1597,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "9b5940c4749dfafb238498d5588b38b06e7041af",
+          "message": "feat(text): implement FreeType + HarfBuzz TextEngine with glyph atlas and LRU cache\n\nAdds PIMPL-based TextEngine (FontStore, HarfBuzz hb-ot shaper with per-cluster font fallback, FreeType dynamic shelf-packed glyph atlas, O(N) UTF-8 word wrapping, ellipsis, hit-testing, caret/selection geometry, batched drawGeometry rendering, headless synthetic fallback, and per-instance layout LRU cache) along with unit tests in tests/test_text_engine.cpp.",
+          "timestamp": "2026-11-27T00:01:22+01:00",
+          "tree_id": "89aa5642d49cab6109124fd1fd1358e4e149cf1b",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/9b5940c4749dfafb238498d5588b38b06e7041af"
+        },
+        "date": 1795734234086,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 252.125,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 3.94888,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00382473,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0335996,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0237511,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.58858,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.753763,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.660797,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.318837,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.988506,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 33.9992,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 34.6033,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 11.3653,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 11.4845,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 31.1433,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00326879,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 39.0817,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 138.804,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 50.8997,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 101.23,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 79.2301,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 59.95,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 95.7256,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 439.93,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 452.561,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 40.5672,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 101.501,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 88.2047,
             "unit": "us"
           }
         ]
