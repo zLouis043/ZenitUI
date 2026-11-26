@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795702097895,
+  "lastUpdate": 1795705526926,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -591,6 +591,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 3162.4,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "82f4785c9c8463a69b2326dcc3ac7dad6eacfa5b",
+          "message": "refactor(style): move Theme into UIContext and remove Theme::get()\n\nReplaces the global Theme::get() singleton with a per-context UIContext::theme member. Adds Layout::theme() accessor, passes const Theme& explicitly through Anim::* helpers, removes the default Theme::get() argument from loadStyleString/loadStyleFile, and updates StyleResolver, Debug, MockBackend, tests, benchmarks, and examples.",
+          "timestamp": "2026-11-26T16:01:00+01:00",
+          "tree_id": "37333b82c03816833df2595e8de9ec0180bc199e",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/82f4785c9c8463a69b2326dcc3ac7dad6eacfa5b"
+        },
+        "date": 1795705525735,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 4805.29,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 4635.99,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2725.27,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 4482.57,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 2579.94,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 4019.52,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 3953.23,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 2466.01,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 4118.97,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 2438.38,
             "unit": "us"
           }
         ]
