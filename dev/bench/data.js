@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795701920311,
+  "lastUpdate": 1795705393324,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -17208,6 +17208,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 70.767,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "82f4785c9c8463a69b2326dcc3ac7dad6eacfa5b",
+          "message": "refactor(style): move Theme into UIContext and remove Theme::get()\n\nReplaces the global Theme::get() singleton with a per-context UIContext::theme member. Adds Layout::theme() accessor, passes const Theme& explicitly through Anim::* helpers, removes the default Theme::get() argument from loadStyleString/loadStyleFile, and updates StyleResolver, Debug, MockBackend, tests, benchmarks, and examples.",
+          "timestamp": "2026-11-26T16:01:00+01:00",
+          "tree_id": "37333b82c03816833df2595e8de9ec0180bc199e",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/82f4785c9c8463a69b2326dcc3ac7dad6eacfa5b"
+        },
+        "date": 1795705391687,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 256.105,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 4.03334,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00410717,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0336625,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0239046,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.600571,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.753818,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.677201,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.321187,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.986381,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 35.5699,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 34.1753,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 10.8656,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 16.2185,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 32.2721,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00327104,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 39.5338,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 140.132,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 41.784,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 100.33,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 78.1125,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 59.7727,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 97.8395,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 446.277,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 457.129,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 39.2271,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 101.512,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 88.0834,
             "unit": "us"
           }
         ]
