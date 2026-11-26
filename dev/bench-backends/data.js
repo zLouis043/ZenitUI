@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795731001633,
+  "lastUpdate": 1795733721040,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -961,6 +961,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 2411.18,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "fb8a92677635079663ac6ac1d2a5024eecff46be",
+          "message": "build(text): integrate FreeType/HarfBuzz and add dynamic textures to IRenderer\n\nFetches minimal FreeType (2.13.3) and HarfBuzz (10.4.0, hb-ot) via FetchContent without circular build dependencies and exports them in ZenitUITargets. Adds createTexture/updateTexture/destroyTexture to IRenderer with implementations in MockRenderer, RaylibRenderer, and SDL3Renderer.",
+          "timestamp": "2026-11-26T23:49:59+01:00",
+          "tree_id": "b14ac667c4ec0921b60640286ecaea3bf2866132",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/fb8a92677635079663ac6ac1d2a5024eecff46be"
+        },
+        "date": 1795733719888,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 4837.76,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 4740.97,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2928.01,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 4665.1,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 2664.24,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 4171.47,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 4100.44,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 2758.3,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 4175.28,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 2625.17,
             "unit": "us"
           }
         ]
