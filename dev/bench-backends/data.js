@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795643510431,
+  "lastUpdate": 1795692773258,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -443,6 +443,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 3124.46,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "3e942dc17508e3fde79a172a0f6131ca05941d4e",
+          "message": "refactor(core): replace global Metrics::viewport with UIContext::viewport\n\nRemoves the global Metrics::viewport struct from CoreTypes.hpp and stores the active logical viewport on UIContext. Value::resolve* and ruleMatches now take an explicit Vec2 viewport parameter (fixing a pre-existing vertical AST mode bug in Value::resolveV), Layout exposes viewportSize(), and SDL3/Raylib/Mock backends compute clip bounds without referencing global metrics.",
+          "timestamp": "2026-11-26T12:28:21+01:00",
+          "tree_id": "c0778172a694aa2a5b1fc72fe540dce3beeb1bde",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/3e942dc17508e3fde79a172a0f6131ca05941d4e"
+        },
+        "date": 1795692771142,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 5905.61,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 5864.99,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 3512.38,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 5888.28,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 3250.8,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 5248.38,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 5098.05,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 3270.37,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 5213.67,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 3187.29,
             "unit": "us"
           }
         ]
