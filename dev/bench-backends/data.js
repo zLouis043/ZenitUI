@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795719824710,
+  "lastUpdate": 1795728581107,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -739,6 +739,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 2650.66,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "d5436b37468de8cfedd6bdfaaf378521698c8a61",
+          "message": "refactor(core): remove UIContext::get() singleton and add multi-context tests\n\nRemoves UIContext::get() and temporary IBackend::bindToContext/unbindFromContext wrappers, switches Layout::context() to nullable UIContext* with safe unmounted fallbacks, owns UIContext per Test::Env fixture, migrates all tests/benchmarks/examples/docs to explicit UIContext instances, and adds tests/test_multi_context.cpp covering theme/viewport/input/filter/target-pool isolation, subtree reparenting, and teardown order independence.",
+          "timestamp": "2026-11-26T22:25:58+01:00",
+          "tree_id": "37877e268467877cfe8492d328306ce92c61f1f7",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/d5436b37468de8cfedd6bdfaaf378521698c8a61"
+        },
+        "date": 1795728579677,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 3547.47,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 3545.07,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2212.56,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 3538.56,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 1866.14,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 3044.92,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 3013.69,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 1790.59,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 3135.07,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 1775.96,
             "unit": "us"
           }
         ]
