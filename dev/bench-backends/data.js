@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795705526926,
+  "lastUpdate": 1795719824710,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -665,6 +665,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 2438.38,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "13566cf500ec0f46864c41c4b895c678afc6eefb",
+          "message": "refactor(core): make UIContext instantiable and bind Layout trees via ctx_\n\nMakes UIContext non-copyable/non-movable with explicit mount/unmount, runFrame/renderFrame, and safe bidirectional backend teardown (attachBackend/detachBackend, IBackend::bindTo/unbind). Attaches Layout subtrees via non-owning ctx_ propagated across tree mutations, adds Layout::moveChildBefore so keyed Each reconciliation preserves focus and context state, and migrates core subsystems and components to node.context().",
+          "timestamp": "2026-11-26T19:59:11+01:00",
+          "tree_id": "163088e90b074fa7664a68bb277ca6ebd5e77d5a",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/13566cf500ec0f46864c41c4b895c678afc6eefb"
+        },
+        "date": 1795719823718,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 4812.32,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 4724.35,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 2894.72,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 4648.9,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 2659.21,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 4239.44,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 4241.82,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 2787.71,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 4418.99,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 2650.66,
             "unit": "us"
           }
         ]
