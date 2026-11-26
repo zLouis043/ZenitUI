@@ -5,7 +5,9 @@ var classZenitUI_1_1RaylibRenderer =
     [ "beginFrame", "classZenitUI_1_1RaylibRenderer.html#a8e331b34807b2d21aff503adc4ee4a47", null ],
     [ "clearTarget", "classZenitUI_1_1RaylibRenderer.html#ad77c756e63c5b37b79e681531df57eaa", null ],
     [ "createTarget", "classZenitUI_1_1RaylibRenderer.html#a2b44ced5665e4aaa36b78f6c3cfb0c22", null ],
+    [ "createTexture", "classZenitUI_1_1RaylibRenderer.html#a2ba4638838770ea4ea9f3a48bb43c07b", null ],
     [ "destroyTarget", "classZenitUI_1_1RaylibRenderer.html#a2133292718835e5f4b6848f54d80902d", null ],
+    [ "destroyTexture", "classZenitUI_1_1RaylibRenderer.html#a4e0063fd39645db93a4c0c04b56c3c45", null ],
     [ "drawGeometry", "classZenitUI_1_1RaylibRenderer.html#a2b1b58b04f87ac247cbd09ef63179e70", null ],
     [ "drawNineSlice", "classZenitUI_1_1RaylibRenderer.html#a0a0645e448aefe373d21fc8c37305381", null ],
     [ "drawTarget", "classZenitUI_1_1RaylibRenderer.html#a66a581591234e507bd8a14bd8a8a41a9", null ],
@@ -44,5 +46,6 @@ var classZenitUI_1_1RaylibRenderer =
     [ "transformClipToScreen", "classZenitUI_1_1RaylibRenderer.html#ac729470843fd38d79575d343ceffefca", null ],
     [ "unregisterEffect", "classZenitUI_1_1RaylibRenderer.html#a4d239081ab99496b390bfb59962af7c1", null ],
     [ "unregisterFont", "classZenitUI_1_1RaylibRenderer.html#a7b5c11bb9cd8584321625b3faf7e9380", null ],
-    [ "unregisterTexture", "classZenitUI_1_1RaylibRenderer.html#a81741735820f2783d3d918050ec1b62f", null ]
+    [ "unregisterTexture", "classZenitUI_1_1RaylibRenderer.html#a81741735820f2783d3d918050ec1b62f", null ],
+    [ "updateTexture", "classZenitUI_1_1RaylibRenderer.html#a50bc3334483ea40c96fd698e5ef84f24", null ]
 ];

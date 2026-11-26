@@ -130,6 +130,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <tr class="memdesc:a5b9c0f3e87559663649f443a60ae0b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw sub-rectangle <span class="tt">src</span> (texture pixels) of texture <span class="tt">t</span> into logical rect <span class="tt">dst</span>, multiplied by <span class="tt">tint</span>.  <br /></td></tr>
 <tr class="memitem:a886cea810324dd6ba7c26cbe157648b1" id="r_a886cea810324dd6ba7c26cbe157648b1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a886cea810324dd6ba7c26cbe157648b1">drawNineSlice</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> t, <a class="el" href="structZenitUI_1_1NineSlice.html">NineSlice</a> s, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a> dst, <a class="el" href="structZenitUI_1_1Color.html">Color</a> tint)</td></tr>
 <tr class="memdesc:a886cea810324dd6ba7c26cbe157648b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw texture <span class="tt">t</span> stretched into <span class="tt">dst</span> using the 9-slice insets <span class="tt">s</span> (fixed corners, stretched edges/center).  <br /></td></tr>
+<tr class="memitem:a16a879da3a2307c6b74fbd8a0fe3d3c5" id="r_a16a879da3a2307c6b74fbd8a0fe3d3c5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16a879da3a2307c6b74fbd8a0fe3d3c5">createTexture</a> (int, int, const uint8_t *=nullptr)</td></tr>
+<tr class="memdesc:a16a879da3a2307c6b74fbd8a0fe3d3c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a dynamic RGBA8 2D texture of <code class="param">w</code> x <code class="param">h</code> pixels.  <br /></td></tr>
+<tr class="memitem:aa6a9b004b4cf25d27c806f222e49eff9" id="r_aa6a9b004b4cf25d27c806f222e49eff9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6a9b004b4cf25d27c806f222e49eff9">updateTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>, <a class="el" href="structZenitUI_1_1Rect.html">Rect</a>, const uint8_t *)</td></tr>
+<tr class="memdesc:aa6a9b004b4cf25d27c806f222e49eff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload tightly-packed RGBA8 pixels into sub-rectangle <code class="param">region</code> of texture <code class="param">t</code>.  <br /></td></tr>
+<tr class="memitem:a90f600e6be49e6f4735a3b97dcedb32d" id="r_a90f600e6be49e6f4735a3b97dcedb32d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90f600e6be49e6f4735a3b97dcedb32d">destroyTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>)</td></tr>
+<tr class="memdesc:a90f600e6be49e6f4735a3b97dcedb32d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a dynamic texture previously created by <span class="tt"><a class="el" href="#a16a879da3a2307c6b74fbd8a0fe3d3c5" title="Allocate a dynamic RGBA8 2D texture of w x h pixels.">createTexture</a></span>.  <br /></td></tr>
 <tr id="pub-methods-3" class="groupHeader"><td colspan="2"><div class="groupHeader">Text Rendering &amp; Metrics</div></td></tr>
 <tr class="memitem:a1e75849b6a55976ea8bdba679fcc5819" id="r_a1e75849b6a55976ea8bdba679fcc5819"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e75849b6a55976ea8bdba679fcc5819">drawText</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, std::string_view s, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> pos, float size, float spacing, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c)=0</td></tr>
 <tr class="memdesc:a1e75849b6a55976ea8bdba679fcc5819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw UTF-8 text <span class="tt">s</span> at logical top-left <span class="tt">pos</span> using font <span class="tt">f</span>, font size <span class="tt">size</span>, and letter spacing <span class="tt">spacing</span>.  <br /></td></tr>
@@ -295,6 +301,45 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 
 </div>
 </div>
+<a id="a16a879da3a2307c6b74fbd8a0fe3d3c5" name="a16a879da3a2307c6b74fbd8a0fe3d3c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16a879da3a2307c6b74fbd8a0fe3d3c5">&#9670;&#160;</a></span>createTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> ZenitUI::IRenderer::createTexture </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate a dynamic RGBA8 2D texture of <code class="param">w</code> x <code class="param">h</code> pixels. </p>
+<p>When <code class="param">rgbaPixels</code> is <span class="tt">nullptr</span>, the texture is initialized to transparent black. Used by <span class="tt">TextEngine</span> to manage dynamic glyph atlas pages. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a2ba4638838770ea4ea9f3a48bb43c07b">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a381bc13a222845558d76a6de9967c21e">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a41d1d2ee7691960f7b48d70dfd4e0262">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
 <a id="a47eeb87e814518b0759a4c6a085cb8e4" name="a47eeb87e814518b0759a4c6a085cb8e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47eeb87e814518b0759a4c6a085cb8e4">&#9670;&#160;</a></span>destroyTarget()</h2>
 
@@ -321,6 +366,35 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <p>Release a render target previously allocated by <span class="tt"><a class="el" href="#ad9854c7ce0e7c8d937e5c1047ef7cf36" title="Allocate an off-screen RGBA render target of w x h pixels (used when Feature::NestedTargets is suppor...">createTarget</a></span>. </p>
 
 <p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a2133292718835e5f4b6848f54d80902d">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a07fe4053d3333bb9e9ba61e534d538b6">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#ab18dbad3f320f40e7614bc0c980e4c5b">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
+<a id="a90f600e6be49e6f4735a3b97dcedb32d" name="a90f600e6be49e6f4735a3b97dcedb32d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90f600e6be49e6f4735a3b97dcedb32d">&#9670;&#160;</a></span>destroyTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IRenderer::destroyTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Release a dynamic texture previously created by <span class="tt"><a class="el" href="#a16a879da3a2307c6b74fbd8a0fe3d3c5" title="Allocate a dynamic RGBA8 2D texture of w x h pixels.">createTexture</a></span>. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a4e0063fd39645db93a4c0c04b56c3c45">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#ab80972b95a6cfeaf90e2e48ee71db478">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a9aff77aa6a2db1b5a428a1de75149d11">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>
@@ -1490,6 +1564,45 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <p>Query whether this backend implements an optional <span class="tt"><a class="el" href="group__grp__core.html#gada7f34c1ace3e7a57e6c0b00b86505ce" title="Optional renderer capabilities queried via IRenderer::supports.">Feature</a></span>. </p>
 
 <p>Implemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a6544a78d6b4036f4061a7373d992b172">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a239793b85f0c5fe43410f6b200459ac2">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a6b51ab6cbed41273428962566156dfcc">ZenitUI::Test::MockRenderer</a>.</p>
+
+</div>
+</div>
+<a id="aa6a9b004b4cf25d27c806f222e49eff9" name="aa6a9b004b4cf25d27c806f222e49eff9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6a9b004b4cf25d27c806f222e49eff9">&#9670;&#160;</a></span>updateTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ZenitUI::IRenderer::updateTexture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structZenitUI_1_1Rect.html">Rect</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Upload tightly-packed RGBA8 pixels into sub-rectangle <code class="param">region</code> of texture <code class="param">t</code>. </p>
+<p>Implementations must flush any pending draw batch referencing <code class="param">t</code> before mutating texels. </p>
+
+<p>Reimplemented in <a class="el" href="classZenitUI_1_1RaylibRenderer.html#a50bc3334483ea40c96fd698e5ef84f24">ZenitUI::RaylibRenderer</a>, <a class="el" href="classZenitUI_1_1SDL3Renderer.html#a351d79bc4ac69dd369044670faa460e6">ZenitUI::SDL3Renderer</a>, and <a class="el" href="classZenitUI_1_1Test_1_1MockRenderer.html#a06b20640954eb342f5876c0b1c4f9f7c">ZenitUI::Test::MockRenderer</a>.</p>
 
 </div>
 </div>

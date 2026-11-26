@@ -4,7 +4,9 @@ var classZenitUI_1_1SDL3Renderer =
     [ "beginFrame", "classZenitUI_1_1SDL3Renderer.html#aa45f3921bcef0060c10625614b8cb8c3", null ],
     [ "clearTarget", "classZenitUI_1_1SDL3Renderer.html#af60bfa8d36b6d7355bf19613cae28622", null ],
     [ "createTarget", "classZenitUI_1_1SDL3Renderer.html#abc3b24398685c3e8f2596062cb4ea1e0", null ],
+    [ "createTexture", "classZenitUI_1_1SDL3Renderer.html#a381bc13a222845558d76a6de9967c21e", null ],
     [ "destroyTarget", "classZenitUI_1_1SDL3Renderer.html#a07fe4053d3333bb9e9ba61e534d538b6", null ],
+    [ "destroyTexture", "classZenitUI_1_1SDL3Renderer.html#ab80972b95a6cfeaf90e2e48ee71db478", null ],
     [ "drawGeometry", "classZenitUI_1_1SDL3Renderer.html#aeab04fadafe092a7adf016b2dfa672c4", null ],
     [ "drawTarget", "classZenitUI_1_1SDL3Renderer.html#ae58cd70271da1080649039640cff38a8", null ],
     [ "drawTarget", "classZenitUI_1_1SDL3Renderer.html#a553d31eeb4481a9a792180239582114a", null ],
@@ -31,5 +33,6 @@ var classZenitUI_1_1SDL3Renderer =
     [ "setEffectVec4", "classZenitUI_1_1SDL3Renderer.html#a04affcb450b1fd4628ce94fc560b7fd2", null ],
     [ "setEffectVec4f", "classZenitUI_1_1SDL3Renderer.html#a403b5d7ad3c04d66e73d4455cdffe9c1", null ],
     [ "shaderLanguage", "classZenitUI_1_1SDL3Renderer.html#a2619bf7a706c7bb509f021a56d9510fb", null ],
-    [ "supports", "classZenitUI_1_1SDL3Renderer.html#a239793b85f0c5fe43410f6b200459ac2", null ]
+    [ "supports", "classZenitUI_1_1SDL3Renderer.html#a239793b85f0c5fe43410f6b200459ac2", null ],
+    [ "updateTexture", "classZenitUI_1_1SDL3Renderer.html#a351d79bc4ac69dd369044670faa460e6", null ]
 ];

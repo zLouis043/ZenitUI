@@ -3,7 +3,9 @@ var classZenitUI_1_1IRenderer =
     [ "beginFrame", "classZenitUI_1_1IRenderer.html#a7877e2c0869b8d61ed144cfca069e2bd", null ],
     [ "clearTarget", "classZenitUI_1_1IRenderer.html#a39809c7484f01987360e6297afbf3abc", null ],
     [ "createTarget", "classZenitUI_1_1IRenderer.html#ad9854c7ce0e7c8d937e5c1047ef7cf36", null ],
+    [ "createTexture", "classZenitUI_1_1IRenderer.html#a16a879da3a2307c6b74fbd8a0fe3d3c5", null ],
     [ "destroyTarget", "classZenitUI_1_1IRenderer.html#a47eeb87e814518b0759a4c6a085cb8e4", null ],
+    [ "destroyTexture", "classZenitUI_1_1IRenderer.html#a90f600e6be49e6f4735a3b97dcedb32d", null ],
     [ "drawGeometry", "classZenitUI_1_1IRenderer.html#af4ebb9c5ecf1e584f1055cfbf016f8a0", null ],
     [ "drawNineSlice", "classZenitUI_1_1IRenderer.html#a886cea810324dd6ba7c26cbe157648b1", null ],
     [ "drawTarget", "classZenitUI_1_1IRenderer.html#a21f47a441a0474e454544a466236821d", null ],
@@ -37,5 +39,6 @@ var classZenitUI_1_1IRenderer =
     [ "shaderLanguage", "classZenitUI_1_1IRenderer.html#a6c17f3037f2d441990c410a6e8f351ae", null ],
     [ "strokeRect", "classZenitUI_1_1IRenderer.html#ab5bb0606807cd1eef5b464920425aaac", null ],
     [ "strokeRoundedRect", "classZenitUI_1_1IRenderer.html#a191e36731fc459c3c7f75ba9e2dfbf2f", null ],
-    [ "supports", "classZenitUI_1_1IRenderer.html#a2f516b76d539008019ed2838f54ebff6", null ]
+    [ "supports", "classZenitUI_1_1IRenderer.html#a2f516b76d539008019ed2838f54ebff6", null ],
+    [ "updateTexture", "classZenitUI_1_1IRenderer.html#aa6a9b004b4cf25d27c806f222e49eff9", null ]
 ];

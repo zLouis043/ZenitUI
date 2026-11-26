@@ -18,6 +18,7 @@ var hierarchy =
       [ "ZenitUI::CollectingDiagnosticSink", "classZenitUI_1_1CollectingDiagnosticSink.html", null ],
       [ "ZenitUI::NullDiagnosticSink", "classZenitUI_1_1NullDiagnosticSink.html", null ]
     ] ],
+    [ "ZenitUI::Test::MockRenderer::DynamicTexture", "structZenitUI_1_1Test_1_1MockRenderer_1_1DynamicTexture.html", null ],
     [ "ZenitUI::ZMarkup::EachBinding", "structZenitUI_1_1ZMarkup_1_1EachBinding.html", null ],
     [ "ZenitUI::EdgeInsets", "structZenitUI_1_1EdgeInsets.html", null ],
     [ "ZenitUI::EffectHandle", "structZenitUI_1_1EffectHandle.html", null ],

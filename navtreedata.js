@@ -55,10 +55,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00_demo_2main_8cpp-example.html",
-"classZenitUI_1_1Layout.html#a01ab125b033e17669efc48de5d581176",
-"classZenitUI_1_1SDL3Renderer.html#aeffad60cd4cda56e7304f612bac9d396",
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a3336c5d336c97ba427b8277e09a7c3cf",
-"page_custom_backends.html#sec_backend_invariants"
+"classZenitUI_1_1InputAccumulator.html#ae9207e4c2fd271c0963a10f4725e0f5a",
+"classZenitUI_1_1SDL3Renderer.html#ab80972b95a6cfeaf90e2e48ee71db478",
+"classZenitUI_1_1UI_1_1VirtualView.html#a21cc06c3b3ea577f64905e872cfaec39",
+"namespaceZenitUI_1_1Anim.html#a6d9a8ebff50b85bcca27a9df8d17bdf2",
+"structZenitUI_1_1ZMarkup_1_1Element.html#ae1779d59083ef2e92c75955f751a7e09"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

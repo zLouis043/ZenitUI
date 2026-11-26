@@ -56,12 +56,13 @@ var searchData=
   ['create_53',['create',['../classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d',1,'ZenitUI::UI::VirtualView::create(ItemFactory factory, int count)'],['../classZenitUI_1_1UI_1_1VirtualView.html#aa797f5142b05b9d0dd909e8d71e1f863',1,'ZenitUI::UI::VirtualView::create(std::function&lt; std::shared_ptr&lt; Layout &gt;()&gt; factory, int count)'],['../classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0',1,'ZenitUI::TLayout::create()'],['../classZenitUI_1_1ZMarkup_1_1Registry.html#a0ff5034e849978c2e91ce39a7e89451d',1,'ZenitUI::ZMarkup::Registry::create(const Element &amp;el, BuildContext &amp;ctx) const']]],
   ['create_5fimpl_54',['create_impl',['../classZenitUI_1_1ZMarkup_1_1Registry.html#a07ef31339ca0718244dc5f87cb52b664',1,'ZenitUI::ZMarkup::Registry']]],
   ['createtarget_55',['createTarget',['../classZenitUI_1_1IRenderer.html#ad9854c7ce0e7c8d937e5c1047ef7cf36',1,'ZenitUI::IRenderer::createTarget()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#aadd29413b6b2ea4e3e3827a9962bb7d1',1,'ZenitUI::Test::MockRenderer::createTarget()'],['../classZenitUI_1_1RaylibRenderer.html#a2b44ced5665e4aaa36b78f6c3cfb0c22',1,'ZenitUI::RaylibRenderer::createTarget()'],['../classZenitUI_1_1SDL3Renderer.html#abc3b24398685c3e8f2596062cb4ea1e0',1,'ZenitUI::SDL3Renderer::createTarget()']]],
-  ['critical_20behavioral_20invariants_56',['3. Critical Behavioral Invariants',['../page_custom_backends.html#sec_backend_invariants',1,'']]],
-  ['current_57',['current',['../structZenitUI_1_1StyleResolver_1_1PartTransition.html#a662c42340f142015fd87c9be22714cfc',1,'ZenitUI::StyleResolver::PartTransition']]],
-  ['currentstate_58',['currentState',['../structZenitUI_1_1StyleResolver.html#a9ab34e0367289d8c5cf6132557cac246',1,'ZenitUI::StyleResolver']]],
-  ['currentstyle_59',['currentStyle',['../structZenitUI_1_1StyleResolver.html#a25e820af891eab5be02707dc07b4362b',1,'ZenitUI::StyleResolver']]],
-  ['currenttransform_60',['currentTransform',['../classZenitUI_1_1Layout.html#a4b1c60a74a96ccb800f9d55c1fd2f1c3',1,'ZenitUI::Layout']]],
-  ['custom_61',['Custom',['../group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faa90589c47f06eb971d548591f23c285af',1,'ZenitUI']]],
-  ['custom_20backend_62',['Writing a Custom Backend',['../page_custom_backends.html',1,'index']]],
-  ['cyrillic_63',['cyrillic',['../classZenitUI_1_1CodepointSet.html#ad67da8af924dc359021b005463e94f0f',1,'ZenitUI::CodepointSet']]]
+  ['createtexture_56',['createTexture',['../classZenitUI_1_1IRenderer.html#a16a879da3a2307c6b74fbd8a0fe3d3c5',1,'ZenitUI::IRenderer::createTexture()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#a41d1d2ee7691960f7b48d70dfd4e0262',1,'ZenitUI::Test::MockRenderer::createTexture()'],['../classZenitUI_1_1RaylibRenderer.html#a2ba4638838770ea4ea9f3a48bb43c07b',1,'ZenitUI::RaylibRenderer::createTexture()'],['../classZenitUI_1_1SDL3Renderer.html#a381bc13a222845558d76a6de9967c21e',1,'ZenitUI::SDL3Renderer::createTexture()']]],
+  ['critical_20behavioral_20invariants_57',['3. Critical Behavioral Invariants',['../page_custom_backends.html#sec_backend_invariants',1,'']]],
+  ['current_58',['current',['../structZenitUI_1_1StyleResolver_1_1PartTransition.html#a662c42340f142015fd87c9be22714cfc',1,'ZenitUI::StyleResolver::PartTransition']]],
+  ['currentstate_59',['currentState',['../structZenitUI_1_1StyleResolver.html#a9ab34e0367289d8c5cf6132557cac246',1,'ZenitUI::StyleResolver']]],
+  ['currentstyle_60',['currentStyle',['../structZenitUI_1_1StyleResolver.html#a25e820af891eab5be02707dc07b4362b',1,'ZenitUI::StyleResolver']]],
+  ['currenttransform_61',['currentTransform',['../classZenitUI_1_1Layout.html#a4b1c60a74a96ccb800f9d55c1fd2f1c3',1,'ZenitUI::Layout']]],
+  ['custom_62',['Custom',['../group__grp__anim.html#ggaef504487c3a2b15a5acb476bbacba4faa90589c47f06eb971d548591f23c285af',1,'ZenitUI']]],
+  ['custom_20backend_63',['Writing a Custom Backend',['../page_custom_backends.html',1,'index']]],
+  ['cyrillic_64',['cyrillic',['../classZenitUI_1_1CodepointSet.html#ad67da8af924dc359021b005463e94f0f',1,'ZenitUI::CodepointSet']]]
 ];

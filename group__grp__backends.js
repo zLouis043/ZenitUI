@@ -67,10 +67,13 @@ var group__grp__backends =
     ] ],
     [ "ZenitUI::Test::MockRenderer", "classZenitUI_1_1Test_1_1MockRenderer.html", [
       [ "CapturedUniform", "structZenitUI_1_1Test_1_1MockRenderer_1_1CapturedUniform.html", null ],
+      [ "DynamicTexture", "structZenitUI_1_1Test_1_1MockRenderer_1_1DynamicTexture.html", null ],
       [ "beginFrame", "classZenitUI_1_1Test_1_1MockRenderer.html#ae4530a873fd9ac9a2439aa910534cc56", null ],
       [ "clearTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a34ef8c31cadad2b9f0d6c0781b5e0aff", null ],
       [ "createTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#aadd29413b6b2ea4e3e3827a9962bb7d1", null ],
+      [ "createTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a41d1d2ee7691960f7b48d70dfd4e0262", null ],
       [ "destroyTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ab18dbad3f320f40e7614bc0c980e4c5b", null ],
+      [ "destroyTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a9aff77aa6a2db1b5a428a1de75149d11", null ],
       [ "drawGeometry", "classZenitUI_1_1Test_1_1MockRenderer.html#a5558e0bc74a6c8bd6fd92441c4d8e4b9", null ],
       [ "drawNineSlice", "classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b", null ],
       [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a80f3cf4c9c97de19ab69d1d1bb957bde", null ],
@@ -102,6 +105,7 @@ var group__grp__backends =
       [ "strokeRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a3f4ad26579a7e69b4416da5c15f9b33c", null ],
       [ "strokeRoundedRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a45d2d5adec1be66b113fbc7301dfcf29", null ],
       [ "supports", "classZenitUI_1_1Test_1_1MockRenderer.html#a6b51ab6cbed41273428962566156dfcc", null ],
+      [ "updateTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a06b20640954eb342f5876c0b1c4f9f7c", null ],
       [ "charWidth", "classZenitUI_1_1Test_1_1MockRenderer.html#afa55e4aeb4af61bf4d4476fdf0e88726", null ]
     ] ],
     [ "ZenitUI::Test::MockPlatform", "classZenitUI_1_1Test_1_1MockPlatform.html", [
@@ -166,7 +170,9 @@ var group__grp__backends =
       [ "beginFrame", "classZenitUI_1_1RaylibRenderer.html#a8e331b34807b2d21aff503adc4ee4a47", null ],
       [ "clearTarget", "classZenitUI_1_1RaylibRenderer.html#ad77c756e63c5b37b79e681531df57eaa", null ],
       [ "createTarget", "classZenitUI_1_1RaylibRenderer.html#a2b44ced5665e4aaa36b78f6c3cfb0c22", null ],
+      [ "createTexture", "classZenitUI_1_1RaylibRenderer.html#a2ba4638838770ea4ea9f3a48bb43c07b", null ],
       [ "destroyTarget", "classZenitUI_1_1RaylibRenderer.html#a2133292718835e5f4b6848f54d80902d", null ],
+      [ "destroyTexture", "classZenitUI_1_1RaylibRenderer.html#a4e0063fd39645db93a4c0c04b56c3c45", null ],
       [ "drawGeometry", "classZenitUI_1_1RaylibRenderer.html#a2b1b58b04f87ac247cbd09ef63179e70", null ],
       [ "drawNineSlice", "classZenitUI_1_1RaylibRenderer.html#a0a0645e448aefe373d21fc8c37305381", null ],
       [ "drawTarget", "classZenitUI_1_1RaylibRenderer.html#a66a581591234e507bd8a14bd8a8a41a9", null ],
@@ -205,7 +211,8 @@ var group__grp__backends =
       [ "transformClipToScreen", "classZenitUI_1_1RaylibRenderer.html#ac729470843fd38d79575d343ceffefca", null ],
       [ "unregisterEffect", "classZenitUI_1_1RaylibRenderer.html#a4d239081ab99496b390bfb59962af7c1", null ],
       [ "unregisterFont", "classZenitUI_1_1RaylibRenderer.html#a7b5c11bb9cd8584321625b3faf7e9380", null ],
-      [ "unregisterTexture", "classZenitUI_1_1RaylibRenderer.html#a81741735820f2783d3d918050ec1b62f", null ]
+      [ "unregisterTexture", "classZenitUI_1_1RaylibRenderer.html#a81741735820f2783d3d918050ec1b62f", null ],
+      [ "updateTexture", "classZenitUI_1_1RaylibRenderer.html#a50bc3334483ea40c96fd698e5ef84f24", null ]
     ] ],
     [ "ZenitUI::RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html", [
       [ "RaylibAssetProvider", "classZenitUI_1_1RaylibAssetProvider.html#a67d0d38aa4752ddacd1bdc46534911ac", null ],
@@ -261,7 +268,9 @@ var group__grp__backends =
       [ "beginFrame", "classZenitUI_1_1SDL3Renderer.html#aa45f3921bcef0060c10625614b8cb8c3", null ],
       [ "clearTarget", "classZenitUI_1_1SDL3Renderer.html#af60bfa8d36b6d7355bf19613cae28622", null ],
       [ "createTarget", "classZenitUI_1_1SDL3Renderer.html#abc3b24398685c3e8f2596062cb4ea1e0", null ],
+      [ "createTexture", "classZenitUI_1_1SDL3Renderer.html#a381bc13a222845558d76a6de9967c21e", null ],
       [ "destroyTarget", "classZenitUI_1_1SDL3Renderer.html#a07fe4053d3333bb9e9ba61e534d538b6", null ],
+      [ "destroyTexture", "classZenitUI_1_1SDL3Renderer.html#ab80972b95a6cfeaf90e2e48ee71db478", null ],
       [ "drawGeometry", "classZenitUI_1_1SDL3Renderer.html#aeab04fadafe092a7adf016b2dfa672c4", null ],
       [ "drawTarget", "classZenitUI_1_1SDL3Renderer.html#ae58cd70271da1080649039640cff38a8", null ],
       [ "drawTarget", "classZenitUI_1_1SDL3Renderer.html#a553d31eeb4481a9a792180239582114a", null ],
@@ -288,7 +297,8 @@ var group__grp__backends =
       [ "setEffectVec4", "classZenitUI_1_1SDL3Renderer.html#a04affcb450b1fd4628ce94fc560b7fd2", null ],
       [ "setEffectVec4f", "classZenitUI_1_1SDL3Renderer.html#a403b5d7ad3c04d66e73d4455cdffe9c1", null ],
       [ "shaderLanguage", "classZenitUI_1_1SDL3Renderer.html#a2619bf7a706c7bb509f021a56d9510fb", null ],
-      [ "supports", "classZenitUI_1_1SDL3Renderer.html#a239793b85f0c5fe43410f6b200459ac2", null ]
+      [ "supports", "classZenitUI_1_1SDL3Renderer.html#a239793b85f0c5fe43410f6b200459ac2", null ],
+      [ "updateTexture", "classZenitUI_1_1SDL3Renderer.html#a351d79bc4ac69dd369044670faa460e6", null ]
     ] ],
     [ "ZenitUI::SDL3AssetProvider", "classZenitUI_1_1SDL3AssetProvider.html", [
       [ "addDefaultCodepointRange", "classZenitUI_1_1SDL3AssetProvider.html#a7c8e074b6ee26e64837fbfec5b6345d6", null ],

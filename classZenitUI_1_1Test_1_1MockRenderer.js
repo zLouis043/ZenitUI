@@ -1,10 +1,13 @@
 var classZenitUI_1_1Test_1_1MockRenderer =
 [
     [ "CapturedUniform", "structZenitUI_1_1Test_1_1MockRenderer_1_1CapturedUniform.html", null ],
+    [ "DynamicTexture", "structZenitUI_1_1Test_1_1MockRenderer_1_1DynamicTexture.html", null ],
     [ "beginFrame", "classZenitUI_1_1Test_1_1MockRenderer.html#ae4530a873fd9ac9a2439aa910534cc56", null ],
     [ "clearTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a34ef8c31cadad2b9f0d6c0781b5e0aff", null ],
     [ "createTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#aadd29413b6b2ea4e3e3827a9962bb7d1", null ],
+    [ "createTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a41d1d2ee7691960f7b48d70dfd4e0262", null ],
     [ "destroyTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#ab18dbad3f320f40e7614bc0c980e4c5b", null ],
+    [ "destroyTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a9aff77aa6a2db1b5a428a1de75149d11", null ],
     [ "drawGeometry", "classZenitUI_1_1Test_1_1MockRenderer.html#a5558e0bc74a6c8bd6fd92441c4d8e4b9", null ],
     [ "drawNineSlice", "classZenitUI_1_1Test_1_1MockRenderer.html#af7bf0c0233fa3532e96689eded65ad7b", null ],
     [ "drawTarget", "classZenitUI_1_1Test_1_1MockRenderer.html#a80f3cf4c9c97de19ab69d1d1bb957bde", null ],
@@ -36,5 +39,6 @@ var classZenitUI_1_1Test_1_1MockRenderer =
     [ "strokeRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a3f4ad26579a7e69b4416da5c15f9b33c", null ],
     [ "strokeRoundedRect", "classZenitUI_1_1Test_1_1MockRenderer.html#a45d2d5adec1be66b113fbc7301dfcf29", null ],
     [ "supports", "classZenitUI_1_1Test_1_1MockRenderer.html#a6b51ab6cbed41273428962566156dfcc", null ],
+    [ "updateTexture", "classZenitUI_1_1Test_1_1MockRenderer.html#a06b20640954eb342f5876c0b1c4f9f7c", null ],
     [ "charWidth", "classZenitUI_1_1Test_1_1MockRenderer.html#afa55e4aeb4af61bf4d4476fdf0e88726", null ]
 ];

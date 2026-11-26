@@ -22,8 +22,9 @@ var searchData=
   ['update_19',['update',['../classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305',1,'ZenitUI::Layout']]],
   ['updateflags_20',['updateFlags',['../structZenitUI_1_1InputController.html#a5e09454c72c2349823e6e39162292465',1,'ZenitUI::InputController']]],
   ['updatemaxscroll_21',['updateMaxScroll',['../structZenitUI_1_1ScrollController.html#abf98a740dc0fbc853445e993d207292b',1,'ZenitUI::ScrollController']]],
-  ['updatetree_22',['updateTree',['../classZenitUI_1_1Layout.html#abbc59a92125d89a5b1600c8d2a4e156e',1,'ZenitUI::Layout']]],
-  ['updatewhendisabled_23',['updateWhenDisabled',['../structZenitUI_1_1NodeConfig.html#a7e9c2bb719c4a2371cbc44da14ad9022',1,'ZenitUI::NodeConfig']]],
-  ['utf_208_20debugging_24',['Backends, UTF-8 &amp;amp; Debugging',['../group__grp__backends.html',1,'']]],
-  ['utf8_2ehpp_25',['Utf8.hpp',['../Utf8_8hpp.html',1,'']]]
+  ['updatetexture_22',['updateTexture',['../classZenitUI_1_1IRenderer.html#aa6a9b004b4cf25d27c806f222e49eff9',1,'ZenitUI::IRenderer::updateTexture()'],['../classZenitUI_1_1Test_1_1MockRenderer.html#a06b20640954eb342f5876c0b1c4f9f7c',1,'ZenitUI::Test::MockRenderer::updateTexture()'],['../classZenitUI_1_1RaylibRenderer.html#a50bc3334483ea40c96fd698e5ef84f24',1,'ZenitUI::RaylibRenderer::updateTexture()'],['../classZenitUI_1_1SDL3Renderer.html#a351d79bc4ac69dd369044670faa460e6',1,'ZenitUI::SDL3Renderer::updateTexture()']]],
+  ['updatetree_23',['updateTree',['../classZenitUI_1_1Layout.html#abbc59a92125d89a5b1600c8d2a4e156e',1,'ZenitUI::Layout']]],
+  ['updatewhendisabled_24',['updateWhenDisabled',['../structZenitUI_1_1NodeConfig.html#a7e9c2bb719c4a2371cbc44da14ad9022',1,'ZenitUI::NodeConfig']]],
+  ['utf_208_20debugging_25',['Backends, UTF-8 &amp;amp; Debugging',['../group__grp__backends.html',1,'']]],
+  ['utf8_2ehpp_26',['Utf8.hpp',['../Utf8_8hpp.html',1,'']]]
 ];
