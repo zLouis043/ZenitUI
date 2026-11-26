@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795705393324,
+  "lastUpdate": 1795719678167,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -17372,6 +17372,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 88.0834,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "13566cf500ec0f46864c41c4b895c678afc6eefb",
+          "message": "refactor(core): make UIContext instantiable and bind Layout trees via ctx_\n\nMakes UIContext non-copyable/non-movable with explicit mount/unmount, runFrame/renderFrame, and safe bidirectional backend teardown (attachBackend/detachBackend, IBackend::bindTo/unbind). Attaches Layout subtrees via non-owning ctx_ propagated across tree mutations, adds Layout::moveChildBefore so keyed Each reconciliation preserves focus and context state, and migrates core subsystems and components to node.context().",
+          "timestamp": "2026-11-26T19:59:11+01:00",
+          "tree_id": "163088e90b074fa7664a68bb277ca6ebd5e77d5a",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/13566cf500ec0f46864c41c4b895c678afc6eefb"
+        },
+        "date": 1795719676904,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 339.374,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 5.38057,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00410059,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0365803,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.0250092,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.783736,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.980778,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.952008,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.465836,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.674044,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 47.292,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 52.9194,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 14.2779,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 20.9838,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 45.7327,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00373026,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 60.3137,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 190.87,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 63.8194,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 146.947,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 121.345,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 91.7044,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 142.647,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 628.981,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 634.282,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 53.5723,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 141.623,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 123.704,
             "unit": "us"
           }
         ]
