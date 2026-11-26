@@ -149,10 +149,13 @@ var NAVTREEINDEX0 =
 "classZenitUI_1_1ConsoleLogger.html":[1,5,7],
 "classZenitUI_1_1DiagnosticSink.html":[1,3,2],
 "classZenitUI_1_1FilterRegistry.html":[1,4,10],
-"classZenitUI_1_1FilterRegistry.html#a66e06412925ee82065b68e01499d0cb3":[1,4,10,0],
-"classZenitUI_1_1FilterRegistry.html#ac64a20eba4183766cb9d8c549e20cb65":[1,4,10,3],
-"classZenitUI_1_1FilterRegistry.html#af48215bf1d9a2155ab8d0cd874343bea":[1,4,10,1],
-"classZenitUI_1_1FilterRegistry.html#afcb92b95979164c621df176e30fe1872":[1,4,10,2],
+"classZenitUI_1_1FilterRegistry.html#a08a7fcdd3a48cc126ee0309c9697066e":[1,4,10,3],
+"classZenitUI_1_1FilterRegistry.html#a1e372e1877ccc1a275cece6f7cdc0fe8":[1,4,10,0],
+"classZenitUI_1_1FilterRegistry.html#a66e06412925ee82065b68e01499d0cb3":[1,4,10,1],
+"classZenitUI_1_1FilterRegistry.html#a7969055d7e8e8b015d6a1b328cb65cd6":[1,4,10,5],
+"classZenitUI_1_1FilterRegistry.html#a994aa5930be4bc4ea28f1506e36b3103":[1,4,10,6],
+"classZenitUI_1_1FilterRegistry.html#af48215bf1d9a2155ab8d0cd874343bea":[1,4,10,2],
+"classZenitUI_1_1FilterRegistry.html#afcb92b95979164c621df176e30fe1872":[1,4,10,4],
 "classZenitUI_1_1IAssetProvider.html":[1,0,31],
 "classZenitUI_1_1IAssetProvider.html#a0b279ae7e528c6fbf3ac60fe7a503ba9":[1,0,31,10],
 "classZenitUI_1_1IAssetProvider.html#a155777286fc3ff8705c1710bb32e39d0":[1,0,31,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX0 =
 "classZenitUI_1_1InputAccumulator.html#aeced62009381411a15648cfb05542d62":[1,5,4,9],
 "classZenitUI_1_1Layout.html":[1,0,24],
 "classZenitUI_1_1Layout.html#a01ab125b033e17669efc48de5d581176":[1,0,24,49],
-"classZenitUI_1_1Layout.html#a047cb7ecfd33214da9a2ad4566f3a184":[1,0,24,18],
-"classZenitUI_1_1Layout.html#a07a63785ef109234f1db33077f91e305":[1,0,24,72],
-"classZenitUI_1_1Layout.html#a0a5bb61b3fe46dae02fbff430f5e6487":[1,0,24,29],
-"classZenitUI_1_1Layout.html#a10d1aa92b372d3414760aab602df3e0e":[1,0,24,8]
+"classZenitUI_1_1Layout.html#a047cb7ecfd33214da9a2ad4566f3a184":[1,0,24,18]
 };

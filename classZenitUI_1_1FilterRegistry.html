@@ -96,13 +96,16 @@ $(function(){initNavTree('classZenitUI_1_1FilterRegistry.html','','classZenitUI_
 </div><!--header-->
 <div class="contents">
 
-<p>Global name → <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span> map.  
+<p>Per-context map from CSS filter name to <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="FilterRegistry_8hpp_source.html">FilterRegistry.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a1e372e1877ccc1a275cece6f7cdc0fe8" id="r_a1e372e1877ccc1a275cece6f7cdc0fe8"><td class="memItemLeft" align="right" valign="top"><a id="a1e372e1877ccc1a275cece6f7cdc0fe8" name="a1e372e1877ccc1a275cece6f7cdc0fe8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>FilterRegistry</b> ()</td></tr>
+<tr class="memdesc:a1e372e1877ccc1a275cece6f7cdc0fe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the registry and populate builtin filters. <br /></td></tr>
 <tr class="memitem:a66e06412925ee82065b68e01499d0cb3" id="r_a66e06412925ee82065b68e01499d0cb3"><td class="memItemLeft" align="right" valign="top"><a id="a66e06412925ee82065b68e01499d0cb3" name="a66e06412925ee82065b68e01499d0cb3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (<a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> def)</td></tr>
 <tr class="memdesc:a66e06412925ee82065b68e01499d0cb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register or replace a filter definition. <br /></td></tr>
@@ -111,16 +114,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addCustom</b> (std::s
 <tr class="memdesc:af48215bf1d9a2155ab8d0cd874343bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a custom (shader-less) filter. <br /></td></tr>
 <tr class="memitem:afcb92b95979164c621df176e30fe1872" id="r_afcb92b95979164c621df176e30fe1872"><td class="memItemLeft" align="right" valign="top"><a id="afcb92b95979164c621df176e30fe1872" name="afcb92b95979164c621df176e30fe1872"></a>
 const <a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>find</b> (const std::string &amp;name) const</td></tr>
-<tr class="memdesc:afcb92b95979164c621df176e30fe1872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a filter by name. <br /></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac64a20eba4183766cb9d8c549e20cb65" id="r_ac64a20eba4183766cb9d8c549e20cb65"><td class="memItemLeft" align="right" valign="top"><a id="ac64a20eba4183766cb9d8c549e20cb65" name="ac64a20eba4183766cb9d8c549e20cb65"></a>
-static <a class="el" href="classZenitUI_1_1FilterRegistry.html">FilterRegistry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()</td></tr>
-<tr class="memdesc:ac64a20eba4183766cb9d8c549e20cb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the global singleton registry. <br /></td></tr>
+<tr class="memdesc:afcb92b95979164c621df176e30fe1872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a filter by name; returns <span class="tt">nullptr</span> if not found. <br /></td></tr>
+<tr class="memitem:a7969055d7e8e8b015d6a1b328cb65cd6" id="r_a7969055d7e8e8b015d6a1b328cb65cd6"><td class="memItemLeft" align="right" valign="top"><a id="a7969055d7e8e8b015d6a1b328cb65cd6" name="a7969055d7e8e8b015d6a1b328cb65cd6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerBuiltins</b> ()</td></tr>
+<tr class="memdesc:a7969055d7e8e8b015d6a1b328cb65cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the builtin filters (<span class="tt">blur</span>, <span class="tt">drop-shadow</span>) if absent. <br /></td></tr>
+<tr class="memitem:a08a7fcdd3a48cc126ee0309c9697066e" id="r_a08a7fcdd3a48cc126ee0309c9697066e"><td class="memItemLeft" align="right" valign="top"><a id="a08a7fcdd3a48cc126ee0309c9697066e" name="a08a7fcdd3a48cc126ee0309c9697066e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr class="memdesc:a08a7fcdd3a48cc126ee0309c9697066e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all registered filters, including builtins. <br /></td></tr>
+<tr class="memitem:a994aa5930be4bc4ea28f1506e36b3103" id="r_a994aa5930be4bc4ea28f1506e36b3103"><td class="memItemLeft" align="right" valign="top"><a id="a994aa5930be4bc4ea28f1506e36b3103" name="a994aa5930be4bc4ea28f1506e36b3103"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
+<tr class="memdesc:a994aa5930be4bc4ea28f1506e36b3103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all filters and re-register only the builtins. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Global name → <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span> map. </p>
+<div class="textblock"><p>Per-context map from CSS filter name to <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span>. </p>
+<p>Owned by <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html#a1251c63242025549325c6993af6edb7e" title="Per-context post-processing filter definitions (preloaded with builtins).">UIContext::filters</a></span>. Default construction automatically registers the builtin filters (<span class="tt">blur</span>, <span class="tt">drop-shadow</span>). </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="FilterRegistry_8hpp_source.html">FilterRegistry.hpp</a></li>
 </ul>

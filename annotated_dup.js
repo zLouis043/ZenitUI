@@ -80,7 +80,7 @@ var annotated_dup =
       [ "NullDiagnosticSink", "classZenitUI_1_1NullDiagnosticSink.html", null ],
       [ "CollectingDiagnosticSink", "classZenitUI_1_1CollectingDiagnosticSink.html", null ],
       [ "FilterParam", "structZenitUI_1_1FilterParam.html", null ],
-      [ "FilterContext", "structZenitUI_1_1FilterContext.html", null ],
+      [ "FilterContext", "structZenitUI_1_1FilterContext.html", "structZenitUI_1_1FilterContext" ],
       [ "FilterDef", "structZenitUI_1_1FilterDef.html", "structZenitUI_1_1FilterDef" ],
       [ "FilterRegistry", "classZenitUI_1_1FilterRegistry.html", "classZenitUI_1_1FilterRegistry" ],
       [ "InputAccumulator", "classZenitUI_1_1InputAccumulator.html", "classZenitUI_1_1InputAccumulator" ],

@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classZenitUI_1_1FilterRegistry.html" target="_top" xlink:title="Global name → FilterDef map.">
+<g id="a_Node000000"><a xlink:href="classZenitUI_1_1FilterRegistry.html" target="_top" xlink:title="Per&#45;context map from CSS filter name to FilterDef.">
 <polygon fill="white" stroke="#666666" points="123.25,-20.75 0,-20.75 0,0 123.25,0 123.25,-20.75"/>
 <text xml:space="preserve" text-anchor="middle" x="61.62" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::FilterRegistry</text>
 </a>

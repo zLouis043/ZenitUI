@@ -26,15 +26,30 @@ var group__grp__anim =
     [ "ZenitUI::KeyframeAnimation", "structZenitUI_1_1KeyframeAnimation.html", null ],
     [ "ZenitUI::ActiveCssAnimation", "structZenitUI_1_1ActiveCssAnimation.html", null ],
     [ "ZenitUI::FilterParam", "structZenitUI_1_1FilterParam.html", null ],
-    [ "ZenitUI::FilterContext", "structZenitUI_1_1FilterContext.html", null ],
+    [ "ZenitUI::FilterContext", "structZenitUI_1_1FilterContext.html", [
+      [ "dst", "structZenitUI_1_1FilterContext.html#ae778b172a000931977d35ece7eee9add", null ],
+      [ "node", "structZenitUI_1_1FilterContext.html#abfc5294e0488f2c73d739881ad4f7789", null ],
+      [ "opacity", "structZenitUI_1_1FilterContext.html#ae4b07d0f3a29e19e482c56d24da8db76", null ],
+      [ "ref", "structZenitUI_1_1FilterContext.html#ab872cc7f2817bea4157dd30ec4bf18a0", null ],
+      [ "region", "structZenitUI_1_1FilterContext.html#af5bedbdca94a2e87f7dde6b6261f712d", null ],
+      [ "renderer", "structZenitUI_1_1FilterContext.html#a5f9f505034c42dd8e22ba699d4030e0a", null ],
+      [ "scratch", "structZenitUI_1_1FilterContext.html#a2c2d5c0b5d06f7913c24c91aa40daff7", null ],
+      [ "src", "structZenitUI_1_1FilterContext.html#afdd777d1d9d91b7710d02ea988646af5", null ],
+      [ "texSize", "structZenitUI_1_1FilterContext.html#a4a1e85fa2c8467cc8c6ccd79801c7711", null ],
+      [ "ui", "structZenitUI_1_1FilterContext.html#a4eee27f7dbe9927f3c24eaf3156cf931", null ],
+      [ "write_target", "structZenitUI_1_1FilterContext.html#a8cc2dbcdc54dd727d039c6892bee85d7", null ]
+    ] ],
     [ "ZenitUI::FilterDef", "structZenitUI_1_1FilterDef.html", [
       [ "downscale", "structZenitUI_1_1FilterDef.html#a7975b9e5a4790813f14091bb6073773b", null ]
     ] ],
     [ "ZenitUI::FilterRegistry", "classZenitUI_1_1FilterRegistry.html", [
+      [ "FilterRegistry", "classZenitUI_1_1FilterRegistry.html#a1e372e1877ccc1a275cece6f7cdc0fe8", null ],
       [ "add", "classZenitUI_1_1FilterRegistry.html#a66e06412925ee82065b68e01499d0cb3", null ],
       [ "addCustom", "classZenitUI_1_1FilterRegistry.html#af48215bf1d9a2155ab8d0cd874343bea", null ],
+      [ "clear", "classZenitUI_1_1FilterRegistry.html#a08a7fcdd3a48cc126ee0309c9697066e", null ],
       [ "find", "classZenitUI_1_1FilterRegistry.html#afcb92b95979164c621df176e30fe1872", null ],
-      [ "get", "classZenitUI_1_1FilterRegistry.html#ac64a20eba4183766cb9d8c549e20cb65", null ]
+      [ "registerBuiltins", "classZenitUI_1_1FilterRegistry.html#a7969055d7e8e8b015d6a1b328cb65cd6", null ],
+      [ "reset", "classZenitUI_1_1FilterRegistry.html#a994aa5930be4bc4ea28f1506e36b3103", null ]
     ] ],
     [ "ZenitUI::FilterCustomFn", "group__grp__anim.html#ga6570fbd7db66e40ff381990a1c46e318", null ],
     [ "ZenitUI::FilterParamType", "group__grp__anim.html#ga8020e9536c776ebc008c157598fc944e", null ],
@@ -49,7 +64,6 @@ var group__grp__anim =
     [ "ZenitUI::evaluateKeyframes", "group__grp__anim.html#ga48e33d9bb4122b2be16f67d16a13f249", null ],
     [ "ZenitUI::getRatio", "group__grp__anim.html#gae5e46e03cf94489e74a23b4750ca22f6", null ],
     [ "ZenitUI::parseEasing", "group__grp__anim.html#ga93a6d4f8c090c992bad60eb2df15356d", null ],
-    [ "ZenitUI::registerBuiltinFilters", "group__grp__anim.html#ga7b1bf726c78ca036c61e48d4bc97ecfd", null ],
     [ "ZenitUI::sampleActive", "group__grp__anim.html#ga1ba79222e3dc1a0c72b7cba4012971d5", null ],
     [ "ZenitUI::sampleActiveCached", "group__grp__anim.html#ga5c0f9f01a02d63814fc6b96d428d5200", null ]
 ];

@@ -13,5 +13,6 @@ var searchData=
   ['onsubmit_10',['onSubmit',['../classZenitUI_1_1UI_1_1TextInput.html#a6e27ac857c5200b90e1010fcc0ef77a7',1,'ZenitUI::UI::TextInput']]],
   ['ontextchanged_11',['onTextChanged',['../classZenitUI_1_1UI_1_1TextInput.html#a53a9f48a7720621160c1079dd44cdcc5',1,'ZenitUI::UI::TextInput']]],
   ['ontoggle_12',['onToggle',['../classZenitUI_1_1UI_1_1Checkbox.html#a621bcd9de3a305be55fa09dd1a8ccd69',1,'ZenitUI::UI::Checkbox::onToggle'],['../classZenitUI_1_1UI_1_1Toggle.html#a2234311a1b6a47a9b6f9d8a95455a795',1,'ZenitUI::UI::Toggle::onToggle']]],
-  ['onvaluechanged_13',['onValueChanged',['../classZenitUI_1_1UI_1_1Slider.html#a4e0cdd0584233f327e86a8ec1be617de',1,'ZenitUI::UI::Slider']]]
+  ['onvaluechanged_13',['onValueChanged',['../classZenitUI_1_1UI_1_1Slider.html#a4e0cdd0584233f327e86a8ec1be617de',1,'ZenitUI::UI::Slider']]],
+  ['opacity_14',['opacity',['../structZenitUI_1_1FilterContext.html#ae4b07d0f3a29e19e482c56d24da8db76',1,'ZenitUI::FilterContext']]]
 ];

@@ -125,7 +125,7 @@ Classes</h2></td></tr>
 <tr class="memitem:ZenitUI_3A_3AFilterDef" id="r_ZenitUI_3A_3AFilterDef"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structZenitUI_1_1FilterDef.html">ZenitUI::FilterDef</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complete description of one filter.  <a href="structZenitUI_1_1FilterDef.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ZenitUI_3A_3AFilterRegistry" id="r_ZenitUI_3A_3AFilterRegistry"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1FilterRegistry.html">ZenitUI::FilterRegistry</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global name → <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span> map.  <a href="classZenitUI_1_1FilterRegistry.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-context map from CSS filter name to <span class="tt"><a class="el" href="structZenitUI_1_1FilterDef.html" title="Complete description of one filter.">FilterDef</a></span>.  <a href="classZenitUI_1_1FilterRegistry.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -182,26 +182,22 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::sampleActiv
 <tr class="memdesc:gae5e46e03cf94489e74a23b4750ca22f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map a normalized time <code class="param">t</code> in <span class="tt">[0, 1]</span> through the given easing.  <br /></td></tr>
 <tr class="memitem:ga93a6d4f8c090c992bad60eb2df15356d" id="r_ga93a6d4f8c090c992bad60eb2df15356d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93a6d4f8c090c992bad60eb2df15356d">ZenitUI::parseEasing</a> (std::string_view name, <a class="el" href="#gae27ff9cac1e9b8ddc267881d389bcdf8">TransitionFunction</a> &amp;out)</td></tr>
 <tr class="memdesc:ga93a6d4f8c090c992bad60eb2df15356d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse an easing name (CSS-like) into a <span class="tt"><a class="el" href="#gae27ff9cac1e9b8ddc267881d389bcdf8" title="Timing function applied between two keyframe values.">TransitionFunction</a></span>.  <br /></td></tr>
-<tr class="memitem:ga7b1bf726c78ca036c61e48d4bc97ecfd" id="r_ga7b1bf726c78ca036c61e48d4bc97ecfd"><td class="memItemLeft" align="right" valign="top"><a id="ga7b1bf726c78ca036c61e48d4bc97ecfd" name="ga7b1bf726c78ca036c61e48d4bc97ecfd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::registerBuiltinFilters</b> ()</td></tr>
-<tr class="memdesc:ga7b1bf726c78ca036c61e48d4bc97ecfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensure the builtin filters (<span class="tt">blur</span>, <span class="tt">drop-shadow</span>) are registered. <br /></td></tr>
-<tr class="memitem:gaed0b14487dc7622a4348a6aa1b55c343" id="r_gaed0b14487dc7622a4348a6aa1b55c343"><td class="memItemLeft" align="right" valign="top"><a id="gaed0b14487dc7622a4348a6aa1b55c343" name="gaed0b14487dc7622a4348a6aa1b55c343"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::applyFilter</b> (const <a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> &amp;def, const <a class="el" href="structZenitUI_1_1FilterContext.html">FilterContext</a> &amp;ctx)</td></tr>
-<tr class="memdesc:gaed0b14487dc7622a4348a6aa1b55c343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute one filter against the given context. <br /></td></tr>
+<tr class="memitem:gaed0b14487dc7622a4348a6aa1b55c343" id="r_gaed0b14487dc7622a4348a6aa1b55c343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaed0b14487dc7622a4348a6aa1b55c343">ZenitUI::applyFilter</a> (const <a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> &amp;def, const <a class="el" href="structZenitUI_1_1FilterContext.html">FilterContext</a> &amp;ctx)</td></tr>
+<tr class="memdesc:gaed0b14487dc7622a4348a6aa1b55c343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute one filter against the given context.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Property transitions, <span class="tt">@keyframes</span>, imperative animations, and post-processing filters. </p>
 <p><a class="el" href="namespaceZenitUI_1_1Key.html" title="Global viewport metrics, updated once per frame from the platform.">Key</a> concepts:</p><ul>
 <li><b>Transitions:</b> opt-in per node (<span class="tt">transition-time: 0s</span> by default); set <span class="tt">transition</span> in <span class="tt">.zstyle</span> to smoothly interpolate across state changes.</li>
 <li><b><a class="el" href="structZenitUI_1_1Keyframe.html" title="One keyframe of a CSS animation: a normalized time and a sparse style delta.">Keyframe</a> &amp; imperative animations:</b> declare <span class="tt">@keyframes</span> in <span class="tt">.zstyle</span> or register a <span class="tt"><a class="el" href="classZenitUI_1_1UIAnimation.html" title="A time-parameterised sequence of per-property tracks.">UIAnimation</a></span> via <span class="tt"><a class="el" href="classZenitUI_1_1Layout.html#aa506040cf4f9fb55481d45a1bd4d1d3f" title="Register an imperative animation under name.">Layout::addAnimation</a></span> / <span class="tt">playAnimation</span>.</li>
-<li><b>Filters &amp; shaders:</b> apply <span class="tt">filter: blur(...) drop-shadow(...)</span> or register custom post-processing passes in <span class="tt"><a class="el" href="classZenitUI_1_1FilterRegistry.html" title="Global name → FilterDef map.">FilterRegistry</a></span>. Off-screen targets are automatically pooled by <span class="tt">UIContext::targetPool</span>.</li>
+<li><b>Filters &amp; shaders:</b> apply <span class="tt">filter: blur(...) drop-shadow(...)</span> or register custom post-processing passes in <span class="tt"><a class="el" href="classZenitUI_1_1FilterRegistry.html" title="Per-context map from CSS filter name to FilterDef.">FilterRegistry</a></span>. Off-screen targets are automatically pooled by <span class="tt">UIContext::targetPool</span>.</li>
 </ul>
 <p><b>Live examples:</b> <a class="el" href="04_animations_2main_8cpp-example.html">04_animations</a> · <a class="el" href="04b_imperative_animations_2main_8cpp-example.html">04b_imperative_animations</a> · <a class="el" href="07_effects_2main_8cpp-example.html">07_effects</a> · <a class="el" href="07b_effects_stress_2main_8cpp-example.html">07b_effects_stress</a></p>
 <dl class="section user"><dt>Live examples</dt><dd><ul>
 <li><a class="el" href="00_demo_2main_8cpp-example.html">00_demo</a> — Flagship ZenitUI showcase: live Dark/Light theming, ZMarkup prefabs &amp; keyed Each, <a class="el" href="classZenitUI_1_1Bindable.html" title="Observable single-value container.">Bindable&lt;T&gt;</a>, UTF-8 TextArea, 10k-row VirtualView, portals, filters, and CanvasLayout.</li>
 <li><a class="el" href="04_animations_2main_8cpp-example.html">04_animations</a> — Declarative animation channels in .zstyle: state transitions, &amp;#64;keyframes, and ::part animations.</li>
 <li><a class="el" href="04b_imperative_animations_2main_8cpp-example.html">04b_imperative_animations</a> — Event-driven imperative <a class="el" href="classZenitUI_1_1UIAnimation.html" title="A time-parameterised sequence of per-property tracks.">UIAnimation</a> timelines: play/reverse, custom math tracks, and weak_ptr-safe chaining via onFinished.</li>
-<li><a class="el" href="07_effects_2main_8cpp-example.html">07_effects</a> — Post-processing with CSS filter chains (blur, drop-shadow, custom sepia via <a class="el" href="classZenitUI_1_1FilterRegistry.html" title="Global name → FilterDef map.">FilterRegistry</a>) vs single-pass shader effects.</li>
+<li><a class="el" href="07_effects_2main_8cpp-example.html">07_effects</a> — Post-processing with CSS filter chains (blur, drop-shadow, custom sepia via <a class="el" href="classZenitUI_1_1FilterRegistry.html" title="Per-context map from CSS filter name to FilterDef.">FilterRegistry</a>) vs single-pass shader effects.</li>
 <li><a class="el" href="07b_effects_stress_2main_8cpp-example.html">07b_effects_stress</a> — GPU stress benchmark for 50 filtered cards testing <a class="el" href="classZenitUI_1_1TargetPool.html" title="Shared, bucket-sized render-target pool owned by UIContext (§4.9 Step c).">TargetPool</a> reuse, downscaled separable blur, and live <a class="el" href="structZenitUI_1_1RenderStats.html" title="Per-frame and live render-target / filter counters (Proposal 9, Step 0).">RenderStats</a> HUD.</li>
 <li><a class="el" href="10_canvas_2main_8cpp-example.html">10_canvas</a> — Explicit offscreen composition with CanvasLayout, comparing an unshaded target against a whole-canvas shader via setShader(). </li>
 </ul>
@@ -267,6 +263,36 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ZenitUI::applyFilter<
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gaed0b14487dc7622a4348a6aa1b55c343" name="gaed0b14487dc7622a4348a6aa1b55c343"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaed0b14487dc7622a4348a6aa1b55c343">&#9670;&#160;</a></span>applyFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ZenitUI::applyFilter </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FilterDef.html">FilterDef</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>def</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FilterContext.html">FilterContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ctx</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Execute one filter against the given context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">def</td><td>Filter definition to execute. </td></tr>
+    <tr><td class="paramname">ctx</td><td>Invocation context providing renderer, targets, and <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">UIContext</a></span>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga48e33d9bb4122b2be16f67d16a13f249" name="ga48e33d9bb4122b2be16f67d16a13f249"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga48e33d9bb4122b2be16f67d16a13f249">&#9670;&#160;</a></span>evaluateKeyframes()</h2>
 

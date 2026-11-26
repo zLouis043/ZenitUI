@@ -9,5 +9,6 @@ var structZenitUI_1_1FilterContext =
     [ "scratch", "structZenitUI_1_1FilterContext.html#a2c2d5c0b5d06f7913c24c91aa40daff7", null ],
     [ "src", "structZenitUI_1_1FilterContext.html#afdd777d1d9d91b7710d02ea988646af5", null ],
     [ "texSize", "structZenitUI_1_1FilterContext.html#a4a1e85fa2c8467cc8c6ccd79801c7711", null ],
+    [ "ui", "structZenitUI_1_1FilterContext.html#a4eee27f7dbe9927f3c24eaf3156cf931", null ],
     [ "write_target", "structZenitUI_1_1FilterContext.html#a8cc2dbcdc54dd727d039c6892bee85d7", null ]
 ];
