@@ -102,8 +102,8 @@ Mental Model</h1>
 <li><b>One node type:</b> every container and widget derives from <a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">ZenitUI::Layout</a> (typically via the CRTP helper <a class="el" href="classZenitUI_1_1TLayout.html" title="CRTP base for components that want fluent builders and a static create() factory.">ZenitUI::TLayout</a>).</li>
 <li><b>Per-instance state in UIContext:</b> create a <a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a>, attach your <span class="tt">IRenderer</span>, <span class="tt">IPlatform</span>, and <span class="tt">IAssetProvider</span> via <span class="tt">ctx.attachBackend(...)</span> (or <span class="tt">IBackend::bindTo(ctx)</span>), and mount your root tree with <span class="tt">ctx.mount(root)</span>.</li>
 <li><b>Four-pass frame cycle:</b><ul>
-<li><span class="tt">ctx.runFrame(*root, dt)</span> runs <span class="tt">update</span> (input, style transitions, animations), <span class="tt">measure</span> (bottom-up), and <span class="tt">arrange</span> (top-down).</li>
-<li><span class="tt">ctx.renderFrame(*root)</span> runs <span class="tt">beginFrame</span>, <span class="tt">draw</span> (clips, layers, portals), and <span class="tt">endFrame</span>.</li>
+<li><span class="tt">ctx.runFrame(dt)</span> runs <span class="tt">update</span> (input, style transitions, animations), <span class="tt">measure</span> (bottom-up), and <span class="tt">arrange</span> (top-down) on the mounted root.</li>
+<li><span class="tt">ctx.renderFrame()</span> runs <span class="tt">beginFrame</span>, <span class="tt">draw</span> (clips, layers, portals), and <span class="tt">endFrame</span>.</li>
 </ul>
 </li>
 <li><b>Imperative or declarative — same tree:</b> build nodes with the fluent C++ API or with ZMarkup (<span class="tt">ZMarkup::build</span>, <span class="tt">ZMarkup::instantiate</span>), and style both with <span class="tt">.zstyle</span> stylesheets.</li>
@@ -178,11 +178,11 @@ Quick Start (Hello World)</h1>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose())</div>
 <div class="line">    {</div>
-<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">runFrame</a>(*root, GetFrameTime()); <span class="comment">// logic</span></div>
+<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">runFrame</a>(GetFrameTime()); <span class="comment">// logic</span></div>
 <div class="line"> </div>
 <div class="line">        BeginDrawing();</div>
 <div class="line">        ClearBackground(::BLACK);</div>
-<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">renderFrame</a>(*root);<span class="comment">// draw</span></div>
+<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">renderFrame</a>();<span class="comment">// draw</span></div>
 <div class="line">        EndDrawing();</div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -201,11 +201,11 @@ Quick Start (Hello World)</h1>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1Spacing_html"><div class="ttname"><a href="structZenitUI_1_1Spacing.html">ZenitUI::Spacing</a></div><div class="ttdoc">Four-sided Value tuple used for padding, margin and border-width.</div><div class="ttdef"><b>Definition</b> Style.hpp:69</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:726</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context and set it as the primary root.</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:760</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a3272b6b8d1ecb3ca8953b474567ccc73"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame()</div><div class="ttdoc">Render the mounted primary root (beginFrame, draw, endFrame).</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a44015b5a106a074212fedb6d5394a764"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on the mounted primary root.</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:745</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8db3965f90fa983ed6d7f23fb343343"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(Layout &amp;root, float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on root using this context.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_ab18c777821167f1d49bf2788e22dd76f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame(Layout &amp;root)</div><div class="ttdoc">Render root (beginFrame, draw, endFrame) using this context.</div></div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="sec_modules"></a>
 Browse by Topic</h1>
 <table class="markdownTable">

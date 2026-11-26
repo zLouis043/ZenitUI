@@ -25,8 +25,9 @@ var searchData=
   ['modifiers_22',['modifiers',['../classZenitUI_1_1IPlatform.html#a1ac863a3b940b2f9f5e1eacf22496711',1,'ZenitUI::IPlatform::modifiers()'],['../classZenitUI_1_1Test_1_1MockPlatform.html#a1069dbe52aaefb93bc30fa9f383f852d',1,'ZenitUI::Test::MockPlatform::modifiers()'],['../classZenitUI_1_1RaylibPlatform.html#a0bbb8a9fa4aedc03da846683f8e3f2c2',1,'ZenitUI::RaylibPlatform::modifiers()'],['../classZenitUI_1_1SDL3Platform.html#af77fd4454f19d4f1505c6cbf0c94f770',1,'ZenitUI::SDL3Platform::modifiers()']]],
   ['modifierstate_23',['ModifierState',['../structZenitUI_1_1ModifierState.html',1,'ZenitUI']]],
   ['mount_24',['mount',['../structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e',1,'ZenitUI::UIContext']]],
-  ['mousebutton_25',['MouseButton',['../group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75',1,'ZenitUI']]],
-  ['movechildbefore_26',['moveChildBefore',['../classZenitUI_1_1Layout.html#a07dd7bec58ecfc2d4789468329831673',1,'ZenitUI::Layout']]],
-  ['msl_27',['MSL',['../group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666',1,'ZenitUI']]],
-  ['mulwith_28',['mulWith',['../structZenitUI_1_1Value.html#a5837ad30a7c229c660bdf50720410f26',1,'ZenitUI::Value']]]
+  ['mountedroot_25',['mountedRoot',['../structZenitUI_1_1UIContext.html#af5e0b45a1aca846c6f53189b0594b871',1,'ZenitUI::UIContext']]],
+  ['mousebutton_26',['MouseButton',['../group__grp__core.html#ga83c77986199d7a5f4201d6a3d1482b75',1,'ZenitUI']]],
+  ['movechildbefore_27',['moveChildBefore',['../classZenitUI_1_1Layout.html#a07dd7bec58ecfc2d4789468329831673',1,'ZenitUI::Layout']]],
+  ['msl_28',['MSL',['../group__grp__core.html#gga544be25d4522a6a93f8e7a6300def03ea1d2d3ecb9e838586939bb4e26a603666',1,'ZenitUI']]],
+  ['mulwith_29',['mulWith',['../structZenitUI_1_1Value.html#a5837ad30a7c229c660bdf50720410f26',1,'ZenitUI::Value']]]
 ];
