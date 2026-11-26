@@ -20,7 +20,7 @@ var searchData=
   ['consumeclick_17',['consumeClick',['../structZenitUI_1_1UIContext.html#a214e0406e09b6432835da164d5032635',1,'ZenitUI::UIContext']]],
   ['contains_18',['contains',['../structZenitUI_1_1Rect.html#ab500e50eacbf6e5f205522fb13eef1d3',1,'ZenitUI::Rect']]],
   ['contenttarget_19',['contentTarget',['../classZenitUI_1_1UI_1_1Modal.html#ad8a27ca52b3c5485e6220d0edb3c8c23',1,'ZenitUI::UI::Modal::contentTarget()'],['../classZenitUI_1_1Layout.html#a8678893b8bbf38b782a23db0294b2de3',1,'ZenitUI::Layout::contentTarget()']]],
-  ['context_20',['context',['../classZenitUI_1_1Layout.html#acc78abc5cf6bdbc40f2719a91bde4e14',1,'ZenitUI::Layout']]],
+  ['context_20',['context',['../classZenitUI_1_1Layout.html#a78d0e5cc79562836c90d9e0b2d5d1cc9',1,'ZenitUI::Layout']]],
   ['contextmenu_21',['ContextMenu',['../group__grp__widgets.html#ga052bbb115558b16a7ab5b2174d83f41d',1,'ZenitUI::UI']]],
   ['contextptr_22',['contextPtr',['../classZenitUI_1_1Layout.html#a2286b575ab1db585426d0a661ef9c1fa',1,'ZenitUI::Layout']]],
   ['create_23',['create',['../classZenitUI_1_1UI_1_1VirtualView.html#a00141b4bd568ade745ad342adcfcaf9d',1,'ZenitUI::UI::VirtualView::create(ItemFactory factory, int count)'],['../classZenitUI_1_1UI_1_1VirtualView.html#aa797f5142b05b9d0dd909e8d71e1f863',1,'ZenitUI::UI::VirtualView::create(std::function&lt; std::shared_ptr&lt; Layout &gt;()&gt; factory, int count)'],['../classZenitUI_1_1TLayout.html#ab3bf0250bf5a974c4ba752ad95bc7ba0',1,'ZenitUI::TLayout::create()'],['../classZenitUI_1_1ZMarkup_1_1Registry.html#a0ff5034e849978c2e91ce39a7e89451d',1,'ZenitUI::ZMarkup::Registry::create(const Element &amp;el, BuildContext &amp;ctx) const']]],

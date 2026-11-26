@@ -617,77 +617,77 @@ $(function(){initNavTree('Debug_8hpp_source.html','',''); });
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        os &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>    }</div>
 <div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span></div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTheme(std::ostream &amp;os = std::cerr)</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    {</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>        dumpTheme(<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().theme, os);</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    }</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span></div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpParts(<span class="keyword">const</span> Layout &amp;node, std::ostream &amp;os = std::cerr)</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    {</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *candidates[] = {</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>            <span class="stringliteral">&quot;track&quot;</span>, <span class="stringliteral">&quot;fill&quot;</span>, <span class="stringliteral">&quot;knob&quot;</span>, <span class="stringliteral">&quot;box&quot;</span>, <span class="stringliteral">&quot;mark&quot;</span>, <span class="stringliteral">&quot;cursor&quot;</span>};</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>        os &lt;&lt; <span class="stringliteral">&quot;=== Parts of &quot;</span> &lt;&lt; node.getStyleTag() &lt;&lt; <span class="stringliteral">&quot; ===\n&quot;</span>;</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;theme = node.theme();</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> *name : candidates)</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>        {</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            <span class="keywordtype">int</span> matchCount = 0;</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;r : theme.rules)</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>            {</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                <span class="keywordflow">if</span> (r.part != name)</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                <span class="keywordflow">if</span> (<a class="code hl_function" href="group__grp__core.html#ga726d61167fb87085933d4f51ecb6007c">ruleMatches</a>(r, &amp;node, node.viewportSize()))</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                    matchCount++;</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>            }</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>            <span class="keywordflow">if</span> (matchCount &gt; 0)</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>            {</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>                os &lt;&lt; <span class="stringliteral">&quot;  ::&quot;</span> &lt;&lt; name &lt;&lt; <span class="stringliteral">&quot;  (&quot;</span> &lt;&lt; matchCount &lt;&lt; <span class="stringliteral">&quot; matching rule(s))\n&quot;</span>;</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>            }</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>        }</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    }</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span></div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>    <span class="keyword">inline</span> std::string renderStatsToString(<span class="keyword">const</span> RenderStats &amp;s = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderStats)</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    {</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>        std::ostringstream os;</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>        os &lt;&lt; <span class="stringliteral">&quot;targets[created=&quot;</span> &lt;&lt; s.targetsCreated</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>           &lt;&lt; <span class="stringliteral">&quot; destroyed=&quot;</span> &lt;&lt; s.targetsDestroyed</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>           &lt;&lt; <span class="stringliteral">&quot; live=&quot;</span> &lt;&lt; s.liveTargets</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>           &lt;&lt; <span class="stringliteral">&quot;] pushTarget=&quot;</span> &lt;&lt; s.pushTargetCalls</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>           &lt;&lt; <span class="stringliteral">&quot; passes=&quot;</span> &lt;&lt; s.filterPasses;</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>        <span class="keywordflow">return</span> os.str();</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>    }</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span></div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(std::ostream &amp;os = std::cerr)</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>    {</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        os &lt;&lt; <span class="stringliteral">&quot;[RenderStats] &quot;</span> &lt;&lt; renderStatsToString() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>    }</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>} <span class="comment">// namespace ZenitUI::Debug</span></div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span> </div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span><span class="preprocessor">#else </span><span class="comment">// !ZENITUI_DEBUG</span></div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpParts(<span class="keyword">const</span> Layout &amp;node, std::ostream &amp;os = std::cerr)</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    {</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *candidates[] = {</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>            <span class="stringliteral">&quot;track&quot;</span>, <span class="stringliteral">&quot;fill&quot;</span>, <span class="stringliteral">&quot;knob&quot;</span>, <span class="stringliteral">&quot;box&quot;</span>, <span class="stringliteral">&quot;mark&quot;</span>, <span class="stringliteral">&quot;cursor&quot;</span>};</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>        os &lt;&lt; <span class="stringliteral">&quot;=== Parts of &quot;</span> &lt;&lt; node.getStyleTag() &lt;&lt; <span class="stringliteral">&quot; ===\n&quot;</span>;</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;theme = node.theme();</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> *name : candidates)</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>        {</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>            <span class="keywordtype">int</span> matchCount = 0;</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;r : theme.rules)</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>            {</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                <span class="keywordflow">if</span> (r.part != name)</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                    <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>                <span class="keywordflow">if</span> (<a class="code hl_function" href="group__grp__core.html#ga726d61167fb87085933d4f51ecb6007c">ruleMatches</a>(r, &amp;node, node.viewportSize()))</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                    matchCount++;</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>            }</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>            <span class="keywordflow">if</span> (matchCount &gt; 0)</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>            {</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                os &lt;&lt; <span class="stringliteral">&quot;  ::&quot;</span> &lt;&lt; name &lt;&lt; <span class="stringliteral">&quot;  (&quot;</span> &lt;&lt; matchCount &lt;&lt; <span class="stringliteral">&quot; matching rule(s))\n&quot;</span>;</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>            }</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>        }</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    }</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span></div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    <span class="keyword">inline</span> std::string renderStatsToString(<span class="keyword">const</span> RenderStats &amp;s)</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    {</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>        std::ostringstream os;</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>        os &lt;&lt; <span class="stringliteral">&quot;targets[created=&quot;</span> &lt;&lt; s.targetsCreated</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>           &lt;&lt; <span class="stringliteral">&quot; destroyed=&quot;</span> &lt;&lt; s.targetsDestroyed</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>           &lt;&lt; <span class="stringliteral">&quot; live=&quot;</span> &lt;&lt; s.liveTargets</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>           &lt;&lt; <span class="stringliteral">&quot;] pushTarget=&quot;</span> &lt;&lt; s.pushTargetCalls</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>           &lt;&lt; <span class="stringliteral">&quot; passes=&quot;</span> &lt;&lt; s.filterPasses;</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>        <span class="keywordflow">return</span> os.str();</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>    }</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span></div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(<span class="keyword">const</span> RenderStats &amp;s, std::ostream &amp;os = std::cerr)</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>    {</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>        os &lt;&lt; <span class="stringliteral">&quot;[RenderStats] &quot;</span> &lt;&lt; renderStatsToString(s) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>    }</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span></div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(<span class="keyword">const</span> UIContext &amp;ctx,  std::ostream &amp;os = std::cerr)</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>    {</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        dumpRenderStats(ctx.renderStats, os);</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>    }</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>} <span class="comment">// namespace ZenitUI::Debug</span></div>
 <div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span> </div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span><span class="preprocessor">#else </span><span class="comment">// !ZENITUI_DEBUG</span></div>
 <div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span> </div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span><span class="keyword">namespace </span>ZenitUI::Debug</div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>{</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>    <span class="comment">// No-op fallbacks. Kept as inline functions so the symbols always exist.</span></div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpStyle(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr) {}</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTree(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr, <span class="keywordtype">int</span> = -1, <span class="keywordtype">int</span> = 0) {}</div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTheme(<span class="keyword">const</span> Theme &amp;, std::ostream &amp; = std::cerr) {}</div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTheme(std::ostream &amp; = std::cerr) {}</div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpParts(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr) {}</div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>    <span class="keyword">inline</span> std::string renderStatsToString(<span class="keyword">const</span> RenderStats &amp; = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderStats) { <span class="keywordflow">return</span> {}; }</div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(std::ostream &amp; = std::cerr) {}</div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span> </div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>} <span class="comment">// namespace ZenitUI::Debug</span></div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span> </div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span><span class="keyword">namespace </span>ZenitUI::Debug</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>{</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>    <span class="comment">// No-op fallbacks. Kept as inline functions so the symbols always exist.</span></div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpStyle(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr) {}</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTree(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr, <span class="keywordtype">int</span> = -1, <span class="keywordtype">int</span> = 0) {}</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpTheme(std::ostream &amp; = std::cerr) {}</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpParts(<span class="keyword">const</span> Layout &amp;, std::ostream &amp; = std::cerr) {}</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>    <span class="keyword">inline</span> std::string renderStatsToString(<span class="keyword">const</span> RenderStats &amp;) { <span class="keywordflow">return</span> {}; }</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(<span class="keyword">const</span> RenderStats &amp;, std::ostream &amp; = std::cerr) {}</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> dumpRenderStats(<span class="keyword">const</span> UIContext &amp;, std::ostream &amp; = std::cerr) {}</div>
 <div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span> </div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span><span class="preprocessor">#endif </span><span class="comment">// ZENITUI_DEBUG</span></div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>} <span class="comment">// namespace ZenitUI::Debug</span></div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span> </div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span><span class="preprocessor">#endif </span><span class="comment">// ZENITUI_DEBUG</span></div>
 <div class="ttc" id="aCoreTypes_8hpp_html"><div class="ttname"><a href="CoreTypes_8hpp.html">CoreTypes.hpp</a></div><div class="ttdoc">Small value types shared by the layout, rendering and input layers.</div></div>
 <div class="ttc" id="aLayout_8hpp_html"><div class="ttname"><a href="Layout_8hpp.html">Layout.hpp</a></div><div class="ttdoc">The node class: tree structure, layout pass, style resolution, input dispatch, render orchestration,...</div></div>
 <div class="ttc" id="aTheme_8hpp_html"><div class="ttname"><a href="Theme_8hpp.html">Theme.hpp</a></div><div class="ttdoc">Global stylesheet storage and rule matching.</div></div>
 <div class="ttc" id="aUnit_8hpp_html"><div class="ttname"><a href="Unit_8hpp.html">Unit.hpp</a></div><div class="ttdoc">Length units and the Value expression AST used by the style system.</div></div>
 <div class="ttc" id="agroup__grp__anim_html_gae27ff9cac1e9b8ddc267881d389bcdf8"><div class="ttname"><a href="group__grp__anim.html#gae27ff9cac1e9b8ddc267881d389bcdf8">ZenitUI::TransitionFunction</a></div><div class="ttdeci">TransitionFunction</div><div class="ttdoc">Timing function applied between two keyframe values.</div><div class="ttdef"><b>Definition</b> Easing.hpp:27</div></div>
 <div class="ttc" id="agroup__grp__core_html_ga0f6a074d868a17d846a8e99282b084a5"><div class="ttname"><a href="group__grp__core.html#ga0f6a074d868a17d846a8e99282b084a5">ZenitUI::Align</a></div><div class="ttdeci">Align</div><div class="ttdoc">Cross-axis alignment for flex items and content.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:287</div></div>
-<div class="ttc" id="agroup__grp__core_html_ga726d61167fb87085933d4f51ecb6007c"><div class="ttname"><a href="group__grp__core.html#ga726d61167fb87085933d4f51ecb6007c">ZenitUI::ruleMatches</a></div><div class="ttdeci">bool ruleMatches(const ThemeRule &amp;r, const Layout *node, Vec2 viewport)</div><div class="ttdoc">true if node matches the full rule selector chain.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1774</div></div>
+<div class="ttc" id="agroup__grp__core_html_ga726d61167fb87085933d4f51ecb6007c"><div class="ttname"><a href="group__grp__core.html#ga726d61167fb87085933d4f51ecb6007c">ZenitUI::ruleMatches</a></div><div class="ttdeci">bool ruleMatches(const ThemeRule &amp;r, const Layout *node, Vec2 viewport)</div><div class="ttdoc">true if node matches the full rule selector chain.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1776</div></div>
 <div class="ttc" id="agroup__grp__core_html_ga89eb7866ba43696b07adaac980a2a5b0"><div class="ttname"><a href="group__grp__core.html#ga89eb7866ba43696b07adaac980a2a5b0">ZenitUI::Justify</a></div><div class="ttdeci">Justify</div><div class="ttdoc">Main-axis distribution for flex containers.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:297</div></div>
 <div class="ttc" id="agroup__grp__core_html_gab8695df1b5ab8660d25da4046f1b1262"><div class="ttname"><a href="group__grp__core.html#gab8695df1b5ab8660d25da4046f1b1262">ZenitUI::Unit</a></div><div class="ttdeci">Unit</div><div class="ttdoc">Unit of a single Value::Term.</div><div class="ttdef"><b>Definition</b> Unit.hpp:25</div></div>
 <div class="ttc" id="agroup__grp__core_html_gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb"><div class="ttname"><a href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a06b9281e396db002010bde1de57262eb">ZenitUI::Align::Auto</a></div><div class="ttdeci">@ Auto</div><div class="ttdoc">Defer to the parent&#39;s alignItems.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:288</div></div>
@@ -703,7 +703,6 @@ $(function(){initNavTree('Debug_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__grp__zstyle_html_gaa130abd7bfd76fae4452d5c8acd586de"><div class="ttname"><a href="group__grp__zstyle.html#gaa130abd7bfd76fae4452d5c8acd586de">ZenitUI::WhiteSpace</a></div><div class="ttdeci">WhiteSpace</div><div class="ttdoc">CSS white-space values relevant to text layout.</div><div class="ttdef"><b>Definition</b> Style.hpp:171</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gad1c0d7e8bd09eeea85e1f3acd4e1e678"><div class="ttname"><a href="group__grp__zstyle.html#gad1c0d7e8bd09eeea85e1f3acd4e1e678">ZenitUI::Position</a></div><div class="ttdeci">Position</div><div class="ttdoc">CSS-style position modes supported by the layout system.</div><div class="ttdef"><b>Definition</b> Style.hpp:135</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gada49a5d270525bd8ccc73cd680f9dc5d"><div class="ttname"><a href="group__grp__zstyle.html#gada49a5d270525bd8ccc73cd680f9dc5d">ZenitUI::Overflow</a></div><div class="ttdeci">Overflow</div><div class="ttdoc">CSS overflow modes for one axis.</div><div class="ttdef"><b>Definition</b> Style.hpp:162</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:947</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

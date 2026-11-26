@@ -6,7 +6,6 @@ var structZenitUI_1_1UIContext =
     [ "detachAllRoots", "structZenitUI_1_1UIContext.html#a89695a2fabc5b4cccdb883a604405800", null ],
     [ "detachBackend", "structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81", null ],
     [ "endFrame", "structZenitUI_1_1UIContext.html#a6c789023ad9f0c5e9960e3d62050beec", null ],
-    [ "get", "structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0", null ],
     [ "getCullingClip", "structZenitUI_1_1UIContext.html#a510ee97a57a08b49054a057e7124b523", null ],
     [ "hasFocus", "structZenitUI_1_1UIContext.html#ad6a585461c24f02be608e55513feeec8", null ],
     [ "invalidateStyles", "structZenitUI_1_1UIContext.html#a5de7e7bb4e67c89f789afec6350bc8b4", null ],

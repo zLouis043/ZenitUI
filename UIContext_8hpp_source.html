@@ -832,38 +832,30 @@ $(function(){initNavTree('UIContext_8hpp_source.html','',''); });
 <div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>            <span class="keywordflow">return</span> sp &amp;&amp; sp.get() == n;</div>
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>        }</div>
 </div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span></div>
-<div class="foldopen" id="foldopen00947" data-start="{" data-end="}">
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno"><a class="line" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">  947</a></span>        <span class="keyword">static</span> UIContext &amp;<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">get</a>()</div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>        {</div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>            <span class="keyword">static</span> UIContext instance;</div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>            <span class="keywordflow">return</span> instance;</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>        }</div>
-</div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a>;</div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span> </div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>        <span class="keywordtype">void</span> registerRoot(<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *root)</div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>        {</div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>            <span class="keywordflow">if</span> (!root)</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>            <span class="keywordflow">if</span> (std::find(attachedRoots_.begin(), attachedRoots_.end(), root) == attachedRoots_.end())</div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                attachedRoots_.push_back(root);</div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a>;</div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span> </div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>        <span class="keywordtype">void</span> registerRoot(<a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a> *root)</div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        {</div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>            <span class="keywordflow">if</span> (!root)</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>            <span class="keywordflow">if</span> (std::find(attachedRoots_.begin(), attachedRoots_.end(), root) == attachedRoots_.end())</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>                attachedRoots_.push_back(root);</div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>        }</div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span> </div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>        <span class="keywordtype">void</span> unregisterRoot(Layout *root)</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>        {</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>            <span class="keyword">auto</span> it = std::find(attachedRoots_.begin(), attachedRoots_.end(), root);</div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>            <span class="keywordflow">if</span> (it != attachedRoots_.end())</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                attachedRoots_.erase(it);</div>
 <div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>        }</div>
 <div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span> </div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>        <span class="keywordtype">void</span> unregisterRoot(Layout *root)</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>        {</div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>            <span class="keyword">auto</span> it = std::find(attachedRoots_.begin(), attachedRoots_.end(), root);</div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>            <span class="keywordflow">if</span> (it != attachedRoots_.end())</div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>                attachedRoots_.erase(it);</div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>        }</div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span> </div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>        std::vector&lt;Layout *&gt; attachedRoots_;</div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>        UIContext **backendOwnerSlot_{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>    };</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>        std::vector&lt;Layout *&gt; attachedRoots_;</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>        UIContext **backendOwnerSlot_{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    };</div>
 </div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span></div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>}</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span></div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>}</div>
 <div class="ttc" id="aCommon_8hpp_html"><div class="ttname"><a href="Common_8hpp.html">Common.hpp</a></div><div class="ttdoc">Centralized standard library includes used throughout ZenitUI.</div></div>
 <div class="ttc" id="aCoreTypes_8hpp_html"><div class="ttname"><a href="CoreTypes_8hpp.html">CoreTypes.hpp</a></div><div class="ttdoc">Small value types shared by the layout, rendering and input layers.</div></div>
 <div class="ttc" id="aFilterRegistry_8hpp_html"><div class="ttname"><a href="FilterRegistry_8hpp.html">FilterRegistry.hpp</a></div><div class="ttdoc">Post-processing filter registry and the filter execution context.</div></div>
@@ -995,7 +987,6 @@ $(function(){initNavTree('UIContext_8hpp_source.html','',''); });
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a89695a2fabc5b4cccdb883a604405800"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a89695a2fabc5b4cccdb883a604405800">ZenitUI::UIContext::detachAllRoots</a></div><div class="ttdeci">void detachAllRoots()</div><div class="ttdoc">Detach every root currently attached to this context.</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a90dcd34dfd0f306b6db8080481be96f2"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a90dcd34dfd0f306b6db8080481be96f2">ZenitUI::UIContext::pushLayerTarget</a></div><div class="ttdeci">void pushLayerTarget(TargetHandle t)</div><div class="ttdoc">Push an off-screen target while preserving the root screen-space culling clip.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:839</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a9169b6dd2baa66f81ac2c41ede5bc0c4"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a9169b6dd2baa66f81ac2c41ede5bc0c4">ZenitUI::UIContext::viewport</a></div><div class="ttdeci">Vec2 viewport</div><div class="ttdoc">Current logical viewport dimensions.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:783</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:947</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8db3965f90fa983ed6d7f23fb343343"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(Layout &amp;root, float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on root using this context.</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8fe195f9f296c28bf9e728b1a8a0e4d"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d">ZenitUI::UIContext::theme</a></div><div class="ttdeci">Theme theme</div><div class="ttdoc">Per-context stylesheet (rules, keyframes, and :root style).</div><div class="ttdef"><b>Definition</b> UIContext.hpp:795</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_ab18c777821167f1d49bf2788e22dd76f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame(Layout &amp;root)</div><div class="ttdoc">Render root (beginFrame, draw, endFrame) using this context.</div></div>

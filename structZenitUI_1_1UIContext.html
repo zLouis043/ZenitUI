@@ -174,12 +174,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>releaseFocus</b> ()</
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasFocus</b> (const Layout *n) const</td></tr>
 <tr class="memdesc:ad6a585461c24f02be608e55513feeec8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><span class="tt">true</span> if <code class="param">n</code> is the current focused node. <br /></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa513e462386818e7c4c1e1efc6cc87c0" id="r_aa513e462386818e7c4c1e1efc6cc87c0"><td class="memItemLeft" align="right" valign="top"><a id="aa513e462386818e7c4c1e1efc6cc87c0" name="aa513e462386818e7c4c1e1efc6cc87c0"></a>
-static UIContext &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()</td></tr>
-<tr class="memdesc:aa513e462386818e7c4c1e1efc6cc87c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the global singleton context. <br /></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aa5479b86d4ada2757d23a54b2ad88487" id="r_aa5479b86d4ada2757d23a54b2ad88487"><td class="memItemLeft" align="right" valign="top"><a id="aa5479b86d4ada2757d23a54b2ad88487" name="aa5479b86d4ada2757d23a54b2ad88487"></a>
@@ -249,6 +243,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Layout</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-application singleton: backends, frame state, and routing. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="00_demo_2main_8cpp-example.html#_a0">00_demo/main.cpp</a>, <a class="el" href="01_hello_world_2main_8cpp-example.html#_a3">01_hello_world/main.cpp</a>, <a class="el" href="02_layouts_2main_8cpp-example.html#_a10">02_layouts/main.cpp</a>, <a class="el" href="03_widgets_2main_8cpp-example.html#_a8">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#_a9">04_animations/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#_a10">04b_imperative_animations/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#_a5">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#_a3">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#_a6">07_effects/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#_a3">07b_effects_stress/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#_a6">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#_a5">09_custom_widget/main.cpp</a>, <a class="el" href="10_canvas_2main_8cpp-example.html#_a8">10_canvas/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#_a5">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#_a3">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#_a3">13_prefabs/main.cpp</a>.</dd>
+</dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a74fa4dface75bab1e6a3e9c274939c7f" name="a74fa4dface75bab1e6a3e9c274939c7f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a74fa4dface75bab1e6a3e9c274939c7f">&#9670;&#160;</a></span>attachBackend()</h2>
@@ -293,6 +289,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Layout</b></td></tr>
     <tr><td class="paramname">ownerSlot</td><td>Optional pointer to an <span class="tt">IBackend::boundCtx_</span> slot kept in sync on detach. </td></tr>
   </table>
   </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="01_hello_world_2main_8cpp-example.html#a4">01_hello_world/main.cpp</a>, <a class="el" href="02_layouts_2main_8cpp-example.html#a11">02_layouts/main.cpp</a>, <a class="el" href="03_widgets_2main_8cpp-example.html#a9">03_widgets/main.cpp</a>, <a class="el" href="04_animations_2main_8cpp-example.html#a10">04_animations/main.cpp</a>, <a class="el" href="04b_imperative_animations_2main_8cpp-example.html#a11">04b_imperative_animations/main.cpp</a>, <a class="el" href="05_zstyle_2main_8cpp-example.html#a6">05_zstyle/main.cpp</a>, <a class="el" href="06_zmarkup_2main_8cpp-example.html#a4">06_zmarkup/main.cpp</a>, <a class="el" href="07_effects_2main_8cpp-example.html#a7">07_effects/main.cpp</a>, <a class="el" href="07b_effects_stress_2main_8cpp-example.html#a4">07b_effects_stress/main.cpp</a>, <a class="el" href="08_portals_2main_8cpp-example.html#a7">08_portals/main.cpp</a>, <a class="el" href="09_custom_widget_2main_8cpp-example.html#a6">09_custom_widget/main.cpp</a>, <a class="el" href="10_canvas_2main_8cpp-example.html#a9">10_canvas/main.cpp</a>, <a class="el" href="11_ref_list_2main_8cpp-example.html#a6">11_ref_list/main.cpp</a>, <a class="el" href="12_bindable_2main_8cpp-example.html#a4">12_bindable/main.cpp</a>, and <a class="el" href="13_prefabs_2main_8cpp-example.html#a4">13_prefabs/main.cpp</a>.</dd>
 </dl>
 
 </div>

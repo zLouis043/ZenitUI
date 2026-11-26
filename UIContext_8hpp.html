@@ -149,7 +149,7 @@ Enumerations</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Per-application state: renderer, platform, pointer, focus, portals. </p>
-<p><span class="tt">UIContext</span> is a singleton (<span class="tt">UIContext::get()</span>) that aggregates every piece of mutable per-frame state the framework needs but does not want to thread through every call. It is the boundary between the platform layer (window, input, clock) and the framework (layout, style, render).</p>
+<p><span class="tt">UIContext</span> aggregates every piece of mutable per-frame state the framework needs but does not want to thread through every call. It is the boundary between the platform layer (window, input, clock) and the framework (layout, style, render).</p>
 <p>Two interface families live here:</p>
 <ul>
 <li><span class="tt">IRenderer</span> — abstract drawing backend. Concrete implementations target a specific GPU API or a software rasterizer; the framework never talks to a specific backend directly.</li>

@@ -138,12 +138,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unbind</b> ()</td></t
 <tr class="memitem:ae90db64b772718737e8e11de9d5f8db1 inherit pub_methods_classZenitUI_1_1IBackend" id="r_ae90db64b772718737e8e11de9d5f8db1"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="structZenitUI_1_1UIContext.html">UIContext</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>boundContext</b> () const</td></tr>
 <tr class="memdesc:ae90db64b772718737e8e11de9d5f8db1 inherit pub_methods_classZenitUI_1_1IBackend"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the currently bound <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">UIContext</a></span>, or <span class="tt">nullptr</span> if unbound. <br /></td></tr>
-<tr class="memitem:a8656923cc971d8a9666ef3ee8b0dbb4b inherit pub_methods_classZenitUI_1_1IBackend" id="r_a8656923cc971d8a9666ef3ee8b0dbb4b"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>bindToContext</b> ()</td></tr>
-<tr class="memdesc:a8656923cc971d8a9666ef3ee8b0dbb4b inherit pub_methods_classZenitUI_1_1IBackend"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporary Step 4 wrapper forwarding to <span class="tt">bindTo(UIContext::get())</span>. <br /></td></tr>
-<tr class="memitem:adf0776892f625a85de6874daa2ee989a inherit pub_methods_classZenitUI_1_1IBackend" id="r_adf0776892f625a85de6874daa2ee989a"><td class="memItemLeft" align="right" valign="top">
-void&#160;</td><td class="memItemRight" valign="bottom"><b>unbindFromContext</b> ()</td></tr>
-<tr class="memdesc:adf0776892f625a85de6874daa2ee989a inherit pub_methods_classZenitUI_1_1IBackend"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporary Step 4 wrapper forwarding to <span class="tt"><a class="el" href="classZenitUI_1_1IBackend.html#aba9b9b52dbdcea7008e1a3b1e3b34c2c" title="Flush pooled targets and detach this backend from its bound context.">unbind()</a></span>. <br /></td></tr>
+<tr class="memitem:a8f6bcaf6daa013b212a4b07870cd4e52 inherit pub_methods_classZenitUI_1_1IBackend" id="r_a8f6bcaf6daa013b212a4b07870cd4e52"><td class="memItemLeft" align="right" valign="top">
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>initAndBind</b> (const <a class="el" href="structZenitUI_1_1WindowConfig.html">WindowConfig</a> &amp;config, <a class="el" href="structZenitUI_1_1UIContext.html">UIContext</a> &amp;ctx)</td></tr>
+<tr class="memdesc:a8f6bcaf6daa013b212a4b07870cd4e52 inherit pub_methods_classZenitUI_1_1IBackend"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the backend and bind its adapters to <code class="param">ctx</code> in one step. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>

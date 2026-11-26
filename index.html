@@ -100,10 +100,10 @@ $(function(){initNavTree('index.html','',''); });
 Mental Model</h1>
 <ol type="1">
 <li><b>One node type:</b> every container and widget derives from <a class="el" href="classZenitUI_1_1Layout.html" title="The base node type: tree, style, layout, input, scroll, render.">ZenitUI::Layout</a> (typically via the CRTP helper <a class="el" href="classZenitUI_1_1TLayout.html" title="CRTP base for components that want fluent builders and a static create() factory.">ZenitUI::TLayout</a>).</li>
-<li><b>Global frame state in UIContext:</b> attach your <span class="tt">IRenderer</span>, <span class="tt">IPlatform</span>, and <span class="tt">IAssetProvider</span> once to <a class="el" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0" title="Return the global singleton context.">ZenitUI::UIContext::get()</a>.</li>
+<li><b>Per-instance state in UIContext:</b> create a <a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a>, attach your <span class="tt">IRenderer</span>, <span class="tt">IPlatform</span>, and <span class="tt">IAssetProvider</span> via <span class="tt">ctx.attachBackend(...)</span> (or <span class="tt">IBackend::bindTo(ctx)</span>), and mount your root tree with <span class="tt">ctx.mount(root)</span>.</li>
 <li><b>Four-pass frame cycle:</b><ul>
-<li><span class="tt">root-&gt;runFrame(dt)</span> runs <span class="tt">update</span> (input, style transitions, animations), <span class="tt">measure</span> (bottom-up), and <span class="tt">arrange</span> (top-down).</li>
-<li><span class="tt">root-&gt;renderFrame()</span> runs <span class="tt">beginFrame</span>, <span class="tt">draw</span> (clips, layers, portals), and <span class="tt">endFrame</span>.</li>
+<li><span class="tt">ctx.runFrame(*root, dt)</span> runs <span class="tt">update</span> (input, style transitions, animations), <span class="tt">measure</span> (bottom-up), and <span class="tt">arrange</span> (top-down).</li>
+<li><span class="tt">ctx.renderFrame(*root)</span> runs <span class="tt">beginFrame</span>, <span class="tt">draw</span> (clips, layers, portals), and <span class="tt">endFrame</span>.</li>
 </ul>
 </li>
 <li><b>Imperative or declarative — same tree:</b> build nodes with the fluent C++ API or with ZMarkup (<span class="tt">ZMarkup::build</span>, <span class="tt">ZMarkup::instantiate</span>), and style both with <span class="tt">.zstyle</span> stylesheets.</li>
@@ -143,13 +143,12 @@ Quick Start (Hello World)</h1>
 <div class="line">    InitWindow(640, 360, <span class="stringliteral">&quot;ZenitUI — 01 Hello World&quot;</span>);</div>
 <div class="line">    SetTargetFPS(60);</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibRenderer.html">RaylibRenderer</a>      renderer;</div>
-<div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a>      platform;</div>
+<div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibRenderer.html">RaylibRenderer</a> renderer;</div>
+<div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibPlatform.html">RaylibPlatform</a> platform;</div>
 <div class="line">    <a class="code hl_class" href="classZenitUI_1_1RaylibAssetProvider.html">RaylibAssetProvider</a> assets(renderer);</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().renderer = &amp;renderer;</div>
-<div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().platform = &amp;platform;</div>
-<div class="line">    <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">UIContext::get</a>().assets   = &amp;assets;</div>
+<div class="line">    <a class="code hl_struct" href="structZenitUI_1_1UIContext.html">UIContext</a> ctx;</div>
+<div class="line">    ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">attachBackend</a>(&amp;renderer, &amp;platform, &amp;assets);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="comment">//  Root layout: fills the viewport, centers its children</span></div>
@@ -157,35 +156,37 @@ Quick Start (Hello World)</h1>
 <div class="line">    <span class="keyword">auto</span> root = std::make_shared&lt;Layout&gt;(<a class="code hl_enumvalue" href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">LayoutType::Stack</a>);</div>
 <div class="line">    root-&gt;size(Percent(100), Percent(100));</div>
 <div class="line">    root-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{24, 24, 28, 255};</div>
-<div class="line">    root-&gt;getInlineBase().itemsH     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
-<div class="line">    root-&gt;getInlineBase().itemsV     = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line">    root-&gt;getInlineBase().itemsH = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
+<div class="line">    root-&gt;getInlineBase().itemsV = <a class="code hl_enumvalue" href="group__grp__core.html#gga0f6a074d868a17d846a8e99282b084a5a4f1f6016fc9f3f2353c0cc7c67b292bd">Align::Center</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="comment">//  The button</span></div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
-<div class="line">    <span class="keyword">auto</span> button = <a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Click me&quot;</span>, []{</div>
-<div class="line">        std::printf(<span class="stringliteral">&quot;clicked!\n&quot;</span>);</div>
-<div class="line">    });</div>
+<div class="line">    <span class="keyword">auto</span> button = <a class="code hl_function" href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">Btn</a>(<span class="stringliteral">&quot;Click me&quot;</span>, []</div>
+<div class="line">                      { std::printf(<span class="stringliteral">&quot;clicked!\n&quot;</span>); });</div>
 <div class="line"> </div>
 <div class="line">    button-&gt;getInlineBase().background = <a class="code hl_struct" href="structZenitUI_1_1Color.html">ZenitUI::Color</a>{60, 120, 220, 255};</div>
-<div class="line">    button-&gt;getInlineBase().radius     = Px(8);</div>
-<div class="line">    button-&gt;getInlineBase().padding    = <a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(VH(1.5f), VW(3.0f));</div>
+<div class="line">    button-&gt;getInlineBase().radius = Px(8);</div>
+<div class="line">    button-&gt;getInlineBase().padding = <a class="code hl_struct" href="structZenitUI_1_1Spacing.html">Spacing</a>(VH(1.5f), VW(3.0f));</div>
 <div class="line"> </div>
 <div class="line">    root-&gt;addChild(button);</div>
+<div class="line"> </div>
+<div class="line">    ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">mount</a>(root);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="comment">//  Main loop</span></div>
 <div class="line">    <span class="comment">// -------------------------------------------------------------------</span></div>
 <div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose())</div>
 <div class="line">    {</div>
-<div class="line">        root-&gt;runFrame(GetFrameTime());    <span class="comment">// logic</span></div>
+<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">runFrame</a>(*root, GetFrameTime()); <span class="comment">// logic</span></div>
 <div class="line"> </div>
 <div class="line">        BeginDrawing();</div>
 <div class="line">        ClearBackground(::BLACK);</div>
-<div class="line">        root-&gt;renderFrame();               <span class="comment">// draw</span></div>
+<div class="line">        ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">renderFrame</a>(*root);<span class="comment">// draw</span></div>
 <div class="line">        EndDrawing();</div>
 <div class="line">    }</div>
 <div class="line"> </div>
+<div class="line">    ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">detachBackend</a>();</div>
 <div class="line">    CloseWindow();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -199,7 +200,12 @@ Quick Start (Hello World)</h1>
 <div class="ttc" id="agroup__grp__widgets_html_gaec8576d8da5dee1119f06d87271e3ccd"><div class="ttname"><a href="group__grp__widgets.html#gaec8576d8da5dee1119f06d87271e3ccd">ZenitUI::UI::Btn</a></div><div class="ttdeci">std::shared_ptr&lt; Button &gt; Btn(std::string text, std::function&lt; void()&gt; cb=nullptr)</div><div class="ttdoc">Convenience factory: a Button with a Text label and a click handler.</div><div class="ttdef"><b>Definition</b> Button.hpp:112</div></div>
 <div class="ttc" id="astructZenitUI_1_1Color_html"><div class="ttname"><a href="structZenitUI_1_1Color.html">ZenitUI::Color</a></div><div class="ttdoc">8-bit-per-channel RGBA color, non-premultiplied.</div><div class="ttdef"><b>Definition</b> CoreTypes.hpp:77</div></div>
 <div class="ttc" id="astructZenitUI_1_1Spacing_html"><div class="ttname"><a href="structZenitUI_1_1Spacing.html">ZenitUI::Spacing</a></div><div class="ttdoc">Four-sided Value tuple used for padding, margin and border-width.</div><div class="ttdef"><b>Definition</b> Style.hpp:69</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:947</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:726</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:760</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:745</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8db3965f90fa983ed6d7f23fb343343"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(Layout &amp;root, float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on root using this context.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_ab18c777821167f1d49bf2788e22dd76f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame(Layout &amp;root)</div><div class="ttdoc">Render root (beginFrame, draw, endFrame) using this context.</div></div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="sec_modules"></a>
 Browse by Topic</h1>
 <table class="markdownTable">

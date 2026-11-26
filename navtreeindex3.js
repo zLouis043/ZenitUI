@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"classZenitUI_1_1ZMarkup_1_1Registry.html#a13bf232f0125020865e07a227aad5aeb":[1,2,9,0],
 "classZenitUI_1_1ZMarkup_1_1Registry.html#a3336c5d336c97ba427b8277e09a7c3cf":[1,2,9,7],
 "classZenitUI_1_1ZMarkup_1_1Registry.html#a4dda9c70f7cff1d6ad70976676fdac21":[1,2,9,3],
 "classZenitUI_1_1ZMarkup_1_1Registry.html#ac21b3fd27f876aa788e14c4b4fc7edb4":[1,2,9,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX3 =
 "page_available_backends.html":[0,5,4],
 "page_available_backends.html#sec_backend_mock":[0,5,4,0],
 "page_available_backends.html#sec_backend_raylib":[0,5,4,1],
-"page_available_backends.html#sec_backend_sdl3":[0,5,4,2]
+"page_available_backends.html#sec_backend_sdl3":[0,5,4,2],
+"page_custom_backends.html":[0,5]
 };

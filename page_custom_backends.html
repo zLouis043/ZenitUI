@@ -96,7 +96,7 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>ZenitUI is rendering- and windowing-agnostic.</p>
-<p>To integrate it into a custom engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan, DirectX, etc.), implement three lightweight interfaces and bind them to <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a></span>:</p>
+<p>To integrate it into a custom engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan, DirectX, etc.), implement three lightweight interfaces and attach them to a <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a></span>:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Interface  </th><th class="markdownTableHeadLeft">Responsibility  </th></tr>
@@ -111,33 +111,30 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_wiring"></a>
 1. Wiring a Backend into UIContext</h1>
-<p>Bind your three instances once after creating your window/graphics context, then drive the per-frame cycle inside your main loop:</p>
+<p>Attach your three instances to a <span class="tt">UIContext</span> after creating your window/graphics context, mount your root tree, and drive the per-frame cycle inside your main loop:</p>
 <div class="fragment"><div class="line">MyPlatform      platform;</div>
 <div class="line">MyRenderer      renderer;</div>
 <div class="line">MyAssetProvider assets(renderer);</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> &amp;ctx = <a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a>();</div>
-<div class="line">ctx.platform = &amp;platform;</div>
-<div class="line">ctx.renderer = &amp;renderer;</div>
-<div class="line">ctx.assets   = &amp;assets;</div>
+<div class="line"><a class="code hl_struct" href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a> ctx;</div>
+<div class="line">ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">attachBackend</a>(&amp;renderer, &amp;platform, &amp;assets);</div>
+<div class="line">ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">mount</a>(root);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Main loop</span></div>
 <div class="line"><span class="keywordflow">while</span> (running) {</div>
 <div class="line">    <span class="keywordtype">float</span> dt = computeDeltaTime();</div>
-<div class="line">    ctx.beginFrame(dt);</div>
-<div class="line"> </div>
-<div class="line">    root-&gt;updateTree(dt);</div>
-<div class="line">    <span class="keyword">auto</span> vp = platform.viewportSize();</div>
-<div class="line">    root-&gt;measure(vp.x, vp.y);</div>
-<div class="line">    root-&gt;arrange({0.0f, 0.0f, vp.x, vp.y});</div>
-<div class="line"> </div>
-<div class="line">    renderer.beginFrame();</div>
-<div class="line">    root-&gt;draw();</div>
-<div class="line">    renderer.endFrame();</div>
-<div class="line"> </div>
-<div class="line">    ctx.endFrame();</div>
+<div class="line">    ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">runFrame</a>(*root, dt);</div>
+<div class="line">    ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">renderFrame</a>(*root);</div>
 <div class="line">}</div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa513e462386818e7c4c1e1efc6cc87c0"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa513e462386818e7c4c1e1efc6cc87c0">ZenitUI::UIContext::get</a></div><div class="ttdeci">static UIContext &amp; get()</div><div class="ttdoc">Return the global singleton context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:947</div></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Flush pooled off-screen targets while the graphics context is still alive.</span></div>
+<div class="line">ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">detachBackend</a>();</div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:726</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:760</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:745</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8db3965f90fa983ed6d7f23fb343343"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8db3965f90fa983ed6d7f23fb343343">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(Layout &amp;root, float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on root using this context.</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_ab18c777821167f1d49bf2788e22dd76f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#ab18c777821167f1d49bf2788e22dd76f">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame(Layout &amp;root)</div><div class="ttdoc">Render root (beginFrame, draw, endFrame) using this context.</div></div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_minimum"></a>
 2. Minimum Viable Backend vs Optional Features</h1>
