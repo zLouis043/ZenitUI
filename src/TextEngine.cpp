@@ -15,6 +15,7 @@
 #include <fstream>
 #include <list>
 #include <unordered_map>
+#include <array>
 
 namespace ZenitUI
 {
@@ -77,10 +78,12 @@ namespace ZenitUI
             uint32_t fontId{0};
             uint32_t glyphId{0};
             uint16_t pixelSize{0};
+            uint8_t hOversample{1};
 
             bool operator==(const GlyphKey &o) const noexcept
             {
-                return fontId == o.fontId && glyphId == o.glyphId && pixelSize == o.pixelSize;
+                return fontId == o.fontId && glyphId == o.glyphId &&
+                       pixelSize == o.pixelSize && hOversample == o.hOversample;
             }
         };
 
@@ -90,7 +93,8 @@ namespace ZenitUI
             {
                 uint64_t h = (static_cast<uint64_t>(k.fontId) << 32) ^
                              (static_cast<uint64_t>(k.glyphId) << 16) ^
-                             static_cast<uint64_t>(k.pixelSize);
+                             (static_cast<uint64_t>(k.pixelSize) << 2) ^
+                             static_cast<uint64_t>(k.hOversample);
                 h ^= h >> 33;
                 h *= 0xff51afd7ed558ccdULL;
                 h ^= h >> 33;
@@ -209,6 +213,8 @@ namespace ZenitUI
 
         float dpiScale{1.0f};
         float fallbackCharWidth{8.0f};
+        SyntheticDrawCallback syntheticDrawCb;
+        bool warnedNoFont{false};
 
         // Dynamic FreeType glyph atlas
         std::vector<AtlasPage> atlasPages;
@@ -310,7 +316,7 @@ namespace ZenitUI
                 const float scale = fs / static_cast<float>(std::max(1, rec->unitsPerEm));
                 const float ascent = static_cast<float>(rec->ascender) * scale;
                 const float descent = static_cast<float>(-rec->descender) * scale;
-                const float naturalH = std::max(fs, ascent + descent);
+                const float naturalH = std::ceil(std::max(fs, ascent + descent));
                 const float lineH = (explicitLineHeight > 0.0f) ? explicitLineHeight : naturalH;
                 return {ascent, descent, lineH};
             }
@@ -810,7 +816,12 @@ namespace ZenitUI
                 glyphCache.clear();
             }
 
-            TextureHandle tex = renderer.createTexture(kAtlasPageSize, kAtlasPageSize, nullptr);
+            std::vector<uint8_t> clearPixels(
+                static_cast<size_t>(kAtlasPageSize) * static_cast<size_t>(kAtlasPageSize) * 4u, 255u);
+            for (size_t i = 3; i < clearPixels.size(); i += 4)
+                clearPixels[i] = 0u;
+
+            TextureHandle tex = renderer.createTexture(kAtlasPageSize, kAtlasPageSize, clearPixels.data());
             if (!tex.valid())
                 return nullptr;
 
@@ -838,8 +849,13 @@ namespace ZenitUI
             if (!rec || !rec->ftFace)
                 return nullptr;
 
-            FT_Set_Pixel_Sizes(rec->ftFace, 0, key.pixelSize);
-            if (FT_Load_Glyph(rec->ftFace, key.glyphId, FT_LOAD_RENDER | FT_LOAD_TARGET_LIGHT) != 0)
+            const uint8_t hOver = std::max<uint8_t>(1u, key.hOversample);
+            FT_Set_Pixel_Sizes(rec->ftFace,
+                               static_cast<FT_UInt>(key.pixelSize) * hOver,
+                               static_cast<FT_UInt>(key.pixelSize));
+
+            const FT_Int32 loadFlags = FT_LOAD_RENDER | FT_LOAD_TARGET_LIGHT;
+            if (FT_Load_Glyph(rec->ftFace, key.glyphId, loadFlags) != 0)
                 return nullptr;
 
             FT_GlyphSlot slot = rec->ftFace->glyph;
@@ -847,10 +863,13 @@ namespace ZenitUI
             const int bw = static_cast<int>(bm.width);
             const int bh = static_cast<int>(bm.rows);
 
+            const int hPad = (hOver > 1) ? 1 : 0;
+            const float invHOver = 1.0f / static_cast<float>(hOver);
+
             AtlasGlyph entry{};
-            entry.bearingX = static_cast<float>(slot->bitmap_left);
+            entry.bearingX = static_cast<float>(slot->bitmap_left - hPad) * invHOver;
             entry.bearingY = static_cast<float>(slot->bitmap_top);
-            entry.width = static_cast<float>(bw);
+            entry.width = static_cast<float>(bw + hPad * 2) * invHOver;
             entry.height = static_cast<float>(bh);
 
             if (bw == 0 || bh == 0 || !bm.buffer)
@@ -867,9 +886,11 @@ namespace ZenitUI
             if (!page)
                 return nullptr;
 
-            // Expand grayscale coverage to white RGBA8 so the standard textured shader tints cleanly.
-            uploadScratch.resize(static_cast<size_t>(bw) * static_cast<size_t>(bh) * 4u);
+            const int dstX = slotX + kGlyphPadding;
+            const int dstY = slotY + kGlyphPadding;
             const int pitch = bm.pitch;
+
+            uploadScratch.resize(static_cast<size_t>(bw) * static_cast<size_t>(bh) * 4u);
             for (int y = 0; y < bh; ++y)
             {
                 const uint8_t *srcRow = (pitch >= 0)
@@ -884,9 +905,6 @@ namespace ZenitUI
                     dstRow[x * 4 + 3] = srcRow[x];
                 }
             }
-
-            const int dstX = slotX + kGlyphPadding;
-            const int dstY = slotY + kGlyphPadding;
             renderer.updateTexture(
                 page->texture,
                 Rect{static_cast<float>(dstX), static_cast<float>(dstY),
@@ -896,9 +914,9 @@ namespace ZenitUI
             const float invW = 1.0f / static_cast<float>(page->width);
             const float invH = 1.0f / static_cast<float>(page->height);
             entry.pageIndex = pageIdx;
-            entry.u0 = static_cast<float>(dstX) * invW;
+            entry.u0 = static_cast<float>(dstX - hPad) * invW;
             entry.v0 = static_cast<float>(dstY) * invH;
-            entry.u1 = static_cast<float>(dstX + bw) * invW;
+            entry.u1 = static_cast<float>(dstX + bw + hPad) * invW;
             entry.v1 = static_cast<float>(dstY + bh) * invH;
             entry.hasBitmap = true;
 
@@ -1358,34 +1376,44 @@ namespace ZenitUI
 
         if (layout.synthetic)
         {
-            if (fallbackText.empty() && !layout.truncated)
-                return;
-
-            const float boxW = (bounds.width > 0.0f) ? bounds.width : layout.size.x;
-            for (const auto &ln : layout.lines)
+            if (impl_->syntheticDrawCb)
             {
-                const float lineTop = bounds.y + ln.yOffset;
-                const float lineBot = lineTop + ln.height;
-                if (cullRect && (lineBot <= cullRect->y || lineTop >= cullRect->y + cullRect->height))
-                    continue;
+                if (fallbackText.empty() && !layout.truncated)
+                    return;
 
-                std::string_view sv =
-                    ln.ellipsized
-                        ? std::string_view(layout.ellipsizedText)
-                        : (ln.byteEnd <= fallbackText.size()
-                               ? fallbackText.substr(ln.byteStart, ln.byteEnd - ln.byteStart)
-                               : std::string_view{});
-                if (sv.empty())
-                    continue;
-                const float lineX = bounds.x + alignOffsetX(boxW, ln.width, align);
-                renderer.drawText(spec.font, sv, {lineX, lineTop}, spec.fontSize, spec.letterSpacing, color);
+                for (const auto &ln : layout.lines)
+                {
+                    const float lineTop = bounds.y + ln.yOffset;
+                    const float lineBot = lineTop + ln.height;
+                    if (cullRect && (lineBot <= cullRect->y || lineTop >= cullRect->y + cullRect->height))
+                        continue;
+
+                    std::string_view sv =
+                        ln.ellipsized
+                            ? std::string_view(layout.ellipsizedText)
+                            : (ln.byteEnd <= fallbackText.size()
+                                   ? fallbackText.substr(ln.byteStart, ln.byteEnd - ln.byteStart)
+                                   : std::string_view{});
+                    if (!sv.empty())
+                        impl_->syntheticDrawCb(sv);
+                }
+            }
+            else if (!impl_->warnedNoFont)
+            {
+                impl_->warnedNoFont = true;
+                logWarn("TextEngine", "", 0, 0,
+                        "No font loaded in UIContext::textEngine; text will not be rendered. "
+                        "Call ctx.textEngine.loadFont(...) to load a TTF/OTF font.");
             }
             return;
         }
 
-        const float invDpi = 1.0f / impl_->dpiScale;
+        const float effectiveDpi = renderer.inTarget() ? 1.0f : impl_->dpiScale;
+        const float invDpi = 1.0f / effectiveDpi;
         const uint16_t physPx = static_cast<uint16_t>(
-            std::clamp(std::lround(std::max(1.0f, spec.fontSize) * impl_->dpiScale), 1L, 512L));
+            std::clamp(std::lround(std::max(1.0f, spec.fontSize) * effectiveDpi), 1L, 512L));
+
+        const uint8_t hOversample = (effectiveDpi < 1.5f && physPx <= 48) ? uint8_t{2} : uint8_t{1};
 
         for (auto &b : impl_->drawBatches)
         {
@@ -1394,6 +1422,7 @@ namespace ZenitUI
         }
 
         const float boxW = (bounds.width > 0.0f) ? bounds.width : layout.size.x;
+        bool anyBatch = false;
 
         for (const auto &ln : layout.lines)
         {
@@ -1402,15 +1431,16 @@ namespace ZenitUI
             if (cullRect && (lineBot <= cullRect->y || lineTop >= cullRect->y + cullRect->height))
                 continue;
 
-            const float lineX = std::round(bounds.x + alignOffsetX(boxW, ln.width, align));
-            const float baselineY = std::round(lineTop + ln.baselineOffset);
+            const float lineX = std::round((bounds.x + alignOffsetX(boxW, ln.width, align)) * effectiveDpi) * invDpi;
+            const float baselineY = std::round((lineTop + ln.baselineOffset) * effectiveDpi) * invDpi;
 
             for (const auto &sg : ln.glyphs)
             {
                 if (sg.fontId == 0)
                     continue;
 
-                const AtlasGlyph *ag = impl_->ensureGlyph(renderer, GlyphKey{sg.fontId, sg.glyphId, physPx});
+                const AtlasGlyph *ag = impl_->ensureGlyph(
+                    renderer, GlyphKey{sg.fontId, sg.glyphId, physPx, hOversample});
                 if (!ag || !ag->hasBitmap)
                     continue;
 
@@ -1419,8 +1449,10 @@ namespace ZenitUI
 
                 auto &batch = impl_->drawBatches[ag->pageIndex];
 
-                const float gx = lineX + sg.x + sg.xOffset + ag->bearingX * invDpi;
-                const float gy = baselineY - sg.yOffset - ag->bearingY * invDpi;
+                const float gx = (hOversample > 1)
+                                     ? (lineX + sg.x + sg.xOffset + ag->bearingX * invDpi)
+                                     : (std::round((lineX + sg.x + sg.xOffset) * effectiveDpi) * invDpi + ag->bearingX * invDpi);
+                const float gy = baselineY - std::round(sg.yOffset * effectiveDpi) * invDpi - ag->bearingY * invDpi;
                 const float gw = ag->width * invDpi;
                 const float gh = ag->height * invDpi;
 
@@ -1436,8 +1468,12 @@ namespace ZenitUI
                 batch.indices.push_back(base + 0);
                 batch.indices.push_back(base + 2);
                 batch.indices.push_back(base + 1);
+                anyBatch = true;
             }
         }
+
+        if (!anyBatch)
+            return;
 
         for (size_t pi = 0; pi < impl_->drawBatches.size() && pi < impl_->atlasPages.size(); ++pi)
         {
@@ -1445,6 +1481,11 @@ namespace ZenitUI
             if (!batch.indices.empty())
                 renderer.drawGeometry(batch.vertices, batch.indices, impl_->atlasPages[pi].texture);
         }
+    }
+
+    void TextEngine::setSyntheticDrawCallback(SyntheticDrawCallback cb)
+    {
+        impl_->syntheticDrawCb = std::move(cb);
     }
 
 } // namespace ZenitUI

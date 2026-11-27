@@ -1,10 +1,29 @@
 #include "TestFramework.hpp"
-#include "Mocks.hpp"
+#include "TextEngine.hpp"
 #include "StyleAttr.hpp"
 #include "Style.hpp"
 
+#include <filesystem>
+#include <fstream>
+#include <vector>
+
 using namespace ZenitUI;
-using namespace ZenitUI::Test;
+
+namespace
+{
+    std::string findTestFontPath()
+    {
+        for (const char *candidate : {
+                 "assets/fonts/Inter_18pt-Regular.ttf",
+                 "../assets/fonts/Inter_18pt-Regular.ttf",
+                 "../../assets/fonts/Inter_18pt-Regular.ttf"})
+        {
+            if (std::filesystem::exists(candidate))
+                return candidate;
+        }
+        return "assets/fonts/Inter_18pt-Regular.ttf";
+    }
+} // namespace
 
 TEST(FontStack, parse_single)
 {
@@ -46,69 +65,79 @@ TEST(FontStack, parse_empty)
 
 TEST(FontStack, fallback_first_match_wins)
 {
-    MockAssetProvider assets;
-    assets.registerFont("calibri", FontHandle{1});
-    assets.registerFont("sans",    FontHandle{2});
+    TextEngine engine;
+    const std::string path = findTestFontPath();
+    FontHandle h1 = engine.loadFont("calibri", path);
+    FontHandle h2 = engine.loadFont("sans", path);
+    CHECK(h1.id != 0 && h2.id != 0 && h1.id != h2.id);
 
     FontStack stack{"mont", "calibri", "sans"};
-    FontHandle h = assets.getFont(stack);
-    CHECK(h.id == 1);
+    CHECK(engine.resolveFont(stack).id == h1.id);
 }
 
-TEST(FontStack, fallback_none_match)
+TEST(FontStack, fallback_none_match_uses_default)
 {
-    MockAssetProvider assets;
-    assets.registerFont("calibri", FontHandle{1});
+    TextEngine engine;
+    FontHandle h1 = engine.loadFont("calibri", findTestFontPath());
+    CHECK(h1.id != 0);
 
     FontStack stack{"mont", "sans"};
-    FontHandle h = assets.getFont(stack);
-    CHECK(h.id == 0);
+    CHECK(engine.resolveFont(stack).id == h1.id);
+
+    engine.setDefaultFont({});
+    CHECK(engine.resolveFont(stack).id == 0);
 }
 
 TEST(FontStack, load_and_unload)
 {
-    MockAssetProvider assets;
-
-    FontHandle h = assets.loadFont("test", "dummy.ttf");
+    TextEngine engine;
+    FontHandle h = engine.loadFont("test", findTestFontPath());
     CHECK(h.id != 0);
 
-    FontHandle again = assets.getFont("test");
+    FontHandle again = engine.getFont("test");
     CHECK(again.id == h.id);
 
-    assets.unloadFont("test");
-    FontHandle after = assets.getFont("test");
+    engine.unloadFont("test");
+    FontHandle after = engine.getFont("test");
     CHECK(after.id == 0);
 }
 
 TEST(FontStack, load_from_memory)
 {
-    MockAssetProvider assets;
-    char data[4] = {0, 1, 2, 3};
-    FontHandle h = assets.loadFontFromMemory("mem", data, sizeof(data));
+    std::ifstream in(findTestFontPath(), std::ios::binary | std::ios::ate);
+    CHECK(static_cast<bool>(in));
+    const std::streamsize sz = in.tellg();
+    CHECK(sz > 0);
+    in.seekg(0, std::ios::beg);
+    std::vector<uint8_t> bytes(static_cast<size_t>(sz));
+    in.read(reinterpret_cast<char *>(bytes.data()), sz);
+
+    TextEngine engine;
+    FontHandle h = engine.loadFontFromMemory("mem", bytes.data(), bytes.size());
     CHECK(h.id != 0);
-    CHECK(assets.getFont("mem").id == h.id);
+    CHECK(engine.getFont("mem").id == h.id);
 }
 
 TEST(FontStack, fallback_uses_runtime_loaded)
 {
-    MockAssetProvider assets;
-    assets.loadFont("mont", "dummy.ttf");
+    TextEngine engine;
+    FontHandle h = engine.loadFont("mont", findTestFontPath());
+    CHECK(h.id != 0);
 
     FontStack stack{"mont", "calibri", "sans"};
-    FontHandle h = assets.getFont(stack);
-    CHECK(h.id != 0);
+    CHECK(engine.resolveFont(stack).id == h.id);
 }
 
 TEST(FontStack, load_empty_name_is_noop)
 {
-    MockAssetProvider assets;
-    CHECK(assets.loadFont("", "x.ttf").id == 0);
-    CHECK(assets.loadFontFromMemory("", nullptr, 0).id == 0);
+    TextEngine engine;
+    CHECK(engine.loadFont("", findTestFontPath()).id == 0);
+    CHECK(engine.loadFontFromMemory("", nullptr, 0).id == 0);
 }
 
 TEST(FontStack, unload_unknown_is_noop)
 {
-    MockAssetProvider assets;
-    assets.unloadFont("nonexistent");
-    CHECK(assets.getFont("nonexistent").id == 0);
+    TextEngine engine;
+    engine.unloadFont("nonexistent");
+    CHECK(engine.getFont("nonexistent").id == 0);
 }

@@ -78,8 +78,8 @@ the same ZStyle cascade, input routing, and rendering pipeline.
 | **Effects** | `filter: blur(...) drop-shadow(...)`, custom GLSL shaders, extensible `FilterRegistry`, `box-shadow`, and automatic off-screen `TargetPool` reuse |
 | **Widgets** | `Text`, `Button`, `Panel`, `Toggle`, `Checkbox`, `Slider`, `ProgressBar`, `TextInput`, `TextArea`, `ScrollView`, `VirtualView` (10k+ virtualized rows), `Dropdown`, `Modal`, `Tooltip`, `Popup`, `ContextMenu`, `CanvasLayout`, `ImageContainer` |
 | **Data binding** | `Bindable<T>` — observable values with lifetime-safe RAII subscriptions and zero external dependencies |
-| **Unicode & Text** | UTF-8 decoding (`Utf8`) and configurable font-atlas baking (`CodepointSet`) |
-| **Backends** | Pluggable `IPlatform` / `IRenderer` / `IAssetProvider` architecture. Ships with a reference **Raylib** backend and a headless **Mock** backend for deterministic unit tests and CI |
+| **Unicode & Text** | UTF-8 decoding (`Utf8`), HarfBuzz OpenType shaping, and FreeType on-demand HiDPI glyph atlas with 2x horizontal oversampling (`TextEngine`) |
+| **Backends** | Pluggable `IPlatform` / `IRenderer` / `IAssetProvider` architecture. Ships with reference **Raylib** and **SDL3 + OpenGL 3.3** desktop backends plus a headless **Mock** backend for deterministic unit tests and CI |
 | **Debugging** | Optional `Debug::dumpStyle` / `dumpTree` / `dumpTheme` / `dumpParts` / `dumpRenderStats` and structured `Logger` with source locations |
 
 ---
@@ -103,6 +103,8 @@ int main() {
 
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
+
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
 
     auto root = std::make_shared<Layout>(LayoutType::Stack);
     root->size(Percent(100), Percent(100));
@@ -159,13 +161,13 @@ at the repository root delegates every step to CMake so the two never drift.
 - CMake ≥ 3.20
 - A C++20 compiler (GCC, Clang, MSVC, or MinGW-w64)
 - Ninja (recommended; falls back to the default generator if absent)
-- Git (used by `FetchContent` to pull Raylib on demand for examples)
+- Git (used by `FetchContent` to pull FreeType, HarfBuzz, and optional backends like Raylib or SDL3 on demand)
 - Doxygen + Graphviz (optional — only needed for `make docs`)
 
 ### From source
 
 ```bash
-git clone [https://github.com/zLouis043/ZenitUI](https://github.com/zLouis043/ZenitUI)
+git clone https://github.com/zLouis043/ZenitUI
 cd ZenitUI
 
 make               # build libzenit.a + unit tests
@@ -230,10 +232,12 @@ The core library is backend-agnostic and only talks to three interfaces in `incl
 
 | Backend | CMake target | Purpose |
 |---------|--------------|---------|
-| `raylib` | `ZenitUI::RaylibBackend` | Reference GPU/desktop implementation (`backends/raylib/`) |
+| `raylib` | `ZenitUI::RaylibBackend` | Reference desktop GPU implementation via Raylib (`backends/raylib/`) |
+| `sdl3`   | `ZenitUI::SDL3Backend`   | Reference desktop GPU + HiDPI implementation via SDL3 + OpenGL 3.3 Core (`backends/sdl3/`) |
 | `mock`   | `ZenitUI::MockBackend`   | Headless testing & minimal backend skeleton (`backends/mock/`) |
 
-Enable them via `-DZENITUI_BACKENDS="raylib;mock"` (tests pull in `mock` automatically; examples default to `raylib`):
+Enable them via `-DZENITUI_BACKENDS="raylib;sdl3;mock"` (tests pull in `mock` automatically; examples default to `raylib`):
+Porting ZenitUI to GLFW + bgfx, Sokol, Vulkan, or a custom engine only requires implementing `IPlatform`, `IRenderer`, and `IAssetProvider`. Optional GPU capabilities (`Feature::Effects`, `Feature::NestedTargets`, `Feature::TargetSubRect`) can be opted into incrementally via `IRenderer::supports()`. See the **Writing a Custom Backend** guide in the Doxygen docs (`docs/custom_backends.dox`) and the reference implementations in `backends/`.
 
 ```cmake
 target_link_libraries(my_app PRIVATE
@@ -288,6 +292,7 @@ ZenitUI/
 │   └── internal/         # animation, input, ZMarkup parser, diagnostics, …
 ├── backends/
 │   ├── raylib/           # reference Raylib backend (IPlatform, IRenderer, IAssetProvider)
+│   ├── sdl3/             # reference SDL3 + OpenGL 3.3 Core backend with HiDPI
 │   └── mock/             # headless mock backend & ZenitUI::Test::Env harness
 ├── assets/               # Inter fonts (SIL OFL), nine-slice textures, GLSL shaders
 ├── examples/             # self-contained runnable examples (00_demo … 13_prefabs)

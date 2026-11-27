@@ -378,7 +378,9 @@ namespace ZenitUI
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
 
 		if (!identity)
+		{
 			renderer->pushTransform(tr);
+		}
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->pushEffect(customEffect);
 		if (currentEffect_.valid() && renderer->supports(Feature::Effects))
@@ -428,10 +430,10 @@ namespace ZenitUI
 		Rect clip = ctxUI->getCullingClip();
 
 		Rect region;
-		region.x = std::max(transformedRect.x, clip.x);
-		region.y = std::max(transformedRect.y, clip.y);
-		float right = std::min(transformedRect.x + transformedRect.width, clip.x + clip.width);
-		float bottom = std::min(transformedRect.y + transformedRect.height, clip.y + clip.height);
+		region.x = std::floor(std::max(transformedRect.x, clip.x));
+		region.y = std::floor(std::max(transformedRect.y, clip.y));
+		float right = std::ceil(std::min(transformedRect.x + transformedRect.width, clip.x + clip.width));
+		float bottom = std::ceil(std::min(transformedRect.y + transformedRect.height, clip.y + clip.height));
 		region.width = std::max(0.0f, right - region.x);
 		region.height = std::max(0.0f, bottom - region.y);
 
@@ -633,7 +635,9 @@ namespace ZenitUI
 			tr.rotationDeg == 0.0f && tr.scale == 1.0f;
 		renderer->pushTransform(offsetTr);
 		if (!identity)
+		{
 			renderer->pushTransform(tr);
+		}
 
 		if (hasShader && renderer->supports(Feature::Effects))
 			renderer->pushEffect(customEffect);
@@ -651,7 +655,6 @@ namespace ZenitUI
 		renderer->popTransform();
 		if (!identity)
 			renderer->popTransform();
-
 		ctxUI->popLayerTarget();
 
 		const Rect dstRect = {0, 0, (float)tw, (float)th};
@@ -867,7 +870,7 @@ namespace ZenitUI
 			return;
 
 		effectName_ = style.effect;
-		auto *ctx = context(); 
+		auto *ctx = context();
 		if (auto *assets = ctx ? ctx->assets : nullptr)
 			currentEffect_ = assets->getEffect(style.effect);
 		else

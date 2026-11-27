@@ -31,7 +31,7 @@ implementation.
   `docs/user/12-virtual_view.md` and `docs/api/Widgets.md` for the
   user-facing API.
 - ✅ **Proposal 9 — Filter layer pipeline performance**: shipped as
-  roadmap §4.9 (steps 0–f; step g declined). See `examples/07b_effects_stress`
+  roadmap §4.9 (steps 0–g). See `examples/07b_effects_stress`
   and the change log at the end of this file.
 - ✅ **Proposal 10 — Named Slots and direct prefab instantiation**:
   shipped as roadmap §5.35. See `tests/test_zmarkup_build.cpp` and the
@@ -57,6 +57,8 @@ implementation.
 - [Proposal 8 — VirtualView](#proposal-8--virtualview)
 - [Proposal 9 — Filter layer pipeline performance](#proposal-9--filter-layer-pipeline-performance)
 - [Proposal 10 — Named Slots and direct prefab instantiation](#proposal-10--named-slots-and-direct-prefab-instantiation)
+- [Proposal 11 — `UINode` `@ref`-based helpers](#proposal-11--uinode-ref-based-helpers)
+- [Proposal 12 — Runtime structural `If` & `Each` in ZMarkup](#proposal-12--runtime-structural-if-and-each-in-zmarkup)
 - [Out of scope (future rounds)](#out-of-scope-future-rounds)
 
 ---
@@ -2003,7 +2005,7 @@ tackled if the measurements justify it.
 **Depends on:** §5.4 (filter chaining) and §5.5 (nested targets), both
 shipped. Independent of every other proposal.
 
-**Status:** ✅ shipped as roadmap §4.9 (steps 0–f; step g declined).
+**Status:** ✅ shipped as roadmap §4.9 (steps 0–g).
 
 **Roadmap mapping:** ships as §4.9 (steps 0, a–g).
 
@@ -2868,7 +2870,7 @@ re-discussing them.
 5. Proposal 4 — StyleParser Diagnostics → §5.20
 6. Proposal 5 — Wrap for HStack → §5.21
 7. Proposal 8 — VirtualView → §5.24
-8. Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–f; step g declined)
+8. Proposal 9 — Filter layer pipeline performance → §4.9 (steps 0–g)
 9. Proposal 10 — Named Slots & `ZMarkup::instantiate` → §5.35
 10. Proposal 11 — `UINode` `@ref`-based helpers → §5.36
 11. Proposal 12 — Runtime structural `If` & `Each` → §5.37 (steps a–d)
@@ -3071,7 +3073,7 @@ VirtualList ships.
 
 ### Proposal 9 — Filter layer pipeline performance
 
-**Shipped:** roadmap §4.9 (steps 0–f; step g declined).
+**Shipped:** roadmap §4.9 (steps 0–g).
 
 **Changes from the proposal:**
 
@@ -3092,24 +3094,29 @@ VirtualList ships.
 - **`assets/blur.fs` required no edits.** The shader already normalized
   tap offsets by `texSize`, so passing the bucketed texture size via
   `FilterContext::texSize` worked out of the box.
-- **Step `g` (opt-in layer cache with `paintDirty`) declined.** After
-  steps 0–e landed, `examples/07b_effects_stress` measured 400–600 FPS
-  on 50 filtered rotating cards (and ≥ 100 FPS in the worst case while
-  scrolling back and forth). Given those numbers, adding a cross-widget
-  `paintDirty` invalidation mechanism and risking stale renders is not
-  justified. Revisit only if a real application hits FBO-switch limits
-  on static filtered scenes.
+- **Step `g` shipped as automatic top-level layer caching (no opt-in
+  `paintDirty` bit).** Rather than adding a manual `setLayerCache(bool)`
+  flag and cross-widget `paintDirty` invalidation, `Layout::drawLayer`
+  automatically caches top-level filtered subtrees that have no active
+  animations: a cheap scalar pre-check guards full subtree
+  fingerprinting (`appendSubtreeFingerprint`), promoting stable layers
+  after two matching frames, blitting silhouette caches with
+  `BlendMode::Premultiplied`, and evicting idle caches after 120 frames
+  (`maybeEvictStaleLayerCache`).
 
 **What landed:**
 
 - `include/UIContext.hpp` — `Feature::TargetSubRect`, non-pure
   `IRenderer::drawTarget(t, src, dst, tint)`, `RenderStats`,
-  `TargetPool`, `UIContext::endFrame()`.
+  `TargetPool` (with `generation()` / `frameIndex()` for cache safety),
+  `UIContext::endFrame()`.
 - `include/FilterRegistry.hpp` / `src/layout/FilterRegistry.cpp` —
   `FilterContext::texSize`, `FilterDef::downscale`, sub-rect drawing,
   downscaled separable intermediate pass, `RenderStats` instrumentation.
 - `src/layout/Render.cpp` — `Layout::drawLayer` rewritten around lazy
-  per-kind acquisition and LIFO release from `UIContext::targetPool`.
+  per-kind acquisition and LIFO release from `UIContext::targetPool`,
+  plus automatic top-level `LayerCache` (`appendSubtreeFingerprint`,
+  `blitCachedLayer`, `maybeEvictStaleLayerCache`).
 - `include/Layout.hpp` / `src/layout/Layout.cpp` — removed per-node
   `layerTarget_` / `layerScratch_` / `layerSeparable_` members and
   destructor teardown; wired `UIContext::endFrame()` into
@@ -3180,7 +3187,7 @@ VirtualList ships.
 - `setTextRef` dispatches dynamically across `Text`, `Button`,
   `TextInput`, and `TextArea` via `std::dynamic_pointer_cast`, logging
   a deduplicated `warnOnce` diagnostic on unsupported node types.
-- `setVisibleRef` is deferred to §5.37 Step `a` (`Layout::setVisible`).
+- `setVisibleRef` was deferred to and shipped in §5.37 Step `a` (`Layout::setVisible`).
 
 **What landed:**
 
@@ -3206,8 +3213,10 @@ VirtualList ships.
   cycles.
 - **`EachBinding` retains item `BuildContext`s.** Keeping each spawned
   item's `std::shared_ptr<BuildContext>` alive inside `EachBinding`
-  allows nested prefabs spawned inside an `Each` to hold their own
-  `Bindable` subscriptions (`bindCondition` / `bindEach`).
+  allowed nested prefabs spawned inside an `Each` to hold their own
+  `Bindable` subscriptions (`bindCondition` / `bindEach`). *(Superseded
+  by §5.38: `BuildContext` is now lazily retained on `root_` via
+  `Layout::retainObject` and `EachBinding::spawnedContexts` was removed.)*
 - **Flexible callback arity.** `syncEach`, `bindEach`, `syncEachKeyed`,
   and `bindEachKeyed` accept 1-, 2-, or 3-argument callbacks
   (`(UINode&)`, `(UINode&, const T&)`, `(UINode&, const T&, size_t)`).

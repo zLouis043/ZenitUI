@@ -24,8 +24,6 @@
 #endif
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb_truetype.h>
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
@@ -229,19 +227,6 @@ void main() {
 			ss << in.rdbuf();
 			out = ss.str();
 			return true;
-		}
-
-		bool readBinaryFile(const std::string &path, std::vector<unsigned char> &out)
-		{
-			std::ifstream in(path, std::ios::binary | std::ios::ate);
-			if (!in)
-				return false;
-			const std::streamsize sz = in.tellg();
-			if (sz <= 0)
-				return false;
-			in.seekg(0, std::ios::beg);
-			out.resize(static_cast<size_t>(sz));
-			return static_cast<bool>(in.read(reinterpret_cast<char *>(out.data()), sz));
 		}
 
 		struct ScancodeBinding
@@ -461,21 +446,6 @@ void main() {
 			int height{0};
 		};
 
-		struct GlyphInfo
-		{
-			float u0{0}, v0{0}, u1{0}, v1{0};
-			float xoff{0}, yoff{0}, w{0}, h{0};
-			float xadvance{0};
-		};
-
-		struct FontObj
-		{
-			GLuint glTex{0};
-			float baseSize{48.0f};
-			float ascentPx{0.0f};
-			std::unordered_map<uint32_t, GlyphInfo> glyphs;
-		};
-
 		using UniformCache = std::unordered_map<
 			std::string, GLint, detail::SdlTransparentStringHash, std::equal_to<>>;
 
@@ -502,6 +472,7 @@ void main() {
 			TargetHandle target{};
 			bool clipActive{false};
 			Rect currentClip{0, 0, 0, 0};
+			float dpiScale{1.0f};
 			std::vector<Rect> clipStack;
 			std::vector<Transform2D> transformStack;
 			int targetW{0};
@@ -542,7 +513,6 @@ void main() {
 
 		uint32_t nextId{1};
 		std::unordered_map<uint32_t, TextureObj> textures;
-		std::unordered_map<uint32_t, FontObj> fonts;
 		std::unordered_map<uint32_t, ShaderObj> shaders;
 		std::unordered_map<uint32_t, TargetObj> targets;
 
@@ -844,8 +814,10 @@ void main() {
 
 			const int x = static_cast<int>(std::floor(clip.x * scale));
 			const int y = static_cast<int>(std::floor(clip.y * scale));
-			const int w = static_cast<int>(std::ceil(clip.width * scale));
-			const int h = static_cast<int>(std::ceil(clip.height * scale));
+			const int x2 = static_cast<int>(std::ceil((clip.x + clip.width) * scale));
+			const int y2 = static_cast<int>(std::ceil((clip.y + clip.height) * scale));
+			const int w = (clip.width <= 0.0f) ? 0 : std::max(0, x2 - x);
+			const int h = (clip.height <= 0.0f) ? 0 : std::max(0, y2 - y);
 			const int sx = (w <= 0 || h <= 0) ? 0 : x;
 			const int sy = (w <= 0 || h <= 0) ? 0 : (targetH - (y + h));
 			const int sw = (w <= 0 || h <= 0) ? 0 : w;
@@ -939,11 +911,6 @@ void main() {
 		{
 			if (t.glId)
 				glDeleteTextures(1, &t.glId);
-		}
-		for (auto &[id, f] : impl_->fonts)
-		{
-			if (f.glTex)
-				glDeleteTextures(1, &f.glTex);
 		}
 		for (auto &[id, s] : impl_->shaders)
 		{
@@ -1112,134 +1079,17 @@ void main() {
 			return;
 
 		impl_->flush();
+
+		if (!impl_->activeTexUnit0)
+		{
+			impl_->gl.ActiveTexture(GL_TEXTURE0);
+			impl_->activeTexUnit0 = true;
+		}
+
 		glBindTexture(GL_TEXTURE_2D, it->second.glId);
 		impl_->boundTexture = it->second.glId;
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, rx, ry, rw, rh, GL_RGBA, GL_UNSIGNED_BYTE, rgbaPixels);
-	}
-
-	// ---- Text rendering & metrics ----
-
-	void SDL3Renderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)
-	{
-		if (s.empty() || size <= 0.0f || c.a == 0)
-			return;
-
-		auto it = impl_->fonts.find(f.id);
-		if (it == impl_->fonts.end())
-		{
-			if (impl_->fonts.empty())
-				return;
-			it = impl_->fonts.begin();
-		}
-
-		const auto &font = it->second;
-		const float ratio = size / font.baseSize;
-		const float startX = std::round(pos.x);
-		float cursorX = startX;
-		float baselineY = std::round(pos.y + font.ascentPx * ratio);
-
-		size_t i = 0;
-		while (i < s.size())
-		{
-			const uint32_t cp = Utf8::next(s, i);
-			if (cp == '\n')
-			{
-				cursorX = startX;
-				baselineY = std::round(baselineY + size * 1.2f);
-				continue;
-			}
-			auto git = font.glyphs.find(cp);
-			if (git == font.glyphs.end())
-				git = font.glyphs.find('?');
-			if (git == font.glyphs.end())
-				continue;
-
-			const auto &g = git->second;
-			if (g.w > 0.0f && g.h > 0.0f)
-			{
-				const Rect dst{
-					cursorX + g.xoff * ratio,
-					baselineY + g.yoff * ratio,
-					g.w * ratio,
-					g.h * ratio};
-				impl_->pushQuad(dst, g.u0, g.v0, g.u1, g.v1, c, font.glTex);
-			}
-			cursorX += g.xadvance * ratio + spacing;
-		}
-	}
-
-	Vec2 SDL3Renderer::measureText(FontHandle f, std::string_view s, float size, float spacing)
-	{
-		if (s.empty() || size <= 0.0f)
-			return {0.0f, size};
-
-		auto it = impl_->fonts.find(f.id);
-		if (it == impl_->fonts.end())
-		{
-			if (impl_->fonts.empty())
-			{
-				const size_t n = Utf8::codepointCount(s);
-				const float w = static_cast<float>(n) * (size * 0.5f) +
-								(n > 1 ? spacing * static_cast<float>(n - 1) : 0.0f);
-				return {w, size};
-			}
-			it = impl_->fonts.begin();
-		}
-
-		const auto &font = it->second;
-		const float ratio = size / font.baseSize;
-		float lineW = 0.0f;
-		float maxW = 0.0f;
-		int lines = 1;
-		bool lineHasGlyph = false;
-
-		size_t i = 0;
-		while (i < s.size())
-		{
-			const uint32_t cp = Utf8::next(s, i);
-			if (cp == '\n')
-			{
-				maxW = std::max(maxW, lineW);
-				lineW = 0.0f;
-				lineHasGlyph = false;
-				++lines;
-				continue;
-			}
-			auto git = font.glyphs.find(cp);
-			if (git == font.glyphs.end())
-				git = font.glyphs.find('?');
-			if (git == font.glyphs.end())
-				continue;
-
-			if (lineHasGlyph)
-				lineW += spacing;
-			lineW += git->second.xadvance * ratio;
-			lineHasGlyph = true;
-		}
-
-		maxW = std::max(maxW, lineW);
-		const float totalH = (lines == 1) ? size : (size + static_cast<float>(lines - 1) * size * 1.2f);
-		return {maxW, totalH};
-	}
-
-	Vec2 SDL3Renderer::measureCodepoint(FontHandle f, uint32_t codepoint, float size, float /*spacing*/)
-	{
-		auto it = impl_->fonts.find(f.id);
-		if (it == impl_->fonts.end())
-		{
-			if (impl_->fonts.empty())
-				return {size * 0.5f, size};
-			it = impl_->fonts.begin();
-		}
-
-		const auto &font = it->second;
-		auto git = font.glyphs.find(codepoint);
-		if (git == font.glyphs.end())
-			git = font.glyphs.find('?');
-		if (git == font.glyphs.end())
-			return {0.0f, size};
-		return {git->second.xadvance * (size / font.baseSize), size};
 	}
 
 	// ---- Transform, clip & shader stacks ----
@@ -1520,13 +1370,15 @@ void main() {
 		impl_->flush();
 		impl_->disableScissor();
 
-		impl_->targetStates.push_back({impl_->currentTarget,
-									   impl_->clipActive,
-									   impl_->currentClip,
-									   std::move(impl_->clipStack),
-									   std::move(impl_->transformStack),
-									   impl_->currentTargetW,
-									   impl_->currentTargetH});
+		Impl::TargetState prevState{};
+		prevState.target = impl_->currentTarget;
+		prevState.clipActive = impl_->clipActive;
+		prevState.currentClip = impl_->currentClip;
+		prevState.clipStack = std::move(impl_->clipStack);
+		prevState.transformStack = std::move(impl_->transformStack);
+		prevState.targetW = impl_->currentTargetW;
+		prevState.targetH = impl_->currentTargetH;
+		impl_->targetStates.push_back(std::move(prevState));
 
 		impl_->clipActive = false;
 		impl_->clipStack.clear();
@@ -1682,150 +1534,6 @@ void main() {
 		}
 	}
 
-	FontHandle SDL3Renderer::createFontFromTTF(const unsigned char *ttfData,
-											   size_t ttfSize,
-											   int baseSize,
-											   const CodepointSet &codepoints)
-	{
-		if (!impl_->ready || !ttfData || ttfSize == 0 || baseSize <= 0)
-			return {};
-
-		stbtt_fontinfo info{};
-		if (!stbtt_InitFont(&info, ttfData, stbtt_GetFontOffsetForIndex(ttfData, 0)))
-			return {};
-
-		std::vector<int> cps = codepoints.build();
-		if (cps.empty())
-		{
-			for (int cp = 32; cp <= 126; ++cp)
-				cps.push_back(cp);
-		}
-		std::sort(cps.begin(), cps.end());
-		cps.erase(std::unique(cps.begin(), cps.end()), cps.end());
-
-		// Group sorted codepoints into contiguous runs for stbtt_PackFontRanges.
-		struct Run
-		{
-			int first;
-			int count;
-			size_t offset;
-		};
-		std::vector<Run> runs;
-		for (size_t i = 0; i < cps.size();)
-		{
-			const int start = cps[i];
-			size_t j = i + 1;
-			while (j < cps.size() && cps[j] == cps[j - 1] + 1)
-				++j;
-			runs.push_back({start, static_cast<int>(j - i), i});
-			i = j;
-		}
-
-		std::vector<stbtt_packedchar> packed(cps.size());
-		std::vector<stbtt_pack_range> ranges(runs.size());
-		for (size_t r = 0; r < runs.size(); ++r)
-		{
-			ranges[r].font_size = static_cast<float>(baseSize);
-			ranges[r].first_unicode_codepoint_in_range = runs[r].first;
-			ranges[r].array_of_unicode_codepoints = nullptr;
-			ranges[r].num_chars = runs[r].count;
-			ranges[r].chardata_for_range = packed.data() + runs[r].offset;
-		}
-
-		int atlasDim = 512;
-		std::vector<unsigned char> alpha;
-		bool packedOk = false;
-		for (; atlasDim <= 4096; atlasDim *= 2)
-		{
-			alpha.assign(static_cast<size_t>(atlasDim) * static_cast<size_t>(atlasDim), 0);
-			stbtt_pack_context pc{};
-			if (!stbtt_PackBegin(&pc, alpha.data(), atlasDim, atlasDim, 0, 1, nullptr))
-				continue;
-			stbtt_PackSetOversampling(&pc, 1, 1);
-			packedOk = stbtt_PackFontRanges(&pc, ttfData, 0, ranges.data(), static_cast<int>(ranges.size())) != 0;
-			stbtt_PackEnd(&pc);
-			if (packedOk)
-				break;
-		}
-
-		if (!packedOk)
-		{
-			logError("SDL3Renderer", "", 0, 0, "Failed to pack font atlas up to 4096x4096");
-			return {};
-		}
-
-		// Expand single-channel coverage to white RGBA so the standard shader tints text cleanly.
-		std::vector<unsigned char> rgba(alpha.size() * 4);
-		for (size_t i = 0; i < alpha.size(); ++i)
-		{
-			rgba[i * 4 + 0] = 255;
-			rgba[i * 4 + 1] = 255;
-			rgba[i * 4 + 2] = 255;
-			rgba[i * 4 + 3] = alpha[i];
-		}
-
-		GLuint glTex = 0;
-		glGenTextures(1, &glTex);
-		glBindTexture(GL_TEXTURE_2D, glTex);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, atlasDim, atlasDim, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba.data());
-		glBindTexture(GL_TEXTURE_2D, 0);
-		impl_->boundTexture = 0;
-
-		int ascent = 0, descent = 0, lineGap = 0;
-		stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
-		const float vScale = stbtt_ScaleForPixelHeight(&info, static_cast<float>(baseSize));
-
-		Impl::FontObj font;
-		font.glTex = glTex;
-		font.baseSize = static_cast<float>(baseSize);
-		font.ascentPx = static_cast<float>(ascent) * vScale;
-		font.glyphs.reserve(cps.size());
-
-		const float invAtlas = 1.0f / static_cast<float>(atlasDim);
-		for (size_t i = 0; i < cps.size(); ++i)
-		{
-			const stbtt_packedchar &pc = packed[i];
-			Impl::GlyphInfo g;
-			g.u0 = static_cast<float>(pc.x0) * invAtlas;
-			g.v0 = static_cast<float>(pc.y0) * invAtlas;
-			g.u1 = static_cast<float>(pc.x1) * invAtlas;
-			g.v1 = static_cast<float>(pc.y1) * invAtlas;
-			g.xoff = pc.xoff;
-			g.yoff = pc.yoff;
-			g.w = pc.xoff2 - pc.xoff;
-			g.h = pc.yoff2 - pc.yoff;
-			g.xadvance = pc.xadvance;
-			font.glyphs[static_cast<uint32_t>(cps[i])] = g;
-		}
-
-		const uint32_t id = impl_->nextId++;
-		impl_->fonts[id] = std::move(font);
-		return {id};
-	}
-
-	void SDL3Renderer::destroyFont(FontHandle h)
-	{
-		if (auto it = impl_->fonts.find(h.id); it != impl_->fonts.end())
-		{
-			const GLuint tex = it->second.glTex;
-			if (impl_->batchTex == tex)
-			{
-				impl_->flush();
-				impl_->batchTex = 0;
-			}
-			if (impl_->boundTexture == tex)
-				impl_->boundTexture = 0;
-			if (tex)
-				glDeleteTextures(1, &tex);
-			impl_->fonts.erase(it);
-		}
-	}
-
 	EffectHandle SDL3Renderer::createEffectFromSource(const char *fsSource, const char *vsSource)
 	{
 		if (!impl_->ready || !fsSource)
@@ -1855,56 +1563,10 @@ void main() {
 
 	SDL3AssetProvider::~SDL3AssetProvider()
 	{
-		for (const auto &[k, h] : fonts_)
-			renderer_.destroyFont(h);
 		for (const auto &[k, h] : textures_)
 			renderer_.destroyTexture(h);
 		for (const auto &[k, h] : effects_)
 			renderer_.destroyEffect(h);
-	}
-
-	FontHandle SDL3AssetProvider::loadFont(std::string_view name, std::string_view path)
-	{
-		if (name.empty() || path.empty())
-			return {};
-		if (auto it = fonts_.find(name); it != fonts_.end())
-			return it->second;
-
-		std::vector<unsigned char> bytes;
-		if (!readBinaryFile(std::string(path), bytes))
-		{
-			logError("Assets", "", 0, 0,
-					 "failed to read font '" + std::string(name) + "' from '" + std::string(path) + "'");
-			return {};
-		}
-		return loadFontFromMemory(name, bytes.data(), bytes.size());
-	}
-
-	FontHandle SDL3AssetProvider::loadFontFromMemory(std::string_view name, const void *data, size_t size)
-	{
-		if (name.empty() || !data || size == 0)
-			return {};
-		if (auto it = fonts_.find(name); it != fonts_.end())
-			return it->second;
-
-		const FontHandle h = renderer_.createFontFromTTF(
-			static_cast<const unsigned char *>(data), size, defaultFontSize_, defaultCodepoints_);
-		if (h.id == 0)
-		{
-			logError("Assets", "", 0, 0, "failed to bake font '" + std::string(name) + "'");
-			return {};
-		}
-		fonts_[std::string(name)] = h;
-		return h;
-	}
-
-	void SDL3AssetProvider::unloadFont(std::string_view name)
-	{
-		if (auto it = fonts_.find(name); it != fonts_.end())
-		{
-			renderer_.destroyFont(it->second);
-			fonts_.erase(it);
-		}
 	}
 
 	TextureHandle SDL3AssetProvider::loadTexture(std::string_view name, std::string_view path)

@@ -183,7 +183,7 @@ namespace ZenitUI
     /**
      * \brief Ordered list of font family names to try, first match wins.
      *
-     * \sa IAssetProvider::getFont(const FontStack&)
+     * \sa TextEngine::resolveFont(const FontStack&, FontHandle)
      */
     struct FontStack : SmallVector<std::string, 3>
     {

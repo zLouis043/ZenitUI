@@ -92,6 +92,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     auto root = std::make_shared<Layout>(LayoutType::Vertical);
     root->size(Percent(100), Percent(100));
     root->getInlineBase().background = ZenitUI::Color{20, 20, 24, 255};

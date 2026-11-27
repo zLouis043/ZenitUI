@@ -9,12 +9,13 @@ It's derived from a full code + documentation review. The **blocking**
 items (bugs, missing API, critical test gaps) are prioritized. The
 **nice-to-have** items are collected at the end.
 
-Last updated: after §4.9 (Filter layer pipeline performance — steps 0–f
-shipped, step g declined) and §5.25–§5.39 (CSS flex/border/text parity,
-TextArea, opt-in transitions, Raylib Latin-1 glyphs, Named Slots &
-direct prefab instantiation, `UINode` `@ref` helpers, runtime structural
-`If` & `Each` + `Layout::setVisible`, root-bound `BuildContext` lifetime
-& `WeakUINode`, `ZMarkup.hpp`/`src/ZMarkup.cpp` split).
+Last updated: after §4.9 (Filter layer pipeline performance — steps 0–g
+shipped) and §5.25–§5.42 (CSS flex/border/text parity, TextArea, opt-in
+transitions, Raylib Latin-1 glyphs, Named Slots & direct prefab
+instantiation, `UINode` `@ref` helpers, runtime structural `If` & `Each`
++ `Layout::setVisible`, root-bound `BuildContext` lifetime & `WeakUINode`,
+`ZMarkup.hpp`/`src/ZMarkup.cpp` split, per-instance `UIContext` &
+`IBackend`, FreeType/HarfBuzz `TextEngine`, and `SDL3Backend`).
 
 ---
 
@@ -969,7 +970,7 @@ framework code.
 
 ### 4.9 Filter layer pipeline performance
 
-**Status:** 🟢 done (steps 0–f shipped; step g declined) — design in
+**Status:** 🟢 done (steps 0–g shipped) — design in
 [PROPOSALS.md, Proposal 9](architecture/PROPOSALS.md#proposal-9--filter-layer-pipeline-performance).
 
 **Severity:** high — severe FPS drops on animated or scrolling nodes
@@ -999,7 +1000,7 @@ Also fixed: a single `drop-shadow` allocated 3 targets (now 1); a single
 150 targets alive (now ≤ 3 via `TargetPool`, trimmed to 0 after idle
 grace period).
 
-**Results (after steps 0–f):**
+**Results (steps 0–f baseline; step g layer cache added on top):**
 
 - **CPU benchmarks (Windows, MinGW GCC 15.1, mock backend, `-O3`):**
   - `system.frame.filtered50.static`: 115.87 µs
@@ -1041,11 +1042,11 @@ grace period).
       `system.frame.filtered50.{static,scaleAnim,rotAnim}` in
       `benchmarks/benches.cpp`; GPU stress example
       `examples/07b_effects_stress`
-- [x] **g.** ~~(Optional, higher risk) opt-in layer cache with a
-      `paintDirty` bit~~ — **declined**: steps 0–e already achieve
-      400–600 FPS (≥ 100 FPS worst-case scrolling) with 50 filtered
-      cards on real GPU; the invalidation surface and stale-rendering
-      risk are not justified
+- [x] **g.** Automatic top-level layer cache in `Layout::drawLayer`:
+      subtree fingerprinting (`appendSubtreeFingerprint`) with a cheap
+      scalar pre-check, 2-frame stability promotion, `BlendMode::Premultiplied`
+      blitting for silhouette filters, and 120-frame idle eviction
+      (`maybeEvictStaleLayerCache`).
 
 **Contract change.** `FilterContext` gained `texSize` (the real size of
 the source texture). Built-in filters were updated; `assets/blur.fs`
@@ -1084,11 +1085,10 @@ Not blocking for beta, but needed for 1.0.
 
 - [x] Font fallback chain (e.g. `font: mont, calibri, sans`)
 - [x] Runtime font loading / registration
-- [ ] Font metrics caching — **deferred post-1.0**: `measureText` is
-      already cached at the widget level (`Text` caches wrapped lines);
-      a renderer-level cache would require invalidation on `unloadFont`,
-      which is not part of `IRenderer`'s contract. Revisit only if
-      benchmarks show `measureText` in the frame profile.
+- [x] Font metrics & layout caching — vertical metrics cached on
+      `FontRecord`, shaped layouts cached per context in
+      `TextEngine::layoutCached` (LRU cache, default 256 entries,
+      invalidated automatically on `loadFont` / `unloadFont` / DPI change)
 
 **Notes.**
 - `FontStack` lives in `Style.hpp` as `SmallVector<std::string, 3>` with
@@ -1097,16 +1097,11 @@ Not blocking for beta, but needed for 1.0.
   `Style` is now `FontStack`.
 - `parseFontStack` (in `StyleAttr.hpp`) splits on commas, trims, and
   honors `"..."` / `'...'` quotes for family names containing spaces.
-- `IAssetProvider::getFont(const FontStack&)` iterates the stack and
-  returns the first valid handle. It is non-pure: backends only need to
-  implement `getFont(std::string_view)`.
-- `IAssetProvider::loadFont` / `loadFontFromMemory` / `unloadFont` are
-  virtual with no-op defaults. `RaylibAssetProvider` implements them;
-  `MockAssetProvider` implements them for tests.
-- `RaylibRenderer::unregisterFont` frees the GPU texture and removes the
-  `::Font` from `res.fonts`. Calling `unloadFont` on a name that is still
-  in use by a `ComputedStyle` is documented as undefined behavior: the
-  next `drawText` falls back to the renderer's default font.
+- Font ownership and fallback moved from `IAssetProvider` into
+  `UIContext::textEngine` (§5.41): `TextEngine::loadFont`,
+  `loadFontFromMemory`, `unloadFont`, `getFont`, and `resolveFont`
+  handle per-context font lifecycle, and `TextEngine` performs
+  per-grapheme-cluster font fallback during HarfBuzz shaping.
 
 ### 5.3 `calc()` extensions
 
@@ -2273,7 +2268,7 @@ declared). Updated `tests/test_transitions.cpp` and
 
 ### 5.34 Extended glyph range in `RaylibAssetProvider`
 
-**Status:** 🟢 done.
+**Status:** 🟢 done. (Superseded by §5.41 TextEngine.)
 
 `RaylibAssetProvider::loadFont` and `loadFontFromMemory` now pass an
 explicit codepoint list covering ASCII (`32..126`), Latin-1
@@ -2471,6 +2466,40 @@ inline `getGlobalRegistry()` singleton across TUs.
 - [x] Trim unnecessary concrete widget `#include`s from `include/ZMarkup.hpp`
 - [x] Verify full `make test` suite
 
+### 5.40 Per-instance `UIContext` & unified `IBackend`
+
+**Status:** 🟢 done.
+
+- [x] Refactor `UIContext` from singleton to instantiable context owning
+      `Theme`, `FilterRegistry`, `TextEngine`, and `TargetPool`
+- [x] Add `attachBackend` / `detachBackend`, `mount` / `unmount`,
+      `runFrame` / `renderFrame`
+- [x] Introduce unified `IBackend` host interface and `ShaderLanguage`
+      asset resolution (`IAssetProvider::loadEffectAsset`)
+
+### 5.41 `TextEngine` (FreeType + HarfBuzz dynamic glyph atlas)
+
+**Status:** 🟢 done.
+
+- [x] Backend-independent text shaping (HarfBuzz) and rasterization
+      (FreeType) in `TextEngine` (`include/TextEngine.hpp`, `src/TextEngine.cpp`)
+- [x] Dynamic RGBA8 shelf-packed glyph atlas via `IRenderer::createTexture` /
+      `updateTexture` / `destroyTexture` and batched `drawGeometry`
+- [x] Per-context layout LRU cache (`layoutCached`), cluster-aware hit-testing,
+      caret, and selection rects
+- [x] Grayscale rendering with `FT_LOAD_TARGET_LIGHT` and 2x horizontal
+      oversampling on 1x DPI displays (zero chromatic fringing, single
+      `BlendMode::Alpha` path across light/dark themes and render targets)
+
+### 5.42 `SDL3Backend` (SDL3 + OpenGL 3.3 Core)
+
+**Status:** 🟢 done.
+
+- [x] Implement `SDL3Platform`, `SDL3Renderer` (batched OpenGL 3.3 Core),
+      `SDL3AssetProvider`, and `SDL3Backend`
+- [x] Full feature parity with `RaylibBackend` (`Effects`, `NestedTargets`,
+      `TargetSubRect`, HiDPI via `SDL_GetWindowPixelDensity`)
+
 ---
 
 ## Phase 6 — Internationalization
@@ -2535,7 +2564,7 @@ Not needed for the framework itself, but for adoption.
 - [ ] `docs/SUMMARY.md` — a navigable table of contents
 - [ ] Review pass to remove redundancy between `user/` and `api/`
 - [ ] Standardize examples (consistent output API, consistent style)
-- [ ] Add a "cheatsheet" page for `.zstyle` and ZMarkup
+- [x] Add a "cheatsheet" page for `.zstyle` and ZMarkup (`docs/CHEATSHEET.md`)
 - [ ] Tutorial: build a complete app in 30 minutes
 
 ### 7.2 Examples
@@ -2713,8 +2742,8 @@ canonical artifact for downstream use. No breaking API changes.
 
 Long-term ideas, not committed.
 
-- [ ] Multi-window support (requires refactoring `UIContext` away from
-      singleton)
+- [ ] Multi-window support (`UIContext` singleton refactor completed;
+      multi-window backend/event routing still pending)
 - [ ] GPU-accelerated transitions (currently CPU-interpolated)
 - [ ] Retained-mode scene graph caching
 - [ ] Accessibility tree (screen reader support)

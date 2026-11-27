@@ -806,16 +806,7 @@ namespace ZenitUI
 			auto *ctx = context();
 			if (!ctx)
 				return fallback;
-			FontHandle h = ctx->textEngine.resolveFont(style.font, fallback);
-			if (h.id != 0)
-				return h;
-			if (!style.font.empty() && ctx->assets && ctx->textEngine.defaultFont().id == 0)
-			{
-				FontHandle ah = ctx->assets->getFont(style.font);
-				if (ah.id != 0)
-					return ah;
-			}
-			return fallback;
+			return ctx->textEngine.resolveFont(style.font, fallback);
 		}
 
 		/** \struct ResolvedBgTexture

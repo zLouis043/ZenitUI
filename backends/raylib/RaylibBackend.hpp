@@ -43,7 +43,6 @@
 
 #include "UIContext.hpp"
 #include "Backend.hpp"
-#include "Utf8.hpp"
 
 #include <raylib.h>
 
@@ -171,7 +170,7 @@ namespace ZenitUI
 		{
 			return f == Feature::Effects ||
 				   f == Feature::NestedTargets ||
-				   f == Feature::TargetSubRect;
+				   f == Feature::TargetSubRect ;
 		}
 
 		/** \brief Reports support for `GLSL330` shader language. */
@@ -186,8 +185,8 @@ namespace ZenitUI
 		void fillCircle(Vec2 center, float radius, Color c) override;
 		void strokeRect(Rect r, float thickness, Color c) override;
 		void drawGeometry(std::span<const Vertex2D> vertices,
-                  std::span<const uint32_t> indices,
-                  TextureHandle tex = {}) override;
+						  std::span<const uint32_t> indices,
+						  TextureHandle tex = {}) override;
 		/// @}
 
 		/// \name Textures & Nine-Slice
@@ -197,13 +196,6 @@ namespace ZenitUI
 		TextureHandle createTexture(int w, int h, const uint8_t *rgbaPixels = nullptr) override;
 		void updateTexture(TextureHandle t, Rect region, const uint8_t *rgbaPixels) override;
 		void destroyTexture(TextureHandle t) override;
-		/// @}
-
-		/// \name Text Rendering & Metrics
-		/// @{
-		void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) override;
-		Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) override;
-		Vec2 measureCodepoint(FontHandle f, uint32_t codepoint, float size, float spacing) override;
 		/// @}
 
 		/// \name Transform, Clip & Shader Stacks
@@ -243,13 +235,9 @@ namespace ZenitUI
 		/// @{
 		/** \brief Register an existing Raylib `::Texture2D` and return its ZenitUI handle. */
 		TextureHandle registerTexture(const ::Texture2D &t);
-		/** \brief Register an existing Raylib `::Font` and return its ZenitUI handle. */
-		FontHandle registerFont(const ::Font &f);
 		/** \brief Register an existing Raylib `::Shader` and return its ZenitUI handle. */
 		EffectHandle registerEffect(const ::Shader &s);
 
-		/** \brief Unload and unregister a previously registered font handle. */
-		void unregisterFont(FontHandle h);
 		/** \brief Unload and unregister a previously registered texture handle. */
 		void unregisterTexture(TextureHandle h);
 		/** \brief Unload and unregister a previously registered shader handle. */
@@ -311,56 +299,24 @@ namespace ZenitUI
 	class RaylibAssetProvider : public IAssetProvider
 	{
 	public:
-		using IAssetProvider::getFont;
-		using IAssetProvider::loadFont;
-		using IAssetProvider::loadFontFromMemory;
-		using IAssetProvider::unloadFont;
-		using IAssetProvider::loadTexture; 
-		using IAssetProvider::loadEffect; 
-		using IAssetProvider::unloadTexture; 
+		using IAssetProvider::loadEffect;
+		using IAssetProvider::loadTexture;
 		using IAssetProvider::unloadEffect;
+		using IAssetProvider::unloadTexture;
 
 		/** \brief Construct an asset provider bound to \p renderer for GPU handle registration. */
 		explicit RaylibAssetProvider(RaylibRenderer &renderer) : renderer_(renderer) {}
 
-		/// \name Font Codepoint Configuration
-		/// @{
-		/** \brief Replace the default codepoint set used by subsequent font loads. */
-		void setDefaultCodepoints(CodepointSet set) { defaultCodepoints_ = std::move(set); }
-		/** \brief Mutable access to the default codepoint set (e.g. to merge extra ranges). */
-		CodepointSet &defaultCodepoints() { return defaultCodepoints_; }
-		/** \brief Read-only access to the default codepoint set. */
-		const CodepointSet &defaultCodepoints() const { return defaultCodepoints_; }
-		/// @}
-
 		/// \name Raylib Convenience Loaders
 		/// @{
-		/** \brief Load a font from disk using `defaultCodepoints()`. */
-		bool loadFont(std::string name, const char *path, int baseSize = 96);
-		/** \brief Load a font from disk using an explicit \p codepoints set. */
-		bool loadFont(std::string name, const char *path, int baseSize, const CodepointSet &codepoints);
 		/** \brief Load a 2D texture from disk and register it under \p name. */
 		bool loadTexture(std::string name, const char *path);
 		/** \brief Load a fragment (and optional vertex) shader from disk under \p name. */
 		bool loadEffect(std::string name, const char *fsPath, const char *vsPath = nullptr);
-		/** \brief Load a font from memory with an explicit \p baseSize and \p codepoints set. */
-		FontHandle loadFontFromMemory(std::string_view name,
-									  const void *data, size_t size,
-									  int baseSize, const CodepointSet &codepoints);
 		/// @}
 
 		/// \name IAssetProvider Overrides
 		/// @{
-		FontHandle loadFont(std::string_view name, std::string_view path) override;
-		FontHandle loadFontFromMemory(std::string_view name, const void *data, size_t size) override;
-		void unloadFont(std::string_view name) override;
-
-		FontHandle getFont(std::string_view name) override
-		{
-			auto it = fonts_.find(name);
-			return it != fonts_.end() ? it->second : FontHandle{};
-		}
-
 		TextureHandle getTexture(std::string_view name) override
 		{
 			auto it = textures_.find(name);
@@ -373,23 +329,12 @@ namespace ZenitUI
 			return it != effects_.end() ? it->second : EffectHandle{};
 		}
 
-		void setDefaultFontSize(int baseSize) override
-	{
-		if (baseSize > 0)
-			defaultFontSize_ = baseSize;
-	}
-
-	void addDefaultCodepointRange(uint32_t first, uint32_t last) override
-	{
-		defaultCodepoints_.addRange(first, last);
-	}
-
-	TextureHandle loadTexture(std::string_view name, std::string_view path) override;
-	void unloadTexture(std::string_view name) override;
-	EffectHandle loadEffect(std::string_view name,
-							std::string_view fsPath,
-							std::string_view vsPath = {}) override;
-	void unloadEffect(std::string_view name) override;
+		TextureHandle loadTexture(std::string_view name, std::string_view path) override;
+		void unloadTexture(std::string_view name) override;
+		EffectHandle loadEffect(std::string_view name,
+								std::string_view fsPath,
+								std::string_view vsPath = {}) override;
+		void unloadEffect(std::string_view name) override;
 
 		/// @}
 
@@ -397,17 +342,9 @@ namespace ZenitUI
 		template <typename Handle>
 		using HandleMap = std::unordered_map<std::string, Handle, detail::TransparentStringHash, std::equal_to<>>;
 
-		FontHandle bakeAndRegisterFont(const std::string &name,
-									   const char *filePath,
-									   int baseSize,
-									   const CodepointSet &codepoints);
-
 		RaylibRenderer &renderer_;
-		HandleMap<FontHandle> fonts_;
 		HandleMap<TextureHandle> textures_;
 		HandleMap<EffectHandle> effects_;
-		CodepointSet defaultCodepoints_{CodepointSet::defaultLatin()};
-		int defaultFontSize_{96};
 	};
 
 	// =========================================================================

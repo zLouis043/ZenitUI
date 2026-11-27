@@ -102,25 +102,31 @@ namespace ZenitUI::UI
         void draw(float parentOp) override
         {
             auto *ctx = context();
-            if (!ctx)
+            auto *r = ctx ? ctx->renderer : nullptr;
+            if (!r || rect.width <= 0.0f || rect.height <= 0.0f)
                 return;
 
-            auto r = ctx->renderer;
-            if (rect.width <= 0 || rect.height <= 0)
-                return;
-            if (!target.valid() || target.width != (int)rect.width || target.height != (int)rect.height)
+            const float snapX = std::floor(rect.x);
+            const float snapY = std::floor(rect.y);
+            const int tw = std::max(1, static_cast<int>(std::ceil(rect.x + rect.width) - snapX));
+            const int th = std::max(1, static_cast<int>(std::ceil(rect.y + rect.height) - snapY));
+            const Rect snapRect{snapX, snapY, static_cast<float>(tw), static_cast<float>(th)};
+
+            if (!target.valid() || target.width != tw || target.height != th)
             {
                 if (target.valid())
                     r->destroyTarget(target);
-                target = r->createTarget((int)rect.width, (int)rect.height);
+                target = r->createTarget(tw, th);
+                if (!target.valid())
+                    return;
             }
-            float op = style_.currentStyle.opacity * parentOp;
 
+            const float op = style_.currentStyle.opacity * parentOp;
             const Vec2 vp = viewportSize();
 
             Transform2D offsetTr;
             offsetTr.pivot = {0.0f, 0.0f};
-            offsetTr.translate = {-rect.x, -rect.y};
+            offsetTr.translate = {-snapX, -snapY};
 
             r->pushTarget(target);
             r->pushTransform(offsetTr);
@@ -134,23 +140,29 @@ namespace ZenitUI::UI
             r->popTarget();
 
             Transform2D tr;
-            tr.pivot = rect.center();
+            tr.pivot = snapRect.center();
             tr.translate = {
                 style_.currentStyle.translateX.resolveSelfH(rect.width, rect.height, vp),
                 style_.currentStyle.translateY.resolveSelfV(rect.width, rect.height, vp)};
             tr.rotationDeg = style_.currentStyle.rotation;
             tr.scale = style_.currentStyle.scale;
 
+            const bool identity =
+                tr.translate.x == 0.0f && tr.translate.y == 0.0f &&
+                tr.rotationDeg == 0.0f && tr.scale == 1.0f;
+
             EffectHandle fx = resolveActiveEffect();
             const bool applyFx = fx.valid() && r->supports(Feature::Effects);
 
-            r->pushTransform(tr);
+            if (!identity)
+                r->pushTransform(tr);
             if (applyFx)
                 r->pushEffect(fx);
-            r->drawTarget(target, rect, Colors::White.withAlpha(op));
+            r->drawTarget(target, snapRect, Colors::White.withAlpha(op));
             if (applyFx)
                 r->popEffect();
-            r->popTransform();
+            if (!identity)
+                r->popTransform();
         }
 
     private:

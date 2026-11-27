@@ -524,9 +524,9 @@ Dropdown {
 
 /* ---- Effects, Animations & Canvas ------------------------------------- */
 @keyframes pulseSoft {
-    0%   { scale: 1.00; opacity: 1.0; }
-    50%  { scale: 1.06; opacity: 0.78; }
-    100% { scale: 1.00; opacity: 1.0; }
+    0%   { scale: 1.00;}
+    50%  { scale: 1.06;}
+    100% { scale: 1.00; }
 }
 
 .fx-tile {
@@ -556,9 +556,9 @@ Dropdown {
 }
 
 .fx-blur   { filter: blur(2px); }
-.fx-sepia  { filter: sepia(0.85); background: #4a78d0; color: #ffffff; }
+.fx-sepia  { filter: sepia(0.85); background: #4a78d0; }
 .fx-shadow { filter: drop-shadow(4px, 4px, #000000aa); }
-.fx-chain  { filter: blur(1.5px), sepia(0.7); background: #4a78d0; color: #ffffff; }
+.fx-chain  { filter: blur(1.5px), sepia(0.7); background: #4a78d0; }
 
 Canvas {
     background: var(--input-bg);

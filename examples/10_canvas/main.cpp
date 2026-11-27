@@ -101,6 +101,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // Load the shader used by the second canvas.
     assets.loadEffect("hueShift", "assets/shaders/hue_shift.fs");
 

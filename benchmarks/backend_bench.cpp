@@ -263,14 +263,7 @@ int main(int argc, char **argv)
     }
 
     // Load shared real assets (same paths as 00_demo, run from repo root).
-    auto &assets = backend->assets();
-    assets.setDefaultFontSize(48);
-    assets.addDefaultCodepointRange(0x2000, 0x206F);
-    assets.addDefaultCodepointRange(0x2190, 0x21FF);
-    assets.loadFont("inter", "assets/fonts/Inter_18pt-Regular.ttf");
-    assets.loadEffect("blur", "assets/shaders/blur.fs");
-    assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");
-    assets.loadEffect("sepia", "assets/shaders/sepia.fs");
+    ctx.textEngine.loadFont("inter", "assets/fonts/Inter_18pt-Regular.ttf");
 
     ctx.filters.add(FilterDef{
         .name = "sepia",
@@ -306,8 +299,7 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildDashboardTree();
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, ctx, *activeRoot, true);
-            },
+                    renderOneFrame(*backend, ctx, *activeRoot, true); },
             /*body=*/[&]
             { renderOneFrame(*backend, ctx, *activeRoot, true); });
 
@@ -319,8 +311,7 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildDashboardTree();
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, ctx, *activeRoot, true);
-            },
+                    renderOneFrame(*backend, ctx, *activeRoot, true); },
             /*body=*/[&]
             { renderOneFrame(*backend, ctx, *activeRoot, false); });
 
@@ -332,8 +323,7 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildRoundedCardsTree(200);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, ctx, *activeRoot, true);
-            },
+                    renderOneFrame(*backend, ctx, *activeRoot, true); },
             /*body=*/[&]
             { renderOneFrame(*backend, ctx, *activeRoot, true); });
 
@@ -346,15 +336,13 @@ int main(int argc, char **argv)
                 scrollStep = 0;
                 activeRoot = buildVirtualScrollTree(virtualList);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, ctx, *activeRoot, true);
-            },
+                    renderOneFrame(*backend, ctx, *activeRoot, true); },
             /*body=*/[&]
             {
                 scrollStep = (scrollStep + 7) % 9000;
                 if (virtualList)
                     virtualList->scrollToItem(scrollStep);
-                renderOneFrame(*backend, ctx, *activeRoot, true);
-            });
+                renderOneFrame(*backend, ctx, *activeRoot, true); });
 
         // 5. 10 cards with multi-pass filters (blur + drop-shadow FBO stress).
         runner.add(
@@ -364,8 +352,7 @@ int main(int argc, char **argv)
                 resetScene();
                 activeRoot = buildFilteredCardsTree(10);
                 for (int i = 0; i < 3; ++i)
-                    renderOneFrame(*backend, ctx, *activeRoot, true);
-            },
+                    renderOneFrame(*backend, ctx, *activeRoot, true); },
             /*body=*/[&]
             { renderOneFrame(*backend, ctx, *activeRoot, true); });
 

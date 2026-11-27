@@ -55,7 +55,7 @@ namespace ZenitUI
 	{
 		Effects,	   ///< Supports fragment shaders (`pushEffect`, `popEffect`, `setEffect*`).
 		NestedTargets, ///< Supports off-screen render targets (`createTarget`, `pushTarget`, `popTarget`, `drawTarget`).
-		TargetSubRect  ///< Supports sub-rectangle blitting via `drawTarget(t, src, dst, tint)` for pooled targets.
+		TargetSubRect, ///< Supports sub-rectangle blitting via `drawTarget(t, src, dst, tint)` for pooled targets.
 	};
 
 	/**
@@ -79,9 +79,9 @@ namespace ZenitUI
 	 */
 	enum class BlendMode
 	{
-		Alpha,         ///< Standard straight-alpha compositing (default).
+		Alpha,		   ///< Standard straight-alpha compositing (default).
 		Premultiplied, ///< Premultiplied-alpha compositing for multi-draw cached FBO layers.
-		Replace        ///< Overwrite destination RGBA directly without blending (single-quad filter passes).
+		Replace,	   ///< Overwrite destination RGBA directly without blending (single-quad filter passes).
 	};
 
 	/**
@@ -224,61 +224,6 @@ namespace ZenitUI
 
 		/// @}
 
-		/// \name Text Rendering & Metrics
-		/// @{
-
-		/**
-		 * \brief Draw UTF-8 text `s` at logical top-left `pos` using font `f`, font size `size`, and letter spacing `spacing`.
-		 * \note If `f.id == 0` or unknown, backends should fall back to a default built-in font.
-		 */
-		virtual void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) = 0;
-
-		/** \brief Measure the logical `{width, height}` of UTF-8 text `s` rendered with `f`, `size`, and `spacing`. */
-		virtual Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) = 0;
-
-		/**
-		 * \brief Measure the advance width and height of a single Unicode codepoint.
-		 *
-		 * Default implementation encodes `codepoint` as UTF-8 and delegates to
-		 * `measureText`. Backends with direct glyph tables (e.g. `RaylibRenderer`)
-		 * can override for O(1) lookup without string allocation.
-		 */
-		virtual Vec2 measureCodepoint(FontHandle f, uint32_t codepoint, float size, float spacing)
-		{
-			char buf[4];
-			size_t len = 0;
-			if (codepoint <= 0x7Fu)
-			{
-				buf[0] = static_cast<char>(codepoint);
-				len = 1;
-			}
-			else if (codepoint <= 0x7FFu)
-			{
-				buf[0] = static_cast<char>(0xC0u | (codepoint >> 6));
-				buf[1] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
-				len = 2;
-			}
-			else if (codepoint <= 0xFFFFu && !(codepoint >= 0xD800u && codepoint <= 0xDFFFu))
-			{
-				buf[0] = static_cast<char>(0xE0u | (codepoint >> 12));
-				buf[1] = static_cast<char>(0x80u | ((codepoint >> 6) & 0x3Fu));
-				buf[2] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
-				len = 3;
-			}
-			else if (codepoint <= 0x10FFFFu && !(codepoint >= 0xD800u && codepoint <= 0xDFFFu))
-			{
-				buf[0] = static_cast<char>(0xF0u | (codepoint >> 18));
-				buf[1] = static_cast<char>(0x80u | ((codepoint >> 12) & 0x3Fu));
-				buf[2] = static_cast<char>(0x80u | ((codepoint >> 6) & 0x3Fu));
-				buf[3] = static_cast<char>(0x80u | (codepoint & 0x3Fu));
-				len = 4;
-			}
-			if (len == 0)
-				return {0.0f, size};
-			return measureText(f, std::string_view(buf, len), size, spacing);
-		}
-		/// @}
-
 		/// \name State Stacks
 		/// @{
 
@@ -357,6 +302,7 @@ namespace ZenitUI
 
 		/** \brief Return `true` while a `pushTarget` is active without a matching `popTarget`. */
 		virtual bool inTarget() const = 0;
+
 		/// @}
 
 		/// \name Shader Uniforms
@@ -376,6 +322,7 @@ namespace ZenitUI
 
 		/** \brief Set a normalized RGBA `vec4` uniform (0..1 per channel) named `name` on effect `e`. */
 		virtual void setEffectVec4(EffectHandle e, const char *name, Color value) = 0;
+
 		/// @}
 
 		/// \name Capabilities & Frame Lifecycle
@@ -454,7 +401,7 @@ namespace ZenitUI
 	 * \class IAssetProvider
 	 * \brief Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.
 	 *
-	 * Lookup methods (`getFont`, `getTexture`, `getEffect`) are called frequently
+	 * Lookup methods (`getTexture`, `getEffect`) are called frequently
 	 * during layout and draw; implementations should avoid heap allocations
 	 * (e.g. via transparent `std::string_view` hashing). Return a default-constructed
 	 * invalid handle (`id == 0`) when a requested asset is not registered.
@@ -466,62 +413,11 @@ namespace ZenitUI
 	public:
 		virtual ~IAssetProvider() = default;
 
-		/** \brief Look up a loaded font by logical `name`; returns `{0}` if not found. */
-		virtual FontHandle getFont(std::string_view name) = 0;
-
 		/** \brief Look up a loaded 2D texture by logical `name`; returns `{0}` if not found. */
 		virtual TextureHandle getTexture(std::string_view name) = 0;
 
 		/** \brief Look up a loaded shader effect by logical `name`; returns `{0}` if not found. */
 		virtual EffectHandle getEffect(std::string_view name) = 0;
-
-		/** \brief Walk fallback font names in `stack` and return the first valid `FontHandle`. */
-		virtual FontHandle getFont(const FontStack &stack)
-		{
-			for (const auto &name : stack)
-			{
-				FontHandle h = getFont(std::string_view(name));
-				if (h.id != 0)
-					return h;
-			}
-			return {};
-		}
-
-		/** \brief Convenience overload forwarding C strings to `getFont(std::string_view)`. */
-		FontHandle getFont(const char *name)
-		{
-			return getFont(std::string_view(name));
-		}
-
-		/**
-		 * \brief Optional runtime hook to load a font from disk under the given logical name.
-		 * \return Registered `FontHandle`, or `{0}` if unsupported or loading failed.
-		 */
-		virtual FontHandle loadFont(std::string_view /*name*/,
-									std::string_view /*path*/)
-		{
-			return {};
-		}
-
-		/**
-		 * \brief Optional runtime hook to load a font from an in-memory TTF/OTF buffer.
-		 * \return Registered `FontHandle`, or `{0}` if unsupported or loading failed.
-		 */
-		virtual FontHandle loadFontFromMemory(std::string_view /*name*/,
-											  const void * /*data*/,
-											  size_t /*size*/)
-		{
-			return {};
-		}
-
-		/** \brief Optional runtime hook to unload and unregister a font by logical name. */
-		virtual void unloadFont(std::string_view /*name*/) {}
-
-		/** \brief Optional hint setting the default rasterization pixel size used by `loadFont`. */
-		virtual void setDefaultFontSize(int /*baseSize*/) {}
-
-		/** \brief Optional hook to include an extra Unicode codepoint range `[first, last]` in subsequent font bakes. */
-		virtual void addDefaultCodepointRange(uint32_t /*first*/, uint32_t /*last*/) {}
 
 		/** \brief Optional runtime hook to load a 2D texture from disk under `name`. */
 		virtual TextureHandle loadTexture(std::string_view /*name*/, std::string_view /*path*/)
@@ -818,8 +714,8 @@ namespace ZenitUI
 		std::weak_ptr<Layout> pointerCapture;
 
 		FilterRegistry filters; ///< Per-context post-processing filter definitions (preloaded with builtins).
-		Theme theme; ///< Per-context stylesheet (rules, keyframes, and `:root` style).
-		TextEngine textEngine; ///< Per-context FreeType/HarfBuzz shaper, glyph atlas, and layout cache.
+		Theme theme;			///< Per-context stylesheet (rules, keyframes, and `:root` style).
+		TextEngine textEngine;	///< Per-context FreeType/HarfBuzz shaper, glyph atlas, and layout cache.
 
 		uint32_t viewportGeneration{0};
 
@@ -881,7 +777,7 @@ namespace ZenitUI
 			if (!cullingClipStack.empty())
 				cullingClipStack.pop_back();
 		}
-		
+
 		/**
 		 * \brief Advance the frame: pull platform state and reset one-shot flags.
 		 *
@@ -982,6 +878,7 @@ namespace ZenitUI
 			auto sp = focusedNode.lock();
 			return sp && sp.get() == n;
 		}
+
 	private:
 		friend class Layout;
 

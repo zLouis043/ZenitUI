@@ -179,7 +179,7 @@ namespace ZenitUI
         /** \brief Set the fixed character advance used when no TTF/OTF font is loaded (headless fallback). */
         void setFallbackCharWidth(float width);
         float fallbackCharWidth() const;
-
+        
         /** \brief Configure the maximum number of entries kept in the layout LRU cache. */
         void setLayoutCacheCapacity(size_t maxEntries);
 
@@ -191,6 +191,10 @@ namespace ZenitUI
 
         /** \brief Return current atlas and layout-cache diagnostics. */
         TextAtlasStats stats() const;
+
+        /** \brief Optional test hook invoked per visible line when drawing in synthetic fallback mode. */
+        using SyntheticDrawCallback = std::function<void(std::string_view)>;
+        void setSyntheticDrawCallback(SyntheticDrawCallback cb);
 
         // ---- Measurement & Layout ----
 

@@ -51,13 +51,13 @@ int main()
     }
 
     // 1. Load SIL OFL Inter font weights (baked with Latin + common symbols).
+
+    // 1. Load SIL OFL Inter font weights into the context's FreeType/HarfBuzz TextEngine.
+    ctx.textEngine.loadFont("inter", "assets/fonts/Inter_18pt-Regular.ttf");
+    ctx.textEngine.loadFont("inter-semibold", "assets/fonts/Inter_18pt-SemiBold.ttf");
+    ctx.textEngine.loadFont("inter-bold", "assets/fonts/Inter_18pt-Bold.ttf");
+
     auto &assets = backend->assets();
-    assets.setDefaultFontSize(48);
-    assets.addDefaultCodepointRange(0x2000, 0x206F); // General punctuation (• — …)
-    assets.addDefaultCodepointRange(0x2190, 0x21FF); // Arrows (→ ← ↑ ↓)
-    assets.loadFont("inter", "assets/fonts/Inter_18pt-Regular.ttf");
-    assets.loadFont("inter-semibold", "assets/fonts/Inter_18pt-SemiBold.ttf");
-    assets.loadFont("inter-bold", "assets/fonts/Inter_18pt-Bold.ttf");
 
     // 2. Load shared nine-slice texture and post-processing shaders.
     assets.loadTexture("npatches", "assets/images/npatches_y.png");

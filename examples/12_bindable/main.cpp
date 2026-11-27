@@ -88,6 +88,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     ZMarkup::loadStyleString(R"(
         #root {
             width: 100%;

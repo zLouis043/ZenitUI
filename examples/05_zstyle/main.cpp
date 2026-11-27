@@ -65,6 +65,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // -----------------------------------------------------------------------
     //  Load the external stylesheet. Path is relative to the current
     //  working directory, which must be the repository root.

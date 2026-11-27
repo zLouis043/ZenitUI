@@ -2,15 +2,15 @@
  * \page page_custom_backends Writing a Custom Backend
  *
  * ZenitUI is rendering- and windowing-agnostic. To integrate it into a custom
- * engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan,
+ * engine or a different graphics library (GLFW + bgfx, Sokol, Vulkan,
  * DirectX, etc.), implement three lightweight interfaces and attach them to a
  * `ZenitUI::UIContext`:
  *
  * | Interface | Responsibility |
  * | :--- | :--- |
  * | `IPlatform` | Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard |
- * | `IRenderer` | 2D vector primitives, textures/nine-slice, text metrics & draw, clip/transform/shader stacks, optional off-screen targets  |
- * | `IAssetProvider` | Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders  |
+ * | `IRenderer` | 2D vector primitives, textures/nine-slice, dynamic RGBA textures (`createTexture`/`updateTexture`/`destroyTexture` for `TextEngine`'s glyph atlas), clip/transform/shader stacks, optional off-screen targets |
+ * | `IAssetProvider` | Name-based loading, caching, lookup, and unloading of textures and shaders |
  *
  * All reference classes are grouped under \ref grp_backends.
  *
@@ -66,7 +66,7 @@
  * Keep these rules in mind when porting to avoid subtle layout or rendering bugs:
  *
  * 1. **Logical vs physical coordinates (`IPlatform` & `IRenderer`)**:
- *    `viewportSize()`, `pointer().pos`, layout rects, and `measureText()` all
+ *    `viewportSize()`, `pointer().pos`, and layout rects all
  *    operate in **logical pixels**. Apply `dpiScale()` only when configuring the
  *    GPU transform/scissor or sampling the physical framebuffer.
  * 2. **Edge-triggered input (`IPlatform`)**:
@@ -82,7 +82,7 @@
  *    the target rectangle so borders sit flush against `fillRect()` /
  *    `fillRoundedRect()` without anti-aliasing gaps.
  * 5. **Zero-allocation asset lookup (`IAssetProvider`)**:
- *    `getFont()`, `getTexture()`, and `getEffect()` are called during layout and
+ *    `getTexture()` and `getEffect()` are called during layout and
  *    draw; prefer transparent `std::string_view` map lookups (see
  *    `detail::TransparentStringHash` in `RaylibBackend.hpp`).
  * 6. **Safe GPU shutdown**:

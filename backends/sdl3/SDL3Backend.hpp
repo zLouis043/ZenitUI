@@ -25,7 +25,6 @@
 
 #include "Backend.hpp"
 #include "UIContext.hpp"
-#include "Utf8.hpp"
 
 #include <functional>
 #include <memory>
@@ -163,13 +162,6 @@ namespace ZenitUI
 		void destroyTexture(TextureHandle h) override;
 		/// @}
 
-		/// \name Text Rendering & Metrics
-		/// @{
-		void drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c) override;
-		Vec2 measureText(FontHandle f, std::string_view s, float size, float spacing) override;
-		Vec2 measureCodepoint(FontHandle f, uint32_t codepoint, float size, float spacing) override;
-		/// @}
-
 		/// \name Transform, Clip & Shader Stacks
 		/// @{
 		void pushTransform(const Transform2D &t) override;
@@ -206,14 +198,6 @@ namespace ZenitUI
 		/// \name Resource Creation Helpers (used by `SDL3AssetProvider`)
 		/// @{
 		TextureHandle createTextureRGBA(int width, int height, const unsigned char *rgbaPixels);
-
-
-		FontHandle createFontFromTTF(const unsigned char *ttfData,
-									 size_t ttfSize,
-									 int baseSize,
-									 const CodepointSet &codepoints);
-		void destroyFont(FontHandle h);
-
 		EffectHandle createEffectFromSource(const char *fsSource, const char *vsSource = nullptr);
 		void destroyEffect(EffectHandle h);
 		/// @}
@@ -230,44 +214,20 @@ namespace ZenitUI
 	/**
 	 * \class SDL3AssetProvider
 	 * \ingroup grp_backends
-	 * \brief Reference `IAssetProvider` loading fonts (`stb_truetype`), textures
-	 *        (`stb_image`), and GLSL 330 shaders into `SDL3Renderer`.
+	 * \brief Reference `IAssetProvider` loading textures (`stb_image`) and
+	 *        GLSL 330 shaders into `SDL3Renderer`.
 	 */
 	class SDL3AssetProvider : public IAssetProvider
 	{
 	public:
-		using IAssetProvider::getFont;
-
 		explicit SDL3AssetProvider(SDL3Renderer &renderer) : renderer_(renderer) {}
 		~SDL3AssetProvider() override;
 
 		SDL3AssetProvider(const SDL3AssetProvider &) = delete;
 		SDL3AssetProvider &operator=(const SDL3AssetProvider &) = delete;
 
-		/// \name Font Codepoint Configuration
-		/// @{
-		void setDefaultCodepoints(CodepointSet set) { defaultCodepoints_ = std::move(set); }
-		CodepointSet &defaultCodepoints() { return defaultCodepoints_; }
-		const CodepointSet &defaultCodepoints() const { return defaultCodepoints_; }
-		/// @}
-
 		/// \name IAssetProvider Overrides
 		/// @{
-		void setDefaultFontSize(int baseSize) override
-		{
-			if (baseSize > 0)
-				defaultFontSize_ = baseSize;
-		}
-
-		void addDefaultCodepointRange(uint32_t first, uint32_t last) override
-		{
-			defaultCodepoints_.addRange(first, last);
-		}
-
-		FontHandle loadFont(std::string_view name, std::string_view path) override;
-		FontHandle loadFontFromMemory(std::string_view name, const void *data, size_t size) override;
-		void unloadFont(std::string_view name) override;
-
 		TextureHandle loadTexture(std::string_view name, std::string_view path) override;
 		void unloadTexture(std::string_view name) override;
 
@@ -275,12 +235,6 @@ namespace ZenitUI
 								std::string_view fsPath,
 								std::string_view vsPath = {}) override;
 		void unloadEffect(std::string_view name) override;
-
-		FontHandle getFont(std::string_view name) override
-		{
-			auto it = fonts_.find(name);
-			return it != fonts_.end() ? it->second : FontHandle{};
-		}
 
 		TextureHandle getTexture(std::string_view name) override
 		{
@@ -300,11 +254,8 @@ namespace ZenitUI
 		using HandleMap = std::unordered_map<std::string, Handle, detail::SdlTransparentStringHash, std::equal_to<>>;
 
 		SDL3Renderer &renderer_;
-		HandleMap<FontHandle> fonts_;
 		HandleMap<TextureHandle> textures_;
 		HandleMap<EffectHandle> effects_;
-		CodepointSet defaultCodepoints_{CodepointSet::defaultLatin()};
-		int defaultFontSize_{96};
 	};
 
 	// =========================================================================

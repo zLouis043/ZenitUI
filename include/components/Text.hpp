@@ -131,12 +131,18 @@ namespace ZenitUI::UI
             else if (style.verticalAlign == Align::End)
                 pos.y += availH - activeLayout->size.y;
 
-            r->pushClip(rect);
+            const bool needsClip =
+                (activeLayout->size.x > availW + 0.5f) ||
+                (activeLayout->size.y > availH + 0.5f);
+
+            if (needsClip)
+                r->pushClip(rect);
             ctx->textEngine.draw(*r, *activeLayout,
                                  {pos.x, pos.y, availW, availH},
                                  style.color.withAlpha(op),
                                  spec, ha, text);
-            r->popClip();
+            if (needsClip)
+                r->popClip();
         }
 
         void onLayout() override

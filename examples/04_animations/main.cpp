@@ -73,6 +73,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // -----------------------------------------------------------------------
     //  All animations live here. No C++ code drives them.
     // -----------------------------------------------------------------------

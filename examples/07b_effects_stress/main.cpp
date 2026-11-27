@@ -28,6 +28,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // Load fragment shaders used by the built-in and custom filters
     assets.loadEffect("blur", "assets/shaders/blur.fs");
     assets.loadEffect("dropShadow", "assets/shaders/drop_shadow.fs");

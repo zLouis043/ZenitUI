@@ -271,24 +271,6 @@ namespace ZenitUI::Test
 		
 		/// @}
 
-		/// \name Text Rendering & Metrics
-		/// @{
-		void drawText(FontHandle, std::string_view s, Vec2, float, float, Color) override
-		{
-			++drawTextCount;
-			drawnTexts.emplace_back(s);
-		}
-
-		Vec2 measureText(FontHandle, std::string_view s, float size, float spacing) override
-		{
-			const size_t count = Utf8::codepointCount(s);
-			float w = charWidth * static_cast<float>(count);
-			if (count > 0)
-				w += spacing * static_cast<float>(count - 1);
-			return {w, size};
-		}
-		/// @}
-
 		/// \name Transform, Clip & Effect Stacks
 		/// @{
 		void pushTransform(const Transform2D &t) override { transformHistory.push_back(t); }
@@ -521,18 +503,12 @@ namespace ZenitUI::Test
 	class MockAssetProvider : public IAssetProvider
 	{
 	public:
-		using IAssetProvider::getFont;
 
 		/// \name Test Registration Helpers
 		/// @{
 		void registerEffect(std::string name)
 		{
 			effects_[std::move(name)] = EffectHandle{nextEffectId_++};
-		}
-
-		void registerFont(const std::string &name, FontHandle h)
-		{
-			fonts_[name] = h;
 		}
 		/// @}
 
@@ -544,35 +520,6 @@ namespace ZenitUI::Test
 			auto it = effects_.find(std::string(name));
 			return it != effects_.end() ? it->second : EffectHandle{};
 		}
-
-		FontHandle getFont(std::string_view name) override
-		{
-			auto it = fonts_.find(std::string(name));
-			return it != fonts_.end() ? it->second : FontHandle{};
-		}
-
-		FontHandle loadFont(std::string_view name, std::string_view /*path*/) override
-		{
-			if (name.empty())
-				return {};
-			const FontHandle h{nextFontId_++};
-			fonts_[std::string(name)] = h;
-			return h;
-		}
-
-		FontHandle loadFontFromMemory(std::string_view name,
-									  const void * /*data*/, size_t /*size*/) override
-		{
-			return loadFont(name, "");
-		}
-
-		void unloadFont(std::string_view name) override
-		{
-			fonts_.erase(std::string(name));
-		}
-
-		void setDefaultFontSize(int baseSize) override { defaultFontSize_ = baseSize; }
-		void addDefaultCodepointRange(uint32_t, uint32_t) override {}
 
 		TextureHandle loadTexture(std::string_view name, std::string_view /*path*/) override
 		{
@@ -614,11 +561,8 @@ namespace ZenitUI::Test
 
 	private:
 		std::unordered_map<std::string, EffectHandle> effects_;
-		std::unordered_map<std::string, FontHandle> fonts_;
 		std::unordered_map<std::string, TextureHandle> textures_;
-		int defaultFontSize_{96};
 		uint32_t nextEffectId_{100};
-		uint32_t nextFontId_{500};
 		uint32_t nextTextureId_{300};
 	};
 
@@ -643,6 +587,11 @@ namespace ZenitUI::Test
 		Env()
 		{
 			ctx.attachBackend(&renderer, &platform, &assets);
+			ctx.textEngine.setSyntheticDrawCallback([this](std::string_view s)
+			{
+				++renderer.drawTextCount;
+				renderer.drawnTexts.emplace_back(s);
+			});
 			reset();
 		}
 

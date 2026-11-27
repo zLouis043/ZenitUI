@@ -40,7 +40,7 @@
  * | \ref grp_zmarkup | ZMarkup DSL, `UINode` / `WeakUINode`, Prefabs & `<Slot>`, `If` / `Each`, `Bindable<T>` | \ref 06_zmarkup/main.cpp "06_zmarkup", \ref 11_ref_list/main.cpp "11_ref_list", \ref 12_bindable/main.cpp "12_bindable", \ref 13_prefabs/main.cpp "13_prefabs" |
  * | \ref grp_zstyle | `.zstyle` cascade, `Theme`, `Style`, `StyleParser`, `@media`, diagnostics | \ref 05_zstyle/main.cpp "05_zstyle" |
  * | \ref grp_anim | Transitions, `@keyframes`, imperative animations, `FilterRegistry` & shaders | \ref 04_animations/main.cpp "04_animations", \ref 04b_imperative_animations/main.cpp "04b_imperative_animations", \ref 07_effects/main.cpp "07_effects" |
- * | \ref grp_backends | Pluggable backends (`IBackend`, `IRenderer`, `IPlatform`, `IAssetProvider`), `Utf8`/`CodepointSet`, `Debug` | \ref 01_hello_world/main.cpp "01_hello_world", \ref 00_demo/main.cpp "00_demo" |
+ * | \ref grp_backends | Pluggable backends (`IBackend`, `IRenderer`, `IPlatform`, `IAssetProvider`), `TextEngine`, `Utf8`, `Debug` | \ref 01_hello_world/main.cpp "01_hello_world", \ref 00_demo/main.cpp "00_demo" |
  *
  * \section sec_learning_path Suggested Reading Order
  *
@@ -151,17 +151,18 @@
  */
 
 /**
- * \defgroup grp_backends Backends, UTF-8 & Debugging
- * \brief Pluggable backend implementations, Unicode utilities (`Utf8`, `CodepointSet`), logging, and debug dumps.
+ * \defgroup grp_backends Backends, TextEngine, UTF-8 & Debugging
+ * \brief Pluggable backend implementations, FreeType/HarfBuzz `TextEngine`, Unicode utilities (`Utf8`), logging, and debug dumps.
  *
  * The core library depends solely on `IPlatform`, `IRenderer`, and
  * `IAssetProvider` (optionally wrapped by `IBackend` for multi-backend apps).
  * Browse \ref page_available_backends for all built-in implementations, or
  * follow \ref page_custom_backends to port ZenitUI to your own engine.
  *
- * Use `CodepointSet` to control which UTF-8 glyph ranges are baked into font
- * atlases, and `ZenitUI::Debug` (`ZENITUI_DEBUG`) to inspect live layout trees,
- * styles, and render stats.
+ * Fonts are loaded per context via `UIContext::textEngine.loadFont(...)`
+ * (HarfBuzz OpenType shaping + FreeType on-demand HiDPI glyph atlas), and
+ * `ZenitUI::Debug` (`ZENITUI_DEBUG`) inspects live layout trees, styles, and
+ * render stats.
  *
  * **Live examples:** \ref 01_hello_world/main.cpp "01_hello_world" ·
  * \ref 00_demo/main.cpp "00_demo"

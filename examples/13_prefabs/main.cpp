@@ -34,6 +34,8 @@ int main(void)
     UIContext ctx;
     ctx.attachBackend(&backendRenderer, &backendPlatform, &backendAssets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // Inline styling for Toggle (its intrinsic size is 0x0 until styled).
     ZMarkup::loadStyleString(R"(
         Toggle {

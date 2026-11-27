@@ -63,6 +63,8 @@ int main()
     UIContext ctx;
     ctx.attachBackend(&renderer, &platform, &assets);
 
+    ctx.textEngine.loadFont("default", "assets/fonts/Inter_18pt-Regular.ttf");
+
     // -----------------------------------------------------------------------
     //  Minimal styling for the built-in widgets.
     //  This is inline (not a file) so the example stays self-contained.

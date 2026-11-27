@@ -6,9 +6,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <filesystem>
-#include <fstream>
-#include <system_error>
 
 namespace ZenitUI
 {
@@ -18,6 +15,8 @@ namespace ZenitUI
 	namespace
 	{
 		constexpr int kRoundedCornerSegments = 12;
+		constexpr int kGlOneMinusSrc1Color = 0x88FA;
+		constexpr int kGlOneMinusSrc1Alpha = 0x88FC;
 
 		::Color toRl(const Color &c) { return {c.r, c.g, c.b, c.a}; }
 		::Vector2 toRl(const Vec2 &v) { return {v.x, v.y}; }
@@ -226,16 +225,9 @@ namespace ZenitUI
 
 		std::unordered_map<uint32_t, ::RenderTexture2D> targets;
 		std::unordered_map<uint32_t, ::Texture2D> textures;
-		std::unordered_map<uint32_t, ::Font> fonts;
 		std::unordered_map<uint32_t, ::Shader> shaders;
 		std::unordered_map<uint32_t, UniformCache> shaderUniforms;
 		uint32_t nextId{1};
-
-		::Font resolveFont(FontHandle h) const
-		{
-			auto it = fonts.find(h.id);
-			return it != fonts.end() ? it->second : GetFontDefault();
-		}
 
 		int uniformLocation(EffectHandle e, const char *name)
 		{
@@ -342,8 +334,10 @@ namespace ZenitUI
 		{
 			const size_t count = std::min(kMaxChunkIndices, totalIndices - offset);
 			rlCheckRenderBatchLimit(static_cast<int>(count));
-			rlSetTexture(glTexId);
+			rlBegin(RL_QUADS);
+			rlEnd();
 			rlBegin(RL_TRIANGLES);
+			rlSetTexture(glTexId);
 
 			for (size_t i = 0; i < count; ++i)
 			{
@@ -357,6 +351,7 @@ namespace ZenitUI
 			}
 
 			rlEnd();
+			rlSetTexture(0);
 		}
 	}
 
@@ -425,38 +420,6 @@ namespace ZenitUI
 		unregisterTexture(t);
 	}
 
-	// ---- Text rendering & metrics ----
-
-	void RaylibRenderer::drawText(FontHandle f, std::string_view s, Vec2 pos, float size, float spacing, Color c)
-	{
-		const ::Font font = res_->resolveFont(f);
-		// Raylib's C API requires a null-terminated string; snap to whole pixels for crisp glyphs.
-		const std::string str(s);
-		const ::Vector2 snappedPos = {std::round(pos.x), std::round(pos.y)};
-		DrawTextEx(font, str.c_str(), snappedPos, size, spacing, toRl(c));
-	}
-
-	Vec2 RaylibRenderer::measureText(FontHandle f, std::string_view s, float size, float spacing)
-	{
-		const ::Font font = res_->resolveFont(f);
-		const std::string str(s);
-		const ::Vector2 v = MeasureTextEx(font, str.c_str(), size * dpiScale_, spacing * dpiScale_);
-		return {v.x / dpiScale_, v.y / dpiScale_};
-	}
-
-	Vec2 RaylibRenderer::measureCodepoint(FontHandle f, uint32_t codepoint, float size, float /*spacing*/)
-	{
-		const ::Font font = res_->resolveFont(f);
-		if (font.baseSize <= 0)
-			return {0.0f, size};
-		const float scale = size / static_cast<float>(font.baseSize);
-		const int idx = GetGlyphIndex(font, static_cast<int>(codepoint));
-		const float adv = (font.glyphs[idx].advanceX == 0)
-							  ? (font.recs[idx].width * scale)
-							  : (static_cast<float>(font.glyphs[idx].advanceX) * scale);
-		return {adv, size};
-	}
-
 	// ---- Transform, clip & shader stacks ----
 
 	void RaylibRenderer::pushTransform(const Transform2D &t)
@@ -506,8 +469,10 @@ namespace ZenitUI
 		const float scale = insideTarget_ ? 1.0f : dpiScale_;
 		const int x = static_cast<int>(std::floor(clip.x * scale));
 		const int y = static_cast<int>(std::floor(clip.y * scale));
-		const int w = static_cast<int>(std::ceil(clip.width * scale));
-		const int h = static_cast<int>(std::ceil(clip.height * scale));
+		const int x2 = static_cast<int>(std::ceil((clip.x + clip.width) * scale));
+		const int y2 = static_cast<int>(std::ceil((clip.y + clip.height) * scale));
+		const int w = (clip.width <= 0.0f) ? 0 : std::max(0, x2 - x);
+		const int h = (clip.height <= 0.0f) ? 0 : std::max(0, y2 - y);
 
 		if (!insideTarget_)
 		{
@@ -617,6 +582,7 @@ namespace ZenitUI
 		{
 		case BlendMode::Alpha:
 			rlEnableColorBlend();
+			rlSetBlendMode(RL_BLEND_ALPHA);
 			rlSetBlendFactorsSeparate(RL_SRC_ALPHA, RL_ONE_MINUS_SRC_ALPHA,
 									  RL_ONE, RL_ONE_MINUS_SRC_ALPHA,
 									  RL_FUNC_ADD, RL_FUNC_ADD);
@@ -681,7 +647,6 @@ namespace ZenitUI
 			SetShaderValue(res_->shaders[e.id], loc, arr, SHADER_UNIFORM_VEC4);
 		}
 	}
-
 	// ---- Off-screen render targets ----
 
 	void RaylibRenderer::suspendRenderState()
@@ -854,27 +819,11 @@ namespace ZenitUI
 		return {id, t.width, t.height};
 	}
 
-	FontHandle RaylibRenderer::registerFont(const ::Font &f)
-	{
-		const uint32_t id = res_->nextId++;
-		res_->fonts[id] = f;
-		return {id};
-	}
-
 	EffectHandle RaylibRenderer::registerEffect(const ::Shader &s)
 	{
 		const uint32_t id = res_->nextId++;
 		res_->shaders[id] = s;
 		return {id};
-	}
-
-	void RaylibRenderer::unregisterFont(FontHandle h)
-	{
-		if (auto it = res_->fonts.find(h.id); it != res_->fonts.end())
-		{
-			UnloadFont(it->second);
-			res_->fonts.erase(it);
-		}
 	}
 
 	void RaylibRenderer::unregisterTexture(TextureHandle h)
@@ -899,111 +848,6 @@ namespace ZenitUI
 	// =========================================================================
 	// 3. RaylibAssetProvider (IAssetProvider)
 	// =========================================================================
-
-	FontHandle RaylibAssetProvider::bakeAndRegisterFont(const std::string &name,
-														const char *filePath,
-														int baseSize,
-														const CodepointSet &codepoints)
-	{
-		auto cps = codepoints.build();
-		int *cpData = cps.empty() ? nullptr : cps.data();
-		const int cpCount = static_cast<int>(cps.size());
-
-		::Font f = LoadFontEx(filePath, baseSize, cpData, cpCount);
-		if (f.texture.id == 0)
-			return {};
-
-		SetTextureFilter(f.texture, TEXTURE_FILTER_BILINEAR);
-		const FontHandle h = renderer_.registerFont(f);
-		fonts_[name] = h;
-		return h;
-	}
-
-	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize)
-	{
-		return loadFont(std::move(name), path, baseSize, defaultCodepoints_);
-	}
-
-	bool RaylibAssetProvider::loadFont(std::string name, const char *path, int baseSize,
-									   const CodepointSet &codepoints)
-	{
-		if (name.empty() || !path)
-			return false;
-		if (fonts_.find(name) != fonts_.end())
-		{
-			logWarn("Assets", "", 0, 0, "font '" + name + "' already loaded");
-			return false;
-		}
-
-		if (bakeAndRegisterFont(name, path, baseSize, codepoints).id == 0)
-		{
-			logError("Assets", "", 0, 0,
-					 "failed to load font '" + name + "' from '" + path + "'");
-			return false;
-		}
-		return true;
-	}
-
-	FontHandle RaylibAssetProvider::loadFont(std::string_view name, std::string_view path)
-	{
-		const std::string key(name);
-		if (!loadFont(key, std::string(path).c_str(), defaultFontSize_, defaultCodepoints_))
-			return {};
-		return fonts_[key];
-	}
-
-	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
-													   const void *data, size_t size)
-	{
-		return loadFontFromMemory(name, data, size, defaultFontSize_, defaultCodepoints_);
-	}
-
-	FontHandle RaylibAssetProvider::loadFontFromMemory(std::string_view name,
-													   const void *data, size_t size,
-													   int baseSize,
-													   const CodepointSet &codepoints)
-	{
-		if (name.empty() || !data || size == 0)
-			return {};
-
-		const std::string key(name);
-		if (auto it = fonts_.find(key); it != fonts_.end())
-		{
-			logWarn("Assets", "", 0, 0, "font '" + key + "' already loaded");
-			return it->second;
-		}
-
-		// Write to a temporary file so LoadFontEx works identically across Raylib versions.
-		const std::filesystem::path tmp =
-			std::filesystem::temp_directory_path() / ("zenit_font_" + key + ".ttf");
-		{
-			std::ofstream out(tmp, std::ios::binary);
-			if (!out)
-			{
-				logError("Assets", "", 0, 0,
-						 "failed to open temp file for font '" + key + "'");
-				return {};
-			}
-			out.write(static_cast<const char *>(data), static_cast<std::streamsize>(size));
-		}
-
-		const FontHandle h = bakeAndRegisterFont(key, tmp.string().c_str(), baseSize, codepoints);
-		std::error_code ec;
-		std::filesystem::remove(tmp, ec);
-
-		if (h.id == 0)
-			logError("Assets", "", 0, 0, "failed to load font '" + key + "' from memory");
-		return h;
-	}
-
-	void RaylibAssetProvider::unloadFont(std::string_view name)
-	{
-		if (auto it = fonts_.find(name); it != fonts_.end())
-		{
-			renderer_.unregisterFont(it->second);
-			fonts_.erase(it);
-		}
-	}
 
 	bool RaylibAssetProvider::loadTexture(std::string name, const char *path)
 	{

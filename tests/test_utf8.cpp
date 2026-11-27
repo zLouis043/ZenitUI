@@ -198,15 +198,6 @@ TEST(Utf8, text_wrap_and_ellipsis_never_split_multibyte_chars)
     }
 }
 
-TEST(Utf8, renderer_measureCodepoint_default_works)
-{
-    Env env;
-    Vec2 mAscii = env.renderer.measureCodepoint({}, 'A', 20.0f, 0.0f);
-    Vec2 mEuro = env.renderer.measureCodepoint({}, 0x20ACu, 20.0f, 0.0f);
-    CHECK_NEAR(mAscii.x, 8.0f, 0.01f);
-    CHECK_NEAR(mEuro.x, 8.0f, 0.01f);
-}
-
 TEST(Utf8, codepoint_set_presets_dedup_and_utf8_extraction)
 {
     auto def = CodepointSet::defaultLatin().build();
@@ -227,4 +218,15 @@ TEST(Utf8, codepoint_set_presets_dedup_and_utf8_extraction)
     CHECK(!std::binary_search(custom.begin(), custom.end(), '\n'));
     CHECK(std::binary_search(custom.begin(), custom.end(), 0x2605)); // ★
     CHECK(std::binary_search(custom.begin(), custom.end(), 0x00E0)); // à
+}
+
+TEST(Utf8, text_engine_measures_multibyte_codepoints)
+{
+    Env env;
+    TextMeasureSpec spec;
+    spec.fontSize = 20.0f;
+    Vec2 mAscii = env.ctx.textEngine.measureText("A", spec);
+    Vec2 mEuro = env.ctx.textEngine.measureText("\xE2\x82\xAC", spec); // '€'
+    CHECK_NEAR(mAscii.x, 8.0f, 0.01f);
+    CHECK_NEAR(mEuro.x, 8.0f, 0.01f);
 }
