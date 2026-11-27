@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795735424575,
+  "lastUpdate": 1795811048291,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI backend benchmarks (Raylib & SDL3)": [
@@ -1183,6 +1183,80 @@ window.BENCHMARK_DATA = {
           {
             "name": "sdl3.frame.filters_10",
             "value": 3161.68,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "742ce399e4fe436b65b1ef7eb7f2913bf3183275",
+          "message": "refactor(text): switch TextEngine to 2x oversampled grayscale and sync docs\n\nReplace dual-source RGB LCD subpixel text rendering with grayscale\nFreeType rasterization (FT_LOAD_TARGET_LIGHT) and 2x horizontal\noversampling on 1x DPI displays (<= 48px), eliminating chromatic\nfringing and unifying text rendering under standard BlendMode::Alpha\nacross light/dark themes and off-screen targets.\n\n- TextEngine: remove LCD shader, FT_LCD_FILTER_H, and setSubpixelLcd API;\n  key glyph cache by hOversample and add 1px horizontal transparent\n  padding for sub-pixel positioning with GL_LINEAR filtering\n- Core & backends: drop Feature::SubpixelText and BlendMode::SubpixelLcd\n  from IRenderer, RaylibRenderer, and SDL3Renderer\n- 00_demo: fix hardcoded white text color in Light Mode stylesheet\n- Docs: sync ROADMAP.md (§4.9g, §5.2, §5.40–§5.42, §7.1, Phase 8),\n  PROPOSALS.md (Proposal 9/11/12), README.md (SDL3Backend, git clone fix),\n  and custom_backends.dox",
+          "timestamp": "2026-11-27T21:19:32+01:00",
+          "tree_id": "7e4bda80e1277dee84945b1f91ed59444df20d45",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/742ce399e4fe436b65b1ef7eb7f2913bf3183275"
+        },
+        "date": 1795811046243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "raylib.frame.static_dashboard",
+            "value": 3102.54,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.render.static_dashboard",
+            "value": 3068.38,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.rounded_cards_200",
+            "value": 1719.08,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.virtual_scroll_10k",
+            "value": 3056.02,
+            "unit": "us"
+          },
+          {
+            "name": "raylib.frame.filters_10",
+            "value": 1657.79,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.static_dashboard",
+            "value": 2933.02,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.render.static_dashboard",
+            "value": 2877.11,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.rounded_cards_200",
+            "value": 1606.82,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.virtual_scroll_10k",
+            "value": 2898.35,
+            "unit": "us"
+          },
+          {
+            "name": "sdl3.frame.filters_10",
+            "value": 1709.86,
             "unit": "us"
           }
         ]
