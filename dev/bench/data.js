@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795735221701,
+  "lastUpdate": 1795810917012,
   "repoUrl": "https://github.com/zLouis043/ZenitUI",
   "entries": {
     "ZenitUI benchmarks": [
@@ -18520,6 +18520,170 @@ window.BENCHMARK_DATA = {
           {
             "name": "system.frame.filtered50.rotAnim",
             "value": 127.127,
+            "unit": "us"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "committer": {
+            "email": "louis.003.lt@gmail.com",
+            "name": "zLouis043",
+            "username": "zLouis043"
+          },
+          "distinct": true,
+          "id": "742ce399e4fe436b65b1ef7eb7f2913bf3183275",
+          "message": "refactor(text): switch TextEngine to 2x oversampled grayscale and sync docs\n\nReplace dual-source RGB LCD subpixel text rendering with grayscale\nFreeType rasterization (FT_LOAD_TARGET_LIGHT) and 2x horizontal\noversampling on 1x DPI displays (<= 48px), eliminating chromatic\nfringing and unifying text rendering under standard BlendMode::Alpha\nacross light/dark themes and off-screen targets.\n\n- TextEngine: remove LCD shader, FT_LCD_FILTER_H, and setSubpixelLcd API;\n  key glyph cache by hOversample and add 1px horizontal transparent\n  padding for sub-pixel positioning with GL_LINEAR filtering\n- Core & backends: drop Feature::SubpixelText and BlendMode::SubpixelLcd\n  from IRenderer, RaylibRenderer, and SDL3Renderer\n- 00_demo: fix hardcoded white text color in Light Mode stylesheet\n- Docs: sync ROADMAP.md (§4.9g, §5.2, §5.40–§5.42, §7.1, Phase 8),\n  PROPOSALS.md (Proposal 9/11/12), README.md (SDL3Backend, git clone fix),\n  and custom_backends.dox",
+          "timestamp": "2026-11-27T21:19:32+01:00",
+          "tree_id": "7e4bda80e1277dee84945b1f91ed59444df20d45",
+          "url": "https://github.com/zLouis043/ZenitUI/commit/742ce399e4fe436b65b1ef7eb7f2913bf3183275"
+        },
+        "date": 1795810915286,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse.zstyle.200rules",
+            "value": 165.731,
+            "unit": "us"
+          },
+          {
+            "name": "parse.zmarkup.100elements",
+            "value": 2.93108,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_1term",
+            "value": 0.00282668,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.construct_2term",
+            "value": 0.0145503,
+            "unit": "us"
+          },
+          {
+            "name": "micro.Value.lerp",
+            "value": 0.011597,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from",
+            "value": 0.40965,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.copy",
+            "value": 0.513692,
+            "unit": "us"
+          },
+          {
+            "name": "micro.ComputedStyle.from_with_parent",
+            "value": 0.456253,
+            "unit": "us"
+          },
+          {
+            "name": "micro.evaluateKeyframes",
+            "value": 0.225794,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCss.100",
+            "value": 0.699253,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickCssAndOverlay.100",
+            "value": 23.8399,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tickImperative.100",
+            "value": 22.0891,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.addChild.1000",
+            "value": 7.76228,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.removeAllChildren.1000",
+            "value": 12.4533,
+            "unit": "us"
+          },
+          {
+            "name": "micro.tree.drawChildren.500",
+            "value": 18.7334,
+            "unit": "us"
+          },
+          {
+            "name": "micro.SmallVector.push_back_inline",
+            "value": 0.00267146,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.static100",
+            "value": 25.8677,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.200rules",
+            "value": 87.7358,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.transitions100",
+            "value": 32.1707,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.animated100",
+            "value": 69.4558,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.wide200",
+            "value": 52.9679,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.layout_stress",
+            "value": 40.3981,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.mixed200",
+            "value": 61.3794,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.large1000",
+            "value": 308.02,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.classChange.1000",
+            "value": 290.45,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.static",
+            "value": 29.1287,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.scaleAnim",
+            "value": 64.8354,
+            "unit": "us"
+          },
+          {
+            "name": "system.frame.filtered50.rotAnim",
+            "value": 55.2013,
             "unit": "us"
           }
         ]
