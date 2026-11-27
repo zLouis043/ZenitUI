@@ -206,7 +206,9 @@ $(function(){initNavTree('11_ref_list_2main_8cpp-example.html','',''); });
 <div class="line">    <a id="_a5" name="_a5"></a><a class="code hl_struct" href="structZenitUI_1_1UIContext.html">UIContext</a> ctx;</div>
 <div class="line">    ctx.<a id="a6" name="a6"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">attachBackend</a>(&amp;renderer, &amp;platform, &amp;assets);</div>
 <div class="line"> </div>
-<div class="line">    <a id="_a7" name="_a7"></a><a class="code hl_function" href="group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9">ZMarkup::loadStyleString</a>(R<span class="stringliteral">&quot;(</span></div>
+<div class="line">    ctx.<a id="a7" name="a7"></a><a class="code hl_variable" href="structZenitUI_1_1UIContext.html#a84dfc8a8611c7997a07c3400f7d144bf">textEngine</a>.<a id="a8" name="a8"></a><a class="code hl_function" href="classZenitUI_1_1TextEngine.html#a9dabd909e72513c33490b572b0360a01">loadFont</a>(<span class="stringliteral">&quot;default&quot;</span>, <span class="stringliteral">&quot;assets/fonts/Inter_18pt-Regular.ttf&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    <a id="_a9" name="_a9"></a><a class="code hl_function" href="group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9">ZMarkup::loadStyleString</a>(R<span class="stringliteral">&quot;(</span></div>
 <div class="line"><span class="stringliteral">        #root {</span></div>
 <div class="line"><span class="stringliteral">            width: 100%;</span></div>
 <div class="line"><span class="stringliteral">            height: 100%;</span></div>
@@ -254,21 +256,21 @@ $(function(){initNavTree('11_ref_list_2main_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">        Button:hover { background: #7bc0ff; }</span></div>
 <div class="line"><span class="stringliteral">        .btn-danger { background: #be2137; }</span></div>
 <div class="line"><span class="stringliteral">        .btn-danger:hover { background: #e62937; }</span></div>
-<div class="line"><span class="stringliteral">    )&quot;, ctx.<a id="a8" name="a8"></a><a class="code hl_variable" href="structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d">theme</a>);</span></div>
+<div class="line"><span class="stringliteral">    )&quot;, ctx.<a id="a10" name="a10"></a><a class="code hl_variable" href="structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d">theme</a>);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">    </span><span class="comment">// Build the initial tree.</span></div>
 <div class="line">    <span class="keyword">auto</span> ui = ZMarkup::build(kInitialMarkup);</div>
 <div class="line">    <span class="keywordflow">if</span> (!ui.root())</div>
 <div class="line">    {</div>
 <div class="line">        std::fprintf(stderr, <span class="stringliteral">&quot;Failed to build initial markup\n&quot;</span>);</div>
-<div class="line">        ctx.<a id="a9" name="a9"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">detachBackend</a>();</div>
+<div class="line">        ctx.<a id="a11" name="a11"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">detachBackend</a>();</div>
 <div class="line">        CloseWindow();</div>
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">auto</span> list = ui.find&lt;<a id="_a10" name="_a10"></a><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a>&gt;(<span class="stringliteral">&quot;list&quot;</span>);      <span class="comment">// by #id</span></div>
-<div class="line">    <span class="keyword">auto</span> counter = ui.<a id="a11" name="a11"></a><a class="code hl_variable" href="classZenitUI_1_1Layout.html#a1cc11f339765c715799f3fad120d8510">ref</a>&lt;<a id="_a12" name="_a12"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Text.html">Text</a>&gt;(<span class="stringliteral">&quot;counter&quot;</span>);   <span class="comment">// by @ref</span></div>
-<div class="line">    <span class="keyword">auto</span> addBtn = ui.find&lt;<a id="_a13" name="_a13"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Button.html">Button</a>&gt;(<span class="stringliteral">&quot;add&quot;</span>);     <span class="comment">// by #id</span></div>
+<div class="line">    <span class="keyword">auto</span> list = ui.find&lt;<a id="_a12" name="_a12"></a><a class="code hl_class" href="classZenitUI_1_1Layout.html">Layout</a>&gt;(<span class="stringliteral">&quot;list&quot;</span>);      <span class="comment">// by #id</span></div>
+<div class="line">    <span class="keyword">auto</span> counter = ui.<a id="a13" name="a13"></a><a class="code hl_variable" href="classZenitUI_1_1Layout.html#a1cc11f339765c715799f3fad120d8510">ref</a>&lt;<a id="_a14" name="_a14"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Text.html">Text</a>&gt;(<span class="stringliteral">&quot;counter&quot;</span>);   <span class="comment">// by @ref</span></div>
+<div class="line">    <span class="keyword">auto</span> addBtn = ui.find&lt;<a id="_a15" name="_a15"></a><a class="code hl_class" href="classZenitUI_1_1UI_1_1Button.html">Button</a>&gt;(<span class="stringliteral">&quot;add&quot;</span>);     <span class="comment">// by #id</span></div>
 <div class="line">    <span class="keyword">auto</span> resetBtn = ui.find&lt;<a class="code hl_class" href="classZenitUI_1_1UI_1_1Button.html">Button</a>&gt;(<span class="stringliteral">&quot;reset&quot;</span>); <span class="comment">// by #id</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">if</span> (!list || !counter || !addBtn || !resetBtn)</div>
@@ -323,7 +325,7 @@ $(function(){initNavTree('11_ref_list_2main_8cpp-example.html','',''); });
 <div class="line">        <span class="keywordflow">return</span> itemRoot;</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    addBtn-&gt;<a id="a14" name="a14"></a>onClick = [list, makeItem]()</div>
+<div class="line">    addBtn-&gt;<a id="a16" name="a16"></a>onClick = [list, makeItem]()</div>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordtype">int</span> n = (int)list-&gt;children.size() + 1;</div>
 <div class="line">        list-&gt;addChild(makeItem(n));</div>
@@ -340,15 +342,15 @@ $(function(){initNavTree('11_ref_list_2main_8cpp-example.html','',''); });
 <div class="line">    <span class="comment">// runs the frame loop; the ZMarkup tree is its child.</span></div>
 <div class="line">    <span class="keyword">auto</span> wrapper = CounterSync::create(list, counter);</div>
 <div class="line">    wrapper-&gt;addChild(ui.root());</div>
-<div class="line">    ctx.<a id="a15" name="a15"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">mount</a>(wrapper);</div>
+<div class="line">    ctx.<a id="a17" name="a17"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">mount</a>(wrapper);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">while</span> (!WindowShouldClose())</div>
 <div class="line">    {</div>
-<div class="line">        ctx.<a id="a16" name="a16"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">runFrame</a>(GetFrameTime());</div>
+<div class="line">        ctx.<a id="a18" name="a18"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">runFrame</a>(GetFrameTime());</div>
 <div class="line"> </div>
 <div class="line">        BeginDrawing();</div>
 <div class="line">        ClearBackground(::BLACK);</div>
-<div class="line">        ctx.<a id="a17" name="a17"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">renderFrame</a>();</div>
+<div class="line">        ctx.<a id="a19" name="a19"></a><a class="code hl_function" href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">renderFrame</a>();</div>
 <div class="line">        EndDrawing();</div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -359,22 +361,24 @@ $(function(){initNavTree('11_ref_list_2main_8cpp-example.html','',''); });
 <div class="ttc" id="aRaylibBackend_8hpp_html"><div class="ttname"><a href="RaylibBackend_8hpp.html">RaylibBackend.hpp</a></div><div class="ttdoc">Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...</div></div>
 <div class="ttc" id="aZenitUI_8hpp_html"><div class="ttname"><a href="ZenitUI_8hpp.html">ZenitUI.hpp</a></div><div class="ttdoc">Umbrella include for the whole framework.</div></div>
 <div class="ttc" id="aclassZenitUI_1_1Layout_html"><div class="ttname"><a href="classZenitUI_1_1Layout.html">ZenitUI::Layout</a></div><div class="ttdoc">The base node type: tree, style, layout, input, scroll, render.</div><div class="ttdef"><b>Definition</b> Layout.hpp:131</div></div>
-<div class="ttc" id="aclassZenitUI_1_1Layout_html_a1cc11f339765c715799f3fad120d8510"><div class="ttname"><a href="classZenitUI_1_1Layout.html#a1cc11f339765c715799f3fad120d8510">ZenitUI::Layout::ref</a></div><div class="ttdeci">std::string ref</div><div class="ttdoc">@ref for UINode::ref / refAll lookup.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1079</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:312</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:102</div></div>
-<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:144</div></div>
-<div class="ttc" id="aclassZenitUI_1_1TLayout_html"><div class="ttname"><a href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout</a></div><div class="ttdoc">CRTP base for components that want fluent builders and a static create() factory.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1655</div></div>
+<div class="ttc" id="aclassZenitUI_1_1Layout_html_a1cc11f339765c715799f3fad120d8510"><div class="ttname"><a href="classZenitUI_1_1Layout.html#a1cc11f339765c715799f3fad120d8510">ZenitUI::Layout::ref</a></div><div class="ttdeci">std::string ref</div><div class="ttdoc">@ref for UINode::ref / refAll lookup.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1070</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibAssetProvider_html"><div class="ttname"><a href="classZenitUI_1_1RaylibAssetProvider.html">ZenitUI::RaylibAssetProvider</a></div><div class="ttdoc">Reference IAssetProvider for loading and caching Raylib fonts, textures, and shaders by logical name.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:300</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibPlatform_html"><div class="ttname"><a href="classZenitUI_1_1RaylibPlatform.html">ZenitUI::RaylibPlatform</a></div><div class="ttdoc">Reference IPlatform backed by Raylib window, input, and clipboard APIs.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:101</div></div>
+<div class="ttc" id="aclassZenitUI_1_1RaylibRenderer_html"><div class="ttname"><a href="classZenitUI_1_1RaylibRenderer.html">ZenitUI::RaylibRenderer</a></div><div class="ttdoc">Reference IRenderer backed by Raylib / rlgl.</div><div class="ttdef"><b>Definition</b> RaylibBackend.hpp:143</div></div>
+<div class="ttc" id="aclassZenitUI_1_1TLayout_html"><div class="ttname"><a href="classZenitUI_1_1TLayout.html">ZenitUI::TLayout</a></div><div class="ttdoc">CRTP base for components that want fluent builders and a static create() factory.</div><div class="ttdef"><b>Definition</b> Layout.hpp:1646</div></div>
+<div class="ttc" id="aclassZenitUI_1_1TextEngine_html_a9dabd909e72513c33490b572b0360a01"><div class="ttname"><a href="classZenitUI_1_1TextEngine.html#a9dabd909e72513c33490b572b0360a01">ZenitUI::TextEngine::loadFont</a></div><div class="ttdeci">FontHandle loadFont(std::string_view name, std::string_view path)</div><div class="ttdoc">Load a TTF/OTF font file from disk under logical name.</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Button_html"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Button.html">ZenitUI::UI::Button</a></div><div class="ttdoc">A push button.</div><div class="ttdef"><b>Definition</b> Button.hpp:45</div></div>
 <div class="ttc" id="aclassZenitUI_1_1UI_1_1Text_html"><div class="ttname"><a href="classZenitUI_1_1UI_1_1Text.html">ZenitUI::UI::Text</a></div><div class="ttdoc">A read-only text node.</div><div class="ttdef"><b>Definition</b> Text.hpp:30</div></div>
 <div class="ttc" id="agroup__grp__core_html_ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca"><div class="ttname"><a href="group__grp__core.html#ggaa4d6ce73648fe3085851e0e7bfd42f32a2187e1021a911b3807cc1bea2eb1a9ca">ZenitUI::LayoutType::Stack</a></div><div class="ttdeci">@ Stack</div><div class="ttdoc">Children overlap each other; Z-order controls paint order.</div><div class="ttdef"><b>Definition</b> UIEnums.hpp:28</div></div>
 <div class="ttc" id="agroup__grp__zstyle_html_gafe7c99c73e3ea499452731da8fcabcd9"><div class="ttname"><a href="group__grp__zstyle.html#gafe7c99c73e3ea499452731da8fcabcd9">ZenitUI::ZMarkup::loadStyleString</a></div><div class="ttdeci">bool loadStyleString(std::string_view src, Theme &amp;theme, const std::string &amp;fileName=&quot;&lt;string&gt;&quot;, DiagnosticSink *sink=nullptr, bool strict=false)</div><div class="ttdoc">Parse src and apply it to theme.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:749</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:645</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context and set it as the primary root.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:783</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:679</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a3272b6b8d1ecb3ca8953b474567ccc73"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame()</div><div class="ttdoc">Render the mounted primary root (beginFrame, draw, endFrame).</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a44015b5a106a074212fedb6d5394a764"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on the mounted primary root.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:768</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8fe195f9f296c28bf9e728b1a8a0e4d"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d">ZenitUI::UIContext::theme</a></div><div class="ttdeci">Theme theme</div><div class="ttdoc">Per-context stylesheet (rules, keyframes, and :root style).</div><div class="ttdef"><b>Definition</b> UIContext.hpp:821</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:664</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a84dfc8a8611c7997a07c3400f7d144bf"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a84dfc8a8611c7997a07c3400f7d144bf">ZenitUI::UIContext::textEngine</a></div><div class="ttdeci">TextEngine textEngine</div><div class="ttdoc">Per-context FreeType/HarfBuzz shaper, glyph atlas, and layout cache.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:718</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_aa8fe195f9f296c28bf9e728b1a8a0e4d"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#aa8fe195f9f296c28bf9e728b1a8a0e4d">ZenitUI::UIContext::theme</a></div><div class="ttdeci">Theme theme</div><div class="ttdoc">Per-context stylesheet (rules, keyframes, and :root style).</div><div class="ttdef"><b>Definition</b> UIContext.hpp:717</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

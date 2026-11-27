@@ -92,11 +92,11 @@ $(function(){initNavTree('classZenitUI_1_1SDL3AssetProvider.html','','classZenit
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::SDL3AssetProvider Class Reference<div class="ingroups"><a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a></div></div></div>
+  <div class="headertitle"><div class="title">ZenitUI::SDL3AssetProvider Class Reference<div class="ingroups"><a class="el" href="group__grp__backends.html">Backends, TextEngine, UTF-8 &amp; Debugging</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> loading fonts (<span class="tt">stb_truetype</span>), textures (<span class="tt">stb_image</span>), and GLSL 330 shaders into <span class="tt"><a class="el" href="classZenitUI_1_1SDL3Renderer.html" title="Reference IRenderer backed by a batched OpenGL 3.3 Core 2D pipeline.">SDL3Renderer</a></span>.  
+<p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> loading textures (<span class="tt">stb_image</span>) and GLSL 330 shaders into <span class="tt"><a class="el" href="classZenitUI_1_1SDL3Renderer.html" title="Reference IRenderer backed by a batched OpenGL 3.3 Core 2D pipeline.">SDL3Renderer</a></span>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SDL3Backend_8hpp_source.html">SDL3Backend.hpp</a>&gt;</code></p>
@@ -114,29 +114,7 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SDL3AssetProvider</b> (const SDL3AssetProvider &amp;)=delete</td></tr>
 <tr class="memitem:af4cb5ab91f77c8457f116ec63e61dd86" id="r_af4cb5ab91f77c8457f116ec63e61dd86"><td class="memItemLeft" align="right" valign="top"><a id="af4cb5ab91f77c8457f116ec63e61dd86" name="af4cb5ab91f77c8457f116ec63e61dd86"></a>
 SDL3AssetProvider &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const SDL3AssetProvider &amp;)=delete</td></tr>
-<tr class="memitem:a4378453450aebf4ddd7d07a42653c249" id="r_a4378453450aebf4ddd7d07a42653c249"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4378453450aebf4ddd7d07a42653c249">getFont</a> (const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;stack)</td></tr>
-<tr class="memdesc:a4378453450aebf4ddd7d07a42653c249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Walk fallback font names in <span class="tt">stack</span> and return the first valid <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>.  <br /></td></tr>
-<tr class="memitem:a38308be482389a9c4e4646b9527b5654" id="r_a38308be482389a9c4e4646b9527b5654"><td class="memItemLeft" align="right" valign="top"><a id="a38308be482389a9c4e4646b9527b5654" name="a38308be482389a9c4e4646b9527b5654"></a>
-<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getFont</b> (const char *name)</td></tr>
-<tr class="memdesc:a38308be482389a9c4e4646b9527b5654"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience overload forwarding C strings to <span class="tt"><a class="el" href="#a13f291016549d037f9756f5fc0b18e2c" title="Look up a loaded font by logical name; returns {0} if not found.">getFont(std::string_view)</a></span>. <br /></td></tr>
-<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Font Codepoint Configuration</div></td></tr>
-<tr class="memitem:a5ad700b568c4404c110a7b8a02ef65a3" id="r_a5ad700b568c4404c110a7b8a02ef65a3"><td class="memItemLeft" align="right" valign="top"><a id="a5ad700b568c4404c110a7b8a02ef65a3" name="a5ad700b568c4404c110a7b8a02ef65a3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setDefaultCodepoints</b> (<a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> set)</td></tr>
-<tr class="memitem:abde4a8d74afd6becf954c4f55368088b" id="r_abde4a8d74afd6becf954c4f55368088b"><td class="memItemLeft" align="right" valign="top"><a id="abde4a8d74afd6becf954c4f55368088b" name="abde4a8d74afd6becf954c4f55368088b"></a>
-<a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>defaultCodepoints</b> ()</td></tr>
-<tr class="memitem:a2d99632b6177edbe2f1c97ef3672c3c6" id="r_a2d99632b6177edbe2f1c97ef3672c3c6"><td class="memItemLeft" align="right" valign="top"><a id="a2d99632b6177edbe2f1c97ef3672c3c6" name="a2d99632b6177edbe2f1c97ef3672c3c6"></a>
-const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>defaultCodepoints</b> () const</td></tr>
-<tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">IAssetProvider Overrides</div></td></tr>
-<tr class="memitem:a4af99705e8aa23ead53f136e1878ebcc" id="r_a4af99705e8aa23ead53f136e1878ebcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4af99705e8aa23ead53f136e1878ebcc">setDefaultFontSize</a> (int baseSize) override</td></tr>
-<tr class="memdesc:a4af99705e8aa23ead53f136e1878ebcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional hint setting the default rasterization pixel size used by <span class="tt"><a class="el" href="#a0321ba9e98109aed72e211bbf57b4709" title="Optional runtime hook to load a font from disk under the given logical name.">loadFont</a></span>.  <br /></td></tr>
-<tr class="memitem:a7c8e074b6ee26e64837fbfec5b6345d6" id="r_a7c8e074b6ee26e64837fbfec5b6345d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c8e074b6ee26e64837fbfec5b6345d6">addDefaultCodepointRange</a> (uint32_t first, uint32_t last) override</td></tr>
-<tr class="memdesc:a7c8e074b6ee26e64837fbfec5b6345d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional hook to include an extra Unicode codepoint range <span class="tt">[first, last]</span> in subsequent font bakes.  <br /></td></tr>
-<tr class="memitem:a0321ba9e98109aed72e211bbf57b4709" id="r_a0321ba9e98109aed72e211bbf57b4709"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0321ba9e98109aed72e211bbf57b4709">loadFont</a> (std::string_view name, std::string_view path) override</td></tr>
-<tr class="memdesc:a0321ba9e98109aed72e211bbf57b4709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a font from disk under the given logical name.  <br /></td></tr>
-<tr class="memitem:a85f775c4b64a5e90a0ff9a61c60bae93" id="r_a85f775c4b64a5e90a0ff9a61c60bae93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85f775c4b64a5e90a0ff9a61c60bae93">loadFontFromMemory</a> (std::string_view name, const void *data, size_t size) override</td></tr>
-<tr class="memdesc:a85f775c4b64a5e90a0ff9a61c60bae93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a font from an in-memory TTF/OTF buffer.  <br /></td></tr>
-<tr class="memitem:a2eb99b1bbf96c95cf2b72d0584ceffb7" id="r_a2eb99b1bbf96c95cf2b72d0584ceffb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2eb99b1bbf96c95cf2b72d0584ceffb7">unloadFont</a> (std::string_view name) override</td></tr>
-<tr class="memdesc:a2eb99b1bbf96c95cf2b72d0584ceffb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to unload and unregister a font by logical name.  <br /></td></tr>
+<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">IAssetProvider Overrides</div></td></tr>
 <tr class="memitem:abb6c6d50ab0e7e81514275f3b77bfcc8" id="r_abb6c6d50ab0e7e81514275f3b77bfcc8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb6c6d50ab0e7e81514275f3b77bfcc8">loadTexture</a> (std::string_view name, std::string_view path) override</td></tr>
 <tr class="memdesc:abb6c6d50ab0e7e81514275f3b77bfcc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a 2D texture from disk under <span class="tt">name</span>.  <br /></td></tr>
 <tr class="memitem:aac44764811f5f5f2cd6a2d09622387fc" id="r_aac44764811f5f5f2cd6a2d09622387fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac44764811f5f5f2cd6a2d09622387fc">unloadTexture</a> (std::string_view name) override</td></tr>
@@ -145,55 +123,17 @@ const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &a
 <tr class="memdesc:a335de7727f47183209d0888f26e40d35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to load a fragment (and optional vertex) shader from disk under <span class="tt">name</span>.  <br /></td></tr>
 <tr class="memitem:a20375e5029fc422b5d3faf6d621f5f35" id="r_a20375e5029fc422b5d3faf6d621f5f35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20375e5029fc422b5d3faf6d621f5f35">unloadEffect</a> (std::string_view name) override</td></tr>
 <tr class="memdesc:a20375e5029fc422b5d3faf6d621f5f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional runtime hook to unload a shader effect by logical name.  <br /></td></tr>
-<tr class="memitem:a13f291016549d037f9756f5fc0b18e2c" id="r_a13f291016549d037f9756f5fc0b18e2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13f291016549d037f9756f5fc0b18e2c">getFont</a> (std::string_view name) override</td></tr>
-<tr class="memdesc:a13f291016549d037f9756f5fc0b18e2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a loaded font by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found.  <br /></td></tr>
 <tr class="memitem:a3bec4c7d07062d34a0ac07b79a479503" id="r_a3bec4c7d07062d34a0ac07b79a479503"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bec4c7d07062d34a0ac07b79a479503">getTexture</a> (std::string_view name) override</td></tr>
 <tr class="memdesc:a3bec4c7d07062d34a0ac07b79a479503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a loaded 2D texture by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found.  <br /></td></tr>
 <tr class="memitem:aa7f95d8777a8ea36dfe9eeffcc9511ed" id="r_aa7f95d8777a8ea36dfe9eeffcc9511ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7f95d8777a8ea36dfe9eeffcc9511ed">getEffect</a> (std::string_view name) override</td></tr>
 <tr class="memdesc:aa7f95d8777a8ea36dfe9eeffcc9511ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Look up a loaded shader effect by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classZenitUI_1_1IAssetProvider"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classZenitUI_1_1IAssetProvider')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classZenitUI_1_1IAssetProvider.html">ZenitUI::IAssetProvider</a></td></tr>
-<tr class="memitem:a38308be482389a9c4e4646b9527b5654 inherit pub_methods_classZenitUI_1_1IAssetProvider" id="r_a38308be482389a9c4e4646b9527b5654"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getFont</b> (const char *name)</td></tr>
-<tr class="memdesc:a38308be482389a9c4e4646b9527b5654 inherit pub_methods_classZenitUI_1_1IAssetProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience overload forwarding C strings to <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html#aed151b0118daf7352b037a4c04f010d4" title="Look up a loaded font by logical name; returns {0} if not found.">getFont(std::string_view)</a></span>. <br /></td></tr>
 <tr class="memitem:a5b7b93de2aca079dbc734910b5f2451a inherit pub_methods_classZenitUI_1_1IAssetProvider" id="r_a5b7b93de2aca079dbc734910b5f2451a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classZenitUI_1_1IAssetProvider.html#a5b7b93de2aca079dbc734910b5f2451a">loadEffectAsset</a> (std::string_view name, std::string_view baseDir, std::string_view fileStem, <a class="el" href="group__grp__core.html#ga544be25d4522a6a93f8e7a6300def03e">ShaderLanguage</a> lang)</td></tr>
 <tr class="memdesc:a5b7b93de2aca079dbc734910b5f2451a inherit pub_methods_classZenitUI_1_1IAssetProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a shader effect by stem <code class="param">fileStem</code> under <code class="param">baseDir</code>, resolving the file extension from <code class="param">lang</code> (e.g.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> loading fonts (<span class="tt">stb_truetype</span>), textures (<span class="tt">stb_image</span>), and GLSL 330 shaders into <span class="tt"><a class="el" href="classZenitUI_1_1SDL3Renderer.html" title="Reference IRenderer backed by a batched OpenGL 3.3 Core 2D pipeline.">SDL3Renderer</a></span>. </p>
+<div class="textblock"><p>Reference <span class="tt"><a class="el" href="classZenitUI_1_1IAssetProvider.html" title="Abstract name-based lookup and runtime lifecycle for fonts, textures, and shaders.">IAssetProvider</a></span> loading textures (<span class="tt">stb_image</span>) and GLSL 330 shaders into <span class="tt"><a class="el" href="classZenitUI_1_1SDL3Renderer.html" title="Reference IRenderer backed by a batched OpenGL 3.3 Core 2D pipeline.">SDL3Renderer</a></span>. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a7c8e074b6ee26e64837fbfec5b6345d6" name="a7c8e074b6ee26e64837fbfec5b6345d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c8e074b6ee26e64837fbfec5b6345d6">&#9670;&#160;</a></span>addDefaultCodepointRange()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::SDL3AssetProvider::addDefaultCodepointRange </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Optional hook to include an extra Unicode codepoint range <span class="tt">[first, last]</span> in subsequent font bakes. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a155777286fc3ff8705c1710bb32e39d0">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
 <a id="aa7f95d8777a8ea36dfe9eeffcc9511ed" name="aa7f95d8777a8ea36dfe9eeffcc9511ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa7f95d8777a8ea36dfe9eeffcc9511ed">&#9670;&#160;</a></span>getEffect()</h2>
 
@@ -220,64 +160,6 @@ const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &a
 <p>Look up a loaded shader effect by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IAssetProvider.html#a53e3acb2f4fe7bf80761cf728900b427">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
-<a id="a4378453450aebf4ddd7d07a42653c249" name="a4378453450aebf4ddd7d07a42653c249"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4378453450aebf4ddd7d07a42653c249">&#9670;&#160;</a></span>getFont() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> <a class="el" href="classZenitUI_1_1IAssetProvider.html#aed151b0118daf7352b037a4c04f010d4">ZenitUI::IAssetProvider::getFont</a> </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structZenitUI_1_1FontStack.html">FontStack</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>stack</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Walk fallback font names in <span class="tt">stack</span> and return the first valid <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a4378453450aebf4ddd7d07a42653c249">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
-<a id="a13f291016549d037f9756f5fc0b18e2c" name="a13f291016549d037f9756f5fc0b18e2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13f291016549d037f9756f5fc0b18e2c">&#9670;&#160;</a></span>getFont() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> ZenitUI::SDL3AssetProvider::getFont </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Look up a loaded font by logical <span class="tt">name</span>; returns <span class="tt">{0}</span> if not found. </p>
-
-<p>Implements <a class="el" href="classZenitUI_1_1IAssetProvider.html#aed151b0118daf7352b037a4c04f010d4">ZenitUI::IAssetProvider</a>.</p>
 
 </div>
 </div>
@@ -348,79 +230,6 @@ const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &a
 
 </div>
 </div>
-<a id="a0321ba9e98109aed72e211bbf57b4709" name="a0321ba9e98109aed72e211bbf57b4709"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0321ba9e98109aed72e211bbf57b4709">&#9670;&#160;</a></span>loadFont()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> ZenitUI::SDL3AssetProvider::loadFont </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Optional runtime hook to load a font from disk under the given logical name. </p>
-<dl class="section return"><dt>Returns</dt><dd>Registered <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>, or <span class="tt">{0}</span> if unsupported or loading failed. </dd></dl>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a39e172a9fee5064ed6bafdbac1023161">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
-<a id="a85f775c4b64a5e90a0ff9a61c60bae93" name="a85f775c4b64a5e90a0ff9a61c60bae93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85f775c4b64a5e90a0ff9a61c60bae93">&#9670;&#160;</a></span>loadFontFromMemory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> ZenitUI::SDL3AssetProvider::loadFontFromMemory </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const void *</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Optional runtime hook to load a font from an in-memory TTF/OTF buffer. </p>
-<dl class="section return"><dt>Returns</dt><dd>Registered <span class="tt"><a class="el" href="structZenitUI_1_1FontHandle.html" title="Opaque handle to a font loaded by the asset provider.">FontHandle</a></span>, or <span class="tt">{0}</span> if unsupported or loading failed. </dd></dl>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a4ae98181a71a2ad9416f82d0a79c9712">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
 <a id="abb6c6d50ab0e7e81514275f3b77bfcc8" name="abb6c6d50ab0e7e81514275f3b77bfcc8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb6c6d50ab0e7e81514275f3b77bfcc8">&#9670;&#160;</a></span>loadTexture()</h2>
 
@@ -454,35 +263,6 @@ const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &a
 
 </div>
 </div>
-<a id="a4af99705e8aa23ead53f136e1878ebcc" name="a4af99705e8aa23ead53f136e1878ebcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4af99705e8aa23ead53f136e1878ebcc">&#9670;&#160;</a></span>setDefaultFontSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::SDL3AssetProvider::setDefaultFontSize </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Optional hint setting the default rasterization pixel size used by <span class="tt"><a class="el" href="#a0321ba9e98109aed72e211bbf57b4709" title="Optional runtime hook to load a font from disk under the given logical name.">loadFont</a></span>. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#ad03e2d8012ec333075caa920b096a7a3">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
 <a id="a20375e5029fc422b5d3faf6d621f5f35" name="a20375e5029fc422b5d3faf6d621f5f35"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20375e5029fc422b5d3faf6d621f5f35">&#9670;&#160;</a></span>unloadEffect()</h2>
 
@@ -509,35 +289,6 @@ const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &a
 <p>Optional runtime hook to unload a shader effect by logical name. </p>
 
 <p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a2c1a8337a23b157719e4804d9a744158">ZenitUI::IAssetProvider</a>.</p>
-
-</div>
-</div>
-<a id="a2eb99b1bbf96c95cf2b72d0584ceffb7" name="a2eb99b1bbf96c95cf2b72d0584ceffb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2eb99b1bbf96c95cf2b72d0584ceffb7">&#9670;&#160;</a></span>unloadFont()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::SDL3AssetProvider::unloadFont </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Optional runtime hook to unload and unregister a font by logical name. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IAssetProvider.html#a51d960d059f0aa47df2a5e7a15e5593c">ZenitUI::IAssetProvider</a>.</p>
 
 </div>
 </div>

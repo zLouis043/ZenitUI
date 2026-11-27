@@ -92,7 +92,7 @@ $(function(){initNavTree('classZenitUI_1_1SDL3Renderer.html','','classZenitUI_1_
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ZenitUI::SDL3Renderer Class Reference<div class="ingroups"><a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a></div></div></div>
+  <div class="headertitle"><div class="title">ZenitUI::SDL3Renderer Class Reference<div class="ingroups"><a class="el" href="group__grp__backends.html">Backends, TextEngine, UTF-8 &amp; Debugging</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -138,14 +138,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isReady</b> () const<
 <tr class="memdesc:a351d79bc4ac69dd369044670faa460e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload tightly-packed RGBA8 pixels into sub-rectangle <code class="param">region</code> of texture <code class="param">t</code>.  <br /></td></tr>
 <tr class="memitem:ab80972b95a6cfeaf90e2e48ee71db478" id="r_ab80972b95a6cfeaf90e2e48ee71db478"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab80972b95a6cfeaf90e2e48ee71db478">destroyTexture</a> (<a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a> h) override</td></tr>
 <tr class="memdesc:ab80972b95a6cfeaf90e2e48ee71db478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a dynamic texture previously created by <span class="tt"><a class="el" href="#a381bc13a222845558d76a6de9967c21e" title="Allocate a dynamic RGBA8 2D texture of w x h pixels.">createTexture</a></span>.  <br /></td></tr>
-<tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">Text Rendering &amp; Metrics</div></td></tr>
-<tr class="memitem:a06af67ec69ff2fcd082c805b273cac00" id="r_a06af67ec69ff2fcd082c805b273cac00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06af67ec69ff2fcd082c805b273cac00">drawText</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, std::string_view s, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> pos, float size, float spacing, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c) override</td></tr>
-<tr class="memdesc:a06af67ec69ff2fcd082c805b273cac00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw UTF-8 text <span class="tt">s</span> at logical top-left <span class="tt">pos</span> using font <span class="tt">f</span>, font size <span class="tt">size</span>, and letter spacing <span class="tt">spacing</span>.  <br /></td></tr>
-<tr class="memitem:aeffad60cd4cda56e7304f612bac9d396" id="r_aeffad60cd4cda56e7304f612bac9d396"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeffad60cd4cda56e7304f612bac9d396">measureText</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, std::string_view s, float size, float spacing) override</td></tr>
-<tr class="memdesc:aeffad60cd4cda56e7304f612bac9d396"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure the logical <span class="tt">{width, height}</span> of UTF-8 text <span class="tt">s</span> rendered with <span class="tt">f</span>, <span class="tt">size</span>, and <span class="tt">spacing</span>.  <br /></td></tr>
-<tr class="memitem:a7c86fcfa0840f4a58e5307d88fabb2a8" id="r_a7c86fcfa0840f4a58e5307d88fabb2a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c86fcfa0840f4a58e5307d88fabb2a8">measureCodepoint</a> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> f, uint32_t codepoint, float size, float spacing) override</td></tr>
-<tr class="memdesc:a7c86fcfa0840f4a58e5307d88fabb2a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure the advance width and height of a single Unicode codepoint.  <br /></td></tr>
-<tr id="pub-methods-3" class="groupHeader"><td colspan="2"><div class="groupHeader">Transform, Clip &amp; Shader Stacks</div></td></tr>
+<tr id="pub-methods-2" class="groupHeader"><td colspan="2"><div class="groupHeader">Transform, Clip &amp; Shader Stacks</div></td></tr>
 <tr class="memitem:a0aa73b9b9ab461eb110c9d01fcb89485" id="r_a0aa73b9b9ab461eb110c9d01fcb89485"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0aa73b9b9ab461eb110c9d01fcb89485">pushTransform</a> (const <a class="el" href="structZenitUI_1_1Transform2D.html">Transform2D</a> &amp;t) override</td></tr>
 <tr class="memdesc:a0aa73b9b9ab461eb110c9d01fcb89485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push a 2D pivot-based transform onto the transform stack.  <br /></td></tr>
 <tr class="memitem:ac7182c8264135ecda7cff8b687d39dea" id="r_ac7182c8264135ecda7cff8b687d39dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7182c8264135ecda7cff8b687d39dea">popTransform</a> () override</td></tr>
@@ -162,7 +155,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isReady</b> () const<
 <tr class="memdesc:ab270999ace7a64c7f306c03ebdb40413"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pop the active shader effect and restore the previous one (if any).  <br /></td></tr>
 <tr class="memitem:a076920a7af39800281fb5969659d4c5a" id="r_a076920a7af39800281fb5969659d4c5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a076920a7af39800281fb5969659d4c5a">setBlendMode</a> (<a class="el" href="group__grp__core.html#gab862907ee575802a8271da3923d1f76c">BlendMode</a> mode) override</td></tr>
 <tr class="memdesc:a076920a7af39800281fb5969659d4c5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switch the active color-blending mode.  <br /></td></tr>
-<tr id="pub-methods-4" class="groupHeader"><td colspan="2"><div class="groupHeader">Shader Uniforms</div></td></tr>
+<tr id="pub-methods-3" class="groupHeader"><td colspan="2"><div class="groupHeader">Shader Uniforms</div></td></tr>
 <tr class="memitem:a287dca752aa6bd6cfe9ab25e9fe3c477" id="r_a287dca752aa6bd6cfe9ab25e9fe3c477"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a287dca752aa6bd6cfe9ab25e9fe3c477">setEffectFloat</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, float value) override</td></tr>
 <tr class="memdesc:a287dca752aa6bd6cfe9ab25e9fe3c477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a <span class="tt">float</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
 <tr class="memitem:a197ad17a0ee7631bb426de91a49bfc11" id="r_a197ad17a0ee7631bb426de91a49bfc11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a197ad17a0ee7631bb426de91a49bfc11">setEffectVec2</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, <a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> value) override</td></tr>
@@ -173,7 +166,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isReady</b> () const<
 <tr class="memdesc:a403b5d7ad3c04d66e73d4455cdffe9c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a <span class="tt">vec4</span> uniform named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
 <tr class="memitem:a04affcb450b1fd4628ce94fc560b7fd2" id="r_a04affcb450b1fd4628ce94fc560b7fd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04affcb450b1fd4628ce94fc560b7fd2">setEffectVec4</a> (<a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a> e, const char *name, <a class="el" href="structZenitUI_1_1Color.html">Color</a> value) override</td></tr>
 <tr class="memdesc:a04affcb450b1fd4628ce94fc560b7fd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a normalized RGBA <span class="tt">vec4</span> uniform (0..1 per channel) named <span class="tt">name</span> on effect <span class="tt">e</span>.  <br /></td></tr>
-<tr id="pub-methods-5" class="groupHeader"><td colspan="2"><div class="groupHeader">Off-Screen Render Targets</div></td></tr>
+<tr id="pub-methods-4" class="groupHeader"><td colspan="2"><div class="groupHeader">Off-Screen Render Targets</div></td></tr>
 <tr class="memitem:abc3b24398685c3e8f2596062cb4ea1e0" id="r_abc3b24398685c3e8f2596062cb4ea1e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc3b24398685c3e8f2596062cb4ea1e0">createTarget</a> (int w, int h) override</td></tr>
 <tr class="memdesc:abc3b24398685c3e8f2596062cb4ea1e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate an off-screen RGBA render target of <span class="tt">w x h</span> pixels (used when <span class="tt"><a class="el" href="group__grp__core.html#ggada7f34c1ace3e7a57e6c0b00b86505cea1bee6f1687595d13d1ff7531bd1f3688" title="Supports off-screen render targets (createTarget, pushTarget, popTarget, drawTarget).">Feature::NestedTargets</a></span> is supported).  <br /></td></tr>
 <tr class="memitem:a07fe4053d3333bb9e9ba61e534d538b6" id="r_a07fe4053d3333bb9e9ba61e534d538b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07fe4053d3333bb9e9ba61e534d538b6">destroyTarget</a> (<a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a> t) override</td></tr>
@@ -190,13 +183,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isReady</b> () const<
 <tr class="memdesc:ac0b34db221e9ea546b0ffc69d607feaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <span class="tt">true</span> while a <span class="tt"><a class="el" href="#a48e636403c82ca59145eef50d6483ccf" title="Redirect subsequent draw calls to target t and clear it to transparent black.">pushTarget</a></span> is active without a matching <span class="tt"><a class="el" href="#a8273cf9a889930e3bdef52897300663d" title="Finish drawing into the active target and restore the previous target (or main framebuffer) and stack...">popTarget</a></span>.  <br /></td></tr>
 <tr class="memitem:af60bfa8d36b6d7355bf19613cae28622" id="r_af60bfa8d36b6d7355bf19613cae28622"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af60bfa8d36b6d7355bf19613cae28622">clearTarget</a> (<a class="el" href="structZenitUI_1_1TargetHandle.html">TargetHandle</a> t, <a class="el" href="structZenitUI_1_1Color.html">Color</a> c) override</td></tr>
 <tr class="memdesc:af60bfa8d36b6d7355bf19613cae28622"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear render target <span class="tt">t</span> to solid color <span class="tt">c</span>.  <br /></td></tr>
-<tr id="pub-methods-6" class="groupHeader"><td colspan="2"><div class="groupHeader">Resource Creation Helpers (used by &lt;tt&gt;SDL3AssetProvider&lt;/tt&gt;)</div></td></tr>
+<tr id="pub-methods-5" class="groupHeader"><td colspan="2"><div class="groupHeader">Resource Creation Helpers (used by &lt;tt&gt;SDL3AssetProvider&lt;/tt&gt;)</div></td></tr>
 <tr class="memitem:a38d883f95d1a3544574bcc5788af926e" id="r_a38d883f95d1a3544574bcc5788af926e"><td class="memItemLeft" align="right" valign="top"><a id="a38d883f95d1a3544574bcc5788af926e" name="a38d883f95d1a3544574bcc5788af926e"></a>
 <a class="el" href="structZenitUI_1_1TextureHandle.html">TextureHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>createTextureRGBA</b> (int width, int height, const unsigned char *rgbaPixels)</td></tr>
-<tr class="memitem:aa7165e5f40119aba34aec747be058576" id="r_aa7165e5f40119aba34aec747be058576"><td class="memItemLeft" align="right" valign="top"><a id="aa7165e5f40119aba34aec747be058576" name="aa7165e5f40119aba34aec747be058576"></a>
-<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>createFontFromTTF</b> (const unsigned char *ttfData, size_t ttfSize, int baseSize, const <a class="el" href="classZenitUI_1_1CodepointSet.html">CodepointSet</a> &amp;codepoints)</td></tr>
-<tr class="memitem:a5dd1acb6b70887308839bfe1bdd85051" id="r_a5dd1acb6b70887308839bfe1bdd85051"><td class="memItemLeft" align="right" valign="top"><a id="a5dd1acb6b70887308839bfe1bdd85051" name="a5dd1acb6b70887308839bfe1bdd85051"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>destroyFont</b> (<a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a> h)</td></tr>
 <tr class="memitem:ae805a7c64ac2dc456c3187e4782526c0" id="r_ae805a7c64ac2dc456c3187e4782526c0"><td class="memItemLeft" align="right" valign="top"><a id="ae805a7c64ac2dc456c3187e4782526c0" name="ae805a7c64ac2dc456c3187e4782526c0"></a>
 <a class="el" href="structZenitUI_1_1EffectHandle.html">EffectHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><b>createEffectFromSource</b> (const char *fsSource, const char *vsSource=nullptr)</td></tr>
 <tr class="memitem:adb4f54613dff81a3ae1d808bf6985c07" id="r_adb4f54613dff81a3ae1d808bf6985c07"><td class="memItemLeft" align="right" valign="top"><a id="adb4f54613dff81a3ae1d808bf6985c07" name="adb4f54613dff81a3ae1d808bf6985c07"></a>
@@ -540,60 +529,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 
 </div>
 </div>
-<a id="a06af67ec69ff2fcd082c805b273cac00" name="a06af67ec69ff2fcd082c805b273cac00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06af67ec69ff2fcd082c805b273cac00">&#9670;&#160;</a></span>drawText()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ZenitUI::SDL3Renderer::drawText </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a></td>          <td class="paramname"><span class="paramname"><em>pos</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>size</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>spacing</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1Color.html">Color</a></td>          <td class="paramname"><span class="paramname"><em>c</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Draw UTF-8 text <span class="tt">s</span> at logical top-left <span class="tt">pos</span> using font <span class="tt">f</span>, font size <span class="tt">size</span>, and letter spacing <span class="tt">spacing</span>. </p>
-<dl class="section note"><dt>Note</dt><dd>If <span class="tt">f.id == 0</span> or unknown, backends should fall back to a default built-in font. </dd></dl>
-
-<p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#a1e75849b6a55976ea8bdba679fcc5819">ZenitUI::IRenderer</a>.</p>
-
-</div>
-</div>
 <a id="a1d02394e4c686cbb7b29492511d8faa4" name="a1d02394e4c686cbb7b29492511d8faa4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d02394e4c686cbb7b29492511d8faa4">&#9670;&#160;</a></span>endFrame()</h2>
 
@@ -678,93 +613,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>fillBorder</b
 <p>Return <span class="tt">true</span> while a <span class="tt"><a class="el" href="#a48e636403c82ca59145eef50d6483ccf" title="Redirect subsequent draw calls to target t and clear it to transparent black.">pushTarget</a></span> is active without a matching <span class="tt"><a class="el" href="#a8273cf9a889930e3bdef52897300663d" title="Finish drawing into the active target and restore the previous target (or main framebuffer) and stack...">popTarget</a></span>. </p>
 
 <p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#a303122b1a9eb61b07cbf0a7de2fe7e32">ZenitUI::IRenderer</a>.</p>
-
-</div>
-</div>
-<a id="a7c86fcfa0840f4a58e5307d88fabb2a8" name="a7c86fcfa0840f4a58e5307d88fabb2a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c86fcfa0840f4a58e5307d88fabb2a8">&#9670;&#160;</a></span>measureCodepoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::SDL3Renderer::measureCodepoint </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>codepoint</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>size</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>spacing</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Measure the advance width and height of a single Unicode codepoint. </p>
-<p>Default implementation encodes <span class="tt">codepoint</span> as UTF-8 and delegates to <span class="tt"><a class="el" href="#aeffad60cd4cda56e7304f612bac9d396" title="Measure the logical {width, height} of UTF-8 text s rendered with f, size, and spacing.">measureText</a></span>. Backends with direct glyph tables (e.g. <span class="tt"><a class="el" href="classZenitUI_1_1RaylibRenderer.html" title="Reference IRenderer backed by Raylib / rlgl.">RaylibRenderer</a></span>) can override for O(1) lookup without string allocation. </p>
-
-<p>Reimplemented from <a class="el" href="classZenitUI_1_1IRenderer.html#a63f46fd8c1353d714f26a4e21ca3e2a0">ZenitUI::IRenderer</a>.</p>
-
-</div>
-</div>
-<a id="aeffad60cd4cda56e7304f612bac9d396" name="aeffad60cd4cda56e7304f612bac9d396"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeffad60cd4cda56e7304f612bac9d396">&#9670;&#160;</a></span>measureText()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structZenitUI_1_1Vec2.html">Vec2</a> ZenitUI::SDL3Renderer::measureText </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structZenitUI_1_1FontHandle.html">FontHandle</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>size</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>spacing</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Measure the logical <span class="tt">{width, height}</span> of UTF-8 text <span class="tt">s</span> rendered with <span class="tt">f</span>, <span class="tt">size</span>, and <span class="tt">spacing</span>. </p>
-
-<p>Implements <a class="el" href="classZenitUI_1_1IRenderer.html#a56fc660402893d6885e92e82efd59a14">ZenitUI::IRenderer</a>.</p>
 
 </div>
 </div>

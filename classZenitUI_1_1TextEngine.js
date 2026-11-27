@@ -1,5 +1,6 @@
 var classZenitUI_1_1TextEngine =
 [
+    [ "SyntheticDrawCallback", "classZenitUI_1_1TextEngine.html#a22b2d98ab4fbd7f625b2a3d3e2745be9", null ],
     [ "caretRect", "classZenitUI_1_1TextEngine.html#ab5bec94313cfea4512b8d3acc5f7c038", null ],
     [ "caretXOnLine", "classZenitUI_1_1TextEngine.html#a0dc9daff6741d0a45fc81438670ba7ca", null ],
     [ "clearAtlas", "classZenitUI_1_1TextEngine.html#a889e4d17d7c464fb02fc0eeacc97ef9a", null ],

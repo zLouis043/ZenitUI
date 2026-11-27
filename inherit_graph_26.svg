@@ -38,7 +38,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classZenitUI_1_1SDL3AssetProvider.html" target="_top" xlink:title="Reference IAssetProvider loading fonts (stb_truetype), textures (stb_image), and GLSL 330 shaders int...">
+<g id="a_Node000002"><a xlink:href="classZenitUI_1_1SDL3AssetProvider.html" target="_top" xlink:title="Reference IAssetProvider loading textures (stb_image) and GLSL 330 shaders into SDL3Renderer.">
 <polygon fill="white" stroke="#666666" points="317.75,-72.12 167.5,-72.12 167.5,-51.38 317.75,-51.38 317.75,-72.12"/>
 <text xml:space="preserve" text-anchor="middle" x="242.62" y="-58.62" font-family="Helvetica,sans-Serif" font-size="10.00">ZenitUI::SDL3AssetProvider</text>
 </a>

@@ -1,5 +1,5 @@
 <map id="ZenitUI::SDL3AssetProvider" name="ZenitUI::SDL3AssetProvider">
-<area shape="rect" id="Node000001" title="Reference IAssetProvider loading fonts (stb_truetype), textures (stb_image), and GLSL 330 shaders int..." alt="" coords="5,81,206,109"/>
+<area shape="rect" id="Node000001" title="Reference IAssetProvider loading textures (stb_image) and GLSL 330 shaders into SDL3Renderer." alt="" coords="5,81,206,109"/>
 <area shape="rect" id="Node000002" href="$classZenitUI_1_1IAssetProvider.html" title="Abstract name&#45;based lookup and runtime lifecycle for fonts, textures, and shaders." alt="" coords="20,5,191,33"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,47,108,82,103,79,104,51"/>
 </map>

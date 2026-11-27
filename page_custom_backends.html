@@ -96,18 +96,18 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>ZenitUI is rendering- and windowing-agnostic.</p>
-<p>To integrate it into a custom engine or a different graphics library (SDL, GLFW + bgfx, Sokol, Vulkan, DirectX, etc.), implement three lightweight interfaces and attach them to a <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a></span>:</p>
+<p>To integrate it into a custom engine or a different graphics library (GLFW + bgfx, Sokol, Vulkan, DirectX, etc.), implement three lightweight interfaces and attach them to a <span class="tt"><a class="el" href="structZenitUI_1_1UIContext.html" title="Per-application singleton: backends, frame state, and routing.">ZenitUI::UIContext</a></span>:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Interface  </th><th class="markdownTableHeadLeft">Responsibility  </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft"><span class="tt">IPlatform</span>  </td><td class="markdownTableBodyLeft">Window size, DPI scale, monotonic clock, pointer/keyboard polling, safe area, clipboard  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><span class="tt">IRenderer</span>  </td><td class="markdownTableBodyLeft">2D vector primitives, textures/nine-slice, text metrics &amp; draw, clip/transform/shader stacks, optional off-screen targets  </td></tr>
+<td class="markdownTableBodyLeft"><span class="tt">IRenderer</span>  </td><td class="markdownTableBodyLeft">2D vector primitives, textures/nine-slice, dynamic RGBA textures (<span class="tt">createTexture</span>/<span class="tt">updateTexture</span>/<span class="tt">destroyTexture</span> for <span class="tt">TextEngine</span>'s glyph atlas), clip/transform/shader stacks, optional off-screen targets  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><span class="tt">IAssetProvider</span>  </td><td class="markdownTableBodyLeft">Name-based loading, caching, lookup, and unloading of fonts, textures, and shaders  </td></tr>
+<td class="markdownTableBodyLeft"><span class="tt">IAssetProvider</span>  </td><td class="markdownTableBodyLeft">Name-based loading, caching, lookup, and unloading of textures and shaders  </td></tr>
 </table>
-<p>All reference classes are grouped under <a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a>.</p>
+<p>All reference classes are grouped under <a class="el" href="group__grp__backends.html">Backends, TextEngine, UTF-8 &amp; Debugging</a>.</p>
 <hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_wiring"></a>
 1. Wiring a Backend into UIContext</h1>
@@ -129,12 +129,12 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="comment">// Flush pooled off-screen targets while the graphics context is still alive.</span></div>
 <div class="line">ctx.<a class="code hl_function" href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">detachBackend</a>();</div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:749</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html"><div class="ttname"><a href="structZenitUI_1_1UIContext.html">ZenitUI::UIContext</a></div><div class="ttdoc">Per-application singleton: backends, frame state, and routing.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:645</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a060d4a5bd680b7dd632a06b08177145e"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a060d4a5bd680b7dd632a06b08177145e">ZenitUI::UIContext::mount</a></div><div class="ttdeci">void mount(Layout &amp;root)</div><div class="ttdoc">Attach a root Layout subtree to this context and set it as the primary root.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:783</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a06a3a3e21c6249d6fd298c9a84b1dd81"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a06a3a3e21c6249d6fd298c9a84b1dd81">ZenitUI::UIContext::detachBackend</a></div><div class="ttdeci">void detachBackend()</div><div class="ttdoc">Flush pooled render targets while the renderer is still valid and clear backend pointers.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:679</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a3272b6b8d1ecb3ca8953b474567ccc73"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a3272b6b8d1ecb3ca8953b474567ccc73">ZenitUI::UIContext::renderFrame</a></div><div class="ttdeci">void renderFrame()</div><div class="ttdoc">Render the mounted primary root (beginFrame, draw, endFrame).</div></div>
 <div class="ttc" id="astructZenitUI_1_1UIContext_html_a44015b5a106a074212fedb6d5394a764"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a44015b5a106a074212fedb6d5394a764">ZenitUI::UIContext::runFrame</a></div><div class="ttdeci">void runFrame(float dt)</div><div class="ttdoc">Run one full update/measure/arrange frame on the mounted primary root.</div></div>
-<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:768</div></div>
+<div class="ttc" id="astructZenitUI_1_1UIContext_html_a74fa4dface75bab1e6a3e9c274939c7f"><div class="ttname"><a href="structZenitUI_1_1UIContext.html#a74fa4dface75bab1e6a3e9c274939c7f">ZenitUI::UIContext::attachBackend</a></div><div class="ttdeci">void attachBackend(IRenderer *r, IPlatform *p, IAssetProvider *a, UIContext **ownerSlot=nullptr)</div><div class="ttdoc">Attach renderer, platform, and asset backends to this context.</div><div class="ttdef"><b>Definition</b> UIContext.hpp:664</div></div>
 </div><!-- fragment --><hr  />
 <h1 class="doxsection"><a class="anchor" id="sec_backend_minimum"></a>
 2. Minimum Viable Backend vs Optional Features</h1>
@@ -150,11 +150,11 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 3. Critical Behavioral Invariants</h1>
 <p>Keep these rules in mind when porting to avoid subtle layout or rendering bugs:</p>
 <ol type="1">
-<li><b>Logical vs physical coordinates (<span class="tt">IPlatform</span> &amp; <span class="tt">IRenderer</span>)</b>: <span class="tt">viewportSize()</span>, <span class="tt">pointer().pos</span>, layout rects, and <span class="tt">measureText()</span> all operate in <b>logical pixels</b>. Apply <span class="tt">dpiScale()</span> only when configuring the GPU transform/scissor or sampling the physical framebuffer.</li>
+<li><b>Logical vs physical coordinates (<span class="tt">IPlatform</span> &amp; <span class="tt">IRenderer</span>)</b>: <span class="tt">viewportSize()</span>, <span class="tt">pointer().pos</span>, and layout rects all operate in <b>logical pixels</b>. Apply <span class="tt">dpiScale()</span> only when configuring the GPU transform/scissor or sampling the physical framebuffer.</li>
 <li><b>Edge-triggered input (<span class="tt">IPlatform</span>)</b>: <span class="tt">ButtonState::pressed</span>, <span class="tt">ButtonState::released</span>, <span class="tt">PointerState::wheelY</span>, <span class="tt">InputEvents::keys</span>, and <span class="tt">InputEvents::chars</span> must fire for <b>one frame only</b>, whereas <span class="tt">ButtonState::down</span> and <span class="tt">InputEvents::held</span> remain true while held.</li>
 <li><b>Intersected clip stack (<span class="tt">IRenderer</span>)</b>: <span class="tt">pushClip(r)</span> must transform <span class="tt">r</span> through the active transform stack, intersect it with the current clip rectangle, and expose the resulting screen-space clip via <span class="tt">getClipRect()</span> so off-screen culling stays accurate.</li>
 <li><b>CSS border-box strokes (<span class="tt">IRenderer</span>)</b>: <span class="tt">strokeRect()</span> and <span class="tt">strokeRoundedRect()</span> should draw strictly <b>inside</b> the target rectangle so borders sit flush against <span class="tt">fillRect()</span> / <span class="tt">fillRoundedRect()</span> without anti-aliasing gaps.</li>
-<li><b>Zero-allocation asset lookup (<span class="tt">IAssetProvider</span>)</b>: <span class="tt">getFont()</span>, <span class="tt">getTexture()</span>, and <span class="tt">getEffect()</span> are called during layout and draw; prefer transparent <span class="tt">std::string_view</span> map lookups (see <span class="tt">detail::TransparentStringHash</span> in <span class="tt"><a class="el" href="RaylibBackend_8hpp.html" title="Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...">RaylibBackend.hpp</a></span>).</li>
+<li><b>Zero-allocation asset lookup (<span class="tt">IAssetProvider</span>)</b>: <span class="tt">getTexture()</span> and <span class="tt">getEffect()</span> are called during layout and draw; prefer transparent <span class="tt">std::string_view</span> map lookups (see <span class="tt">detail::TransparentStringHash</span> in <span class="tt"><a class="el" href="RaylibBackend_8hpp.html" title="Reference Raylib implementation of ZenitUI&#39;s three backend interfaces: IPlatform, IRenderer,...">RaylibBackend.hpp</a></span>).</li>
 <li><b>Safe GPU shutdown</b>: If your renderer owns native handles, ensure GPU resources are released before the graphics context is destroyed (or release them explicitly on teardown rather than assuming the context is still alive at destructor time).</li>
 </ol>
 <hr  />
@@ -163,7 +163,7 @@ $(function(){initNavTree('page_custom_backends.html','',''); });
 <p>Every backend shipped under <span class="tt">backends/</span> is indexed automatically with its CMake target, supported optional features, and class references:</p>
 <ul>
 <li><a class="el" href="page_available_backends.html">Available Backends</a> — full auto-generated catalog of all built-in backends.</li>
-<li><a class="el" href="group__grp__backends.html">Backends, UTF-8 &amp; Debugging</a> — complete module API reference. </li>
+<li><a class="el" href="group__grp__backends.html">Backends, TextEngine, UTF-8 &amp; Debugging</a> — complete module API reference. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

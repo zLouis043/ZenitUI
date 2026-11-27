@@ -101,6 +101,12 @@ $(function(){initNavTree('classZenitUI_1_1TextEngine.html','','classZenitUI_1_1T
 
 <p><code>#include &lt;<a class="el" href="TextEngine_8hpp_source.html">TextEngine.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a22b2d98ab4fbd7f625b2a3d3e2745be9" id="r_a22b2d98ab4fbd7f625b2a3d3e2745be9"><td class="memItemLeft" align="right" valign="top"><a id="a22b2d98ab4fbd7f625b2a3d3e2745be9" name="a22b2d98ab4fbd7f625b2a3d3e2745be9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>SyntheticDrawCallback</b> = std::function&lt;void(std::string_view)&gt;</td></tr>
+<tr class="memdesc:a22b2d98ab4fbd7f625b2a3d3e2745be9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional test hook invoked per visible line when drawing in synthetic fallback mode. <br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf1dcb4ce6e7f1012c602b834cbf2164" id="r_aaf1dcb4ce6e7f1012c602b834cbf2164"><td class="memItemLeft" align="right" valign="top"><a id="aaf1dcb4ce6e7f1012c602b834cbf2164" name="aaf1dcb4ce6e7f1012c602b834cbf2164"></a>
@@ -157,6 +163,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clearLayoutCache</b> 
 <tr class="memitem:ad174fc8555523f38fa53c144495cbff2" id="r_ad174fc8555523f38fa53c144495cbff2"><td class="memItemLeft" align="right" valign="top"><a id="ad174fc8555523f38fa53c144495cbff2" name="ad174fc8555523f38fa53c144495cbff2"></a>
 <a class="el" href="structZenitUI_1_1TextAtlasStats.html">TextAtlasStats</a>&#160;</td><td class="memItemRight" valign="bottom"><b>stats</b> () const</td></tr>
 <tr class="memdesc:ad174fc8555523f38fa53c144495cbff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return current atlas and layout-cache diagnostics. <br /></td></tr>
+<tr class="memitem:ae040a1bbc1abb271fdd38d99c9f0dfbc" id="r_ae040a1bbc1abb271fdd38d99c9f0dfbc"><td class="memItemLeft" align="right" valign="top"><a id="ae040a1bbc1abb271fdd38d99c9f0dfbc" name="ae040a1bbc1abb271fdd38d99c9f0dfbc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setSyntheticDrawCallback</b> (<a class="el" href="#a22b2d98ab4fbd7f625b2a3d3e2745be9">SyntheticDrawCallback</a> cb)</td></tr>
 <tr class="memitem:a32bd9d90836fd3639faf5a474af6cd48" id="r_a32bd9d90836fd3639faf5a474af6cd48"><td class="memItemLeft" align="right" valign="top"><a id="a32bd9d90836fd3639faf5a474af6cd48" name="a32bd9d90836fd3639faf5a474af6cd48"></a>
 <a class="el" href="structZenitUI_1_1TextLayout.html">TextLayout</a>&#160;</td><td class="memItemRight" valign="bottom"><b>layout</b> (std::string_view text, const <a class="el" href="structZenitUI_1_1TextMeasureSpec.html">TextMeasureSpec</a> &amp;spec, const <a class="el" href="structZenitUI_1_1TextLayoutOptions.html">TextLayoutOptions</a> &amp;options={}) const</td></tr>
 <tr class="memdesc:a32bd9d90836fd3639faf5a474af6cd48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shape and lay out <code class="param">text</code> according to <code class="param">spec</code> and <code class="param">options</code> (uncached). <br /></td></tr>
